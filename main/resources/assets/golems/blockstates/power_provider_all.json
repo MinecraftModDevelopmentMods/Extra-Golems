@@ -1,0 +1,21 @@
+{
+    "variants": {
+		"normal": { "model": "golems:light_provider" },
+		"power=0": { "model": "golems:light_provider" },
+		"power=1": { "model": "golems:light_provider" },
+		"power=2": { "model": "golems:light_provider" },
+		"power=3": { "model": "golems:light_provider" },
+		"power=4": { "model": "golems:light_provider" },
+		"power=5": { "model": "golems:light_provider" },
+		"power=6": { "model": "golems:light_provider" },
+		"power=7": { "model": "golems:light_provider" },
+		"power=8": { "model": "golems:light_provider" },
+		"power=9": { "model": "golems:light_provider" },
+		"power=10": { "model": "golems:light_provider" },
+		"power=11": { "model": "golems:light_provider" },
+		"power=12": { "model": "golems:light_provider" },
+		"power=13": { "model": "golems:light_provider" },
+		"power=14": { "model": "golems:light_provider" },
+		"power=15": { "model": "golems:light_provider" }
+    }
+}

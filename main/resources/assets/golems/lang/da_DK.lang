@@ -1,0 +1,52 @@
+# translated by Brade1210
+item.golem_paper.name=§cGolem Fortryllelse§r
+tile.golem_head.name=Golem Hovede
+
+entity.golems.golem_bedrock.name=Grundfjeld Golem
+entity.golems.golem_bookshelf.name=Bibliotekar Golem
+entity.golems.golem_clay.name=Ler Golem
+entity.golems.golem_coal.name=Kul Golem
+entity.golems.golem_diamond.name=Diamant Golem
+entity.golems.golem_emerald.name=Emerald Golem
+entity.golems.golem_end_stone.name=Endsten Golem
+entity.golems.golem_glass.name=Glass Golem
+entity.golems.golem_glowstone.name=Glødesten Golem
+entity.golems.golem_gold.name=Guld Golem
+entity.golems.golem_hardened_clay.name=Hård Ler Golem
+entity.golems.golem_ice.name=Is Golem
+entity.golems.golem_lapis.name=Lapis Lazuli Golem
+entity.golems.golem_leaves.name=Blad Golem
+entity.golems.golem_melon.name=Melon Golem
+entity.golems.golem_nether_brick.name=Nether Mursten Golem
+entity.golems.golem_obsidian.name=Obsidian Golem
+entity.golems.golem_prismarine.name=Prismarine Golem
+entity.golems.golem_quartz.name=Kvarts Golem
+entity.golems.golem_redstone.name=Rødsten Golem
+entity.golems.golem_red_sandstone.name=Rød Sandstens Golem
+entity.golems.golem_sandstone.name=Sandstens Golem
+entity.golems.golem_sea_lantern.name=Sø Lanterne Golem
+entity.golems.golem_shroom.name=Svampe Golem
+entity.golems.golem_slime.name=Slimede Golem
+entity.golems.golem_sponge.name=Svampe Golem
+entity.golems.golem_stained_clay.name=Farvet Ler Golem
+entity.golems.golem_stained_glass.name=Farvet Glas Golem
+entity.golems.golem_straw.name=Halm Golem
+entity.golems.golem_tnt.name=TNT Golem
+entity.golems.golem_wooden.name=Træ Golem
+entity.golems.golem_wool.name=Uld Golem
+
+# Tooltip translations
+tooltip.creative_only_item=Kun for Kreativ Tilstand
+tooltip.press=Tryk
+tooltip.shift=SHIFT
+tooltip.for_more_details=for flere detalier
+tooltip.for_golem_materials=for at se valide golem materialer
+tooltip.use_to_spawn=Bruge dette til at oprette en %s
+tooltip.use_on_existing=Bruge dette på en eksisterende %s
+tooltip.to_remove_it=For at fjerne det
+material.leaf_block=Blad Block
+material.shroom_block=Svampe Block
+material.glass=Glass
+material.glowstone=Glødesten
+material.log=Træ
+material.stained_clay=Farvet Ler
