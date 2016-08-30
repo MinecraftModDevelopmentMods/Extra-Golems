@@ -41,12 +41,12 @@ public class ItemBedrockGolem extends Item
 			}
 			
 			if (facing == EnumFacing.DOWN)
-	        {
-	            return EnumActionResult.FAIL;
-	        }
+	        	{
+	        	 	return EnumActionResult.FAIL;
+	        	}
 			
-            boolean flag = worldIn.getBlockState(pos).getBlock().isReplaceable(worldIn, pos);
-            BlockPos spawn = flag ? pos : pos.offset(facing);
+            		boolean flag = worldIn.getBlockState(pos).getBlock().isReplaceable(worldIn, pos);
+            		BlockPos spawn = flag ? pos : pos.offset(facing);
 			
 			if(!worldIn.isRemote)
 			{
@@ -57,6 +57,10 @@ public class ItemBedrockGolem extends Item
 			}
 			spawnParticles(worldIn, pos.getX() - 0.5D, pos.getY() + 1.0D, pos.getZ() - 0.5D, 0.2D);
 			playerIn.swingArm(hand);
+			if(!playerIn.capabilities.isCreativeMode) 
+			{
+				stack.stackSize--;
+			}
 			return EnumActionResult.SUCCESS;
 		}
 		return EnumActionResult.PASS;
