@@ -1,0 +1,27 @@
+HOW TO ADD A GOLEM TO EXTRA GOLEMS:
+
+1) Add a static GolemConfigSet to com.golems.main.Config
+	a) Initialize it with default values for health and attack strength inside Config.initGolemConfigSets
+	b) Load any other golem-specific information from the config by adding a key in Config.loadSpecials
+2) Draw a texture for the golem, saving it as src/main/resources/assets/golems/textures/entity/golem_example.png
+	a) Replace 'example' with the name of that golem
+3) Make a class in com.golems.entity that inherits from GolemBase
+	a) Use one of these classes:
+	  * GolemBase is used for all golems that have unique behavior or no special abilities
+	  * GolemLightProvider is used for golems that place temporary light sources.
+	  * GolemMultiTextured is used to change texture upon entity interaction.
+	  * GolemColorized and GolemColorizedMultiTextured are used for grayscale->colored textures
+	  * EntityEndstoneGolem, EntityRedstoneGolem, and EntityTNTGolem have extra-flexible constructors for easy reuse
+	b) Provide the necessary arguments in the call to the super constructor
+	  * Usually this includes the World, attack damage, and the block used to make this golem
+	c) Implement all required methods
+	d) Replace any initialization of attack power or health to reference the GolemConfigSet
+	e) Add any special behavior
+4) Register the golem by adding a call to CommonProxy.register inside CommonProxy#registerEntities
+5) Register the render class by adding a call to ClientProxy.registerTextured or ClientProxy.registerColorized inside ClientProxy#registerEntities
+6) Add an else-if statement to com.golems.events.handlers.GolemCommonEventHandler
+	a) Follow the pattern of checking for that block, then calling GolemBuildEvent#setGolem
+	b) Pass a new instance of the golem along with GolemConfigSet#canSpawn()
+7) Add the name of the block used to build the golem in ItemGolemPaper#addInformation -- use the blocks lang entry for this
+8) Add the golem's name to as many *.lang files as possible at src/main/resources/assets/golems/lang/
+9) Test, debug, and enjoy!

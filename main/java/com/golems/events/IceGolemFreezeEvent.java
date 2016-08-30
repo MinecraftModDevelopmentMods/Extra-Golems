@@ -44,7 +44,7 @@ public class IceGolemFreezeEvent extends Event
 		int y = iceGolemPos.getY();
 		int z = iceGolemPos.getZ();
 
-		// check 2-layer circle around golem to freeze liquids
+		// check 3-layer circle around this golem (disc, not sphere) to add positions to the map
 		for(int i = -range; i <= range; i++)
 		{
 			for(int j = -1; j <= 1; j++)
@@ -89,7 +89,7 @@ public class IceGolemFreezeEvent extends Event
 		}
 	}
 
-	/** Final action of this event -- replaces all blocks in the list with their frozen counterpart **/
+	/** Final action of this event -- replaces all blocks in the map with their frozen counterpart **/
 	public boolean freezeBlocks()
 	{
 		boolean flag = false;
