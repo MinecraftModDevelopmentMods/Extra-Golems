@@ -39,15 +39,15 @@ public class ItemBedrockGolem extends Item
 			{
 				return EnumActionResult.PASS;
 			}
-			
+
 			if (facing == EnumFacing.DOWN)
-	        	{
-	        	 	return EnumActionResult.FAIL;
-	        	}
-			
-            		boolean flag = worldIn.getBlockState(pos).getBlock().isReplaceable(worldIn, pos);
-            		BlockPos spawn = flag ? pos : pos.offset(facing);
-			
+			{
+				return EnumActionResult.FAIL;
+			}
+
+			boolean flag = worldIn.getBlockState(pos).getBlock().isReplaceable(worldIn, pos);
+			BlockPos spawn = flag ? pos : pos.offset(facing);
+
 			if(!worldIn.isRemote)
 			{
 				GolemBase golem = new EntityBedrockGolem(worldIn);
@@ -65,7 +65,7 @@ public class ItemBedrockGolem extends Item
 		}
 		return EnumActionResult.PASS;
 	}
-	
+
 	public static void spawnParticles(World world, double x, double y, double z, double motion)
 	{
 		if(world.isRemote)
@@ -76,7 +76,7 @@ public class ItemBedrockGolem extends Item
 			}
 		}
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
@@ -94,12 +94,12 @@ public class ItemBedrockGolem extends Item
 		{	
 			String lorePressShift =
 					TextFormatting.GRAY + trans("tooltip.press") + " " + 
-					TextFormatting.YELLOW + trans("tooltip.shift").toUpperCase() + " " + 
-					TextFormatting.GRAY + trans("tooltip.for_more_details");
+							TextFormatting.YELLOW + trans("tooltip.shift").toUpperCase() + " " + 
+							TextFormatting.GRAY + trans("tooltip.for_more_details");
 			par3List.add(lorePressShift);
 		}
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	private String trans(String s)
 	{

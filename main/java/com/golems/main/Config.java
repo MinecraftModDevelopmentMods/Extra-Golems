@@ -127,13 +127,13 @@ public class Config
 		ICE.addKey(EntityIceGolem.AOE, 3, 1, 8, "Radial distance at which this golem can freeze / cool liquids");
 		LAPIS.addKey(EntityLapisGolem.ALLOW_SPECIAL, true, "Whether this golem can inflict harmful potion effects");
 		LEAF.addKey(EntityLeafGolem.ALLOW_SPECIAL, true, "Whether this golem can heal itself");
-		MAGMA.addKey(EntityMagmaGolem.ALLOW_FIRE_SPECIAL, true, "Whether this golem can light mobs on fire");
+		MAGMA.addKey(EntityMagmaGolem.ALLOW_LAVA_SPECIAL, true, "Whether this golem can slowly melt cobblestone");
+		MAGMA.addKey(EntityMagmaGolem.MELT_DELAY, 240, 1, 24000, "Number of ticks it takes to melt cobblestone (12 sec * 20 t/sec = 240 t)");
 		MELON.addKey(EntityMelonGolem.ALLOW_SPECIAL, true, "Whether this golem can plant flowers randomly");
 		MELON.addKey(EntityMelonGolem.FREQUENCY, 240, 1, 24000, "Average number of ticks between planting flowers");
 		MUSHROOM.addKey(EntityMushroomGolem.ALLOW_SPECIAL, true, "Whether this golem can plant mushrooms randomly");
 		MUSHROOM.addKey(EntityMushroomGolem.FREQUENCY, 420, 1, 24000, "Average number of ticks between planting mushrooms");
-		NETHERBRICK.addKey(EntityNetherBrickGolem.ALLOW_LAVA_SPECIAL, true, "Whether this golem can slowly melt cobblestone");
-		NETHERBRICK.addKey(EntityNetherBrickGolem.MELT_DELAY, 240, 1, 24000, "Number of ticks it takes to melt cobblestone (12 sec * 20 t/sec = 240 t)");
+		NETHERBRICK.addKey(EntityNetherBrickGolem.ALLOW_FIRE_SPECIAL, true, "Whether this golem can light creatures on fire");
 		NETHERWART.addKey(EntityNetherWartGolem.ALLOW_SPECIAL, true, "Whether this golem can plant netherwart randomly");
 		NETHERWART.addKey(EntityNetherWartGolem.FREQUENCY, 880, 1, 24000, "Average number of ticks between planting nether wart");
 		NETHERWART.addKey(EntityNetherWartGolem.DROP_NETHERWART_BLOCK, true, "When true, this golem drops 0-4 netherwart blocks. When false, drops 1-9 netherwart"); 

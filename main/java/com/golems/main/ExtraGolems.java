@@ -1,26 +1,27 @@
 package com.golems.main;
 
+import com.golems.integration.ModIds;
 import com.golems.proxies.CommonProxy;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
-@Mod(modid = ExtraGolems.MODID, name = ExtraGolems.NAME, version = ExtraGolems.VERSION, acceptedMinecraftVersions = ExtraGolems.MCVERSION)
+@Mod(modid = ExtraGolems.MODID, name = ExtraGolems.NAME, version = ExtraGolems.VERSION)
 public class ExtraGolems 
 {	
 	public static final String MODID = "golems";
 	public static final String NAME = "Extra Golems";
 	public static final String VERSION = "6.02";
-	public static final String MCVERSION = "1.10.2";
 	
 	@SidedProxy(clientSide = "com." + MODID + ".proxies.ClientProxy", serverSide = "com." + MODID + ".proxies.CommonProxy")
 	public static CommonProxy proxy;
@@ -42,6 +43,15 @@ public class ExtraGolems
 	{		
 		registerCrafting();
 		proxy.registerEvents();
+		
+		if(Loader.isModLoaded(ModIds.WAILA))
+		{
+			FMLInterModComms.sendMessage(ModIds.WAILA, "register", "com.golems.integration.waila.WailaExtraGolems.callbackRegister");
+		}
+		if(Loader.isModLoaded(ModIds.TOP))
+		{
+			FMLInterModComms.sendFunctionMessage("theoneprobe", "getTheOneProbe", "com.golems.integration.theoneprobe.TOPExtraGolems$GetTheOneProbe");
+		}
 	}
 	
 	public static void registerCrafting()

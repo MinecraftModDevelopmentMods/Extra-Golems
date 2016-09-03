@@ -6,6 +6,7 @@ import java.util.List;
 import com.golems.entity.ai.EntityAIDefendAgainstMonsters;
 import com.golems.main.ExtraGolems;
 import com.golems.main.GolemItems;
+import com.golems.util.GolemConfigSet;
 import com.golems.util.WeightedItem;
 import com.google.common.base.Predicate;
 
@@ -34,7 +35,6 @@ import net.minecraft.entity.passive.IAnimals;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathNavigateGround;
@@ -58,14 +58,15 @@ public abstract class GolemBase extends EntityCreature implements IAnimals
 	protected int attackTimer;
 	protected boolean isPlayerCreated;
 	protected ResourceLocation textureLoc;
-	protected boolean hasHome = false;
 	protected ItemStack creativeReturn;
 	Village villageObj;
-	/** deincrements, and a distance-to-home check is done at 0 */
+	protected boolean hasHome = false;
+	/** deincrements, and a distance-to-home check is done at 0 **/
 	private int homeCheckTimer = 70;
 
 	// customizable variables with default values //
 	protected double knockbackY = 0.4000000059604645D;
+	/** Amount by which to multiply damage if it's a critical **/
 	protected float criticalModifier = 2.25F;
 	/** Percent chance to multiply damage [0, 100] **/
 	protected int criticalChance = 5;

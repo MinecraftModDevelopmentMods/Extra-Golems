@@ -8,22 +8,32 @@ import com.golems.util.WeightedItem;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 public class EntityMagmaGolem extends GolemLightProvider
 {		
-	public static final String ALLOW_FIRE_SPECIAL = "Allow Special: Burn Enemies";
+	public static final String ALLOW_LAVA_SPECIAL = "Allow Special: Melt Cobblestone";
+	public static final String MELT_DELAY = "Melting Delay";
 	public static Block MAGMA = Blocks.field_189877_df;
+	
+	/** Golem should stand in one spot for number of ticks before affecting the block below it */
+	private int ticksStandingStill;
 
 	public EntityMagmaGolem(World world) 
 	{
 		super(world, Config.MAGMA.getBaseAttack(), MAGMA, EnumLightLevel.HALF);
 		this.isImmuneToFire = true;
+		this.ticksStandingStill = 0;
+		this.stepHeight = 1.0F;
+		this.tasks.addTask(0, this.swimmingAI);
 	}
 	
 	@Override
@@ -32,19 +42,38 @@ public class EntityMagmaGolem extends GolemLightProvider
 		return this.makeGolemTexture("magma");
 	}
 
-	/** Attack by lighting on fire as well */
+	/**
+	 * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
+	 * use this to react to sunlight and start to burn.
+	 */
 	@Override
-	public boolean attackEntityAsMob(Entity entity)
+	public void onLivingUpdate()
 	{
-		if(super.attackEntityAsMob(entity))
+		super.onLivingUpdate();
+		if(Config.MAGMA.getBoolean(ALLOW_LAVA_SPECIAL))
 		{
-			if(Config.MAGMA.getBoolean(ALLOW_FIRE_SPECIAL))
+			int x = MathHelper.floor_double(this.posX);
+			int y = MathHelper.floor_double(this.posY - 0.20000000298023224D);
+			int z = MathHelper.floor_double(this.posZ);
+			BlockPos below = new BlockPos(x,y,z);
+			Block b1 = this.worldObj.getBlockState(below).getBlock();
+			// debug:
+			//System.out.println("below=" + below + "; lastPos = " + new BlockPos(MathHelper.floor_double(this.lastTickPosX), this.lastTickPosY, MathHelper.floor_double(this.lastTickPosZ)));
+			//System.out.println("block on= " + b1.getUnlocalizedName() + "; ticksStandingStill=" + ticksStandingStill);
+			
+			if(x == MathHelper.floor_double(this.lastTickPosX) && z == MathHelper.floor_double(this.lastTickPosZ))
 			{
-				entity.setFire(2 + rand.nextInt(5));
+				if(++this.ticksStandingStill >= Config.MAGMA.getInt(MELT_DELAY) && b1 == Blocks.COBBLESTONE && rand.nextInt(16) == 0)
+				{
+					this.worldObj.setBlockState(below, Blocks.LAVA.getDefaultState(), 3);
+					this.ticksStandingStill = 0;
+				}
 			}
-			return true;
+			else
+			{
+				this.ticksStandingStill = 0;
+			}
 		}
-		return false;
 	}
 
 	@Override

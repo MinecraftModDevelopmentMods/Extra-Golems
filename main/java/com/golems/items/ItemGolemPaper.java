@@ -36,7 +36,7 @@ public class ItemGolemPaper extends Item
 			//par3List.add(loreListIntro);
 			final String C = ", "; // C = comma
 			String toAdd = trans("tile.blockDiamond.name") + C + trans("tile.blockEmerald.name") + C +
-			trans("tile.obsidian.name") + C + trans("material.glass") + C + trans("tile.stainedGlass.name") + C +
+			trans("tile.obsidian.name") + C + trans("tile.glass.name") + C + trans("tile.stainedGlass.name") + C +
 			trans("tile.lightgem.name") + C + trans("tile.whiteStone.name") + C + trans("tile.quartzBlock.default.name") + C +
 			trans("tile.blockGold.name") + C + trans("tile.prismarine.rough.name") + C + trans("tile.icePacked.name") + C +
 			trans("tile.netherBrick.name") + C + trans("tile.blockIron.name") + C + trans("tile.seaLantern.name") + C +
@@ -45,7 +45,7 @@ public class ItemGolemPaper extends Item
 			trans("tile.tnt.name") + C + trans("tile.blockCoal.name") + C + trans("tile.blockRedstone.name") + C +
 			trans("tile.blockLapis.name") + C + trans("tile.slime.name") + C + trans("tile.clay.name") + C +
 			trans("tile.bookshelf.name") + C + trans("tile.sponge.dry.name") + C + trans("tile.melon.name") + C + trans("tile.workbench.name") + C +
-			trans("tile.cloth.name") + C + trans("tile.hayBlock.name") + C + trans("material.leaf_block") + C + trans("tile.magma.name") + C +
+			trans("tile.cloth.name") + C + trans("tile.hayBlock.name") + C + trans("tile.leaves.name") + C + trans("tile.magma.name") + C +
 			trans("tile.netherWartBlock.name") + C + trans("tile.redNetherBrick.name") + C + trans("tile.boneBlock.name");		
 			par3List.add(toAdd);
 			GolemPaperAddInfoEvent event = new GolemPaperAddInfoEvent(stack, player, par3List, advanced);

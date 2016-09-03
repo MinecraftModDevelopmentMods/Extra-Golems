@@ -43,10 +43,11 @@ public class EntityBookshelfGolem extends GolemBase
 	{
 	    super.onLivingUpdate();
 
-	    // Potion effects:  for this golem only
 	    if(Config.BOOKSHELF.getBoolean(ALLOW_SPECIAL) && this.getActivePotionEffects().isEmpty() && rand.nextInt(40) == 0)
 	    {
-	    	this.addPotionEffect(new PotionEffect(goodEffects[rand.nextInt(goodEffects.length)], 200 + 100 * (1 + rand.nextInt(5)), 1));
+	    	Potion potion = goodEffects[rand.nextInt(goodEffects.length)];
+	    	int len = potion.isInstant() ? 1 : 200 + 100 * (1 + rand.nextInt(5));
+	    	this.addPotionEffect(new PotionEffect(potion, len, rand.nextInt(2)));
 	    }
 	}
 		
