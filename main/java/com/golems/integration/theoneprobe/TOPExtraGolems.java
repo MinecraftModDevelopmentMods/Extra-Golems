@@ -18,6 +18,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 
+/**
+ * TheOneProbe integration -- using theoneprobe-1.10-1.1.0
+ **/
 @Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoEntityProvider", modid = ModIds.TOP)
 public class TOPExtraGolems extends GolemDescriptionManager implements IProbeInfoEntityProvider  
 {	
