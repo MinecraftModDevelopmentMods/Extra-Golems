@@ -32,6 +32,7 @@ public class TOPExtraGolems extends GolemDescriptionManager implements IProbeInf
 	}
 	
 	@Override
+	@Optional.Method(modid = ModIds.TOP)
 	public void addProbeEntityInfo(ProbeMode mode, IProbeInfo iprobeInfo, EntityPlayer player, World world, Entity entity, IProbeHitEntityData data) 
 	{
 		if(entity instanceof GolemBase)
@@ -49,6 +50,7 @@ public class TOPExtraGolems extends GolemDescriptionManager implements IProbeInf
 	}
 
 	@Override
+	@Optional.Method(modid = ModIds.TOP)
 	public String getID() 
 	{
 		return ExtraGolems.MODID;

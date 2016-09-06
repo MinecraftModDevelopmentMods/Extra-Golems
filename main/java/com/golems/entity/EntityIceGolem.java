@@ -61,8 +61,7 @@ public class EntityIceGolem extends GolemBase
 			if(Config.ICE.getBoolean(ALLOW_SPECIAL))
 			{
 				IceGolemFreezeEvent event = new IceGolemFreezeEvent(this, below, Config.ICE.getInt(AOE));
-				MinecraftForge.EVENT_BUS.post(event);
-				if(event.getResult() != Result.DENY)
+				if(!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Result.DENY)
 				{
 					event.freezeBlocks();
 				}

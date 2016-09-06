@@ -56,8 +56,7 @@ public class EntitySpongeGolem extends GolemBase
 			BlockPos center = new BlockPos(x,y,z);
 			
 			SpongeGolemSoakEvent event = new SpongeGolemSoakEvent(this, center, Config.SPONGE.getInt(RANGE));
-			MinecraftForge.EVENT_BUS.post(event);
-			if(event.getResult() != Result.DENY)
+			if(!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Result.DENY)
 			{
 				event.replaceWater();
 			}

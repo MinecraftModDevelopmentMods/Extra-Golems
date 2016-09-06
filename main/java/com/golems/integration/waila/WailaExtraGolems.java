@@ -87,10 +87,10 @@ public class WailaExtraGolems extends GolemDescriptionManager implements IWailaE
 		{
 			GolemBase golem = (GolemBase)entity;
 			
-			this.showAttack = config.getConfig(configShowAttackDamage);
+			this.showAttack = config.getConfig(configShowAttackDamage) && accessor.getPlayer().isSneaking();
 			this.showMultiTexture = config.getConfig(configShowMultiTexture);
 			this.showSpecial = config.getConfig(configShowSpecialAbilities);
-			this.showFireproof = config.getConfig(configShowFireproof);
+			this.showFireproof = config.getConfig(configShowFireproof) && accessor.getPlayer().isSneaking();
 			this.showKnockbackResist = config.getConfig(configShowKnockbackResist);
 			
 			tip.addAll(this.getEntityDescription(golem));
