@@ -158,7 +158,9 @@ public abstract class GolemDescriptionManager
 			if(golem.getClass() == EntityMagmaGolem.class)
 			{
 				String sLava = TextFormatting.RED + trans("entitytip.slowly_melts", trans("tile.stonebrick.name"));
+				String sFire = TextFormatting.RED + trans("entitytip.lights_mobs_on_fire");
 				if(Config.MAGMA.getBoolean(EntityMagmaGolem.ALLOW_LAVA_SPECIAL)) list.add(sLava);
+				if(Config.MAGMA.getBoolean(EntityMagmaGolem.ALLOW_FIRE_SPECIAL)) list.add(sFire);
 			}
 
 			// add planting to tip if possible
