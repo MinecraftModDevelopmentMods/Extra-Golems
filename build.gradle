@@ -27,12 +27,7 @@ archivesBaseName = "ExtraGolems[1.10.2]"
 minecraft {
     version = "1.10.2-12.18.1.2076"
     runDir = "run"
-    
-    // the mappings can be changed at any time, and must be in the following format.
-    // snapshot_YYYYMMDD   snapshot are built nightly.
-    // stable_#            stables are built at the discretion of the MCP team.
-    // Use non-default mappings at your own risk. they may not allways work.
-    // simply re-run your setup task after changing the mappings to update your workspace.
+
     mappings = "snapshot_20160518"
     makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 }
@@ -44,20 +39,8 @@ repositories {
 }
 
 dependencies {
-    // you may put jars on which you depend on in ./libs
-    // or you may define them like so..
-    
-    // the 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
-    //provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-	//provided files('libs/Waila-1.7.0-B3_1.9.4.jar')
-	//provided files('libs/theoneprobe-1.10-1.1.0.jar')
-	provided 'mcp.mobius.waila:Waila:1.7.0_1.9.4:dev'
+	provided 'mcp.mobius.waila:Waila:1.7.0-B3_1.9.4:dev'
 	provided 'mcjty.theoneprobe:TheOneProbe:1.10-1.1.0-30'
-
-    // for more info...
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
-
 }
 
 processResources
