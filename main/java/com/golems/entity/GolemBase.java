@@ -501,6 +501,11 @@ public abstract class GolemBase extends EntityCreature implements IAnimals
 	{
 		return this.isPlayerCreated;
 	}
+	
+	public void setImmuneToFire(boolean toSet)
+	{
+		this.isImmuneToFire = toSet;
+	}
 
 	/** Not used in this project. Will be used in the WAILA addon **/
 	public boolean doesInteractChangeTexture()

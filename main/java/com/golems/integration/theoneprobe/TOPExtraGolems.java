@@ -18,6 +18,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 
+/**
+ * TheOneProbe integration -- using theoneprobe-1.10-1.1.0
+ **/
 @Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoEntityProvider", modid = ModIds.TOP)
 public class TOPExtraGolems extends GolemDescriptionManager implements IProbeInfoEntityProvider  
 {	
@@ -29,6 +32,7 @@ public class TOPExtraGolems extends GolemDescriptionManager implements IProbeInf
 	}
 	
 	@Override
+	@Optional.Method(modid = ModIds.TOP)
 	public void addProbeEntityInfo(ProbeMode mode, IProbeInfo iprobeInfo, EntityPlayer player, World world, Entity entity, IProbeHitEntityData data) 
 	{
 		if(entity instanceof GolemBase)
@@ -46,6 +50,7 @@ public class TOPExtraGolems extends GolemDescriptionManager implements IProbeInf
 	}
 
 	@Override
+	@Optional.Method(modid = ModIds.TOP)
 	public String getID() 
 	{
 		return ExtraGolems.MODID;

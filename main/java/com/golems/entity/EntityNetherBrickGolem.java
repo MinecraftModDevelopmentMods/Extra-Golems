@@ -26,7 +26,7 @@ public class EntityNetherBrickGolem extends GolemBase
 	public EntityNetherBrickGolem(World world) 
 	{
 		super(world, Config.NETHERBRICK.getBaseAttack(), Blocks.NETHER_BRICK);
-		this.isImmuneToFire = true;
+		this.setImmuneToFire(true);
 	}
 	
 	@Override

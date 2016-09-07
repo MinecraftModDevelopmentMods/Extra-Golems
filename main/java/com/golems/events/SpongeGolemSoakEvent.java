@@ -9,6 +9,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**
@@ -16,6 +17,7 @@ import net.minecraftforge.fml.common.eventhandler.Event;
  * the Sponge Golem's behavior. It is not handled in Extra Golems.
  */
 @Event.HasResult
+@Cancelable
 public class SpongeGolemSoakEvent extends Event
 {
 	public List<BlockPos> affectedBlocks;

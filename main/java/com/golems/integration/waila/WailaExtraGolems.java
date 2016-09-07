@@ -39,6 +39,9 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 
+/**
+ * WAILA integration -- using Waila-1.7.0-B3_1.9.4
+ **/
 @Optional.Interface(iface = "mcp.mobius.waila.api.IWailaEntityProvider", modid = ModIds.WAILA)
 public class WailaExtraGolems extends GolemDescriptionManager implements IWailaEntityProvider
 {
@@ -84,10 +87,10 @@ public class WailaExtraGolems extends GolemDescriptionManager implements IWailaE
 		{
 			GolemBase golem = (GolemBase)entity;
 			
-			this.showAttack = config.getConfig(configShowAttackDamage);
+			this.showAttack = config.getConfig(configShowAttackDamage) && accessor.getPlayer().isSneaking();
 			this.showMultiTexture = config.getConfig(configShowMultiTexture);
 			this.showSpecial = config.getConfig(configShowSpecialAbilities);
-			this.showFireproof = config.getConfig(configShowFireproof);
+			this.showFireproof = config.getConfig(configShowFireproof) && accessor.getPlayer().isSneaking();
 			this.showKnockbackResist = config.getConfig(configShowKnockbackResist);
 			
 			tip.addAll(this.getEntityDescription(golem));

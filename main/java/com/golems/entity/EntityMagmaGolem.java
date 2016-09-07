@@ -20,6 +20,7 @@ import net.minecraft.world.World;
 
 public class EntityMagmaGolem extends GolemLightProvider
 {		
+	public static final String ALLOW_FIRE_SPECIAL = "Allow Special: Burn Enemies";
 	public static final String ALLOW_LAVA_SPECIAL = "Allow Special: Melt Cobblestone";
 	public static final String MELT_DELAY = "Melting Delay";
 	public static Block MAGMA = Blocks.field_189877_df;
@@ -30,7 +31,7 @@ public class EntityMagmaGolem extends GolemLightProvider
 	public EntityMagmaGolem(World world) 
 	{
 		super(world, Config.MAGMA.getBaseAttack(), MAGMA, EnumLightLevel.HALF);
-		this.isImmuneToFire = true;
+		this.setImmuneToFire(true);
 		this.ticksStandingStill = 0;
 		this.stepHeight = 1.0F;
 		this.tasks.addTask(0, this.swimmingAI);
@@ -40,6 +41,21 @@ public class EntityMagmaGolem extends GolemLightProvider
 	protected ResourceLocation applyTexture()
 	{
 		return this.makeGolemTexture("magma");
+	}
+	
+	/** Attack by lighting on fire as well */
+	@Override
+	public boolean attackEntityAsMob(Entity entity)
+	{
+		if(super.attackEntityAsMob(entity))
+		{
+			if(Config.MAGMA.getBoolean(ALLOW_FIRE_SPECIAL))
+			{
+				entity.setFire(2 + rand.nextInt(5));
+			}
+			return true;
+		}
+		return false;
 	}
 
 	/**

@@ -100,7 +100,7 @@ public class EntityRedstoneGolem extends GolemBase
 			{
 				RedstoneGolemPowerEvent event = new RedstoneGolemPowerEvent(this, at, this.getPowerOutput(at));
 				MinecraftForge.EVENT_BUS.post(event);
-				if(event.getResult() != Result.DENY && event.placePower())
+				if(!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Result.DENY && event.placePower())
 				{
 					numPlaced++;
 				}

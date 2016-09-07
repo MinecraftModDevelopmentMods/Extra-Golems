@@ -59,7 +59,7 @@ material.shroom_block=Mushroom Block
 material.log=Log
 material.stained_clay=Stained Clay
 
-# Entity headings (for Waila)
+# Entity headings (for Waila and TOP)
 entitytip.attack=Attack
 entitytip.lights_area=Provides light
 entitytip.click_change_texture=Right click to change texture
@@ -75,6 +75,7 @@ entitytip.plants_flowers=Plants flowers
 entitytip.plants_shrooms=Plants mushrooms
 entitytip.plants_warts=Plants nether wart
 entitytip.lights_mobs_on_fire=Lights creatures on fire
+entitytip.is_fireproof=Fireproof
 entitytip.slowly_melts=Slowly melts %s
 entitytip.has_knockback=Massive knockback attack!
 entitytip.absorbs_water=Absorbs water
