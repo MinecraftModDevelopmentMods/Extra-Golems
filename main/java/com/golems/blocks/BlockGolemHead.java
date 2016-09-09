@@ -17,6 +17,8 @@ import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.EntitySnowman;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Mirror;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -55,10 +57,23 @@ public class BlockGolemHead extends BlockHorizontal
 		return state.getValue(FACING).getHorizontalIndex();
 	}
 
+	@Override
 	protected BlockStateContainer createBlockState()
-    {
+	{
 		return new BlockStateContainer(this, new IProperty[] {FACING});
-    }
+	}
+
+	@Override
+	public IBlockState withRotation(IBlockState state, Rotation rot)
+	{
+		return state.withProperty(FACING, rot.rotate(state.getValue(FACING)));
+	}
+
+	@Override
+	public IBlockState withMirror(IBlockState state, Mirror mirrorIn)
+	{
+		return state.withRotation(mirrorIn.toRotation(state.getValue(FACING)));
+	}
 
 	/**
 	 * Called whenever the block is added into the world. Args: world, x, y, z
@@ -90,7 +105,7 @@ public class BlockGolemHead extends BlockHorizontal
 					entitysnowman.setLocationAndAngles((double)x + 0.5D, (double)y - 1.95D, (double)z + 0.5D, 0.0F, 0.0F);
 					world.spawnEntityInWorld(entitysnowman);
 				}
-				
+
 				ItemBedrockGolem.spawnParticles(world, x + 0.5D, y - 1.5D, z + 0.5D, 0.2D);
 				return;
 			}
@@ -111,7 +126,7 @@ public class BlockGolemHead extends BlockHorizontal
 						world.spawnEntityInWorld(golem);
 						return;
 					}				
-					
+
 					// post an event that, when handled, will initialize the golem to spawn
 					GolemBuildEvent event = new GolemBuildEvent(world, pos, flagX);
 					MinecraftForge.EVENT_BUS.post(event);
@@ -133,7 +148,7 @@ public class BlockGolemHead extends BlockHorizontal
 			}
 		}
 	}
-	
+
 	/** @return {@code true} if the blocks at x-1 and x+1 match the block at x **/
 	public static boolean isGolemXAligned(World world, BlockPos headPos)
 	{
@@ -141,7 +156,7 @@ public class BlockGolemHead extends BlockHorizontal
 		Block below = world.getBlockState(headPos.down(1)).getBlock();
 		return world.getBlockState(armsX[0]).getBlock() == below && world.getBlockState(armsX[1]).getBlock() == below;
 	}
-	
+
 	/** @return {@code true} if the blocks at z-1 and z+1 match the block at z **/
 	public static boolean isGolemZAligned(World world, BlockPos headPos)
 	{
@@ -149,14 +164,14 @@ public class BlockGolemHead extends BlockHorizontal
 		Block below = world.getBlockState(headPos.down(1)).getBlock();
 		return world.getBlockState(armsZ[0]).getBlock() == below && world.getBlockState(armsZ[1]).getBlock() == below;
 	}
-	
+
 	/** Replaces this block and the four construction blocks with air **/
 	public static void removeAllGolemBlocks(World world, BlockPos pos, boolean isXAligned)
 	{
 		removeGolemBody(world, pos);
 		removeGolemArms(world, pos, isXAligned);
 	}
-	
+
 	/** Replaces this block and the two below it with air **/
 	public static void removeGolemBody(World world, BlockPos head)
 	{
@@ -164,7 +179,7 @@ public class BlockGolemHead extends BlockHorizontal
 		world.setBlockToAir(head.down(1));
 		world.setBlockToAir(head.down(2));
 	}
-	
+
 	/** Replaces blocks at arm positions with air **/
 	public static void removeGolemArms(World world, BlockPos pos, boolean isXAligned)
 	{

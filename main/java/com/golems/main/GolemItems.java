@@ -11,8 +11,11 @@ import com.golems.items.ItemGolemPaper;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class GolemItems 
 {
@@ -45,7 +48,7 @@ public class GolemItems
 
 	private static void initBlocks()
 	{
-		golemHead = new BlockGolemHead();
+		golemHead = new BlockGolemHead().setHardness(0.6F);
 		blockLightSourceFull = new BlockLightProvider(1.0F);
 		blockLightSourceHalf = new BlockLightProvider(0.5F);
 		blockPowerSource = new BlockPowerProvider();
@@ -53,7 +56,15 @@ public class GolemItems
 	
 	private static void initItemBlocks()
 	{
-		ibGolemHead = new ItemBlock(golemHead);
+		ibGolemHead = new ItemBlock(golemHead)
+		{
+			@Override
+			@SideOnly(Side.CLIENT)
+		    public boolean hasEffect(ItemStack stack)
+		    {
+		        return Config.itemGolemHeadHasGlint;
+		    }
+		};
 	}
 
 	private static void initItems()
@@ -71,8 +82,7 @@ public class GolemItems
 	private static void registerWithItemBlock(Block block, ItemBlock itemBlock, String name)
 	{
 		register(block, name);
-		itemBlock.setUnlocalizedName(name).setRegistryName(ExtraGolems.MODID, name);
-		GameRegistry.register(itemBlock);
+		register(itemBlock, name);
 	}
 
 	private static void register(Block block, String name)

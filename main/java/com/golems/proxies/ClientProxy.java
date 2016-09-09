@@ -46,6 +46,7 @@ import com.golems.renders.RenderGolem;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
@@ -65,7 +66,7 @@ public class ClientProxy extends CommonProxy
 	public void preInitRenders()
 	{
 		// itemblocks
-		registerRender(GolemItems.ibGolemHead, "minecraft:pumpkin");
+		registerRender(GolemItems.ibGolemHead, Blocks.PUMPKIN.getRegistryName().toString());
 		// items
 		registerRender(GolemItems.golemPaper);	
 		registerRender(GolemItems.spawnBedrockGolem);

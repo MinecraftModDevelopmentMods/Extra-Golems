@@ -65,6 +65,7 @@ public class Config
 	
 	public static int paperRecipeOutput;
 	public static boolean bedrockGolemCreativeOnly;
+	public static boolean itemGolemHeadHasGlint;
 
 	public static void mainRegistry(Configuration config)
 	{
@@ -157,5 +158,7 @@ public class Config
 				"When true, only players in creative mode can use a Bedrock Golem spawn item");
 		paperRecipeOutput = config.getInt("Paper Recipe Output", CATEGORY_OTHER, 1, 1, 16, 
 				"Number of Golem Spell papers resulting from one recipe");
+		itemGolemHeadHasGlint = config.getBoolean("Golem Head Has Glint", CATEGORY_OTHER, true, 
+				"Whether the Golem Head item always has 'enchanted' effect");
 	}
 }
