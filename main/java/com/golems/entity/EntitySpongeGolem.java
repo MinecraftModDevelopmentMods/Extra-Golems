@@ -2,10 +2,12 @@ package com.golems.entity;
 
 import java.util.List;
 
+import com.golems.events.IceGolemFreezeEvent;
 import com.golems.events.SpongeGolemSoakEvent;
 import com.golems.main.Config;
 import com.golems.util.WeightedItem;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
@@ -58,7 +60,7 @@ public class EntitySpongeGolem extends GolemBase
 			SpongeGolemSoakEvent event = new SpongeGolemSoakEvent(this, center, Config.SPONGE.getInt(RANGE));
 			if(!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Result.DENY)
 			{
-				event.replaceWater();
+				this.replaceWater(event.getPositionList(), event.getReplacementState(), event.updateFlag);
 			}
 		}
 
@@ -90,5 +92,21 @@ public class EntitySpongeGolem extends GolemBase
 	public SoundEvent getGolemSound() 
 	{
 		return SoundEvents.BLOCK_CLOTH_STEP;
+	}
+	
+	/** 
+	 * Usually called after creating and firing a {@link SpongeGolemSoakEvent}.
+	 * Iterates through the list of positions and replaces each one with the
+	 * passed IBlockState.
+	 * @return whether all setBlockState calls were successful.
+	 **/
+	public boolean replaceWater(final List<BlockPos> POSITIONS, final IBlockState REPLACE_WATER, final int UPDATE_FLAG)
+	{
+		boolean flag = true;
+		for(BlockPos p : POSITIONS)
+		{
+			flag &= this.worldObj.setBlockState(p, REPLACE_WATER, UPDATE_FLAG);
+		}
+		return flag;
 	}
 }

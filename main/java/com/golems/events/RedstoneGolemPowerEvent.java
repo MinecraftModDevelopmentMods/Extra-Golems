@@ -22,7 +22,6 @@ public class RedstoneGolemPowerEvent extends Event
 	public final BlockPos posToAffect;
 	
 	protected int powerLevel;
-	protected boolean canPlace;
 	public int updateFlag = 3;
 	
 	public RedstoneGolemPowerEvent(GolemBase golemBase, BlockPos toAffect, int defPower)
@@ -33,23 +32,13 @@ public class RedstoneGolemPowerEvent extends Event
 		this.powerLevel = defPower;
 	}
 	
-	public void setCanPlace(boolean toSet)
-	{
-		this.canPlace = toSet;
-	}
-	
 	public void setPowerLevel(int toSet)
 	{
-		this.powerLevel = toSet > 15 || toSet < 0 ? 15 : toSet;
+		this.powerLevel = toSet > 15 ? 15 : (toSet < 0 ? 0 : toSet);
 	}
 	
-	/**
-	 * Final action of this event: places a BlockPowerProvider at the location of this event.
-	 * Only fires when called externally (Redstone Golem checks that the Result is not Result.DENY first)
-	 **/
-	public boolean placePower()
+	public int getPowerLevel()
 	{
-		IBlockState powerState = GolemItems.blockPowerSource.getDefaultState().withProperty(BlockPowerProvider.POWER, this.powerLevel);
-		return this.golem.worldObj.setBlockState(this.posToAffect, powerState, updateFlag);
+		return this.powerLevel;
 	}
 }

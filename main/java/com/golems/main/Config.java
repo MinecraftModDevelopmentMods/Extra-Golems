@@ -25,7 +25,7 @@ import net.minecraftforge.common.config.Configuration;
 public class Config 
 {	
 	public static final String CATEGORY_OTHER = "_other_";
-	
+
 	public static GolemConfigSet BEDROCK;
 	public static GolemConfigSet BONE;
 	public static GolemConfigSet BOOKSHELF;
@@ -62,7 +62,7 @@ public class Config
 	public static GolemConfigSet TNT;
 	public static GolemConfigSet WOOD;
 	public static GolemConfigSet WOOL;
-	
+
 	public static int paperRecipeOutput;
 	public static boolean bedrockGolemCreativeOnly;
 	public static boolean itemGolemHeadHasGlint;
@@ -75,7 +75,7 @@ public class Config
 		loadOther(config);		
 		config.save();
 	}
-	
+
 	/** Now I can change default attack and health values all from one place **/
 	private static void initGolemConfigSets(Configuration config)
 	{
@@ -116,7 +116,7 @@ public class Config
 		WOOD = new GolemConfigSet(config, "Wooden Golem", 20.0D, 3.0F);
 		WOOL = new GolemConfigSet(config, "Wool Golem", 10.0D, 1.0F);		
 	}
-	
+
 	private static void loadSpecials(Configuration config)
 	{
 		BOOKSHELF.addKey(EntityBookshelfGolem.ALLOW_SPECIAL, true, "Whether this golem can give itself potion effects");
@@ -151,7 +151,7 @@ public class Config
 		STAINED_GLASS.addKey(EntityStainedGlassGolem.DROP_META, -1, -1, 15, "The metadata of stained glass dropped by this golem. Set to -1 to let it be based on current texture");
 		TNT.addKey(EntityTNTGolem.ALLOW_SPECIAL, true, "Whether this golem can explode when fighting or dying");
 	}
-	
+
 	private static void loadOther(Configuration config)
 	{
 		bedrockGolemCreativeOnly = config.getBoolean("Bedrock Golem Creative Only", CATEGORY_OTHER, true, 

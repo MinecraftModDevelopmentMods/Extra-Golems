@@ -30,7 +30,6 @@ public class EntityNetherWartGolem extends GolemBase
 	{
 		super(world, Config.NETHERWART.getBaseAttack(), NETHERWART);	
 		this.setCanSwim(true);
-		
 	}
 
 	@Override

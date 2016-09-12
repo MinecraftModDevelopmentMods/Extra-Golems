@@ -78,8 +78,6 @@ public abstract class GolemColorizedMultiTextured extends GolemColorized
 		if(this.ticksExisted == 2)
 		{
 			this.updateTextureByData(this.getTextureNum());
-			// debug:
-			//System.out.println("Set texture using textureNum = " + this.getTextureNum());
 		}
 	}
 	
@@ -96,16 +94,6 @@ public abstract class GolemColorizedMultiTextured extends GolemColorized
 		super.readEntityFromNBT(nbt);
 		this.setTextureNum(nbt.getByte(NBT_TEXTURE));
 		this.updateTextureByData(this.getTextureNum());
-		// debug:
-		//System.out.println("NBT textureNum = " + this.getTextureNum());
-	}
-	
-	@Override
-	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData data)
-	{
-		this.setTextureNum((byte)this.rand.nextInt(this.colors.length));
-		this.updateTextureByData(this.getTextureNum());
-		return super.onInitialSpawn(difficulty, data);
 	}
 	
 	@Override

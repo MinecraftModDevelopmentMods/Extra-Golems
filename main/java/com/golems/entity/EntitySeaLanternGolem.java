@@ -37,10 +37,10 @@ public class EntitySeaLanternGolem extends GolemLightProvider
 	@Override
 	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel)	
 	{
-		int size = 1 + this.rand.nextInt(2 + lootingLevel);
-		this.addDrop(dropList, new ItemStack(Blocks.SEA_LANTERN, size > 4 ? 4 : size), 100);
-		this.addDrop(dropList, Items.PRISMARINE_SHARD, 0, 1, 3, 4 + lootingLevel * 5);
-		this.addDrop(dropList, Items.PRISMARINE_CRYSTALS, 0, 1, 3, 4 + lootingLevel * 5);
+		int add = lootingLevel > 0 ? 1 : 0;
+		this.addDrop(dropList, Blocks.SEA_LANTERN, 0, 1, 2 + add, 100);
+		this.addDrop(dropList, Items.PRISMARINE_SHARD, 0, 1, 3, 4 + lootingLevel * 10);
+		this.addDrop(dropList, Items.PRISMARINE_CRYSTALS, 0, 1, 3, 4 + lootingLevel * 10);
 	}
  
 	@Override

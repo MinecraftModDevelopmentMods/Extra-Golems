@@ -50,7 +50,7 @@ public class EntityLapisGolem extends GolemBase
 			if(Config.LAPIS.getBoolean(ALLOW_SPECIAL))
 			{
 				Potion potionID = entity.isEntityUndead() ? MobEffects.INSTANT_HEALTH : badEffects[rand.nextInt(badEffects.length)];
-				int len = potionID.isInstant() ? 1 : 20 * (3 + rand.nextInt(6));
+				int len = potionID.isInstant() ? 1 : 20 * (5 + rand.nextInt(9));
 				int amp = potionID.isInstant() ? rand.nextInt(2) : rand.nextInt(3);
 				entity.addPotionEffect(new PotionEffect(potionID, len, amp));
 			}

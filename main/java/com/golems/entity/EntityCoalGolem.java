@@ -49,7 +49,7 @@ public class EntityCoalGolem extends GolemBase
 			final int BLIND_CHANCE = 4;
 			if(Config.COAL.getBoolean(ALLOW_SPECIAL) && entity instanceof EntityLivingBase && this.rand.nextInt(BLIND_CHANCE) == 0)
 			{
-				((EntityLivingBase)entity).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 20 * (1 + rand.nextInt(5)), 1));
+				((EntityLivingBase)entity).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 20 * (3 + rand.nextInt(5)), 0));
 			}
 			return true;
 		}

@@ -2,6 +2,7 @@ package com.golems.events;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 import com.golems.entity.GolemBase;
 
@@ -15,12 +16,18 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 /**
  * This event exists for other mods or addons to handle and modify
  * the Sponge Golem's behavior. It is not handled in Extra Golems.
+ * To modify which blocks count as 'water' you must call 
+ * {@link #setWaterPredicate(Predicate)} and {@link #initAffectedBlockList(int)},
+ * in that order. You can 'add' your liquid to the current predicate by passing
+ * {@code SpongeGolemSoakEvent#getWaterPredicate().and(yourPredicate)} to 
+ * {@link #setWaterPredicate(Predicate)}
  */
 @Event.HasResult
 @Cancelable
 public class SpongeGolemSoakEvent extends Event
 {
-	public List<BlockPos> affectedBlocks;
+	protected List<BlockPos> affectedBlocks;
+	protected Predicate<IBlockState> waterPredicate;
 	
 	public final GolemBase spongeGolem;
 	public final BlockPos spongeGolemPos;
@@ -36,36 +43,57 @@ public class SpongeGolemSoakEvent extends Event
 		this.spongeGolem = golem;
 		this.spongeGolemPos = center;
 		this.range = RADIUS;
-		this.replacesWater = Blocks.AIR.getDefaultState();
-		initAffectedBlockList();
+		this.setReplacementState(Blocks.AIR.getDefaultState());
+		this.setWaterPredicate(new Predicate<IBlockState>()
+		{
+			@Override
+			public boolean test(IBlockState state) 
+			{
+				return state.getMaterial() == Material.WATER || state.getBlock() == Blocks.WATER || state.getBlock() == Blocks.FLOWING_WATER;
+			}	
+		});
+		
+		initAffectedBlockList(RADIUS);
 	}
 	
-	protected void initAffectedBlockList()
+	public void initAffectedBlockList(final int RANGE)
 	{
-		this.affectedBlocks = new ArrayList(this.range * this.range * this.range * 4);
+		this.affectedBlocks = new ArrayList(RANGE * RANGE * RANGE * 4);
+		final int MAX_DIS = RANGE * RANGE;
 		// check sphere around golem to absorb water
-		int x = spongeGolemPos.getX();
-		int y = spongeGolemPos.getY();
-		int z = spongeGolemPos.getZ();
-		for(int i = -range; i <= range; i++)
+		for(int i = -RANGE; i <= RANGE; i++)
 		{
-			for(int j = -range; j <= range; j++)
+			for(int j = -RANGE; j <= RANGE; j++)
 			{
-				for(int k = -range; k <= range; k++)
+				for(int k = -RANGE; k <= RANGE; k++)
 				{
-					if(spongeGolemPos.distanceSq(x + i, y + j, z + k) <= range * range)
+					final BlockPos CURRENT = this.spongeGolemPos.add(i, j, k);
+					if(spongeGolemPos.distanceSq(CURRENT) <= MAX_DIS)
 					{
-						BlockPos pos = new BlockPos(x + i, y + j, z + k);
-						IBlockState state = this.spongeGolem.worldObj.getBlockState(pos);
-
-						if(state.getMaterial() == Material.WATER || state.getBlock() == Blocks.WATER || state.getBlock() == Blocks.FLOWING_WATER)
+						final IBlockState STATE = this.spongeGolem.worldObj.getBlockState(CURRENT);
+						if(this.waterPredicate.test(STATE))
 						{
-							this.affectedBlocks.add(pos);
+							this.affectedBlocks.add(CURRENT);
 						}
 					}
 				}
 			}	
 		}
+	}
+	
+	public List<BlockPos> getPositionList()
+	{
+		return this.affectedBlocks;
+	}
+	
+	public Predicate<IBlockState> getWaterPredicate()
+	{
+		return this.waterPredicate;
+	}
+	
+	public void setWaterPredicate(Predicate<IBlockState> waterPred)
+	{
+		this.waterPredicate = waterPred;
 	}
 	
 	/** Sets the IBlockState that will replace water when this event is finalized **/
@@ -74,15 +102,9 @@ public class SpongeGolemSoakEvent extends Event
 		this.replacesWater = toReplaceWater;
 	}
 	
-	/** Final action of this event -- replaces all blocks in the list with the passed IBlockState **/
-	public boolean replaceWater()
+	public IBlockState getReplacementState()
 	{
-		boolean flag = true;
-		for(BlockPos p : this.affectedBlocks)
-		{
-			flag &= this.spongeGolem.worldObj.setBlockState(p, this.replacesWater, this.updateFlag);
-		}
-		return flag;
+		return this.replacesWater;
 	}
 	
 	public boolean removeBlockPos(BlockPos toRemove)

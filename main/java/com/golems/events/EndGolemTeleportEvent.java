@@ -1,6 +1,7 @@
 package com.golems.events;
 
-import net.minecraft.entity.EntityLivingBase;
+import com.golems.entity.EntityEndstoneGolem;
+
 import net.minecraftforge.event.entity.living.EnderTeleportEvent;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 
@@ -12,8 +13,11 @@ import net.minecraftforge.fml.common.eventhandler.Cancelable;
 @Cancelable
 public class EndGolemTeleportEvent extends EnderTeleportEvent 
 {
-	public EndGolemTeleportEvent(EntityLivingBase entity, double targetX, double targetY, double targetZ, float attackDamage) 
+	public final EntityEndstoneGolem entityGolem;
+	
+	public EndGolemTeleportEvent(EntityEndstoneGolem entity, double targetX, double targetY, double targetZ, float attackDamage) 
 	{
 		super(entity, targetX, targetY, targetZ, attackDamage);
+		this.entityGolem = entity;
 	}
 }

@@ -10,6 +10,7 @@ import com.golems.main.GolemItems;
 import com.golems.util.WeightedItem;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -85,28 +86,35 @@ public class EntityRedstoneGolem extends GolemBase
 	}
 
 	/** Finds air blocks nearby and replaces them with BlockMovingPowerSource **/
-	protected int placePowerNearby() 
-	{
-		List<BlockPos> powerPos = new ArrayList(4);
-		
-		int numPlaced = 0;
+	protected void placePowerNearby() 
+	{		
 		// power 3 layers at golem location
 		for(int k = -1; k < 3; ++k)
 		{	
 			BlockPos at = this.getPosition().up(k);
-			if(this.worldObj.getBlockState(at).getBlock() instanceof BlockPowerProvider) continue;
-			// if the block is air, make it a power block
-			if(this.worldObj.isAirBlock(at))
+			if(this.worldObj.getBlockState(at).getBlock() instanceof BlockPowerProvider) 
+			{
+				continue;
+			}
+			else if(this.worldObj.isAirBlock(at))
 			{
 				RedstoneGolemPowerEvent event = new RedstoneGolemPowerEvent(this, at, this.getPowerOutput(at));
-				MinecraftForge.EVENT_BUS.post(event);
-				if(!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Result.DENY && event.placePower())
+				if(!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Result.DENY)
 				{
-					numPlaced++;
+					this.placePower(event.posToAffect, event.getPowerLevel(), event.updateFlag);
 				}
 			}
 		}
-		return numPlaced;
+	}
+	
+	/**
+	 * Places a BlockPowerProvider at the given location
+	 * @return whether the block was set successfully
+	 **/
+	protected final boolean placePower(final BlockPos POS, final int POWER, final int UPDATE_FLAG)
+	{
+		final IBlockState POWER_STATE = GolemItems.blockPowerSource.getDefaultState().withProperty(BlockPowerProvider.POWER, POWER);
+		return this.worldObj.setBlockState(POS, POWER_STATE, UPDATE_FLAG);
 	}
 
 	/** Override this to check conditions and return correct power level **/

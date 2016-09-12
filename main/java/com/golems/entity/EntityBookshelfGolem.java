@@ -61,8 +61,7 @@ public class EntityBookshelfGolem extends GolemBase
 	@Override
 	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel)
 	{
-		int size = 4 + this.rand.nextInt(6 + lootingLevel);
-		this.addDrop(dropList, new ItemStack(Items.BOOK, size), 100);
+		this.addDrop(dropList, Items.BOOK, 0, 4, 8 + lootingLevel, 100);
 		this.addDrop(dropList, Blocks.PLANKS, 0, 3, 12, 75);
 	}
 

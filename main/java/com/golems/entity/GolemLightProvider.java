@@ -17,12 +17,14 @@ public abstract class GolemLightProvider extends GolemBase
 {	
 	protected EnumLightLevel lightLevel;
 	protected int tickDelay;
+	protected int updateFlag;
 	
 	public GolemLightProvider(World world, float attack, Block pick, EnumLightLevel light)
 	{
 		super(world, attack, pick);
 		this.lightLevel = light;
 		this.tickDelay = 2;
+		this.updateFlag = 2;
 	}
 	
 	public GolemLightProvider(World world, float attack, EnumLightLevel light)
@@ -57,13 +59,13 @@ public abstract class GolemLightProvider extends GolemBase
 				BlockPos pos = new BlockPos(xPos, yPos, zPos);
 				IBlockState state = this.worldObj.getBlockState(pos);
 				Block at = state.getBlock();
-				if(this.worldObj.isAirBlock(pos) || state.getMaterial() == this.lightLevel.getMaterialToReplace())
-				{
-					return this.worldObj.setBlockState(pos, this.lightLevel.getLightBlock().getDefaultState(), 2);
-				}
-				else if(at instanceof BlockLightProvider)
+				if(at instanceof BlockLightProvider)
 				{
 					return false;
+				}
+				else if(this.worldObj.isAirBlock(pos) || state.getMaterial() == this.lightLevel.getMaterialToReplace())
+				{
+					return this.worldObj.setBlockState(pos, this.lightLevel.getLightBlock().getDefaultState(), this.updateFlag);
 				}
 			}
 		}

@@ -5,7 +5,9 @@ import java.util.List;
 import com.golems.events.IceGolemFreezeEvent;
 import com.golems.main.Config;
 import com.golems.util.WeightedItem;
+import com.google.common.base.Function;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
@@ -63,7 +65,7 @@ public class EntityIceGolem extends GolemBase
 				IceGolemFreezeEvent event = new IceGolemFreezeEvent(this, below, Config.ICE.getInt(AOE));
 				if(!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Result.DENY)
 				{
-					event.freezeBlocks();
+					this.freezeBlocks(event.getAffectedPositions(), event.getFunction(), event.updateFlag);
 				}
 			}				
 		}
@@ -111,5 +113,27 @@ public class EntityIceGolem extends GolemBase
 	public SoundEvent getGolemSound() 
 	{
 		return SoundEvents.BLOCK_GLASS_STEP;
+	}
+	
+	/** 
+	 * Usually called after creating and firing a {@link IceGolemFreezeEvent}.
+	 * Iterates through the list of positions and calls {@code apply(IBlockState input)}
+	 * on the passed Function<IBlockState, IBlockState> . 
+	 * @return whether all setBlockState calls were successful.
+	 **/
+	public boolean freezeBlocks(final List<BlockPos> POSITIONS, final Function<IBlockState, IBlockState> FUNCTION, final int UPDATE_FLAG)
+	{		
+		boolean flag = false;
+		for(int i = 0, len = POSITIONS.size(); i < len; i++)
+		{
+			final BlockPos POS = POSITIONS.get(i);
+			final IBlockState CURRENT_STATE = this.worldObj.getBlockState(POS);
+			final IBlockState TO_SET = FUNCTION.apply(CURRENT_STATE);
+			if(TO_SET != null && TO_SET != CURRENT_STATE)
+			{
+				flag &= this.worldObj.setBlockState(POS, TO_SET, UPDATE_FLAG);
+			}
+		}
+		return flag;
 	}
 }

@@ -1,8 +1,11 @@
 package com.golems.util;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import gnu.trove.map.TObjectByteMap;
+import gnu.trove.map.TObjectFloatMap;
+import gnu.trove.map.TObjectIntMap;
+import gnu.trove.map.hash.TObjectByteHashMap;
+import gnu.trove.map.hash.TObjectFloatHashMap;
+import gnu.trove.map.hash.TObjectIntHashMap;
 import net.minecraftforge.common.config.Configuration;
 
 /**
@@ -14,25 +17,36 @@ public class GolemConfigSet
 {	
 	private Configuration config;
 	private String golemName;
+	private String category;
 
-	private Map<String, Object> keys;
+	private TObjectIntMap<String> mapInt;
+	private TObjectFloatMap<String> mapFloat;
+	private TObjectByteMap<String> mapByte; // used as boolean map
+	
 	private boolean canSpawn;
 	private double maxHealth;
 	private float baseAttack;
 	
+	private final boolean DEF_SPAWN;
+	private final double DEF_HEALTH;
+	private final float DEF_ATTACK;
+	
 	// default objects -- methods will return these if the map has no entry
-	private static final Boolean DEF_BOOL = Boolean.valueOf(false);
-	private static final Integer DEF_INT = Integer.valueOf(0);
-	private static final Float DEF_FLOAT = Float.valueOf(0.0F);
+	private static final int DEF_INT = 0;
+	private static final float DEF_FLOAT = 0.0F;
+	private static final boolean DEF_BOOL = false;
 
 	public GolemConfigSet(Configuration configFile, String name, boolean spawn, double health, float attack)
 	{
-		this.keys = new HashMap(4);
+		this.mapInt = new TObjectIntHashMap(1);
+		this.mapFloat = new TObjectFloatHashMap(1);
+		this.mapByte = new TObjectByteHashMap(1);
 		this.config = configFile;
 		this.golemName = name;
-		this.setCanSpawn(spawn);
-		this.setMaxHealth(health);
-		this.setBaseAttack(attack);
+		this.category = this.golemName.toLowerCase().replace(' ', '_');
+		this.DEF_SPAWN = spawn;
+		this.DEF_HEALTH = health;
+		this.DEF_ATTACK = attack;
 		this.loadFromConfig();
 	}
 
@@ -44,110 +58,84 @@ public class GolemConfigSet
 	/** Load some values like spawn permission, health, and attack right away **/
 	public GolemConfigSet loadFromConfig()
 	{
-		String category = this.getCategory();
-		boolean spawn = config.getBoolean("Allow Golem", category, true, 
+		this.canSpawn = config.getBoolean("Allow Golem", this.category, this.DEF_SPAWN, 
 				"Whether the " + golemName + " can be built");
-		double health = config.getFloat("Golem Health", category, (float)this.getMaxHealth(), 0.0F, 999.0F, 
+		this.maxHealth = config.getFloat("Golem Health", this.category, (float)this.DEF_HEALTH, 0.0F, 999.0F, 
 				"Max health for this golem");
-		float attack = config.getFloat("Golem Attack", category, this.getBaseAttack(), 0.0F, 300.0F, 
+		this.baseAttack = config.getFloat("Golem Attack", this.category, this.DEF_ATTACK, 0.0F, 300.0F, 
 				"Base attack damage dealt by this golem");
-		this.setCanSpawn(spawn);
-		this.setMaxHealth(health);
-		this.setBaseAttack(attack);
 		return this;
 	}
 
 	public int addKey(String key, int defaultValue, int min, int max, String comment)
 	{
-		String category = this.getCategory();
-		int value = config.getInt(key, category, defaultValue, min, max, comment);
-		this.keys.put(key, Integer.valueOf(value));
+		int value = config.getInt(key, this.category, defaultValue, min, max, comment);
+		this.mapInt.put(key, value);
 		return value;
 	}
 
 	public float addKey(String key, float defaultValue, float min, float max, String comment)
 	{
-		String category = this.getCategory();
-		float value = config.getFloat(key, category, defaultValue, min, max, comment);
-		this.keys.put(key, Float.valueOf(value));
+		float value = config.getFloat(key, this.category, defaultValue, min, max, comment);
+		this.mapFloat.put(key, value);
 		return value;
 	}
 
 	public boolean addKey(String key, boolean defaultValue, String comment)
 	{
-		String category = this.getCategory();
-		boolean value = config.getBoolean(key, category, defaultValue, comment);
-		this.keys.put(key, Boolean.valueOf(value));
+		boolean value = config.getBoolean(key, this.category, defaultValue, comment);
+		this.mapByte.put(key, value ? (byte)1 : (byte)0);
 		return value;
 	}
 
 	public int getInt(String key)
 	{
-		if(!this.keys.containsKey(key))
+		if(this.mapInt.containsKey(key))
 		{
-			String error = "Did not find an integer value matching '" + key + "' in GolemConfigSet '" + this.golemName + "' - defaulting to " + this.DEF_INT.toString();
-			System.err.print(error);
-			this.keys.put(key, DEF_INT);
-			return this.DEF_INT.intValue();
+			return this.mapInt.get(key);
 		}
-		Object value = this.keys.get(key);
-		if(value instanceof Integer)
+		else
 		{
-			return ((Integer)value).intValue();
+			String error = "Did not find an int value matching '" + key + "' in GolemConfigSet '" + this.golemName + "' - defaulting to " + this.DEF_INT;
+			System.out.println(error);
+			this.mapInt.put(key, DEF_INT);
+			return DEF_INT;
 		}
-		else System.err.print("Expected an Integer to be mapped to '" + key + "' in GolemConfigSet '" + this.golemName + "' but got " + value.toString() + " instead");
-		return this.DEF_INT.intValue();
 	}
 
 	public float getFloat(String key)
 	{
-		if(!this.keys.containsKey(key))
+		if(this.mapFloat.containsKey(key))
 		{
-			String error = "Did not find a float value matching '" + key + "' in GolemConfigSet '" + this.golemName + "' - defaulting to " + this.DEF_FLOAT.toString();
-			System.err.print(error);
-			this.keys.put(key, DEF_FLOAT);
-			return this.DEF_FLOAT.floatValue();
+			return this.mapFloat.get(key);
 		}
-		Object value = this.keys.get(key);
-		if(value instanceof Float)
+		else
 		{
-			return ((Float)value).floatValue();
+			String error = "Did not find a float value matching '" + key + "' in GolemConfigSet '" + this.golemName + "' - defaulting to " + this.DEF_FLOAT;
+			System.out.println(error);
+			this.mapFloat.put(key, DEF_FLOAT);
+			return DEF_FLOAT;
 		}
-		else System.err.print("Expected a Float to be mapped to '" + key + "' in GolemConfigSet '" + this.golemName + "' but got " + value.toString() + " instead");
-		return this.DEF_FLOAT.floatValue();
 	}
 
 	public boolean getBoolean(String key)
 	{
-		if(!this.keys.containsKey(key))
+		if(this.mapByte.containsKey(key))
 		{
-			String error = "Did not find a boolean value matching '" + key + "' in GolemConfigSet '" + this.golemName + "' - defaulting to " + this.DEF_BOOL.toString();
-			System.err.print(error);
-			this.keys.put(key, DEF_BOOL);
-			return this.DEF_BOOL.booleanValue();
+			return this.mapByte.get(key) == (byte)1;
 		}
-		Object value = this.keys.get(key);
-		if(value instanceof Boolean)
+		else
 		{
-			return ((Boolean)value).booleanValue();
+			String error = "Did not find a boolean value matching '" + key + "' in GolemConfigSet '" + this.golemName + "' - defaulting to " + this.DEF_BOOL;
+			System.out.println(error);
+			this.mapByte.put(key, DEF_BOOL ? (byte)1 : (byte)0);
+			return DEF_BOOL;
 		}
-		else System.err.print("Expected a Boolean to be mapped to '" + key + "' in GolemConfigSet '" + this.golemName + "' but got " + value.toString() + " instead");
-		return this.DEF_BOOL.booleanValue();
 	}
-
-	public void setCanSpawn(boolean toSet)
-	{
-		this.canSpawn = toSet;
-	}
-
+	
 	public boolean canSpawn()
 	{
 		return this.canSpawn;
-	}
-
-	public void setMaxHealth(double toSet)
-	{
-		this.maxHealth = toSet;
 	}
 
 	public double getMaxHealth()
@@ -155,19 +143,9 @@ public class GolemConfigSet
 		return this.maxHealth;
 	}
 
-	public void setBaseAttack(float toSet)
-	{
-		this.baseAttack = toSet;
-	}
-
 	public float getBaseAttack()
 	{
 		return this.baseAttack;
-	}
-
-	public String getCategory()
-	{
-		return this.golemName.toLowerCase().replace(' ', '_');
 	}
 
 	public Configuration getConfig()
