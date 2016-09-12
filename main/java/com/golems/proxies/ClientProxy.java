@@ -55,6 +55,24 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 public class ClientProxy extends CommonProxy 
 {	
+	public static final IRenderFactory<GolemBase> FACTORY_TEXTURED_GOLEM = new IRenderFactory<GolemBase>() 
+	{
+		@Override
+		public Render<? super GolemBase> createRenderFor(RenderManager manager) 
+		{
+			return new RenderGolem(manager);
+		}
+	};
+	
+	public static final IRenderFactory<GolemColorized> FACTORY_COLORED_GOLEM = new IRenderFactory<GolemColorized>() 
+	{
+		@Override
+		public Render<? super GolemColorized> createRenderFor(RenderManager manager) 
+		{
+			return new RenderColoredGolem(manager);
+		}
+	};
+	
 	@Override
 	public void registerEvents()
 	{
@@ -118,34 +136,21 @@ public class ClientProxy extends CommonProxy
 	/**	Registers an entity with the RenderGolem rendering class */
 	public static void registerTextured(Class<? extends GolemBase> golem)
 	{
-		RenderingRegistry.registerEntityRenderingHandler(golem, new IRenderFactory<GolemBase>() 
-		{
-			@Override
-			public Render<? super GolemBase> createRenderFor(RenderManager manager) 
-			{
-				return new RenderGolem(manager);
-			}
-		});
+		RenderingRegistry.registerEntityRenderingHandler(golem, FACTORY_TEXTURED_GOLEM);
 	}
 	
 	public static void registerColorized(Class<? extends GolemColorized> golem)
 	{
-		RenderingRegistry.registerEntityRenderingHandler(golem, new IRenderFactory<GolemColorized>() 
-		{
-			@Override
-			public Render<? super GolemColorized> createRenderFor(RenderManager manager) 
-			{
-				return new RenderColoredGolem(manager);
-			}
-		});
+		RenderingRegistry.registerEntityRenderingHandler(golem, FACTORY_COLORED_GOLEM);
 	}
 	
 	private void registerRender(Item i, String name, int... meta)
 	{
 		if(meta.length < 1) meta = new int[] {0};
+		final ModelResourceLocation MRL = new ModelResourceLocation(name, "inventory");
 		for(int m : meta)
 		{
-			ModelLoader.setCustomModelResourceLocation(i, m, new ModelResourceLocation(name, "inventory"));
+			ModelLoader.setCustomModelResourceLocation(i, m, MRL);
 		}
 	}
 

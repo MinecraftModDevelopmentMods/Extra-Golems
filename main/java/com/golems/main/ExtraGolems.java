@@ -50,7 +50,7 @@ public class ExtraGolems
 		}
 		if(Loader.isModLoaded(ModIds.TOP))
 		{
-			FMLInterModComms.sendFunctionMessage("theoneprobe", "getTheOneProbe", "com.golems.integration.theoneprobe.TOPExtraGolems$GetTheOneProbe");
+			FMLInterModComms.sendFunctionMessage(ModIds.TOP, "getTheOneProbe", "com.golems.integration.theoneprobe.TOPExtraGolems$GetTheOneProbe");
 		}
 	}
 	
