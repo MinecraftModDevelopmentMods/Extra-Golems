@@ -160,7 +160,7 @@ public class EntityEndstoneGolem extends GolemBase
             {
                 if (this.getAITarget() instanceof EntityMob)
                 {
-                    if (this.getAITarget().getDistanceSqToEntity(this) < 16.0D)
+                    if (this.getAITarget().getDistanceSqToEntity(this) < 16.0D && (rand.nextInt(5) == 0 || this.getAITarget().getAITarget() == this))
                     {
                         this.teleportRandomly();
                     }

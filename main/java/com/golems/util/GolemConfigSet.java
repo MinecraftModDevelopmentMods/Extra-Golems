@@ -1,9 +1,10 @@
 package com.golems.util;
 
-import gnu.trove.map.TObjectByteMap;
+import java.util.HashSet;
+import java.util.Set;
+
 import gnu.trove.map.TObjectFloatMap;
 import gnu.trove.map.TObjectIntMap;
-import gnu.trove.map.hash.TObjectByteHashMap;
 import gnu.trove.map.hash.TObjectFloatHashMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
 import net.minecraftforge.common.config.Configuration;
@@ -21,7 +22,7 @@ public class GolemConfigSet
 
 	private TObjectIntMap<String> mapInt;
 	private TObjectFloatMap<String> mapFloat;
-	private TObjectByteMap<String> mapByte; // used as boolean map
+	private Set<String> mapBoolean;
 	
 	private boolean canSpawn;
 	private double maxHealth;
@@ -34,13 +35,12 @@ public class GolemConfigSet
 	// default objects -- methods will return these if the map has no entry
 	private static final int DEF_INT = 0;
 	private static final float DEF_FLOAT = 0.0F;
-	private static final boolean DEF_BOOL = false;
 
 	public GolemConfigSet(Configuration configFile, String name, boolean spawn, double health, float attack)
 	{
 		this.mapInt = new TObjectIntHashMap(1);
 		this.mapFloat = new TObjectFloatHashMap(1);
-		this.mapByte = new TObjectByteHashMap(1);
+		this.mapBoolean = new HashSet(1);
 		this.config = configFile;
 		this.golemName = name;
 		this.category = this.golemName.toLowerCase().replace(' ', '_');
@@ -84,7 +84,10 @@ public class GolemConfigSet
 	public boolean addKey(String key, boolean defaultValue, String comment)
 	{
 		boolean value = config.getBoolean(key, this.category, defaultValue, comment);
-		this.mapByte.put(key, value ? (byte)1 : (byte)0);
+		if(value)
+		{
+			this.mapBoolean.add(key);
+		}
 		return value;
 	}
 
@@ -120,17 +123,7 @@ public class GolemConfigSet
 
 	public boolean getBoolean(String key)
 	{
-		if(this.mapByte.containsKey(key))
-		{
-			return this.mapByte.get(key) == (byte)1;
-		}
-		else
-		{
-			String error = "Did not find a boolean value matching '" + key + "' in GolemConfigSet '" + this.golemName + "' - defaulting to " + this.DEF_BOOL;
-			System.out.println(error);
-			this.mapByte.put(key, DEF_BOOL ? (byte)1 : (byte)0);
-			return DEF_BOOL;
-		}
+		return this.mapBoolean.contains(key);
 	}
 	
 	public boolean canSpawn()
