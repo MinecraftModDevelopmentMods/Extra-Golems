@@ -118,7 +118,7 @@ public class EntityIceGolem extends GolemBase
 	/** 
 	 * Usually called after creating and firing a {@link IceGolemFreezeEvent}.
 	 * Iterates through the list of positions and calls {@code apply(IBlockState input)}
-	 * on the passed Function<IBlockState, IBlockState> . 
+	 * on the passed {@code Function<IBlockState, IBlockState>} . 
 	 * @return whether all setBlockState calls were successful.
 	 **/
 	public boolean freezeBlocks(final List<BlockPos> POSITIONS, final Function<IBlockState, IBlockState> FUNCTION, final int UPDATE_FLAG)
