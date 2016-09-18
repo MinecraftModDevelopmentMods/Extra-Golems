@@ -8,7 +8,6 @@ import com.golems.util.WeightedItem;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -30,7 +29,7 @@ public class EntityMagmaGolem extends GolemLightProvider
 
 	public EntityMagmaGolem(World world) 
 	{
-		super(world, Config.MAGMA.getBaseAttack(), MAGMA, EnumLightLevel.HALF);
+		super(world, Config.MAGMA.getBaseAttack(), new ItemStack(MAGMA), LightLevel.HALF);
 		this.setImmuneToFire(true);
 		this.ticksStandingStill = 0;
 		this.stepHeight = 1.0F;

@@ -1,5 +1,6 @@
 package com.golems.blocks;
 
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
@@ -10,14 +11,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockPowerProvider extends BlockLightProvider 
+public class BlockPowerProvider extends BlockUtility implements ITileEntityProvider 
 {	
-	public static final IProperty POWER = PropertyInteger.create("power", 0, 15);
+	public static final PropertyInteger POWER = PropertyInteger.create("power", 0, 15);
 	
 	public BlockPowerProvider()
     {
-        super(0);
-        setDefaultState(blockState.getBaseState().withProperty(POWER, 0));  
+        super();
+        setDefaultState(blockState.getBaseState().withProperty(POWER, Integer.valueOf(0)));  
     }
    
     @Override
@@ -29,7 +30,7 @@ public class BlockPowerProvider extends BlockLightProvider
     @Override
     public int getMetaFromState(IBlockState state)
     {
-        return ((Integer)state.getValue(POWER)).intValue();
+        return state.getValue(POWER).intValue();
     }
 
     @Override

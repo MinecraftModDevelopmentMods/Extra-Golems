@@ -23,8 +23,7 @@ public class GolemItems
 	public static Item spawnBedrockGolem;	
 	
 	public static Block golemHead;				
-	public static Block blockLightSourceFull;	
-	public static Block blockLightSourceHalf;	
+	public static Block blockLightSource;	
 	public static Block blockPowerSource;	
 	
 	public static ItemBlock ibGolemHead;
@@ -41,16 +40,14 @@ public class GolemItems
 		register(golemPaper, "golem_paper");
 		register(spawnBedrockGolem, "spawn_bedrock_golem");
 		registerWithItemBlock(golemHead, ibGolemHead, "golem_head");
-		register(blockLightSourceFull, "light_provider_full");
-		register(blockLightSourceHalf, "light_provider_half");
+		register(blockLightSource, "light_provider_full");
 		register(blockPowerSource, "power_provider_all");
 	}
 
 	private static void initBlocks()
 	{
 		golemHead = new BlockGolemHead().setHardness(0.6F);
-		blockLightSourceFull = new BlockLightProvider(1.0F);
-		blockLightSourceHalf = new BlockLightProvider(0.5F);
+		blockLightSource = new BlockLightProvider();
 		blockPowerSource = new BlockPowerProvider();
 	}
 	

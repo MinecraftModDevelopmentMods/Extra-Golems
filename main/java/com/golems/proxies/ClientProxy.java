@@ -1,5 +1,7 @@
 package com.golems.proxies;
 
+import com.golems.blocks.BlockLightProvider;
+import com.golems.blocks.BlockPowerProvider;
 import com.golems.entity.EntityBedrockGolem;
 import com.golems.entity.EntityBoneGolem;
 import com.golems.entity.EntityBookshelfGolem;
@@ -44,6 +46,7 @@ import com.golems.renders.RenderColoredGolem;
 import com.golems.renders.RenderGolem;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.init.Blocks;
@@ -83,6 +86,9 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public void preInitRenders()
 	{
+		// blocks
+		ModelLoader.setCustomStateMapper(GolemItems.blockPowerSource, new StateMap.Builder().ignore(BlockPowerProvider.POWER).build());
+		ModelLoader.setCustomStateMapper(GolemItems.blockLightSource, new StateMap.Builder().ignore(BlockLightProvider.LIGHT).build());
 		// itemblocks
 		registerRender(GolemItems.ibGolemHead, Blocks.PUMPKIN.getRegistryName().toString());
 		// items

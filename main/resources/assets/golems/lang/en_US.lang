@@ -5,7 +5,6 @@ tile.golem_head.name=Golem Head
 
 # These will only show up in something like JEI
 tile.light_provider_full.name=Dynamic Golem Light (Full)
-tile.light_provider_half.name=Dynamic Golem Light (Half)
 tile.power_provider_full.name=Dynamic Golem Power Source
 
 # Entity names

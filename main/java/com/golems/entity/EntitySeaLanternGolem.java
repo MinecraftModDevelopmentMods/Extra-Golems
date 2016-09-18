@@ -5,6 +5,7 @@ import java.util.List;
 import com.golems.main.Config;
 import com.golems.util.WeightedItem;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -18,7 +19,7 @@ public class EntitySeaLanternGolem extends GolemLightProvider
 {			
 	public EntitySeaLanternGolem(World world) 
 	{
-		super(world, Config.SEA_LANTERN.getBaseAttack(), Blocks.SEA_LANTERN, EnumLightLevel.WATER_FULL);
+		super(world, Config.SEA_LANTERN.getBaseAttack(), new ItemStack(Blocks.SEA_LANTERN), LightLevel.of(1.0F, Material.AIR, Material.WATER));
 		this.tickDelay = 1;
 	}
 	

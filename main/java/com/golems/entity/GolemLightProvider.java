@@ -1,12 +1,15 @@
 package com.golems.entity;
 
+import java.util.Set;
+
 import com.golems.blocks.BlockLightProvider;
 import com.golems.main.GolemItems;
+import com.google.common.collect.Sets;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -15,11 +18,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class GolemLightProvider extends GolemBase 
 {	
-	protected EnumLightLevel lightLevel;
+	protected LightLevel lightLevel;
 	protected int tickDelay;
 	protected int updateFlag;
 	
-	public GolemLightProvider(World world, float attack, Block pick, EnumLightLevel light)
+	public GolemLightProvider(World world, float attack, ItemStack pick, LightLevel light)
 	{
 		super(world, attack, pick);
 		this.lightLevel = light;
@@ -27,6 +30,24 @@ public abstract class GolemLightProvider extends GolemBase
 		this.updateFlag = 2;
 	}
 	
+	public GolemLightProvider(World world, float attack, LightLevel light)
+	{
+		this(world, attack, new ItemStack(GolemItems.golemHead), light);
+	}
+	
+	/**
+	 * @deprecated Use {@link #GolemLightProvider(World, float, ItemStack, LightLevel)}
+	 * REMOVE THIS CONSTRUCTOR IN 1.11 UPDATE
+	 **/
+	public GolemLightProvider(World world, float attack, Block pick, EnumLightLevel light)
+	{
+		this(world, attack, new ItemStack(pick), new LightLevel(light.getBrightness(), light.getMaterialToReplace()));
+	}
+	
+	/**
+	 * @deprecated Use {@link #GolemLightProvider(World, float, LightLevel)}
+	 * REMOVE THIS CONSTRUCTOR IN 1.11 UPDATE
+	 **/
 	public GolemLightProvider(World world, float attack, EnumLightLevel light)
 	{
 		this(world, attack, GolemItems.golemHead, light);
@@ -63,9 +84,9 @@ public abstract class GolemLightProvider extends GolemBase
 				{
 					return false;
 				}
-				else if(this.worldObj.isAirBlock(pos) || state.getMaterial() == this.lightLevel.getMaterialToReplace())
+				else if(this.worldObj.isAirBlock(pos) || this.lightLevel.canReplaceMaterial(state.getMaterial()))
 				{
-					return this.worldObj.setBlockState(pos, this.lightLevel.getLightBlock().getDefaultState(), this.updateFlag);
+					return this.worldObj.setBlockState(pos, this.lightLevel.getLightState(), this.updateFlag);
 				}
 			}
 		}
@@ -85,8 +106,59 @@ public abstract class GolemLightProvider extends GolemBase
 	{
 		return this.lightLevel.getBrightness();
 	}
+	
+	public static class LightLevel
+	{
+		public static final LightLevel FULL = LightLevel.of(1.0F);
+		public static final LightLevel HALF = LightLevel.of(0.5F);
+		
+		private final int lightRange;
+		private final float light;
+		private final Set<Material> replaceable;
+		
+		public LightLevel(float brightness, Material... canReplace)
+		{
+			this.lightRange = (int)(15.0F * brightness);
+			this.light = brightness;
+			if(canReplace != null && canReplace.length > 0)
+			{
+				this.replaceable = Sets.newHashSet(canReplace);
+			}
+			else this.replaceable = Sets.newHashSet(Material.AIR);
+		}
+		
+		public IBlockState getLightState()
+		{
+			return GolemItems.blockLightSource.getDefaultState().withProperty(BlockLightProvider.LIGHT, this.lightRange);
+		}
+		
+		public int getLightValue()
+		{
+			return this.lightRange;
+		}
+		
+		public float getBrightness()
+		{
+			return this.light;
+		}
+		
+		public boolean canReplaceMaterial(Material m)
+		{
+			return this.replaceable.contains(m);
+		}
+		
+		public static LightLevel of(float brightness, Material... materials)
+		{
+			return new LightLevel(brightness, materials);
+		}
+	}
 
-	/** Allows the golem to emit different levels of light **/
+	/** 
+	 * Allows the golem to emit different levels of light.
+	 * @deprecated use {@link LightLevel}
+	 * REMOVE THIS ENUM IN 1.11 UPDATE
+	 **/
+	@Deprecated
 	public static enum EnumLightLevel
 	{
 		HALF(0.5F, Material.AIR),
@@ -94,23 +166,25 @@ public abstract class GolemLightProvider extends GolemBase
 		WATER_HALF(0.5F, Material.WATER),
 		WATER_FULL(1.0F, Material.WATER);
 		
+		private final int lightRange;
 		private final float light;
 		private final Material replaceable;
 		
 		private EnumLightLevel(float brightness, Material canReplace)
 		{
+			this.lightRange = (int)(15.0F * brightness);
 			this.light = brightness;
 			this.replaceable = canReplace;
 		}
 		
-		public Block getLightBlock()
+		public IBlockState getLightBlock()
 		{
-			switch(this)
-			{
-			case FULL: case WATER_FULL:	return GolemItems.blockLightSourceFull;
-			case HALF: case WATER_HALF:	return GolemItems.blockLightSourceHalf;
-			}
-			return Blocks.AIR;
+			return GolemItems.blockLightSource.getDefaultState().withProperty(BlockLightProvider.LIGHT, this.lightRange);
+		}
+		
+		public int getLightValue()
+		{
+			return this.lightRange;
 		}
 		
 		public float getBrightness()
