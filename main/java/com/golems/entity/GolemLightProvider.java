@@ -1,6 +1,6 @@
 package com.golems.entity;
 
-import java.util.Set;
+import java.util.HashSet;
 
 import com.golems.blocks.BlockLightProvider;
 import com.golems.main.GolemItems;
@@ -79,12 +79,11 @@ public abstract class GolemLightProvider extends GolemBase
 				int yPos = y + k + 1;
 				BlockPos pos = new BlockPos(xPos, yPos, zPos);
 				IBlockState state = this.worldObj.getBlockState(pos);
-				Block at = state.getBlock();
-				if(at instanceof BlockLightProvider)
+				if(state.getBlock() instanceof BlockLightProvider)
 				{
 					return false;
 				}
-				else if(this.worldObj.isAirBlock(pos) || this.lightLevel.canReplaceMaterial(state.getMaterial()))
+				else if(this.lightLevel.canReplace(state))
 				{
 					return this.worldObj.setBlockState(pos, this.lightLevel.getLightState(), this.updateFlag);
 				}
@@ -114,7 +113,7 @@ public abstract class GolemLightProvider extends GolemBase
 		
 		private final int lightRange;
 		private final float light;
-		private final Set<Material> replaceable;
+		private final HashSet<Material> replaceable;
 		
 		public LightLevel(float brightness, Material... canReplace)
 		{
@@ -142,9 +141,9 @@ public abstract class GolemLightProvider extends GolemBase
 			return this.light;
 		}
 		
-		public boolean canReplaceMaterial(Material m)
+		public boolean canReplace(IBlockState state)
 		{
-			return this.replaceable.contains(m);
+			return this.replaceable.contains(state.getMaterial());
 		}
 		
 		public static LightLevel of(float brightness, Material... materials)
