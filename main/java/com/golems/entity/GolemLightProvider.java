@@ -37,7 +37,7 @@ public abstract class GolemLightProvider extends GolemBase
 	
 	/**
 	 * @deprecated Use {@link #GolemLightProvider(World, float, ItemStack, LightLevel)}
-	 * REMOVE THIS CONSTRUCTOR IN 1.11 UPDATE
+	 * REMOVE THIS CONSTRUCTOR IN NEXT MAJOR UPDATE
 	 **/
 	public GolemLightProvider(World world, float attack, Block pick, EnumLightLevel light)
 	{
@@ -46,7 +46,7 @@ public abstract class GolemLightProvider extends GolemBase
 	
 	/**
 	 * @deprecated Use {@link #GolemLightProvider(World, float, LightLevel)}
-	 * REMOVE THIS CONSTRUCTOR IN 1.11 UPDATE
+	 * REMOVE THIS CONSTRUCTOR IN NEXT MAJOR UPDATE
 	 **/
 	public GolemLightProvider(World world, float attack, EnumLightLevel light)
 	{
@@ -155,7 +155,7 @@ public abstract class GolemLightProvider extends GolemBase
 	/** 
 	 * Allows the golem to emit different levels of light.
 	 * @deprecated use {@link LightLevel}
-	 * REMOVE THIS ENUM IN 1.11 UPDATE
+	 * REMOVE THIS ENUM IN NEXT MAJOR UPDATE
 	 **/
 	@Deprecated
 	public static enum EnumLightLevel
