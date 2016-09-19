@@ -18,7 +18,7 @@ public class EntityGlowstoneGolem extends GolemLightProvider
 {			
 	public EntityGlowstoneGolem(World world) 
 	{
-		super(world, Config.GLOWSTONE.getBaseAttack(), new ItemStack(Blocks.GLOWSTONE), LightLevel.FULL);
+		super(world, Config.GLOWSTONE.getBaseAttack(), new ItemStack(Blocks.GLOWSTONE), LightManager.FULL);
 		this.setCanTakeFallDamage(true);
 		this.isImmuneToFire = true;
 	}

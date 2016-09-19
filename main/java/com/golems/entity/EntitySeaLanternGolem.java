@@ -16,10 +16,12 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
 public class EntitySeaLanternGolem extends GolemLightProvider
-{			
+{		
+	public static final LightManager WATER_LIGHT = new LightManager(0.987F, 2, Material.AIR, Material.WATER);
+	
 	public EntitySeaLanternGolem(World world) 
 	{
-		super(world, Config.SEA_LANTERN.getBaseAttack(), new ItemStack(Blocks.SEA_LANTERN), LightLevel.of(1.0F, Material.AIR, Material.WATER));
+		super(world, Config.SEA_LANTERN.getBaseAttack(), new ItemStack(Blocks.SEA_LANTERN), WATER_LIGHT);
 		this.tickDelay = 1;
 	}
 	

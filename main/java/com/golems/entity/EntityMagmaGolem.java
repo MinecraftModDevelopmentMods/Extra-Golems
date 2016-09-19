@@ -29,7 +29,7 @@ public class EntityMagmaGolem extends GolemLightProvider
 
 	public EntityMagmaGolem(World world) 
 	{
-		super(world, Config.MAGMA.getBaseAttack(), new ItemStack(MAGMA), LightLevel.HALF);
+		super(world, Config.MAGMA.getBaseAttack(), new ItemStack(MAGMA), LightManager.HALF);
 		this.setImmuneToFire(true);
 		this.ticksStandingStill = 0;
 		this.stepHeight = 1.0F;
