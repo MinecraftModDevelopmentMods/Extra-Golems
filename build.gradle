@@ -13,6 +13,11 @@ buildscript {
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: "maven-publish"
+
+javadoc {
+    failOnError = false
+}
 
 /*
 // for people who want stable - not yet functional for MC 1.8.8 - we require the forgegradle 2.1 snapshot
@@ -20,7 +25,7 @@ plugins {
     id "net.minecraftforge.gradle.forge" version "2.0.2"
 }
 */
-version = "6.02"
+version = "6.02.1"
 group= "com.golems" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "ExtraGolems[1.10.2]"
 
@@ -34,6 +39,7 @@ minecraft {
 
 repositories {
     mavenCentral()
+    maven { url = "https://maven.mcmoddev.com/" }
     maven { url = "http://maven.tterrag.com" }
 	maven { url = "http://mobiusstrip.eu/maven" }
 }
@@ -62,3 +68,49 @@ processResources
         exclude 'mcmod.info'
     }
 }
+
+task deobfJar(type: Jar) {
+    classifier = "deobf"
+    from sourceSets.main.output
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = "javadoc"
+    from javadoc.getDestinationDir()
+}
+
+artifacts {
+    archives deobfJar
+    archives sourceJar
+    archives javadocJar
+}
+/*
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId project.group
+            artifactId project.archivesBaseName
+            version project.version
+            from components.java
+            artifact sourceJar {
+                classifier "sources"
+            }
+            artifact deobfJar {
+                classifier "deobf"
+            }
+            artifact javadocJar {
+                classifier "javadoc"
+            }
+        }
+    }
+    repositories {
+        maven {
+            credentials {
+                username secret.username
+                password secret.password
+            }
+            url secret.url
+        }
+    }
+}
+*/
