@@ -25,10 +25,10 @@ group= "com.golems" // http://maven.apache.org/guides/mini/guide-naming-conventi
 archivesBaseName = "ExtraGolems[1.10.2]"
 
 minecraft {
-    version = "1.10.2-12.18.1.2076"
+    version = "1.10.2-12.18.3.2185"
     runDir = "run"
 
-    mappings = "snapshot_20160518"
+    mappings = "stable_29"
     makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 }
 
