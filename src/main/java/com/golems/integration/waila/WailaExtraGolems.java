@@ -2,40 +2,17 @@ package com.golems.integration.waila;
 
 import java.util.List;
 
-import com.golems.entity.EntityBedrockGolem;
-import com.golems.entity.EntityBookshelfGolem;
-import com.golems.entity.EntityCoalGolem;
-import com.golems.entity.EntityCraftingGolem;
-import com.golems.entity.EntityEndstoneGolem;
-import com.golems.entity.EntityIceGolem;
-import com.golems.entity.EntityLapisGolem;
-import com.golems.entity.EntityLeafGolem;
-import com.golems.entity.EntityMagmaGolem;
-import com.golems.entity.EntityMelonGolem;
-import com.golems.entity.EntityMushroomGolem;
-import com.golems.entity.EntityNetherBrickGolem;
-import com.golems.entity.EntityNetherWartGolem;
-import com.golems.entity.EntityRedstoneGolem;
-import com.golems.entity.EntitySlimeGolem;
-import com.golems.entity.EntitySpongeGolem;
-import com.golems.entity.EntityTNTGolem;
-import com.golems.entity.GolemBase;
-import com.golems.entity.GolemLightProvider;
-import com.golems.entity.GolemMultiTextured;
+import com.golems.entity.*;
 import com.golems.integration.GolemDescriptionManager;
 import com.golems.integration.ModIds;
-import com.golems.main.Config;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaEntityAccessor;
 import mcp.mobius.waila.api.IWailaEntityProvider;
 import mcp.mobius.waila.api.IWailaRegistrar;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 

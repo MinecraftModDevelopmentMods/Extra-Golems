@@ -47,6 +47,7 @@ public class EntityBedrockGolem extends GolemBase
     }
 	
 	@SideOnly(Side.CLIENT)
+	@Override
     public boolean canRenderOnFire()
     {
         return false;
@@ -61,10 +62,10 @@ public class EntityBedrockGolem extends GolemBase
 			if (itemstack != null && itemstack.getItem() == GolemItems.spawnBedrockGolem)
 			{		
 				player.swingArm(hand);
-				if(!this.worldObj.isRemote)
+				if(!this.world.isRemote)
 				{
 					this.setDead();
-				} else ItemBedrockGolem.spawnParticles(this.worldObj, this.posX - 0.5D, this.posY + 0.1D, this.posZ - 0.5D, 0.1D);
+				} else ItemBedrockGolem.spawnParticles(this.world, this.posX - 0.5D, this.posY + 0.1D, this.posZ - 0.5D, 0.1D);
 			}
 		}
 

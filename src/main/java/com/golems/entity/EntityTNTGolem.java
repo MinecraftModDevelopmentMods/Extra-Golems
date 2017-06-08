@@ -7,7 +7,6 @@ import com.golems.util.WeightedItem;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -95,15 +94,15 @@ public class EntityTNTGolem extends GolemBase
 		{
 			this.motionX = this.motionZ = 0;
 			this.fuseTimer--;
-			if(this.worldObj instanceof WorldServer)
+			if(this.world instanceof WorldServer)
 			{
 				for (int i = 0; i < 2; i++)
 				{
-					this.worldObj.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX, this.posY + 2.0D, this.posZ, 0.0D, 0.0D, 0.0D);
-					this.worldObj.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX + 0.75D, this.posY + 1.0D + rand.nextDouble() * 2, this.posZ + 0.75D, 0.5 * (0.5D - rand.nextDouble()), 0.0D, 0.5 * (0.5D - rand.nextDouble()));
-					this.worldObj.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX + 0.75D, this.posY + 1.0D + rand.nextDouble() * 2, this.posZ - 0.75D, 0.5 * (0.5D - rand.nextDouble()), 0.0D, 0.5 * (0.5D - rand.nextDouble()));
-					this.worldObj.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX - 0.75D, this.posY + 1.0D + rand.nextDouble() * 2, this.posZ + 0.75D, 0.5 * (0.5D - rand.nextDouble()), 0.0D, 0.5 * (0.5D - rand.nextDouble()));
-					this.worldObj.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX - 0.75D, this.posY + 1.0D + rand.nextDouble() * 2, this.posZ - 0.75D, 0.5 * (0.5D - rand.nextDouble()), 0.0D, 0.5 * (0.5D - rand.nextDouble()));
+					this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX, this.posY + 2.0D, this.posZ, 0.0D, 0.0D, 0.0D);
+					this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX + 0.75D, this.posY + 1.0D + rand.nextDouble() * 2, this.posZ + 0.75D, 0.5 * (0.5D - rand.nextDouble()), 0.0D, 0.5 * (0.5D - rand.nextDouble()));
+					this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX + 0.75D, this.posY + 1.0D + rand.nextDouble() * 2, this.posZ - 0.75D, 0.5 * (0.5D - rand.nextDouble()), 0.0D, 0.5 * (0.5D - rand.nextDouble()));
+					this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX - 0.75D, this.posY + 1.0D + rand.nextDouble() * 2, this.posZ + 0.75D, 0.5 * (0.5D - rand.nextDouble()), 0.0D, 0.5 * (0.5D - rand.nextDouble()));
+					this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX - 0.75D, this.posY + 1.0D + rand.nextDouble() * 2, this.posZ - 0.75D, 0.5 * (0.5D - rand.nextDouble()), 0.0D, 0.5 * (0.5D - rand.nextDouble()));
 				}
 			}
 			if(this.fuseTimer <= 0)
@@ -143,10 +142,10 @@ public class EntityTNTGolem extends GolemBase
 	{
 		if (itemstack != null && itemstack.getItem() == Items.FLINT_AND_STEEL)
 		{	
-			this.worldObj.playSound(player, this.posX, this.posY, this.posZ, SoundEvents.ITEM_FLINTANDSTEEL_USE, this.getSoundCategory(), 1.0F, this.rand.nextFloat() * 0.4F + 0.8F);
+			this.world.playSound(player, this.posX, this.posY, this.posZ, SoundEvents.ITEM_FLINTANDSTEEL_USE, this.getSoundCategory(), 1.0F, this.rand.nextFloat() * 0.4F + 0.8F);
 			player.swingArm(hand);
 
-			if(!this.worldObj.isRemote)
+			if(!this.world.isRemote)
 			{
 				this.setFire(Math.floorDiv(this.FUSE_LEN, 20));
 				this.ignite();
@@ -198,11 +197,11 @@ public class EntityTNTGolem extends GolemBase
 	{
 		if(this.allowedToExplode)
 		{
-			if(!this.worldObj.isRemote)
+			if(!this.world.isRemote)
 			{
-				boolean flag = this.worldObj.getGameRules().getBoolean("mobGriefing");
+				boolean flag = this.world.getGameRules().getBoolean("mobGriefing");
 				float range = this.MAX_EXPLOSION_RAD > this.MIN_EXPLOSION_RAD ? rand.nextInt(MAX_EXPLOSION_RAD - MIN_EXPLOSION_RAD) : this.MIN_EXPLOSION_RAD;
-				this.worldObj.createExplosion(this, this.posX, this.posY, this.posZ, range, flag);
+				this.world.createExplosion(this, this.posX, this.posY, this.posZ, range, flag);
 				this.setDead();
 			}
 		}

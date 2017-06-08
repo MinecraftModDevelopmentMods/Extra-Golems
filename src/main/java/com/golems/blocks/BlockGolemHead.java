@@ -34,7 +34,7 @@ public class BlockGolemHead extends BlockHorizontal
 	}
 
 	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
 	{
 		return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
 	}
@@ -103,7 +103,7 @@ public class BlockGolemHead extends BlockHorizontal
 					EntitySnowman entitysnowman = new EntitySnowman(world);
 					System.out.print("[Extra Golems]: Building regular boring Snow Golem\n");
 					entitysnowman.setLocationAndAngles((double)x + 0.5D, (double)y - 1.95D, (double)z + 0.5D, 0.0F, 0.0F);
-					world.spawnEntityInWorld(entitysnowman);
+					world.spawnEntity(entitysnowman);
 				}
 
 				ItemBedrockGolem.spawnParticles(world, x + 0.5D, y - 1.5D, z + 0.5D, 0.2D);
@@ -123,7 +123,7 @@ public class BlockGolemHead extends BlockHorizontal
 						System.out.print("[Extra Golems]: Building regular boring Iron Golem\n");
 						golem.setPlayerCreated(true);
 						golem.setLocationAndAngles((double)x + 0.5D, (double)y - 1.95D, (double)z + 0.5D, 0.0F, 0.0F);
-						world.spawnEntityInWorld(golem);
+						world.spawnEntity(golem);
 						return;
 					}				
 
@@ -143,7 +143,7 @@ public class BlockGolemHead extends BlockHorizontal
 					System.out.print("[Extra Golems]: Building golem " + golem.toString() + "\n");
 					golem.setPlayerCreated(true);
 					golem.setLocationAndAngles((double)x + 0.5D, (double)y - 1.95D, (double)z + 0.5D, 0.0F, 0.0F);
-					world.spawnEntityInWorld(golem);
+					world.spawnEntity(golem);
 				} 
 			}
 		}

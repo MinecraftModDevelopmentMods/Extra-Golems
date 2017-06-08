@@ -18,9 +18,9 @@ public class RenderGolem extends RenderLiving<GolemBase>
 	}
 
 	@Override
-	protected void rotateCorpse(GolemBase golem, float p_77043_2_, float p_77043_3_, float partialTicks)
+	protected void applyRotations(GolemBase golem, float p_77043_2_, float p_77043_3_, float partialTicks)
 	{
-		super.rotateCorpse(golem, p_77043_2_, p_77043_3_, partialTicks);
+		super.applyRotations(golem, p_77043_2_, p_77043_3_, partialTicks);
 
 		if ((double)golem.limbSwingAmount >= 0.01D)
 		{

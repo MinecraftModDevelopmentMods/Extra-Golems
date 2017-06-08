@@ -22,7 +22,7 @@ public class EntityMagmaGolem extends GolemLightProvider
 	public static final String ALLOW_FIRE_SPECIAL = "Allow Special: Burn Enemies";
 	public static final String ALLOW_LAVA_SPECIAL = "Allow Special: Melt Cobblestone";
 	public static final String MELT_DELAY = "Melting Delay";
-	public static Block MAGMA = Blocks.field_189877_df;
+	public static Block MAGMA = Blocks.MAGMA;
 	
 	/** Golem should stand in one spot for number of ticks before affecting the block below it */
 	private int ticksStandingStill;
@@ -67,20 +67,20 @@ public class EntityMagmaGolem extends GolemLightProvider
 		super.onLivingUpdate();
 		if(Config.MAGMA.getBoolean(ALLOW_LAVA_SPECIAL))
 		{
-			int x = MathHelper.floor_double(this.posX);
-			int y = MathHelper.floor_double(this.posY - 0.20000000298023224D);
-			int z = MathHelper.floor_double(this.posZ);
+			int x = MathHelper.floor(this.posX);
+			int y = MathHelper.floor(this.posY - 0.20000000298023224D);
+			int z = MathHelper.floor(this.posZ);
 			BlockPos below = new BlockPos(x,y,z);
-			Block b1 = this.worldObj.getBlockState(below).getBlock();
+			Block b1 = this.world.getBlockState(below).getBlock();
 			// debug:
 			//System.out.println("below=" + below + "; lastPos = " + new BlockPos(MathHelper.floor_double(this.lastTickPosX), this.lastTickPosY, MathHelper.floor_double(this.lastTickPosZ)));
 			//System.out.println("block on= " + b1.getUnlocalizedName() + "; ticksStandingStill=" + ticksStandingStill);
 			
-			if(x == MathHelper.floor_double(this.lastTickPosX) && z == MathHelper.floor_double(this.lastTickPosZ))
+			if(x == MathHelper.floor(this.lastTickPosX) && z == MathHelper.floor(this.lastTickPosZ))
 			{
 				if(++this.ticksStandingStill >= Config.MAGMA.getInt(MELT_DELAY) && b1 == Blocks.COBBLESTONE && rand.nextInt(16) == 0)
 				{
-					this.worldObj.setBlockState(below, Blocks.LAVA.getDefaultState(), 3);
+					this.world.setBlockState(below, Blocks.LAVA.getDefaultState(), 3);
 					this.ticksStandingStill = 0;
 				}
 			}

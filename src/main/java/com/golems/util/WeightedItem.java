@@ -1,11 +1,9 @@
 package com.golems.util;
 
-import java.util.List;
 import java.util.Random;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
 
 /**
  * This class will produce a randomly sized ItemStack

@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 
 public class EntityNetherWartGolem extends GolemBase 
 {	
-	public static final Block NETHERWART = Blocks.field_189878_dg;
+	public static final Block NETHERWART = Blocks.NETHER_WART_BLOCK;
 	
 	public static final String ALLOW_SPECIAL = "Allow Special: Plant Netherwart";
 	public static final String FREQUENCY = "Netherwart Frequency";

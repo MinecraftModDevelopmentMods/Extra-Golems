@@ -68,9 +68,9 @@ public abstract class GolemLightProvider extends GolemBase
 
 	protected boolean placeLightBlock() 
 	{
-		int x = MathHelper.floor_double(this.posX);
-		int y = MathHelper.floor_double(this.posY - 0.20000000298023224D);
-		int z = MathHelper.floor_double(this.posZ);
+		int x = MathHelper.floor(this.posX);
+		int y = MathHelper.floor(this.posY - 0.20000000298023224D);
+		int z = MathHelper.floor(this.posZ);
 		int[][] validPos = {{x,z},{x+1,z},{x-1,z},{x,z+1},{x,z-1},{x+1,z+1},{x-1,z+1},{x+1,z-1},{x-1,z-1}};
 		for(int[] coord : validPos)
 		{
@@ -80,14 +80,14 @@ public abstract class GolemLightProvider extends GolemBase
 			{	
 				int yPos = y + k + 1;
 				BlockPos pos = new BlockPos(xPos, yPos, zPos);
-				IBlockState state = this.worldObj.getBlockState(pos);
+				IBlockState state = this.world.getBlockState(pos);
 				if(state.getBlock() instanceof BlockLightProvider)
 				{
 					return false;
 				}
 				else if(this.lightManager.canReplace(state))
 				{
-					return this.lightManager.placeAt(this.worldObj, pos);
+					return this.lightManager.placeAt(this.world, pos);
 				}
 			}
 		}

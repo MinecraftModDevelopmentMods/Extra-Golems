@@ -70,7 +70,7 @@ public class SpongeGolemSoakEvent extends Event
 					final BlockPos CURRENT = this.spongeGolemPos.add(i, j, k);
 					if(spongeGolemPos.distanceSq(CURRENT) <= MAX_DIS)
 					{
-						final IBlockState STATE = this.spongeGolem.worldObj.getBlockState(CURRENT);
+						final IBlockState STATE = this.spongeGolem.world.getBlockState(CURRENT);
 						if(this.waterPredicate.test(STATE))
 						{
 							this.affectedBlocks.add(CURRENT);

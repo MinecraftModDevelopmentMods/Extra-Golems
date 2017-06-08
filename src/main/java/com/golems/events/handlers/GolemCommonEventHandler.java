@@ -128,7 +128,7 @@ public class GolemCommonEventHandler
 			{
 				event.setGolem(new EntityStrawGolem(event.worldObj), Config.STRAW.canSpawn());	
 			}
-			else if(event.blockBelow == Blocks.NETHER_BRICK || event.blockBelow == Blocks.field_189879_dh)
+			else if(event.blockBelow == Blocks.NETHER_BRICK || event.blockBelow == Blocks.RED_NETHER_BRICK)
 			{
 				event.setGolem(new EntityNetherBrickGolem(event.worldObj), Config.NETHERBRICK.canSpawn());	
 			}
@@ -213,15 +213,15 @@ public class GolemCommonEventHandler
 				// actually set the golem
 				event.setGolem(golem, Config.STAINED_GLASS.canSpawn());
 			}
-			else if(event.blockBelow == Blocks.field_189877_df)
+			else if(event.blockBelow == Blocks.MAGMA)
 			{
 				event.setGolem(new EntityMagmaGolem(event.worldObj), Config.MAGMA.canSpawn());
 			}
-			else if(event.blockBelow == Blocks.field_189878_dg)
+			else if(event.blockBelow == Blocks.NETHER_WART_BLOCK)
 			{
 				event.setGolem(new EntityNetherWartGolem(event.worldObj), Config.NETHERWART.canSpawn());
 			}
-			else if(event.blockBelow == Blocks.field_189880_di)
+			else if(event.blockBelow == Blocks.BONE_BLOCK)
 			{
 				event.setGolem(new EntityBoneGolem(event.worldObj), Config.BONE.canSpawn());
 			}

@@ -43,10 +43,10 @@ public class EntityCraftingGolem extends GolemBase
 	@Override
 	protected boolean processInteract(EntityPlayer player, EnumHand hand, ItemStack itemstack)
 	{
-		if(!player.worldObj.isRemote && itemstack == null)
+		if(!player.world.isRemote && itemstack == null)
 		{
 			// display crafting grid for player
-			player.displayGui(new EntityCraftingGolem.InterfaceCraftingGrid(player.worldObj, player.playerLocation));
+			player.displayGui(new EntityCraftingGolem.InterfaceCraftingGrid(player.world, player.bedLocation));
 			player.addStat(StatList.CRAFTING_TABLE_INTERACTION);
 			player.swingArm(hand);
 		}
@@ -79,6 +79,7 @@ public class EntityCraftingGolem extends GolemBase
             this.position2 = pos;
         }
 
+        @Override
         public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)
         {
             return new ContainerPortableWorkbench(playerInventory, this.world2, this.position2);

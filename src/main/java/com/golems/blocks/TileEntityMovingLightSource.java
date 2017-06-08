@@ -32,12 +32,12 @@ public class TileEntityMovingLightSource extends TileEntity implements ITickable
 	@Override
 	public void update()
 	{
-		List<GolemLightProvider> entityList = worldObj.getEntitiesWithinAABB(GolemLightProvider.class, this.getAABBToCheck(this.worldObj, this.getPos()));
+		List<GolemLightProvider> entityList = world.getEntitiesWithinAABB(GolemLightProvider.class, this.getAABBToCheck(this.world, this.getPos()));
 		
 		// if no golem was found, delete this tile entity and block
 		if(entityList.isEmpty())
 		{
-			if(worldObj.getBlockState(getPos()).getBlock() instanceof BlockLightProvider)
+			if(world.getBlockState(getPos()).getBlock() instanceof BlockLightProvider)
 			{
 				selfDestruct();
 			}
@@ -46,8 +46,8 @@ public class TileEntityMovingLightSource extends TileEntity implements ITickable
 	
 	protected void selfDestruct()
 	{
-		worldObj.removeTileEntity(getPos());
-		worldObj.setBlockState(getPos(), Blocks.AIR.getDefaultState(), 3);
+		world.removeTileEntity(getPos());
+		world.setBlockState(getPos(), Blocks.AIR.getDefaultState(), 3);
 	}
 
 	protected AxisAlignedBB getAABBToCheck(World worldIn, BlockPos pos)

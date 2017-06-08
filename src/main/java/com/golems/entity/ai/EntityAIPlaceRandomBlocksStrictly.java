@@ -3,14 +3,9 @@ package com.golems.entity.ai;
 import java.util.function.Predicate;
 
 import com.golems.entity.GolemBase;
-import com.google.common.base.Predicates;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
 
 public class EntityAIPlaceRandomBlocksStrictly extends EntityAIPlaceRandomBlocks
 {	
@@ -27,7 +22,7 @@ public class EntityAIPlaceRandomBlocksStrictly extends EntityAIPlaceRandomBlocks
 	@Override
 	public boolean shouldExecute() 
 	{
-		return canExecute.test(this) && golem.worldObj.rand.nextInt(tickDelay) == 0;
+		return canExecute.test(this) && golem.world.rand.nextInt(tickDelay) == 0;
 	}
 	
 	public static Predicate<EntityAIPlaceRandomBlocks> getPredicate(final boolean ret)
@@ -49,7 +44,7 @@ public class EntityAIPlaceRandomBlocksStrictly extends EntityAIPlaceRandomBlocks
 			@Override
 			public boolean test(EntityAIPlaceRandomBlocks t) 
 			{
-				return t.golem.worldObj.getGameRules().getBoolean("mobGriefing");
+				return t.golem.world.getGameRules().getBoolean("mobGriefing");
 			}
 		};
 	}

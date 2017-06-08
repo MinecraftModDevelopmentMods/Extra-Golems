@@ -50,9 +50,9 @@ public class EntityLeafGolem extends GolemColorized
 			this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 200 + 20 * (1 + rand.nextInt(8)), 1));
 		}
 		
-		if(this.ticksExisted % 10 == 2 && this.worldObj.isRemote)
+		if(this.ticksExisted % 10 == 2 && this.world.isRemote)
 		{
-			Biome biome = this.worldObj.getBiomeGenForCoords(this.getPosition());
+			Biome biome = this.world.getBiome(this.getPosition());
 			long color = biome.getFoliageColorAtPos(this.getPosition());
 			this.setColor(color);
 		}

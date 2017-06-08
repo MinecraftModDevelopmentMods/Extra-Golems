@@ -21,6 +21,7 @@ public class RenderColoredGolem extends RenderLiving<GolemColorized>
 		super(renderManagerIn, new ModelGolem(), 0.5F);
 	}
 	
+	@Override
 	public void doRender(GolemColorized golem, double x, double y, double z, float f0, float f1)
 	{
 		float colorRed = golem.getColorRed();
@@ -66,9 +67,9 @@ public class RenderColoredGolem extends RenderLiving<GolemColorized>
 	}
 
 	@Override
-	protected void rotateCorpse(GolemColorized golem, float p_77043_2_, float p_77043_3_, float partialTicks)
+	protected void applyRotations(GolemColorized golem, float p_77043_2_, float p_77043_3_, float partialTicks)
 	{
-		super.rotateCorpse(golem, p_77043_2_, p_77043_3_, partialTicks);
+		super.applyRotations(golem, p_77043_2_, p_77043_3_, partialTicks);
 
 		if ((double)golem.limbSwingAmount >= 0.01D)
 		{

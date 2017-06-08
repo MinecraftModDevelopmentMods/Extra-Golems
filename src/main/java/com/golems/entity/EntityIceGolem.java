@@ -50,12 +50,12 @@ public class EntityIceGolem extends GolemBase
 		// calling every other tick reduces lag by 50%
 		if(this.ticksExisted % 2 == 0)
 		{
-			int x = MathHelper.floor_double(this.posX);
-			int y = MathHelper.floor_double(this.posY - 0.20000000298023224D);
-			int z = MathHelper.floor_double(this.posZ);
+			int x = MathHelper.floor(this.posX);
+			int y = MathHelper.floor(this.posY - 0.20000000298023224D);
+			int z = MathHelper.floor(this.posZ);
 			BlockPos below = new BlockPos(x,y,z);
 
-			if(this.worldObj.getBiomeGenForCoords(below).getFloatTemperature(below) > 1.0F)
+			if(this.world.getBiome(below).getFloatTemperature(below) > 1.0F)
 			{
 				this.attackEntityFrom(DamageSource.onFire, 1.0F);
 			}
@@ -127,11 +127,11 @@ public class EntityIceGolem extends GolemBase
 		for(int i = 0, len = POSITIONS.size(); i < len; i++)
 		{
 			final BlockPos POS = POSITIONS.get(i);
-			final IBlockState CURRENT_STATE = this.worldObj.getBlockState(POS);
+			final IBlockState CURRENT_STATE = this.world.getBlockState(POS);
 			final IBlockState TO_SET = FUNCTION.apply(CURRENT_STATE);
 			if(TO_SET != null && TO_SET != CURRENT_STATE)
 			{
-				flag &= this.worldObj.setBlockState(POS, TO_SET, UPDATE_FLAG);
+				flag &= this.world.setBlockState(POS, TO_SET, UPDATE_FLAG);
 			}
 		}
 		return flag;

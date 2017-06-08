@@ -3,7 +3,6 @@ package com.golems.blocks;
 import javax.annotation.Nullable;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockStateContainer;
@@ -34,6 +33,7 @@ public class BlockUtility extends Block
 	}
 	
 	@Nullable
+	@Override
     public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos)
     {
         return NULL_AABB;
@@ -81,6 +81,7 @@ public class BlockUtility extends Block
 	 /**
 	  * Spawns this Block's drops into the World as EntityItems.
 	  */
+	 @Override
 	 public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)
 	 {
 	 }
@@ -107,7 +108,7 @@ public class BlockUtility extends Block
 	 }
 
 	 @Override
-	 public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+	 public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
 	 {
 		 return getDefaultState();
 	 }

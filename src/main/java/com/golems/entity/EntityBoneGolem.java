@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 
 public class EntityBoneGolem extends GolemBase 
 {			
-	public static final Block BONE = Blocks.field_189880_di;
+	public static final Block BONE = Blocks.BONE_BLOCK;
 	
 	public EntityBoneGolem(World world) 
 	{

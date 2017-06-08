@@ -11,12 +11,12 @@ public class TileEntityMovingPowerSource extends TileEntityMovingLightSource
 	@Override
 	public void update()
 	{
-		List<EntityRedstoneGolem> entityList = worldObj.getEntitiesWithinAABB(EntityRedstoneGolem.class, this.getAABBToCheck(this.worldObj, this.getPos()));
+		List<EntityRedstoneGolem> entityList = world.getEntitiesWithinAABB(EntityRedstoneGolem.class, this.getAABBToCheck(this.world, this.getPos()));
 
 		// if no golem was found, delete this tile entity and block
 		if(entityList.isEmpty())
 		{
-			if(worldObj.getBlockState(getPos()).getBlock() instanceof BlockPowerProvider)
+			if(world.getBlockState(getPos()).getBlock() instanceof BlockPowerProvider)
 			{
 				selfDestruct();
 			}

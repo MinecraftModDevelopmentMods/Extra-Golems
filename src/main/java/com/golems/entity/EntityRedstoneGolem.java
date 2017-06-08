@@ -1,6 +1,5 @@
 package com.golems.entity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.golems.blocks.BlockPowerProvider;
@@ -17,8 +16,6 @@ import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -92,11 +89,11 @@ public class EntityRedstoneGolem extends GolemBase
 		for(int k = -1; k < 3; ++k)
 		{	
 			BlockPos at = this.getPosition().up(k);
-			if(this.worldObj.getBlockState(at).getBlock() instanceof BlockPowerProvider) 
+			if(this.world.getBlockState(at).getBlock() instanceof BlockPowerProvider) 
 			{
 				continue;
 			}
-			else if(this.worldObj.isAirBlock(at))
+			else if(this.world.isAirBlock(at))
 			{
 				RedstoneGolemPowerEvent event = new RedstoneGolemPowerEvent(this, at, this.getPowerOutput(at));
 				if(!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Result.DENY)
@@ -114,7 +111,7 @@ public class EntityRedstoneGolem extends GolemBase
 	protected final boolean placePower(final BlockPos POS, final int POWER, final int UPDATE_FLAG)
 	{
 		final IBlockState POWER_STATE = GolemItems.blockPowerSource.getDefaultState().withProperty(BlockPowerProvider.POWER, POWER);
-		return this.worldObj.setBlockState(POS, POWER_STATE, UPDATE_FLAG);
+		return this.world.setBlockState(POS, POWER_STATE, UPDATE_FLAG);
 	}
 
 	/** Override this to check conditions and return correct power level **/

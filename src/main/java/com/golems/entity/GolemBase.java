@@ -6,7 +6,6 @@ import java.util.List;
 import com.golems.entity.ai.EntityAIDefendAgainstMonsters;
 import com.golems.main.ExtraGolems;
 import com.golems.main.GolemItems;
-import com.golems.util.GolemConfigSet;
 import com.golems.util.WeightedItem;
 import com.google.common.base.Predicate;
 
@@ -155,7 +154,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimals
 		if (--this.homeCheckTimer <= 0)
 		{
 			this.homeCheckTimer = 70 + this.rand.nextInt(50);
-			this.villageObj = this.worldObj.getVillageCollection().getNearestVillage(new BlockPos(this), 32);
+			this.villageObj = this.world.getVillageCollection().getNearestVillage(new BlockPos(this), 32);
 
 			if (this.villageObj == null)
 			{
@@ -214,14 +213,14 @@ public abstract class GolemBase extends EntityCreature implements IAnimals
 		// spawn block particles when this golem moves
 		if (this.motionX * this.motionX + this.motionZ * this.motionZ > 2.500000277905201E-7D && this.rand.nextInt(5) == 0)
 		{
-			int i = MathHelper.floor_double(this.posX);
-			int j = MathHelper.floor_double(this.posY - 0.20000000298023224D);
-			int k = MathHelper.floor_double(this.posZ);
-			IBlockState iblockstate = this.worldObj.getBlockState(new BlockPos(i, j, k));
+			int i = MathHelper.floor(this.posX);
+			int j = MathHelper.floor(this.posY - 0.20000000298023224D);
+			int k = MathHelper.floor(this.posZ);
+			IBlockState iblockstate = this.world.getBlockState(new BlockPos(i, j, k));
 
 			if (iblockstate.getMaterial() != Material.AIR)
 			{
-				this.worldObj.spawnParticle(EnumParticleTypes.BLOCK_CRACK, this.posX + ((double)this.rand.nextFloat() - 0.5D) * (double)this.width, this.getEntityBoundingBox().minY + 0.1D, this.posZ + ((double)this.rand.nextFloat() - 0.5D) * (double)this.width, 4.0D * ((double)this.rand.nextFloat() - 0.5D), 0.5D, ((double)this.rand.nextFloat() - 0.5D) * 4.0D, new int[] {Block.getStateId(iblockstate)});
+				this.world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, this.posX + ((double)this.rand.nextFloat() - 0.5D) * (double)this.width, this.getEntityBoundingBox().minY + 0.1D, this.posZ + ((double)this.rand.nextFloat() - 0.5D) * (double)this.width, 4.0D * ((double)this.rand.nextFloat() - 0.5D), 0.5D, ((double)this.rand.nextFloat() - 0.5D) * 4.0D, new int[] {Block.getStateId(iblockstate)});
 			}
 		}	
 	}
@@ -251,7 +250,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimals
 		}
 
 		this.attackTimer = 10;
-		this.worldObj.setEntityState(this, (byte)4);
+		this.world.setEntityState(this, (byte)4);
 		boolean flag = entity.attackEntityFrom(DamageSource.causeMobDamage(this), damage);
 
 		if (flag)

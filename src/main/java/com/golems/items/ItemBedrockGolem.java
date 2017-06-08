@@ -53,7 +53,7 @@ public class ItemBedrockGolem extends Item
 				GolemBase golem = new EntityBedrockGolem(worldIn);
 				golem.setPlayerCreated(true);
 				golem.moveToBlockPosAndAngles(spawn, 0.0F, 0.0F);
-				worldIn.spawnEntityInWorld(golem);
+				worldIn.spawnEntity(golem);
 			}
 			spawnParticles(worldIn, pos.getX() - 0.5D, pos.getY() + 1.0D, pos.getZ() - 0.5D, 0.2D);
 			playerIn.swingArm(hand);

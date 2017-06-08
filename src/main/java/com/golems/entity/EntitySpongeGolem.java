@@ -2,7 +2,6 @@ package com.golems.entity;
 
 import java.util.List;
 
-import com.golems.events.IceGolemFreezeEvent;
 import com.golems.events.SpongeGolemSoakEvent;
 import com.golems.main.Config;
 import com.golems.util.WeightedItem;
@@ -52,9 +51,9 @@ public class EntitySpongeGolem extends GolemBase
 		int interval = Config.SPONGE.getInt(INTERVAL);
 		if(Config.SPONGE.getBoolean(ALLOW_SPECIAL) && (interval <= 1 || this.ticksExisted % interval == 0))
 		{
-			int x = MathHelper.floor_double(this.posX);
-			int y = MathHelper.floor_double(this.posY - 0.20000000298023224D) + 2;
-			int z = MathHelper.floor_double(this.posZ);
+			int x = MathHelper.floor(this.posX);
+			int y = MathHelper.floor(this.posY - 0.20000000298023224D) + 2;
+			int z = MathHelper.floor(this.posZ);
 			BlockPos center = new BlockPos(x,y,z);
 			
 			SpongeGolemSoakEvent event = new SpongeGolemSoakEvent(this, center, Config.SPONGE.getInt(RANGE));
@@ -64,13 +63,13 @@ public class EntitySpongeGolem extends GolemBase
 			}
 		}
 
-		if(Config.SPONGE.getBoolean(PARTICLES) && Math.abs(this.motionX) < 0.05D && Math.abs(this.motionZ) < 0.05D && worldObj.isRemote)
+		if(Config.SPONGE.getBoolean(PARTICLES) && Math.abs(this.motionX) < 0.05D && Math.abs(this.motionZ) < 0.05D && world.isRemote)
 		{
 			EnumParticleTypes particle = this.isBurning() ? EnumParticleTypes.SMOKE_NORMAL : EnumParticleTypes.WATER_SPLASH;
 			double x = this.rand.nextDouble() - 0.5D * (double)this.width * 0.6D;
 			double y = this.rand.nextDouble() * (double)(this.height - 0.75D);
 			double z = this.rand.nextDouble() - 0.5D * (double)this.width;
-			this.worldObj.spawnParticle(particle, this.posX + x, this.posY + y, this.posZ + z, (this.rand.nextDouble() - 0.5D) * 0.5D, this.rand.nextDouble() - 0.5D, (this.rand.nextDouble() - 0.5D) * 0.5D, new int[0]);
+			this.world.spawnParticle(particle, this.posX + x, this.posY + y, this.posZ + z, (this.rand.nextDouble() - 0.5D) * 0.5D, this.rand.nextDouble() - 0.5D, (this.rand.nextDouble() - 0.5D) * 0.5D, new int[0]);
 		}
 	}
 
@@ -105,7 +104,7 @@ public class EntitySpongeGolem extends GolemBase
 		boolean flag = true;
 		for(BlockPos p : POSITIONS)
 		{
-			flag &= this.worldObj.setBlockState(p, REPLACE_WATER, UPDATE_FLAG);
+			flag &= this.world.setBlockState(p, REPLACE_WATER, UPDATE_FLAG);
 		}
 		return flag;
 	}
