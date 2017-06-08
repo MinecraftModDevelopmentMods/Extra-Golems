@@ -20,7 +20,7 @@ plugins {
     id "net.minecraftforge.gradle.forge" version "2.0.2"
 }
 */
-version = "6.02"
+version = "6.02.1"
 group= "com.golems" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "ExtraGolems[1.10.2]"
 

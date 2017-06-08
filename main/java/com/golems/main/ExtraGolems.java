@@ -21,7 +21,7 @@ public class ExtraGolems
 {	
 	public static final String MODID = "golems";
 	public static final String NAME = "Extra Golems";
-	public static final String VERSION = "6.02";
+	public static final String VERSION = "6.02.1";
 	
 	@SidedProxy(clientSide = "com." + MODID + ".proxies.ClientProxy", serverSide = "com." + MODID + ".proxies.CommonProxy")
 	public static CommonProxy proxy;
