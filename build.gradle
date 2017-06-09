@@ -46,7 +46,7 @@ repositories {
 
 dependencies {
 	provided 'mcp.mobius.waila:Waila:1.7.0-B3_1.9.4:dev'
-	provided 'mcjty.theoneprobe:TheOneProbe:1.10-1.1.0-30'
+	provided 'mcjty.theoneprobe:TheOneProbe:1.1x-1.4.0-50'
 }
 
 processResources
