@@ -45,7 +45,7 @@ public class EntityMelonGolem extends GolemBase
 	@Override
 	protected ResourceLocation applyTexture()
 	{
-		return this.makeGolemTexture("melon");
+		return GolemBase.makeGolemTexture("melon");
 	}
 
 	@Override
@@ -76,7 +76,7 @@ public class EntityMelonGolem extends GolemBase
 		IBlockState[] flowers;
 		final Block[] soils = {Blocks.DIRT, Blocks.GRASS, Blocks.MYCELIUM, Blocks.FARMLAND};
 		// init list and AI for planting flowers
-		List<IBlockState> lFlowers = new ArrayList();
+		List<IBlockState> lFlowers = new ArrayList<IBlockState>();
 		for(EnumFlowerType e : BlockFlower.EnumFlowerType.values())
 		{
 			lFlowers.add(e.getBlockType().getBlock().getStateFromMeta(e.getMeta()));

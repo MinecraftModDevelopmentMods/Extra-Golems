@@ -36,7 +36,7 @@ public class EntityIceGolem extends GolemBase
 
 	protected ResourceLocation applyTexture()
 	{
-		return this.makeGolemTexture("ice");
+		return GolemBase.makeGolemTexture("ice");
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class EntityIceGolem extends GolemBase
 
 			if(this.world.getBiome(below).getFloatTemperature(below) > 1.0F)
 			{
-				this.attackEntityFrom(DamageSource.onFire, 1.0F);
+				this.attackEntityFrom(DamageSource.ON_FIRE, 1.0F);
 			}
 			
 			if(Config.ICE.getBoolean(ALLOW_SPECIAL))
@@ -78,7 +78,7 @@ public class EntityIceGolem extends GolemBase
 		{
 			if(entity.isBurning())
 			{
-				this.attackEntityFrom(DamageSource.generic, 0.5F);
+				this.attackEntityFrom(DamageSource.GENERIC, 0.5F);
 			}
 			return true;
 		}

@@ -120,7 +120,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimals
 		this.tasks.addTask(7, new EntityAILookIdle(this));
 		this.targetTasks.addTask(1, new EntityAIDefendAgainstMonsters(this));
 		this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, false, new Class[0]));
-		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityLiving.class, 10, false, true, new Predicate<EntityLiving>()
+		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<EntityLiving>(this, EntityLiving.class, 10, false, true, new Predicate<EntityLiving>()
 		{
 			public boolean apply(EntityLiving e)
 			{
@@ -366,7 +366,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimals
 	protected void dropFewItems(boolean recentlyHit, int lootingLevel)
 	{
 		// make and populate a list of WeightedItem instances
-		List<WeightedItem> drops = new ArrayList();
+		List<WeightedItem> drops = new ArrayList<WeightedItem>();
 		this.addDrop(drops, rand.nextBoolean() ? Blocks.YELLOW_FLOWER : Blocks.RED_FLOWER, 0, 1, 2, 65);
 		this.addDrop(drops, Items.REDSTONE, 0, 1, 1, 20 + lootingLevel * 10);
 

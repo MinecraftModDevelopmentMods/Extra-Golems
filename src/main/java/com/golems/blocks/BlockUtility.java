@@ -34,10 +34,11 @@ public class BlockUtility extends Block
 	
 	@Nullable
 	@Override
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos)
-    {
-        return NULL_AABB;
-    }
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) 
+	{
+		 return NULL_AABB;
+	}
+
 /*
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
@@ -51,11 +52,6 @@ public class BlockUtility extends Block
 		return SINGULAR_AABB;
 	}
 */
-	@Override
-	public boolean isFullyOpaque(IBlockState state)
-	{
-		return false;
-	}
 
 	@Override
 	public boolean isFullBlock(IBlockState state)

@@ -30,7 +30,7 @@ public class EntitySlimeGolem extends GolemBase
 	@Override
 	protected ResourceLocation applyTexture()
 	{
-		return this.makeGolemTexture("slime");
+		return GolemBase.makeGolemTexture("slime");
 	}
 
 	@Override

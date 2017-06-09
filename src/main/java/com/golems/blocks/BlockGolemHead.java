@@ -92,7 +92,7 @@ public class BlockGolemHead extends BlockHorizontal
 		{
 			boolean flagX = isGolemXAligned(world, pos);
 			boolean flagZ = isGolemZAligned(world, pos);
-			IBlockState meta = world.getBlockState(pos.down(1));
+			world.getBlockState(pos.down(1));
 
 			// hard-coded support for Snow Golem
 			if(blockBelow1 == Blocks.SNOW)

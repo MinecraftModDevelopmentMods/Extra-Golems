@@ -27,7 +27,7 @@ public class EntitySeaLanternGolem extends GolemLightProvider
 	
 	protected ResourceLocation applyTexture()
 	{
-		return this.makeGolemTexture("sea_lantern");
+		return GolemBase.makeGolemTexture("sea_lantern");
 	}
 
 	@Override

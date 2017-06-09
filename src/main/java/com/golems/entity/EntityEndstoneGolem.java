@@ -87,7 +87,7 @@ public class EntityEndstoneGolem extends GolemBase
 	@Override
 	protected ResourceLocation applyTexture()
 	{
-		return this.makeGolemTexture("end_stone");
+		return GolemBase.makeGolemTexture("end_stone");
 	}
 	
 	@Override
@@ -120,19 +120,19 @@ public class EntityEndstoneGolem extends GolemBase
 		
 		if(this.isHurtByWater && this.isWet())
         {
-            this.attackEntityFrom(DamageSource.drown, 1.0F);
+            this.attackEntityFrom(DamageSource.DROWN, 1.0F);
             for(int i = 0; i < 16; ++i)
             {
             	if(this.teleportRandomly()) break;
             }
         }
 		
-		if (this.getAITarget() != null)
+		if (this.getAttackTarget() != null)
         {
-            this.faceEntity(this.getAITarget(), 100.0F, 100.0F);
+            this.faceEntity(this.getAttackTarget(), 100.0F, 100.0F);
             if(rand.nextInt(5) == 0)
             {
-            	this.teleportToEntity(this.getAITarget());
+            	this.teleportToEntity(this.getAttackTarget());
             }
         }
 	    else if(rand.nextInt(this.ticksBetweenIdleTeleports) == 0)
@@ -156,18 +156,18 @@ public class EntityEndstoneGolem extends GolemBase
 	    
 	    if (!this.world.isRemote && this.isEntityAlive())
         {
-            if (this.getAITarget() != null)
+            if (this.getAttackTarget() != null)
             {
-                if (this.getAITarget() instanceof EntityMob)
+                if (this.getAttackTarget() instanceof EntityMob)
                 {
-                    if (this.getAITarget().getDistanceSqToEntity(this) < 16.0D && (rand.nextInt(5) == 0 || this.getAITarget().getAITarget() == this))
+                    if (this.getAttackTarget().getDistanceSqToEntity(this) < 16.0D && (rand.nextInt(5) == 0 || this.getAttackTarget().getRevengeTarget() == this))
                     {
                         this.teleportRandomly();
                     }
                     
                     this.teleportDelay = 0;
                 }
-                else if (this.getAITarget().getDistanceSqToEntity(this) > 256.0D && this.teleportDelay++ >= 30 && this.teleportToEntity(this.getAITarget()))
+                else if (this.getAttackTarget().getDistanceSqToEntity(this) > 256.0D && this.teleportDelay++ >= 30 && this.teleportToEntity(this.getAttackTarget()))
                 {
                     this.teleportDelay = 0;
                 }
@@ -206,7 +206,7 @@ public class EntityEndstoneGolem extends GolemBase
             }
             else
             {
-            	if(rand.nextInt(this.chanceToTeleportWhenHurt) == 0 || (this.getAITarget() != null && rand.nextBoolean()))
+            	if(rand.nextInt(this.chanceToTeleportWhenHurt) == 0 || (this.getAttackTarget() != null && rand.nextBoolean()))
             	{
             		this.teleportRandomly();
             	}

@@ -44,7 +44,7 @@ public abstract class GolemMultiTextured extends GolemBase
 	protected ResourceLocation applyTexture()
 	{
 		// apply TEMPORARY texture to avoid NPE. Actual texture is first applied in onLivingUpdate
-		return this.makeGolemTexture("clay");
+		return GolemBase.makeGolemTexture("clay");
 	}
 	
 	@Override
@@ -55,12 +55,12 @@ public abstract class GolemMultiTextured extends GolemBase
 	}
 	
 	@Override
-	public boolean processInteract(EntityPlayer player, EnumHand hand, ItemStack stack)
+	public boolean processInteract(EntityPlayer player, EnumHand hand)
 	{
 		// only change texture when player has empty hand
-		if(stack != null)
+		if(activeItemStack != null)
 		{
-			return super.processInteract(player, hand, stack);
+			return super.processInteract(player, hand);
 		}
 		else
 		{

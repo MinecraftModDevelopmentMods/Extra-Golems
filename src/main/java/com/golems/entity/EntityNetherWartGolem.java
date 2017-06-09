@@ -51,7 +51,7 @@ public class EntityNetherWartGolem extends GolemBase
 	@Override
 	protected ResourceLocation applyTexture()
 	{
-		return this.makeGolemTexture("nether_wart");
+		return GolemBase.makeGolemTexture("nether_wart");
 	}
 
 	@Override

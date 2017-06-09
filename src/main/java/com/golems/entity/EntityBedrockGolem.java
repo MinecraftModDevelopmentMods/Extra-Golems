@@ -12,7 +12,6 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
@@ -31,7 +30,7 @@ public class EntityBedrockGolem extends GolemBase
 	@Override
 	protected ResourceLocation applyTexture()
 	{
-		return this.makeGolemTexture("bedrock");
+		return GolemBase.makeGolemTexture("bedrock");
 	}
 
 	@Override
@@ -52,14 +51,14 @@ public class EntityBedrockGolem extends GolemBase
     {
         return false;
     }
-
+	
 	@Override
-	protected boolean processInteract(EntityPlayer player, EnumHand hand, ItemStack itemstack)
+	protected boolean processInteract(EntityPlayer player, EnumHand hand)
 	{
 		// creative players can "despawn" by using spawnBedrockGolem on this entity
 		if(player.capabilities.isCreativeMode)
 		{
-			if (itemstack != null && itemstack.getItem() == GolemItems.spawnBedrockGolem)
+			if (activeItemStack != null && activeItemStack.getItem() == GolemItems.spawnBedrockGolem)
 			{		
 				player.swingArm(hand);
 				if(!this.world.isRemote)
@@ -68,8 +67,7 @@ public class EntityBedrockGolem extends GolemBase
 				} else ItemBedrockGolem.spawnParticles(this.world, this.posX - 0.5D, this.posY + 0.1D, this.posZ - 0.5D, 0.1D);
 			}
 		}
-
-		return super.processInteract(player, hand, itemstack);
+		return super.processInteract(player, hand);
 	}
 
 	@Override

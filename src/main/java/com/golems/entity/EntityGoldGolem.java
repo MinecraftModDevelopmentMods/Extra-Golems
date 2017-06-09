@@ -23,7 +23,7 @@ public class EntityGoldGolem extends GolemBase
 	
 	protected ResourceLocation applyTexture()
 	{
-		return this.makeGolemTexture("gold");
+		return GolemBase.makeGolemTexture("gold");
 	}
 		
 	@Override

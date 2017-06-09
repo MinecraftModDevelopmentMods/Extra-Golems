@@ -239,7 +239,7 @@ public class GolemCommonEventHandler
 		if(event.getEntity() instanceof EntityZombie && !(event.getEntity() instanceof EntityPigZombie))
 		{
 			EntityZombie zombie = (EntityZombie)event.getEntity();
-			zombie.targetTasks.addTask(3, new EntityAINearestAttackableTarget(zombie, GolemBase.class, true));
+			zombie.targetTasks.addTask(3, new EntityAINearestAttackableTarget<GolemBase>(zombie, GolemBase.class, true));
 		}
 	}
 }

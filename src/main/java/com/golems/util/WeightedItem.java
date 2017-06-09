@@ -31,7 +31,7 @@ public class WeightedItem
 	
 	public WeightedItem(ItemStack stack, int percentChance)
 	{
-		this(stack.getItem(), stack.getMetadata(), stack.stackSize, stack.stackSize, percentChance);
+		this(stack.getItem(), stack.getMetadata(), stack.getCount(), stack.getCount(), percentChance);
 	}
 	
 	/** Calculated randomly each time this method is called **/

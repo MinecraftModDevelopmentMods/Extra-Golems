@@ -1,8 +1,5 @@
 package com.golems.entity.ai;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.golems.entity.GolemBase;
 
 import net.minecraft.entity.EntityLivingBase;
@@ -14,8 +11,6 @@ public class EntityAIDefendAgainstMonsters extends EntityAITarget
     GolemBase entityGolem;
     /** The aggressor of the iron golem's village which is now the golem's attack target. */
     EntityLivingBase villageAgressorTarget;
-    private List villageAgressors = new ArrayList();
-
     public EntityAIDefendAgainstMonsters(GolemBase golem)
     {
         super(golem, false, true);

@@ -49,7 +49,7 @@ public class EntityWoolGolem extends GolemMultiTextured
 	@Override
 	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel)
 	{
-		int size = 1 + this.rand.nextInt(3) + lootingLevel;
+		this.rand.nextInt(3);
 		int meta = this.getTextureNum() % coloredWoolTypes.length;
 		this.addDrop(dropList, new ItemStack(Blocks.WOOL, 1 + rand.nextInt(2), 0), 100);
 		this.addDrop(dropList, Blocks.WOOL, meta, 1, 2, 60 + lootingLevel * 10);
@@ -65,7 +65,7 @@ public class EntityWoolGolem extends GolemMultiTextured
 	@Override
 	public void setTextureNum(byte toSet, boolean updateInstantly)
 	{
-		toSet %= (byte)(this.coloredWoolTypes.length - 1);
+		toSet %= (byte)(EntityWoolGolem.coloredWoolTypes.length - 1);
 		super.setTextureNum(toSet, updateInstantly);
 	}
 }

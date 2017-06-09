@@ -39,6 +39,8 @@ import com.golems.entity.EntityWoolGolem;
 import com.golems.events.handlers.GolemCommonEventHandler;
 import com.golems.main.ExtraGolems;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 
@@ -95,8 +97,9 @@ public class CommonProxy
 	}
 	
 	/** registers the entity **/
-	protected static void register(Class entityClass, String name)
+	protected static void register(Class<? extends Entity> entityClass, String name)
 	{		
-		EntityRegistry.registerModEntity(entityClass, name, ++golemEntityCount, ExtraGolems.instance, 16 * 4, 3, true);
+
+		EntityRegistry.registerModEntity(new ResourceLocation(name), entityClass, name, ++golemEntityCount, ExtraGolems.instance, 16 * 4, 3, true);
 	}
 }

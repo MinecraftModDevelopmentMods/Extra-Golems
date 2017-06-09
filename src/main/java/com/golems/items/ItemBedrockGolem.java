@@ -30,7 +30,7 @@ public class ItemBedrockGolem extends Item
 	}
 
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+	public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) 
 	{
 		// creative players can use this item to spawn a bedrock golem
 		if(Config.BEDROCK.canSpawn())
@@ -59,7 +59,7 @@ public class ItemBedrockGolem extends Item
 			playerIn.swingArm(hand);
 			if(!playerIn.capabilities.isCreativeMode) 
 			{
-				stack.stackSize--;
+				playerIn.getActiveItemStack().shrink(1);
 			}
 			return EnumActionResult.SUCCESS;
 		}

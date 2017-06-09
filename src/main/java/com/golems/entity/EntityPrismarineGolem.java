@@ -24,7 +24,7 @@ public class EntityPrismarineGolem extends GolemBase
 	@Override
 	protected ResourceLocation applyTexture()
 	{
-		return this.makeGolemTexture("prismarine");
+		return GolemBase.makeGolemTexture("prismarine");
 	}
 	
 	/**

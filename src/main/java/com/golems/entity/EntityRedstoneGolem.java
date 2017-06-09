@@ -57,7 +57,7 @@ public class EntityRedstoneGolem extends GolemBase
 	@Override
 	protected ResourceLocation applyTexture()
 	{
-		return this.makeGolemTexture("redstone");
+		return GolemBase.makeGolemTexture("redstone");
 	}
 
 	@Override

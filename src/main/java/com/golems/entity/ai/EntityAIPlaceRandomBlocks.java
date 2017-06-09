@@ -49,7 +49,7 @@ public class EntityAIPlaceRandomBlocks extends EntityAIBase
 		int y = MathHelper.floor(golem.posY - 0.20000000298023224D - (double)golem.getYOffset());
 		int z = MathHelper.floor(golem.posZ);
 		BlockPos below = new BlockPos(x, y, z);
-		Block blockBelow = golem.world.getBlockState(below).getBlock();
+		golem.world.getBlockState(below).getBlock();
 		
 		if(golem.world.isAirBlock(below.up(1)) && isPlantSupport(golem.world, below))
 		{
@@ -59,7 +59,7 @@ public class EntityAIPlaceRandomBlocks extends EntityAIBase
 	}
 	
 	@Override
-	public boolean continueExecuting()
+	public boolean shouldContinueExecuting() 
 	{
 		return false;
 	}

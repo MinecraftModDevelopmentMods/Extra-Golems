@@ -26,7 +26,7 @@ public class EntityGlowstoneGolem extends GolemLightProvider
 	@Override
 	protected ResourceLocation applyTexture()
 	{
-		return this.makeGolemTexture("glowstone");
+		return GolemBase.makeGolemTexture("glowstone");
 	}
 
 	@Override

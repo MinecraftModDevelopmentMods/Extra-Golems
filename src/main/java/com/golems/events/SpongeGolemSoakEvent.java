@@ -58,7 +58,7 @@ public class SpongeGolemSoakEvent extends Event
 	
 	public void initAffectedBlockList(final int RANGE)
 	{
-		this.affectedBlocks = new ArrayList(RANGE * RANGE * RANGE * 4);
+		this.affectedBlocks = new ArrayList<BlockPos>(RANGE * RANGE * RANGE * 4);
 		final int MAX_DIS = RANGE * RANGE;
 		// check sphere around golem to absorb water
 		for(int i = -RANGE; i <= RANGE; i++)

@@ -30,7 +30,7 @@ public class EntityBookshelfGolem extends GolemBase
 	
 	protected ResourceLocation applyTexture()
 	{
-		return this.makeGolemTexture("books");
+		return GolemBase.makeGolemTexture("books");
 	}
 	
 	/**

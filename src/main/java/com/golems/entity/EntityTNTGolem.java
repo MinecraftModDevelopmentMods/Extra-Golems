@@ -68,7 +68,7 @@ public class EntityTNTGolem extends GolemBase
 	@Override
 	protected ResourceLocation applyTexture()
 	{
-		return this.makeGolemTexture("tnt");
+		return GolemBase.makeGolemTexture("tnt");
 	}
 
 	/**
@@ -138,9 +138,9 @@ public class EntityTNTGolem extends GolemBase
 	}
 
 	@Override
-	protected boolean processInteract(EntityPlayer player, EnumHand hand, ItemStack itemstack)
+	protected boolean processInteract(EntityPlayer player, EnumHand hand)
 	{
-		if (itemstack != null && itemstack.getItem() == Items.FLINT_AND_STEEL)
+		if (activeItemStack != null && activeItemStack.getItem() == Items.FLINT_AND_STEEL)
 		{	
 			this.world.playSound(player, this.posX, this.posY, this.posZ, SoundEvents.ITEM_FLINTANDSTEEL_USE, this.getSoundCategory(), 1.0F, this.rand.nextFloat() * 0.4F + 0.8F);
 			player.swingArm(hand);
@@ -149,11 +149,11 @@ public class EntityTNTGolem extends GolemBase
 			{
 				this.setFire(Math.floorDiv(this.FUSE_LEN, 20));
 				this.ignite();
-				itemstack.damageItem(1, player);
+				activeItemStack.damageItem(1, player);
 			}
 		}
 
-		return super.processInteract(player, hand, itemstack);
+		return super.processInteract(player, hand);
 	}
 
 	protected void resetFuse()

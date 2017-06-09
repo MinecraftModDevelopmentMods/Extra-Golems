@@ -57,7 +57,7 @@ public abstract class GolemDescriptionManager
 	 **/
 	public List<String> getEntityDescription(GolemBase golem)
 	{
-		List<String> list = new LinkedList();
+		List<String> list = new LinkedList<String>();
 		if(showAttack)
 		{
 			float attack = golem.getBaseAttackDamage();

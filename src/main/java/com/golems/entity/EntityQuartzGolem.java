@@ -24,7 +24,7 @@ public class EntityQuartzGolem extends GolemBase
 	@Override
 	protected ResourceLocation applyTexture()
 	{
-		return this.makeGolemTexture("quartz");
+		return GolemBase.makeGolemTexture("quartz");
 	}
 		
 	@Override

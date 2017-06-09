@@ -37,13 +37,13 @@ public class EntityCraftingGolem extends GolemBase
 	@Override
 	protected ResourceLocation applyTexture() 
 	{
-		return this.makeGolemTexture("crafting");
+		return GolemBase.makeGolemTexture("crafting");
 	}
 	
 	@Override
-	protected boolean processInteract(EntityPlayer player, EnumHand hand, ItemStack itemstack)
+	protected boolean processInteract(EntityPlayer player, EnumHand hand)
 	{
-		if(!player.world.isRemote && itemstack == null)
+		if(!player.world.isRemote && activeItemStack == null)
 		{
 			// display crafting grid for player
 			player.displayGui(new EntityCraftingGolem.InterfaceCraftingGrid(player.world, player.bedLocation));
@@ -51,7 +51,7 @@ public class EntityCraftingGolem extends GolemBase
 			player.swingArm(hand);
 		}
 		
-		return super.processInteract(player, hand, itemstack);
+		return super.processInteract(player, hand);
 	}
 
 	@Override

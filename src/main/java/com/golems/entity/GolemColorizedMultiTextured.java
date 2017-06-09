@@ -50,12 +50,12 @@ public abstract class GolemColorizedMultiTextured extends GolemColorized
 	}
 	
 	@Override
-	public boolean processInteract(EntityPlayer player, EnumHand hand, ItemStack stack)
+	public boolean processInteract(EntityPlayer player, EnumHand hand)
 	{
 		// only change texture when player has empty hand
-		if(stack != null)
+		if(activeItemStack != null)
 		{
-			return super.processInteract(player, hand, stack);
+			return super.processInteract(player, hand);
 		}
 		else
 		{
