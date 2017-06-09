@@ -44,9 +44,9 @@ public class GolemConfigSet
 
 	public GolemConfigSet(Configuration configFile, String name, boolean spawn, double health, float attack)
 	{
-		this.mapInt = new TObjectIntHashMap(1);
-		this.mapFloat = new TObjectFloatHashMap(1);
-		this.mapBoolean = new TObjectByteHashMap(1);
+		this.mapInt = new TObjectIntHashMap<String>(1);
+		this.mapFloat = new TObjectFloatHashMap<String>(1);
+		this.mapBoolean = new TObjectByteHashMap<String>(1);
 		this.config = configFile;
 		this.golemName = name;
 		this.category = this.golemName.toLowerCase().replace(' ', '_');
@@ -102,7 +102,7 @@ public class GolemConfigSet
 		}
 		else
 		{
-			String error = "Did not find an int value matching '" + key + "' in GolemConfigSet '" + this.golemName + "' - defaulting to " + this.DEF_INT;
+			String error = "Did not find an int value matching '" + key + "' in GolemConfigSet '" + this.golemName + "' - defaulting to " + GolemConfigSet.DEF_INT;
 			System.out.println(error);
 			this.mapInt.put(key, DEF_INT);
 			return DEF_INT;
@@ -117,7 +117,7 @@ public class GolemConfigSet
 		}
 		else
 		{
-			String error = "Did not find a float value matching '" + key + "' in GolemConfigSet '" + this.golemName + "' - defaulting to " + this.DEF_FLOAT;
+			String error = "Did not find a float value matching '" + key + "' in GolemConfigSet '" + this.golemName + "' - defaulting to " + GolemConfigSet.DEF_FLOAT;
 			System.out.println(error);
 			this.mapFloat.put(key, DEF_FLOAT);
 			return DEF_FLOAT;

@@ -85,6 +85,6 @@ public class RenderColoredGolem extends RenderLiving<GolemColorized>
 	 */
 	protected ResourceLocation getEntityTexture(GolemColorized golem)
 	{
-		return this.texture != null ? this.texture : this.fallbackTexture;
+		return this.texture != null ? this.texture : RenderColoredGolem.fallbackTexture;
 	}
 }
