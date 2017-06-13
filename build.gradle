@@ -27,7 +27,7 @@ plugins {
 */
 version = "6.02.1"
 group= "com.golems" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "ExtraGolems[1.10.2]"
+archivesBaseName = "ExtraGolems[1.11.2]"
 
 minecraft {
     version = "1.11.2-13.20.0.2228"
