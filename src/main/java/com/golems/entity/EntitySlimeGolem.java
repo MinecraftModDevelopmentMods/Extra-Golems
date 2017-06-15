@@ -55,7 +55,7 @@ public class EntitySlimeGolem extends GolemBase
 			super.damageEntity(source, amount);
 			if(source.getTrueSource() != null && Config.SLIME.getBoolean(ALLOW_SPECIAL))
 			{
-				knockbackTarget(source.getTrueSource() != null, Config.SLIME.getFloat(KNOCKBACK) * 0.325F);
+				knockbackTarget(source.getTrueSource(), Config.SLIME.getFloat(KNOCKBACK) * 0.325F);
 			}
 		}
 	}
