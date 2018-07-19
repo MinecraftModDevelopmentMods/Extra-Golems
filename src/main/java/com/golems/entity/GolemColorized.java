@@ -1,7 +1,6 @@
 package com.golems.entity;
 
 import com.golems.main.GolemItems;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -115,11 +114,12 @@ public abstract class GolemColorized extends GolemBase
 		return this.colorAlpha;
 	}
     
-    /**
-     * Whether {@link overlay} should be rendered as transparent.
-     * This is not called for rendering {@link base},
-     * only for rendering the colorized layer.
-     **/
+    ///**
+     //* Whether {@link overlay} should be rendered as transparent.
+     //* This is not called for rendering {@link base},
+     //* only for rendering the colorized layer.
+     //**/
+	//TODO: FIX ME!
     @SideOnly(Side.CLIENT)
     public boolean hasTransparency()
     {

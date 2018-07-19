@@ -1,11 +1,8 @@
 package com.golems.entity;
 
-import java.util.List;
-
 import com.golems.blocks.ContainerPortableWorkbench;
 import com.golems.main.Config;
 import com.golems.util.WeightedItem;
-
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -19,6 +16,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 public class EntityCraftingGolem extends GolemBase
 {
@@ -41,8 +40,9 @@ public class EntityCraftingGolem extends GolemBase
 	}
 	
 	@Override
-	protected boolean processInteract(EntityPlayer player, EnumHand hand, ItemStack itemstack)
+	protected boolean processInteract(EntityPlayer player, EnumHand hand)
 	{
+		ItemStack itemstack = player.getHeldItem(hand);
 		if(!player.world.isRemote && itemstack == null)
 		{
 			// display crafting grid for player
@@ -51,7 +51,7 @@ public class EntityCraftingGolem extends GolemBase
 			player.swingArm(hand);
 		}
 		
-		return super.processInteract(player, hand, itemstack);
+		return super.processInteract(player, hand);
 	}
 
 	@Override

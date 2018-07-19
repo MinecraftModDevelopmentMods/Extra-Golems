@@ -1,49 +1,38 @@
 package com.golems.proxies;
 
-import com.golems.entity.EntityBedrockGolem;
-import com.golems.entity.EntityBoneGolem;
-import com.golems.entity.EntityBookshelfGolem;
-import com.golems.entity.EntityClayGolem;
-import com.golems.entity.EntityCoalGolem;
-import com.golems.entity.EntityCraftingGolem;
-import com.golems.entity.EntityDiamondGolem;
-import com.golems.entity.EntityEmeraldGolem;
-import com.golems.entity.EntityEndstoneGolem;
-import com.golems.entity.EntityGlassGolem;
-import com.golems.entity.EntityGlowstoneGolem;
-import com.golems.entity.EntityGoldGolem;
-import com.golems.entity.EntityHardenedClayGolem;
-import com.golems.entity.EntityIceGolem;
-import com.golems.entity.EntityLapisGolem;
-import com.golems.entity.EntityLeafGolem;
-import com.golems.entity.EntityMagmaGolem;
-import com.golems.entity.EntityMelonGolem;
-import com.golems.entity.EntityMushroomGolem;
-import com.golems.entity.EntityNetherBrickGolem;
-import com.golems.entity.EntityNetherWartGolem;
-import com.golems.entity.EntityObsidianGolem;
-import com.golems.entity.EntityPrismarineGolem;
-import com.golems.entity.EntityQuartzGolem;
-import com.golems.entity.EntityRedSandstoneGolem;
-import com.golems.entity.EntityRedstoneGolem;
-import com.golems.entity.EntitySandstoneGolem;
-import com.golems.entity.EntitySeaLanternGolem;
-import com.golems.entity.EntitySlimeGolem;
-import com.golems.entity.EntitySpongeGolem;
-import com.golems.entity.EntityStainedClayGolem;
-import com.golems.entity.EntityStainedGlassGolem;
-import com.golems.entity.EntityStrawGolem;
-import com.golems.entity.EntityTNTGolem;
-import com.golems.entity.EntityWoodenGolem;
-import com.golems.entity.EntityWoolGolem;
+import com.golems.blocks.*;
+import com.golems.entity.*;
 import com.golems.events.handlers.GolemCommonEventHandler;
+import com.golems.items.ItemBedrockGolem;
+import com.golems.items.ItemGolemPaper;
+import com.golems.main.Config;
 import com.golems.main.ExtraGolems;
-
+import com.golems.main.GolemItems;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+@Mod.EventBusSubscriber
 public class CommonProxy 
 {
+
+	private static Map<String, Block> blocks = new ConcurrentHashMap<>();
+	private static Map<String, Item> items = new ConcurrentHashMap<>();
+
+
 	protected static int golemEntityCount;
 	
 	public void preInitRenders() {}
@@ -97,6 +86,41 @@ public class CommonProxy
 	/** registers the entity **/
 	protected static void register(Class entityClass, String name)
 	{		
-		EntityRegistry.registerModEntity(entityClass, name, ++golemEntityCount, ExtraGolems.instance, 16 * 4, 3, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(ExtraGolems.MODID + ":textures/entity/" +
+				name + ".png"),entityClass, name, ++golemEntityCount,
+				ExtraGolems.instance, 16 * 4, 3, true);
 	}
+
+	//TODO: Reimplement old version
+	@SubscribeEvent
+	public static void registerItems(RegistryEvent.Register<Item> event) {
+		event.getRegistry().register(new ItemBlock(GolemItems.golemHead){
+            @Override
+            @SideOnly(Side.CLIENT)
+            public boolean hasEffect(ItemStack stack)
+            {
+                return Config.itemGolemHeadHasGlint;
+            }
+        }.setRegistryName(GolemItems.golemHead.getRegistryName()));
+
+		event.getRegistry().register(new ItemBedrockGolem().setUnlocalizedName("spawn_bedrock_golem").setRegistryName(ExtraGolems.MODID,
+                "spawn_bedrock_golem"));
+
+		event.getRegistry().register(new ItemGolemPaper().setUnlocalizedName("golem_paper").setRegistryName(ExtraGolems.MODID,
+                "golem_paper"));
+	}
+
+
+	//TODO: Reimplement old version
+	@SubscribeEvent
+	public static void registerBlocks(RegistryEvent.Register<Block> event) {
+		//TODO: Clean up
+		event.getRegistry().registerAll(new BlockGolemHead().setUnlocalizedName("golem_head")
+				.setRegistryName(ExtraGolems.MODID, "golem_head"), new BlockLightProvider().setUnlocalizedName("light_provider_full")
+				.setRegistryName(ExtraGolems.MODID, "light_provider_full"), new BlockPowerProvider()
+				.setUnlocalizedName("power_provider_all").setRegistryName(ExtraGolems.MODID, "power_provider_all"));
+		TileEntity.register(ExtraGolems.MODID + "_TileEntityMovingLightSource", TileEntityMovingLightSource.class);
+		TileEntity.register(ExtraGolems.MODID + "_TileEntityMovingPowerSource", TileEntityMovingPowerSource.class);
+	}
+
 }

@@ -1,19 +1,20 @@
 package com.golems.items;
 
-import java.util.List;
-
 import com.golems.events.GolemPaperAddInfoEvent;
-
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class ItemGolemPaper extends Item 
 {
@@ -22,13 +23,15 @@ public class ItemGolemPaper extends Item
 		super();
 		this.setCreativeTab(CreativeTabs.MISC);
 	}
-	
+
+
 	/**
      * allows items to add custom lines of information to the mouseover description
      */
+
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> par3List, boolean advanced)
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
 	{
 		if(GuiScreen.isShiftKeyDown())
 		{
@@ -47,8 +50,8 @@ public class ItemGolemPaper extends Item
 			trans("tile.bookshelf.name") + C + trans("tile.sponge.dry.name") + C + trans("tile.melon.name") + C + trans("tile.workbench.name") + C +
 			trans("tile.cloth.name") + C + trans("tile.hayBlock.name") + C + trans("tile.leaves.name") + C + trans("tile.magma.name") + C +
 			trans("tile.netherWartBlock.name") + C + trans("tile.redNetherBrick.name") + C + trans("tile.boneBlock.name");		
-			par3List.add(toAdd);
-			GolemPaperAddInfoEvent event = new GolemPaperAddInfoEvent(stack, player, par3List, advanced);
+			tooltip.add(toAdd);
+			GolemPaperAddInfoEvent event = new GolemPaperAddInfoEvent(stack, worldIn, tooltip, flagIn);
 			MinecraftForge.EVENT_BUS.post(event);
 		}
 		else
@@ -57,7 +60,7 @@ public class ItemGolemPaper extends Item
 					TextFormatting.GRAY + trans("tooltip.press") + " " + 
 					TextFormatting.YELLOW + trans("tooltip.shift").toUpperCase() + " " + 
 					TextFormatting.GRAY + trans("tooltip.for_golem_materials");
-			par3List.add(lorePressShift);
+			tooltip.add(lorePressShift);
 		}
 	}
 

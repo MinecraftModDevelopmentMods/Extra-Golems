@@ -1,13 +1,11 @@
 package com.golems.items;
 
-import java.util.List;
-
 import com.golems.entity.EntityBedrockGolem;
 import com.golems.entity.GolemBase;
 import com.golems.main.Config;
-
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -22,6 +20,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.List;
+
 public class ItemBedrockGolem extends Item 
 {
 	public ItemBedrockGolem()
@@ -29,13 +29,15 @@ public class ItemBedrockGolem extends Item
 		this.setCreativeTab(CreativeTabs.MISC);
 	}
 
+
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+	public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
+		ItemStack stack = player.getHeldItem(hand);
 		// creative players can use this item to spawn a bedrock golem
 		if(Config.BEDROCK.canSpawn())
 		{
-			if(Config.bedrockGolemCreativeOnly && !playerIn.capabilities.isCreativeMode)
+			if(Config.bedrockGolemCreativeOnly && !player.capabilities.isCreativeMode)
 			{
 				return EnumActionResult.PASS;
 			}
@@ -56,10 +58,10 @@ public class ItemBedrockGolem extends Item
 				worldIn.spawnEntity(golem);
 			}
 			spawnParticles(worldIn, pos.getX() - 0.5D, pos.getY() + 1.0D, pos.getZ() - 0.5D, 0.2D);
-			playerIn.swingArm(hand);
-			if(!playerIn.capabilities.isCreativeMode) 
+			player.swingArm(hand);
+			if(!player.capabilities.isCreativeMode)
 			{
-				stack.stackSize--;
+				stack.shrink(1);
 			}
 			return EnumActionResult.SUCCESS;
 		}
@@ -79,7 +81,7 @@ public class ItemBedrockGolem extends Item
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
+	public void addInformation(ItemStack par1ItemStack, World world, List par3List, ITooltipFlag flag)
 	{
 		String loreCreativeOnly = TextFormatting.RED + trans("tooltip.creative_only_item"); 
 		if(Config.bedrockGolemCreativeOnly) par3List.add(loreCreativeOnly);
