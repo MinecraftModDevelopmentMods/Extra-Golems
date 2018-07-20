@@ -45,7 +45,9 @@ public class GolemBuildEvent extends Event {
 		this.isGolemBanned = !isAllowedByConfig;
 	}
 
-	/** Assign this event a new GolemBase to spawn **/
+	/**
+	 * Assign this event a new GolemBase to spawn
+	 **/
 	public void setGolem(GolemBase golem) {
 		this.setGolem(golem, true);
 	}
@@ -54,12 +56,16 @@ public class GolemBuildEvent extends Event {
 		this.isGolemBanned = toSet;
 	}
 
-	/** @return the GolemBase to spawn (may be null) **/
+	/**
+	 * @return the GolemBase to spawn (may be null)
+	 **/
 	public GolemBase getGolem() {
 		return this.theGolem;
 	}
 
-	/** @return true if theGolem has not been initialized **/
+	/**
+	 * @return true if theGolem has not been initialized
+	 **/
 	public boolean isGolemNull() {
 		return this.theGolem == (GolemBase) null;
 	}
@@ -71,12 +77,14 @@ public class GolemBuildEvent extends Event {
 		return this.isGolemBanned;
 	}
 
-	/** @return true if all 4 construction blocks have the same metadata **/
+	/**
+	 * @return true if all 4 construction blocks have the same metadata
+	 **/
 	protected boolean getAreGolemBlocksSameMeta() {
 		// SOUTH=z++; WEST=x--; NORTH=z--; EAST=x++
-		BlockPos[] armsX = { this.headPos.down(1).west(1), this.headPos.down(1).east(1) };
-		BlockPos[] armsZ = { this.headPos.down(1).north(1), this.headPos.down(1).south(1) };
-		int metaBelow1 = this.blockBelow.getMetaFromState(this.blockState);
+		final BlockPos[] armsX = { this.headPos.down(1).west(1), this.headPos.down(1).east(1) };
+		final BlockPos[] armsZ = { this.headPos.down(1).north(1), this.headPos.down(1).south(1) };
+		final int metaBelow1 = this.blockBelow.getMetaFromState(this.blockState);
 		IBlockState state;
 		state = this.worldObj.getBlockState(this.headPos.down(2));
 		int metaBelow2 = this.blockBelow.getMetaFromState(state);

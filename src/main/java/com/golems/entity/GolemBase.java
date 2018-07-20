@@ -559,6 +559,8 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	public abstract void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit,
 			int lootingLevel);
 
-	/** @return A SoundEvent to play when the golem is attacking, walking, hurt, and on death **/
+	/**
+	 * @return A SoundEvent to play when the golem is attacking, walking, hurt, and on death
+	 **/
 	public abstract SoundEvent getGolemSound();
 }

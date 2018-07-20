@@ -158,8 +158,9 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	private void registerRender(Item i, String name, int... meta) {
-		if (meta.length < 1)
+		if (meta.length < 1) {
 			meta = new int[] { 0 };
+		}
 		final ModelResourceLocation MRL = new ModelResourceLocation(name, "inventory");
 		for (int m : meta) {
 			ModelLoader.setCustomModelResourceLocation(i, m, MRL);

@@ -40,7 +40,7 @@ public class BlockGolemHead extends BlockHorizontal {
 	}
 
 	/**
-	 * Convert the given metadata into a BlockState for this Block
+	 * Convert the given metadata into a BlockState for this Block.
 	 */
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
@@ -48,7 +48,7 @@ public class BlockGolemHead extends BlockHorizontal {
 	}
 
 	/**
-	 * Convert the BlockState into the correct metadata value
+	 * Convert the BlockState into the correct metadata value.
 	 */
 	@Override
 	public int getMetaFromState(IBlockState state) {
@@ -139,7 +139,9 @@ public class BlockGolemHead extends BlockHorizontal {
 		}
 	}
 
-	/** @return {@code true} if the blocks at x-1 and x+1 match the block at x **/
+	/**
+	 * @return {@code true} if the blocks at x-1 and x+1 match the block at x.
+	 **/
 	public static boolean isGolemXAligned(World world, BlockPos headPos) {
 		BlockPos[] armsX = { headPos.down(1).west(1), headPos.down(1).east(1) };
 		Block below = world.getBlockState(headPos.down(1)).getBlock();
@@ -147,7 +149,9 @@ public class BlockGolemHead extends BlockHorizontal {
 				&& world.getBlockState(armsX[1]).getBlock() == below;
 	}
 
-	/** @return {@code true} if the blocks at z-1 and z+1 match the block at z **/
+	/**
+	 * @return {@code true} if the blocks at z-1 and z+1 match the block at z.
+	 **/
 	public static boolean isGolemZAligned(World world, BlockPos headPos) {
 		BlockPos[] armsZ = { headPos.down(1).north(1), headPos.down(1).south(1) };
 		Block below = world.getBlockState(headPos.down(1)).getBlock();
@@ -155,13 +159,17 @@ public class BlockGolemHead extends BlockHorizontal {
 				&& world.getBlockState(armsZ[1]).getBlock() == below;
 	}
 
-	/** Replaces this block and the four construction blocks with air **/
+	/**
+	 * Replaces this block and the four construction blocks with air.
+	 **/
 	public static void removeAllGolemBlocks(World world, BlockPos pos, boolean isXAligned) {
 		removeGolemBody(world, pos);
 		removeGolemArms(world, pos, isXAligned);
 	}
 
-	/** Replaces this block and the two below it with air **/
+	/**
+	 * Replaces this block and the two below it with air
+	 **/
 	public static void removeGolemBody(World world, BlockPos head) {
 		world.setBlockToAir(head);
 		world.setBlockToAir(head.down(1));

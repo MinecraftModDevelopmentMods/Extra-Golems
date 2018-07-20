@@ -79,8 +79,9 @@ public class ItemBedrockGolem extends Item {
 	public void addInformation(ItemStack par1ItemStack, World world, List<String> par3List,
 			ITooltipFlag flag) {
 		String loreCreativeOnly = TextFormatting.RED + trans("tooltip.creative_only_item");
-		if (Config.bedrockGolemCreativeOnly)
+		if (Config.bedrockGolemCreativeOnly) {
 			par3List.add(loreCreativeOnly);
+		}
 
 		if (GuiScreen.isShiftKeyDown()) {
 			par3List.add(I18n.format("tooltip.use_to_spawn", trans("entity.golem_bedrock.name")));

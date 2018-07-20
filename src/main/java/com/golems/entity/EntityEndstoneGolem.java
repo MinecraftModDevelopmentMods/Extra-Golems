@@ -128,8 +128,9 @@ public class EntityEndstoneGolem extends GolemBase {
 		if (this.isHurtByWater && this.isWet()) {
 			this.attackEntityFrom(DamageSource.DROWN, 1.0F);
 			for (int i = 0; i < 16; ++i) {
-				if (this.teleportRandomly())
+				if (this.teleportRandomly()) {
 					break;
+				}
 			}
 		}
 		if (this.getRevengeTarget() != null) {

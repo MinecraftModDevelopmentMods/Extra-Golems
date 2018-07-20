@@ -57,9 +57,10 @@ public class EntityBedrockGolem extends GolemBase {
 				player.swingArm(hand);
 				if (!this.world.isRemote) {
 					this.setDead();
-				} else
+				} else {
 					ItemBedrockGolem.spawnParticles(this.world, this.posX - 0.5D, this.posY + 0.1D,
 							this.posZ - 0.5D, 0.1D);
+				}
 			}
 		}
 

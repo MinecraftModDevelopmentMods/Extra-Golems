@@ -77,7 +77,9 @@ public abstract class GolemColorized extends GolemBase {
 		return this.hasBase;
 	}
 
-	/** Updates {@link #color} as well as calculates the RGBA components of that color **/
+	/**
+	 * Updates {@link #color} as well as calculates the RGBA components of that color
+	 **/
 	public void setColor(long toSet) {
 		this.color = toSet;
 		long tmpColor = toSet;

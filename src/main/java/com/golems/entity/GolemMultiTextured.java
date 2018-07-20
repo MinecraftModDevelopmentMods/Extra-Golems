@@ -98,7 +98,9 @@ public abstract class GolemMultiTextured extends GolemBase {
 		return true;
 	}
 
-	/** Calls {@link #setTextureNum(byte, boolean)} with <b>toSet</b> and <b>true</b> **/
+	/**
+	 * Calls {@link #setTextureNum(byte, boolean)} with <b>toSet</b> and <b>true</b>
+	 **/
 	public void setTextureNum(byte toSet) {
 		setTextureNum(toSet, true);
 	}
@@ -131,7 +133,10 @@ public abstract class GolemMultiTextured extends GolemBase {
 		return this.textures;
 	}
 
-	/** @deprecated automatically handled in {@link #setTextureNum(byte, boolean)} **/
+	/**
+	 * @deprecated
+	 * automatically handled in {@link #setTextureNum(byte, boolean)}
+	 **/
 	@Deprecated
 	public void updateTexture() {
 		this.setTextureType(this.getTextureFromArray(this.getTextureNum()));

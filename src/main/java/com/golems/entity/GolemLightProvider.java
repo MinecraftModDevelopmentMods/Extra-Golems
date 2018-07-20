@@ -127,11 +127,14 @@ public abstract class GolemLightProvider extends GolemBase {
 			this.UPDATE_FLAG = update;
 			if (canReplace != null && canReplace.length > 0) {
 				this.REPLACEABLE_MATERIALS = ImmutableSet.copyOf(canReplace);
-			} else
+			} else {
 				this.REPLACEABLE_MATERIALS = ImmutableSet.of(Material.AIR);
+			}
 		}
 
-		/** @see #LightManager(float, int, Material...) **/
+		/**
+		 * @see #LightManager(float, int, Material...)
+		 **/
 		public LightManager(float brightness, Material... canReplace) {
 			this(brightness, 2, canReplace);
 		}

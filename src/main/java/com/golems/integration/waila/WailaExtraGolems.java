@@ -59,7 +59,7 @@ public class WailaExtraGolems extends GolemDescriptionManager implements IWailaE
 	public List<String> getWailaBody(Entity entity, List<String> tip, IWailaEntityAccessor accessor,
 			IWailaConfigHandler config) {
 		if (entity instanceof GolemBase) {
-			GolemBase golem = (GolemBase) entity;
+			final GolemBase golem = (GolemBase) entity;
 
 			this.showAttack = config.getConfig(configShowAttackDamage)
 					&& accessor.getPlayer().isSneaking();

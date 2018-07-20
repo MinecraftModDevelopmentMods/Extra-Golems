@@ -66,14 +66,16 @@ public class EntityAIPlaceRandomBlocks extends EntityAIBase {
 	}
 
 	public boolean isPlantSupport(World world, BlockPos pos) {
-		if (!this.checkSupports)
+		if (!this.checkSupports) {
 			return true;
+		}
 
 		Block at = world.getBlockState(pos).getBlock();
 		if (this.plantSupports != null && this.plantSupports.length > 0) {
 			for (Block b : this.plantSupports) {
-				if (at == b)
+				if (at == b) {
 					return true;
+				}
 			}
 		}
 

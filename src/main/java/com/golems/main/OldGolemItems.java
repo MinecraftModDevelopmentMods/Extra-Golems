@@ -3,8 +3,7 @@ package com.golems.main;
 
 
 //TODO: Reimplement
-public class OldGolemItems
-{
+public class OldGolemItems {
 //	public static Item golemPaper;
 //	public static Item spawnBedrockGolem;
 //

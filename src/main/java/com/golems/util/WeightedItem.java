@@ -31,19 +31,25 @@ public class WeightedItem {
 				percentChance);
 	}
 
-	/** Calculated randomly each time this method is called **/
+	/**
+	 * Calculated randomly each time this method is called
+	 **/
 	public boolean shouldDrop(Random rand) {
 		return this.item != null && rand.nextInt(100) < this.dropChance;
 	}
 
-	/** Gets a random number between minAmount and maxAmount, inclusive **/
+	/**
+	 * Gets a random number between minAmount and maxAmount, inclusive
+	 **/
 	public int getRandomSize(Random rand) {
 		return this.maxAmount > this.minAmount
 				? this.minAmount + rand.nextInt(this.maxAmount - this.minAmount + 1)
 				: this.minAmount;
 	}
 
-	/** Makes an ItemStack of this WeightedItem using {@link #getRandomSize(Random)} **/
+	/**
+	 * Makes an ItemStack of this WeightedItem using {@link #getRandomSize(Random)}
+	 **/
 	public ItemStack makeStack(Random rand) {
 		int size = getRandomSize(rand);
 		return new ItemStack(this.item, size, this.meta);

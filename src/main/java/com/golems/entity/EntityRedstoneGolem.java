@@ -27,18 +27,24 @@ public class EntityRedstoneGolem extends GolemBase {
 	public static final String ALLOW_SPECIAL = "Allow Special: Redstone Power";
 	public static final String POWER = "Redstone Power Level";
 
-	/** If you want to change power after constructor, add a {@link DataParameter} **/
+	/**
+	 * If you want to change power after constructor, add a {@link DataParameter}
+	 **/
 	private int powerLevel;
 	protected boolean CAN_POWER;
 	protected int tickDelay;
 
-	/** Default constructor for Redstone Golem **/
+	/**
+	 * Default constructor for Redstone Golem
+	 **/
 	public EntityRedstoneGolem(World world) {
 		this(world, Config.REDSTONE.getBaseAttack(), Blocks.REDSTONE_BLOCK,
 				Config.REDSTONE.getInt(POWER), Config.REDSTONE.getBoolean(ALLOW_SPECIAL));
 	}
 
-	/** Flexible constructor to allow child classes to customize **/
+	/**
+	 * Flexible constructor to allow child classes to customize
+	 **/
 	public EntityRedstoneGolem(World world, float attack, Block pick, int defPower,
 			boolean CONFIG_ALLOWS_POWERING) {
 		super(world, attack, pick);
@@ -47,7 +53,9 @@ public class EntityRedstoneGolem extends GolemBase {
 		this.tickDelay = 2;
 	}
 
-	/** Flexible constructor to allow child classes to customize **/
+	/**
+	 * Flexible constructor to allow child classes to customize
+	 **/
 	public EntityRedstoneGolem(World world, float attack, int defPower,
 			boolean CONFIG_ALLOWS_POWERING) {
 		this(world, attack, GolemItems.golemHead, defPower, CONFIG_ALLOWS_POWERING);
