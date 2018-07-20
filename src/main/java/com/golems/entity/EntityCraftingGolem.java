@@ -43,7 +43,7 @@ public class EntityCraftingGolem extends GolemBase
 	protected boolean processInteract(EntityPlayer player, EnumHand hand)
 	{
 		ItemStack itemstack = player.getHeldItem(hand);
-		if(!player.world.isRemote && itemstack == null)
+		if(!player.world.isRemote && itemstack.isEmpty())
 		{
 			// display crafting grid for player
 			player.displayGui(new EntityCraftingGolem.InterfaceCraftingGrid(player.world, player.bedLocation));
