@@ -12,41 +12,36 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityGlassGolem extends GolemBase 
-{			
-	public EntityGlassGolem(World world) 
-	{
+public class EntityGlassGolem extends GolemBase {
+
+	public EntityGlassGolem(World world) {
 		super(world, Config.GLASS.getBaseAttack(), Blocks.GLASS);
 		this.setCanTakeFallDamage(true);
 	}
-	
-	protected ResourceLocation applyTexture()
-	{
+
+	protected ResourceLocation applyTexture() {
 		return makeGolemTexture("glass");
 	}
-		
+
 	@Override
-	protected void applyAttributes() 
-	{
-	 	this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Config.GLASS.getMaxHealth());
-	  	this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
+	protected void applyAttributes() {
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
+				.setBaseValue(Config.GLASS.getMaxHealth());
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
 	}
-	
+
 	@Override
-	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel)
-	{
+	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel) {
 		this.addDrop(dropList, Blocks.GLASS, 0, lootingLevel, lootingLevel + 1, 90);
 	}
-	
+
 	@Override
-	public SoundEvent getGolemSound() 
-	{
+	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_GLASS_STEP;
 	}
-	
+
 	@Override
-	protected SoundEvent getDeathSound()
-	{
+	protected SoundEvent getDeathSound() {
 		return SoundEvents.BLOCK_GLASS_BREAK;
 	}
 }

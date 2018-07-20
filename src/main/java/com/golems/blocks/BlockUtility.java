@@ -19,12 +19,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
-public class BlockUtility extends Block
-{
-	public static final AxisAlignedBB SINGULAR_AABB = new AxisAlignedBB(0.5D, 0.5D, 0.5D, 0.5D, 0.5D, 0.5D);
+public class BlockUtility extends Block {
 
-	public BlockUtility()
-	{
+	public static final AxisAlignedBB SINGULAR_AABB = new AxisAlignedBB(0.5D, 0.5D, 0.5D, 0.5D,
+			0.5D, 0.5D);
+
+	public BlockUtility() {
 		super(Material.AIR);
 		setDefaultState(blockState.getBaseState());
 		setTickRandomly(false);
@@ -35,25 +35,24 @@ public class BlockUtility extends Block
 	@Nullable
 	@Deprecated
 	@Override
-	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess access, BlockPos pos)
-	{
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess access,
+			BlockPos pos) {
 		return NULL_AABB;
 	}
 
 	@Nullable
 	@Deprecated
 	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState blockState, IBlockAccess access, BlockPos pos)
-	{
+	public AxisAlignedBB getBoundingBox(IBlockState blockState, IBlockAccess access, BlockPos pos) {
 		return NULL_AABB;
 	}
 
 	@Deprecated
 	@Override
 	public AxisAlignedBB getSelectedBoundingBox(IBlockState blockState, World world, BlockPos pos) {
-		 return SINGULAR_AABB;
+		return SINGULAR_AABB;
 	}
-	
+
 	@Deprecated
 	@Override
 	public boolean isTopSolid(IBlockState state) {
@@ -62,8 +61,7 @@ public class BlockUtility extends Block
 
 	@Deprecated
 	@Override
-	public boolean isFullBlock(IBlockState state)
-	{
+	public boolean isFullBlock(IBlockState state) {
 		return false;
 	}
 
@@ -71,104 +69,91 @@ public class BlockUtility extends Block
 	 * Used to determine ambient occlusion and culling when rebuilding chunks for render
 	 */
 	@Deprecated
-	 @Override
-	 public boolean isOpaqueCube(IBlockState state)
-	 {
-		 return false;
-	 }
+	@Override
+	public boolean isOpaqueCube(IBlockState state) {
+		return false;
+	}
 
-	 @Override
-	 public boolean canCollideCheck(IBlockState state, boolean hitIfLiquid)
-	 {
-		 return false;
-	 }
+	@Override
+	public boolean canCollideCheck(IBlockState state, boolean hitIfLiquid) {
+		return false;
+	}
 
-	 /**
-	  * Spawns this Block's drops into the World as EntityItems.
-	  */
-	 @Override
-	 public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)
-	 {
-		 // Because we don't want to drop anything.
-	 }
+	/**
+	 * Spawns this Block's drops into the World as EntityItems.
+	 */
+	@Override
+	public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state,
+			float chance, int fortune) {
+		// Because we don't want to drop anything.
+	}
 
-	 /**
-	  * Whether this Block can be replaced directly by other blocks (true for e.g. tall grass)
-	  */
-	 @Override
-	 public boolean isReplaceable(IBlockAccess worldIn, BlockPos pos)
-	 {
-		 return true;
-	 }
-
-	 @Deprecated
-	 @Override
-	 public boolean isFullCube(IBlockState state)
-	 {
-		 return false;
-	 }
-
-	 @Override
-	 public boolean canPlaceBlockAt(World worldIn, BlockPos pos)
-	 {
-		 return true;
-	 }
+	/**
+	 * Whether this Block can be replaced directly by other blocks (true for e.g. tall grass)
+	 */
+	@Override
+	public boolean isReplaceable(IBlockAccess worldIn, BlockPos pos) {
+		return true;
+	}
 
 	@Deprecated
-	 @Override
-	 public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
-	 {
-		 return getDefaultState();
-	 }
+	@Override
+	public boolean isFullCube(IBlockState state) {
+		return false;
+	}
 
-	 @Override
-	 public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)
-	 {
-		 // Do nothing.
-	 }
+	@Override
+	public boolean canPlaceBlockAt(World worldIn, BlockPos pos) {
+		return true;
+	}
 
 	@Deprecated
-	 @Override
-	 public IBlockState getStateFromMeta(int meta)
-	 {
-		 return getDefaultState();
-	 }
+	@Override
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing,
+			float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+		return getDefaultState();
+	}
 
-	 @Override
-	 public int getMetaFromState(IBlockState state)
-	 {
-		 return 0;
-	 }
+	@Override
+	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
+		// Do nothing.
+	}
 
 	@Deprecated
-	 @Override
-	 public EnumBlockRenderType getRenderType(IBlockState state)
-	 {
-		 return EnumBlockRenderType.INVISIBLE;
-	 }
+	@Override
+	public IBlockState getStateFromMeta(int meta) {
+		return getDefaultState();
+	}
 
-	 @Override
-	 @SideOnly(Side.CLIENT)
-	 public BlockRenderLayer getBlockLayer()
-	 {
-		 return BlockRenderLayer.CUTOUT;
-	 }
+	@Override
+	public int getMetaFromState(IBlockState state) {
+		return 0;
+	}
 
-	 @Override
-	 public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance)
-	 {
-		 return;
-	 }
+	@Deprecated
+	@Override
+	public EnumBlockRenderType getRenderType(IBlockState state) {
+		return EnumBlockRenderType.INVISIBLE;
+	}
 
-	 @Override
-	 public void onLanded(World worldIn, Entity entityIn)
-	 {
-		 return;
-	 }
+	@Override
+	@SideOnly(Side.CLIENT)
+	public BlockRenderLayer getBlockLayer() {
+		return BlockRenderLayer.CUTOUT;
+	}
 
-	 @Override
-	 protected BlockStateContainer createBlockState()
-	 {
-		 return new BlockStateContainer(this, (IProperty[]) new IProperty[0]);
-	 }
+	@Override
+	public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance) {
+		return;
+	}
+
+	@Override
+	public void onLanded(World worldIn, Entity entityIn) {
+		return;
+	}
+
+	@Override
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, (IProperty[]) new IProperty[0]);
+	}
 }

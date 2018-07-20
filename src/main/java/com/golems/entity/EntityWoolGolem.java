@@ -14,41 +14,40 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityWoolGolem extends GolemMultiTextured 
-{	
-	public static final String woolPrefix = "wool";
-	private static final String[] coloredWoolTypes = {"black","orange","magenta","light_blue","yellow","lime","pink","gray","silver","cyan","purple","blue","brown","green","red","white"};
+public class EntityWoolGolem extends GolemMultiTextured {
 
-	public EntityWoolGolem(World world) 
-	{
-		super(world, Config.WOOL.getBaseAttack(), new ItemStack(Blocks.WOOL), woolPrefix, coloredWoolTypes);
+	public static final String woolPrefix = "wool";
+	private static final String[] coloredWoolTypes = { "black", "orange", "magenta", "light_blue",
+			"yellow", "lime", "pink", "gray", "silver", "cyan", "purple", "blue", "brown", "green",
+			"red", "white" };
+
+	public EntityWoolGolem(World world) {
+		super(world, Config.WOOL.getBaseAttack(), new ItemStack(Blocks.WOOL), woolPrefix,
+				coloredWoolTypes);
 		this.setCanSwim(true);
 	}
-	
+
 	@Override
-	public ItemStack getCreativeReturn()
-	{
+	public ItemStack getCreativeReturn() {
 		ItemStack woolStack = super.getCreativeReturn();
 		woolStack.setItemDamage(this.getTextureNum() % (coloredWoolTypes.length + 1));
 		return woolStack;
 	}
-	
+
 	@Override
-	public String getModId() 
-	{
+	public String getModId() {
 		return ExtraGolems.MODID;
 	}
 
 	@Override
-	protected void applyAttributes() 
-	{
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Config.WOOL.getMaxHealth());
+	protected void applyAttributes() {
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
+				.setBaseValue(Config.WOOL.getMaxHealth());
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
 	}
 
 	@Override
-	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel)
-	{
+	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel) {
 		int size = 1 + this.rand.nextInt(3) + lootingLevel;
 		int meta = this.getTextureNum() % coloredWoolTypes.length;
 		this.addDrop(dropList, new ItemStack(Blocks.WOOL, 1 + rand.nextInt(2), 0), 100);
@@ -57,15 +56,13 @@ public class EntityWoolGolem extends GolemMultiTextured
 	}
 
 	@Override
-	public SoundEvent getGolemSound() 
-	{
+	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_CLOTH_STEP;
 	}
-	
+
 	@Override
-	public void setTextureNum(byte toSet, boolean updateInstantly)
-	{
-		toSet %= (byte)(coloredWoolTypes.length - 1);
+	public void setTextureNum(byte toSet, boolean updateInstantly) {
+		toSet %= (byte) (coloredWoolTypes.length - 1);
 		super.setTextureNum(toSet, updateInstantly);
 	}
 }

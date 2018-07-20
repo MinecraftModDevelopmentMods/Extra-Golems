@@ -21,89 +21,88 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
-public class EntitySpongeGolem extends GolemBase 
-{	
+public class EntitySpongeGolem extends GolemBase {
+
 	public static final String ALLOW_SPECIAL = "Allow Special: Absorb Water";
 	public static final String INTERVAL = "Water Soaking Frequency";
 	public static final String RANGE = "Water Soaking Range";
 	public static final String PARTICLES = "Can Render Sponge Particles";
-	
-	public EntitySpongeGolem(World world) 
-	{
+
+	public EntitySpongeGolem(World world) {
 		super(world, Config.SPONGE.getBaseAttack(), Blocks.SPONGE);
 		this.setCanSwim(true);
 	}
 
 	@Override
-	protected ResourceLocation applyTexture()
-	{
+	protected ResourceLocation applyTexture() {
 		return makeGolemTexture("sponge");
 	}
 
 	/**
-	 * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
-	 * use this to react to sunlight and start to burn.
+	 * Called frequently so the entity can update its state every tick as required. For example,
+	 * zombies and skeletons use this to react to sunlight and start to burn.
 	 */
 	@Override
-	public void onLivingUpdate()
-	{
+	public void onLivingUpdate() {
 		super.onLivingUpdate();
 		int interval = Config.SPONGE.getInt(INTERVAL);
-		if(Config.SPONGE.getBoolean(ALLOW_SPECIAL) && (interval <= 1 || this.ticksExisted % interval == 0))
-		{
+		if (Config.SPONGE.getBoolean(ALLOW_SPECIAL)
+				&& (interval <= 1 || this.ticksExisted % interval == 0)) {
 			int x = MathHelper.floor(this.posX);
 			int y = MathHelper.floor(this.posY - 0.20000000298023224D) + 2;
 			int z = MathHelper.floor(this.posZ);
-			BlockPos center = new BlockPos(x,y,z);
-			
-			SpongeGolemSoakEvent event = new SpongeGolemSoakEvent(this, center, Config.SPONGE.getInt(RANGE));
-			if(!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Result.DENY)
-			{
-				this.replaceWater(event.getPositionList(), event.getReplacementState(), event.updateFlag);
+			BlockPos center = new BlockPos(x, y, z);
+
+			SpongeGolemSoakEvent event = new SpongeGolemSoakEvent(this, center,
+					Config.SPONGE.getInt(RANGE));
+			if (!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Result.DENY) {
+				this.replaceWater(event.getPositionList(), event.getReplacementState(),
+						event.updateFlag);
 			}
 		}
 
-		if(Config.SPONGE.getBoolean(PARTICLES) && Math.abs(this.motionX) < 0.05D && Math.abs(this.motionZ) < 0.05D && world.isRemote)
-		{
-			EnumParticleTypes particle = this.isBurning() ? EnumParticleTypes.SMOKE_NORMAL : EnumParticleTypes.WATER_SPLASH;
-			double x = this.rand.nextDouble() - 0.5D * (double)this.width * 0.6D;
-			double y = this.rand.nextDouble() * (double)(this.height - 0.75D);
-			double z = this.rand.nextDouble() - 0.5D * (double)this.width;
-			this.world.spawnParticle(particle, this.posX + x, this.posY + y, this.posZ + z, (this.rand.nextDouble() - 0.5D) * 0.5D, this.rand.nextDouble() - 0.5D, (this.rand.nextDouble() - 0.5D) * 0.5D, new int[0]);
+		if (Config.SPONGE.getBoolean(PARTICLES) && Math.abs(this.motionX) < 0.05D
+				&& Math.abs(this.motionZ) < 0.05D && world.isRemote) {
+			EnumParticleTypes particle = this.isBurning() ? EnumParticleTypes.SMOKE_NORMAL
+					: EnumParticleTypes.WATER_SPLASH;
+			double x = this.rand.nextDouble() - 0.5D * (double) this.width * 0.6D;
+			double y = this.rand.nextDouble() * (double) (this.height - 0.75D);
+			double z = this.rand.nextDouble() - 0.5D * (double) this.width;
+			this.world.spawnParticle(particle, this.posX + x, this.posY + y, this.posZ + z,
+					(this.rand.nextDouble() - 0.5D) * 0.5D, this.rand.nextDouble() - 0.5D,
+					(this.rand.nextDouble() - 0.5D) * 0.5D, new int[0]);
 		}
 	}
 
 	@Override
-	protected void applyAttributes() 
-	{
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Config.SPONGE.getMaxHealth());
+	protected void applyAttributes() {
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
+				.setBaseValue(Config.SPONGE.getMaxHealth());
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.22D);
 	}
 
 	@Override
-	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel)	
-	{
+	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel) {
 		int size = 1 + this.rand.nextInt(3 + lootingLevel);
-		this.addDrop(dropList, new ItemStack(Item.getItemFromBlock(Blocks.SPONGE), size > 4 ? 4 : size), 100);
+		this.addDrop(dropList,
+				new ItemStack(Item.getItemFromBlock(Blocks.SPONGE), size > 4 ? 4 : size), 100);
 	}
 
 	@Override
-	public SoundEvent getGolemSound() 
-	{
+	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_CLOTH_STEP;
 	}
-	
-	/** 
-	 * Usually called after creating and firing a {@link SpongeGolemSoakEvent}.
-	 * Iterates through the list of positions and replaces each one with the
-	 * passed IBlockState.
+
+	/**
+	 * Usually called after creating and firing a {@link SpongeGolemSoakEvent}. Iterates through the
+	 * list of positions and replaces each one with the passed IBlockState.
+	 * 
 	 * @return whether all setBlockState calls were successful.
 	 **/
-	public boolean replaceWater(final List<BlockPos> POSITIONS, final IBlockState REPLACE_WATER, final int UPDATE_FLAG)
-	{
+	public boolean replaceWater(final List<BlockPos> POSITIONS, final IBlockState REPLACE_WATER,
+			final int UPDATE_FLAG) {
 		boolean flag = true;
-		for(BlockPos p : POSITIONS)
-		{
+		for (BlockPos p : POSITIONS) {
 			flag &= this.world.setBlockState(p, REPLACE_WATER, UPDATE_FLAG);
 		}
 		return flag;

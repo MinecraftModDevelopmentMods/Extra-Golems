@@ -23,56 +23,53 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Mod.EventBusSubscriber
-public class ClientProxy extends CommonProxy 
-{	
-	public static final IRenderFactory<GolemBase> FACTORY_TEXTURED_GOLEM = new IRenderFactory<GolemBase>() 
-	{
+public class ClientProxy extends CommonProxy {
+
+	public static final IRenderFactory<GolemBase> FACTORY_TEXTURED_GOLEM = new IRenderFactory<GolemBase>() {
+
 		@Override
-		public Render<? super GolemBase> createRenderFor(RenderManager manager) 
-		{
+		public Render<? super GolemBase> createRenderFor(RenderManager manager) {
 			return new RenderGolem(manager);
 		}
 	};
-	
-	public static final IRenderFactory<GolemColorized> FACTORY_COLORED_GOLEM = new IRenderFactory<GolemColorized>() 
-	{
+
+	public static final IRenderFactory<GolemColorized> FACTORY_COLORED_GOLEM = new IRenderFactory<GolemColorized>() {
+
 		@Override
-		public Render<? super GolemColorized> createRenderFor(RenderManager manager) 
-		{
+		public Render<? super GolemColorized> createRenderFor(RenderManager manager) {
 			return new RenderColoredGolem(manager);
 		}
 	};
-	
+
 	@Override
-	public void registerEvents()
-	{
+	public void registerEvents() {
 		super.registerEvents();
 		MinecraftForge.EVENT_BUS.register(new GolemClientEventHandler());
 	}
 
-	//TODO: this looks wrong
+	// TODO: this looks wrong
 	@SubscribeEvent
 	public static void registerModels(ModelRegistryEvent event) {
 		ExtraGolems.proxy.preInitRenders();
 	}
 
-
 	@Override
-	public void preInitRenders()
-	{
+	public void preInitRenders() {
 		// blocks
-		ModelLoader.setCustomStateMapper(GolemItems.blockPowerSource, new StateMap.Builder().ignore(BlockPowerProvider.POWER).build());
-		ModelLoader.setCustomStateMapper(GolemItems.blockLightSource, new StateMap.Builder().ignore(BlockLightProvider.LIGHT).build());
+		ModelLoader.setCustomStateMapper(GolemItems.blockPowerSource,
+				new StateMap.Builder().ignore(BlockPowerProvider.POWER).build());
+		ModelLoader.setCustomStateMapper(GolemItems.blockLightSource,
+				new StateMap.Builder().ignore(BlockLightProvider.LIGHT).build());
 		// itemblocks
-		registerRender(Item.getItemFromBlock(GolemItems.golemHead), Blocks.PUMPKIN.getRegistryName().toString());
+		registerRender(Item.getItemFromBlock(GolemItems.golemHead),
+				Blocks.PUMPKIN.getRegistryName().toString());
 		// items
-		registerRender(GolemItems.golemPaper);	
+		registerRender(GolemItems.golemPaper);
 		registerRender(GolemItems.spawnBedrockGolem);
 	}
 
 	@Override
-	public void registerEntities()
-	{
+	public void registerEntities() {
 		super.registerEntities();
 		// register entity renders by calling a helper function
 		registerTextured(EntityBedrockGolem.class);
@@ -110,32 +107,28 @@ public class ClientProxy extends CommonProxy
 		registerTextured(EntityStrawGolem.class);
 		registerTextured(EntityTNTGolem.class);
 		registerTextured(EntityWoodenGolem.class);
-		registerTextured(EntityWoolGolem.class);	
+		registerTextured(EntityWoolGolem.class);
 	}
 
-	/**	Registers an entity with the RenderGolem rendering class */
-	public static void registerTextured(Class<? extends GolemBase> golem)
-	{
+	/** Registers an entity with the RenderGolem rendering class */
+	public static void registerTextured(Class<? extends GolemBase> golem) {
 		RenderingRegistry.registerEntityRenderingHandler(golem, FACTORY_TEXTURED_GOLEM);
 	}
-	
-	public static void registerColorized(Class<? extends GolemColorized> golem)
-	{
+
+	public static void registerColorized(Class<? extends GolemColorized> golem) {
 		RenderingRegistry.registerEntityRenderingHandler(golem, FACTORY_COLORED_GOLEM);
 	}
-	
-	private void registerRender(Item i, String name, int... meta)
-	{
-		if(meta.length < 1) meta = new int[] {0};
+
+	private void registerRender(Item i, String name, int... meta) {
+		if (meta.length < 1)
+			meta = new int[] { 0 };
 		final ModelResourceLocation MRL = new ModelResourceLocation(name, "inventory");
-		for(int m : meta)
-		{
+		for (int m : meta) {
 			ModelLoader.setCustomModelResourceLocation(i, m, MRL);
 		}
 	}
 
-	private void registerRender(Item i, int... meta)
-	{
+	private void registerRender(Item i, int... meta) {
 		registerRender(i, i.getRegistryName().toString(), meta);
 	}
 }

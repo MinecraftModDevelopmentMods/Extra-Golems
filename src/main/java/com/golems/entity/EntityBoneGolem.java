@@ -13,37 +13,33 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityBoneGolem extends GolemBase 
-{			
+public class EntityBoneGolem extends GolemBase {
+
 	public static final Block BONE = Blocks.BONE_BLOCK;
-	
-	public EntityBoneGolem(World world) 
-	{
+
+	public EntityBoneGolem(World world) {
 		super(world, Config.BONE.getBaseAttack(), BONE);
 		this.setCanTakeFallDamage(true);
 	}
-	
-	protected ResourceLocation applyTexture()
-	{
+
+	protected ResourceLocation applyTexture() {
 		return makeGolemTexture("bone");
 	}
-		
+
 	@Override
-	protected void applyAttributes() 
-	{
-	 	this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Config.BONE.getMaxHealth());
-	  	this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
+	protected void applyAttributes() {
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
+				.setBaseValue(Config.BONE.getMaxHealth());
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
-	
+
 	@Override
-	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel)
-	{
+	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel) {
 		this.addDrop(dropList, BONE, 0, lootingLevel + rand.nextInt(2), 4, 90);
 	}
-	
+
 	@Override
-	public SoundEvent getGolemSound() 
-	{
+	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_STONE_STEP;
 	}
 }

@@ -31,20 +31,17 @@ public class CommonProxy {
 	private static Map<String, Block> blocks = new ConcurrentHashMap<>();
 	private static Map<String, Item> items = new ConcurrentHashMap<>();
 
-
 	protected static int golemEntityCount;
-	
+
 	public void preInitRenders() {
 		// Unused
 	}
-	
-	public void registerEvents()
-	{
+
+	public void registerEvents() {
 		MinecraftForge.EVENT_BUS.register(new GolemCommonEventHandler());
 	}
-	
-	public void registerEntities()
-	{
+
+	public void registerEntities() {
 		golemEntityCount = 0;
 		register(EntityBedrockGolem.class, "golem_bedrock");
 		register(EntityBoneGolem.class, "golem_bone");
@@ -83,45 +80,51 @@ public class CommonProxy {
 		register(EntityWoodenGolem.class, "golem_wooden");
 		register(EntityWoolGolem.class, "golem_wool");
 	}
-	
-	/** registers the entity **/
-	protected static void register(Class entityClass, String name)
-	{		
 
-		EntityRegistry.registerModEntity(new ResourceLocation(ExtraGolems.MODID + ":textures/entity/" +
-				name + ".png"), entityClass, ExtraGolems.MODID + "." + name, ++golemEntityCount, ExtraGolems.instance, 16 * 4, 3, true);
+	/** registers the entity **/
+	protected static void register(Class entityClass, String name) {
+
+		EntityRegistry.registerModEntity(
+				new ResourceLocation(ExtraGolems.MODID + ":textures/entity/" + name + ".png"),
+				entityClass, ExtraGolems.MODID + "." + name, ++golemEntityCount,
+				ExtraGolems.instance, 16 * 4, 3, true);
 	}
 
-	//TODO: Reimplement old version
+	// TODO: Reimplement old version
 	@SubscribeEvent
 	public static void registerItems(RegistryEvent.Register<Item> event) {
-		event.getRegistry().register(new ItemBlock(GolemItems.golemHead){
-            @Override
-            @SideOnly(Side.CLIENT)
-            public boolean hasEffect(ItemStack stack)
-            {
-                return Config.itemGolemHeadHasGlint;
-            }
-        }.setRegistryName(GolemItems.golemHead.getRegistryName()));
+		event.getRegistry().register(new ItemBlock(GolemItems.golemHead) {
 
-		event.getRegistry().register(new ItemBedrockGolem().setUnlocalizedName("spawn_bedrock_golem").setRegistryName(ExtraGolems.MODID,
-                "spawn_bedrock_golem"));
+			@Override
+			@SideOnly(Side.CLIENT)
+			public boolean hasEffect(ItemStack stack) {
+				return Config.itemGolemHeadHasGlint;
+			}
+		}.setRegistryName(GolemItems.golemHead.getRegistryName()));
 
-		event.getRegistry().register(new ItemGolemPaper().setUnlocalizedName("golem_paper").setRegistryName(ExtraGolems.MODID,
-                "golem_paper"));
+		event.getRegistry()
+				.register(new ItemBedrockGolem().setUnlocalizedName("spawn_bedrock_golem")
+						.setRegistryName(ExtraGolems.MODID, "spawn_bedrock_golem"));
+
+		event.getRegistry().register(new ItemGolemPaper().setUnlocalizedName("golem_paper")
+				.setRegistryName(ExtraGolems.MODID, "golem_paper"));
 	}
 
-
-	//TODO: Reimplement old version
+	// TODO: Reimplement old version
 	@SubscribeEvent
 	public static void registerBlocks(RegistryEvent.Register<Block> event) {
-		//TODO: Clean up
-		event.getRegistry().registerAll(new BlockGolemHead().setUnlocalizedName("golem_head")
-				.setRegistryName(ExtraGolems.MODID, "golem_head"), new BlockLightProvider().setUnlocalizedName("light_provider_full")
-				.setRegistryName(ExtraGolems.MODID, "light_provider_full"), new BlockPowerProvider()
-				.setUnlocalizedName("power_provider_all").setRegistryName(ExtraGolems.MODID, "power_provider_all"));
-		TileEntity.register(ExtraGolems.MODID + "_TileEntityMovingLightSource", TileEntityMovingLightSource.class);
-		TileEntity.register(ExtraGolems.MODID + "_TileEntityMovingPowerSource", TileEntityMovingPowerSource.class);
+		// TODO: Clean up
+		event.getRegistry().registerAll(
+				new BlockGolemHead().setUnlocalizedName("golem_head")
+						.setRegistryName(ExtraGolems.MODID, "golem_head"),
+				new BlockLightProvider().setUnlocalizedName("light_provider_full")
+						.setRegistryName(ExtraGolems.MODID, "light_provider_full"),
+				new BlockPowerProvider().setUnlocalizedName("power_provider_all")
+						.setRegistryName(ExtraGolems.MODID, "power_provider_all"));
+		TileEntity.register(ExtraGolems.MODID + "_TileEntityMovingLightSource",
+				TileEntityMovingLightSource.class);
+		TileEntity.register(ExtraGolems.MODID + "_TileEntityMovingPowerSource",
+				TileEntityMovingPowerSource.class);
 	}
 
 }

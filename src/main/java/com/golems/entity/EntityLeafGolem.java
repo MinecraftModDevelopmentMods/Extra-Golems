@@ -17,56 +17,55 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 
-public class EntityLeafGolem extends GolemColorized 
-{
-	public static final String ALLOW_SPECIAL = "Allow Special: Regeneration";
-	
-	private static final ResourceLocation TEXTURE_BASE = GolemBase.makeGolemTexture("leaves");
-	private static final ResourceLocation TEXTURE_OVERLAY = GolemBase.makeGolemTexture("leaves_grayscale");
+public class EntityLeafGolem extends GolemColorized {
 
-	public EntityLeafGolem(World world)
-	{
-		super(world, Config.LEAF.getBaseAttack(), new ItemStack(Blocks.LEAVES), 0x5F904A, TEXTURE_BASE, TEXTURE_OVERLAY);
+	public static final String ALLOW_SPECIAL = "Allow Special: Regeneration";
+
+	private static final ResourceLocation TEXTURE_BASE = GolemBase.makeGolemTexture("leaves");
+	private static final ResourceLocation TEXTURE_OVERLAY = GolemBase
+			.makeGolemTexture("leaves_grayscale");
+
+	public EntityLeafGolem(World world) {
+		super(world, Config.LEAF.getBaseAttack(), new ItemStack(Blocks.LEAVES), 0x5F904A,
+				TEXTURE_BASE, TEXTURE_OVERLAY);
 		this.setCanSwim(true);
 	}
-	
+
 	@Override
-	protected void applyAttributes() 
-	{
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Config.LEAF.getMaxHealth());
+	protected void applyAttributes() {
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
+				.setBaseValue(Config.LEAF.getMaxHealth());
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.31D);
 	}
-	
+
 	/**
-	 * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
-	 * use this to react to sunlight and start to burn.
+	 * Called frequently so the entity can update its state every tick as required. For example,
+	 * zombies and skeletons use this to react to sunlight and start to burn.
 	 */
 	@Override
-	public void onLivingUpdate()
-	{
+	public void onLivingUpdate() {
 		super.onLivingUpdate();
-		if(Config.LEAF.getBoolean(ALLOW_SPECIAL) && this.getActivePotionEffect(MobEffects.REGENERATION) == null && rand.nextInt(40) == 0)
-		{
-			this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 200 + 20 * (1 + rand.nextInt(8)), 1));
+		if (Config.LEAF.getBoolean(ALLOW_SPECIAL)
+				&& this.getActivePotionEffect(MobEffects.REGENERATION) == null
+				&& rand.nextInt(40) == 0) {
+			this.addPotionEffect(
+					new PotionEffect(MobEffects.REGENERATION, 200 + 20 * (1 + rand.nextInt(8)), 1));
 		}
-		
-		if(this.ticksExisted % 10 == 2 && this.world.isRemote)
-		{
+
+		if (this.ticksExisted % 10 == 2 && this.world.isRemote) {
 			Biome biome = this.world.getBiome(this.getPosition());
 			long color = biome.getFoliageColorAtPos(this.getPosition());
 			this.setColor(color);
 		}
-		
+
 		// slow falling for this entity
-		if(this.motionY < -0.1D)
-		{
+		if (this.motionY < -0.1D) {
 			this.motionY *= 4.0D / 5.0D;
 		}
 	}
-	
+
 	@Override
-	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel)
-	{
+	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel) {
 		this.addDrop(dropList, new ItemStack(Blocks.LEAVES, lootingLevel + 1), 100);
 		this.addDrop(dropList, Blocks.SAPLING, 0, 1, 1, 20 + lootingLevel * 10);
 		this.addDrop(dropList, Items.APPLE, 0, 1, 1, 15 + lootingLevel * 10);
@@ -74,8 +73,7 @@ public class EntityLeafGolem extends GolemColorized
 	}
 
 	@Override
-	public SoundEvent getGolemSound() 
-	{
+	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_GRASS_STEP;
 	}
 }

@@ -19,22 +19,20 @@ import java.util.List;
  * WAILA integration -- using Hwyla:1.8.23-B38_1.12
  **/
 @Optional.Interface(iface = "mcp.mobius.waila.api.IWailaEntityProvider", modid = ModIds.WAILA)
-public class WailaExtraGolems extends GolemDescriptionManager implements IWailaEntityProvider
-{
+public class WailaExtraGolems extends GolemDescriptionManager implements IWailaEntityProvider {
+
 	public static final String configShowAttackDamage = "extragolems.show_attack_damage_tip";
 	public static final String configShowSpecialAbilities = "extragolems.show_special_abilities_tip";
 	public static final String configShowKnockbackResist = "extragolems.show_knockback_resistance_tip";
 	public static final String configShowMultiTexture = "extragolems.show_multitexture_tip";
 	public static final String configShowFireproof = "extragolems.show_fireproof_tip";
-	
-	public WailaExtraGolems()
-	{
+
+	public WailaExtraGolems() {
 		super();
 	}
 
 	@Optional.Method(modid = ModIds.WAILA)
-	public static void callbackRegister(IWailaRegistrar register) 
-	{
+	public static void callbackRegister(IWailaRegistrar register) {
 		WailaExtraGolems instance = new WailaExtraGolems();
 
 		register.registerBodyProvider(instance, GolemBase.class);
@@ -48,8 +46,8 @@ public class WailaExtraGolems extends GolemDescriptionManager implements IWailaE
 
 	@Override
 	@Optional.Method(modid = ModIds.WAILA)
-	public NBTTagCompound getNBTData(EntityPlayerMP player, Entity entity, NBTTagCompound tag, World world) 
-	{
+	public NBTTagCompound getNBTData(EntityPlayerMP player, Entity entity, NBTTagCompound tag,
+			World world) {
 		NBTTagCompound tag2 = new NBTTagCompound();
 		entity.writeToNBT(tag2);
 		return tag2;
@@ -57,18 +55,19 @@ public class WailaExtraGolems extends GolemDescriptionManager implements IWailaE
 
 	@Override
 	@Optional.Method(modid = ModIds.WAILA)
-	public List<String> getWailaBody(Entity entity, List<String> tip, IWailaEntityAccessor accessor, IWailaConfigHandler config) 
-	{
-		if(entity instanceof GolemBase)
-		{
-			GolemBase golem = (GolemBase)entity;
-			
-			this.showAttack = config.getConfig(configShowAttackDamage) && accessor.getPlayer().isSneaking();
+	public List<String> getWailaBody(Entity entity, List<String> tip, IWailaEntityAccessor accessor,
+			IWailaConfigHandler config) {
+		if (entity instanceof GolemBase) {
+			GolemBase golem = (GolemBase) entity;
+
+			this.showAttack = config.getConfig(configShowAttackDamage)
+					&& accessor.getPlayer().isSneaking();
 			this.showMultiTexture = config.getConfig(configShowMultiTexture);
 			this.showSpecial = config.getConfig(configShowSpecialAbilities);
-			this.showFireproof = config.getConfig(configShowFireproof) && accessor.getPlayer().isSneaking();
+			this.showFireproof = config.getConfig(configShowFireproof)
+					&& accessor.getPlayer().isSneaking();
 			this.showKnockbackResist = config.getConfig(configShowKnockbackResist);
-			
+
 			tip.addAll(this.getEntityDescription(golem));
 		}
 		return tip;
@@ -76,22 +75,21 @@ public class WailaExtraGolems extends GolemDescriptionManager implements IWailaE
 
 	@Override
 	@Optional.Method(modid = ModIds.WAILA)
-	public List<String> getWailaHead(Entity entity, List<String> currenttip, IWailaEntityAccessor accessor,	IWailaConfigHandler config) 
-	{
+	public List<String> getWailaHead(Entity entity, List<String> currenttip,
+			IWailaEntityAccessor accessor, IWailaConfigHandler config) {
 		return currenttip;
 	}
 
 	@Override
 	@Optional.Method(modid = ModIds.WAILA)
-	public Entity getWailaOverride(IWailaEntityAccessor accessor, IWailaConfigHandler config) 
-	{
+	public Entity getWailaOverride(IWailaEntityAccessor accessor, IWailaConfigHandler config) {
 		return accessor.getEntity();
 	}
 
 	@Override
 	@Optional.Method(modid = ModIds.WAILA)
-	public List<String> getWailaTail(Entity entity, List<String> currenttip, IWailaEntityAccessor accessor,	IWailaConfigHandler config) 
-	{
+	public List<String> getWailaTail(Entity entity, List<String> currenttip,
+			IWailaEntityAccessor accessor, IWailaConfigHandler config) {
 		return currenttip;
 	}
 }

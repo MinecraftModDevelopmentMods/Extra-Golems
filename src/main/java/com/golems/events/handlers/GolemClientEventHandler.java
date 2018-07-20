@@ -4,12 +4,11 @@ import com.golems.events.GolemPaperAddInfoEvent;
 
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class GolemClientEventHandler 
-{
+public class GolemClientEventHandler {
+
 	@SubscribeEvent
-	public void onAddInfo(GolemPaperAddInfoEvent event)
-	{
+	public void onAddInfo(GolemPaperAddInfoEvent event) {
 		// debug:
-		//event.infoList.add("test");
+		// event.infoList.add("test");
 	}
 }

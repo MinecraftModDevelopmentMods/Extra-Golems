@@ -15,30 +15,25 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class EntitySlimeGolem extends GolemBase 
-{		
+public class EntitySlimeGolem extends GolemBase {
+
 	public static final String ALLOW_SPECIAL = "Allow Special: Extra Knockback";
 	public static final String KNOCKBACK = "Knockback Factor";
-	
-	public EntitySlimeGolem(World world) 
-	{
+
+	public EntitySlimeGolem(World world) {
 		super(world, Config.SLIME.getBaseAttack(), Blocks.SLIME_BLOCK);
-		this.setCanSwim(true);	
+		this.setCanSwim(true);
 	}
 
 	@Override
-	protected ResourceLocation applyTexture()
-	{
+	protected ResourceLocation applyTexture() {
 		return makeGolemTexture("slime");
 	}
 
 	@Override
-	public boolean attackEntityAsMob(Entity entity)
-	{
-		if(super.attackEntityAsMob(entity))
-		{
-			if(Config.SLIME.getBoolean(ALLOW_SPECIAL))
-			{
+	public boolean attackEntityAsMob(Entity entity) {
+		if (super.attackEntityAsMob(entity)) {
+			if (Config.SLIME.getBoolean(ALLOW_SPECIAL)) {
 				knockbackTarget(entity, Config.SLIME.getFloat(KNOCKBACK));
 			}
 			return true;
@@ -47,20 +42,17 @@ public class EntitySlimeGolem extends GolemBase
 	}
 
 	@Override
-	protected void damageEntity(DamageSource source, float amount) 
-	{
-		if (!this.isEntityInvulnerable(source))
-		{
+	protected void damageEntity(DamageSource source, float amount) {
+		if (!this.isEntityInvulnerable(source)) {
 			super.damageEntity(source, amount);
-			if(source.getImmediateSource() != null && Config.SLIME.getBoolean(ALLOW_SPECIAL))
-			{
-				knockbackTarget(source.getImmediateSource(), Config.SLIME.getFloat(KNOCKBACK) * 0.325F);
+			if (source.getImmediateSource() != null && Config.SLIME.getBoolean(ALLOW_SPECIAL)) {
+				knockbackTarget(source.getImmediateSource(),
+						Config.SLIME.getFloat(KNOCKBACK) * 0.325F);
 			}
 		}
 	}
-	
-	protected void knockbackTarget(Entity entity, final double KNOCKBACK_FACTOR)
-	{
+
+	protected void knockbackTarget(Entity entity, final double KNOCKBACK_FACTOR) {
 		double dX = Math.signum(entity.posX - this.posX) * KNOCKBACK_FACTOR;
 		double dZ = Math.signum(entity.posZ - this.posZ) * KNOCKBACK_FACTOR;
 		entity.addVelocity(dX, KNOCKBACK_FACTOR / 4, dZ);
@@ -68,23 +60,21 @@ public class EntitySlimeGolem extends GolemBase
 	}
 
 	@Override
-	protected void applyAttributes() 
-	{
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Config.SLIME.getMaxHealth());
+	protected void applyAttributes() {
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
+				.setBaseValue(Config.SLIME.getMaxHealth());
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.29D);
 		this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.5D);
 	}
 
 	@Override
-	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel)	
-	{
+	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel) {
 		int size = 11 + this.rand.nextInt(16 + lootingLevel * 4);
 		this.addDrop(dropList, new ItemStack(Items.SLIME_BALL, size), 100);
 	}
 
 	@Override
-	public SoundEvent getGolemSound() 
-	{
+	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_SLIME_STEP;
 	}
 }
