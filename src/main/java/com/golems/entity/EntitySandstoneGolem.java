@@ -22,7 +22,7 @@ public class EntitySandstoneGolem extends GolemBase
 	
 	protected ResourceLocation applyTexture()
 	{
-		return this.makeGolemTexture("sandstone");
+		return makeGolemTexture("sandstone");
 	}
 		
 	@Override

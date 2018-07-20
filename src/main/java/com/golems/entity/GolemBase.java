@@ -351,7 +351,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimals
 	protected void dropFewItems(boolean recentlyHit, int lootingLevel)
 	{
 		// make and populate a list of WeightedItem instances
-		List<WeightedItem> drops = new ArrayList();
+		List<WeightedItem> drops = new ArrayList<>();
 		this.addDrop(drops, rand.nextBoolean() ? Blocks.YELLOW_FLOWER : Blocks.RED_FLOWER, 0, 1, 2, 65);
 		this.addDrop(drops, Items.REDSTONE, 0, 1, 1, 20 + lootingLevel * 10);
 

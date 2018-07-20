@@ -81,7 +81,7 @@ public class ItemBedrockGolem extends Item
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack par1ItemStack, World world, List par3List, ITooltipFlag flag)
+	public void addInformation(ItemStack par1ItemStack, World world, List<String> par3List, ITooltipFlag flag)
 	{
 		String loreCreativeOnly = TextFormatting.RED + trans("tooltip.creative_only_item"); 
 		if(Config.bedrockGolemCreativeOnly) par3List.add(loreCreativeOnly);

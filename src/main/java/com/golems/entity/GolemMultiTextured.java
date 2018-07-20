@@ -44,7 +44,7 @@ public abstract class GolemMultiTextured extends GolemBase
 	protected ResourceLocation applyTexture()
 	{
 		// apply TEMPORARY texture to avoid NPE. Actual texture is first applied in onLivingUpdate
-		return this.makeGolemTexture("clay");
+		return makeGolemTexture("clay");
 	}
 	
 	@Override

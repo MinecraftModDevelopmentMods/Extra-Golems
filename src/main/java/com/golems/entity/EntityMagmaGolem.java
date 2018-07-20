@@ -39,7 +39,7 @@ public class EntityMagmaGolem extends GolemLightProvider
 	@Override
 	protected ResourceLocation applyTexture()
 	{
-		return this.makeGolemTexture("magma");
+		return makeGolemTexture("magma");
 	}
 	
 	/** Attack by lighting on fire as well */

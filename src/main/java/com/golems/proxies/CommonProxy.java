@@ -26,8 +26,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Mod.EventBusSubscriber
-public class CommonProxy 
-{
+public class CommonProxy {
 
 	private static Map<String, Block> blocks = new ConcurrentHashMap<>();
 	private static Map<String, Item> items = new ConcurrentHashMap<>();

@@ -27,7 +27,7 @@ public class EntityNetherBrickGolem extends GolemBase
 	@Override
 	protected ResourceLocation applyTexture()
 	{
-		return this.makeGolemTexture("nether_brick");
+		return makeGolemTexture("nether_brick");
 	}
 
 	/** Attack by lighting on fire as well */

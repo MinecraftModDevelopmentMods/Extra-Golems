@@ -23,7 +23,7 @@ public class EntityObsidianGolem extends GolemBase
 	@Override
 	protected ResourceLocation applyTexture()
 	{
-		return this.makeGolemTexture("obsidian");
+		return makeGolemTexture("obsidian");
 	}
 		
 	@Override

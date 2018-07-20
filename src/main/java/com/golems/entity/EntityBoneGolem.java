@@ -25,7 +25,7 @@ public class EntityBoneGolem extends GolemBase
 	
 	protected ResourceLocation applyTexture()
 	{
-		return this.makeGolemTexture("bone");
+		return makeGolemTexture("bone");
 	}
 		
 	@Override

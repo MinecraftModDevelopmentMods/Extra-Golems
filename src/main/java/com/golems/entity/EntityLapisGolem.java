@@ -36,7 +36,7 @@ public class EntityLapisGolem extends GolemBase
 	@Override
 	protected ResourceLocation applyTexture()
 	{
-		return this.makeGolemTexture("lapis");
+		return makeGolemTexture("lapis");
 	}
 	
 	/** Attack by adding potion effect as well */

@@ -23,7 +23,7 @@ public class EntityClayGolem extends GolemBase
 	@Override
 	protected ResourceLocation applyTexture()
 	{
-		return this.makeGolemTexture("clay");
+		return makeGolemTexture("clay");
 	}
 
 	@Override

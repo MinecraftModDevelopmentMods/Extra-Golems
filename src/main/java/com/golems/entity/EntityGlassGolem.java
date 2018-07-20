@@ -22,7 +22,7 @@ public class EntityGlassGolem extends GolemBase
 	
 	protected ResourceLocation applyTexture()
 	{
-		return this.makeGolemTexture("glass");
+		return makeGolemTexture("glass");
 	}
 		
 	@Override

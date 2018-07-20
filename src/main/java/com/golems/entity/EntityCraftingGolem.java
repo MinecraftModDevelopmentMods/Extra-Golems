@@ -36,7 +36,7 @@ public class EntityCraftingGolem extends GolemBase
 	@Override
 	protected ResourceLocation applyTexture() 
 	{
-		return this.makeGolemTexture("crafting");
+		return makeGolemTexture("crafting");
 	}
 	
 	@Override

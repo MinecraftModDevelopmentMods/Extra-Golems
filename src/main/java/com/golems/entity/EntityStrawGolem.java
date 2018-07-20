@@ -24,7 +24,7 @@ public class EntityStrawGolem extends GolemBase
 	
 	protected ResourceLocation applyTexture()
 	{
-		return this.makeGolemTexture("straw");
+		return makeGolemTexture("straw");
 	}
 		
 	@Override

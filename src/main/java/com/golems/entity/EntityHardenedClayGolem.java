@@ -22,7 +22,7 @@ public class EntityHardenedClayGolem extends GolemBase
 
 	protected ResourceLocation applyTexture()
 	{
-		return this.makeGolemTexture("hardened_clay");
+		return makeGolemTexture("hardened_clay");
 	}
 
 	@Override

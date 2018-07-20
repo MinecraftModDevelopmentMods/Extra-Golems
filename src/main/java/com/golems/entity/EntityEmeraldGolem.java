@@ -24,7 +24,7 @@ public class EntityEmeraldGolem extends GolemBase
 	@Override
 	protected ResourceLocation applyTexture()
 	{
-		return this.makeGolemTexture("emerald_block");
+		return makeGolemTexture("emerald_block");
 	}
 		
 	@Override

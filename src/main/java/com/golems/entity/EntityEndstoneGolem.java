@@ -82,7 +82,7 @@ public class EntityEndstoneGolem extends GolemBase
 	@Override
 	protected ResourceLocation applyTexture()
 	{
-		return this.makeGolemTexture("end_stone");
+		return makeGolemTexture("end_stone");
 	}
 	
 	@Override

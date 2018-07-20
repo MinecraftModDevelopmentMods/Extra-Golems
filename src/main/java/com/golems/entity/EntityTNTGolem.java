@@ -63,7 +63,7 @@ public class EntityTNTGolem extends GolemBase
 	@Override
 	protected ResourceLocation applyTexture()
 	{
-		return this.makeGolemTexture("tnt");
+		return makeGolemTexture("tnt");
 	}
 
 	/**

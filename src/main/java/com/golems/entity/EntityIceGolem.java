@@ -35,7 +35,7 @@ public class EntityIceGolem extends GolemBase
 
 	protected ResourceLocation applyTexture()
 	{
-		return this.makeGolemTexture("ice");
+		return makeGolemTexture("ice");
 	}
 
 	/**
