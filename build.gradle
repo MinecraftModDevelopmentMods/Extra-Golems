@@ -19,7 +19,7 @@ javadoc {
     failOnError = false
 }
 
-version = "7.00-alpha3"
+version = "7.00-alpha4"
 group= "com.golems" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "ExtraGolems[1.10.2]"
 
