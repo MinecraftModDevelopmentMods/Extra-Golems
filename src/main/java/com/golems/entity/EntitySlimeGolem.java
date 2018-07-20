@@ -1,7 +1,10 @@
 package com.golems.entity;
 
+import java.util.List;
+
 import com.golems.main.Config;
 import com.golems.util.WeightedItem;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
@@ -12,8 +15,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
-
-import java.util.List;
 
 public class EntitySlimeGolem extends GolemBase {
 

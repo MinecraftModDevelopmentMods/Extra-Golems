@@ -1,7 +1,10 @@
 package com.golems.entity;
 
+import java.util.List;
+
 import com.golems.main.Config;
 import com.golems.util.WeightedItem;
+
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
@@ -10,8 +13,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
-
-import java.util.List;
 
 public class EntityStainedClayGolem extends GolemColorizedMultiTextured {
 

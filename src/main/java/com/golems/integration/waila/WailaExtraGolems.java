@@ -1,8 +1,11 @@
 package com.golems.integration.waila;
 
+import java.util.List;
+
 import com.golems.entity.GolemBase;
 import com.golems.integration.GolemDescriptionManager;
 import com.golems.integration.ModIds;
+
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaEntityAccessor;
 import mcp.mobius.waila.api.IWailaEntityProvider;
@@ -12,8 +15,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
-
-import java.util.List;
 
 /**
  * WAILA integration -- using Hwyla:1.8.23-B38_1.12

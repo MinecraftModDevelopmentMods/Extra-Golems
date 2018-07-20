@@ -2,6 +2,7 @@ package com.golems.main;
 
 import com.golems.integration.ModIds;
 import com.golems.proxies.CommonProxy;
+
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;

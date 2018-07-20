@@ -1,8 +1,11 @@
 package com.golems.entity;
 
+import javax.annotation.concurrent.Immutable;
+
 import com.golems.blocks.BlockLightProvider;
 import com.golems.main.GolemItems;
 import com.google.common.collect.ImmutableSet;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -10,8 +13,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-
-import javax.annotation.concurrent.Immutable;
 
 public abstract class GolemLightProvider extends GolemBase {
 

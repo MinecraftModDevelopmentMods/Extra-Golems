@@ -1,9 +1,12 @@
 package com.golems.entity;
 
+import java.util.List;
+
 import com.golems.events.IceGolemFreezeEvent;
 import com.golems.main.Config;
 import com.golems.util.WeightedItem;
 import com.google.common.base.Function;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -18,8 +21,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
-
-import java.util.List;
 
 public class EntityIceGolem extends GolemBase {
 

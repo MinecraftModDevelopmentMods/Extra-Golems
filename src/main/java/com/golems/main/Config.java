@@ -1,7 +1,24 @@
 package com.golems.main;
 
-import com.golems.entity.*;
+import com.golems.entity.EntityBookshelfGolem;
+import com.golems.entity.EntityCoalGolem;
+import com.golems.entity.EntityEndstoneGolem;
+import com.golems.entity.EntityIceGolem;
+import com.golems.entity.EntityLapisGolem;
+import com.golems.entity.EntityLeafGolem;
+import com.golems.entity.EntityMagmaGolem;
+import com.golems.entity.EntityMelonGolem;
+import com.golems.entity.EntityMushroomGolem;
+import com.golems.entity.EntityNetherBrickGolem;
+import com.golems.entity.EntityNetherWartGolem;
+import com.golems.entity.EntityRedstoneGolem;
+import com.golems.entity.EntitySlimeGolem;
+import com.golems.entity.EntitySpongeGolem;
+import com.golems.entity.EntityStainedClayGolem;
+import com.golems.entity.EntityStainedGlassGolem;
+import com.golems.entity.EntityTNTGolem;
 import com.golems.util.GolemConfigSet;
+
 import net.minecraftforge.common.config.Configuration;
 
 /** Registers the config settings to adjust aspects of this mod **/

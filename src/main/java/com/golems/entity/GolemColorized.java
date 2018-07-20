@@ -1,6 +1,7 @@
 package com.golems.entity;
 
 import com.golems.main.GolemItems;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;

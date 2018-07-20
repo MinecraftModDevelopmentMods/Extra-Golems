@@ -1,9 +1,9 @@
 package com.golems.util;
 
+import java.util.Random;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-
-import java.util.Random;
 
 /**
  * This class will produce a randomly sized ItemStack given an Item, metadata, and size bounds in
