@@ -33,18 +33,34 @@ public class BlockUtility extends Block
 	}
 
 	@Nullable
+	@Deprecated
 	@Override
 	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess access, BlockPos pos)
 	{
 		return NULL_AABB;
 	}
 
-	//Unsure if this is the correct replacement.
+	@Nullable
+	@Deprecated
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState blockState, IBlockAccess access, BlockPos pos)
+	{
+		return NULL_AABB;
+	}
+
+	@Deprecated
+	@Override
+	public AxisAlignedBB getSelectedBoundingBox(IBlockState blockState, World world, BlockPos pos) {
+		 return SINGULAR_AABB;
+	}
+	
+	@Deprecated
 	@Override
 	public boolean isTopSolid(IBlockState state) {
 		return false;
 	}
 
+	@Deprecated
 	@Override
 	public boolean isFullBlock(IBlockState state)
 	{
@@ -54,6 +70,7 @@ public class BlockUtility extends Block
 	/**
 	 * Used to determine ambient occlusion and culling when rebuilding chunks for render
 	 */
+	@Deprecated
 	 @Override
 	 public boolean isOpaqueCube(IBlockState state)
 	 {
@@ -72,6 +89,7 @@ public class BlockUtility extends Block
 	 @Override
 	 public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)
 	 {
+		 // Because we don't want to drop anything.
 	 }
 
 	 /**
@@ -83,6 +101,7 @@ public class BlockUtility extends Block
 		 return true;
 	 }
 
+	 @Deprecated
 	 @Override
 	 public boolean isFullCube(IBlockState state)
 	 {
@@ -95,6 +114,7 @@ public class BlockUtility extends Block
 		 return true;
 	 }
 
+	@Deprecated
 	 @Override
 	 public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
 	 {
@@ -104,9 +124,10 @@ public class BlockUtility extends Block
 	 @Override
 	 public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)
 	 {
-		 return;
+		 // Do nothing.
 	 }
 
+	@Deprecated
 	 @Override
 	 public IBlockState getStateFromMeta(int meta)
 	 {
@@ -119,6 +140,7 @@ public class BlockUtility extends Block
 		 return 0;
 	 }
 
+	@Deprecated
 	 @Override
 	 public EnumBlockRenderType getRenderType(IBlockState state)
 	 {
@@ -147,6 +169,6 @@ public class BlockUtility extends Block
 	 @Override
 	 protected BlockStateContainer createBlockState()
 	 {
-		 return new BlockStateContainer(this, new IProperty[0]);
+		 return new BlockStateContainer(this, (IProperty[]) new IProperty[0]);
 	 }
 }

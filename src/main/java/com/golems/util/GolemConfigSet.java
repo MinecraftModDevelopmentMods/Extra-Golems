@@ -102,7 +102,7 @@ public class GolemConfigSet
 		}
 		else
 		{
-			String error = "Did not find an int value matching '" + key + "' in GolemConfigSet '" + this.golemName + "' - defaulting to " + this.DEF_INT;
+			String error = "Did not find an int value matching '" + key + "' in GolemConfigSet '" + this.golemName + "' - defaulting to " + DEF_INT;
 			System.out.println(error);
 			this.mapInt.put(key, DEF_INT);
 			return DEF_INT;
@@ -117,7 +117,7 @@ public class GolemConfigSet
 		}
 		else
 		{
-			String error = "Did not find a float value matching '" + key + "' in GolemConfigSet '" + this.golemName + "' - defaulting to " + this.DEF_FLOAT;
+			String error = "Did not find a float value matching '" + key + "' in GolemConfigSet '" + this.golemName + "' - defaulting to " + DEF_FLOAT;
 			System.out.println(error);
 			this.mapFloat.put(key, DEF_FLOAT);
 			return DEF_FLOAT;

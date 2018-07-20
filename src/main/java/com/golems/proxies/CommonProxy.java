@@ -34,7 +34,9 @@ public class CommonProxy {
 
 	protected static int golemEntityCount;
 	
-	public void preInitRenders() {}
+	public void preInitRenders() {
+		// Unused
+	}
 	
 	public void registerEvents()
 	{

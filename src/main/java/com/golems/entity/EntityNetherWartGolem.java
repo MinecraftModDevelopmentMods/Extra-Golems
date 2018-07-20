@@ -65,7 +65,8 @@ public class EntityNetherWartGolem extends GolemBase
 	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel)
 	{
 		Item netherwart;
-		int min, max;
+		int min;
+		int max;
 		if(Config.NETHERWART.getBoolean(DROP_NETHERWART_BLOCK))
 		{
 			netherwart = Item.getItemFromBlock(NETHERWART);

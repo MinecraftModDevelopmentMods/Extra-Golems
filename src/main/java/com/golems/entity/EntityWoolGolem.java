@@ -65,7 +65,7 @@ public class EntityWoolGolem extends GolemMultiTextured
 	@Override
 	public void setTextureNum(byte toSet, boolean updateInstantly)
 	{
-		toSet %= (byte)(this.coloredWoolTypes.length - 1);
+		toSet %= (byte)(coloredWoolTypes.length - 1);
 		super.setTextureNum(toSet, updateInstantly);
 	}
 }

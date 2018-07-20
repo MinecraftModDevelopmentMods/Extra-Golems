@@ -121,7 +121,6 @@ public class EntityEndstoneGolem extends GolemBase
             	if(this.teleportRandomly()) break;
             }
         }
-		//TODO: This probably isn't correct.
 		if (this.getRevengeTarget() != null)
         {
             this.faceEntity(this.getRevengeTarget(), 100.0F, 100.0F);

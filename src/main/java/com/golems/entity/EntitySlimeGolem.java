@@ -49,13 +49,12 @@ public class EntitySlimeGolem extends GolemBase
 	@Override
 	protected void damageEntity(DamageSource source, float amount) 
 	{
-		//TODO: Check if this is correct. (getTrueSource)
 		if (!this.isEntityInvulnerable(source))
 		{
 			super.damageEntity(source, amount);
-			if(source.getTrueSource() != null && Config.SLIME.getBoolean(ALLOW_SPECIAL))
+			if(source.getImmediateSource() != null && Config.SLIME.getBoolean(ALLOW_SPECIAL))
 			{
-				knockbackTarget(source.getTrueSource(), Config.SLIME.getFloat(KNOCKBACK) * 0.325F);
+				knockbackTarget(source.getImmediateSource(), Config.SLIME.getFloat(KNOCKBACK) * 0.325F);
 			}
 		}
 	}

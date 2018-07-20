@@ -145,6 +145,7 @@ public abstract class GolemMultiTextured extends GolemBase
 	}
 	
 	/** @deprecated automatically handled in {@link #setTextureNum(byte, boolean)} **/
+	@Deprecated
 	public void updateTexture()
 	{
 		this.setTextureType(this.getTextureFromArray(this.getTextureNum()));
