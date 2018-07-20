@@ -1,6 +1,6 @@
 {
-   "pack": {
-      "pack_format": 3,
-      "description": "pack.mcmeta for ExtraGolems"
-   }
+  "pack": {
+    "pack_format": 2,
+    "description": "Extra Golems"
+  }
 }
