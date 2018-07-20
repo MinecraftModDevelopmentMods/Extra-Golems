@@ -86,9 +86,9 @@ public class CommonProxy
 	/** registers the entity **/
 	protected static void register(Class entityClass, String name)
 	{		
+
 		EntityRegistry.registerModEntity(new ResourceLocation(ExtraGolems.MODID + ":textures/entity/" +
-				name + ".png"),entityClass, name, ++golemEntityCount,
-				ExtraGolems.instance, 16 * 4, 3, true);
+				name + ".png"), entityClass, ExtraGolems.MODID + "." + name, ++golemEntityCount, ExtraGolems.instance, 16 * 4, 3, true);
 	}
 
 	//TODO: Reimplement old version

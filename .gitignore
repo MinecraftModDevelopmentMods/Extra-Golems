@@ -52,5 +52,6 @@ Temporary Items
 /bin/
 
 # Intellij
-/.idea/
+.idea/
 *.iml
+run/
