@@ -88,8 +88,8 @@ public class ItemBedrockGolem extends Item
 
 		if(GuiScreen.isShiftKeyDown())
 		{
-			par3List.add(I18n.format("tooltip.use_to_spawn", trans("entity.golems.golem_bedrock.name")));
-			par3List.add(I18n.format("tooltip.use_on_existing", trans("entity.golems.golem_bedrock.name")));
+			par3List.add(I18n.format("tooltip.use_to_spawn", trans("entity.golem_bedrock.name")));
+			par3List.add(I18n.format("tooltip.use_on_existing", trans("entity.golem_bedrock.name")));
 			par3List.add(trans("tooltip.to_remove_it") + ".");
 		}
 		else

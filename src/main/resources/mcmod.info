@@ -3,7 +3,7 @@
   "modid": "golems",
   "name": "Extra Golems",
   "description": "Adds 35 golems to the minecraft universe, each with unique textures and abilities!",
-  "version": "7.00-alpha2",
+  "version": "7.00-alpha4",
   "mcversion": "${mcversion}",
   "url": "http://goo.gl/5IpqWW",
   "updateUrl": "",
