@@ -1,11 +1,8 @@
 package com.golems.entity;
 
-import javax.annotation.concurrent.Immutable;
-
 import com.golems.blocks.BlockLightProvider;
 import com.golems.main.GolemItems;
 import com.google.common.collect.ImmutableSet;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -13,8 +10,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.concurrent.Immutable;
 
 public abstract class GolemLightProvider extends GolemBase 
 {	
@@ -95,19 +92,17 @@ public abstract class GolemLightProvider extends GolemBase
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public int getBrightnessForRender(float f)
-	{
-		return this.lightManager.getLightValue() > 0 ? 15728880 : super.getBrightnessForRender(f);
+	public int getBrightnessForRender() {
+		return this.lightManager.getLightValue() > 0 ? 15728880 : super.getBrightnessForRender();
 	}
 
 	/** Gets how bright this entity is **/
 	@Override
-	public float getBrightness(float f)
+	public float getBrightness()
 	{
 		return this.lightManager.getBrightness();
 	}
-	
+
 	/**
 	 * Helper class that manages light-block calculations for this golem.
 	 * Contains 2 constant instances for convenience (FULL and HALF) for

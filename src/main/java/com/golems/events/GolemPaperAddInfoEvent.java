@@ -1,14 +1,15 @@
 package com.golems.events;
 
-import java.util.List;
-
 import com.golems.items.ItemGolemPaper;
-
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 /** 
  * Fired after {@link ItemGolemPaper} has added information to itself.
@@ -18,16 +19,17 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class GolemPaperAddInfoEvent extends Event
 {
 	public final ItemStack itemStack;
-	public final EntityPlayer player;
+	@Nullable
+	public final World world;
 	public final List<String> infoList;
-	public final boolean isAdvanced;
+	public final ITooltipFlag flagIn;
 	
-	public GolemPaperAddInfoEvent(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List<String> par3List, boolean advanced)
+	public GolemPaperAddInfoEvent(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
 	{
-		this.itemStack = par1ItemStack;
-		this.player = par2EntityPlayer;
-		this.infoList = par3List;
-		this.isAdvanced = advanced;
+		this.itemStack = stack;
+		this.world = worldIn;
+		this.infoList = tooltip;
+		this.flagIn = flagIn;
 	}
 	
 	/** Removes all entries matching the passed String **/

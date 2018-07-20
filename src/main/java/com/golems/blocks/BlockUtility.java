@@ -1,7 +1,5 @@
 package com.golems.blocks;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -19,6 +17,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
+
 public class BlockUtility extends Block
 {
 	public static final AxisAlignedBB SINGULAR_AABB = new AxisAlignedBB(0.5D, 0.5D, 0.5D, 0.5D, 0.5D, 0.5D);
@@ -31,29 +31,17 @@ public class BlockUtility extends Block
 		blockHardness = -1F;
 		this.translucent = true;
 	}
-	
+
 	@Nullable
 	@Override
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos)
-    {
-        return NULL_AABB;
-    }
-/*
-	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess access, BlockPos pos)
 	{
 		return NULL_AABB;
 	}
 
+	//Unsure if this is the correct replacement.
 	@Override
-	public AxisAlignedBB getSelectedBoundingBox(IBlockState blockState, World worldIn, BlockPos pos)
-	{
-		return SINGULAR_AABB;
-	}
-*/
-	@Override
-	public boolean isFullyOpaque(IBlockState state)
-	{
+	public boolean isTopSolid(IBlockState state) {
 		return false;
 	}
 

@@ -50,3 +50,7 @@ Network Trash Folder
 Temporary Items
 .apdisk
 /bin/
+
+# Intellij
+/.idea/
+*.iml

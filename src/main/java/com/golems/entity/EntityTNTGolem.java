@@ -1,10 +1,7 @@
 package com.golems.entity;
 
-import java.util.List;
-
 import com.golems.main.Config;
 import com.golems.util.WeightedItem;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,13 +12,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+
+import java.util.List;
 
 public class EntityTNTGolem extends GolemBase 
 {	
@@ -85,7 +80,7 @@ public class EntityTNTGolem extends GolemBase
 			this.ignite();
 		}
 
-		if(this.isWet() || (this.getAttackTarget() != null && this.getDistanceSqToEntity(this.getAttackTarget()) > this.MAX_EXPLOSION_RAD * this.MAX_EXPLOSION_RAD))
+		if(this.isWet() || (this.getAttackTarget() != null && this.getDistanceSq(this.getAttackTarget()) > this.MAX_EXPLOSION_RAD * this.MAX_EXPLOSION_RAD))
 		{
 			this.resetIgnite();
 		}
@@ -129,7 +124,7 @@ public class EntityTNTGolem extends GolemBase
 	{
 		boolean flag = super.attackEntityAsMob(entity);
 
-		if (flag && !entity.isDead && rand.nextInt(100) < this.CHANCE_TO_EXPLODE_WHEN_ATTACKING && this.getDistanceSqToEntity(entity) <= this.MIN_EXPLOSION_RAD * this.MIN_EXPLOSION_RAD)
+		if (flag && !entity.isDead && rand.nextInt(100) < this.CHANCE_TO_EXPLODE_WHEN_ATTACKING && this.getDistanceSq(entity) <= this.MIN_EXPLOSION_RAD * this.MIN_EXPLOSION_RAD)
 		{
 			this.ignite();
 		}
@@ -138,9 +133,10 @@ public class EntityTNTGolem extends GolemBase
 	}
 
 	@Override
-	protected boolean processInteract(EntityPlayer player, EnumHand hand, ItemStack itemstack)
+	protected boolean processInteract(EntityPlayer player, EnumHand hand)
 	{
-		if (itemstack != null && itemstack.getItem() == Items.FLINT_AND_STEEL)
+		ItemStack itemstack = player.getHeldItem(hand);
+		if (!itemstack.isEmpty() && itemstack.getItem() == Items.FLINT_AND_STEEL)
 		{	
 			this.world.playSound(player, this.posX, this.posY, this.posZ, SoundEvents.ITEM_FLINTANDSTEEL_USE, this.getSoundCategory(), 1.0F, this.rand.nextFloat() * 0.4F + 0.8F);
 			player.swingArm(hand);
@@ -153,7 +149,7 @@ public class EntityTNTGolem extends GolemBase
 			}
 		}
 
-		return super.processInteract(player, hand, itemstack);
+		return super.processInteract(player, hand);
 	}
 
 	protected void resetFuse()

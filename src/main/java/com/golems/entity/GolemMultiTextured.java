@@ -55,12 +55,13 @@ public abstract class GolemMultiTextured extends GolemBase
 	}
 	
 	@Override
-	public boolean processInteract(EntityPlayer player, EnumHand hand, ItemStack stack)
+	public boolean processInteract(EntityPlayer player, EnumHand hand)
 	{
+		ItemStack stack = player.getHeldItem(hand);
 		// only change texture when player has empty hand
-		if(stack != null)
+		if(!stack.isEmpty())
 		{
-			return super.processInteract(player, hand, stack);
+			return super.processInteract(player, hand);
 		}
 		else
 		{

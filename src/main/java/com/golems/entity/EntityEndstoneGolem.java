@@ -1,12 +1,9 @@
 package com.golems.entity;
 
-import java.util.List;
-
 import com.golems.events.EndGolemTeleportEvent;
 import com.golems.main.Config;
 import com.golems.main.GolemItems;
 import com.golems.util.WeightedItem;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
@@ -15,14 +12,12 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntityDamageSourceIndirect;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.util.*;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+
+import java.util.List;
 
 public class EntityEndstoneGolem extends GolemBase 
 {			
@@ -120,19 +115,19 @@ public class EntityEndstoneGolem extends GolemBase
 		
 		if(this.isHurtByWater && this.isWet())
         {
-            this.attackEntityFrom(DamageSource.drown, 1.0F);
+            this.attackEntityFrom(DamageSource.DROWN, 1.0F);
             for(int i = 0; i < 16; ++i)
             {
             	if(this.teleportRandomly()) break;
             }
         }
-		
-		if (this.getAITarget() != null)
+		//TODO: This probably isn't correct.
+		if (this.getRevengeTarget() != null)
         {
-            this.faceEntity(this.getAITarget(), 100.0F, 100.0F);
+            this.faceEntity(this.getRevengeTarget(), 100.0F, 100.0F);
             if(rand.nextInt(5) == 0)
             {
-            	this.teleportToEntity(this.getAITarget());
+            	this.teleportToEntity(this.getRevengeTarget());
             }
         }
 	    else if(rand.nextInt(this.ticksBetweenIdleTeleports) == 0)
@@ -156,18 +151,18 @@ public class EntityEndstoneGolem extends GolemBase
 	    
 	    if (!this.world.isRemote && this.isEntityAlive())
         {
-            if (this.getAITarget() != null)
+            if (this.getRevengeTarget() != null)
             {
-                if (this.getAITarget() instanceof EntityMob)
+                if (this.getRevengeTarget() instanceof EntityMob)
                 {
-                    if (this.getAITarget().getDistanceSqToEntity(this) < 16.0D && (rand.nextInt(5) == 0 || this.getAITarget().getAITarget() == this))
+                    if (this.getRevengeTarget().getDistanceSq(this) < 16.0D && (rand.nextInt(5) == 0 || this.getRevengeTarget().getRevengeTarget() == this))
                     {
                         this.teleportRandomly();
                     }
                     
                     this.teleportDelay = 0;
                 }
-                else if (this.getAITarget().getDistanceSqToEntity(this) > 256.0D && this.teleportDelay++ >= 30 && this.teleportToEntity(this.getAITarget()))
+                else if (this.getRevengeTarget().getDistanceSq(this) > 256.0D && this.teleportDelay++ >= 30 && this.teleportToEntity(this.getRevengeTarget()))
                 {
                     this.teleportDelay = 0;
                 }
@@ -206,7 +201,7 @@ public class EntityEndstoneGolem extends GolemBase
             }
             else
             {
-            	if(rand.nextInt(this.chanceToTeleportWhenHurt) == 0 || (this.getAITarget() != null && rand.nextBoolean()))
+            	if(rand.nextInt(this.chanceToTeleportWhenHurt) == 0 || (this.getRevengeTarget() != null && rand.nextBoolean()))
             	{
             		this.teleportRandomly();
             	}
@@ -224,9 +219,9 @@ public class EntityEndstoneGolem extends GolemBase
         Vec3d vec3d = new Vec3d(this.posX - p_70816_1_.posX, this.getEntityBoundingBox().minY + (double)(this.height / 2.0F) - p_70816_1_.posY + (double)p_70816_1_.getEyeHeight(), this.posZ - p_70816_1_.posZ);
         vec3d = vec3d.normalize();
         double d0 = 16.0D;
-        double d1 = this.posX + (this.rand.nextDouble() - 0.5D) * 8.0D - vec3d.xCoord * d0;
-        double d2 = this.posY + (double)(this.rand.nextInt(16) - 8) - vec3d.yCoord * d0;
-        double d3 = this.posZ + (this.rand.nextDouble() - 0.5D) * 8.0D - vec3d.zCoord * d0;
+        double d1 = this.posX + (this.rand.nextDouble() - 0.5D) * 8.0D - vec3d.x * d0;
+        double d2 = this.posY + (double)(this.rand.nextInt(16) - 8) - vec3d.y * d0;
+        double d3 = this.posZ + (this.rand.nextDouble() - 0.5D) * 8.0D - vec3d.z * d0;
         return this.teleportTo(d1, d2, d3);
     }
 

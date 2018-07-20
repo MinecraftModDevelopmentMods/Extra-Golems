@@ -1,9 +1,9 @@
 package com.golems.util;
 
-import java.util.Random;
-
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+
+import java.util.Random;
 
 /**
  * This class will produce a randomly sized ItemStack
@@ -31,7 +31,7 @@ public class WeightedItem
 	
 	public WeightedItem(ItemStack stack, int percentChance)
 	{
-		this(stack.getItem(), stack.getMetadata(), stack.stackSize, stack.stackSize, percentChance);
+		this(stack.getItem(), stack.getMetadata(), stack.getCount(), stack.getCount(), percentChance);
 	}
 	
 	/** Calculated randomly each time this method is called **/

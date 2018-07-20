@@ -1,12 +1,9 @@
 package com.golems.entity;
 
-import java.util.List;
-
 import com.golems.items.ItemBedrockGolem;
 import com.golems.main.Config;
 import com.golems.main.GolemItems;
 import com.golems.util.WeightedItem;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,6 +17,8 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.List;
 
 public class EntityBedrockGolem extends GolemBase 
 {
@@ -54,12 +53,13 @@ public class EntityBedrockGolem extends GolemBase
     }
 
 	@Override
-	protected boolean processInteract(EntityPlayer player, EnumHand hand, ItemStack itemstack)
+	protected boolean processInteract(EntityPlayer player, EnumHand hand)
 	{
 		// creative players can "despawn" by using spawnBedrockGolem on this entity
+		ItemStack itemstack = player.getHeldItem(hand);
 		if(player.capabilities.isCreativeMode)
 		{
-			if (itemstack != null && itemstack.getItem() == GolemItems.spawnBedrockGolem)
+			if (!itemstack.isEmpty() && itemstack.getItem() == GolemItems.spawnBedrockGolem)
 			{		
 				player.swingArm(hand);
 				if(!this.world.isRemote)
@@ -69,7 +69,7 @@ public class EntityBedrockGolem extends GolemBase
 			}
 		}
 
-		return super.processInteract(player, hand, itemstack);
+		return super.processInteract(player, hand);
 	}
 
 	@Override

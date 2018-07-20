@@ -1,12 +1,9 @@
 package com.golems.entity;
 
-import java.util.List;
-
 import com.golems.events.IceGolemFreezeEvent;
 import com.golems.main.Config;
 import com.golems.util.WeightedItem;
 import com.google.common.base.Function;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -21,6 +18,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
+
+import java.util.List;
 
 public class EntityIceGolem extends GolemBase 
 {			
@@ -55,9 +54,9 @@ public class EntityIceGolem extends GolemBase
 			int z = MathHelper.floor(this.posZ);
 			BlockPos below = new BlockPos(x,y,z);
 
-			if(this.world.getBiome(below).getFloatTemperature(below) > 1.0F)
+			if(this.world.getBiome(below).getTemperature(below) > 1.0F)
 			{
-				this.attackEntityFrom(DamageSource.onFire, 1.0F);
+				this.attackEntityFrom(DamageSource.ON_FIRE, 1.0F);
 			}
 			
 			if(Config.ICE.getBoolean(ALLOW_SPECIAL))
@@ -78,7 +77,7 @@ public class EntityIceGolem extends GolemBase
 		{
 			if(entity.isBurning())
 			{
-				this.attackEntityFrom(DamageSource.generic, 0.5F);
+				this.attackEntityFrom(DamageSource.GENERIC, 0.5F);
 			}
 			return true;
 		}

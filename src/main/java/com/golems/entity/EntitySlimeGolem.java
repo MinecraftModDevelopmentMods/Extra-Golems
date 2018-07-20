@@ -1,10 +1,7 @@
 package com.golems.entity;
 
-import java.util.List;
-
 import com.golems.main.Config;
 import com.golems.util.WeightedItem;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
@@ -15,6 +12,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 public class EntitySlimeGolem extends GolemBase 
 {		
@@ -50,12 +49,13 @@ public class EntitySlimeGolem extends GolemBase
 	@Override
 	protected void damageEntity(DamageSource source, float amount) 
 	{
+		//TODO: Check if this is correct. (getTrueSource)
 		if (!this.isEntityInvulnerable(source))
 		{
 			super.damageEntity(source, amount);
-			if(source.getSourceOfDamage() != null && Config.SLIME.getBoolean(ALLOW_SPECIAL))
+			if(source.getTrueSource() != null && Config.SLIME.getBoolean(ALLOW_SPECIAL))
 			{
-				knockbackTarget(source.getSourceOfDamage(), Config.SLIME.getFloat(KNOCKBACK) * 0.325F);
+				knockbackTarget(source.getTrueSource(), Config.SLIME.getFloat(KNOCKBACK) * 0.325F);
 			}
 		}
 	}

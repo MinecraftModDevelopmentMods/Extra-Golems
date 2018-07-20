@@ -1,15 +1,14 @@
 package com.golems.entity.ai;
 
-import java.util.function.Predicate;
-
 import com.golems.entity.GolemBase;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+
+import java.util.function.Predicate;
 
 public class EntityAIPlaceRandomBlocks extends EntityAIBase
 {
@@ -59,7 +58,7 @@ public class EntityAIPlaceRandomBlocks extends EntityAIBase
 	}
 	
 	@Override
-	public boolean continueExecuting()
+	public boolean shouldContinueExecuting()
 	{
 		return false;
 	}

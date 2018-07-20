@@ -3,7 +3,6 @@ package com.golems.blocks;
 import com.golems.entity.GolemBase;
 import com.golems.events.GolemBuildEvent;
 import com.golems.items.ItemBedrockGolem;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;

@@ -9,7 +9,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
@@ -19,21 +19,15 @@ javadoc {
     failOnError = false
 }
 
-/*
-// for people who want stable - not yet functional for MC 1.8.8 - we require the forgegradle 2.1 snapshot
-plugins {
-    id "net.minecraftforge.gradle.forge" version "2.0.2"
-}
-*/
-version = "6.02.1"
+version = "7.00-alpha2"
 group= "com.golems" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "ExtraGolems[1.10.2]"
 
 minecraft {
-    version = "1.10.2-12.18.3.2185"
+    version = "1.12.2-14.23.4.2705"
     runDir = "run"
 
-    mappings = "stable_29"
+    mappings = "snapshot_20180709"
     makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 }
 
@@ -41,12 +35,13 @@ repositories {
     mavenCentral()
     maven { url = "https://maven.mcmoddev.com/" }
     maven { url = "http://maven.tterrag.com" }
-	maven { url = "http://mobiusstrip.eu/maven" }
+    maven {url = "http://tehnut.info/maven"}
+    maven {url = "http://maven.covers1624.net" }
 }
 
 dependencies {
-	provided 'mcp.mobius.waila:Waila:1.7.0-B3_1.9.4:dev'
-	provided 'mcjty.theoneprobe:TheOneProbe:1.10-1.1.0-30'
+	deobfProvided 'mcp.mobius.waila:Hwyla:1.8.23-B38_1.12'
+	deobfProvided 'mcjty.theoneprobe:TheOneProbe-1.12:1.12-1.4.18-10'
 }
 
 processResources
