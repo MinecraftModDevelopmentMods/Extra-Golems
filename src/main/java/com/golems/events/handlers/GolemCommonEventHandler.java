@@ -45,7 +45,9 @@ import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.BlockLog.EnumAxis;
 import net.minecraft.block.BlockWorkbench;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
+import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.init.Blocks;
@@ -182,11 +184,20 @@ public class GolemCommonEventHandler {
 	@SubscribeEvent
 	public void onLivingSpawned(EntityJoinWorldEvent event) {
 		// add custom 'attack golem' AI to zombies. They already have this for regular iron golems
-		if (event.getEntity() instanceof EntityZombie
-				&& !(event.getEntity() instanceof EntityPigZombie)) {
-			EntityZombie zombie = (EntityZombie) event.getEntity();
-			zombie.targetTasks.addTask(3,
-					new EntityAINearestAttackableTarget(zombie, GolemBase.class, true));
-		}
+	    if (event.getEntity() instanceof EntityZombie && !(event.getEntity() instanceof EntityPigZombie)) {
+	        EntityZombie zombie = (EntityZombie) event.getEntity();
+	        for (EntityAITasks.EntityAITaskEntry entry : zombie.targetTasks.taskEntries) {
+	            if (entry.action instanceof EntityAIAttackGolem) {
+	                return;
+	            }
+	        }
+	        zombie.targetTasks.addTask(3, new EntityAIAttackGolem(zombie));
+	    }
+	}
+
+	private static final class EntityAIAttackGolem extends EntityAINearestAttackableTarget<GolemBase> {
+	    private EntityAIAttackGolem(EntityCreature creature) {
+	        super(creature, GolemBase.class, true);
+	    }
 	}
 }
