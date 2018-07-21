@@ -26,19 +26,19 @@ public class ItemGolemPaper extends Item {
 	}
 
 	/**
-	 * allows items to add custom lines of information to the mouseover description
+	 * allows items to add custom lines of information to the mouseover description.
 	 */
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip,
-			ITooltipFlag flagIn) {
+	public void addInformation(final ItemStack stack, @Nullable final World worldIn, final List<String> tooltip,
+			final ITooltipFlag flagIn) {
 		if (GuiScreen.isShiftKeyDown()) {
 			// String loreListIntro= TextFormatting.WHITE + trans("tooltip.in_order_of_attack") +
 			// ":";
 			// par3List.add(loreListIntro);
 			final String C = ", "; // C = comma
-			String toAdd = trans("tile.blockDiamond.name") + C + trans("tile.blockEmerald.name") + C
+			final String toAdd = trans("tile.blockDiamond.name") + C + trans("tile.blockEmerald.name") + C
 					+ trans("tile.obsidian.name") + C + trans("tile.glass.name") + C
 					+ trans("tile.stainedGlass.name") + C + trans("tile.lightgem.name") + C
 					+ trans("tile.whiteStone.name") + C + trans("tile.quartzBlock.default.name") + C
@@ -62,7 +62,7 @@ public class ItemGolemPaper extends Item {
 					flagIn);
 			MinecraftForge.EVENT_BUS.post(event);
 		} else {
-			String lorePressShift = TextFormatting.GRAY + trans("tooltip.press") + " "
+			final String lorePressShift = TextFormatting.GRAY + trans("tooltip.press") + " "
 					+ TextFormatting.YELLOW + trans("tooltip.shift").toUpperCase() + " "
 					+ TextFormatting.GRAY + trans("tooltip.for_golem_materials");
 			tooltip.add(lorePressShift);
@@ -70,7 +70,7 @@ public class ItemGolemPaper extends Item {
 	}
 
 	@SideOnly(Side.CLIENT)
-	private String trans(String s, Object... p) {
+	private String trans(final String s, final Object... p) {
 		return I18n.format(s, p);
 	}
 }

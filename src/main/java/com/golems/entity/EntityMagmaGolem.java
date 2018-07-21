@@ -22,12 +22,12 @@ public class EntityMagmaGolem extends GolemLightProvider {
 	public static final String ALLOW_FIRE_SPECIAL = "Allow Special: Burn Enemies";
 	public static final String ALLOW_LAVA_SPECIAL = "Allow Special: Melt Cobblestone";
 	public static final String MELT_DELAY = "Melting Delay";
-	public static Block MAGMA = Blocks.MAGMA;
+	public static final Block MAGMA = Blocks.MAGMA;
 
-	/** Golem should stand in one spot for number of ticks before affecting the block below it */
+	/** Golem should stand in one spot for number of ticks before affecting the block below it. */
 	private int ticksStandingStill;
 
-	public EntityMagmaGolem(World world) {
+	public EntityMagmaGolem(final World world) {
 		super(world, Config.MAGMA.getBaseAttack(), new ItemStack(MAGMA), LightManager.HALF);
 		this.setImmuneToFire(true);
 		this.ticksStandingStill = 0;
@@ -40,9 +40,9 @@ public class EntityMagmaGolem extends GolemLightProvider {
 		return makeGolemTexture("magma");
 	}
 
-	/** Attack by lighting on fire as well */
+	/** Attack by lighting on fire as well. */
 	@Override
-	public boolean attackEntityAsMob(Entity entity) {
+	public boolean attackEntityAsMob(final Entity entity) {
 		if (super.attackEntityAsMob(entity)) {
 			if (Config.MAGMA.getBoolean(ALLOW_FIRE_SPECIAL)) {
 				entity.setFire(2 + rand.nextInt(5));
@@ -60,11 +60,11 @@ public class EntityMagmaGolem extends GolemLightProvider {
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
 		if (Config.MAGMA.getBoolean(ALLOW_LAVA_SPECIAL)) {
-			int x = MathHelper.floor(this.posX);
-			int y = MathHelper.floor(this.posY - 0.20000000298023224D);
-			int z = MathHelper.floor(this.posZ);
-			BlockPos below = new BlockPos(x, y, z);
-			Block b1 = this.world.getBlockState(below).getBlock();
+			final int x = MathHelper.floor(this.posX);
+			final int y = MathHelper.floor(this.posY - 0.20000000298023224D);
+			final int z = MathHelper.floor(this.posZ);
+			final BlockPos below = new BlockPos(x, y, z);
+			final Block b1 = this.world.getBlockState(below).getBlock();
 			// debug:
 			// System.out.println("below=" + below + "; lastPos = " + new
 			// BlockPos(MathHelper.floor_double(this.lastTickPosX), this.lastTickPosY,
@@ -93,8 +93,8 @@ public class EntityMagmaGolem extends GolemLightProvider {
 	}
 
 	@Override
-	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel) {
-		int size = lootingLevel + this.rand.nextInt(4);
+	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
+		final int size = lootingLevel + this.rand.nextInt(4);
 		this.addDrop(dropList, new ItemStack(MAGMA, size > 4 ? 4 : size), 90 + lootingLevel * 2);
 	}
 

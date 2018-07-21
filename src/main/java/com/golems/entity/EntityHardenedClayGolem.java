@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 
 public class EntityHardenedClayGolem extends GolemBase {
 
-	public EntityHardenedClayGolem(World world) {
+	public EntityHardenedClayGolem(final World world) {
 		super(world, Config.HARD_CLAY.getBaseAttack(), Blocks.HARDENED_CLAY);
 	}
 
@@ -31,8 +31,8 @@ public class EntityHardenedClayGolem extends GolemBase {
 	}
 
 	@Override
-	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel) {
-		int size = 1 + this.rand.nextInt(2 + lootingLevel);
+	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
+		final int size = 1 + this.rand.nextInt(2 + lootingLevel);
 		this.addDrop(dropList, new ItemStack(Blocks.HARDENED_CLAY, size), 100);
 	}
 

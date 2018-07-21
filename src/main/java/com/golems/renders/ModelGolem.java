@@ -13,17 +13,17 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ModelGolem extends ModelBase {
 
 	/** The head model for the iron golem. */
-	public ModelRenderer ironGolemHead;
+	public final ModelRenderer golemHead;
 	/** The body model for the iron golem. */
-	public ModelRenderer ironGolemBody;
+	public final ModelRenderer golemBody;
 	/** The right arm model for the iron golem. */
-	public ModelRenderer ironGolemRightArm;
+	public final ModelRenderer golemRightArm;
 	/** The left arm model for the iron golem. */
-	public ModelRenderer ironGolemLeftArm;
+	public final ModelRenderer golemLeftArm;
 	/** The left leg model for the Iron Golem. */
-	public ModelRenderer ironGolemLeftLeg;
+	public final ModelRenderer golemLeftLeg;
 	/** The right leg model for the Iron Golem. */
-	public ModelRenderer ironGolemRightLeg;
+	public final ModelRenderer golemRightLeg;
 
 	public ModelGolem() {
 		this(0.0F);
@@ -36,49 +36,50 @@ public class ModelGolem extends ModelBase {
 	public ModelGolem(float p_i1162_1_, float p_i1162_2_) {
 		short short1 = 128;
 		short short2 = 128;
-		this.ironGolemHead = (new ModelRenderer(this)).setTextureSize(short1, short2);
-		this.ironGolemHead.setRotationPoint(0.0F, 0.0F + p_i1162_2_, -2.0F);
-		this.ironGolemHead.setTextureOffset(0, 0).addBox(-4.0F, -12.0F, -5.5F, 8, 10, 8,
+		this.golemHead = (new ModelRenderer(this)).setTextureSize(short1, short2);
+		this.golemHead.setRotationPoint(0.0F, 0.0F + p_i1162_2_, -2.0F);
+		this.golemHead.setTextureOffset(0, 0).addBox(-4.0F, -12.0F, -5.5F, 8, 10, 8,
 				p_i1162_1_);
-		this.ironGolemHead.setTextureOffset(24, 0).addBox(-1.0F, -5.0F, -7.5F, 2, 4, 2, p_i1162_1_);
-		this.ironGolemBody = (new ModelRenderer(this)).setTextureSize(short1, short2);
-		this.ironGolemBody.setRotationPoint(0.0F, 0.0F + p_i1162_2_, 0.0F);
-		this.ironGolemBody.setTextureOffset(0, 40).addBox(-9.0F, -2.0F, -6.0F, 18, 12, 11,
+		this.golemHead.setTextureOffset(24, 0).addBox(-1.0F, -5.0F, -7.5F, 2, 4, 2, p_i1162_1_);
+		this.golemBody = (new ModelRenderer(this)).setTextureSize(short1, short2);
+		this.golemBody.setRotationPoint(0.0F, 0.0F + p_i1162_2_, 0.0F);
+		this.golemBody.setTextureOffset(0, 40).addBox(-9.0F, -2.0F, -6.0F, 18, 12, 11,
 				p_i1162_1_);
-		this.ironGolemBody.setTextureOffset(0, 70).addBox(-4.5F, 10.0F, -3.0F, 9, 5, 6,
+		this.golemBody.setTextureOffset(0, 70).addBox(-4.5F, 10.0F, -3.0F, 9, 5, 6,
 				p_i1162_1_ + 0.5F);
-		this.ironGolemRightArm = (new ModelRenderer(this)).setTextureSize(short1, short2);
-		this.ironGolemRightArm.setRotationPoint(0.0F, -7.0F, 0.0F);
-		this.ironGolemRightArm.setTextureOffset(60, 21).addBox(-13.0F, -2.5F, -3.0F, 4, 30, 6,
+		this.golemRightArm = (new ModelRenderer(this)).setTextureSize(short1, short2);
+		this.golemRightArm.setRotationPoint(0.0F, -7.0F, 0.0F);
+		this.golemRightArm.setTextureOffset(60, 21).addBox(-13.0F, -2.5F, -3.0F, 4, 30, 6,
 				p_i1162_1_);
-		this.ironGolemLeftArm = (new ModelRenderer(this)).setTextureSize(short1, short2);
-		this.ironGolemLeftArm.setRotationPoint(0.0F, -7.0F, 0.0F);
-		this.ironGolemLeftArm.setTextureOffset(60, 58).addBox(9.0F, -2.5F, -3.0F, 4, 30, 6,
+		this.golemLeftArm = (new ModelRenderer(this)).setTextureSize(short1, short2);
+		this.golemLeftArm.setRotationPoint(0.0F, -7.0F, 0.0F);
+		this.golemLeftArm.setTextureOffset(60, 58).addBox(9.0F, -2.5F, -3.0F, 4, 30, 6,
 				p_i1162_1_);
-		this.ironGolemLeftLeg = (new ModelRenderer(this, 0, 22)).setTextureSize(short1, short2);
-		this.ironGolemLeftLeg.setRotationPoint(-4.0F, 18.0F + p_i1162_2_, 0.0F);
-		this.ironGolemLeftLeg.setTextureOffset(37, 0).addBox(-3.5F, -3.0F, -3.0F, 6, 16, 5,
+		this.golemLeftLeg = (new ModelRenderer(this, 0, 22)).setTextureSize(short1, short2);
+		this.golemLeftLeg.setRotationPoint(-4.0F, 18.0F + p_i1162_2_, 0.0F);
+		this.golemLeftLeg.setTextureOffset(37, 0).addBox(-3.5F, -3.0F, -3.0F, 6, 16, 5,
 				p_i1162_1_);
-		this.ironGolemRightLeg = (new ModelRenderer(this, 0, 22)).setTextureSize(short1, short2);
-		this.ironGolemRightLeg.mirror = true;
-		this.ironGolemRightLeg.setTextureOffset(60, 0).setRotationPoint(5.0F, 18.0F + p_i1162_2_,
+		this.golemRightLeg = (new ModelRenderer(this, 0, 22)).setTextureSize(short1, short2);
+		this.golemRightLeg.mirror = true;
+		this.golemRightLeg.setTextureOffset(60, 0).setRotationPoint(5.0F, 18.0F + p_i1162_2_,
 				0.0F);
-		this.ironGolemRightLeg.addBox(-3.5F, -3.0F, -3.0F, 6, 16, 5, p_i1162_1_);
+		this.golemRightLeg.addBox(-3.5F, -3.0F, -3.0F, 6, 16, 5, p_i1162_1_);
 	}
 
 	/**
 	 * Sets the models various rotation angles then renders the model.
 	 */
-	public void render(Entity p_78088_1_, float p_78088_2_, float p_78088_3_, float p_78088_4_,
-			float p_78088_5_, float p_78088_6_, float p_78088_7_) {
-		this.setRotationAngles(p_78088_2_, p_78088_3_, p_78088_4_, p_78088_5_, p_78088_6_,
-				p_78088_7_, p_78088_1_);
-		this.ironGolemHead.render(p_78088_7_);
-		this.ironGolemBody.render(p_78088_7_);
-		this.ironGolemLeftLeg.render(p_78088_7_);
-		this.ironGolemRightLeg.render(p_78088_7_);
-		this.ironGolemRightArm.render(p_78088_7_);
-		this.ironGolemLeftArm.render(p_78088_7_);
+	@Override
+	public void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks,
+			float netHeadYaw, float headPitch, float scale) {
+		this.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch,
+				scale, entityIn);
+		this.golemHead.render(scale);
+		this.golemBody.render(scale);
+		this.golemLeftLeg.render(scale);
+		this.golemRightLeg.render(scale);
+		this.golemRightArm.render(scale);
+		this.golemLeftArm.render(scale);
 	}
 
 	/**
@@ -86,41 +87,43 @@ public class ModelGolem extends ModelBase {
 	 * the movement of arms and legs, where par1 represents the time(so that arms and legs swing
 	 * back and forth) and par2 represents how "far" arms and legs can swing at most.
 	 */
-	public void setRotationAngles(float p_78087_1_, float p_78087_2_, float p_78087_3_,
-			float p_78087_4_, float p_78087_5_, float p_78087_6_, Entity p_78087_7_) {
-		this.ironGolemHead.rotateAngleY = p_78087_4_ / (180F / (float) Math.PI);
-		this.ironGolemHead.rotateAngleX = p_78087_5_ / (180F / (float) Math.PI);
-		this.ironGolemLeftLeg.rotateAngleX = -1.5F * this.func_78172_a(p_78087_1_, 13.0F)
-				* p_78087_2_;
-		this.ironGolemRightLeg.rotateAngleX = 1.5F * this.func_78172_a(p_78087_1_, 13.0F)
-				* p_78087_2_;
-		this.ironGolemLeftLeg.rotateAngleY = 0.0F;
-		this.ironGolemRightLeg.rotateAngleY = 0.0F;
+	@Override
+	public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks,
+			float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn) {
+		this.golemHead.rotateAngleY = netHeadYaw / (180F / (float) Math.PI);
+		this.golemHead.rotateAngleX = headPitch / (180F / (float) Math.PI);
+		this.golemLeftLeg.rotateAngleX = -1.5F * this.triangleWave(limbSwing, 13.0F)
+				* limbSwingAmount;
+		this.golemRightLeg.rotateAngleX = 1.5F * this.triangleWave(limbSwing, 13.0F)
+				* limbSwingAmount;
+		this.golemLeftLeg.rotateAngleY = 0.0F;
+		this.golemRightLeg.rotateAngleY = 0.0F;
 	}
 
 	/**
 	 * Used for easily adding entity-dependent animations. The second and third float params here
 	 * are the same second and third as in the setRotationAngles method.
 	 */
-	public void setLivingAnimations(EntityLivingBase p_78086_1_, float p_78086_2_, float p_78086_3_,
-			float p_78086_4_) {
-		GolemBase entityirongolem = (GolemBase) p_78086_1_;
+	@Override
+    public void setLivingAnimations(EntityLivingBase entitylivingbaseIn, float limbSwing,
+    		float limbSwingAmount, float partialTickTime) {
+		GolemBase entityirongolem = (GolemBase) entitylivingbaseIn;
 		int i = entityirongolem.getAttackTimer();
 
 		if (i > 0) {
-			this.ironGolemRightArm.rotateAngleX = -2.0F
-					+ 1.5F * this.func_78172_a((float) i - p_78086_4_, 10.0F);
-			this.ironGolemLeftArm.rotateAngleX = -2.0F
-					+ 1.5F * this.func_78172_a((float) i - p_78086_4_, 10.0F);
+			this.golemRightArm.rotateAngleX = -2.0F
+					+ 1.5F * this.triangleWave((float) i - partialTickTime, 10.0F);
+			this.golemLeftArm.rotateAngleX = -2.0F
+					+ 1.5F * this.triangleWave((float) i - partialTickTime, 10.0F);
 		} else {
-			this.ironGolemRightArm.rotateAngleX = (-0.2F
-					+ 1.5F * this.func_78172_a(p_78086_2_, 13.0F)) * p_78086_3_;
-			this.ironGolemLeftArm.rotateAngleX = (-0.2F
-					- 1.5F * this.func_78172_a(p_78086_2_, 13.0F)) * p_78086_3_;
+			this.golemRightArm.rotateAngleX = (-0.2F
+					+ 1.5F * this.triangleWave(limbSwing, 13.0F)) * limbSwingAmount;
+			this.golemLeftArm.rotateAngleX = (-0.2F
+					- 1.5F * this.triangleWave(limbSwing, 13.0F)) * limbSwingAmount;
 		}
 	}
 
-	private float func_78172_a(float p_78172_1_, float p_78172_2_) {
+	private float triangleWave(float p_78172_1_, float p_78172_2_) {
 		return (Math.abs(p_78172_1_ % p_78172_2_ - p_78172_2_ * 0.5F) - p_78172_2_ * 0.25F)
 				/ (p_78172_2_ * 0.25F);
 	}

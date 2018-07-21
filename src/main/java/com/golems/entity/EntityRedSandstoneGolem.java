@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 
 public class EntityRedSandstoneGolem extends GolemBase {
 
-	public EntityRedSandstoneGolem(World world) {
+	public EntityRedSandstoneGolem(final World world) {
 		super(world, Config.RED_SANDSTONE.getBaseAttack(), Blocks.RED_SANDSTONE);
 	}
 
@@ -31,8 +31,8 @@ public class EntityRedSandstoneGolem extends GolemBase {
 	}
 
 	@Override
-	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel) {
-		int size = 4 + this.rand.nextInt(8 + lootingLevel * 2);
+	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
+		final int size = 4 + this.rand.nextInt(8 + lootingLevel * 2);
 		this.addDrop(dropList, new ItemStack(Blocks.SAND, size, 1), 100);
 	}
 

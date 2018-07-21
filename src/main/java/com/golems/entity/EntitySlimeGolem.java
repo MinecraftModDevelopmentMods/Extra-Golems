@@ -21,7 +21,7 @@ public class EntitySlimeGolem extends GolemBase {
 	public static final String ALLOW_SPECIAL = "Allow Special: Extra Knockback";
 	public static final String KNOCKBACK = "Knockback Factor";
 
-	public EntitySlimeGolem(World world) {
+	public EntitySlimeGolem(final World world) {
 		super(world, Config.SLIME.getBaseAttack(), Blocks.SLIME_BLOCK);
 		this.setCanSwim(true);
 	}
@@ -32,7 +32,7 @@ public class EntitySlimeGolem extends GolemBase {
 	}
 
 	@Override
-	public boolean attackEntityAsMob(Entity entity) {
+	public boolean attackEntityAsMob(final Entity entity) {
 		if (super.attackEntityAsMob(entity)) {
 			if (Config.SLIME.getBoolean(ALLOW_SPECIAL)) {
 				knockbackTarget(entity, Config.SLIME.getFloat(KNOCKBACK));
@@ -43,7 +43,7 @@ public class EntitySlimeGolem extends GolemBase {
 	}
 
 	@Override
-	protected void damageEntity(DamageSource source, float amount) {
+	protected void damageEntity(final DamageSource source, final float amount) {
 		if (!this.isEntityInvulnerable(source)) {
 			super.damageEntity(source, amount);
 			if (source.getImmediateSource() != null && Config.SLIME.getBoolean(ALLOW_SPECIAL)) {
@@ -53,10 +53,10 @@ public class EntitySlimeGolem extends GolemBase {
 		}
 	}
 
-	protected void knockbackTarget(Entity entity, final double KNOCKBACK_FACTOR) {
-		double dX = Math.signum(entity.posX - this.posX) * KNOCKBACK_FACTOR;
-		double dZ = Math.signum(entity.posZ - this.posZ) * KNOCKBACK_FACTOR;
-		entity.addVelocity(dX, KNOCKBACK_FACTOR / 4, dZ);
+	protected void knockbackTarget(final Entity entity, final double knockbackFactor) {
+		final double dX = Math.signum(entity.posX - this.posX) * knockbackFactor;
+		final double dZ = Math.signum(entity.posZ - this.posZ) * knockbackFactor;
+		entity.addVelocity(dX, knockbackFactor / 4, dZ);
 		entity.velocityChanged = true;
 	}
 
@@ -69,8 +69,8 @@ public class EntitySlimeGolem extends GolemBase {
 	}
 
 	@Override
-	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel) {
-		int size = 11 + this.rand.nextInt(16 + lootingLevel * 4);
+	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
+		final int size = 11 + this.rand.nextInt(16 + lootingLevel * 4);
 		this.addDrop(dropList, new ItemStack(Items.SLIME_BALL, size), 100);
 	}
 

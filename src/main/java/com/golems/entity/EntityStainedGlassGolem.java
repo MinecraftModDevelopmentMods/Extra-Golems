@@ -24,7 +24,7 @@ public class EntityStainedGlassGolem extends GolemColorizedMultiTextured {
 	private static final ResourceLocation TEXTURE_OVERLAY = GolemBase
 			.makeGolemTexture("stained_glass_grayscale");
 
-	public EntityStainedGlassGolem(World world) {
+	public EntityStainedGlassGolem(final World world) {
 		super(world, Config.STAINED_GLASS.getBaseAttack(), Blocks.STAINED_GLASS, TEXTURE_BASE,
 				TEXTURE_OVERLAY, ItemDye.DYE_COLORS);
 		this.setCanTakeFallDamage(true);
@@ -48,10 +48,10 @@ public class EntityStainedGlassGolem extends GolemColorizedMultiTextured {
 	}
 
 	@Override
-	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel) {
-		int keyReturn = Config.STAINED_GLASS.getInt(DROP_META);
-		int meta = keyReturn < 0 ? 15 - this.getTextureNum() : keyReturn;
-		int size = lootingLevel + rand.nextInt(3 + lootingLevel);
+	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
+		final int keyReturn = Config.STAINED_GLASS.getInt(DROP_META);
+		final int meta = keyReturn < 0 ? 15 - this.getTextureNum() : keyReturn;
+		final int size = lootingLevel + rand.nextInt(3 + lootingLevel);
 		this.addDrop(dropList, Blocks.STAINED_GLASS, meta, 0, size > 4 ? 4 : size,
 				50 + lootingLevel * 10);
 		this.addDrop(dropList, Blocks.STAINED_GLASS_PANE, meta, 1, 5 + lootingLevel,

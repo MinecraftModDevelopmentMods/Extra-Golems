@@ -18,7 +18,7 @@ public class EntityNetherBrickGolem extends GolemBase {
 
 	public static final String ALLOW_FIRE_SPECIAL = "Allow Special: Burn Enemies";
 
-	public EntityNetherBrickGolem(World world) {
+	public EntityNetherBrickGolem(final World world) {
 		super(world, Config.NETHERBRICK.getBaseAttack(), Blocks.NETHER_BRICK);
 		this.setImmuneToFire(true);
 	}
@@ -28,7 +28,7 @@ public class EntityNetherBrickGolem extends GolemBase {
 		return makeGolemTexture("nether_brick");
 	}
 
-	/** Attack by lighting on fire as well */
+	/** Attack by lighting on fire as well. */
 	@Override
 	public boolean attackEntityAsMob(Entity entity) {
 		if (super.attackEntityAsMob(entity)) {
@@ -48,7 +48,7 @@ public class EntityNetherBrickGolem extends GolemBase {
 	}
 
 	@Override
-	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel) {
+	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
 		this.addDrop(dropList, Items.NETHERBRICK, 0, 4, 8 + lootingLevel, 100);
 	}
 

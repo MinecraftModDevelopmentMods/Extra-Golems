@@ -21,14 +21,14 @@ public class RedstoneGolemPowerEvent extends Event {
 	protected int powerLevel;
 	public int updateFlag = 3;
 
-	public RedstoneGolemPowerEvent(GolemBase golemBase, BlockPos toAffect, int defPower) {
+	public RedstoneGolemPowerEvent(final GolemBase golemBase, final BlockPos toAffect, final int defPower) {
 		this.setResult(Result.ALLOW);
 		this.golem = golemBase;
 		this.posToAffect = toAffect;
 		this.powerLevel = defPower;
 	}
 
-	public void setPowerLevel(int toSet) {
+	public void setPowerLevel(final int toSet) {
 		this.powerLevel = toSet > 15 ? 15 : (toSet < 0 ? 0 : toSet);
 	}
 

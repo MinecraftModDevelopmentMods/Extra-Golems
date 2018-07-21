@@ -26,7 +26,7 @@ public class EntityNetherWartGolem extends GolemBase {
 	public static final String FREQUENCY = "Netherwart Frequency";
 	public static final String DROP_NETHERWART_BLOCK = "Drop Netherwart Blocks";
 
-	public EntityNetherWartGolem(World world) {
+	public EntityNetherWartGolem(final World world) {
 		super(world, Config.NETHERWART.getBaseAttack(), NETHERWART);
 		this.setCanSwim(true);
 	}
@@ -34,13 +34,13 @@ public class EntityNetherWartGolem extends GolemBase {
 	@Override
 	protected void initEntityAI() {
 		super.initEntityAI();
-		IBlockState[] flowers = {
+		final IBlockState[] flowers = {
 				Blocks.NETHER_WART.getDefaultState().withProperty(BlockNetherWart.AGE, 0),
 				Blocks.NETHER_WART.getDefaultState().withProperty(BlockNetherWart.AGE, 1),
 				Blocks.NETHER_WART.getDefaultState().withProperty(BlockNetherWart.AGE, 2) };
-		Block[] soils = { Blocks.SOUL_SAND };
-		boolean spawn = Config.NETHERWART.getBoolean(ALLOW_SPECIAL);
-		int freq = Config.NETHERWART.getInt(FREQUENCY);
+		final Block[] soils = { Blocks.SOUL_SAND };
+		final boolean spawn = Config.NETHERWART.getBoolean(ALLOW_SPECIAL);
+		final int freq = Config.NETHERWART.getInt(FREQUENCY);
 		this.tasks.addTask(2,
 				new EntityAIPlaceRandomBlocksStrictly(this, freq, flowers, soils, spawn));
 	}
@@ -58,7 +58,7 @@ public class EntityNetherWartGolem extends GolemBase {
 	}
 
 	@Override
-	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel) {
+	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
 		Item netherwart;
 		int min;
 		int max;

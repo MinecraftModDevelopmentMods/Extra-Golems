@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 
 public class EntityClayGolem extends GolemBase {
 
-	public EntityClayGolem(World world) {
+	public EntityClayGolem(final World world) {
 		super(world, Config.CLAY.getBaseAttack(), Blocks.CLAY);
 	}
 
@@ -32,7 +32,7 @@ public class EntityClayGolem extends GolemBase {
 	}
 
 	@Override
-	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel) {
+	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
 		this.addDrop(dropList, Items.CLAY_BALL, 0, 8, 10 + lootingLevel, 100);
 	}
 

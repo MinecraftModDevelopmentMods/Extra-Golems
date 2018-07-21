@@ -10,23 +10,23 @@ import net.minecraft.util.ResourceLocation;
 
 /**
  * RenderColoredGolem is the same as RenderGolem but with casting to GolemColorized instead of
- * GolemBase
+ * GolemBase.
  */
 public class RenderColoredGolem extends RenderLiving<GolemColorized> {
 
 	private static final ResourceLocation fallbackTexture = GolemBase.makeGolemTexture("clay");
 	private ResourceLocation texture;
 
-	public RenderColoredGolem(RenderManager renderManagerIn) {
+	public RenderColoredGolem(final RenderManager renderManagerIn) {
 		super(renderManagerIn, new ModelGolem(), 0.5F);
 	}
 
 	@Override
-	public void doRender(GolemColorized golem, double x, double y, double z, float f0, float f1) {
-		float colorRed = golem.getColorRed();
-		float colorGreen = golem.getColorGreen();
-		float colorBlue = golem.getColorBlue();
-		float colorAlpha = golem.getColorAlpha();
+	public void doRender(final GolemColorized golem, final double x, final double y, final double z, final float f0, final float f1) {
+		final float colorRed = golem.getColorRed();
+		final float colorGreen = golem.getColorGreen();
+		final float colorBlue = golem.getColorBlue();
+		final float colorAlpha = golem.getColorAlpha();
 
 		// render first pass of golem texture (usually eyes and other opaque, pre-colored features)
 		if (golem.hasBase()) {
@@ -61,9 +61,9 @@ public class RenderColoredGolem extends RenderLiving<GolemColorized> {
 	}
 
 	@Override
-	protected void applyRotations(GolemColorized golem, float p_77043_2_, float p_77043_3_,
-			float partialTicks) {
-		super.applyRotations(golem, p_77043_2_, p_77043_3_, partialTicks);
+	protected void applyRotations(final GolemColorized golem, final float p_77043_2_, final float rotationYaw,
+			final float partialTicks) {
+		super.applyRotations(golem, p_77043_2_, rotationYaw, partialTicks);
 
 		if ((double) golem.limbSwingAmount >= 0.01D) {
 			float f = 13.0F;
@@ -77,7 +77,7 @@ public class RenderColoredGolem extends RenderLiving<GolemColorized> {
 	 * Returns the location of an entity's texture. Doesn't seem to be called unless you call
 	 * Render.bindEntityTexture.
 	 */
-	protected ResourceLocation getEntityTexture(GolemColorized golem) {
+	protected ResourceLocation getEntityTexture(final GolemColorized golem) {
 		return this.texture != null ? this.texture : fallbackTexture;
 	}
 }

@@ -10,25 +10,25 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class GolemBuildEvent extends Event {
 
-	/** The world in which theGolem was built **/
+	/** The world in which theGolem was built. **/
 	public final World worldObj;
-	/** The X,Y,Z coordinates of the Golem Head block **/
+	/** The X,Y,Z coordinates of the Golem Head block. **/
 	public final BlockPos headPos;
-	/** The Block type being used to build the golem **/
+	/** The Block type being used to build the golem. **/
 	public final Block blockBelow;
-	/** The metadata of blockBelow **/
+	/** The metadata of blockBelow. **/
 	public final IBlockState blockState;
-	/** Whether the golem's arms are aligned on the x-axis **/
+	/** Whether the golem's arms are aligned on the x-axis. **/
 	public final boolean isGolemXAligned;
-	/** Whether all 4 construction blocks are identical metadata **/
+	/** Whether all 4 construction blocks are identical metadata. **/
 	public final boolean areBlocksSameMeta;
 
-	/** The GolemBase to spawn if possible **/
+	/** The GolemBase to spawn if possible. **/
 	private GolemBase theGolem;
-	/** Whether theGolem is not allowed to be spawned **/
+	/** Whether theGolem is not allowed to be spawned. **/
 	private boolean isGolemBanned;
 
-	public GolemBuildEvent(World world, final BlockPos pos, final boolean isXAligned) {
+	public GolemBuildEvent(final World world, final BlockPos pos, final boolean isXAligned) {
 		this.worldObj = world;
 		this.headPos = pos;
 		this.blockBelow = world.getBlockState(pos.down(1)).getBlock();
@@ -39,20 +39,20 @@ public class GolemBuildEvent extends Event {
 		this.isGolemBanned = false;
 	}
 
-	/** Assign this event a new GolemBase to spawn and its spawn permission **/
-	public void setGolem(GolemBase golem, boolean isAllowedByConfig) {
+	/** Assign this event a new GolemBase to spawn and its spawn permission. **/
+	public void setGolem(final GolemBase golem, final boolean isAllowedByConfig) {
 		this.theGolem = golem;
 		this.isGolemBanned = !isAllowedByConfig;
 	}
 
 	/**
-	 * Assign this event a new GolemBase to spawn
+	 * Assign this event a new GolemBase to spawn.
 	 **/
-	public void setGolem(GolemBase golem) {
+	public void setGolem(final GolemBase golem) {
 		this.setGolem(golem, true);
 	}
 
-	public void setIsGolemBanned(boolean toSet) {
+	public void setIsGolemBanned(final boolean toSet) {
 		this.isGolemBanned = toSet;
 	}
 
@@ -87,13 +87,13 @@ public class GolemBuildEvent extends Event {
 		final int metaBelow1 = this.blockBelow.getMetaFromState(this.blockState);
 		IBlockState state;
 		state = this.worldObj.getBlockState(this.headPos.down(2));
-		int metaBelow2 = this.blockBelow.getMetaFromState(state);
+		final int metaBelow2 = this.blockBelow.getMetaFromState(state);
 		state = this.isGolemXAligned ? this.worldObj.getBlockState(armsX[0])
 				: this.worldObj.getBlockState(armsZ[0]);
-		int metaArm1 = this.blockBelow.getMetaFromState(state);
+		final int metaArm1 = this.blockBelow.getMetaFromState(state);
 		state = this.isGolemXAligned ? this.worldObj.getBlockState(armsX[1])
 				: this.worldObj.getBlockState(armsZ[1]);
-		int metaArm2 = this.blockBelow.getMetaFromState(state);
+		final int metaArm2 = this.blockBelow.getMetaFromState(state);
 
 		return metaBelow1 == metaBelow2 && metaBelow2 == metaArm1 && metaArm1 == metaArm2;
 	}

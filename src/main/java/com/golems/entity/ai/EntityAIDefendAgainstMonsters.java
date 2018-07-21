@@ -1,8 +1,5 @@
 package com.golems.entity.ai;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.golems.entity.GolemBase;
 
 import net.minecraft.entity.EntityLivingBase;
@@ -11,19 +8,19 @@ import net.minecraft.village.Village;
 
 public class EntityAIDefendAgainstMonsters extends EntityAITarget {
 
-	GolemBase entityGolem;
+	final GolemBase entityGolem;
 	/** The aggressor of the iron golem's village which is now the golem's attack target. */
 	EntityLivingBase villageAgressorTarget;
-	private List villageAgressors = new ArrayList();
+	// private List villageAgressors = new ArrayList();
 
-	public EntityAIDefendAgainstMonsters(GolemBase golem) {
+	public EntityAIDefendAgainstMonsters(final GolemBase golem) {
 		super(golem, false, true);
 		this.entityGolem = golem;
 		this.setMutexBits(1);
 	}
 
 	public boolean shouldExecute() {
-		Village village = this.entityGolem.getVillage();
+		final Village village = this.entityGolem.getVillage();
 
 		if (village == null) {
 			return false;
@@ -45,7 +42,7 @@ public class EntityAIDefendAgainstMonsters extends EntityAITarget {
 	}
 
 	/**
-	 * Execute a one shot task or start executing a continuous task
+	 * Execute a one shot task or start executing a continuous task.
 	 */
 	@Override
 	public void startExecuting() {

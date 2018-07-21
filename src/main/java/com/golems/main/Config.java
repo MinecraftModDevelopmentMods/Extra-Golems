@@ -21,8 +21,12 @@ import com.golems.util.GolemConfigSet;
 
 import net.minecraftforge.common.config.Configuration;
 
-/** Registers the config settings to adjust aspects of this mod **/
+/** Registers the config settings to adjust aspects of this mod. **/
 public class Config {
+
+	private Config() {
+		//
+	}
 
 	public static final String CATEGORY_OTHER = "_other_";
 
@@ -67,7 +71,7 @@ public class Config {
 	public static boolean bedrockGolemCreativeOnly;
 	public static boolean itemGolemHeadHasGlint;
 
-	public static void mainRegistry(Configuration config) {
+	public static void mainRegistry(final Configuration config) {
 		config.load();
 		initGolemConfigSets(config);
 		loadSpecials(config);
@@ -75,8 +79,8 @@ public class Config {
 		config.save();
 	}
 
-	/** Now I can change default attack and health values all from one place **/
-	private static void initGolemConfigSets(Configuration config) {
+	/** Now I can change default attack and health values all from one place. **/
+	private static void initGolemConfigSets(final Configuration config) {
 		BEDROCK = new GolemConfigSet(config, "Bedrock Golem", 999.0D, 32.0F);
 		BONE = new GolemConfigSet(config, "Bone Golem", 74.0D, 6.5F);
 		BOOKSHELF = new GolemConfigSet(config, "Bookshelf Golem", 28.0D, 1.5F);
@@ -115,7 +119,7 @@ public class Config {
 		WOOL = new GolemConfigSet(config, "Wool Golem", 10.0D, 1.0F);
 	}
 
-	private static void loadSpecials(Configuration config) {
+	private static void loadSpecials(final Configuration config) {
 		BOOKSHELF.addKey(EntityBookshelfGolem.ALLOW_SPECIAL, true,
 				"Whether this golem can give itself potion effects");
 		COAL.addKey(EntityCoalGolem.ALLOW_SPECIAL, false,
@@ -177,7 +181,7 @@ public class Config {
 				"Whether this golem can explode when fighting or dying");
 	}
 
-	private static void loadOther(Configuration config) {
+	private static void loadOther(final Configuration config) {
 		bedrockGolemCreativeOnly = config.getBoolean("Bedrock Golem Creative Only", CATEGORY_OTHER,
 				true,
 				"When true, only players in creative mode can use a Bedrock Golem spawn item");

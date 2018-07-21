@@ -20,44 +20,58 @@ public class BlockPowerProvider extends BlockUtility implements ITileEntityProvi
 		setDefaultState(blockState.getBaseState().withProperty(POWER, Integer.valueOf(0)));
 	}
 
+	/**
+	 * @deprecated
+	 */
+	@Deprecated
 	@Override
-	public IBlockState getStateFromMeta(int meta) {
+	public IBlockState getStateFromMeta(final int meta) {
 		return getDefaultState().withProperty(POWER, meta % 16);
 	}
 
 	@Override
-	public int getMetaFromState(IBlockState state) {
+	public int getMetaFromState(final IBlockState state) {
 		return state.getValue(POWER).intValue();
 	}
 
 	@Override
 	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[] { POWER });
+		return new BlockStateContainer(this, (IProperty[]) new IProperty[] { POWER });
 	}
 
 	/**
 	 * Can this block provide power. Only wire currently seems to have this change based on its
 	 * state.
+	 * @deprecated
 	 */
+	@Deprecated
 	@Override
-	public boolean canProvidePower(IBlockState state) {
+	public boolean canProvidePower(final IBlockState state) {
 		return true;
 	}
 
+	/**
+	 * @deprecated
+	 */
+	@Deprecated
 	@Override
-	public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos,
+	public int getWeakPower(final IBlockState blockState, final IBlockAccess blockAccess, final BlockPos pos,
+			EnumFacing side) {
+		return this.getMetaFromState(blockState);
+	}
+
+	/**
+	 * @deprecated
+	 */
+	@Deprecated
+	@Override
+	public int getStrongPower(final IBlockState blockState, final IBlockAccess blockAccess, final BlockPos pos,
 			EnumFacing side) {
 		return this.getMetaFromState(blockState);
 	}
 
 	@Override
-	public int getStrongPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos,
-			EnumFacing side) {
-		return this.getMetaFromState(blockState);
-	}
-
-	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta) {
+	public TileEntity createNewTileEntity(final World worldIn, final int meta) {
 		return new TileEntityMovingPowerSource();
 	}
 }

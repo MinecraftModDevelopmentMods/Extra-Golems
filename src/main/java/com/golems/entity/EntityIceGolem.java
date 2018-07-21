@@ -28,7 +28,7 @@ public class EntityIceGolem extends GolemBase {
 	public static final String CAN_USE_REGULAR_ICE = "Can Use Regular Ice";
 	public static final String AOE = "Area of Effect";
 
-	public EntityIceGolem(World world) {
+	public EntityIceGolem(final World world) {
 		super(world, Config.ICE.getBaseAttack(), Blocks.PACKED_ICE);
 		this.setCanSwim(true);
 	}
@@ -46,17 +46,17 @@ public class EntityIceGolem extends GolemBase {
 		super.onLivingUpdate();
 		// calling every other tick reduces lag by 50%
 		if (this.ticksExisted % 2 == 0) {
-			int x = MathHelper.floor(this.posX);
-			int y = MathHelper.floor(this.posY - 0.20000000298023224D);
-			int z = MathHelper.floor(this.posZ);
-			BlockPos below = new BlockPos(x, y, z);
+			final int x = MathHelper.floor(this.posX);
+			final int y = MathHelper.floor(this.posY - 0.20000000298023224D);
+			final int z = MathHelper.floor(this.posZ);
+			final BlockPos below = new BlockPos(x, y, z);
 
 			if (this.world.getBiome(below).getTemperature(below) > 1.0F) {
 				this.attackEntityFrom(DamageSource.ON_FIRE, 1.0F);
 			}
 
 			if (Config.ICE.getBoolean(ALLOW_SPECIAL)) {
-				IceGolemFreezeEvent event = new IceGolemFreezeEvent(this, below,
+				final IceGolemFreezeEvent event = new IceGolemFreezeEvent(this, below,
 						Config.ICE.getInt(AOE));
 				if (!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Result.DENY) {
 					this.freezeBlocks(event.getAffectedPositions(), event.getFunction(),
@@ -67,7 +67,7 @@ public class EntityIceGolem extends GolemBase {
 	}
 
 	@Override
-	public boolean attackEntityAsMob(Entity entity) {
+	public boolean attackEntityAsMob(final Entity entity) {
 		if (super.attackEntityAsMob(entity)) {
 			if (entity.isBurning()) {
 				this.attackEntityFrom(DamageSource.GENERIC, 0.5F);
@@ -85,8 +85,8 @@ public class EntityIceGolem extends GolemBase {
 	}
 
 	@Override
-	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel) {
-		int size = 1 + lootingLevel;
+	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
+		final int size = 1 + lootingLevel;
 		this.addDrop(dropList, new ItemStack(Blocks.ICE, size > 4 ? 4 : size), 100);
 		if (lootingLevel > 0 || !Config.ICE.getBoolean(CAN_USE_REGULAR_ICE)) {
 			this.addDrop(dropList, Blocks.PACKED_ICE, 0, 0, size > 2 ? 2 : size, 80);
@@ -110,15 +110,15 @@ public class EntityIceGolem extends GolemBase {
 	 * 
 	 * @return whether all setBlockState calls were successful.
 	 **/
-	public boolean freezeBlocks(final List<BlockPos> POSITIONS,
-			final Function<IBlockState, IBlockState> FUNCTION, final int UPDATE_FLAG) {
+	public boolean freezeBlocks(final List<BlockPos> positions,
+			final Function<IBlockState, IBlockState> function, final int updateFlag) {
 		boolean flag = false;
-		for (int i = 0, len = POSITIONS.size(); i < len; i++) {
-			final BlockPos POS = POSITIONS.get(i);
-			final IBlockState CURRENT_STATE = this.world.getBlockState(POS);
-			final IBlockState TO_SET = FUNCTION.apply(CURRENT_STATE);
-			if (TO_SET != null && TO_SET != CURRENT_STATE) {
-				flag &= this.world.setBlockState(POS, TO_SET, UPDATE_FLAG);
+		for (int i = 0, len = positions.size(); i < len; i++) {
+			final BlockPos pos = positions.get(i);
+			final IBlockState currentState = this.world.getBlockState(pos);
+			final IBlockState toSet = function.apply(currentState);
+			if (toSet != null && toSet != currentState) {
+				flag &= this.world.setBlockState(pos, toSet, updateFlag);
 			}
 		}
 		return flag;

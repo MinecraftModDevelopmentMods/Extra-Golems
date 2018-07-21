@@ -9,13 +9,13 @@ import net.minecraft.block.state.IBlockState;
 
 public class EntityAIPlaceRandomBlocksStrictly extends EntityAIPlaceRandomBlocks {
 
-	public EntityAIPlaceRandomBlocksStrictly(GolemBase golemBase, int ticksBetweenPlanting,
-			IBlockState[] plants, Block[] soils, boolean configAllows) {
+	public EntityAIPlaceRandomBlocksStrictly(final GolemBase golemBase, final int ticksBetweenPlanting,
+			final IBlockState[] plants, final Block[] soils, final boolean configAllows) {
 		super(golemBase, ticksBetweenPlanting, plants, soils, getPredicate(configAllows));
 	}
 
-	public EntityAIPlaceRandomBlocksStrictly(GolemBase golemBase, int ticksBetweenPlanting,
-			IBlockState[] plants, boolean configAllows) {
+	public EntityAIPlaceRandomBlocksStrictly(final GolemBase golemBase, final int ticksBetweenPlanting,
+			final IBlockState[] plants, final boolean configAllows) {
 		this(golemBase, ticksBetweenPlanting, plants, null, configAllows);
 	}
 
@@ -28,7 +28,7 @@ public class EntityAIPlaceRandomBlocksStrictly extends EntityAIPlaceRandomBlocks
 		return new Predicate<EntityAIPlaceRandomBlocks>() {
 
 			@Override
-			public boolean test(EntityAIPlaceRandomBlocks t) {
+			public boolean test(final EntityAIPlaceRandomBlocks t) {
 				return ret;
 			}
 		};

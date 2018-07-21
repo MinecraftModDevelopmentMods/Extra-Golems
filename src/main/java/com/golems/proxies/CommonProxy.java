@@ -1,8 +1,5 @@
 package com.golems.proxies;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import com.golems.blocks.BlockGolemHead;
 import com.golems.blocks.BlockLightProvider;
 import com.golems.blocks.BlockPowerProvider;
@@ -44,6 +41,7 @@ import com.golems.entity.EntityStrawGolem;
 import com.golems.entity.EntityTNTGolem;
 import com.golems.entity.EntityWoodenGolem;
 import com.golems.entity.EntityWoolGolem;
+import com.golems.entity.GolemBase;
 import com.golems.events.handlers.GolemCommonEventHandler;
 import com.golems.items.ItemBedrockGolem;
 import com.golems.items.ItemGolemPaper;
@@ -68,8 +66,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @Mod.EventBusSubscriber
 public class CommonProxy {
 
-	private static Map<String, Block> blocks = new ConcurrentHashMap<>();
-	private static Map<String, Item> items = new ConcurrentHashMap<>();
+	// private static Map<String, Block> blocks = new ConcurrentHashMap<>();
+	// private static Map<String, Item> items = new ConcurrentHashMap<>();
 
 	protected static int golemEntityCount;
 
@@ -121,8 +119,8 @@ public class CommonProxy {
 		register(EntityWoolGolem.class, "golem_wool");
 	}
 
-	/** registers the entity **/
-	protected static void register(Class entityClass, String name) {
+	/** registers the entity. **/
+	protected static void register(final Class<? extends GolemBase> entityClass, final String name) {
 
 		EntityRegistry.registerModEntity(
 				new ResourceLocation(ExtraGolems.MODID + ":textures/entity/" + name + ".png"),
@@ -132,12 +130,12 @@ public class CommonProxy {
 
 	// TODO: Reimplement old version
 	@SubscribeEvent
-	public static void registerItems(RegistryEvent.Register<Item> event) {
+	public static void registerItems(final RegistryEvent.Register<Item> event) {
 		event.getRegistry().register(new ItemBlock(GolemItems.golemHead) {
 
 			@Override
 			@SideOnly(Side.CLIENT)
-			public boolean hasEffect(ItemStack stack) {
+			public boolean hasEffect(final ItemStack stack) {
 				return Config.itemGolemHeadHasGlint;
 			}
 		}.setRegistryName(GolemItems.golemHead.getRegistryName()));
@@ -152,7 +150,7 @@ public class CommonProxy {
 
 	// TODO: Reimplement old version
 	@SubscribeEvent
-	public static void registerBlocks(RegistryEvent.Register<Block> event) {
+	public static void registerBlocks(final RegistryEvent.Register<Block> event) {
 		// TODO: Clean up
 		event.getRegistry().registerAll(
 				new BlockGolemHead().setUnlocalizedName("golem_head")

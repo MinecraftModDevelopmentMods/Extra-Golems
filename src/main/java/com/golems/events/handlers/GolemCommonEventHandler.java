@@ -54,11 +54,11 @@ import net.minecraft.init.Blocks;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-/** Handles events added specifically from this mod **/
+/** Handles events added specifically from this mod. **/
 public class GolemCommonEventHandler {
 
 	@SubscribeEvent
-	public void onBuildGolem(GolemBuildEvent event) {
+	public void onBuildGolem(final GolemBuildEvent event) {
 		// if it has not already been set
 		if (event.isGolemNull()) {
 			if (event.blockBelow == Blocks.DIAMOND_BLOCK) {
@@ -93,7 +93,7 @@ public class GolemCommonEventHandler {
 			} else if (event.blockBelow instanceof BlockLog) {
 				GolemMultiTextured golem = new EntityWoodenGolem(event.worldObj);
 				// use block metadata to give this golem the right texture
-				int meta = event.blockBelow.getMetaFromState(
+				final int meta = event.blockBelow.getMetaFromState(
 						event.blockState.withProperty(BlockLog.LOG_AXIS, EnumAxis.NONE));
 				byte textureNum = event.blockBelow == Blocks.LOG2 ? (byte) (meta + 4) : (byte) meta;
 				textureNum %= golem.getNumTextures();
@@ -128,7 +128,7 @@ public class GolemCommonEventHandler {
 						Config.PRISMARINE.canSpawn());
 			} else if (event.blockBelow == Blocks.BROWN_MUSHROOM_BLOCK
 					|| event.blockBelow == Blocks.RED_MUSHROOM_BLOCK) {
-				GolemMultiTextured golem = new EntityMushroomGolem(event.worldObj);
+				final GolemMultiTextured golem = new EntityMushroomGolem(event.worldObj);
 				// use block metadata to give this golem the right texture
 				byte textureNum = event.blockBelow == Blocks.RED_MUSHROOM_BLOCK ? (byte) 0
 						: (byte) 1;
@@ -145,25 +145,25 @@ public class GolemCommonEventHandler {
 			} else if (event.blockBelow == Blocks.REDSTONE_BLOCK) {
 				event.setGolem(new EntityRedstoneGolem(event.worldObj), Config.REDSTONE.canSpawn());
 			} else if (event.blockBelow == Blocks.WOOL) {
-				GolemMultiTextured golem = new EntityWoolGolem(event.worldObj);
+				final GolemMultiTextured golem = new EntityWoolGolem(event.worldObj);
 				// use block metadata to give this golem the right texture
-				int meta = event.blockBelow.getMetaFromState(event.blockState)
+				final int meta = event.blockBelow.getMetaFromState(event.blockState)
 						% golem.getTextureArray().length;
 				golem.setTextureNum((byte) meta);
 				// actually set the golem
 				event.setGolem(golem, Config.WOOL.canSpawn());
 			} else if (event.blockBelow == Blocks.STAINED_HARDENED_CLAY) {
-				GolemColorizedMultiTextured golem = new EntityStainedClayGolem(event.worldObj);
+				final GolemColorizedMultiTextured golem = new EntityStainedClayGolem(event.worldObj);
 				// use block metadata to give this golem the right texture
-				int meta = event.blockBelow.getMetaFromState(event.blockState)
+				final int meta = event.blockBelow.getMetaFromState(event.blockState)
 						% golem.getColorArray().length;
 				golem.setTextureNum((byte) (golem.getColorArray().length - meta - 1));
 				// actually set the golem
 				event.setGolem(golem, Config.STAINED_CLAY.canSpawn());
 			} else if (event.blockBelow == Blocks.STAINED_GLASS) {
-				GolemColorizedMultiTextured golem = new EntityStainedGlassGolem(event.worldObj);
+				final GolemColorizedMultiTextured golem = new EntityStainedGlassGolem(event.worldObj);
 				// use block metadata to give this golem the right texture
-				int meta = event.blockBelow.getMetaFromState(event.blockState)
+				final int meta = event.blockBelow.getMetaFromState(event.blockState)
 						% golem.getColorArray().length;
 				golem.setTextureNum((byte) (golem.getColorArray().length - meta - 1));
 				// actually set the golem
@@ -182,11 +182,11 @@ public class GolemCommonEventHandler {
 	}
 
 	@SubscribeEvent
-	public void onLivingSpawned(EntityJoinWorldEvent event) {
+	public void onLivingSpawned(final EntityJoinWorldEvent event) {
 		// add custom 'attack golem' AI to zombies. They already have this for regular iron golems
 	    if (event.getEntity() instanceof EntityZombie && !(event.getEntity() instanceof EntityPigZombie)) {
-	        EntityZombie zombie = (EntityZombie) event.getEntity();
-	        for (EntityAITasks.EntityAITaskEntry entry : zombie.targetTasks.taskEntries) {
+	        final EntityZombie zombie = (EntityZombie) event.getEntity();
+	        for (final EntityAITasks.EntityAITaskEntry entry : zombie.targetTasks.taskEntries) {
 	            if (entry.action instanceof EntityAIAttackGolem) {
 	                return;
 	            }
@@ -196,7 +196,7 @@ public class GolemCommonEventHandler {
 	}
 
 	private static final class EntityAIAttackGolem extends EntityAINearestAttackableTarget<GolemBase> {
-	    private EntityAIAttackGolem(EntityCreature creature) {
+	    private EntityAIAttackGolem(final EntityCreature creature) {
 	        super(creature, GolemBase.class, true);
 	    }
 	}

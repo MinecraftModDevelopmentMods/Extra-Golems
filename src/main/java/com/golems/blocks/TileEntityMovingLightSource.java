@@ -18,6 +18,7 @@ public class TileEntityMovingLightSource extends TileEntity implements ITickable
 	protected AxisAlignedBB aabb = Block.NULL_AABB;
 
 	public TileEntityMovingLightSource() {
+		//
 	}
 
 	/**
@@ -25,14 +26,14 @@ public class TileEntityMovingLightSource extends TileEntity implements ITickable
 	 * Normally only want this when block actually is replaced.
 	 */
 	@Override
-	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState,
-			IBlockState newSate) {
+	public boolean shouldRefresh(final World world, final BlockPos pos, final IBlockState oldState,
+			final IBlockState newSate) {
 		return (oldState.getBlock() != newSate.getBlock());
 	}
 
 	@Override
 	public void update() {
-		List<GolemLightProvider> entityList = world.getEntitiesWithinAABB(GolemLightProvider.class,
+		final List<GolemLightProvider> entityList = world.getEntitiesWithinAABB(GolemLightProvider.class,
 				this.getAABBToCheck(this.world, this.getPos()));
 
 		// if no golem was found, delete this tile entity and block
@@ -48,7 +49,7 @@ public class TileEntityMovingLightSource extends TileEntity implements ITickable
 		world.setBlockState(getPos(), Blocks.AIR.getDefaultState(), 3);
 	}
 
-	protected AxisAlignedBB getAABBToCheck(World worldIn, BlockPos pos) {
+	protected AxisAlignedBB getAABBToCheck(final World worldIn, final BlockPos pos) {
 		if (this.aabb == Block.NULL_AABB) {
 			this.aabb = new AxisAlignedBB((double) pos.getX(), (double) pos.getY(),
 					(double) pos.getZ(), (double) pos.getX() + 1D, (double) pos.getY() + 1D,

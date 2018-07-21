@@ -18,7 +18,7 @@ public class WeightedItem {
 	public final int minAmount;
 	public final int dropChance;
 
-	public WeightedItem(Item itemIn, int metadata, int min, int max, int percentChance) {
+	public WeightedItem(final Item itemIn, final int metadata, final int min, final int max, final int percentChance) {
 		this.item = itemIn;
 		this.meta = metadata;
 		this.minAmount = min;
@@ -26,32 +26,32 @@ public class WeightedItem {
 		this.dropChance = percentChance > 100 ? 100 : percentChance;
 	}
 
-	public WeightedItem(ItemStack stack, int percentChance) {
+	public WeightedItem(final ItemStack stack, final int percentChance) {
 		this(stack.getItem(), stack.getMetadata(), stack.getCount(), stack.getCount(),
 				percentChance);
 	}
 
 	/**
-	 * Calculated randomly each time this method is called
+	 * Calculated randomly each time this method is called.
 	 **/
-	public boolean shouldDrop(Random rand) {
+	public boolean shouldDrop(final Random rand) {
 		return this.item != null && rand.nextInt(100) < this.dropChance;
 	}
 
 	/**
-	 * Gets a random number between minAmount and maxAmount, inclusive
+	 * Gets a random number between minAmount and maxAmount, inclusive.
 	 **/
-	public int getRandomSize(Random rand) {
+	public int getRandomSize(final Random rand) {
 		return this.maxAmount > this.minAmount
 				? this.minAmount + rand.nextInt(this.maxAmount - this.minAmount + 1)
 				: this.minAmount;
 	}
 
 	/**
-	 * Makes an ItemStack of this WeightedItem using {@link #getRandomSize(Random)}
+	 * Makes an ItemStack of this WeightedItem using {@link #getRandomSize(Random)}.
 	 **/
-	public ItemStack makeStack(Random rand) {
-		int size = getRandomSize(rand);
+	public ItemStack makeStack(final Random rand) {
+		final int size = getRandomSize(rand);
 		return new ItemStack(this.item, size, this.meta);
 	}
 }

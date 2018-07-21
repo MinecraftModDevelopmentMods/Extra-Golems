@@ -18,40 +18,36 @@ public abstract class GolemColorizedMultiTextured extends GolemColorized {
 	protected static final String NBT_TEXTURE = "GolemTextureData";
 	protected final int[] colors;
 
-	/// **
-	// * Flexible constructor so child classes can "borrow" this class's behavior and customize.
-	// * It is fine to pass 'null' for {@link BASE} or {@link OVERLAY}, and null textures will not
-	/// be rendered.
-	// * @param BASE an optional texture that will not be recolored or rendered transparent, to
-	/// render before {@link OVERLAY}
-	// * @param OVERLAY a texture that will be recolored and optionally rendered as transparent.
-	// * @param lColors an int[] of color values to use for rendering -- interacting with this golem
-	/// will go to the next color
-	// **/
-	// TODO: FIX ME!
-	public GolemColorizedMultiTextured(World world, float damage, ItemStack pick,
-			final ResourceLocation BASE, final ResourceLocation OVERLAY, int[] lColors) {
-		super(world, damage, pick, 0L, BASE, OVERLAY);
+	/**
+	 * Flexible constructor so child classes can "borrow" this class's behavior and customize.
+	 * It is fine to pass 'null' for {@link base} or {@link overlay}, and null textures will not  be rendered.
+	 * @param base an optional texture that will not be recolored or rendered transparent, to render before {@link overlay}
+	 * @param overlay a texture that will be recolored and optionally rendered as transparent.
+	 * @param lColors an int[] of color values to use for rendering -- interacting with this golem  will go to the next color
+	 **/
+	public GolemColorizedMultiTextured(final World world, final float damage, final ItemStack pick,
+			final ResourceLocation base, final ResourceLocation overlay, final int[] lColors) {
+		super(world, damage, pick, 0L, base, overlay);
 		colors = lColors;
 	}
 
 	/**
 	 * Flexible constructor so child classes can "borrow" this class's behavior and customize. It is
-	 * fine to pass 'null' for {@link BASE} or {@link OVERLAY}, and null textures will not be
+	 * fine to pass 'null' for {@link base} or {@link overlay}, and null textures will not be
 	 * rendered.
 	 * 
-	 * @param BASE
+	 * @param base
 	 *            an optional texture that will not be recolored or rendered transparent, to render
-	 *            before {@link OVERLAY}
-	 * @param OVERLAY
+	 *            before {@link overlay}
+	 * @param overlay
 	 *            a texture that will be recolored and optionally rendered as transparent.
 	 * @param lColors
 	 *            an int[] of color values to use for rendering -- interacting with this golem will
 	 *            go to the next color
 	 **/
-	public GolemColorizedMultiTextured(World world, float damage, Block pick,
-			final ResourceLocation BASE, final ResourceLocation OVERLAY, int[] lColors) {
-		this(world, damage, new ItemStack(pick), BASE, OVERLAY, lColors);
+	public GolemColorizedMultiTextured(final World world, float damage, final Block pick,
+			final ResourceLocation base, final ResourceLocation overlay, final int[] lColors) {
+		this(world, damage, new ItemStack(pick), base, overlay, lColors);
 	}
 
 	@Override
@@ -61,8 +57,8 @@ public abstract class GolemColorizedMultiTextured extends GolemColorized {
 	}
 
 	@Override
-	public boolean processInteract(EntityPlayer player, EnumHand hand) {
-		ItemStack stack = player.getHeldItem(hand);
+	public boolean processInteract(final EntityPlayer player, final EnumHand hand) {
+		final ItemStack stack = player.getHeldItem(hand);
 		// only change texture when player has empty hand
 		if (!stack.isEmpty()) {
 			return super.processInteract(player, hand);
@@ -86,13 +82,13 @@ public abstract class GolemColorizedMultiTextured extends GolemColorized {
 	}
 
 	@Override
-	public void writeEntityToNBT(NBTTagCompound nbt) {
+	public void writeEntityToNBT(final NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		nbt.setByte(NBT_TEXTURE, (byte) this.getTextureNum());
 	}
 
 	@Override
-	public void readEntityFromNBT(NBTTagCompound nbt) {
+	public void readEntityFromNBT(final NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		this.setTextureNum(nbt.getByte(NBT_TEXTURE));
 		this.updateTextureByData(this.getTextureNum());
@@ -103,7 +99,7 @@ public abstract class GolemColorizedMultiTextured extends GolemColorized {
 		return true;
 	}
 
-	public void setTextureNum(byte toSet) {
+	public void setTextureNum(final byte toSet) {
 		this.getDataManager().set(DATA_TEXTURE, new Byte(toSet));
 	}
 
@@ -115,7 +111,7 @@ public abstract class GolemColorizedMultiTextured extends GolemColorized {
 		return this.colors;
 	}
 
-	protected void updateTextureByData(int data) {
+	protected void updateTextureByData(final int data) {
 		this.setColor(this.colors[data]);
 	}
 }

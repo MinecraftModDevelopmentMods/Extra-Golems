@@ -33,39 +33,39 @@ public class SpongeGolemSoakEvent extends Event {
 	public final int range;
 
 	protected IBlockState replacesWater;
-	/** This will be passed in World#setBlockState **/
+	/** This will be passed in World#setBlockState. **/
 	public int updateFlag = 3;
 
-	public SpongeGolemSoakEvent(GolemBase golem, BlockPos center, final int RADIUS) {
+	public SpongeGolemSoakEvent(final GolemBase golem, final BlockPos center, final int radius) {
 		this.setResult(Result.ALLOW);
 		this.spongeGolem = golem;
 		this.spongeGolemPos = center;
-		this.range = RADIUS;
+		this.range = radius;
 		this.setReplacementState(Blocks.AIR.getDefaultState());
 		this.setWaterPredicate(new Predicate<IBlockState>() {
 
 			@Override
-			public boolean test(IBlockState state) {
+			public boolean test(final IBlockState state) {
 				return state.getMaterial() == Material.WATER || state.getBlock() == Blocks.WATER
 						|| state.getBlock() == Blocks.FLOWING_WATER;
 			}
 		});
 
-		initAffectedBlockList(RADIUS);
+		initAffectedBlockList(radius);
 	}
 
-	public void initAffectedBlockList(final int RANGE) {
-		this.affectedBlocks = new ArrayList<>(RANGE * RANGE * RANGE * 4);
-		final int MAX_DIS = RANGE * RANGE;
+	public void initAffectedBlockList(final int range) {
+		this.affectedBlocks = new ArrayList<>(range * range * range * 4);
+		final int MAX_DIS = range * range;
 		// check sphere around golem to absorb water
-		for (int i = -RANGE; i <= RANGE; i++) {
-			for (int j = -RANGE; j <= RANGE; j++) {
-				for (int k = -RANGE; k <= RANGE; k++) {
-					final BlockPos CURRENT = this.spongeGolemPos.add(i, j, k);
-					if (spongeGolemPos.distanceSq(CURRENT) <= MAX_DIS) {
-						final IBlockState STATE = this.spongeGolem.world.getBlockState(CURRENT);
-						if (this.waterPredicate.test(STATE)) {
-							this.affectedBlocks.add(CURRENT);
+		for (int i = -range; i <= range; i++) {
+			for (int j = -range; j <= range; j++) {
+				for (int k = -range; k <= range; k++) {
+					final BlockPos current = this.spongeGolemPos.add(i, j, k);
+					if (spongeGolemPos.distanceSq(current) <= MAX_DIS) {
+						final IBlockState state = this.spongeGolem.world.getBlockState(current);
+						if (this.waterPredicate.test(state)) {
+							this.affectedBlocks.add(current);
 						}
 					}
 				}
@@ -81,12 +81,12 @@ public class SpongeGolemSoakEvent extends Event {
 		return this.waterPredicate;
 	}
 
-	public void setWaterPredicate(Predicate<IBlockState> waterPred) {
+	public void setWaterPredicate(final Predicate<IBlockState> waterPred) {
 		this.waterPredicate = waterPred;
 	}
 
-	/** Sets the IBlockState that will replace water when this event is finalized **/
-	public void setReplacementState(IBlockState toReplaceWater) {
+	/** Sets the IBlockState that will replace water when this event is finalized. **/
+	public void setReplacementState(final IBlockState toReplaceWater) {
 		this.replacesWater = toReplaceWater;
 	}
 
@@ -94,7 +94,7 @@ public class SpongeGolemSoakEvent extends Event {
 		return this.replacesWater;
 	}
 
-	public boolean removeBlockPos(BlockPos toRemove) {
+	public boolean removeBlockPos(final BlockPos toRemove) {
 		return this.affectedBlocks.remove(toRemove);
 	}
 }

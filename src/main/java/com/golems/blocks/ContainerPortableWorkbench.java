@@ -10,14 +10,14 @@ public class ContainerPortableWorkbench extends ContainerWorkbench {
 
 	protected BlockPos blockPos;
 
-	public ContainerPortableWorkbench(InventoryPlayer playerInventory, World worldIn,
-			BlockPos posIn) {
+	public ContainerPortableWorkbench(final InventoryPlayer playerInventory, final World worldIn,
+			final BlockPos posIn) {
 		super(playerInventory, worldIn, posIn);
 		this.blockPos = posIn;
 	}
 
 	@Override
-	public boolean canInteractWith(EntityPlayer playerIn) {
+	public boolean canInteractWith(final EntityPlayer playerIn) {
 		return true;
 	}
 

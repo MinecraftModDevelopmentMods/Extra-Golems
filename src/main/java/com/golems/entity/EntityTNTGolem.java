@@ -29,18 +29,18 @@ public class EntityTNTGolem extends GolemBase {
 			.<Boolean>createKey(EntityTNTGolem.class, DataSerializers.BOOLEAN);
 	public static final String ALLOW_SPECIAL = "Allow Special: Explode";
 
-	protected final int MIN_EXPLOSION_RAD;
-	protected final int MAX_EXPLOSION_RAD;
-	protected final int FUSE_LEN;
-	/** Percent chance to explode while attacking a mob **/
-	protected final int CHANCE_TO_EXPLODE_WHEN_ATTACKING;
+	protected final int minExplosionRad;
+	protected final int maxExplosionRad;
+	protected final int fuseLen;
+	/** Percent chance to explode while attacking a mob. **/
+	protected final int chanceToExplodeWhenAttacking;
 	protected boolean allowedToExplode;
 
 	protected boolean willExplode;
 	protected int fuseTimer;
 
-	/** Default constructor for TNT golem **/
-	public EntityTNTGolem(World world) {
+	/** Default constructor for TNT golem. **/
+	public EntityTNTGolem(final World world) {
 		this(world, Config.TNT.getBaseAttack(), new ItemStack(Blocks.TNT), 3, 6, 50, 10,
 				Config.TNT.getBoolean(ALLOW_SPECIAL));
 	}
@@ -48,14 +48,14 @@ public class EntityTNTGolem extends GolemBase {
 	/**
 	 * Flexible constructor to allow child classes to customize.
 	 **/
-	public EntityTNTGolem(World world, float attack, ItemStack pick, int minExplosionRange,
-			int maxExplosionRange, int minFuseLength, int randomExplosionChance,
-			boolean configAllowsExplode) {
+	public EntityTNTGolem(final World world, final float attack, final ItemStack pick, final int minExplosionRange,
+			final int maxExplosionRange, final int minFuseLength, final int randomExplosionChance,
+			final boolean configAllowsExplode) {
 		super(world, attack, pick);
-		this.MIN_EXPLOSION_RAD = minExplosionRange;
-		this.MAX_EXPLOSION_RAD = maxExplosionRange;
-		this.FUSE_LEN = minFuseLength;
-		this.CHANCE_TO_EXPLODE_WHEN_ATTACKING = randomExplosionChance;
+		this.minExplosionRad = minExplosionRange;
+		this.maxExplosionRad = maxExplosionRange;
+		this.fuseLen = minFuseLength;
+		this.chanceToExplodeWhenAttacking = randomExplosionChance;
 		this.allowedToExplode = configAllowsExplode;
 		this.resetIgnite();
 	}
@@ -84,8 +84,8 @@ public class EntityTNTGolem extends GolemBase {
 		}
 
 		if (this.isWet() || (this.getAttackTarget() != null
-				&& this.getDistanceSq(this.getAttackTarget()) > this.MAX_EXPLOSION_RAD
-						* this.MAX_EXPLOSION_RAD)) {
+				&& this.getDistanceSq(this.getAttackTarget()) > this.minExplosionRad
+						* this.maxExplosionRad)) {
 			this.resetIgnite();
 		}
 
@@ -125,17 +125,17 @@ public class EntityTNTGolem extends GolemBase {
 	}
 
 	@Override
-	public void onDeath(DamageSource source) {
+	public void onDeath(final DamageSource source) {
 		super.onDeath(source);
 		this.explode();
 	}
 
 	@Override
-	public boolean attackEntityAsMob(Entity entity) {
+	public boolean attackEntityAsMob(final Entity entity) {
 		boolean flag = super.attackEntityAsMob(entity);
 
-		if (flag && !entity.isDead && rand.nextInt(100) < this.CHANCE_TO_EXPLODE_WHEN_ATTACKING
-				&& this.getDistanceSq(entity) <= this.MIN_EXPLOSION_RAD * this.MIN_EXPLOSION_RAD) {
+		if (flag && !entity.isDead && rand.nextInt(100) < this.chanceToExplodeWhenAttacking
+				&& this.getDistanceSq(entity) <= this.minExplosionRad * this.minExplosionRad) {
 			this.ignite();
 		}
 
@@ -143,8 +143,8 @@ public class EntityTNTGolem extends GolemBase {
 	}
 
 	@Override
-	protected boolean processInteract(EntityPlayer player, EnumHand hand) {
-		ItemStack itemstack = player.getHeldItem(hand);
+	protected boolean processInteract(final EntityPlayer player, final EnumHand hand) {
+		final ItemStack itemstack = player.getHeldItem(hand);
 		if (!itemstack.isEmpty() && itemstack.getItem() == Items.FLINT_AND_STEEL) {
 			this.world.playSound(player, this.posX, this.posY, this.posZ,
 					SoundEvents.ITEM_FLINTANDSTEEL_USE, this.getSoundCategory(), 1.0F,
@@ -152,7 +152,7 @@ public class EntityTNTGolem extends GolemBase {
 			player.swingArm(hand);
 
 			if (!this.world.isRemote) {
-				this.setFire(Math.floorDiv(this.FUSE_LEN, 20));
+				this.setFire(Math.floorDiv(this.fuseLen, 20));
 				this.ignite();
 				itemstack.damageItem(1, player);
 			}
@@ -162,7 +162,7 @@ public class EntityTNTGolem extends GolemBase {
 	}
 
 	protected void resetFuse() {
-		this.fuseTimer = this.FUSE_LEN + rand.nextInt(Math.floorDiv(FUSE_LEN, 2) + 1);
+		this.fuseTimer = this.fuseLen + rand.nextInt(Math.floorDiv(fuseLen, 2) + 1);
 	}
 
 	protected void setIgnited(boolean toSet) {
@@ -194,10 +194,10 @@ public class EntityTNTGolem extends GolemBase {
 	protected void explode() {
 		if (this.allowedToExplode) {
 			if (!this.world.isRemote) {
-				boolean flag = this.world.getGameRules().getBoolean("mobGriefing");
-				float range = this.MAX_EXPLOSION_RAD > this.MIN_EXPLOSION_RAD
-						? rand.nextInt(MAX_EXPLOSION_RAD - MIN_EXPLOSION_RAD)
-						: this.MIN_EXPLOSION_RAD;
+				final boolean flag = this.world.getGameRules().getBoolean("mobGriefing");
+				final float range = this.maxExplosionRad > this.minExplosionRad
+						? rand.nextInt(maxExplosionRad - minExplosionRad)
+						: this.minExplosionRad;
 				this.world.createExplosion(this, this.posX, this.posY, this.posZ, range, flag);
 				this.setDead();
 			}
@@ -214,8 +214,8 @@ public class EntityTNTGolem extends GolemBase {
 	}
 
 	@Override
-	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel) {
-		int size = 2 + this.rand.nextInt(4);
+	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
+		final int size = 2 + this.rand.nextInt(4);
 		this.addDrop(dropList, new ItemStack(Items.GUNPOWDER, size), 100);
 		this.addDrop(dropList, Blocks.TNT, 0, 1, 1, lootingLevel * 30);
 		this.addDrop(dropList, Blocks.SAND, 0, 1, 4, 5 + lootingLevel * 10);

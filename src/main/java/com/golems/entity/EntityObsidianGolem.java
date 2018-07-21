@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 
 public class EntityObsidianGolem extends GolemBase {
 
-	public EntityObsidianGolem(World world) {
+	public EntityObsidianGolem(final World world) {
 		super(world, Config.OBSIDIAN.getBaseAttack(), Blocks.OBSIDIAN);
 	}
 
@@ -32,8 +32,8 @@ public class EntityObsidianGolem extends GolemBase {
 	}
 
 	@Override
-	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel) {
-		int size = 1 + this.rand.nextInt(2 + (lootingLevel > 2 ? 2 : lootingLevel));
+	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
+		final int size = 1 + this.rand.nextInt(2 + (lootingLevel > 2 ? 2 : lootingLevel));
 		this.addDrop(dropList, new ItemStack(Blocks.OBSIDIAN, size), 100);
 	}
 

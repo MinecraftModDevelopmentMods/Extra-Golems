@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 
 public class EntityPrismarineGolem extends GolemBase {
 
-	public EntityPrismarineGolem(World world) {
+	public EntityPrismarineGolem(final World world) {
 		super(world, Config.PRISMARINE.getBaseAttack(), Blocks.PRISMARINE);
 	}
 
@@ -47,8 +47,8 @@ public class EntityPrismarineGolem extends GolemBase {
 	}
 
 	@Override
-	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel) {
-		int size = 6 + this.rand.nextInt(4 + lootingLevel * 2);
+	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
+		final int size = 6 + this.rand.nextInt(4 + lootingLevel * 2);
 		this.addDrop(dropList, new ItemStack(Items.PRISMARINE_SHARD, size), 100);
 		this.addDrop(dropList, Items.PRISMARINE_CRYSTALS, 0, 1, 3, 6 + lootingLevel * 5);
 	}

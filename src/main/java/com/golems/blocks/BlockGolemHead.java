@@ -3,6 +3,7 @@ package com.golems.blocks;
 import com.golems.entity.GolemBase;
 import com.golems.events.GolemBuildEvent;
 import com.golems.items.ItemBedrockGolem;
+import com.golems.main.ExtraGolems;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
@@ -32,18 +33,24 @@ public class BlockGolemHead extends BlockHorizontal {
 		this.setSoundType(SoundType.WOOD);
 	}
 
+	/**
+	 * @deprecated
+	 */
+	@Deprecated
 	@Override
-	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing,
-			float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+	public IBlockState getStateForPlacement(final World worldIn, final BlockPos pos, final EnumFacing facing,
+			final float hitX, final float hitY, final float hitZ, final int meta, final EntityLivingBase placer) {
 		return this.getDefaultState().withProperty(FACING,
 				placer.getHorizontalFacing().getOpposite());
 	}
 
 	/**
 	 * Convert the given metadata into a BlockState for this Block.
+	 * @deprecated
 	 */
+	@Deprecated
 	@Override
-	public IBlockState getStateFromMeta(int meta) {
+	public IBlockState getStateFromMeta(final int meta) {
 		return this.getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta));
 	}
 
@@ -51,48 +58,57 @@ public class BlockGolemHead extends BlockHorizontal {
 	 * Convert the BlockState into the correct metadata value.
 	 */
 	@Override
-	public int getMetaFromState(IBlockState state) {
+	public int getMetaFromState(final IBlockState state) {
 		return state.getValue(FACING).getHorizontalIndex();
 	}
 
 	@Override
 	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[] { FACING });
+		return new BlockStateContainer(this, (IProperty[]) new IProperty[] { FACING });
 	}
 
+	/**
+	 * @deprecated
+	 */
+	@Deprecated
 	@Override
-	public IBlockState withRotation(IBlockState state, Rotation rot) {
+	public IBlockState withRotation(final IBlockState state, final Rotation rot) {
 		return state.withProperty(FACING, rot.rotate(state.getValue(FACING)));
 	}
 
+	/**
+	 * @deprecated
+	 */
+	@Deprecated
 	@Override
-	public IBlockState withMirror(IBlockState state, Mirror mirrorIn) {
+	public IBlockState withMirror(final IBlockState state, final Mirror mirrorIn) {
 		return state.withRotation(mirrorIn.toRotation(state.getValue(FACING)));
 	}
 
+	
 	/**
 	 * Called whenever the block is added into the world. Args: world, x, y, z
 	 */
 	@Override
-	public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
+	public void onBlockAdded(final World world, final BlockPos pos, final IBlockState state) {
 		super.onBlockAdded(world, pos, state);
-		Block blockBelow1 = world.getBlockState(pos.down(1)).getBlock();
-		Block blockBelow2 = world.getBlockState(pos.down(2)).getBlock();
-		int x = pos.getX();
-		int y = pos.getY();
-		int z = pos.getZ();
+		final Block blockBelow1 = world.getBlockState(pos.down(1)).getBlock();
+		final Block blockBelow2 = world.getBlockState(pos.down(2)).getBlock();
+		final int x = pos.getX();
+		final int y = pos.getY();
+		final int z = pos.getZ();
 
 		if (blockBelow1 == blockBelow2) {
-			boolean flagX = isGolemXAligned(world, pos);
-			boolean flagZ = isGolemZAligned(world, pos);
-			IBlockState meta = world.getBlockState(pos.down(1));
+			final boolean flagX = isGolemXAligned(world, pos);
+			final boolean flagZ = isGolemZAligned(world, pos);
+			// final IBlockState meta = world.getBlockState(pos.down(1));
 
 			// hard-coded support for Snow Golem
 			if (blockBelow1 == Blocks.SNOW) {
 				if (!world.isRemote) {
 					removeGolemBody(world, pos);
-					EntitySnowman entitysnowman = new EntitySnowman(world);
-					System.out.print("[Extra Golems]: Building regular boring Snow Golem\n");
+					final EntitySnowman entitysnowman = new EntitySnowman(world);
+					ExtraGolems.LOGGER.info("[Extra Golems]: Building regular boring Snow Golem\n");
 					entitysnowman.setLocationAndAngles((double) x + 0.5D, (double) y - 1.95D,
 							(double) z + 0.5D, 0.0F, 0.0F);
 					world.spawnEntity(entitysnowman);
@@ -108,8 +124,8 @@ public class BlockGolemHead extends BlockHorizontal {
 					if (blockBelow1 == Blocks.IRON_BLOCK) {
 						removeAllGolemBlocks(world, pos, flagX);
 						// spawn the golem
-						EntityIronGolem golem = new EntityIronGolem(world);
-						System.out.print("[Extra Golems]: Building regular boring Iron Golem\n");
+						final EntityIronGolem golem = new EntityIronGolem(world);
+						ExtraGolems.LOGGER.info("[Extra Golems]: Building regular boring Iron Golem\n");
 						golem.setPlayerCreated(true);
 						golem.setLocationAndAngles((double) x + 0.5D, (double) y - 1.95D,
 								(double) z + 0.5D, 0.0F, 0.0F);
@@ -118,7 +134,7 @@ public class BlockGolemHead extends BlockHorizontal {
 					}
 
 					// post an event that, when handled, will initialize the golem to spawn
-					GolemBuildEvent event = new GolemBuildEvent(world, pos, flagX);
+					final GolemBuildEvent event = new GolemBuildEvent(world, pos, flagX);
 					MinecraftForge.EVENT_BUS.post(event);
 					if (event.isGolemNull() || event.isGolemBanned()) {
 						return;
@@ -128,8 +144,8 @@ public class BlockGolemHead extends BlockHorizontal {
 					removeAllGolemBlocks(world, pos, flagX);
 
 					// spawn the golem
-					GolemBase golem = event.getGolem();
-					System.out.print("[Extra Golems]: Building golem " + golem.toString() + "\n");
+					final GolemBase golem = event.getGolem();
+					ExtraGolems.LOGGER.info("[Extra Golems]: Building golem " + golem.toString() + "\n");
 					golem.setPlayerCreated(true);
 					golem.setLocationAndAngles((double) x + 0.5D, (double) y - 1.95D,
 							(double) z + 0.5D, 0.0F, 0.0F);
@@ -142,9 +158,9 @@ public class BlockGolemHead extends BlockHorizontal {
 	/**
 	 * @return {@code true} if the blocks at x-1 and x+1 match the block at x.
 	 **/
-	public static boolean isGolemXAligned(World world, BlockPos headPos) {
-		BlockPos[] armsX = { headPos.down(1).west(1), headPos.down(1).east(1) };
-		Block below = world.getBlockState(headPos.down(1)).getBlock();
+	public static boolean isGolemXAligned(final World world, final BlockPos headPos) {
+		final BlockPos[] armsX = { headPos.down(1).west(1), headPos.down(1).east(1) };
+		final Block below = world.getBlockState(headPos.down(1)).getBlock();
 		return world.getBlockState(armsX[0]).getBlock() == below
 				&& world.getBlockState(armsX[1]).getBlock() == below;
 	}
@@ -152,9 +168,9 @@ public class BlockGolemHead extends BlockHorizontal {
 	/**
 	 * @return {@code true} if the blocks at z-1 and z+1 match the block at z.
 	 **/
-	public static boolean isGolemZAligned(World world, BlockPos headPos) {
-		BlockPos[] armsZ = { headPos.down(1).north(1), headPos.down(1).south(1) };
-		Block below = world.getBlockState(headPos.down(1)).getBlock();
+	public static boolean isGolemZAligned(final World world, final BlockPos headPos) {
+		final BlockPos[] armsZ = { headPos.down(1).north(1), headPos.down(1).south(1) };
+		final Block below = world.getBlockState(headPos.down(1)).getBlock();
 		return world.getBlockState(armsZ[0]).getBlock() == below
 				&& world.getBlockState(armsZ[1]).getBlock() == below;
 	}
@@ -162,22 +178,22 @@ public class BlockGolemHead extends BlockHorizontal {
 	/**
 	 * Replaces this block and the four construction blocks with air.
 	 **/
-	public static void removeAllGolemBlocks(World world, BlockPos pos, boolean isXAligned) {
+	public static void removeAllGolemBlocks(final World world, final BlockPos pos, final boolean isXAligned) {
 		removeGolemBody(world, pos);
 		removeGolemArms(world, pos, isXAligned);
 	}
 
 	/**
-	 * Replaces this block and the two below it with air
+	 * Replaces this block and the two below it with air.
 	 **/
-	public static void removeGolemBody(World world, BlockPos head) {
+	public static void removeGolemBody(final World world, final BlockPos head) {
 		world.setBlockToAir(head);
 		world.setBlockToAir(head.down(1));
 		world.setBlockToAir(head.down(2));
 	}
 
-	/** Replaces blocks at arm positions with air **/
-	public static void removeGolemArms(World world, BlockPos pos, boolean isXAligned) {
+	/** Replaces blocks at arm positions with air. **/
+	public static void removeGolemArms(final World world, final BlockPos pos, final boolean isXAligned) {
 		if (isXAligned) {
 			world.setBlockToAir(pos.down(1).west(1));
 			world.setBlockToAir(pos.down(1).east(1));

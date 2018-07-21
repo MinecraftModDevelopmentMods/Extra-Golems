@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 
 public class EntityEmeraldGolem extends GolemBase {
 
-	public EntityEmeraldGolem(World world) {
+	public EntityEmeraldGolem(final World world) {
 		super(world, Config.EMERALD.getBaseAttack(), Blocks.EMERALD_BLOCK);
 	}
 
@@ -33,8 +33,8 @@ public class EntityEmeraldGolem extends GolemBase {
 	}
 
 	@Override
-	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel) {
-		int size = 8 + this.rand.nextInt(8 + lootingLevel * 2);
+	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
+		final int size = 8 + this.rand.nextInt(8 + lootingLevel * 2);
 		this.addDrop(dropList, new ItemStack(Items.EMERALD, size), 100);
 	}
 

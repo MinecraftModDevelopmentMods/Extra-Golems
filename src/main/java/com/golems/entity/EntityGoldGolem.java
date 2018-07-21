@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 
 public class EntityGoldGolem extends GolemBase {
 
-	public EntityGoldGolem(World world) {
+	public EntityGoldGolem(final World world) {
 		super(world, Config.GOLD.getBaseAttack(), Blocks.GOLD_BLOCK);
 	}
 
@@ -33,8 +33,8 @@ public class EntityGoldGolem extends GolemBase {
 	}
 
 	@Override
-	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel) {
-		int size = 6 + this.rand.nextInt(8 + lootingLevel * 4);
+	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
+		final int size = 6 + this.rand.nextInt(8 + lootingLevel * 4);
 		this.addDrop(dropList, new ItemStack(Items.GOLD_INGOT, size), 100);
 	}
 

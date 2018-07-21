@@ -32,15 +32,15 @@ public class TOPExtraGolems extends GolemDescriptionManager implements IProbeInf
 
 	@Override
 	@Optional.Method(modid = ModIds.TOP)
-	public void addProbeEntityInfo(ProbeMode mode, IProbeInfo iprobeInfo, EntityPlayer player,
-			World world, Entity entity, IProbeHitEntityData data) {
+	public void addProbeEntityInfo(final ProbeMode mode, final IProbeInfo iprobeInfo, final EntityPlayer player,
+			final World world, final Entity entity, final IProbeHitEntityData data) {
 		if (entity instanceof GolemBase) {
-			GolemBase golem = (GolemBase) entity;
+			final GolemBase golem = (GolemBase) entity;
 			// show attack if advanced mode
 			this.showFireproof = this.showAttack = (mode == ProbeMode.EXTENDED);
 
-			List<String> list = this.getEntityDescription(golem);
-			for (String s : list) {
+			final List<String> list = this.getEntityDescription(golem);
+			for (final String s : list) {
 				iprobeInfo.text(s);
 			}
 		}
@@ -56,8 +56,8 @@ public class TOPExtraGolems extends GolemDescriptionManager implements IProbeInf
 	public static class GetTheOneProbe implements Function<ITheOneProbe, Void> {
 
 		@Override
-		public Void apply(ITheOneProbe input) {
-			IProbeInfoEntityProvider instance = new TOPExtraGolems();
+		public Void apply(final ITheOneProbe input) {
+			final IProbeInfoEntityProvider instance = new TOPExtraGolems();
 			input.registerEntityProvider(instance);
 			return null;
 		}

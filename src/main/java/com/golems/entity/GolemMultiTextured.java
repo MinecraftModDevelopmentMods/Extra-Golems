@@ -35,12 +35,12 @@ public abstract class GolemMultiTextured extends GolemBase {
 	 * This will initialize textures for <code>golem_example_one.png</code>,
 	 * <code>golem_example_two.png</code> and <code>golem_example_three.png</code>
 	 **/
-	public GolemMultiTextured(World world, float attack, ItemStack pick, String prefix,
-			String[] textureNames) {
+	public GolemMultiTextured(final World world, final float attack, final ItemStack pick, final String prefix,
+			final String[] textureNames) {
 		super(world, attack, pick);
 		this.textures = new ResourceLocation[textureNames.length];
 		for (int n = 0, len = textureNames.length; n < len; n++) {
-			String s = textureNames[n];
+			final String s = textureNames[n];
 			this.textures[n] = GolemBase.makeGolemTexture(getModId(), prefix + "_" + s);
 		}
 	}
@@ -58,13 +58,13 @@ public abstract class GolemMultiTextured extends GolemBase {
 	}
 
 	@Override
-	public boolean processInteract(EntityPlayer player, EnumHand hand) {
-		ItemStack stack = player.getHeldItem(hand);
+	public boolean processInteract(final EntityPlayer player, final EnumHand hand) {
+		final ItemStack stack = player.getHeldItem(hand);
 		// only change texture when player has empty hand
 		if (!stack.isEmpty()) {
 			return super.processInteract(player, hand);
 		} else {
-			int incremented = (this.getTextureNum() + 1) % this.textures.length;
+			final int incremented = (this.getTextureNum() + 1) % this.textures.length;
 			this.setTextureNum((byte) incremented);
 			// this.writeEntityToNBT(this.getEntityData());
 			player.swingArm(hand);
@@ -82,13 +82,13 @@ public abstract class GolemMultiTextured extends GolemBase {
 	}
 
 	@Override
-	public void writeEntityToNBT(NBTTagCompound nbt) {
+	public void writeEntityToNBT(final NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		nbt.setByte(NBT_TEXTURE, (byte) this.getTextureNum());
 	}
 
 	@Override
-	public void readEntityFromNBT(NBTTagCompound nbt) {
+	public void readEntityFromNBT(final NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		this.setTextureNum(nbt.getByte(NBT_TEXTURE));
 	}
@@ -99,9 +99,9 @@ public abstract class GolemMultiTextured extends GolemBase {
 	}
 
 	/**
-	 * Calls {@link #setTextureNum(byte, boolean)} with <b>toSet</b> and <b>true</b>
+	 * Calls {@link #setTextureNum(byte, boolean)} with <b>toSet</b> and <b>true</b>.
 	 **/
-	public void setTextureNum(byte toSet) {
+	public void setTextureNum(final byte toSet) {
 		setTextureNum(toSet, true);
 	}
 
@@ -110,7 +110,7 @@ public abstract class GolemMultiTextured extends GolemBase {
 	 * {@link #setTextureType(ResourceLocation)} based on {@link #getTextureFromArray(int)} and
 	 * {@link #getTextureNum()}
 	 **/
-	public void setTextureNum(byte toSet, boolean updateInstantly) {
+	public void setTextureNum(final byte toSet, final boolean updateInstantly) {
 		this.getDataManager().set(DATA_TEXTURE, Byte.valueOf(toSet));
 		if (updateInstantly) {
 			this.setTextureType(this.getTextureFromArray(this.getTextureNum()));
@@ -142,7 +142,7 @@ public abstract class GolemMultiTextured extends GolemBase {
 		this.setTextureType(this.getTextureFromArray(this.getTextureNum()));
 	}
 
-	public ResourceLocation getTextureFromArray(int index) {
+	public ResourceLocation getTextureFromArray(final int index) {
 		return this.textures[index % this.textures.length];
 	}
 

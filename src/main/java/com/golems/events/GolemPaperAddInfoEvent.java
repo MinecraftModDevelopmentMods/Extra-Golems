@@ -24,8 +24,8 @@ public class GolemPaperAddInfoEvent extends Event {
 	public final List<String> infoList;
 	public final ITooltipFlag flagIn;
 
-	public GolemPaperAddInfoEvent(ItemStack stack, @Nullable World worldIn, List<String> tooltip,
-			ITooltipFlag flagIn) {
+	public GolemPaperAddInfoEvent(final ItemStack stack, @Nullable final World worldIn, final List<String> tooltip,
+			final ITooltipFlag flagIn) {
 		this.itemStack = stack;
 		this.world = worldIn;
 		this.infoList = tooltip;
@@ -33,9 +33,12 @@ public class GolemPaperAddInfoEvent extends Event {
 	}
 
 	/** Removes all entries matching the passed String **/
-	public void replaceWith(String toRemove, String replace) {
-		for (String line : this.infoList) {
-			line.replaceAll(toRemove, replace);
+	/*
+	public void replaceWith(final String toRemove, final String replace) {
+		for (final String line : this.infoList) {
+			@SuppressWarnings("unused")
+			final String temp = line.replaceAll(toRemove, replace);
 		}
 	}
+	*/
 }

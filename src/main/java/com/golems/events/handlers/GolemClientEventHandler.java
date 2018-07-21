@@ -7,7 +7,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class GolemClientEventHandler {
 
 	@SubscribeEvent
-	public void onAddInfo(GolemPaperAddInfoEvent event) {
+	public void onAddInfo(final GolemPaperAddInfoEvent event) {
 		// debug:
 		// event.infoList.add("test");
 	}

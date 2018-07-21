@@ -22,7 +22,7 @@ import net.minecraft.world.World;
 
 public class EntityCraftingGolem extends GolemBase {
 
-	public EntityCraftingGolem(World world) {
+	public EntityCraftingGolem(final World world) {
 		super(world, Config.CRAFTING.getBaseAttack(), Blocks.CRAFTING_TABLE);
 	}
 
@@ -39,8 +39,8 @@ public class EntityCraftingGolem extends GolemBase {
 	}
 
 	@Override
-	protected boolean processInteract(EntityPlayer player, EnumHand hand) {
-		ItemStack itemstack = player.getHeldItem(hand);
+	protected boolean processInteract(final EntityPlayer player, final EnumHand hand) {
+		final ItemStack itemstack = player.getHeldItem(hand);
 		if (!player.world.isRemote && itemstack.isEmpty()) {
 			// display crafting grid for player
 			player.displayGui(new EntityCraftingGolem.InterfaceCraftingGrid(player.world,
@@ -53,7 +53,7 @@ public class EntityCraftingGolem extends GolemBase {
 	}
 
 	@Override
-	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel) {
+	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
 		this.addDrop(dropList, new ItemStack(Blocks.CRAFTING_TABLE, 1 + rand.nextInt(2)), 100);
 		this.addDrop(dropList, Blocks.PLANKS, 0, 1, 6, 70 + lootingLevel * 10);
 	}
@@ -69,7 +69,7 @@ public class EntityCraftingGolem extends GolemBase {
 		private final World world2;
 		private final BlockPos position2;
 
-		public InterfaceCraftingGrid(World worldIn, BlockPos pos) {
+		public InterfaceCraftingGrid(final World worldIn, final BlockPos pos) {
 			super(worldIn, pos);
 			this.world2 = worldIn;
 			this.position2 = pos;

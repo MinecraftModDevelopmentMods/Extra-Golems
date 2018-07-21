@@ -22,7 +22,7 @@ public class EntityStainedClayGolem extends GolemColorizedMultiTextured {
 	private static final ResourceLocation TEXTURE_OVERLAY = GolemBase
 			.makeGolemTexture("stained_clay_grayscale");
 
-	public EntityStainedClayGolem(World world) {
+	public EntityStainedClayGolem(final World world) {
 		super(world, Config.STAINED_CLAY.getBaseAttack(), Blocks.STAINED_HARDENED_CLAY,
 				TEXTURE_BASE, TEXTURE_OVERLAY, ItemDye.DYE_COLORS);
 	}
@@ -35,10 +35,10 @@ public class EntityStainedClayGolem extends GolemColorizedMultiTextured {
 	}
 
 	@Override
-	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel) {
-		int keyReturn = Config.STAINED_CLAY.getInt(DROP_META);
-		int meta = keyReturn < 0 ? 15 - this.getTextureNum() : keyReturn;
-		int size = 1 + lootingLevel + rand.nextInt(3);
+	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
+		final int keyReturn = Config.STAINED_CLAY.getInt(DROP_META);
+		final int meta = keyReturn < 0 ? 15 - this.getTextureNum() : keyReturn;
+		final int size = 1 + lootingLevel + rand.nextInt(3);
 		this.addDrop(dropList,
 				new ItemStack(Blocks.STAINED_HARDENED_CLAY, size > 4 ? 4 : size, meta), 100);
 	}

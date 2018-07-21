@@ -7,7 +7,6 @@ import com.golems.main.Config;
 import com.golems.main.GolemItems;
 import com.golems.util.WeightedItem;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -23,7 +22,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntityBedrockGolem extends GolemBase {
 
-	public EntityBedrockGolem(World world) {
+	public EntityBedrockGolem(final World world) {
 		super(world, Config.BEDROCK.getBaseAttack(), Blocks.BEDROCK);
 	}
 
@@ -33,12 +32,7 @@ public class EntityBedrockGolem extends GolemBase {
 	}
 
 	@Override
-	public boolean attackEntityAsMob(Entity entity) {
-		return super.attackEntityAsMob(entity);
-	}
-
-	@Override
-	public boolean isEntityInvulnerable(DamageSource src) {
+	public boolean isEntityInvulnerable(final DamageSource src) {
 		return true;
 	}
 
@@ -49,9 +43,9 @@ public class EntityBedrockGolem extends GolemBase {
 	}
 
 	@Override
-	protected boolean processInteract(EntityPlayer player, EnumHand hand) {
+	protected boolean processInteract(final EntityPlayer player, final EnumHand hand) {
 		// creative players can "despawn" by using spawnBedrockGolem on this entity
-		ItemStack itemstack = player.getHeldItem(hand);
+		final ItemStack itemstack = player.getHeldItem(hand);
 		if (player.capabilities.isCreativeMode) {
 			if (!itemstack.isEmpty() && itemstack.getItem() == GolemItems.spawnBedrockGolem) {
 				player.swingArm(hand);
@@ -68,7 +62,8 @@ public class EntityBedrockGolem extends GolemBase {
 	}
 
 	@Override
-	protected void damageEntity(DamageSource source, float amount) {
+	protected void damageEntity(final DamageSource source, final float amount) {
+		//
 	}
 
 	@Override
@@ -80,7 +75,8 @@ public class EntityBedrockGolem extends GolemBase {
 	}
 
 	@Override
-	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel) {
+	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
+		//
 	}
 
 	@Override

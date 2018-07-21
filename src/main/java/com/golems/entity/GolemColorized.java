@@ -39,7 +39,7 @@ public abstract class GolemColorized extends GolemBase {
 	 * @param rOverlay
 	 *            a texture that will be recolored and optionally rendered as transparent.
 	 **/
-	public GolemColorized(World world, float attack, ItemStack pickBlock, long initial,
+	public GolemColorized(final World world, final float attack, final ItemStack pickBlock, final long initial,
 			final ResourceLocation rBase, final ResourceLocation rOverlay) {
 		super(world, attack, pickBlock);
 		this.setColor(initial);
@@ -52,8 +52,8 @@ public abstract class GolemColorized extends GolemBase {
 	 * @see {@link GolemColorized(World, float, ItemStack, long, ResourceLocation,
 	 *      ResourceLocation)}
 	 **/
-	public GolemColorized(World world, float attack, long initial, ResourceLocation rBase,
-			ResourceLocation rOverlay) {
+	public GolemColorized(final World world, final float attack, final long initial, final ResourceLocation rBase,
+			final ResourceLocation rOverlay) {
 		this(world, attack, new ItemStack(GolemItems.golemHead), initial, rBase, rOverlay);
 	}
 
@@ -62,25 +62,25 @@ public abstract class GolemColorized extends GolemBase {
 		return makeGolemTexture("clay");
 	}
 
-	/** An optional texture to render as-is, without coloring **/
+	/** An optional texture to render as-is, without coloring. **/
 	public ResourceLocation getTextureBase() {
 		return base;
 	}
 
-	/** The (probably grayscaled) texture that will be colored **/
+	/** The (probably grayscaled) texture that will be colored. **/
 	public ResourceLocation getTextureToColor() {
 		return overlay;
 	}
 
-	/** Whether this golem has a sub-texture that should not be colored **/
+	/** Whether this golem has a sub-texture that should not be colored. **/
 	public boolean hasBase() {
 		return this.hasBase;
 	}
 
 	/**
-	 * Updates {@link #color} as well as calculates the RGBA components of that color
+	 * Updates {@link #color} as well as calculates the RGBA components of that color.
 	 **/
-	public void setColor(long toSet) {
+	public void setColor(final long toSet) {
 		this.color = toSet;
 		long tmpColor = toSet;
 		if ((tmpColor & -67108864) == 0) {

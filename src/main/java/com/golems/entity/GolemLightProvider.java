@@ -6,7 +6,6 @@ import com.golems.blocks.BlockLightProvider;
 import com.golems.main.GolemItems;
 import com.google.common.collect.ImmutableSet;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
@@ -18,36 +17,15 @@ public abstract class GolemLightProvider extends GolemBase {
 
 	protected LightManager lightManager;
 	protected int tickDelay;
-	@Deprecated /** REMOVE THIS FIELD IN NEXT MAJOR UPDATE **/
-	protected int updateFlag;
 
-	public GolemLightProvider(World world, float attack, ItemStack pick, LightManager light) {
+	public GolemLightProvider(final World world, final float attack, final ItemStack pick, final LightManager light) {
 		super(world, attack, pick);
 		this.lightManager = light;
 		this.tickDelay = 2;
 	}
 
-	public GolemLightProvider(World world, float attack, LightManager light) {
+	public GolemLightProvider(final World world, final float attack, final LightManager light) {
 		this(world, attack, new ItemStack(GolemItems.golemHead), light);
-	}
-
-	/**
-	 * @deprecated Use {@link #GolemLightProvider(World, float, ItemStack, LightManager)} REMOVE
-	 *             THIS CONSTRUCTOR IN NEXT MAJOR UPDATE
-	 **/
-	@Deprecated
-	public GolemLightProvider(World world, float attack, Block pick, EnumLightLevel light) {
-		this(world, attack, new ItemStack(pick),
-				new LightManager(light.getBrightness(), light.getMaterialToReplace()));
-	}
-
-	/**
-	 * @deprecated Use {@link #GolemLightProvider(World, float, LightManager)} REMOVE THIS
-	 *             CONSTRUCTOR IN NEXT MAJOR UPDATE
-	 **/
-	@Deprecated
-	public GolemLightProvider(World world, float attack, EnumLightLevel light) {
-		this(world, attack, GolemItems.golemHead, light);
 	}
 
 	@Override
@@ -60,18 +38,18 @@ public abstract class GolemLightProvider extends GolemBase {
 	}
 
 	protected boolean placeLightBlock() {
-		int x = MathHelper.floor(this.posX);
-		int y = MathHelper.floor(this.posY - 0.20000000298023224D);
-		int z = MathHelper.floor(this.posZ);
-		int[][] validPos = { { x, z }, { x + 1, z }, { x - 1, z }, { x, z + 1 }, { x, z - 1 },
+		final int x = MathHelper.floor(this.posX);
+		final int y = MathHelper.floor(this.posY - 0.20000000298023224D);
+		final int z = MathHelper.floor(this.posZ);
+		final int[][] validPos = { { x, z }, { x + 1, z }, { x - 1, z }, { x, z + 1 }, { x, z - 1 },
 				{ x + 1, z + 1 }, { x - 1, z + 1 }, { x + 1, z - 1 }, { x - 1, z - 1 } };
-		for (int[] coord : validPos) {
-			int xPos = coord[0];
-			int zPos = coord[1];
+		for (final int[] coord : validPos) {
+			final int xPos = coord[0];
+			final int zPos = coord[1];
 			for (int k = 0; k < 3; ++k) {
-				int yPos = y + k + 1;
-				BlockPos pos = new BlockPos(xPos, yPos, zPos);
-				IBlockState state = this.world.getBlockState(pos);
+				final int yPos = y + k + 1;
+				final BlockPos pos = new BlockPos(xPos, yPos, zPos);
+				final IBlockState state = this.world.getBlockState(pos);
 				if (state.getBlock() instanceof BlockLightProvider) {
 					return false;
 				} else if (this.lightManager.canReplace(state)) {
@@ -87,7 +65,7 @@ public abstract class GolemLightProvider extends GolemBase {
 		return this.lightManager.getLightValue() > 0 ? 15728880 : super.getBrightnessForRender();
 	}
 
-	/** Gets how bright this entity is **/
+	/** Gets how bright this entity is. **/
 	@Override
 	public float getBrightness() {
 		return this.lightManager.getBrightness();
@@ -105,10 +83,10 @@ public abstract class GolemLightProvider extends GolemBase {
 		private static final int MIN = 0;
 		private static final int MAX = 15;
 
-		private final int LIGHT_RANGE_INT;
-		private final int UPDATE_FLAG;
-		private final float BRIGHTNESS;
-		private final ImmutableSet<Material> REPLACEABLE_MATERIALS;
+		private final int lightRangeInt;
+		private final int updateFlag;
+		private final float brightness;
+		private final ImmutableSet<Material> replaceableMaterials;
 
 		/**
 		 * @param brightness
@@ -120,77 +98,48 @@ public abstract class GolemLightProvider extends GolemBase {
 		 *            a list of Materials that the golem's lights are allowed to replace. Defaults
 		 *            to {@code Material.AIR} if left empty
 		 **/
-		public LightManager(float brightness, int update, Material... canReplace) {
-			int l = (int) (15.0F * brightness);
-			this.LIGHT_RANGE_INT = l > MAX ? MAX : (l < MIN ? MIN : l);
-			this.BRIGHTNESS = brightness;
-			this.UPDATE_FLAG = update;
+		public LightManager(final float brightness, final int update, final Material... canReplace) {
+			final int l = (int) (15.0F * brightness);
+			this.lightRangeInt = l > MAX ? MAX : (l < MIN ? MIN : l);
+			this.brightness = brightness;
+			this.updateFlag = update;
 			if (canReplace != null && canReplace.length > 0) {
-				this.REPLACEABLE_MATERIALS = ImmutableSet.copyOf(canReplace);
+				this.replaceableMaterials = ImmutableSet.copyOf(canReplace);
 			} else {
-				this.REPLACEABLE_MATERIALS = ImmutableSet.of(Material.AIR);
+				this.replaceableMaterials = ImmutableSet.of(Material.AIR);
 			}
 		}
 
 		/**
 		 * @see #LightManager(float, int, Material...)
 		 **/
-		public LightManager(float brightness, Material... canReplace) {
+		public LightManager(final float brightness, final Material... canReplace) {
 			this(brightness, 2, canReplace);
 		}
 
 		public IBlockState getLightState() {
 			return GolemItems.blockLightSource.getDefaultState()
-					.withProperty(BlockLightProvider.LIGHT, this.LIGHT_RANGE_INT);
+					.withProperty(BlockLightProvider.LIGHT, this.lightRangeInt);
 		}
 
 		public int getLightValue() {
-			return this.LIGHT_RANGE_INT;
+			return this.lightRangeInt;
 		}
 
 		public float getBrightness() {
-			return this.BRIGHTNESS;
+			return this.brightness;
 		}
 
 		public int getUpdateFlag() {
-			return this.UPDATE_FLAG;
+			return this.updateFlag;
 		}
 
-		public boolean canReplace(IBlockState state) {
-			return this.REPLACEABLE_MATERIALS.contains(state.getMaterial());
+		public boolean canReplace(final IBlockState state) {
+			return this.replaceableMaterials.contains(state.getMaterial());
 		}
 
-		public boolean placeAt(World world, BlockPos pos) {
+		public boolean placeAt(final World world, final BlockPos pos) {
 			return world.setBlockState(pos, this.getLightState(), this.getUpdateFlag());
-		}
-	}
-
-	/**
-	 * @deprecated use {@link LightManager} REMOVE THIS ENUM IN NEXT MAJOR UPDATE
-	 **/
-	@Deprecated
-	public static enum EnumLightLevel {
-		HALF(0.5F, Material.AIR), FULL(1.0F, Material.AIR), WATER_HALF(0.5F,
-				Material.WATER), WATER_FULL(1.0F, Material.WATER);
-
-		private final float light;
-		private final Material replaceable;
-
-		private EnumLightLevel(float brightness, Material canReplace) {
-			this.light = brightness;
-			this.replaceable = canReplace;
-		}
-
-		public Block getLightBlock() {
-			return GolemItems.blockLightSource;
-		}
-
-		public float getBrightness() {
-			return this.light;
-		}
-
-		public Material getMaterialToReplace() {
-			return this.replaceable;
 		}
 	}
 }

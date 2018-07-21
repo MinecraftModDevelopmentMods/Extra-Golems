@@ -17,7 +17,7 @@ public class EntityBoneGolem extends GolemBase {
 
 	public static final Block BONE = Blocks.BONE_BLOCK;
 
-	public EntityBoneGolem(World world) {
+	public EntityBoneGolem(final World world) {
 		super(world, Config.BONE.getBaseAttack(), BONE);
 		this.setCanTakeFallDamage(true);
 	}
@@ -34,7 +34,7 @@ public class EntityBoneGolem extends GolemBase {
 	}
 
 	@Override
-	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel) {
+	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
 		this.addDrop(dropList, BONE, 0, lootingLevel + rand.nextInt(2), 4, 90);
 	}
 

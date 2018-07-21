@@ -21,18 +21,18 @@ public class EntityMushroomGolem extends GolemMultiTextured {
 	public static final String ALLOW_SPECIAL = "Allow Special: Plant Mushrooms";
 	public static final String FREQUENCY = "Mushroom Frequency";
 
-	public static final String shroomPrefix = "shroom";
-	public static final String[] shroomTypes = { "red", "brown" };
+	public static final String SHROOM_PREFIX = "shroom";
+	protected static final String[] SHROOM_TYPES = { "red", "brown" };
 	public final IBlockState[] mushrooms = { Blocks.BROWN_MUSHROOM.getDefaultState(),
 			Blocks.RED_MUSHROOM.getDefaultState() };
-	public final Block[] soils = { Blocks.DIRT, Blocks.GRASS, Blocks.MYCELIUM };
+	protected static final Block[] soils = { Blocks.DIRT, Blocks.GRASS, Blocks.MYCELIUM };
 
 	public EntityMushroomGolem(World world) {
 		super(world, Config.MUSHROOM.getBaseAttack(), new ItemStack(Blocks.RED_MUSHROOM_BLOCK),
-				shroomPrefix, shroomTypes);
+				SHROOM_PREFIX, SHROOM_TYPES);
 		this.setCanSwim(true);
-		int freq = Config.MUSHROOM.getInt(FREQUENCY);
-		boolean allowed = Config.MUSHROOM.getBoolean(ALLOW_SPECIAL);
+		final int freq = Config.MUSHROOM.getInt(FREQUENCY);
+		final boolean allowed = Config.MUSHROOM.getBoolean(ALLOW_SPECIAL);
 		this.tasks.addTask(2,
 				new EntityAIPlaceRandomBlocksStrictly(this, freq, mushrooms, soils, allowed));
 	}
@@ -50,9 +50,9 @@ public class EntityMushroomGolem extends GolemMultiTextured {
 	}
 
 	@Override
-	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel) {
-		int size = 4 + this.rand.nextInt(6 + lootingLevel * 2);
-		Block shroom = rand.nextBoolean() ? Blocks.RED_MUSHROOM : Blocks.BROWN_MUSHROOM;
+	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
+		final int size = 4 + this.rand.nextInt(6 + lootingLevel * 2);
+		final Block shroom = rand.nextBoolean() ? Blocks.RED_MUSHROOM : Blocks.BROWN_MUSHROOM;
 		this.addDrop(dropList, new ItemStack(shroom, size), 100);
 	}
 

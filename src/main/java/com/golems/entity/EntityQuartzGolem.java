@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 
 public class EntityQuartzGolem extends GolemBase {
 
-	public EntityQuartzGolem(World world) {
+	public EntityQuartzGolem(final World world) {
 		super(world, Config.QUARTZ.getBaseAttack(), Blocks.QUARTZ_BLOCK);
 	}
 
@@ -33,8 +33,8 @@ public class EntityQuartzGolem extends GolemBase {
 	}
 
 	@Override
-	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel) {
-		int size = 4 + this.rand.nextInt(8 + lootingLevel * 2);
+	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
+		final int size = 4 + this.rand.nextInt(8 + lootingLevel * 2);
 		this.addDrop(dropList, new ItemStack(Items.QUARTZ, size > 16 ? 16 : size), 100);
 	}
 

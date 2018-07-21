@@ -5,6 +5,10 @@ import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class GolemItems {
+	
+	private GolemItems() {
+		//
+	}
 
 	@GameRegistry.ObjectHolder(ExtraGolems.MODID + ":golem_paper")
 	public static Item golemPaper;

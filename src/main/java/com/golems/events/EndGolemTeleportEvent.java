@@ -16,8 +16,8 @@ public class EndGolemTeleportEvent extends EnderTeleportEvent {
 
 	public final EntityEndstoneGolem entityGolem;
 
-	public EndGolemTeleportEvent(EntityEndstoneGolem entity, double targetX, double targetY,
-			double targetZ, float attackDamage) {
+	public EndGolemTeleportEvent(final EntityEndstoneGolem entity, final double targetX, final double targetY,
+			final double targetZ, final float attackDamage) {
 		super(entity, targetX, targetY, targetZ, attackDamage);
 		this.entityGolem = entity;
 	}

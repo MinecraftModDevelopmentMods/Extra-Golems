@@ -22,7 +22,7 @@ public class EntityCoalGolem extends GolemBase {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Blindness";
 
-	public EntityCoalGolem(World world) {
+	public EntityCoalGolem(final World world) {
 		super(world, Config.COAL.getBaseAttack(), Blocks.COAL_BLOCK);
 	}
 
@@ -38,9 +38,9 @@ public class EntityCoalGolem extends GolemBase {
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
 	}
 
-	/** Attack by adding potion effect as well */
+	/** Attack by adding potion effect as well. */
 	@Override
-	public boolean attackEntityAsMob(Entity entity) {
+	public boolean attackEntityAsMob(final Entity entity) {
 		if (super.attackEntityAsMob(entity)) {
 			final int BLIND_CHANCE = 4;
 			if (Config.COAL.getBoolean(ALLOW_SPECIAL) && entity instanceof EntityLivingBase
@@ -66,8 +66,8 @@ public class EntityCoalGolem extends GolemBase {
 	}
 
 	@Override
-	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel) {
-		int size = 8 + this.rand.nextInt(8 + lootingLevel * 2);
+	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
+		final int size = 8 + this.rand.nextInt(8 + lootingLevel * 2);
 		this.addDrop(dropList, new ItemStack(Items.COAL, size), 100);
 		this.addDrop(dropList, Items.COAL, 1, 1, size / 4, 40);
 	}

@@ -32,6 +32,9 @@ public class BlockUtility extends Block {
 		this.translucent = true;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	@Nullable
 	@Deprecated
 	@Override
@@ -40,6 +43,9 @@ public class BlockUtility extends Block {
 		return NULL_AABB;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	@Nullable
 	@Deprecated
 	@Override
@@ -47,18 +53,27 @@ public class BlockUtility extends Block {
 		return NULL_AABB;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	@Deprecated
 	@Override
 	public AxisAlignedBB getSelectedBoundingBox(IBlockState blockState, World world, BlockPos pos) {
 		return SINGULAR_AABB;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	@Deprecated
 	@Override
 	public boolean isTopSolid(IBlockState state) {
 		return false;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	@Deprecated
 	@Override
 	public boolean isFullBlock(IBlockState state) {
@@ -66,7 +81,8 @@ public class BlockUtility extends Block {
 	}
 
 	/**
-	 * Used to determine ambient occlusion and culling when rebuilding chunks for render
+	 * Used to determine ambient occlusion and culling when rebuilding chunks for render.
+	 * @deprecated
 	 */
 	@Deprecated
 	@Override
@@ -96,6 +112,9 @@ public class BlockUtility extends Block {
 		return true;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	@Deprecated
 	@Override
 	public boolean isFullCube(IBlockState state) {
@@ -107,6 +126,9 @@ public class BlockUtility extends Block {
 		return true;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	@Deprecated
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing,
@@ -119,6 +141,9 @@ public class BlockUtility extends Block {
 		// Do nothing.
 	}
 
+	/**
+	 * @deprecated
+	 */
 	@Deprecated
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
@@ -130,6 +155,9 @@ public class BlockUtility extends Block {
 		return 0;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	@Deprecated
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state) {

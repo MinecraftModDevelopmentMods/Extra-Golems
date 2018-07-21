@@ -25,7 +25,7 @@ public class EntityLeafGolem extends GolemColorized {
 	private static final ResourceLocation TEXTURE_OVERLAY = GolemBase
 			.makeGolemTexture("leaves_grayscale");
 
-	public EntityLeafGolem(World world) {
+	public EntityLeafGolem(final World world) {
 		super(world, Config.LEAF.getBaseAttack(), new ItemStack(Blocks.LEAVES), 0x5F904A,
 				TEXTURE_BASE, TEXTURE_OVERLAY);
 		this.setCanSwim(true);
@@ -65,7 +65,7 @@ public class EntityLeafGolem extends GolemColorized {
 	}
 
 	@Override
-	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel) {
+	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
 		this.addDrop(dropList, new ItemStack(Blocks.LEAVES, lootingLevel + 1), 100);
 		this.addDrop(dropList, Blocks.SAPLING, 0, 1, 1, 20 + lootingLevel * 10);
 		this.addDrop(dropList, Items.APPLE, 0, 1, 1, 15 + lootingLevel * 10);

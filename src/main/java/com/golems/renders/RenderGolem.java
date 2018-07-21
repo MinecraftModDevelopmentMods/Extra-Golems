@@ -9,7 +9,7 @@ import net.minecraft.util.ResourceLocation;
 
 /**
  * RenderGolem is the same as RenderIronGolem but with casting to GolemBase instead of
- * EntityIronGolem
+ * EntityIronGolem.
  */
 public class RenderGolem extends RenderLiving<GolemBase> {
 
@@ -18,14 +18,14 @@ public class RenderGolem extends RenderLiving<GolemBase> {
 	}
 
 	@Override
-	protected void applyRotations(GolemBase golem, float p_77043_2_, float p_77043_3_,
-			float partialTicks) {
-		super.applyRotations(golem, p_77043_2_, p_77043_3_, partialTicks);
+	protected void applyRotations(final GolemBase golem, final float p_77043_2_, final float rotationYaw,
+			final float partialTicks) {
+		super.applyRotations(golem, p_77043_2_, rotationYaw, partialTicks);
 
 		if ((double) golem.limbSwingAmount >= 0.01D) {
-			float f = 13.0F;
-			float f1 = golem.limbSwing - golem.limbSwingAmount * (1.0F - partialTicks) + 6.0F;
-			float f2 = (Math.abs(f1 % f - f * 0.5F) - f * 0.25F) / (f * 0.25F);
+			final float f = 13.0F;
+			final float f1 = golem.limbSwing - golem.limbSwingAmount * (1.0F - partialTicks) + 6.0F;
+			final float f2 = (Math.abs(f1 % f - f * 0.5F) - f * 0.25F) / (f * 0.25F);
 			GlStateManager.rotate(6.5F * f2, 0.0F, 0.0F, 1.0F);
 		}
 	}
@@ -35,7 +35,7 @@ public class RenderGolem extends RenderLiving<GolemBase> {
 	 * Render.bindEntityTexture.
 	 */
 	@Override
-	protected ResourceLocation getEntityTexture(GolemBase golem) {
+	protected ResourceLocation getEntityTexture(final GolemBase golem) {
 		return golem.getTextureType();
 	}
 }

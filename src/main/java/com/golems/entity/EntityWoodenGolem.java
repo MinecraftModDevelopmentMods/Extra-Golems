@@ -17,12 +17,12 @@ import net.minecraft.world.World;
 
 public class EntityWoodenGolem extends GolemMultiTextured {
 
-	public static final String woodPrefix = "wooden";
-	public static final String[] woodTypes = { "oak", "spruce", "birch", "jungle", "acacia",
+	public static final String WOOD_PREFIX = "wooden";
+	protected static final String[] woodTypes = { "oak", "spruce", "birch", "jungle", "acacia",
 			"big_oak" };
 
-	public EntityWoodenGolem(World world) {
-		super(world, Config.WOOD.getBaseAttack(), new ItemStack(Blocks.LOG), woodPrefix, woodTypes);
+	public EntityWoodenGolem(final World world) {
+		super(world, Config.WOOD.getBaseAttack(), new ItemStack(Blocks.LOG), WOOD_PREFIX, woodTypes);
 		this.setCanSwim(true);
 	}
 
@@ -51,9 +51,9 @@ public class EntityWoodenGolem extends GolemMultiTextured {
 	}
 
 	@Override
-	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel) {
-		int size = 6 + this.rand.nextInt(4 + lootingLevel * 4);
-		int meta = this.getTextureNum() % woodTypes.length;
+	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
+		final int size = 6 + this.rand.nextInt(4 + lootingLevel * 4);
+		final int meta = this.getTextureNum() % woodTypes.length;
 		this.addDrop(dropList, new ItemStack(Blocks.PLANKS, size > 16 ? 16 : size, meta), 100);
 		this.addDrop(dropList, Items.STICK, 0, 1, 4, 10 + lootingLevel * 4);
 		this.addDrop(dropList, Blocks.SAPLING, 0, 1, 2, 4 + lootingLevel * 4);

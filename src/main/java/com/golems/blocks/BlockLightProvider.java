@@ -19,33 +19,41 @@ public class BlockLightProvider extends BlockUtility implements ITileEntityProvi
 		setDefaultState(blockState.getBaseState().withProperty(LIGHT, Integer.valueOf(0)));
 	}
 
+	/**
+	 * @deprecated
+	 */
+	@Deprecated
 	@Override
-	public IBlockState getStateFromMeta(int meta) {
+	public IBlockState getStateFromMeta(final int meta) {
 		return getDefaultState().withProperty(LIGHT, meta % 16);
 	}
 
 	@Override
-	public int getMetaFromState(IBlockState state) {
+	public int getMetaFromState(final IBlockState state) {
 		return state.getValue(LIGHT).intValue();
 	}
 
 	@Override
 	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[] { LIGHT });
+		return new BlockStateContainer(this, (IProperty[]) new IProperty[] { LIGHT });
 	}
 
+	/**
+	 * @deprecated
+	 */
+	@Deprecated
 	@Override
-	public int getLightValue(IBlockState state) {
+	public int getLightValue(final IBlockState state) {
 		return state.getValue(LIGHT).intValue();
 	}
 
 	@Override
-	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
+	public int getLightValue(final IBlockState state, final IBlockAccess world, final BlockPos pos) {
 		return state.getValue(LIGHT).intValue();
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta) {
+	public TileEntity createNewTileEntity(final World worldIn, final int meta) {
 		return new TileEntityMovingLightSource();
 	}
 }

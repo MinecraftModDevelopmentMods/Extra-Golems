@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 
 public class EntityGlowstoneGolem extends GolemLightProvider {
 
-	public EntityGlowstoneGolem(World world) {
+	public EntityGlowstoneGolem(final World world) {
 		super(world, Config.GLOWSTONE.getBaseAttack(), new ItemStack(Blocks.GLOWSTONE),
 				LightManager.FULL);
 		this.setCanTakeFallDamage(true);
@@ -36,8 +36,8 @@ public class EntityGlowstoneGolem extends GolemLightProvider {
 	}
 
 	@Override
-	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel) {
-		int size = 6 + this.rand.nextInt(8 + lootingLevel * 2);
+	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
+		final int size = 6 + this.rand.nextInt(8 + lootingLevel * 2);
 		this.addDrop(dropList, new ItemStack(Items.GLOWSTONE_DUST, size), 100);
 	}
 
