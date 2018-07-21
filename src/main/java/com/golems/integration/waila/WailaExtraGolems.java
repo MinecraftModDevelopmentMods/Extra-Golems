@@ -17,10 +17,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 
 /**
- * WAILA integration -- using Hwyla:1.8.23-B38_1.12
+ * WAILA integration -- using Hwyla:1.8.23-B38_1.12.
  **/
 @Optional.Interface(iface = "mcp.mobius.waila.api.IWailaEntityProvider", modid = ModIds.WAILA)
-public class WailaExtraGolems extends GolemDescriptionManager implements IWailaEntityProvider {
+public final class WailaExtraGolems extends GolemDescriptionManager implements IWailaEntityProvider {
 
 	public static final String CONFIG_SHOW_ATTACK_DAMAGE = "extragolems.show_attack_damage_tip";
 	public static final String CONFIG_SHOW_SPECIAL_ABILITIES = "extragolems.show_special_abilities_tip";

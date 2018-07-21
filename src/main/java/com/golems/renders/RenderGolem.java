@@ -13,7 +13,7 @@ import net.minecraft.util.ResourceLocation;
  */
 public class RenderGolem extends RenderLiving<GolemBase> {
 
-	public RenderGolem(RenderManager renderManagerIn) {
+	public RenderGolem(final RenderManager renderManagerIn) {
 		super(renderManagerIn, new ModelGolem(), 0.5F);
 	}
 

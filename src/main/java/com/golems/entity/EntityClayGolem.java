@@ -13,7 +13,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityClayGolem extends GolemBase {
+public final class EntityClayGolem extends GolemBase {
 
 	public EntityClayGolem(final World world) {
 		super(world, Config.CLAY.getBaseAttack(), Blocks.CLAY);

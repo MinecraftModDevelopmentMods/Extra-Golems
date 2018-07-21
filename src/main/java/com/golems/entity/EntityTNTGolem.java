@@ -23,7 +23,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
-public class EntityTNTGolem extends GolemBase {
+public final class EntityTNTGolem extends GolemBase {
 
 	protected static final DataParameter<Boolean> DATA_IGNITED = EntityDataManager
 			.<Boolean>createKey(EntityTNTGolem.class, DataSerializers.BOOLEAN);
@@ -47,7 +47,16 @@ public class EntityTNTGolem extends GolemBase {
 
 	/**
 	 * Flexible constructor to allow child classes to customize.
-	 **/
+	 * 
+	 * @param world
+	 * @param attack
+	 * @param pick
+	 * @param minExplosionRange
+	 * @param maxExplosionRange
+	 * @param minFuseLength
+	 * @param randomExplosionChance
+	 * @param configAllowsExplode
+	 */
 	public EntityTNTGolem(final World world, final float attack, final ItemStack pick, final int minExplosionRange,
 			final int maxExplosionRange, final int minFuseLength, final int randomExplosionChance,
 			final boolean configAllowsExplode) {
@@ -165,7 +174,7 @@ public class EntityTNTGolem extends GolemBase {
 		this.fuseTimer = this.fuseLen + rand.nextInt(Math.floorDiv(fuseLen, 2) + 1);
 	}
 
-	protected void setIgnited(boolean toSet) {
+	protected void setIgnited(final boolean toSet) {
 		this.getDataManager().set(DATA_IGNITED, Boolean.valueOf(toSet));
 	}
 

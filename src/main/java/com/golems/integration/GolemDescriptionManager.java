@@ -32,7 +32,7 @@ import net.minecraft.util.text.TextFormatting;
 /**
  * Base class to get in-game information about types of golems. Currently used for Waila and The One
  * Probe integration.
- * 
+ *
  * @author sky01
  **/
 public abstract class GolemDescriptionManager {
@@ -53,7 +53,7 @@ public abstract class GolemDescriptionManager {
 
 	/**
 	 * Checks the passed golem for various characteristics, making a String for each one.
-	 * 
+	 *
 	 * @return a LinkedList containing all descriptions that apply to the passed golem
 	 **/
 	public List<String> getEntityDescription(final GolemBase golem) {

@@ -38,7 +38,7 @@ public class EntityAIPlaceRandomBlocksStrictly extends EntityAIPlaceRandomBlocks
 		return new Predicate<EntityAIPlaceRandomBlocks>() {
 
 			@Override
-			public boolean test(EntityAIPlaceRandomBlocks t) {
+			public boolean test(final EntityAIPlaceRandomBlocks t) {
 				return t.golem.world.getGameRules().getBoolean("mobGriefing");
 			}
 		};

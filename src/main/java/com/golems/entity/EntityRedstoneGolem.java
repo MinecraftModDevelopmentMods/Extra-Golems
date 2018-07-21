@@ -22,7 +22,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
-public class EntityRedstoneGolem extends GolemBase {
+public final class EntityRedstoneGolem extends GolemBase {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Redstone Power";
 	public static final String POWER = "Redstone Power Level";
@@ -44,7 +44,13 @@ public class EntityRedstoneGolem extends GolemBase {
 
 	/**
 	 * Flexible constructor to allow child classes to customize.
-	 **/
+	 * 
+	 * @param world
+	 * @param attack
+	 * @param pick
+	 * @param defPower
+	 * @param configAllowsPowering
+	 */
 	public EntityRedstoneGolem(final World world, final float attack, final Block pick, final int defPower,
 			final boolean configAllowsPowering) {
 		super(world, attack, pick);
@@ -55,7 +61,12 @@ public class EntityRedstoneGolem extends GolemBase {
 
 	/**
 	 * Flexible constructor to allow child classes to customize.
-	 **/
+	 * 
+	 * @param world
+	 * @param attack
+	 * @param defPower
+	 * @param configAllowsPowering
+	 */
 	public EntityRedstoneGolem(final World world, final float attack, final int defPower,
 			final boolean configAllowsPowering) {
 		this(world, attack, GolemItems.golemHead, defPower, configAllowsPowering);
@@ -105,7 +116,7 @@ public class EntityRedstoneGolem extends GolemBase {
 
 	/**
 	 * Places a BlockPowerProvider at the given location.
-	 * 
+	 *
 	 * @return whether the block was set successfully
 	 **/
 	protected final boolean placePower(final BlockPos pos, final int power, final int updateFlag) {

@@ -24,7 +24,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 
-public class BlockGolemHead extends BlockHorizontal {
+public final class BlockGolemHead extends BlockHorizontal {
 
 	public BlockGolemHead() {
 		super(Material.GROUND);
@@ -85,7 +85,6 @@ public class BlockGolemHead extends BlockHorizontal {
 		return state.withRotation(mirrorIn.toRotation(state.getValue(FACING)));
 	}
 
-	
 	/**
 	 * Called whenever the block is added into the world. Args: world, x, y, z
 	 */

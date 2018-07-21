@@ -29,11 +29,11 @@ public class ModelGolem extends ModelBase {
 		this(0.0F);
 	}
 
-	public ModelGolem(float p_i1161_1_) {
+	public ModelGolem(final float p_i1161_1_) {
 		this(p_i1161_1_, -7.0F);
 	}
 
-	public ModelGolem(float p_i1162_1_, float p_i1162_2_) {
+	public ModelGolem(final float p_i1162_1_, final float p_i1162_2_) {
 		short short1 = 128;
 		short short2 = 128;
 		this.golemHead = (new ModelRenderer(this)).setTextureSize(short1, short2);
@@ -70,8 +70,8 @@ public class ModelGolem extends ModelBase {
 	 * Sets the models various rotation angles then renders the model.
 	 */
 	@Override
-	public void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks,
-			float netHeadYaw, float headPitch, float scale) {
+	public void render(final Entity entityIn, final float limbSwing, final float limbSwingAmount, final float ageInTicks,
+			final float netHeadYaw, final float headPitch, final float scale) {
 		this.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch,
 				scale, entityIn);
 		this.golemHead.render(scale);
@@ -88,8 +88,8 @@ public class ModelGolem extends ModelBase {
 	 * back and forth) and par2 represents how "far" arms and legs can swing at most.
 	 */
 	@Override
-	public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks,
-			float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn) {
+	public void setRotationAngles(final float limbSwing, final float limbSwingAmount, final float ageInTicks,
+			final float netHeadYaw, final float headPitch, final float scaleFactor, final Entity entityIn) {
 		this.golemHead.rotateAngleY = netHeadYaw / (180F / (float) Math.PI);
 		this.golemHead.rotateAngleX = headPitch / (180F / (float) Math.PI);
 		this.golemLeftLeg.rotateAngleX = -1.5F * this.triangleWave(limbSwing, 13.0F)
@@ -105,8 +105,8 @@ public class ModelGolem extends ModelBase {
 	 * are the same second and third as in the setRotationAngles method.
 	 */
 	@Override
-    public void setLivingAnimations(EntityLivingBase entitylivingbaseIn, float limbSwing,
-    		float limbSwingAmount, float partialTickTime) {
+    public void setLivingAnimations(final EntityLivingBase entitylivingbaseIn, final float limbSwing,
+    		final 	float limbSwingAmount, final float partialTickTime) {
 		GolemBase entityirongolem = (GolemBase) entitylivingbaseIn;
 		int i = entityirongolem.getAttackTimer();
 
@@ -123,7 +123,7 @@ public class ModelGolem extends ModelBase {
 		}
 	}
 
-	private float triangleWave(float p_78172_1_, float p_78172_2_) {
+	private float triangleWave(final float p_78172_1_, final float p_78172_2_) {
 		return (Math.abs(p_78172_1_ % p_78172_2_ - p_78172_2_ * 0.5F) - p_78172_2_ * 0.25F)
 				/ (p_78172_2_ * 0.25F);
 	}

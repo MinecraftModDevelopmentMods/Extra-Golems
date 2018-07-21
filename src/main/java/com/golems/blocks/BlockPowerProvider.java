@@ -56,7 +56,7 @@ public class BlockPowerProvider extends BlockUtility implements ITileEntityProvi
 	@Deprecated
 	@Override
 	public int getWeakPower(final IBlockState blockState, final IBlockAccess blockAccess, final BlockPos pos,
-			EnumFacing side) {
+			final EnumFacing side) {
 		return this.getMetaFromState(blockState);
 	}
 
@@ -66,7 +66,7 @@ public class BlockPowerProvider extends BlockUtility implements ITileEntityProvi
 	@Deprecated
 	@Override
 	public int getStrongPower(final IBlockState blockState, final IBlockAccess blockAccess, final BlockPos pos,
-			EnumFacing side) {
+			final EnumFacing side) {
 		return this.getMetaFromState(blockState);
 	}
 

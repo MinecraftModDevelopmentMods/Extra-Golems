@@ -22,7 +22,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityMelonGolem extends GolemBase {
+public final class EntityMelonGolem extends GolemBase {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Plant Flowers";
 	public static final String FREQUENCY = "Flower Frequency";

@@ -13,7 +13,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityBoneGolem extends GolemBase {
+public final class EntityBoneGolem extends GolemBase {
 
 	public static final Block BONE = Blocks.BONE_BLOCK;
 

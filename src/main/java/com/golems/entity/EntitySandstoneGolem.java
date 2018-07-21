@@ -13,9 +13,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntitySandstoneGolem extends GolemBase {
+public final class EntitySandstoneGolem extends GolemBase {
 
-	public EntitySandstoneGolem(World world) {
+	public EntitySandstoneGolem(final World world) {
 		super(world, Config.SANDSTONE.getBaseAttack(), Blocks.SANDSTONE);
 	}
 

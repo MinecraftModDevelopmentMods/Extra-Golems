@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.eventhandler.Event;
  */
 @Event.HasResult
 @Cancelable
-public class RedstoneGolemPowerEvent extends Event {
+public final class RedstoneGolemPowerEvent extends Event {
 
 	public final GolemBase golem;
 	public final BlockPos posToAffect;

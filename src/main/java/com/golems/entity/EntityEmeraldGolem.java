@@ -14,7 +14,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityEmeraldGolem extends GolemBase {
+public final class EntityEmeraldGolem extends GolemBase {
 
 	public EntityEmeraldGolem(final World world) {
 		super(world, Config.EMERALD.getBaseAttack(), Blocks.EMERALD_BLOCK);

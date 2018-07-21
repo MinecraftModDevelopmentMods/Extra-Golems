@@ -62,7 +62,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = ExtraGolems.MODID)
-public class ClientProxy extends CommonProxy {
+public final class ClientProxy extends CommonProxy {
 
 	public static final IRenderFactory<GolemBase> FACTORY_TEXTURED_GOLEM = new IRenderFactory<GolemBase>() {
 

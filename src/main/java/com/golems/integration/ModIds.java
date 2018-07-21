@@ -1,6 +1,6 @@
 package com.golems.integration;
 
-public class ModIds {
+public final class ModIds {
 
 	private ModIds() {
 		//

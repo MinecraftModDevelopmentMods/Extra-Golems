@@ -30,6 +30,9 @@ public abstract class GolemColorized extends GolemBase {
 	 * fine to pass 'null' for {@link rBase} or {@link rOverlay}, and null textures will not be
 	 * rendered. Args: world, attack, pickBlock, initialColor, rBase, rOverlay.
 	 * 
+	 * @param world
+	 * @param attack
+	 * @param pickBlock
 	 * @param initial
 	 *            the (usually temporary) color to apply to this golem until it is updated by some
 	 *            other method.

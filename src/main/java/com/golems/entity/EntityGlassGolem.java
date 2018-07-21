@@ -12,7 +12,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityGlassGolem extends GolemBase {
+public final class EntityGlassGolem extends GolemBase {
 
 	public EntityGlassGolem(final World world) {
 		super(world, Config.GLASS.getBaseAttack(), Blocks.GLASS);

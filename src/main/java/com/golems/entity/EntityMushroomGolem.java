@@ -16,7 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityMushroomGolem extends GolemMultiTextured {
+public final class EntityMushroomGolem extends GolemMultiTextured {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Plant Mushrooms";
 	public static final String FREQUENCY = "Mushroom Frequency";
@@ -27,7 +27,7 @@ public class EntityMushroomGolem extends GolemMultiTextured {
 			Blocks.RED_MUSHROOM.getDefaultState() };
 	protected static final Block[] soils = { Blocks.DIRT, Blocks.GRASS, Blocks.MYCELIUM };
 
-	public EntityMushroomGolem(World world) {
+	public EntityMushroomGolem(final World world) {
 		super(world, Config.MUSHROOM.getBaseAttack(), new ItemStack(Blocks.RED_MUSHROOM_BLOCK),
 				SHROOM_PREFIX, SHROOM_TYPES);
 		this.setCanSwim(true);

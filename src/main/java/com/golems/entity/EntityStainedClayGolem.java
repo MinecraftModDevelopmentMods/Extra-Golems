@@ -14,7 +14,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityStainedClayGolem extends GolemColorizedMultiTextured {
+public final class EntityStainedClayGolem extends GolemColorizedMultiTextured {
 
 	public static final String DROP_META = "Drop Metadata";
 

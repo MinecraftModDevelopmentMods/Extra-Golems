@@ -18,7 +18,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityCoalGolem extends GolemBase {
+public final class EntityCoalGolem extends GolemBase {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Blindness";
 

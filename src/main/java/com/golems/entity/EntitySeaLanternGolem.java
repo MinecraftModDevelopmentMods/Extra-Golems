@@ -15,7 +15,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntitySeaLanternGolem extends GolemLightProvider {
+public final class EntitySeaLanternGolem extends GolemLightProvider {
 
 	public static final LightManager WATER_LIGHT = new LightManager(0.987F, 2, Material.AIR,
 			Material.WATER);

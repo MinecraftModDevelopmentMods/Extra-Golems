@@ -14,7 +14,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityStrawGolem extends GolemBase {
+public final class EntityStrawGolem extends GolemBase {
 
 	public EntityStrawGolem(final World world) {
 		super(world, Config.STRAW.getBaseAttack(), Blocks.HAY_BLOCK);

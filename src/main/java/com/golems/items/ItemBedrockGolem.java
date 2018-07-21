@@ -23,7 +23,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemBedrockGolem extends Item {
+public final class ItemBedrockGolem extends Item {
 
 	public ItemBedrockGolem() {
 		this.setCreativeTab(CreativeTabs.MISC);

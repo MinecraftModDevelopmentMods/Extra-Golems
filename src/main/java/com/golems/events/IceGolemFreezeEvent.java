@@ -21,7 +21,7 @@ import net.minecraftforge.fml.common.eventhandler.Event;
  */
 @Event.HasResult
 @Cancelable
-public class IceGolemFreezeEvent extends Event {
+public final class IceGolemFreezeEvent extends Event {
 
 	protected List<BlockPos> affectedBlocks;
 	protected Function<IBlockState, IBlockState> freezeFunction;

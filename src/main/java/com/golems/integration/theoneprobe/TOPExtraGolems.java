@@ -19,10 +19,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 
 /**
- * TheOneProbe integration -- using theoneprobe-1.10-1.1.0
+ * TheOneProbe integration -- using theoneprobe-1.10-1.1.0.
  **/
 @Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoEntityProvider", modid = ModIds.TOP)
-public class TOPExtraGolems extends GolemDescriptionManager implements IProbeInfoEntityProvider {
+public final class TOPExtraGolems extends GolemDescriptionManager implements IProbeInfoEntityProvider {
 
 	public TOPExtraGolems() {
 		super();
@@ -53,7 +53,7 @@ public class TOPExtraGolems extends GolemDescriptionManager implements IProbeInf
 	}
 
 	@Optional.Interface(iface = "mcjty.theoneprobe.api.ITheOneProbe", modid = ModIds.TOP)
-	public static class GetTheOneProbe implements Function<ITheOneProbe, Void> {
+	public static final class GetTheOneProbe implements Function<ITheOneProbe, Void> {
 
 		@Override
 		public Void apply(final ITheOneProbe input) {

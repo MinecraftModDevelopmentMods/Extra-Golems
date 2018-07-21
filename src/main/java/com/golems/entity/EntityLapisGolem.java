@@ -20,7 +20,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityLapisGolem extends GolemBase {
+public final class EntityLapisGolem extends GolemBase {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Potion Effects";
 
@@ -28,7 +28,7 @@ public class EntityLapisGolem extends GolemBase {
 			MobEffects.INSTANT_DAMAGE, MobEffects.WEAKNESS, MobEffects.WITHER, MobEffects.UNLUCK,
 			MobEffects.GLOWING };
 
-	public EntityLapisGolem(World world) {
+	public EntityLapisGolem(final World world) {
 		super(world, Config.LAPIS.getBaseAttack(), Blocks.LAPIS_BLOCK);
 	}
 

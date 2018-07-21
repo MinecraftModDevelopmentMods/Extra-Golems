@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class EntityStainedGlassGolem extends GolemColorizedMultiTextured {
+public final class EntityStainedGlassGolem extends GolemColorizedMultiTextured {
 
 	public static final String DROP_META = "Drop Metadata";
 

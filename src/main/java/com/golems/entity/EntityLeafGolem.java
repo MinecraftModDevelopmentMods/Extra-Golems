@@ -17,7 +17,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 
-public class EntityLeafGolem extends GolemColorized {
+public final class EntityLeafGolem extends GolemColorized {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Regeneration";
 

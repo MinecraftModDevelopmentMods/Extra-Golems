@@ -15,7 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityWoodenGolem extends GolemMultiTextured {
+public final class EntityWoodenGolem extends GolemMultiTextured {
 
 	public static final String WOOD_PREFIX = "wooden";
 	protected static final String[] woodTypes = { "oak", "spruce", "birch", "jungle", "acacia",

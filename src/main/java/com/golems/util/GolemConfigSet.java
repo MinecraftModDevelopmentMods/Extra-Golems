@@ -14,7 +14,7 @@ import net.minecraftforge.common.config.Configuration;
  * This class loads several values from the config for a specific golem, including spawn
  * permissions, health, and attack. It can load any number of fields as a boolean, int, or float.
  **/
-public class GolemConfigSet {
+public final class GolemConfigSet {
 
 	private static final String GOLEM_PERMS = "Allow Golem";
 	private static final String GOLEM_HEALTH = "Golem Health";
@@ -104,7 +104,7 @@ public class GolemConfigSet {
 		}
 	}
 
-	public float getFloat(String key) {
+	public float getFloat(final String key) {
 		if (this.mapFloat.containsKey(key)) {
 			return this.mapFloat.get(key);
 		} else {
@@ -116,7 +116,7 @@ public class GolemConfigSet {
 		}
 	}
 
-	public boolean getBoolean(String key) {
+	public boolean getBoolean(final String key) {
 		if (this.mapBoolean.containsKey(key)) {
 			return this.mapBoolean.get(key) == TRUE;
 		} else {

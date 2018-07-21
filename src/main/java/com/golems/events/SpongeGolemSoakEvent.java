@@ -23,7 +23,7 @@ import net.minecraftforge.fml.common.eventhandler.Event;
  */
 @Event.HasResult
 @Cancelable
-public class SpongeGolemSoakEvent extends Event {
+public final class SpongeGolemSoakEvent extends Event {
 
 	protected List<BlockPos> affectedBlocks;
 	protected Predicate<IBlockState> waterPredicate;

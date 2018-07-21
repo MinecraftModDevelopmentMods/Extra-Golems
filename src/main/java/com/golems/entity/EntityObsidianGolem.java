@@ -13,7 +13,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityObsidianGolem extends GolemBase {
+public final class EntityObsidianGolem extends GolemBase {
 
 	public EntityObsidianGolem(final World world) {
 		super(world, Config.OBSIDIAN.getBaseAttack(), Blocks.OBSIDIAN);

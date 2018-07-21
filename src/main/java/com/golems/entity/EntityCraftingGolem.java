@@ -20,7 +20,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class EntityCraftingGolem extends GolemBase {
+public final class EntityCraftingGolem extends GolemBase {
 
 	public EntityCraftingGolem(final World world) {
 		super(world, Config.CRAFTING.getBaseAttack(), Blocks.CRAFTING_TABLE);
@@ -76,7 +76,7 @@ public class EntityCraftingGolem extends GolemBase {
 		}
 
 		@Override
-		public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn) {
+		public Container createContainer(final InventoryPlayer playerInventory, final EntityPlayer playerIn) {
 			return new ContainerPortableWorkbench(playerInventory, this.world2, this.position2);
 		}
 	}

@@ -38,8 +38,8 @@ public class BlockUtility extends Block {
 	@Nullable
 	@Deprecated
 	@Override
-	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess access,
-			BlockPos pos) {
+	public AxisAlignedBB getCollisionBoundingBox(final IBlockState blockState, final IBlockAccess access,
+			final BlockPos pos) {
 		return NULL_AABB;
 	}
 
@@ -49,7 +49,7 @@ public class BlockUtility extends Block {
 	@Nullable
 	@Deprecated
 	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState blockState, IBlockAccess access, BlockPos pos) {
+	public AxisAlignedBB getBoundingBox(final IBlockState blockState, final IBlockAccess access, final BlockPos pos) {
 		return NULL_AABB;
 	}
 
@@ -58,7 +58,7 @@ public class BlockUtility extends Block {
 	 */
 	@Deprecated
 	@Override
-	public AxisAlignedBB getSelectedBoundingBox(IBlockState blockState, World world, BlockPos pos) {
+	public AxisAlignedBB getSelectedBoundingBox(final IBlockState blockState, final World world, final BlockPos pos) {
 		return SINGULAR_AABB;
 	}
 
@@ -67,7 +67,7 @@ public class BlockUtility extends Block {
 	 */
 	@Deprecated
 	@Override
-	public boolean isTopSolid(IBlockState state) {
+	public boolean isTopSolid(final IBlockState state) {
 		return false;
 	}
 
@@ -76,7 +76,7 @@ public class BlockUtility extends Block {
 	 */
 	@Deprecated
 	@Override
-	public boolean isFullBlock(IBlockState state) {
+	public boolean isFullBlock(final IBlockState state) {
 		return false;
 	}
 
@@ -86,12 +86,12 @@ public class BlockUtility extends Block {
 	 */
 	@Deprecated
 	@Override
-	public boolean isOpaqueCube(IBlockState state) {
+	public boolean isOpaqueCube(final IBlockState state) {
 		return false;
 	}
 
 	@Override
-	public boolean canCollideCheck(IBlockState state, boolean hitIfLiquid) {
+	public boolean canCollideCheck(final IBlockState state, final boolean hitIfLiquid) {
 		return false;
 	}
 
@@ -99,8 +99,8 @@ public class BlockUtility extends Block {
 	 * Spawns this Block's drops into the World as EntityItems.
 	 */
 	@Override
-	public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state,
-			float chance, int fortune) {
+	public void dropBlockAsItemWithChance(final World worldIn, final BlockPos pos, final IBlockState state,
+			final float chance, final int fortune) {
 		// Because we don't want to drop anything.
 	}
 
@@ -108,7 +108,7 @@ public class BlockUtility extends Block {
 	 * Whether this Block can be replaced directly by other blocks (true for e.g. tall grass)
 	 */
 	@Override
-	public boolean isReplaceable(IBlockAccess worldIn, BlockPos pos) {
+	public boolean isReplaceable(final IBlockAccess worldIn, final BlockPos pos) {
 		return true;
 	}
 
@@ -117,12 +117,12 @@ public class BlockUtility extends Block {
 	 */
 	@Deprecated
 	@Override
-	public boolean isFullCube(IBlockState state) {
+	public boolean isFullCube(final IBlockState state) {
 		return false;
 	}
 
 	@Override
-	public boolean canPlaceBlockAt(World worldIn, BlockPos pos) {
+	public boolean canPlaceBlockAt(final World worldIn, final BlockPos pos) {
 		return true;
 	}
 
@@ -131,13 +131,13 @@ public class BlockUtility extends Block {
 	 */
 	@Deprecated
 	@Override
-	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing,
-			float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+	public IBlockState getStateForPlacement(final World worldIn, final BlockPos pos, final EnumFacing facing,
+			final float hitX, final float hitY, final float hitZ, final int meta, final EntityLivingBase placer) {
 		return getDefaultState();
 	}
 
 	@Override
-	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
+	public void onBlockAdded(final World worldIn, final BlockPos pos, final IBlockState state) {
 		// Do nothing.
 	}
 
@@ -146,12 +146,12 @@ public class BlockUtility extends Block {
 	 */
 	@Deprecated
 	@Override
-	public IBlockState getStateFromMeta(int meta) {
+	public IBlockState getStateFromMeta(final int meta) {
 		return getDefaultState();
 	}
 
 	@Override
-	public int getMetaFromState(IBlockState state) {
+	public int getMetaFromState(final IBlockState state) {
 		return 0;
 	}
 
@@ -160,7 +160,7 @@ public class BlockUtility extends Block {
 	 */
 	@Deprecated
 	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state) {
+	public EnumBlockRenderType getRenderType(final IBlockState state) {
 		return EnumBlockRenderType.INVISIBLE;
 	}
 
@@ -171,12 +171,12 @@ public class BlockUtility extends Block {
 	}
 
 	@Override
-	public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance) {
+	public void onFallenUpon(final World worldIn, final BlockPos pos, final Entity entityIn, final float fallDistance) {
 		return;
 	}
 
 	@Override
-	public void onLanded(World worldIn, Entity entityIn) {
+	public void onLanded(final World worldIn, final Entity entityIn) {
 		return;
 	}
 

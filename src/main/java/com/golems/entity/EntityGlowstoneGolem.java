@@ -14,7 +14,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityGlowstoneGolem extends GolemLightProvider {
+public final class EntityGlowstoneGolem extends GolemLightProvider {
 
 	public EntityGlowstoneGolem(final World world) {
 		super(world, Config.GLOWSTONE.getBaseAttack(), new ItemStack(Blocks.GLOWSTONE),

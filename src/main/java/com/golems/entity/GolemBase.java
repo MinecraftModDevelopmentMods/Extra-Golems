@@ -88,7 +88,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param world
 	 * @param attack
 	 * @param pickBlock
@@ -128,7 +128,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityLiving.class,
 				10, false, true, new Predicate<EntityLiving>() {
 
-					public boolean apply(EntityLiving e) {
+					public boolean apply(final EntityLiving e) {
 						return e != null && IMob.VISIBLE_MOB_SELECTOR.apply(e)
 								&& !(e instanceof EntityCreeper);
 					}
@@ -349,7 +349,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 
 	/**
 	 * Drop items of this living's type.
-	 * 
+	 *
 	 * @param recentlyHit
 	 *            - Whether this entity has recently been hit by a player.
 	 * @param lootingLevel
@@ -385,9 +385,19 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 		return dropList.add(new WeightedItem(item, meta, min, max, percentChance));
 	}
 
-	/** Adds a Block to the list of golem drops. **/
+	/**
+	 * Adds a Block to the list of golem drops.
+	 * 
+	 * @param dropList
+	 * @param block
+	 * @param meta
+	 * @param min
+	 * @param max
+	 * @param percentChance
+	 * @return
+	 */
 	protected boolean addDrop(final List<WeightedItem> dropList, final Block block, final int meta, final int min, final int max,
-			int percentChance) {
+			final int percentChance) {
 		return dropList
 				.add(new WeightedItem(Item.getItemFromBlock(block), meta, min, max, percentChance));
 	}
@@ -493,7 +503,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	/**
 	 * Makes a ResourceLocation using the passed mod id and part of the texture name. Texture should
 	 * be at 'assets/<b>MODID</b>/textures/entity/golem_<b>suffix</b>.png'
-	 * 
+	 *
 	 * @see {@link #applyTexture()}
 	 **/
 	public static ResourceLocation makeGolemTexture(final String modid, final String texture) {
@@ -540,17 +550,17 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	 * Called from {@code entityInit} and used to set the texture type <b>before</b> the entity is
 	 * fully constructed or rendered. Example implementation: texture is at
 	 * 'assets/golems/textures/entity/golem_clay.png'
-	 * 
+	 *
 	 * <pre>
 	 * {@code
 	 * protected ResourceLocation applyTexture()
 	 *{
-	 * 	return this.makeGolemTexture("golems", "clay"); 
+	 * 	return this.makeGolemTexture("golems", "clay");
 	 *}
 	 * </pre>
-	 * 
+	 *
 	 * @return a ResourceLocation for this golem's texture
-	 * 
+	 *
 	 * @see #makeGolemTexture(String, String)
 	 **/
 	protected abstract ResourceLocation applyTexture();
@@ -563,8 +573,8 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	// * @see WeightedItem
 	// **/
 	// TODO: Fix me!
-	public abstract void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit,
-			final int lootingLevel);
+	public abstract void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit,
+			int lootingLevel);
 
 	/**
 	 * @return A SoundEvent to play when the golem is attacking, walking, hurt, and on death

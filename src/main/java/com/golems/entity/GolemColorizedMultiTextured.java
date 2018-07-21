@@ -35,7 +35,7 @@ public abstract class GolemColorizedMultiTextured extends GolemColorized {
 	 * Flexible constructor so child classes can "borrow" this class's behavior and customize. It is
 	 * fine to pass 'null' for {@link base} or {@link overlay}, and null textures will not be
 	 * rendered.
-	 * 
+	 *
 	 * @param base
 	 *            an optional texture that will not be recolored or rendered transparent, to render
 	 *            before {@link overlay}
@@ -45,7 +45,7 @@ public abstract class GolemColorizedMultiTextured extends GolemColorized {
 	 *            an int[] of color values to use for rendering -- interacting with this golem will
 	 *            go to the next color
 	 **/
-	public GolemColorizedMultiTextured(final World world, float damage, final Block pick,
+	public GolemColorizedMultiTextured(final World world, final float damage, final Block pick,
 			final ResourceLocation base, final ResourceLocation overlay, final int[] lColors) {
 		this(world, damage, new ItemStack(pick), base, overlay, lColors);
 	}

@@ -17,7 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-public class EntityMagmaGolem extends GolemLightProvider {
+public final class EntityMagmaGolem extends GolemLightProvider {
 
 	public static final String ALLOW_FIRE_SPECIAL = "Allow Special: Burn Enemies";
 	public static final String ALLOW_LAVA_SPECIAL = "Allow Special: Melt Cobblestone";

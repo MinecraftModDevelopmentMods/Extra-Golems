@@ -22,7 +22,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
-public class EntityIceGolem extends GolemBase {
+public final class EntityIceGolem extends GolemBase {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Freeze Blocks";
 	public static final String CAN_USE_REGULAR_ICE = "Can Use Regular Ice";
@@ -107,7 +107,7 @@ public class EntityIceGolem extends GolemBase {
 	 * Usually called after creating and firing a {@link IceGolemFreezeEvent}. Iterates through the
 	 * list of positions and calls {@code apply(IBlockState input)} on the passed
 	 * {@code Function<IBlockState, IBlockState>} .
-	 * 
+	 *
 	 * @return whether all setBlockState calls were successful.
 	 **/
 	public boolean freezeBlocks(final List<BlockPos> positions,

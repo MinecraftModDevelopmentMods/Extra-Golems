@@ -14,7 +14,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityDiamondGolem extends GolemBase {
+public final class EntityDiamondGolem extends GolemBase {
 
 	public EntityDiamondGolem(final World world) {
 		super(world, Config.DIAMOND.getBaseAttack(), Blocks.DIAMOND_BLOCK);

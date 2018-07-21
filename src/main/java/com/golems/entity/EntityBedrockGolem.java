@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class EntityBedrockGolem extends GolemBase {
+public final class EntityBedrockGolem extends GolemBase {
 
 	public EntityBedrockGolem(final World world) {
 		super(world, Config.BEDROCK.getBaseAttack(), Blocks.BEDROCK);

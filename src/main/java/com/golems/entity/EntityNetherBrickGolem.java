@@ -14,7 +14,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityNetherBrickGolem extends GolemBase {
+public final class EntityNetherBrickGolem extends GolemBase {
 
 	public static final String ALLOW_FIRE_SPECIAL = "Allow Special: Burn Enemies";
 
@@ -30,7 +30,7 @@ public class EntityNetherBrickGolem extends GolemBase {
 
 	/** Attack by lighting on fire as well. */
 	@Override
-	public boolean attackEntityAsMob(Entity entity) {
+	public boolean attackEntityAsMob(final Entity entity) {
 		if (super.attackEntityAsMob(entity)) {
 			if (Config.NETHERBRICK.getBoolean(ALLOW_FIRE_SPECIAL)) {
 				entity.setFire(2 + rand.nextInt(5));

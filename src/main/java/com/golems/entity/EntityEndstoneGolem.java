@@ -24,14 +24,14 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 
-public class EntityEndstoneGolem extends GolemBase {
+public final class EntityEndstoneGolem extends GolemBase {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Teleporting";
 	public static final String ALLOW_WATER_HURT = "Can Take Water Damage";
 
 	/** countdown timer for next teleport. **/
 	protected int teleportDelay;
-	/** Max distance for one teleport; range is 32.0 for endstone golem **/
+	/** Max distance for one teleport; range is 32.0 for endstone golem. **/
 	protected double range;
 	protected boolean canTeleport;
 	protected boolean isHurtByWater;
@@ -50,7 +50,7 @@ public class EntityEndstoneGolem extends GolemBase {
 
 	/**
 	 * Flexible constructor to allow child classes to customize.
-	 * 
+	 *
 	 * @param world
 	 *            the worldObj
 	 * @param attack
@@ -77,7 +77,7 @@ public class EntityEndstoneGolem extends GolemBase {
 
 	/**
 	 * Flexible contructor to allow child classes to customize.
-	 * 
+	 *
 	 * @param world
 	 *            the worldObj
 	 * @param attack
@@ -181,7 +181,7 @@ public class EntityEndstoneGolem extends GolemBase {
 	}
 
 	@Override
-	public boolean attackEntityFrom(DamageSource src, float amnt) {
+	public boolean attackEntityFrom(final DamageSource src, final float amnt) {
 		if (this.isEntityInvulnerable(src)) {
 			return false;
 		} else {
@@ -208,7 +208,7 @@ public class EntityEndstoneGolem extends GolemBase {
 	/**
 	 * Teleport the golem to another entity.
 	 **/
-	protected boolean teleportToEntity(Entity entity) {
+	protected boolean teleportToEntity(final Entity entity) {
 		Vec3d vec3d = new Vec3d(this.posX - entity.posX,
 				this.getEntityBoundingBox().minY + (double) (this.height / 2.0F) - entity.posY
 						+ (double) entity.getEyeHeight(),

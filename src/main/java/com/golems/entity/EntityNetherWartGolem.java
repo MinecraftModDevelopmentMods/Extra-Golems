@@ -18,7 +18,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityNetherWartGolem extends GolemBase {
+public final class EntityNetherWartGolem extends GolemBase {
 
 	public static final Block NETHERWART = Blocks.NETHER_WART_BLOCK;
 

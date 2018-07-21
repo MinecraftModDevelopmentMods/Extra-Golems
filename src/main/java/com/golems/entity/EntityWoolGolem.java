@@ -14,14 +14,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityWoolGolem extends GolemMultiTextured {
+public final class EntityWoolGolem extends GolemMultiTextured {
 
 	private static final String WOOL_PREFIX = "wool";
 	private static final String[] coloredWoolTypes = { "black", "orange", "magenta", "light_blue",
 			"yellow", "lime", "pink", "gray", "silver", "cyan", "purple", "blue", "brown", "green",
 			"red", "white" };
 
-	public EntityWoolGolem(World world) {
+	public EntityWoolGolem(final World world) {
 		super(world, Config.WOOL.getBaseAttack(), new ItemStack(Blocks.WOOL), WOOL_PREFIX,
 				coloredWoolTypes);
 		this.setCanSwim(true);

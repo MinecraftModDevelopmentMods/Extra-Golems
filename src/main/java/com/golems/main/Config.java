@@ -22,7 +22,7 @@ import com.golems.util.GolemConfigSet;
 import net.minecraftforge.common.config.Configuration;
 
 /** Registers the config settings to adjust aspects of this mod. **/
-public class Config {
+public final class Config {
 
 	private Config() {
 		//
@@ -79,7 +79,11 @@ public class Config {
 		config.save();
 	}
 
-	/** Now I can change default attack and health values all from one place. **/
+	/**
+	 * Now I can change default attack and health values all from one place.
+	 * 
+	 * @param config
+	 */
 	private static void initGolemConfigSets(final Configuration config) {
 		BEDROCK = new GolemConfigSet(config, "Bedrock Golem", 999.0D, 32.0F);
 		BONE = new GolemConfigSet(config, "Bone Golem", 74.0D, 6.5F);

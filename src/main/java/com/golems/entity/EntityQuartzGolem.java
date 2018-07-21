@@ -14,7 +14,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityQuartzGolem extends GolemBase {
+public final class EntityQuartzGolem extends GolemBase {
 
 	public EntityQuartzGolem(final World world) {
 		super(world, Config.QUARTZ.getBaseAttack(), Blocks.QUARTZ_BLOCK);

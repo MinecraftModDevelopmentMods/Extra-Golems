@@ -4,8 +4,8 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-public class GolemItems {
-	
+public final class GolemItems {
+
 	private GolemItems() {
 		//
 	}

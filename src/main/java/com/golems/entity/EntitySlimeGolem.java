@@ -16,7 +16,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntitySlimeGolem extends GolemBase {
+public final class EntitySlimeGolem extends GolemBase {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Extra Knockback";
 	public static final String KNOCKBACK = "Knockback Factor";

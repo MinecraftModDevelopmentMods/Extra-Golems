@@ -21,7 +21,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 
-public class EntitySpongeGolem extends GolemBase {
+public final class EntitySpongeGolem extends GolemBase {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Absorb Water";
 	public static final String INTERVAL = "Water Soaking Frequency";
@@ -96,7 +96,7 @@ public class EntitySpongeGolem extends GolemBase {
 	/**
 	 * Usually called after creating and firing a {@link SpongeGolemSoakEvent}. Iterates through the
 	 * list of positions and replaces each one with the passed IBlockState.
-	 * 
+	 *
 	 * @return whether all setBlockState calls were successful.
 	 **/
 	public boolean replaceWater(final List<BlockPos> positions, final IBlockState replaceWater,

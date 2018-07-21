@@ -16,7 +16,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityBookshelfGolem extends GolemBase {
+public final class EntityBookshelfGolem extends GolemBase {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Potion Effects";
 	private static final Potion[] goodEffects = { MobEffects.FIRE_RESISTANCE, MobEffects.REGENERATION,

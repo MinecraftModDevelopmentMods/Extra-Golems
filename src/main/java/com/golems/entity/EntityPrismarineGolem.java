@@ -14,7 +14,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityPrismarineGolem extends GolemBase {
+public final class EntityPrismarineGolem extends GolemBase {
 
 	public EntityPrismarineGolem(final World world) {
 		super(world, Config.PRISMARINE.getBaseAttack(), Blocks.PRISMARINE);

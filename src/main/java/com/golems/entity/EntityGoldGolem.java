@@ -14,7 +14,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityGoldGolem extends GolemBase {
+public final class EntityGoldGolem extends GolemBase {
 
 	public EntityGoldGolem(final World world) {
 		super(world, Config.GOLD.getBaseAttack(), Blocks.GOLD_BLOCK);
