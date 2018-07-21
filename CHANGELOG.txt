@@ -1,2 +1,1 @@
-First beta for 1.12.x
-Much thanks to glitch for laying the groundwork.
+Fixed two niggly bugs in last release
