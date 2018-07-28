@@ -14,30 +14,25 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityNetherBrickGolem extends GolemBase 
-{		
+public final class EntityNetherBrickGolem extends GolemBase {
+
 	public static final String ALLOW_FIRE_SPECIAL = "Allow Special: Burn Enemies";
 
-	public EntityNetherBrickGolem(World world) 
-	{
+	public EntityNetherBrickGolem(final World world) {
 		super(world, Config.NETHERBRICK.getBaseAttack(), Blocks.NETHER_BRICK);
 		this.setImmuneToFire(true);
 	}
-	
+
 	@Override
-	protected ResourceLocation applyTexture()
-	{
-		return this.makeGolemTexture("nether_brick");
+	protected ResourceLocation applyTexture() {
+		return makeGolemTexture("nether_brick");
 	}
 
-	/** Attack by lighting on fire as well */
+	/** Attack by lighting on fire as well. */
 	@Override
-	public boolean attackEntityAsMob(Entity entity)
-	{
-		if(super.attackEntityAsMob(entity))
-		{
-			if(Config.NETHERBRICK.getBoolean(ALLOW_FIRE_SPECIAL))
-			{
+	public boolean attackEntityAsMob(final Entity entity) {
+		if (super.attackEntityAsMob(entity)) {
+			if (Config.NETHERBRICK.getBoolean(ALLOW_FIRE_SPECIAL)) {
 				entity.setFire(2 + rand.nextInt(5));
 			}
 			return true;
@@ -46,21 +41,19 @@ public class EntityNetherBrickGolem extends GolemBase
 	}
 
 	@Override
-	protected void applyAttributes() 
-	{
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Config.NETHERBRICK.getMaxHealth());
+	protected void applyAttributes() {
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
+				.setBaseValue(Config.NETHERBRICK.getMaxHealth());
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
 	}
 
 	@Override
-	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel)
-	{
+	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
 		this.addDrop(dropList, Items.NETHERBRICK, 0, 4, 8 + lootingLevel, 100);
 	}
 
 	@Override
-	public SoundEvent getGolemSound() 
-	{
+	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_STONE_STEP;
 	}
 }

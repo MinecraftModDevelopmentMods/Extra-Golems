@@ -1,12 +1,33 @@
 package com.golems.main;
 
-import com.golems.entity.*;
+import com.golems.entity.EntityBookshelfGolem;
+import com.golems.entity.EntityCoalGolem;
+import com.golems.entity.EntityEndstoneGolem;
+import com.golems.entity.EntityIceGolem;
+import com.golems.entity.EntityLapisGolem;
+import com.golems.entity.EntityLeafGolem;
+import com.golems.entity.EntityMagmaGolem;
+import com.golems.entity.EntityMelonGolem;
+import com.golems.entity.EntityMushroomGolem;
+import com.golems.entity.EntityNetherBrickGolem;
+import com.golems.entity.EntityNetherWartGolem;
+import com.golems.entity.EntityRedstoneGolem;
+import com.golems.entity.EntitySlimeGolem;
+import com.golems.entity.EntitySpongeGolem;
+import com.golems.entity.EntityStainedClayGolem;
+import com.golems.entity.EntityStainedGlassGolem;
+import com.golems.entity.EntityTNTGolem;
 import com.golems.util.GolemConfigSet;
+
 import net.minecraftforge.common.config.Configuration;
 
-/** Registers the config settings to adjust aspects of this mod **/
-public class Config 
-{	
+/** Registers the config settings to adjust aspects of this mod. **/
+public final class Config {
+
+	private Config() {
+		//
+	}
+
 	public static final String CATEGORY_OTHER = "_other_";
 
 	public static GolemConfigSet BEDROCK;
@@ -50,18 +71,20 @@ public class Config
 	public static boolean bedrockGolemCreativeOnly;
 	public static boolean itemGolemHeadHasGlint;
 
-	public static void mainRegistry(Configuration config)
-	{
+	public static void mainRegistry(final Configuration config) {
 		config.load();
 		initGolemConfigSets(config);
 		loadSpecials(config);
-		loadOther(config);		
+		loadOther(config);
 		config.save();
 	}
 
-	/** Now I can change default attack and health values all from one place **/
-	private static void initGolemConfigSets(Configuration config)
-	{
+	/**
+	 * Now I can change default attack and health values all from one place.
+	 * 
+	 * @param config
+	 */
+	private static void initGolemConfigSets(final Configuration config) {
 		BEDROCK = new GolemConfigSet(config, "Bedrock Golem", 999.0D, 32.0F);
 		BONE = new GolemConfigSet(config, "Bone Golem", 74.0D, 6.5F);
 		BOOKSHELF = new GolemConfigSet(config, "Bookshelf Golem", 28.0D, 1.5F);
@@ -97,49 +120,76 @@ public class Config
 		STRAW = new GolemConfigSet(config, "Straw Golem", 10.0D, 1.0F);
 		TNT = new GolemConfigSet(config, "TNT Golem", 14.0D, 2.5F);
 		WOOD = new GolemConfigSet(config, "Wooden Golem", 20.0D, 3.0F);
-		WOOL = new GolemConfigSet(config, "Wool Golem", 10.0D, 1.0F);		
+		WOOL = new GolemConfigSet(config, "Wool Golem", 10.0D, 1.0F);
 	}
 
-	private static void loadSpecials(Configuration config)
-	{
-		BOOKSHELF.addKey(EntityBookshelfGolem.ALLOW_SPECIAL, true, "Whether this golem can give itself potion effects");
-		COAL.addKey(EntityCoalGolem.ALLOW_SPECIAL, false, "Whether this golem can inflict blindness");
+	private static void loadSpecials(final Configuration config) {
+		BOOKSHELF.addKey(EntityBookshelfGolem.ALLOW_SPECIAL, true,
+				"Whether this golem can give itself potion effects");
+		COAL.addKey(EntityCoalGolem.ALLOW_SPECIAL, false,
+				"Whether this golem can inflict blindness");
 		ENDSTONE.addKey(EntityEndstoneGolem.ALLOW_SPECIAL, true, "Whether this golem can teleport");
-		ENDSTONE.addKey(EntityEndstoneGolem.ALLOW_WATER_HURT, true, "Whether the Endstone Golem takes damage from water");
-		ICE.addKey(EntityIceGolem.ALLOW_SPECIAL, true, "Whether this golem can freeze water and cool lava nearby");
-		ICE.addKey(EntityIceGolem.CAN_USE_REGULAR_ICE, true, "When true, the Ice Golem can be built with regular ice as well as packed ice");
-		ICE.addKey(EntityIceGolem.AOE, 3, 1, 8, "Radial distance at which this golem can freeze / cool liquids");
-		LAPIS.addKey(EntityLapisGolem.ALLOW_SPECIAL, true, "Whether this golem can inflict harmful potion effects");
+		ENDSTONE.addKey(EntityEndstoneGolem.ALLOW_WATER_HURT, true,
+				"Whether the Endstone Golem takes damage from water");
+		ICE.addKey(EntityIceGolem.ALLOW_SPECIAL, true,
+				"Whether this golem can freeze water and cool lava nearby");
+		ICE.addKey(EntityIceGolem.CAN_USE_REGULAR_ICE, true,
+				"When true, the Ice Golem can be built with regular ice as well as packed ice");
+		ICE.addKey(EntityIceGolem.AOE, 3, 1, 8,
+				"Radial distance at which this golem can freeze / cool liquids");
+		LAPIS.addKey(EntityLapisGolem.ALLOW_SPECIAL, true,
+				"Whether this golem can inflict harmful potion effects");
 		LEAF.addKey(EntityLeafGolem.ALLOW_SPECIAL, true, "Whether this golem can heal itself");
-		MAGMA.addKey(EntityMagmaGolem.ALLOW_LAVA_SPECIAL, true, "Whether this golem can slowly melt cobblestone");
-		MAGMA.addKey(EntityMagmaGolem.MELT_DELAY, 240, 1, 24000, "Number of ticks it takes to melt cobblestone (12 sec * 20 t/sec = 240 t)");
-		MAGMA.addKey(EntityMagmaGolem.ALLOW_FIRE_SPECIAL, false, "Whether this golem can light creatures on fire");
-		MELON.addKey(EntityMelonGolem.ALLOW_SPECIAL, true, "Whether this golem can plant flowers randomly");
-		MELON.addKey(EntityMelonGolem.FREQUENCY, 240, 1, 24000, "Average number of ticks between planting flowers");
-		MUSHROOM.addKey(EntityMushroomGolem.ALLOW_SPECIAL, true, "Whether this golem can plant mushrooms randomly");
-		MUSHROOM.addKey(EntityMushroomGolem.FREQUENCY, 420, 1, 24000, "Average number of ticks between planting mushrooms");
-		NETHERBRICK.addKey(EntityNetherBrickGolem.ALLOW_FIRE_SPECIAL, true, "Whether this golem can light creatures on fire");
-		NETHERWART.addKey(EntityNetherWartGolem.ALLOW_SPECIAL, true, "Whether this golem can plant netherwart randomly");
-		NETHERWART.addKey(EntityNetherWartGolem.FREQUENCY, 880, 1, 24000, "Average number of ticks between planting nether wart");
-		NETHERWART.addKey(EntityNetherWartGolem.DROP_NETHERWART_BLOCK, true, "When true, this golem drops 0-4 netherwart blocks. When false, drops 1-9 netherwart"); 
-		REDSTONE.addKey(EntityRedstoneGolem.ALLOW_SPECIAL, true, "Whether this golem can power nearby redstone");
-		REDSTONE.addKey(EntityRedstoneGolem.POWER, 15, 0, 15, "Level of redstone power emitted by this golem");
-		SLIME.addKey(EntitySlimeGolem.ALLOW_SPECIAL, true, "Whether this golem can apply extra knockback when attacking");
-		SLIME.addKey(EntitySlimeGolem.KNOCKBACK, 2.0012F, 0.001F, 10.0F, "How powerful the Slime Golem attack is (Higher Value = Further Knockback)");
+		MAGMA.addKey(EntityMagmaGolem.ALLOW_LAVA_SPECIAL, true,
+				"Whether this golem can slowly melt cobblestone");
+		MAGMA.addKey(EntityMagmaGolem.MELT_DELAY, 240, 1, 24000,
+				"Number of ticks it takes to melt cobblestone (12 sec * 20 t/sec = 240 t)");
+		MAGMA.addKey(EntityMagmaGolem.ALLOW_FIRE_SPECIAL, false,
+				"Whether this golem can light creatures on fire");
+		MELON.addKey(EntityMelonGolem.ALLOW_SPECIAL, true,
+				"Whether this golem can plant flowers randomly");
+		MELON.addKey(EntityMelonGolem.FREQUENCY, 240, 1, 24000,
+				"Average number of ticks between planting flowers");
+		MUSHROOM.addKey(EntityMushroomGolem.ALLOW_SPECIAL, true,
+				"Whether this golem can plant mushrooms randomly");
+		MUSHROOM.addKey(EntityMushroomGolem.FREQUENCY, 420, 1, 24000,
+				"Average number of ticks between planting mushrooms");
+		NETHERBRICK.addKey(EntityNetherBrickGolem.ALLOW_FIRE_SPECIAL, true,
+				"Whether this golem can light creatures on fire");
+		NETHERWART.addKey(EntityNetherWartGolem.ALLOW_SPECIAL, true,
+				"Whether this golem can plant netherwart randomly");
+		NETHERWART.addKey(EntityNetherWartGolem.FREQUENCY, 880, 1, 24000,
+				"Average number of ticks between planting nether wart");
+		NETHERWART.addKey(EntityNetherWartGolem.DROP_NETHERWART_BLOCK, true,
+				"When true, this golem drops 0-4 netherwart blocks. When false, drops 1-9 netherwart");
+		REDSTONE.addKey(EntityRedstoneGolem.ALLOW_SPECIAL, true,
+				"Whether this golem can power nearby redstone");
+		REDSTONE.addKey(EntityRedstoneGolem.POWER, 15, 0, 15,
+				"Level of redstone power emitted by this golem");
+		SLIME.addKey(EntitySlimeGolem.ALLOW_SPECIAL, true,
+				"Whether this golem can apply extra knockback when attacking");
+		SLIME.addKey(EntitySlimeGolem.KNOCKBACK, 2.0012F, 0.001F, 10.0F,
+				"How powerful the Slime Golem attack is (Higher Value = Further Knockback)");
 		SPONGE.addKey(EntitySpongeGolem.ALLOW_SPECIAL, true, "Whether this golem can absorb water");
-		SPONGE.addKey(EntitySpongeGolem.PARTICLES, true, "Whether this golem should always drip water");
-		SPONGE.addKey(EntitySpongeGolem.RANGE, 4, 2, 8, "Radial distance at which this golem can absorb water (Warning: larger values cause lag)");
-		SPONGE.addKey(EntitySpongeGolem.INTERVAL, 80, 1, 24000, "Number of ticks between each water-check; increase to reduce lag");
-		STAINED_CLAY.addKey(EntityStainedClayGolem.DROP_META, -1, -1, 15, "The metadata of stained clay dropped by this golem. Set to -1 to let it be based on current texture");
-		STAINED_GLASS.addKey(EntityStainedGlassGolem.DROP_META, -1, -1, 15, "The metadata of stained glass dropped by this golem. Set to -1 to let it be based on current texture");
-		TNT.addKey(EntityTNTGolem.ALLOW_SPECIAL, true, "Whether this golem can explode when fighting or dying");
+		SPONGE.addKey(EntitySpongeGolem.PARTICLES, true,
+				"Whether this golem should always drip water");
+		SPONGE.addKey(EntitySpongeGolem.RANGE, 4, 2, 8,
+				"Radial distance at which this golem can absorb water (Warning: larger values cause lag)");
+		SPONGE.addKey(EntitySpongeGolem.INTERVAL, 80, 1, 24000,
+				"Number of ticks between each water-check; increase to reduce lag");
+		STAINED_CLAY.addKey(EntityStainedClayGolem.DROP_META, -1, -1, 15,
+				"The metadata of stained clay dropped by this golem. Set to -1 to let it be based on current texture");
+		STAINED_GLASS.addKey(EntityStainedGlassGolem.DROP_META, -1, -1, 15,
+				"The metadata of stained glass dropped by this golem. Set to -1 to let it be based on current texture");
+		TNT.addKey(EntityTNTGolem.ALLOW_SPECIAL, true,
+				"Whether this golem can explode when fighting or dying");
 	}
 
-	private static void loadOther(Configuration config)
-	{
-		bedrockGolemCreativeOnly = config.getBoolean("Bedrock Golem Creative Only", CATEGORY_OTHER, true, 
+	private static void loadOther(final Configuration config) {
+		bedrockGolemCreativeOnly = config.getBoolean("Bedrock Golem Creative Only", CATEGORY_OTHER,
+				true,
 				"When true, only players in creative mode can use a Bedrock Golem spawn item");
-		itemGolemHeadHasGlint = config.getBoolean("Golem Head Has Glint", CATEGORY_OTHER, true, 
+		itemGolemHeadHasGlint = config.getBoolean("Golem Head Has Glint", CATEGORY_OTHER, true,
 				"Whether the Golem Head item always has 'enchanted' effect");
 	}
 }

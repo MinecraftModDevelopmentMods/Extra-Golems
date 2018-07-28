@@ -14,55 +14,47 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityPrismarineGolem extends GolemBase 
-{			
-	public EntityPrismarineGolem(World world) 
-	{
+public final class EntityPrismarineGolem extends GolemBase {
+
+	public EntityPrismarineGolem(final World world) {
 		super(world, Config.PRISMARINE.getBaseAttack(), Blocks.PRISMARINE);
 	}
-	
+
 	@Override
-	protected ResourceLocation applyTexture()
-	{
-		return this.makeGolemTexture("prismarine");
+	protected ResourceLocation applyTexture() {
+		return makeGolemTexture("prismarine");
 	}
-	
+
 	/**
-	 * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
-	 * use this to react to sunlight and start to burn.
+	 * Called frequently so the entity can update its state every tick as required. For example,
+	 * zombies and skeletons use this to react to sunlight and start to burn.
 	 */
 	@Override
-	public void onLivingUpdate()
-	{
+	public void onLivingUpdate() {
 		super.onLivingUpdate();
-		if(this.isInWater())
-		{
+		if (this.isInWater()) {
 			this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.50D);
-		}
-		else
-		{
+		} else {
 			this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.24D);
 		}
 	}
-		
+
 	@Override
-	protected void applyAttributes() 
-	{
-	 	this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Config.PRISMARINE.getMaxHealth());
-	  	this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.24D);
+	protected void applyAttributes() {
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
+				.setBaseValue(Config.PRISMARINE.getMaxHealth());
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.24D);
 	}
-	
+
 	@Override
-	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel)	
-	{
-		int size = 6 + this.rand.nextInt(4 + lootingLevel * 2);
+	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
+		final int size = 6 + this.rand.nextInt(4 + lootingLevel * 2);
 		this.addDrop(dropList, new ItemStack(Items.PRISMARINE_SHARD, size), 100);
 		this.addDrop(dropList, Items.PRISMARINE_CRYSTALS, 0, 1, 3, 6 + lootingLevel * 5);
 	}
 
 	@Override
-	public SoundEvent getGolemSound() 
-	{
+	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_STONE_STEP;
 	}
 }

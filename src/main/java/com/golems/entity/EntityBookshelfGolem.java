@@ -16,57 +16,53 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityBookshelfGolem extends GolemBase 
-{		
+public final class EntityBookshelfGolem extends GolemBase {
+
 	public static final String ALLOW_SPECIAL = "Allow Special: Potion Effects";
-	private Potion[] goodEffects = 
-		{MobEffects.FIRE_RESISTANCE,MobEffects.REGENERATION,MobEffects.STRENGTH,MobEffects.ABSORPTION,MobEffects.LUCK,
-		 MobEffects.INSTANT_HEALTH,MobEffects.RESISTANCE,MobEffects.INVISIBILITY,MobEffects.SPEED,MobEffects.JUMP_BOOST};
-	
-	public EntityBookshelfGolem(World world) 
-	{
+	private static final Potion[] goodEffects = { MobEffects.FIRE_RESISTANCE, MobEffects.REGENERATION,
+			MobEffects.STRENGTH, MobEffects.ABSORPTION, MobEffects.LUCK, MobEffects.INSTANT_HEALTH,
+			MobEffects.RESISTANCE, MobEffects.INVISIBILITY, MobEffects.SPEED,
+			MobEffects.JUMP_BOOST };
+
+	public EntityBookshelfGolem(final World world) {
 		super(world, Config.BOOKSHELF.getBaseAttack(), Blocks.BOOKSHELF);
 	}
-	
-	protected ResourceLocation applyTexture()
-	{
-		return this.makeGolemTexture("books");
+
+	protected ResourceLocation applyTexture() {
+		return makeGolemTexture("books");
 	}
-	
+
 	/**
-	 * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
-	 * use this to react to sunlight and start to burn.
+	 * Called frequently so the entity can update its state every tick as required. For example,
+	 * zombies and skeletons use this to react to sunlight and start to burn.
 	 */
 	@Override
-	public void onLivingUpdate()
-	{
-	    super.onLivingUpdate();
+	public void onLivingUpdate() {
+		super.onLivingUpdate();
 
-	    if(Config.BOOKSHELF.getBoolean(ALLOW_SPECIAL) && this.getActivePotionEffects().isEmpty() && rand.nextInt(40) == 0)
-	    {
-	    	Potion potion = goodEffects[rand.nextInt(goodEffects.length)];
-	    	int len = potion.isInstant() ? 1 : 200 + 100 * (1 + rand.nextInt(5));
-	    	this.addPotionEffect(new PotionEffect(potion, len, rand.nextInt(2)));
-	    }
+		if (Config.BOOKSHELF.getBoolean(ALLOW_SPECIAL) && this.getActivePotionEffects().isEmpty()
+				&& rand.nextInt(40) == 0) {
+			final Potion potion = goodEffects[rand.nextInt(goodEffects.length)];
+			final int len = potion.isInstant() ? 1 : 200 + 100 * (1 + rand.nextInt(5));
+			this.addPotionEffect(new PotionEffect(potion, len, rand.nextInt(2)));
+		}
 	}
-		
+
 	@Override
-	protected void applyAttributes() 
-	{
-	 	this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Config.BOOKSHELF.getMaxHealth());
-	  	this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.29D);
+	protected void applyAttributes() {
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
+				.setBaseValue(Config.BOOKSHELF.getMaxHealth());
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.29D);
 	}
-	
+
 	@Override
-	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel)
-	{
+	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
 		this.addDrop(dropList, Items.BOOK, 0, 4, 8 + lootingLevel, 100);
 		this.addDrop(dropList, Blocks.PLANKS, 0, 3, 12, 75);
 	}
 
 	@Override
-	public SoundEvent getGolemSound() 
-	{
+	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_WOOD_STEP;
 	}
 }

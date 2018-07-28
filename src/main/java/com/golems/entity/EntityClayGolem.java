@@ -13,35 +13,31 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityClayGolem extends GolemBase 
-{			
-	public EntityClayGolem(World world) 
-	{
+public final class EntityClayGolem extends GolemBase {
+
+	public EntityClayGolem(final World world) {
 		super(world, Config.CLAY.getBaseAttack(), Blocks.CLAY);
-	}
-	
-	@Override
-	protected ResourceLocation applyTexture()
-	{
-		return this.makeGolemTexture("clay");
 	}
 
 	@Override
-	protected void applyAttributes() 
-	{
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Config.CLAY.getMaxHealth());
+	protected ResourceLocation applyTexture() {
+		return makeGolemTexture("clay");
+	}
+
+	@Override
+	protected void applyAttributes() {
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
+				.setBaseValue(Config.CLAY.getMaxHealth());
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.22D);
 	}
 
 	@Override
-	public void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit, int lootingLevel)
-	{
+	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
 		this.addDrop(dropList, Items.CLAY_BALL, 0, 8, 10 + lootingLevel, 100);
 	}
 
 	@Override
-	public SoundEvent getGolemSound() 
-	{
+	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_GRAVEL_STEP;
 	}
 }

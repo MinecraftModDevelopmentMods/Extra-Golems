@@ -11,58 +11,67 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockPowerProvider extends BlockUtility implements ITileEntityProvider 
-{	
+public class BlockPowerProvider extends BlockUtility implements ITileEntityProvider {
+
 	public static final PropertyInteger POWER = PropertyInteger.create("power", 0, 15);
-	
-	public BlockPowerProvider()
-    {
-        super();
-        setDefaultState(blockState.getBaseState().withProperty(POWER, Integer.valueOf(0)));  
-    }
-   
-    @Override
-    public IBlockState getStateFromMeta(int meta)
-    {
-        return getDefaultState().withProperty(POWER, meta % 16);
-    }
 
-    @Override
-    public int getMetaFromState(IBlockState state)
-    {
-        return state.getValue(POWER).intValue();
-    }
+	public BlockPowerProvider() {
+		super();
+		setDefaultState(blockState.getBaseState().withProperty(POWER, Integer.valueOf(0)));
+	}
 
-    @Override
-    protected BlockStateContainer createBlockState()
-    {
-        return new BlockStateContainer(this, new IProperty[] { POWER });
-    }
+	/**
+	 * @deprecated
+	 */
+	@Deprecated
+	@Override
+	public IBlockState getStateFromMeta(final int meta) {
+		return getDefaultState().withProperty(POWER, meta % 16);
+	}
 
-    /**
-     * Can this block provide power. Only wire currently seems to have this change based on its state.
-     */
-    @Override
-    public boolean canProvidePower(IBlockState state)
-    {
-        return true;
-    }
+	@Override
+	public int getMetaFromState(final IBlockState state) {
+		return state.getValue(POWER).intValue();
+	}
 
-    @Override
-    public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
-    {
-        return this.getMetaFromState(blockState);
-    }
-    
-    @Override
-    public int getStrongPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
-    {
-        return this.getMetaFromState(blockState);
-    }
+	@Override
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, (IProperty[]) new IProperty[] { POWER });
+	}
 
-    @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta)
-    {
-        return new TileEntityMovingPowerSource();
-    }
+	/**
+	 * Can this block provide power. Only wire currently seems to have this change based on its
+	 * state.
+	 * @deprecated
+	 */
+	@Deprecated
+	@Override
+	public boolean canProvidePower(final IBlockState state) {
+		return true;
+	}
+
+	/**
+	 * @deprecated
+	 */
+	@Deprecated
+	@Override
+	public int getWeakPower(final IBlockState blockState, final IBlockAccess blockAccess, final BlockPos pos,
+			final EnumFacing side) {
+		return this.getMetaFromState(blockState);
+	}
+
+	/**
+	 * @deprecated
+	 */
+	@Deprecated
+	@Override
+	public int getStrongPower(final IBlockState blockState, final IBlockAccess blockAccess, final BlockPos pos,
+			final EnumFacing side) {
+		return this.getMetaFromState(blockState);
+	}
+
+	@Override
+	public TileEntity createNewTileEntity(final World worldIn, final int meta) {
+		return new TileEntityMovingPowerSource();
+	}
 }

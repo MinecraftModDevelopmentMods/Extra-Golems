@@ -220,7 +220,7 @@ repositories {
 }
 
 dependencies {
-  deobfCompile "mezz.jei:jei_${mc_version}:${jei_version}"
+  runtime "mezz.jei:jei_${mc_version}:${jei_version}"
 
   deobfProvided "mcjty.theoneprobe:TheOneProbe-${mc_version}:${mc_version}-${top_version}:api"
   runtime "mcjty.theoneprobe:TheOneProbe-${mc_version}:${mc_version}-${top_version}"
