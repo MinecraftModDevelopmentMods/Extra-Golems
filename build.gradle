@@ -225,7 +225,10 @@ dependencies {
   deobfProvided "mcjty.theoneprobe:TheOneProbe-${mc_version}:${mc_version}-${top_version}:api"
   runtime "mcjty.theoneprobe:TheOneProbe-${mc_version}:${mc_version}-${top_version}"
 
-  deobfCompile ("mcp.mobius.waila:Hwyla:${hwyla_version}") {
+  deobfProvided ("mcp.mobius.waila:Hwyla:${hwyla_version}") {
+    exclude group: 'mezz.jei'
+  }
+  runtime ("mcp.mobius.waila:Hwyla:${hwyla_version}") {
     exclude group: 'mezz.jei'
   }
 }
