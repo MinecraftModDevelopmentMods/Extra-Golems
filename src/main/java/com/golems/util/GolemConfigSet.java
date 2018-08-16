@@ -1,7 +1,6 @@
 package com.golems.util;
 
 import com.golems.main.ExtraGolems;
-
 import gnu.trove.map.TObjectByteMap;
 import gnu.trove.map.TObjectFloatMap;
 import gnu.trove.map.TObjectIntMap;
@@ -14,7 +13,7 @@ import net.minecraftforge.common.config.Configuration;
  * This class loads several values from the config for a specific golem, including spawn
  * permissions, health, and attack. It can load any number of fields as a boolean, int, or float.
  **/
-public final class GolemConfigSet {
+public class GolemConfigSet {
 
 	private static final String GOLEM_PERMS = "Allow Golem";
 	private static final String GOLEM_HEALTH = "Golem Health";
