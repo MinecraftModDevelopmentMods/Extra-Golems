@@ -1,33 +1,13 @@
 package com.golems.integration;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import com.golems.entity.EntityBedrockGolem;
-import com.golems.entity.EntityBookshelfGolem;
-import com.golems.entity.EntityCoalGolem;
-import com.golems.entity.EntityCraftingGolem;
-import com.golems.entity.EntityEndstoneGolem;
-import com.golems.entity.EntityIceGolem;
-import com.golems.entity.EntityLapisGolem;
-import com.golems.entity.EntityLeafGolem;
-import com.golems.entity.EntityMagmaGolem;
-import com.golems.entity.EntityMelonGolem;
-import com.golems.entity.EntityMushroomGolem;
-import com.golems.entity.EntityNetherBrickGolem;
-import com.golems.entity.EntityNetherWartGolem;
-import com.golems.entity.EntityRedstoneGolem;
-import com.golems.entity.EntitySlimeGolem;
-import com.golems.entity.EntitySpongeGolem;
-import com.golems.entity.EntityTNTGolem;
-import com.golems.entity.GolemBase;
-import com.golems.entity.GolemLightProvider;
-import com.golems.entity.GolemMultiTextured;
+import com.golems.entity.*;
 import com.golems.main.Config;
-
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.text.TextFormatting;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Base class to get in-game information about types of golems. Currently used for Waila and The One
@@ -56,27 +36,24 @@ public abstract class GolemDescriptionManager {
 	 *
 	 * @return a LinkedList containing all descriptions that apply to the passed golem
 	 **/
+	@SuppressWarnings("WeakerAccess")
 	public List<String> getEntityDescription(final GolemBase golem) {
-		final List<String> list = new LinkedList<>();
+		List<String> list = new LinkedList<>();
 		if (showAttack) {
-			final float attack = golem.getBaseAttackDamage();
-			final String sAttack = TextFormatting.GRAY + trans("entitytip.attack") + " : "
-					+ TextFormatting.WHITE + attack;
-			list.add(sAttack);
+			list.add(TextFormatting.GRAY + trans("entitytip.attack") + " : "
+					+ TextFormatting.WHITE + golem.getBaseAttackDamage());
 		}
 
 		// add right-click-texture to tip if possible
 		if (this.showMultiTexture
 				&& (golem instanceof GolemMultiTextured || golem.doesInteractChangeTexture())) {
-			final String sColor = TextFormatting.BLUE + trans("entitytip.click_change_texture");
-			list.add(sColor);
+			list.add(TextFormatting.BLUE + trans("entitytip.click_change_texture"));
 		}
 
 		// add fire immunity to tip if possible
 		if (this.showFireproof && golem.isImmuneToFire()
 				&& !(golem instanceof EntityBedrockGolem)) {
-			final String sFire = TextFormatting.GOLD + trans("entitytip.is_fireproof");
-			list.add(sFire);
+			list.add(TextFormatting.GOLD + trans("entitytip.is_fireproof"));
 		}
 
 		// add knockback resist to tip if possible
@@ -89,153 +66,7 @@ public abstract class GolemDescriptionManager {
 
 		// add special information
 		if (showSpecial) {
-			// add glowing to tip if possible
-			if (golem instanceof GolemLightProvider) {
-				final String sLight = TextFormatting.YELLOW + trans("entitytip.lights_area");
-				list.add(sLight);
-			}
-
-			/////// BEGIN SPECIFIC CLASS CHECKS ////////
-
-			// add indestructible to tip if possible
-			if (golem.getClass() == EntityBedrockGolem.class) {
-				final String sIndestructible = TextFormatting.WHITE + "" + TextFormatting.BOLD
-						+ trans("entitytip.indestructible");
-				list.add(sIndestructible);
-			}
-
-			// add potion effect to tip if possible
-			if (golem.getClass() == EntityBookshelfGolem.class) {
-				final String sPotion = TextFormatting.LIGHT_PURPLE
-						+ trans("entitytip.grants_self_potion_effects");
-				if (Config.BOOKSHELF.getBoolean(EntityBookshelfGolem.ALLOW_SPECIAL)) {
-					list.add(sPotion);
-				}
-			}
-
-			// add blinding effect to tip if possible
-			if (golem.getClass() == EntityCoalGolem.class) {
-				final String sPotion = TextFormatting.GRAY + trans("entitytip.blinds_creatures");
-				if (Config.COAL.getBoolean(EntityCoalGolem.ALLOW_SPECIAL)) {
-					list.add(sPotion);
-				}
-			}
-
-			// add interaction to tip if possible
-			if (golem.getClass() == EntityCraftingGolem.class) {
-				final String sCraft = TextFormatting.BLUE + trans("entitytip.click_open_crafting");
-				list.add(sCraft);
-			}
-
-			// add teleporting to tip if possible
-			if (golem.getClass() == EntityEndstoneGolem.class) {
-				final String sTeleport = TextFormatting.DARK_AQUA + trans("entitytip.can_teleport");
-				if (Config.ENDSTONE.getBoolean(EntityEndstoneGolem.ALLOW_SPECIAL)) {
-					list.add(sTeleport);
-				}
-			}
-
-			// add freezing to tip if possible
-			if (golem.getClass() == EntityIceGolem.class) {
-				final String sFreeze = TextFormatting.AQUA + trans("entitytip.freezes_blocks");
-				if (Config.ICE.getBoolean(EntityIceGolem.ALLOW_SPECIAL)) {
-					list.add(sFreeze);
-				}
-			}
-
-			// add potion effects to tip if possible
-			if (golem.getClass() == EntityLapisGolem.class) {
-				final String sPotion = TextFormatting.LIGHT_PURPLE
-						+ trans("entitytip.attacks_use_potion_effects");
-				if (Config.LAPIS.getBoolean(EntityLapisGolem.ALLOW_SPECIAL)) {
-					list.add(sPotion);
-				}
-			}
-
-			// add potion effects to tip if possible
-			if (golem.getClass() == EntityLeafGolem.class) {
-				final String sPotion = TextFormatting.DARK_GREEN + trans("entitytip.has_regen_1");
-				if (Config.LEAF.getBoolean(EntityLeafGolem.ALLOW_SPECIAL)) {
-					list.add(sPotion);
-				}
-			}
-
-			// add fire to tip if possible
-			if (golem.getClass() == EntityMagmaGolem.class) {
-				final String sLava = TextFormatting.RED
-						+ trans("entitytip.slowly_melts", trans("tile.stonebrick.name"));
-				final String sFire = TextFormatting.RED + trans("entitytip.lights_mobs_on_fire");
-				if (Config.MAGMA.getBoolean(EntityMagmaGolem.ALLOW_LAVA_SPECIAL)) {
-					list.add(sLava);
-				}
-				if (Config.MAGMA.getBoolean(EntityMagmaGolem.ALLOW_FIRE_SPECIAL)) {
-					list.add(sFire);
-				}
-			}
-
-			// add planting to tip if possible
-			if (golem.getClass() == EntityMelonGolem.class) {
-				final String sPlant = TextFormatting.GREEN + trans("entitytip.plants_flowers");
-				if (Config.MELON.getBoolean(EntityMelonGolem.ALLOW_SPECIAL)) {
-					list.add(sPlant);
-				}
-			}
-
-			// add planting to tip if possible
-			if (golem.getClass() == EntityMushroomGolem.class) {
-				final String sPlant = TextFormatting.DARK_GREEN + trans("entitytip.plants_shrooms");
-				if (Config.MUSHROOM.getBoolean(EntityMushroomGolem.ALLOW_SPECIAL)) {
-					list.add(sPlant);
-				}
-			}
-
-			// add netherbrick specials to tip if possible
-			if (golem.getClass() == EntityNetherBrickGolem.class) {
-				final String sFire = TextFormatting.RED + trans("entitytip.lights_mobs_on_fire");
-				if (Config.NETHERBRICK.getBoolean(EntityNetherBrickGolem.ALLOW_FIRE_SPECIAL)) {
-					list.add(sFire);
-				}
-			}
-
-			// add planting to tip if possible
-			if (golem.getClass() == EntityNetherWartGolem.class) {
-				final String sPlant = TextFormatting.RED + trans("entitytip.plants_warts");
-				if (Config.NETHERWART.getBoolean(EntityNetherWartGolem.ALLOW_SPECIAL)) {
-					list.add(sPlant);
-				}
-			}
-
-			// add redstone power to tip if possible
-			if (golem.getClass() == EntityRedstoneGolem.class) {
-				final String sRed = TextFormatting.RED + trans("entitytip.emits_redstone_signal");
-				if (Config.REDSTONE.getBoolean(EntityRedstoneGolem.ALLOW_SPECIAL)) {
-					list.add(sRed);
-				}
-			}
-
-			// add knockback to tip if possible
-			if (golem.getClass() == EntitySlimeGolem.class) {
-				final String sKnock = TextFormatting.GREEN + trans("entitytip.has_knockback");
-				if (Config.SLIME.getBoolean(EntitySlimeGolem.ALLOW_SPECIAL)) {
-					list.add(sKnock);
-				}
-			}
-
-			// add water-drying to tip if possible
-			if (golem.getClass() == EntitySpongeGolem.class) {
-				final String sWater = TextFormatting.YELLOW + trans("entitytip.absorbs_water");
-				if (Config.SPONGE.getBoolean(EntitySpongeGolem.ALLOW_SPECIAL)) {
-					list.add(sWater);
-				}
-			}
-
-			// add boom to tip if possible
-			if (golem.getClass() == EntityTNTGolem.class) {
-				final String sBoom = TextFormatting.RED + trans("entitytip.explodes");
-				if (Config.TNT.getBoolean(EntityTNTGolem.ALLOW_SPECIAL)) {
-					list.add(sBoom);
-				}
-			}
+			list = addSpecial(list, golem);
 		}
 		return list;
 	}
@@ -246,4 +77,111 @@ public abstract class GolemDescriptionManager {
 	protected String trans(final String s, final Object... strings) {
 		return I18n.format(s, strings);
 	}
+
+	protected List<String> addSpecial(List<String> list, GolemBase golem) {
+
+		// add glowing to tip if possible
+		if (golem instanceof GolemLightProvider) {
+			list.add(TextFormatting.YELLOW + trans("entitytip.lights_area"));
+		}
+
+		/////// BEGIN SPECIFIC CLASS CHECKS ////////
+
+		// add indestructible to tip if possible
+		if (golem.getClass() == EntityBedrockGolem.class) {
+			list.add(TextFormatting.WHITE + "" + TextFormatting.BOLD
+					+ trans("entitytip.indestructible"));
+		}
+
+		// add potion effect to tip if possible
+		else if (golem.getClass() == EntityBookshelfGolem.class && Config.BOOKSHELF.getBoolean(EntityBookshelfGolem.ALLOW_SPECIAL)) {
+			list.add(TextFormatting.LIGHT_PURPLE + trans("entitytip.grants_self_potion_effects"));
+		}
+
+		// add blinding effect to tip if possible
+		else if (golem.getClass() == EntityCoalGolem.class && Config.COAL.getBoolean(EntityCoalGolem.ALLOW_SPECIAL)) {
+			list.add(TextFormatting.GRAY + trans("entitytip.blinds_creatures"));
+		}
+
+		// add interaction to tip if possible
+		else if (golem.getClass() == EntityCraftingGolem.class && Config.ENDSTONE.getBoolean(EntityEndstoneGolem.ALLOW_SPECIAL)) {
+			list.add(TextFormatting.BLUE + trans("entitytip.click_open_crafting"));
+		}
+
+		// add teleporting to tip if possible
+		else if (golem.getClass() == EntityEndstoneGolem.class && Config.ENDSTONE.getBoolean(EntityEndstoneGolem.ALLOW_SPECIAL)) {
+			list.add(TextFormatting.DARK_AQUA + trans("entitytip.can_teleport"));
+
+		}
+
+		// add freezing to tip if possible
+		else if (golem.getClass() == EntityIceGolem.class && Config.ICE.getBoolean(EntityIceGolem.ALLOW_SPECIAL)) {
+			list.add(TextFormatting.AQUA + trans("entitytip.freezes_blocks"));
+		}
+
+		// add potion effects to tip if possible
+		else if (golem.getClass() == EntityLapisGolem.class && Config.LAPIS.getBoolean(EntityLapisGolem.ALLOW_SPECIAL)) {
+			list.add( TextFormatting.LIGHT_PURPLE
+					+ trans("entitytip.attacks_use_potion_effects"));
+		}
+
+		// add potion effects to tip if possible
+		else if (golem.getClass() == EntityLeafGolem.class && Config.LEAF.getBoolean(EntityLeafGolem.ALLOW_SPECIAL)) {
+			list.add(TextFormatting.DARK_GREEN + trans("entitytip.has_regen_1"));
+		}
+
+		// add fire to tip if possible
+		else if (golem.getClass() == EntityMagmaGolem.class) {
+			if (Config.MAGMA.getBoolean(EntityMagmaGolem.ALLOW_LAVA_SPECIAL)) {
+				list.add(TextFormatting.RED
+						+ trans("entitytip.slowly_melts", trans("tile.stonebrick.name")));
+			}
+			if (Config.MAGMA.getBoolean(EntityMagmaGolem.ALLOW_FIRE_SPECIAL)) {
+				list.add(TextFormatting.RED + trans("entitytip.lights_mobs_on_fire"));
+			}
+		}
+
+		// add planting to tip if possible
+		else if (golem.getClass() == EntityMelonGolem.class && Config.MELON.getBoolean(EntityMelonGolem.ALLOW_SPECIAL)) {
+			list.add(TextFormatting.GREEN + trans("entitytip.plants_flowers"));
+		}
+
+		// add planting to tip if possible
+		else if (golem.getClass() == EntityMushroomGolem.class && Config.MUSHROOM.getBoolean(EntityMushroomGolem.ALLOW_SPECIAL)) {
+			list.add(TextFormatting.DARK_GREEN + trans("entitytip.plants_shrooms"));
+		}
+
+		// add netherbrick specials to tip if possible
+		else if (golem.getClass() == EntityNetherBrickGolem.class && Config.NETHERBRICK.getBoolean(EntityNetherWartGolem.ALLOW_SPECIAL)) {
+			list.add(TextFormatting.RED + trans("entitytip.lights_mobs_on_fire"));
+		}
+
+		// add planting to tip if possible
+		else if (golem.getClass() == EntityNetherWartGolem.class && Config.NETHERWART.getBoolean(EntityNetherWartGolem.ALLOW_SPECIAL)) {
+			list.add(TextFormatting.RED + trans("entitytip.plants_warts"));
+
+		}
+
+		// add redstone power to tip if possible
+		else if (golem.getClass() == EntityRedstoneGolem.class && Config.REDSTONE.getBoolean(EntityRedstoneGolem.ALLOW_SPECIAL)) {
+			list.add(TextFormatting.RED + trans("entitytip.emits_redstone_signal"));
+		}
+
+		// add knockback to tip if possible
+		else if (golem.getClass() == EntitySlimeGolem.class && Config.SLIME.getBoolean(EntitySlimeGolem.ALLOW_SPECIAL)) {
+			list.add(TextFormatting.GREEN + trans("entitytip.has_knockback"));
+		}
+
+		// add water-drying to tip if possible
+		else if (golem.getClass() == EntitySpongeGolem.class && Config.SPONGE.getBoolean(EntitySpongeGolem.ALLOW_SPECIAL)) {
+			list.add(TextFormatting.YELLOW + trans("entitytip.absorbs_water"));
+		}
+
+		// add boom to tip if possible
+		else if (golem.getClass() == EntityTNTGolem.class && Config.TNT.getBoolean(EntityTNTGolem.ALLOW_SPECIAL)) {
+			list.add(TextFormatting.RED + trans("entitytip.explodes"));
+		}
+		return list;
+	}
+
 }
