@@ -141,10 +141,10 @@ public class CommonProxy {
 		}.setRegistryName(GolemItems.golemHead.getRegistryName()));
 
 		event.getRegistry()
-				.register(new ItemBedrockGolem().setUnlocalizedName("spawn_bedrock_golem")
+				.register(new ItemBedrockGolem().setTranslationKey("spawn_bedrock_golem")
 						.setRegistryName(ExtraGolems.MODID, "spawn_bedrock_golem"));
 
-		event.getRegistry().register(new ItemGolemPaper().setUnlocalizedName("golem_paper")
+		event.getRegistry().register(new ItemGolemPaper().setTranslationKey("golem_paper")
 				.setRegistryName(ExtraGolems.MODID, "golem_paper"));
 	}
 
@@ -153,11 +153,11 @@ public class CommonProxy {
 	public static void registerBlocks(final RegistryEvent.Register<Block> event) {
 		// TODO: Clean up
 		event.getRegistry().registerAll(
-				new BlockGolemHead().setUnlocalizedName("golem_head")
+				new BlockGolemHead().setTranslationKey("golem_head")
 						.setRegistryName(ExtraGolems.MODID, "golem_head"),
-				new BlockLightProvider().setUnlocalizedName("light_provider_full")
+				new BlockLightProvider().setTranslationKey("light_provider_full")
 						.setRegistryName(ExtraGolems.MODID, "light_provider_full"),
-				new BlockPowerProvider().setUnlocalizedName("power_provider_all")
+				new BlockPowerProvider().setTranslationKey("power_provider_all")
 						.setRegistryName(ExtraGolems.MODID, "power_provider_all"));
 		TileEntity.register(ExtraGolems.MODID + "_TileEntityMovingLightSource",
 				TileEntityMovingLightSource.class);
