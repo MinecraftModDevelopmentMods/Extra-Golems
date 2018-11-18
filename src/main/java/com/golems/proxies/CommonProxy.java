@@ -91,7 +91,7 @@ public class CommonProxy {
 		register(EntityEmeraldGolem.class, "golem_emerald");
 		register(EntityEndstoneGolem.class, "golem_end_stone");
 		register(EntityGlassGolem.class, "golem_glass");
-		register(EntityGlowstoneGolem.class, "golem_glowstone");
+//		register(EntityGlowstoneGolem.class, "golem_glowstone");
 		register(EntityGoldGolem.class, "golem_gold");
 		register(EntityHardenedClayGolem.class, "golem_hardened_clay");
 		register(EntityIceGolem.class, "golem_ice");
@@ -106,7 +106,7 @@ public class CommonProxy {
 		register(EntityPrismarineGolem.class, "golem_prismarine");
 		register(EntityQuartzGolem.class, "golem_quartz");
 		register(EntityRedSandstoneGolem.class, "golem_red_sandstone");
-		register(EntityRedstoneGolem.class, "golem_redstone");
+//		register(EntityRedstoneGolem.class, "golem_redstone");
 		register(EntitySandstoneGolem.class, "golem_sandstone");
 		register(EntitySeaLanternGolem.class, "golem_sea_lantern");
 		register(EntitySlimeGolem.class, "golem_slime");
