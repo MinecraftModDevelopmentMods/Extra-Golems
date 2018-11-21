@@ -12,7 +12,6 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
@@ -113,7 +112,7 @@ public class CommonProxy {
 		// TODO: Clean up
 		event.getRegistry().registerAll(
 				new BlockGolemHead().setTranslationKey("golem_head")
-						.setRegistryName(ExtraGolems.MODID, "golem_head");
+						.setRegistryName(ExtraGolems.MODID, "golem_head"));
 	}
 
 }
