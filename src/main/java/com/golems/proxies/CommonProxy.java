@@ -12,6 +12,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
@@ -99,10 +100,10 @@ public class CommonProxy {
 		}.setRegistryName(GolemItems.golemHead.getRegistryName()));
 
 		event.getRegistry()
-				.register(new ItemBedrockGolem().setUnlocalizedName("spawn_bedrock_golem")
+				.register(new ItemBedrockGolem().setTranslationKey("spawn_bedrock_golem")
 						.setRegistryName(ExtraGolems.MODID, "spawn_bedrock_golem"));
 
-		event.getRegistry().register(new ItemGolemPaper().setUnlocalizedName("golem_paper")
+		event.getRegistry().register(new ItemGolemPaper().setTranslationKey("golem_paper")
 				.setRegistryName(ExtraGolems.MODID, "golem_paper"));
 	}
 
@@ -111,8 +112,8 @@ public class CommonProxy {
 	public static void registerBlocks(final RegistryEvent.Register<Block> event) {
 		// TODO: Clean up
 		event.getRegistry().registerAll(
-				new BlockGolemHead().setUnlocalizedName("golem_head")
-						.setRegistryName(ExtraGolems.MODID, "golem_head"));
+				new BlockGolemHead().setTranslationKey("golem_head")
+						.setRegistryName(ExtraGolems.MODID, "golem_head");
 	}
 
 }
