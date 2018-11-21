@@ -1,59 +1,17 @@
 package com.golems.proxies;
 
 import com.golems.blocks.BlockGolemHead;
-import com.golems.blocks.BlockLightProvider;
-import com.golems.blocks.BlockPowerProvider;
-import com.golems.blocks.TileEntityMovingLightSource;
-import com.golems.blocks.TileEntityMovingPowerSource;
-import com.golems.entity.EntityBedrockGolem;
-import com.golems.entity.EntityBoneGolem;
-import com.golems.entity.EntityBookshelfGolem;
-import com.golems.entity.EntityClayGolem;
-import com.golems.entity.EntityCoalGolem;
-import com.golems.entity.EntityCraftingGolem;
-import com.golems.entity.EntityDiamondGolem;
-import com.golems.entity.EntityEmeraldGolem;
-import com.golems.entity.EntityEndstoneGolem;
-import com.golems.entity.EntityGlassGolem;
-import com.golems.entity.EntityGlowstoneGolem;
-import com.golems.entity.EntityGoldGolem;
-import com.golems.entity.EntityHardenedClayGolem;
-import com.golems.entity.EntityIceGolem;
-import com.golems.entity.EntityLapisGolem;
-import com.golems.entity.EntityLeafGolem;
-import com.golems.entity.EntityMagmaGolem;
-import com.golems.entity.EntityMelonGolem;
-import com.golems.entity.EntityMushroomGolem;
-import com.golems.entity.EntityNetherBrickGolem;
-import com.golems.entity.EntityNetherWartGolem;
-import com.golems.entity.EntityObsidianGolem;
-import com.golems.entity.EntityPrismarineGolem;
-import com.golems.entity.EntityQuartzGolem;
-import com.golems.entity.EntityRedSandstoneGolem;
-import com.golems.entity.EntityRedstoneGolem;
-import com.golems.entity.EntitySandstoneGolem;
-import com.golems.entity.EntitySeaLanternGolem;
-import com.golems.entity.EntitySlimeGolem;
-import com.golems.entity.EntitySpongeGolem;
-import com.golems.entity.EntityStainedClayGolem;
-import com.golems.entity.EntityStainedGlassGolem;
-import com.golems.entity.EntityStrawGolem;
-import com.golems.entity.EntityTNTGolem;
-import com.golems.entity.EntityWoodenGolem;
-import com.golems.entity.EntityWoolGolem;
-import com.golems.entity.GolemBase;
+import com.golems.entity.*;
 import com.golems.events.handlers.GolemCommonEventHandler;
 import com.golems.items.ItemBedrockGolem;
 import com.golems.items.ItemGolemPaper;
 import com.golems.main.Config;
 import com.golems.main.ExtraGolems;
 import com.golems.main.GolemItems;
-
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
@@ -80,7 +38,7 @@ public class CommonProxy {
 	}
 
 	public void registerEntities() {
-		golemEntityCount = 0;
+		CommonProxy.golemEntityCount = 0;
 		register(EntityBedrockGolem.class, "golem_bedrock");
 		register(EntityBoneGolem.class, "golem_bone");
 		register(EntityBookshelfGolem.class, "golem_bookshelf");
@@ -154,15 +112,7 @@ public class CommonProxy {
 		// TODO: Clean up
 		event.getRegistry().registerAll(
 				new BlockGolemHead().setUnlocalizedName("golem_head")
-						.setRegistryName(ExtraGolems.MODID, "golem_head"),
-				new BlockLightProvider().setUnlocalizedName("light_provider_full")
-						.setRegistryName(ExtraGolems.MODID, "light_provider_full"),
-				new BlockPowerProvider().setUnlocalizedName("power_provider_all")
-						.setRegistryName(ExtraGolems.MODID, "power_provider_all"));
-		TileEntity.register(ExtraGolems.MODID + "_TileEntityMovingLightSource",
-				TileEntityMovingLightSource.class);
-		TileEntity.register(ExtraGolems.MODID + "_TileEntityMovingPowerSource",
-				TileEntityMovingPowerSource.class);
+						.setRegistryName(ExtraGolems.MODID, "golem_head"));
 	}
 
 }

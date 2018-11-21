@@ -82,3 +82,4 @@ entitytip.absorbs_water=Absorbs water
 entitytip.explodes=May explode randomly
 entitytip.emits_redstone_signal=Emits redstone signal
 entitytip.click_open_crafting=Right click to open a crafting menu
+entitytip.breathes_underwater=Breathes Underwater

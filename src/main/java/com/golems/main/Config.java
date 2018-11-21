@@ -2,7 +2,6 @@ package com.golems.main;
 
 import com.golems.entity.*;
 import com.golems.util.GolemConfigSet;
-
 import net.minecraftforge.common.config.Configuration;
 
 /** Registers the config settings to adjust aspects of this mod. **/
@@ -94,9 +93,9 @@ public final class Config {
 		PRISMARINE = new GolemConfigSet(config, "Prismarine Golem", 24.0D, 8.0F);
 		QUARTZ = new GolemConfigSet(config, "Quartz Golem", 85.0D, 8.5F);
 		RED_SANDSTONE = new GolemConfigSet(config, "Red Sandstone Golem", 15.0D, 4.0F);
-		REDSTONE = new GolemConfigSet(config, "Redstone Golem", 18.0D, 2.0F);
+		REDSTONE = new GolemConfigSet(config, "Redstone Golem", 18.0D, 4.0F);
 		SANDSTONE = new GolemConfigSet(config, "Sandstone Golem", 15.0D, 4.0F);
-		SEA_LANTERN = new GolemConfigSet(config, "Sea Lantern Golem", 26.0D, 4.0F);
+		SEA_LANTERN = new GolemConfigSet(config, "Sea Lantern Golem", 24.0D, 6.0F);
 		SLIME = new GolemConfigSet(config, "Slime Golem", 85.0D, 2.5F);
 		SPONGE = new GolemConfigSet(config, "Sponge Golem", 20.0D, 1.5F);
 		STAINED_CLAY = new GolemConfigSet(config, "Stained Clay Golem", 26.0D, 3.0F);
@@ -162,10 +161,8 @@ public final class Config {
 		NETHERWART.addKey(EntityNetherWartGolem.DROP_NETHERWART_BLOCK, true,
 				"When true, this golem drops 0-4 netherwart blocks. When false, drops 1-9 netherwart");
 
-		REDSTONE.addKey(EntityRedstoneGolem.ALLOW_SPECIAL, true,
-				"Whether this golem can power nearby redstone");
-		REDSTONE.addKey(EntityRedstoneGolem.POWER, 15, 0, 15,
-				"Level of redstone power emitted by this golem");
+		SEA_LANTERN.addKey(EntitySeaLanternGolem.ALLOW_SPECIAL, true, "When true, this golem" +
+				" cannot drown.");
 
 		SLIME.addKey(EntitySlimeGolem.ALLOW_SPECIAL, true,
 				"Whether this golem can apply extra knockback when attacking");

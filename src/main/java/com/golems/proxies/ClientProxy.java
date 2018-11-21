@@ -1,55 +1,12 @@
 package com.golems.proxies;
 
-import com.golems.blocks.BlockLightProvider;
-import com.golems.blocks.BlockPowerProvider;
-import com.golems.entity.EntityBedrockGolem;
-import com.golems.entity.EntityBoneGolem;
-import com.golems.entity.EntityBookshelfGolem;
-import com.golems.entity.EntityClayGolem;
-import com.golems.entity.EntityCoalGolem;
-import com.golems.entity.EntityCraftingGolem;
-import com.golems.entity.EntityDiamondGolem;
-import com.golems.entity.EntityEmeraldGolem;
-import com.golems.entity.EntityEndstoneGolem;
-import com.golems.entity.EntityGlassGolem;
-import com.golems.entity.EntityGlowstoneGolem;
-import com.golems.entity.EntityGoldGolem;
-import com.golems.entity.EntityHardenedClayGolem;
-import com.golems.entity.EntityIceGolem;
-import com.golems.entity.EntityLapisGolem;
-import com.golems.entity.EntityLeafGolem;
-import com.golems.entity.EntityMagmaGolem;
-import com.golems.entity.EntityMelonGolem;
-import com.golems.entity.EntityMushroomGolem;
-import com.golems.entity.EntityNetherBrickGolem;
-import com.golems.entity.EntityNetherWartGolem;
-import com.golems.entity.EntityObsidianGolem;
-import com.golems.entity.EntityPrismarineGolem;
-import com.golems.entity.EntityQuartzGolem;
-import com.golems.entity.EntityRedSandstoneGolem;
-import com.golems.entity.EntityRedstoneGolem;
-import com.golems.entity.EntitySandstoneGolem;
-import com.golems.entity.EntitySeaLanternGolem;
-import com.golems.entity.EntitySlimeGolem;
-import com.golems.entity.EntitySpongeGolem;
-import com.golems.entity.EntityStainedClayGolem;
-import com.golems.entity.EntityStainedGlassGolem;
-import com.golems.entity.EntityStrawGolem;
-import com.golems.entity.EntityTNTGolem;
-import com.golems.entity.EntityWoodenGolem;
-import com.golems.entity.EntityWoolGolem;
-import com.golems.entity.GolemBase;
-import com.golems.entity.GolemColorized;
+import com.golems.entity.*;
 import com.golems.events.handlers.GolemClientEventHandler;
 import com.golems.main.ExtraGolems;
 import com.golems.main.GolemItems;
 import com.golems.renders.RenderColoredGolem;
 import com.golems.renders.RenderGolem;
-
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.block.statemap.StateMap;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -64,21 +21,9 @@ import net.minecraftforge.fml.relauncher.Side;
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = ExtraGolems.MODID)
 public final class ClientProxy extends CommonProxy {
 
-	public static final IRenderFactory<GolemBase> FACTORY_TEXTURED_GOLEM = new IRenderFactory<GolemBase>() {
+	public static final IRenderFactory<GolemBase> FACTORY_TEXTURED_GOLEM = RenderGolem::new;
 
-		@Override
-		public Render<? super GolemBase> createRenderFor(final RenderManager manager) {
-			return new RenderGolem(manager);
-		}
-	};
-
-	public static final IRenderFactory<GolemColorized> FACTORY_COLORED_GOLEM = new IRenderFactory<GolemColorized>() {
-
-		@Override
-		public Render<? super GolemColorized> createRenderFor(final RenderManager manager) {
-			return new RenderColoredGolem(manager);
-		}
-	};
+	public static final IRenderFactory<GolemColorized> FACTORY_COLORED_GOLEM = RenderColoredGolem::new;
 
 	@Override
 	public void registerEvents() {
@@ -86,7 +31,7 @@ public final class ClientProxy extends CommonProxy {
 		MinecraftForge.EVENT_BUS.register(new GolemClientEventHandler());
 	}
 
-	// TODO: this looks wrong
+
 	@SubscribeEvent
 	public static void registerModels(final ModelRegistryEvent event) {
 		ExtraGolems.proxy.preInitRenders();
@@ -94,11 +39,7 @@ public final class ClientProxy extends CommonProxy {
 
 	@Override
 	public void preInitRenders() {
-		// blocks
-		ModelLoader.setCustomStateMapper(GolemItems.blockPowerSource,
-				new StateMap.Builder().ignore(BlockPowerProvider.POWER).build());
-		ModelLoader.setCustomStateMapper(GolemItems.blockLightSource,
-				new StateMap.Builder().ignore(BlockLightProvider.LIGHT).build());
+
 		// itemblocks
 		registerRender(Item.getItemFromBlock(GolemItems.golemHead),
 				Blocks.PUMPKIN.getRegistryName().toString());

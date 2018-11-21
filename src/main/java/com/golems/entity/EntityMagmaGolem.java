@@ -1,10 +1,7 @@
 package com.golems.entity;
 
-import java.util.List;
-
 import com.golems.main.Config;
 import com.golems.util.WeightedItem;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -17,7 +14,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-public final class EntityMagmaGolem extends GolemLightProvider {
+import java.util.List;
+
+public final class EntityMagmaGolem extends GolemBase {
 
 	public static final String ALLOW_FIRE_SPECIAL = "Allow Special: Burn Enemies";
 	public static final String ALLOW_LAVA_SPECIAL = "Allow Special: Melt Cobblestone";
@@ -28,7 +27,7 @@ public final class EntityMagmaGolem extends GolemLightProvider {
 	private int ticksStandingStill;
 
 	public EntityMagmaGolem(final World world) {
-		super(world, Config.MAGMA.getBaseAttack(), new ItemStack(MAGMA), LightManager.HALF);
+		super(world, Config.MAGMA.getBaseAttack(), new ItemStack(MAGMA));
 		this.setImmuneToFire(true);
 		this.ticksStandingStill = 0;
 		this.stepHeight = 1.0F;
