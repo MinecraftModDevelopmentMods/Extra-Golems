@@ -77,7 +77,7 @@ public final class ClientProxy extends CommonProxy {
 		registerTextured(EntityPrismarineGolem.class);
 		registerTextured(EntityQuartzGolem.class);
 		registerTextured(EntityRedSandstoneGolem.class);
-//		registerTextured(EntityRedstoneGolem.class);
+		registerTextured(EntityRedstoneGolem.class);
 		registerTextured(EntitySandstoneGolem.class);
 		registerTextured(EntitySeaLanternGolem.class);
 		registerTextured(EntitySlimeGolem.class);
