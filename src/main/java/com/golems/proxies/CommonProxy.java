@@ -64,7 +64,7 @@ public class CommonProxy {
 		register(EntityPrismarineGolem.class, "golem_prismarine");
 		register(EntityQuartzGolem.class, "golem_quartz");
 		register(EntityRedSandstoneGolem.class, "golem_red_sandstone");
-//		register(EntityRedstoneGolem.class, "golem_redstone");
+		register(EntityRedstoneGolem.class, "golem_redstone");
 		register(EntitySandstoneGolem.class, "golem_sandstone");
 		register(EntitySeaLanternGolem.class, "golem_sea_lantern");
 		register(EntitySlimeGolem.class, "golem_slime");
