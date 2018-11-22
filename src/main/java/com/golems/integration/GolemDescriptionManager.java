@@ -80,10 +80,7 @@ public abstract class GolemDescriptionManager {
 
 	protected List<String> addSpecial(List<String> list, GolemBase golem) {
 
-		// add glowing to tip if possible
-		if (golem instanceof GolemLightProvider) {
-			list.add(TextFormatting.YELLOW + trans("entitytip.lights_area"));
-		}
+
 
 		/////// BEGIN SPECIFIC CLASS CHECKS ////////
 
@@ -162,11 +159,6 @@ public abstract class GolemDescriptionManager {
 
 		}
 
-		// add redstone power to tip if possible
-		else if (golem.getClass() == EntityRedstoneGolem.class && Config.REDSTONE.getBoolean(EntityRedstoneGolem.ALLOW_SPECIAL)) {
-			list.add(TextFormatting.RED + trans("entitytip.emits_redstone_signal"));
-		}
-
 		// add knockback to tip if possible
 		else if (golem.getClass() == EntitySlimeGolem.class && Config.SLIME.getBoolean(EntitySlimeGolem.ALLOW_SPECIAL)) {
 			list.add(TextFormatting.GREEN + trans("entitytip.has_knockback"));
@@ -180,6 +172,11 @@ public abstract class GolemDescriptionManager {
 		// add boom to tip if possible
 		else if (golem.getClass() == EntityTNTGolem.class && Config.TNT.getBoolean(EntityTNTGolem.ALLOW_SPECIAL)) {
 			list.add(TextFormatting.RED + trans("entitytip.explodes"));
+		}
+
+		// add immunity to drowning if possible
+		else if (golem.getClass() == EntitySeaLanternGolem.class && Config.SEA_LANTERN.getBoolean(EntitySeaLanternGolem.ALLOW_SPECIAL)) {
+			list.add(TextFormatting.AQUA + trans("entitytip.breathes_underwater"));
 		}
 		return list;
 	}

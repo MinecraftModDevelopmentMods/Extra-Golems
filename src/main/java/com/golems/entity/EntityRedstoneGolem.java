@@ -1,15 +1,9 @@
 package com.golems.entity;
 
-import java.util.List;
-
-import com.golems.blocks.BlockPowerProvider;
-import com.golems.events.RedstoneGolemPowerEvent;
 import com.golems.main.Config;
 import com.golems.main.GolemItems;
 import com.golems.util.WeightedItem;
-
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -17,29 +11,25 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.Event.Result;
+
+import java.util.List;
 
 public final class EntityRedstoneGolem extends GolemBase {
 
-	public static final String ALLOW_SPECIAL = "Allow Special: Redstone Power";
-	public static final String POWER = "Redstone Power Level";
+//	public static final String ALLOW_SPECIAL = "Allow Special: Electrical Spark";
+//	public static final String FREQUENCY = "Chance of smiting foes";
 
 	/**
 	 * If you want to change power after constructor, add a {@link DataParameter}.
 	 **/
-	private int powerLevel;
-	protected boolean canPower;
-	protected int tickDelay;
+
 
 	/**
 	 * Default constructor for Redstone Golem.
 	 **/
 	public EntityRedstoneGolem(final World world) {
-		this(world, Config.REDSTONE.getBaseAttack(), Blocks.REDSTONE_BLOCK,
-				Config.REDSTONE.getInt(POWER), Config.REDSTONE.getBoolean(ALLOW_SPECIAL));
+		this(world, Config.REDSTONE.getBaseAttack(), Blocks.REDSTONE_BLOCK);
 	}
 
 	/**
@@ -48,15 +38,10 @@ public final class EntityRedstoneGolem extends GolemBase {
 	 * @param world
 	 * @param attack
 	 * @param pick
-	 * @param defPower
-	 * @param configAllowsPowering
+
 	 */
-	public EntityRedstoneGolem(final World world, final float attack, final Block pick, final int defPower,
-			final boolean configAllowsPowering) {
+	public EntityRedstoneGolem(final World world, final float attack, final Block pick) {
 		super(world, attack, pick);
-		this.powerLevel = defPower;
-		this.canPower = configAllowsPowering;
-		this.tickDelay = 2;
 	}
 
 	/**
@@ -64,12 +49,9 @@ public final class EntityRedstoneGolem extends GolemBase {
 	 * 
 	 * @param world
 	 * @param attack
-	 * @param defPower
-	 * @param configAllowsPowering
 	 */
-	public EntityRedstoneGolem(final World world, final float attack, final int defPower,
-			final boolean configAllowsPowering) {
-		this(world, attack, GolemItems.golemHead, defPower, configAllowsPowering);
+	public EntityRedstoneGolem(final World world, final float attack) {
+		this(world, attack, GolemItems.golemHead);
 	}
 
 	@Override
@@ -84,51 +66,7 @@ public final class EntityRedstoneGolem extends GolemBase {
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 
-	/**
-	 * Called frequently so the entity can update its state every tick as required. For example,
-	 * zombies and skeletons use this to react to sunlight and start to burn.
-	 */
-	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
-		// calling every other tick reduces lag by 50%
-		if (canPower && (this.tickDelay <= 1 || this.ticksExisted % this.tickDelay == 0)) {
-			placePowerNearby();
-		}
-	}
 
-	/** Finds air blocks nearby and replaces them with BlockMovingPowerSource. **/
-	protected void placePowerNearby() {
-		// power 3 layers at golem location
-		for (int k = -1; k < 3; ++k) {
-			final BlockPos at = this.getPosition().up(k);
-			if (this.world.getBlockState(at).getBlock() instanceof BlockPowerProvider) {
-				continue;
-			} else if (this.world.isAirBlock(at)) {
-				final RedstoneGolemPowerEvent event = new RedstoneGolemPowerEvent(this, at,
-						this.getPowerOutput(at));
-				if (!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Result.DENY) {
-					this.placePower(event.posToAffect, event.getPowerLevel(), event.updateFlag);
-				}
-			}
-		}
-	}
-
-	/**
-	 * Places a BlockPowerProvider at the given location.
-	 *
-	 * @return whether the block was set successfully
-	 **/
-	protected final boolean placePower(final BlockPos pos, final int power, final int updateFlag) {
-		final IBlockState powerState = GolemItems.blockPowerSource.getDefaultState()
-				.withProperty(BlockPowerProvider.POWER, power);
-		return this.world.setBlockState(pos, powerState, updateFlag);
-	}
-
-	/** Override this to check conditions and return correct power level. **/
-	public int getPowerOutput(final BlockPos toPlaceAt) {
-		return this.powerLevel;
-	}
 
 	@Override
 	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {

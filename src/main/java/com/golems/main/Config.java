@@ -1,24 +1,7 @@
 package com.golems.main;
 
-import com.golems.entity.EntityBookshelfGolem;
-import com.golems.entity.EntityCoalGolem;
-import com.golems.entity.EntityEndstoneGolem;
-import com.golems.entity.EntityIceGolem;
-import com.golems.entity.EntityLapisGolem;
-import com.golems.entity.EntityLeafGolem;
-import com.golems.entity.EntityMagmaGolem;
-import com.golems.entity.EntityMelonGolem;
-import com.golems.entity.EntityMushroomGolem;
-import com.golems.entity.EntityNetherBrickGolem;
-import com.golems.entity.EntityNetherWartGolem;
-import com.golems.entity.EntityRedstoneGolem;
-import com.golems.entity.EntitySlimeGolem;
-import com.golems.entity.EntitySpongeGolem;
-import com.golems.entity.EntityStainedClayGolem;
-import com.golems.entity.EntityStainedGlassGolem;
-import com.golems.entity.EntityTNTGolem;
+import com.golems.entity.*;
 import com.golems.util.GolemConfigSet;
-
 import net.minecraftforge.common.config.Configuration;
 
 /** Registers the config settings to adjust aspects of this mod. **/
@@ -110,9 +93,9 @@ public final class Config {
 		PRISMARINE = new GolemConfigSet(config, "Prismarine Golem", 24.0D, 8.0F);
 		QUARTZ = new GolemConfigSet(config, "Quartz Golem", 85.0D, 8.5F);
 		RED_SANDSTONE = new GolemConfigSet(config, "Red Sandstone Golem", 15.0D, 4.0F);
-		REDSTONE = new GolemConfigSet(config, "Redstone Golem", 18.0D, 2.0F);
+		REDSTONE = new GolemConfigSet(config, "Redstone Golem", 18.0D, 4.0F);
 		SANDSTONE = new GolemConfigSet(config, "Sandstone Golem", 15.0D, 4.0F);
-		SEA_LANTERN = new GolemConfigSet(config, "Sea Lantern Golem", 26.0D, 4.0F);
+		SEA_LANTERN = new GolemConfigSet(config, "Sea Lantern Golem", 24.0D, 6.0F);
 		SLIME = new GolemConfigSet(config, "Slime Golem", 85.0D, 2.5F);
 		SPONGE = new GolemConfigSet(config, "Sponge Golem", 20.0D, 1.5F);
 		STAINED_CLAY = new GolemConfigSet(config, "Stained Clay Golem", 26.0D, 3.0F);
@@ -126,50 +109,66 @@ public final class Config {
 	private static void loadSpecials(final Configuration config) {
 		BOOKSHELF.addKey(EntityBookshelfGolem.ALLOW_SPECIAL, true,
 				"Whether this golem can give itself potion effects");
+
 		COAL.addKey(EntityCoalGolem.ALLOW_SPECIAL, false,
 				"Whether this golem can inflict blindness");
+
 		ENDSTONE.addKey(EntityEndstoneGolem.ALLOW_SPECIAL, true, "Whether this golem can teleport");
 		ENDSTONE.addKey(EntityEndstoneGolem.ALLOW_WATER_HURT, true,
 				"Whether the Endstone Golem takes damage from water");
+
+		GLOWSTONE.addKey(EntityGlowstoneGolem.ALLOW_SPECIAL, true, "Whether this golem can place" +
+				" torches randomly");
+		GLOWSTONE.addKey(EntityGlowstoneGolem.FREQUENCY, 650, 1, 24000,
+				"Average number of ticks between" + " placing torches");
+
 		ICE.addKey(EntityIceGolem.ALLOW_SPECIAL, true,
 				"Whether this golem can freeze water and cool lava nearby");
 		ICE.addKey(EntityIceGolem.CAN_USE_REGULAR_ICE, true,
 				"When true, the Ice Golem can be built with regular ice as well as packed ice");
 		ICE.addKey(EntityIceGolem.AOE, 3, 1, 8,
 				"Radial distance at which this golem can freeze / cool liquids");
+
 		LAPIS.addKey(EntityLapisGolem.ALLOW_SPECIAL, true,
 				"Whether this golem can inflict harmful potion effects");
+
 		LEAF.addKey(EntityLeafGolem.ALLOW_SPECIAL, true, "Whether this golem can heal itself");
+
 		MAGMA.addKey(EntityMagmaGolem.ALLOW_LAVA_SPECIAL, true,
 				"Whether this golem can slowly melt cobblestone");
 		MAGMA.addKey(EntityMagmaGolem.MELT_DELAY, 240, 1, 24000,
 				"Number of ticks it takes to melt cobblestone (12 sec * 20 t/sec = 240 t)");
 		MAGMA.addKey(EntityMagmaGolem.ALLOW_FIRE_SPECIAL, false,
 				"Whether this golem can light creatures on fire");
+
 		MELON.addKey(EntityMelonGolem.ALLOW_SPECIAL, true,
 				"Whether this golem can plant flowers randomly");
 		MELON.addKey(EntityMelonGolem.FREQUENCY, 240, 1, 24000,
 				"Average number of ticks between planting flowers");
+
 		MUSHROOM.addKey(EntityMushroomGolem.ALLOW_SPECIAL, true,
 				"Whether this golem can plant mushrooms randomly");
 		MUSHROOM.addKey(EntityMushroomGolem.FREQUENCY, 420, 1, 24000,
 				"Average number of ticks between planting mushrooms");
+
 		NETHERBRICK.addKey(EntityNetherBrickGolem.ALLOW_FIRE_SPECIAL, true,
 				"Whether this golem can light creatures on fire");
+
 		NETHERWART.addKey(EntityNetherWartGolem.ALLOW_SPECIAL, true,
 				"Whether this golem can plant netherwart randomly");
 		NETHERWART.addKey(EntityNetherWartGolem.FREQUENCY, 880, 1, 24000,
 				"Average number of ticks between planting nether wart");
 		NETHERWART.addKey(EntityNetherWartGolem.DROP_NETHERWART_BLOCK, true,
 				"When true, this golem drops 0-4 netherwart blocks. When false, drops 1-9 netherwart");
-		REDSTONE.addKey(EntityRedstoneGolem.ALLOW_SPECIAL, true,
-				"Whether this golem can power nearby redstone");
-		REDSTONE.addKey(EntityRedstoneGolem.POWER, 15, 0, 15,
-				"Level of redstone power emitted by this golem");
+
+		SEA_LANTERN.addKey(EntitySeaLanternGolem.ALLOW_SPECIAL, true, "When true, this golem" +
+				" cannot drown.");
+
 		SLIME.addKey(EntitySlimeGolem.ALLOW_SPECIAL, true,
 				"Whether this golem can apply extra knockback when attacking");
 		SLIME.addKey(EntitySlimeGolem.KNOCKBACK, 2.0012F, 0.001F, 10.0F,
 				"How powerful the Slime Golem attack is (Higher Value = Further Knockback)");
+
 		SPONGE.addKey(EntitySpongeGolem.ALLOW_SPECIAL, true, "Whether this golem can absorb water");
 		SPONGE.addKey(EntitySpongeGolem.PARTICLES, true,
 				"Whether this golem should always drip water");
@@ -177,10 +176,13 @@ public final class Config {
 				"Radial distance at which this golem can absorb water (Warning: larger values cause lag)");
 		SPONGE.addKey(EntitySpongeGolem.INTERVAL, 80, 1, 24000,
 				"Number of ticks between each water-check; increase to reduce lag");
+
 		STAINED_CLAY.addKey(EntityStainedClayGolem.DROP_META, -1, -1, 15,
 				"The metadata of stained clay dropped by this golem. Set to -1 to let it be based on current texture");
+
 		STAINED_GLASS.addKey(EntityStainedGlassGolem.DROP_META, -1, -1, 15,
 				"The metadata of stained glass dropped by this golem. Set to -1 to let it be based on current texture");
+
 		TNT.addKey(EntityTNTGolem.ALLOW_SPECIAL, true,
 				"Whether this golem can explode when fighting or dying");
 	}

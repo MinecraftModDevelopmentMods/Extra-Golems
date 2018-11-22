@@ -1,10 +1,9 @@
 package com.golems.entity;
 
-import java.util.List;
-
+import com.golems.entity.ai.EntityAIPlaceRandomBlocksStrictly;
 import com.golems.main.Config;
 import com.golems.util.WeightedItem;
-
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -14,13 +13,23 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public final class EntityGlowstoneGolem extends GolemLightProvider {
+import java.util.List;
+
+public final class EntityGlowstoneGolem extends GolemBase {
+
+	public static final String ALLOW_SPECIAL = "Allow Special: Place Torches";
+	public static final String FREQUENCY = "Torch Frequency";
+	public final IBlockState[] state = {Blocks.TORCH.getDefaultState()};
 
 	public EntityGlowstoneGolem(final World world) {
-		super(world, Config.GLOWSTONE.getBaseAttack(), new ItemStack(Blocks.GLOWSTONE),
-				LightManager.FULL);
+		super(world, Config.GLOWSTONE.getBaseAttack(), new ItemStack(Blocks.TORCH));
+
 		this.setCanTakeFallDamage(true);
 		this.isImmuneToFire = true;
+		final int freq = Config.GLOWSTONE.getInt(FREQUENCY);
+		final boolean allowed = Config.GLOWSTONE.getBoolean(ALLOW_SPECIAL);
+		this.tasks.addTask(2,
+				new EntityAIPlaceRandomBlocksStrictly(this, freq, state, allowed));
 	}
 
 	@Override

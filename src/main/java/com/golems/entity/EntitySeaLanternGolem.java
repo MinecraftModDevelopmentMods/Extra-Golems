@@ -1,11 +1,7 @@
 package com.golems.entity;
 
-import java.util.List;
-
 import com.golems.main.Config;
 import com.golems.util.WeightedItem;
-
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -15,15 +11,16 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public final class EntitySeaLanternGolem extends GolemLightProvider {
+import java.util.List;
 
-	public static final LightManager WATER_LIGHT = new LightManager(0.987F, 2, Material.AIR,
-			Material.WATER);
+public final class EntitySeaLanternGolem extends GolemBase {
+
+	public static final String ALLOW_SPECIAL = "Allow Special: Breathe Underwater";
 
 	public EntitySeaLanternGolem(final World world) {
-		super(world, Config.SEA_LANTERN.getBaseAttack(), new ItemStack(Blocks.SEA_LANTERN),
-				WATER_LIGHT);
-		this.tickDelay = 1;
+		super(world, Config.SEA_LANTERN.getBaseAttack(), new ItemStack(Blocks.SEA_LANTERN));
+		//Invert result because method is 'canDrown' not 'cannotDrown'
+		this.canDrown = !(Config.SEA_LANTERN.getBoolean(ALLOW_SPECIAL));
 	}
 
 	protected ResourceLocation applyTexture() {
