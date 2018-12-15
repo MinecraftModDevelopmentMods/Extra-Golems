@@ -16,6 +16,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 public final class EntityNetherWartGolem extends GolemBase {
@@ -77,5 +78,12 @@ public final class EntityNetherWartGolem extends GolemBase {
 	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_WOOD_STEP;
+	}
+	
+	@Override
+	public List<String> addSpecialDesc(final List<String> list) {
+		if(Config.NETHERWART.getBoolean(EntityNetherWartGolem.ALLOW_SPECIAL))
+			list.add(TextFormatting.RED + trans("entitytip.plants_warts"));
+		return list;
 	}
 }

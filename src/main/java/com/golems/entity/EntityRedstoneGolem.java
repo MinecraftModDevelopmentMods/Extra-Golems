@@ -11,12 +11,14 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 import java.util.List;
 
 public final class EntityRedstoneGolem extends GolemBase {
-
+// TODO re-integrate redstone power from golem
+//	public static final String ALLOW_SPECIAL = "Allow Special: Redstone Power";
 //	public static final String ALLOW_SPECIAL = "Allow Special: Electrical Spark";
 //	public static final String FREQUENCY = "Chance of smiting foes";
 
@@ -78,4 +80,14 @@ public final class EntityRedstoneGolem extends GolemBase {
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_STONE_STEP;
 	}
+	
+	/* TODO add this once redstone signal is working again
+	@Override
+	public List<String> addSpecialDesc(final List<String> list) {
+		// does not fire for child classes
+		if(this.getClass() == EntityRedstoneGolem.class && Config.REDSTONE.getBoolean(ALLOW_SPECIAL))
+			list.add(TextFormatting.RED + trans("entitytip.emits_redstone_signal"));
+		return list;
+	}
+	*/
 }

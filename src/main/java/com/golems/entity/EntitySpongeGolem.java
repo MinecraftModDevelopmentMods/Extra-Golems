@@ -17,6 +17,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
@@ -106,5 +107,12 @@ public final class EntitySpongeGolem extends GolemBase {
 			flag &= this.world.setBlockState(p, replaceWater, updateFlag);
 		}
 		return flag;
+	}
+	
+	@Override
+	public List<String> addSpecialDesc(final List<String> list) {
+		if(Config.SPONGE.getBoolean(EntitySpongeGolem.ALLOW_SPECIAL))
+			list.add(TextFormatting.YELLOW + trans("entitytip.absorbs_water"));
+		return list;
 	}
 }

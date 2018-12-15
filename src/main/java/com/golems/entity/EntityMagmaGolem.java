@@ -12,6 +12,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -100,5 +101,14 @@ public final class EntityMagmaGolem extends GolemBase {
 	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_STONE_STEP;
+	}
+	
+	@Override
+	public List<String> addSpecialDesc(final List<String> list) {
+		if (Config.MAGMA.getBoolean(EntityMagmaGolem.ALLOW_LAVA_SPECIAL))
+			list.add(TextFormatting.RED	+ trans("entitytip.slowly_melts", trans("tile.stonebrick.name")));
+		if (Config.MAGMA.getBoolean(EntityMagmaGolem.ALLOW_FIRE_SPECIAL))
+			list.add(TextFormatting.RED + trans("entitytip.lights_mobs_on_fire"));
+		return list;
 	}
 }

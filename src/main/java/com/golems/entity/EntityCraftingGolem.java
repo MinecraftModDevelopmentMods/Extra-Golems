@@ -18,10 +18,13 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 public final class EntityCraftingGolem extends GolemBase {
 
+	public static final String ALLOW_SPECIAL = "Allow Special: Crafting";
+	
 	public EntityCraftingGolem(final World world) {
 		super(world, Config.CRAFTING.getBaseAttack(), Blocks.CRAFTING_TABLE);
 	}
@@ -79,5 +82,12 @@ public final class EntityCraftingGolem extends GolemBase {
 		public Container createContainer(final InventoryPlayer playerInventory, final EntityPlayer playerIn) {
 			return new ContainerPortableWorkbench(playerInventory, this.world2, this.position2);
 		}
+	}
+	
+	@Override
+	public List<String> addSpecialDesc(final List<String> list) {
+		if(Config.CRAFTING.getBoolean(ALLOW_SPECIAL))
+			list.add(TextFormatting.BLUE + trans("entitytip.click_open_crafting"));
+		return list;
 	}
 }

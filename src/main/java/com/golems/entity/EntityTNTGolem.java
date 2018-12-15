@@ -20,6 +20,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
@@ -233,5 +234,13 @@ public final class EntityTNTGolem extends GolemBase {
 	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_GRAVEL_STEP;
+	}
+	
+	@Override
+	public List<String> addSpecialDesc(final List<String> list) {
+		// only fires for this golem, not child classes
+		if (this.getClass() == EntityTNTGolem.class && Config.TNT.getBoolean(EntityTNTGolem.ALLOW_SPECIAL))
+			list.add(TextFormatting.RED + trans("entitytip.explodes"));
+		return list;
 	}
 }

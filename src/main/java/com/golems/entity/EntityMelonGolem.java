@@ -20,6 +20,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 public final class EntityMelonGolem extends GolemBase {
@@ -74,5 +75,12 @@ public final class EntityMelonGolem extends GolemBase {
 		final int freq = Config.MELON.getInt(FREQUENCY);
 		final boolean allowed = Config.MELON.getBoolean(ALLOW_SPECIAL);
 		return new EntityAIPlaceRandomBlocksStrictly(this, freq, flowers, soils, allowed);
+	}
+	
+	@Override
+	public List<String> addSpecialDesc(final List<String> list) {
+		if(Config.MELON.getBoolean(EntityMelonGolem.ALLOW_SPECIAL))
+			list.add(TextFormatting.GREEN + trans("entitytip.plants_flowers"));
+		return list;
 	}
 }

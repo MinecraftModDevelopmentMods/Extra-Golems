@@ -21,6 +21,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -244,5 +245,13 @@ public final class EntityEndstoneGolem extends GolemBase {
 	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_STONE_STEP;
+	}
+	
+	@Override
+	public List<String> addSpecialDesc(final List<String> list) {
+		// this will only fire for the Endstone Golem, not child classes
+		if (this.getClass() == EntityEndstoneGolem.class && Config.ENDSTONE.getBoolean(EntityEndstoneGolem.ALLOW_SPECIAL))
+			list.add(TextFormatting.DARK_AQUA + trans("entitytip.can_teleport"));
+		return list;
 	}
 }

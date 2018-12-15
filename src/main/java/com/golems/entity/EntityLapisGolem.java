@@ -18,6 +18,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 public final class EntityLapisGolem extends GolemBase {
@@ -72,5 +73,12 @@ public final class EntityLapisGolem extends GolemBase {
 	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_STONE_STEP;
+	}
+	
+	@Override
+	public List<String> addSpecialDesc(final List<String> list) {
+		if(Config.LAPIS.getBoolean(EntityLapisGolem.ALLOW_SPECIAL))
+			list.add( TextFormatting.LIGHT_PURPLE + trans("entitytip.attacks_use_potion_effects"));
+		return list;
 	}
 }

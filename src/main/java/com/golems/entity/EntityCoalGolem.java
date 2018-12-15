@@ -16,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 public final class EntityCoalGolem extends GolemBase {
@@ -75,5 +76,12 @@ public final class EntityCoalGolem extends GolemBase {
 	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_STONE_STEP;
+	}
+	
+	@Override
+	public List<String> addSpecialDesc(final List<String> list) {
+		if(Config.COAL.getBoolean(EntityCoalGolem.ALLOW_SPECIAL))
+			list.add(TextFormatting.GRAY + trans("entitytip.blinds_creatures"));
+		return list;
 	}
 }

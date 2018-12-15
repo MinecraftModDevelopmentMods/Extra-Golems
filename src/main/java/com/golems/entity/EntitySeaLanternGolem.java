@@ -9,6 +9,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -45,5 +46,12 @@ public final class EntitySeaLanternGolem extends GolemBase {
 	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_GLASS_STEP;
+	}
+	
+	@Override
+	public List<String> addSpecialDesc(final List<String> list) {
+		if(Config.SEA_LANTERN.getBoolean(EntitySeaLanternGolem.ALLOW_SPECIAL))
+			list.add(TextFormatting.AQUA + trans("entitytip.breathes_underwater"));
+		return list;
 	}
 }

@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 public final class EntitySlimeGolem extends GolemBase {
@@ -77,5 +78,12 @@ public final class EntitySlimeGolem extends GolemBase {
 	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_SLIME_STEP;
+	}
+	
+	@Override
+	public List<String> addSpecialDesc(final List<String> list) {
+		if(Config.SLIME.getBoolean(EntitySlimeGolem.ALLOW_SPECIAL))
+			list.add(TextFormatting.GREEN + trans("entitytip.has_knockback"));
+		return list;
 	}
 }

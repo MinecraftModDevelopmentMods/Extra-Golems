@@ -12,6 +12,7 @@ import com.google.common.base.Predicate;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
@@ -335,11 +336,10 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	/**
 	 * Called when the mob's health reaches 0.
 	 */
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onDeath(final DamageSource src) {
 		if (!this.isPlayerCreated() && this.attackingPlayer != null && this.villageObj != null) {
-			this.villageObj.modifyPlayerReputation(this.attackingPlayer.getName(), -5);
+			this.villageObj.modifyPlayerReputation(this.attackingPlayer.getUniqueID(), -5);
 		}
 
 		super.onDeath(src);
@@ -492,6 +492,22 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	public boolean doesInteractChangeTexture() {
 		return false;
 	}
+	
+	/**
+	 * Allows each golem to add special information to in-game info (eg, Waila, Hwyla, TOP, etc.).
+	 * Typically checks if the Config allows this golem's special ability (if it has one) and adds a
+	 * formatted String to the passed list.
+	 * @return the passed list with or without this golem's added description
+	 **/
+	public List<String> addSpecialDesc(final List<String> list) { return list; }
+	
+	/** 
+	 * Helper method for translating text into local language using {@code I18n}
+	 * @see addSpecialDesc 
+	 **/
+	protected static String trans(final String s, final Object... strings) {
+		return I18n.format(s, strings);
+	}
 
 	/////////////// TEXTURE HELPERS //////////////////
 
@@ -572,7 +588,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	// * {@link #addDropEntry(dropList, ItemStack, percentChance)}
 	// * @see WeightedItem
 	// **/
-	// TODO: Fix me!
+	// TODO: Use loot tables instead!
 	public abstract void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit,
 			int lootingLevel);
 

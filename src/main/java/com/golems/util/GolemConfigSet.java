@@ -73,22 +73,22 @@ public class GolemConfigSet {
 		return this;
 	}
 
-	public int addKey(final String key, final int defaultValue, final int min, final int max, final String comment) {
+	public GolemConfigSet addKey(final String key, final int defaultValue, final int min, final int max, final String comment) {
 		final int value = this.config.getInt(key, this.category, defaultValue, min, max, comment);
 		this.mapInt.put(key, value);
-		return value;
+		return this;
 	}
 
-	public float addKey(final String key, final float defaultValue, final float min, final float max, final String comment) {
+	public GolemConfigSet addKey(final String key, final float defaultValue, final float min, final float max, final String comment) {
 		final float value = config.getFloat(key, this.category, defaultValue, min, max, comment);
 		this.mapFloat.put(key, value);
-		return value;
+		return this;
 	}
 
-	public boolean addKey(final String key, final boolean defaultValue, final String comment) {
+	public GolemConfigSet addKey(final String key, final boolean defaultValue, final String comment) {
 		final boolean value = config.getBoolean(key, this.category, defaultValue, comment);
 		this.mapBoolean.put(key, value ? TRUE : FALSE);
-		return value;
+		return this;
 	}
 
 	public int getInt(final String key) {

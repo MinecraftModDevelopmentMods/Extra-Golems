@@ -12,6 +12,7 @@ import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 public final class EntityNetherBrickGolem extends GolemBase {
@@ -55,5 +56,12 @@ public final class EntityNetherBrickGolem extends GolemBase {
 	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_STONE_STEP;
+	}
+	
+	@Override
+	public List<String> addSpecialDesc(final List<String> list) {
+		if(Config.NETHERBRICK.getBoolean(EntityNetherWartGolem.ALLOW_SPECIAL))
+			list.add(TextFormatting.RED + trans("entitytip.lights_mobs_on_fire"));
+		return list;
 	}
 }

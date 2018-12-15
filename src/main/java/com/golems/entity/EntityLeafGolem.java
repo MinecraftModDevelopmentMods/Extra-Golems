@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 
@@ -75,5 +76,12 @@ public final class EntityLeafGolem extends GolemColorized {
 	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_GRASS_STEP;
+	}
+	
+	@Override
+	public List<String> addSpecialDesc(final List<String> list) {
+		if(Config.LEAF.getBoolean(EntityLeafGolem.ALLOW_SPECIAL))
+			list.add(TextFormatting.DARK_GREEN + trans("entitytip.has_regen_1"));
+		return list;
 	}
 }

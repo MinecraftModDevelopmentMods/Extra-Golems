@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 import java.util.List;
 
 public final class EntityGlowstoneGolem extends GolemBase {
-
+	// TODO re-implement glowing block placement
 	public static final String ALLOW_SPECIAL = "Allow Special: Place Torches";
 	public static final String FREQUENCY = "Torch Frequency";
 	public final IBlockState[] state = {Blocks.TORCH.getDefaultState()};

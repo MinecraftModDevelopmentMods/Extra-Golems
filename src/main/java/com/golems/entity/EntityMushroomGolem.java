@@ -14,6 +14,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 public final class EntityMushroomGolem extends GolemMultiTextured {
@@ -59,5 +60,12 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_GRASS_STEP;
+	}
+	
+	@Override
+	public List<String> addSpecialDesc(final List<String> list) {
+		if(Config.MUSHROOM.getBoolean(EntityMushroomGolem.ALLOW_SPECIAL))
+			list.add(TextFormatting.DARK_GREEN + trans("entitytip.plants_shrooms"));
+		return list;
 	}
 }
