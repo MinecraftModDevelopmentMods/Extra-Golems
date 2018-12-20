@@ -83,8 +83,8 @@ public final class Config {
 				.addKey(EntityEndstoneGolem.ALLOW_WATER_HURT, true, "Whether the Endstone Golem takes damage from water");
 		GLASS = new GolemConfigSet(config, "Glass Golem", 8.0D, 13.0F);
 		GLOWSTONE = new GolemConfigSet(config, "Glowstone Golem", 8.0D, 12.0F)
-				.addKey(EntityGlowstoneGolem.ALLOW_SPECIAL, true, "Whether this golem can place torches randomly")
-				.addKey(EntityGlowstoneGolem.FREQUENCY, 650, 1, 24000, "Average number of ticks between" + " placing torches");
+				.addKey(EntityGlowstoneGolem.ALLOW_SPECIAL, true, "Whether this golem can place light sources randomly")
+				.addKey(EntityGlowstoneGolem.FREQUENCY, 2, 1, 24000, "Number of ticks between placing light sources");
 		GOLD = new GolemConfigSet(config, "Gold Golem", 80.0D, 8.0F);
 		HARD_CLAY = new GolemConfigSet(config, "Hardened Clay Golem", 22.0D, 4.0F);
 		ICE = new GolemConfigSet(config, "Ice Golem", 18.0D, 6.0F)
@@ -116,8 +116,7 @@ public final class Config {
 		QUARTZ = new GolemConfigSet(config, "Quartz Golem", 85.0D, 8.5F);
 		RED_SANDSTONE = new GolemConfigSet(config, "Red Sandstone Golem", 15.0D, 4.0F);
 		REDSTONE = new GolemConfigSet(config, "Redstone Golem", 18.0D, 4.0F)
-				//.addKey(EntityRedstoneGolem.ALLOW_SPECIAL, true, "Whether this golem can emit redstone power");
-				; // TODO
+				.addKey(EntityRedstoneGolem.ALLOW_SPECIAL, true, "Whether this golem can emit redstone power");
 		SANDSTONE = new GolemConfigSet(config, "Sandstone Golem", 15.0D, 4.0F);
 		SEA_LANTERN = new GolemConfigSet(config, "Sea Lantern Golem", 24.0D, 6.0F)
 				.addKey(EntitySeaLanternGolem.ALLOW_SPECIAL, true, "When true, this golem cannot drown");

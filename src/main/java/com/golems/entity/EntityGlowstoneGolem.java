@@ -1,8 +1,13 @@
 package com.golems.entity;
 
-import com.golems.entity.ai.EntityAIPlaceRandomBlocksStrictly;
+import java.util.List;
+
+import com.golems.blocks.BlockUtilityGlow;
+import com.golems.entity.ai.EntityAIPlaceSingleBlock;
 import com.golems.main.Config;
+import com.golems.main.GolemItems;
 import com.golems.util.WeightedItem;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
@@ -11,25 +16,35 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-
-import java.util.List;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public final class EntityGlowstoneGolem extends GolemBase {
-	// TODO re-implement glowing block placement
-	public static final String ALLOW_SPECIAL = "Allow Special: Place Torches";
-	public static final String FREQUENCY = "Torch Frequency";
-	public final IBlockState[] state = {Blocks.TORCH.getDefaultState()};
+	
+	public static final String ALLOW_SPECIAL = "Allow Special: Emit Light";
+	public static final String FREQUENCY = "Light Frequency";
+	
+	/** Float value between 0.0F and 1.0F that determines light level **/
+	private final float brightness;
 
+	/** Default constructor for EntityGlowstoneGolem **/
 	public EntityGlowstoneGolem(final World world) {
-		super(world, Config.GLOWSTONE.getBaseAttack(), new ItemStack(Blocks.TORCH));
-
-		this.setCanTakeFallDamage(true);
+		this(world, Config.GLOWSTONE.getBaseAttack(), new ItemStack(Blocks.GLOWSTONE), 1.0F,
+				Config.GLOWSTONE.getInt(FREQUENCY), Config.GLOWSTONE.getBoolean(ALLOW_SPECIAL));
 		this.isImmuneToFire = true;
-		final int freq = Config.GLOWSTONE.getInt(FREQUENCY);
-		final boolean allowed = Config.GLOWSTONE.getBoolean(ALLOW_SPECIAL);
-		this.tasks.addTask(2,
-				new EntityAIPlaceRandomBlocksStrictly(this, freq, state, allowed));
+		this.setCanTakeFallDamage(true);
+	}
+	
+	/** Flexible constructor to allow child classes to customize **/
+	public EntityGlowstoneGolem(final World world, final float attack, final ItemStack pick, 
+			final float lightLevel, final int freq, final boolean allowed) {
+		super(world, attack, pick);
+		int lightInt = (int)(lightLevel * 15.0F);
+		this.brightness = lightLevel;
+		final IBlockState state = GolemItems.blockLightSource.getDefaultState().withProperty(BlockUtilityGlow.LIGHT_LEVEL, lightInt);
+		this.tasks.addTask(9, new EntityAIPlaceSingleBlock(this, state, freq, allowed));
 	}
 
 	@Override
@@ -58,5 +73,24 @@ public final class EntityGlowstoneGolem extends GolemBase {
 	@Override
 	protected SoundEvent getDeathSound() {
 		return SoundEvents.BLOCK_GLASS_BREAK;
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+    public int getBrightnessForRender() {
+		return (int)(15728880F * this.brightness);
+	}
+	
+	@Override
+	public float getBrightness() {
+		return this.brightness;
+	}
+	
+	@Override
+	public List<String> addSpecialDesc(final List<String> list) {
+		// does not fire for child classes
+		if(this.getClass() == EntityGlowstoneGolem.class && Config.GLOWSTONE.getBoolean(ALLOW_SPECIAL))
+			list.add(TextFormatting.RED + trans("entitytip.lights_area"));
+		return list;
 	}
 }

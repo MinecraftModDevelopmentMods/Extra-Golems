@@ -11,6 +11,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
+/**
+ * @see EntityAIPlaceRandomBlocksStrictly
+ **/
 public class EntityAIPlaceRandomBlocks extends EntityAIBase {
 
 	public final GolemBase golem;

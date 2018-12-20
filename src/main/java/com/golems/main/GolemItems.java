@@ -9,12 +9,14 @@ public final class GolemItems {
 	private GolemItems() {
 		//
 	}
-
+	////// ITEMS //////
 	@GameRegistry.ObjectHolder(ExtraGolems.MODID + ":golem_paper")
 	public static Item golemPaper;
+	
 	@GameRegistry.ObjectHolder(ExtraGolems.MODID + ":spawn_bedrock_golem")
 	public static Item spawnBedrockGolem;
-
+	
+	////// BLOCKS //////
 	@GameRegistry.ObjectHolder(ExtraGolems.MODID + ":golem_head")
 	public static Block golemHead;
 

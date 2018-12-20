@@ -1,6 +1,6 @@
 package com.golems.proxies;
 
-import com.golems.blocks.BlockGolemHead;
+import com.golems.blocks.*;
 import com.golems.entity.*;
 import com.golems.events.handlers.GolemCommonEventHandler;
 import com.golems.items.ItemBedrockGolem;
@@ -8,6 +8,7 @@ import com.golems.items.ItemGolemPaper;
 import com.golems.main.Config;
 import com.golems.main.ExtraGolems;
 import com.golems.main.GolemItems;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -110,9 +111,11 @@ public class CommonProxy {
 	@SubscribeEvent
 	public static void registerBlocks(final RegistryEvent.Register<Block> event) {
 		// TODO: Clean up
+		final int GLOW_FREQ = Config.GLOWSTONE.getInt(EntityGlowstoneGolem.FREQUENCY);
 		event.getRegistry().registerAll(
-				new BlockGolemHead().setTranslationKey("golem_head")
-						.setRegistryName(ExtraGolems.MODID, "golem_head"));
+				new BlockGolemHead().setTranslationKey("golem_head").setRegistryName(ExtraGolems.MODID, "golem_head"),
+				new BlockUtilityGlow(1.0F, GLOW_FREQ).setTranslationKey("light_provider_full").setRegistryName(ExtraGolems.MODID, "light_provider_full"),
+				new BlockUtilityPower(15, EntityRedstoneGolem.FREQUENCY).setTranslationKey("power_provider_all").setRegistryName(ExtraGolems.MODID, "power_provider_all"));
 	}
 
 }

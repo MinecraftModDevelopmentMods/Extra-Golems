@@ -31,3 +31,6 @@ libs/*
 !/libs/README.txt
 
 .DS_Store
+
+# Thumbnails
+._*

@@ -4,8 +4,7 @@ import javax.annotation.Nullable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -19,13 +18,13 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockUtility extends Block {
+public abstract class BlockUtility extends Block {
 
 	public static final AxisAlignedBB SINGULAR_AABB = new AxisAlignedBB(0.5D, 0.5D, 0.5D, 0.5D,
 			0.5D, 0.5D);
 
 	public BlockUtility() {
-		super(Material.AIR);
+		super(Material.GLASS);
 		setDefaultState(blockState.getBaseState());
 		setTickRandomly(false);
 		blockHardness = -1F;
@@ -33,25 +32,40 @@ public class BlockUtility extends Block {
 	}
 
 	/**
-	 * @deprecated
-	 */
-	@Nullable
-	@Deprecated
-	@Override
-	public AxisAlignedBB getCollisionBoundingBox(final IBlockState blockState, final IBlockAccess access,
-			final BlockPos pos) {
-		return NULL_AABB;
-	}
+     * @deprecated call via {@link IBlockState#getBoundingBox(IBlockAccess,BlockPos)} whenever possible.
+     * Implementing/overriding is fine.
+     */
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
+    {
+        return SINGULAR_AABB;
+    }
 
-	/**
-	 * @deprecated
-	 */
-	@Nullable
-	@Deprecated
-	@Override
-	public AxisAlignedBB getBoundingBox(final IBlockState blockState, final IBlockAccess access, final BlockPos pos) {
-		return NULL_AABB;
-	}
+    /**
+     * @deprecated call via {@link IBlockState#getCollisionBoundingBox(IBlockAccess,BlockPos)} whenever possible.
+     * Implementing/overriding is fine.
+     */
+    @Nullable
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos)
+    {
+        return NULL_AABB;
+    }
+
+    /**
+     * Used to determine ambient occlusion and culling when rebuilding chunks for render
+     * @deprecated call via {@link IBlockState#isOpaqueCube()} whenever possible. Implementing/overriding is fine.
+     */
+    public boolean isOpaqueCube(IBlockState state)
+    {
+        return false;
+    }
+
+    /**
+     * @deprecated call via {@link IBlockState#isFullCube()} whenever possible. Implementing/overriding is fine.
+     */
+    public boolean isFullCube(IBlockState state)
+    {
+        return false;
+    }
 
 	/**
 	 * @deprecated
@@ -80,16 +94,6 @@ public class BlockUtility extends Block {
 		return false;
 	}
 
-	/**
-	 * Used to determine ambient occlusion and culling when rebuilding chunks for render.
-	 * @deprecated
-	 */
-	@Deprecated
-	@Override
-	public boolean isOpaqueCube(final IBlockState state) {
-		return false;
-	}
-
 	@Override
 	public boolean canCollideCheck(final IBlockState state, final boolean hitIfLiquid) {
 		return false;
@@ -110,15 +114,6 @@ public class BlockUtility extends Block {
 	@Override
 	public boolean isReplaceable(final IBlockAccess worldIn, final BlockPos pos) {
 		return true;
-	}
-
-	/**
-	 * @deprecated
-	 */
-	@Deprecated
-	@Override
-	public boolean isFullCube(final IBlockState state) {
-		return false;
 	}
 
 	@Override
@@ -179,9 +174,20 @@ public class BlockUtility extends Block {
 	public void onLanded(final World worldIn, final Entity entityIn) {
 		return;
 	}
-
-	@Override
-	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, (IProperty[]) new IProperty[0]);
-	}
+	
+	/**
+     * Get the geometry of the queried face at the given position and state. This is used to decide whether things like
+     * buttons are allowed to be placed on the face, or how glass panes connect to the face, among other things.
+     * <p>
+     * Common values are {@code SOLID}, which is the default, and {@code UNDEFINED}, which represents something that
+     * does not fit the other descriptions and will generally cause other things not to connect to the face.
+     * 
+     * @return an approximation of the form of the given face
+     * @deprecated call via {@link IBlockState#getBlockFaceShape(IBlockAccess,BlockPos,EnumFacing)} whenever possible.
+     * Implementing/overriding is fine.
+     */
+    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)
+    {
+        return BlockFaceShape.UNDEFINED;
+    }
 }

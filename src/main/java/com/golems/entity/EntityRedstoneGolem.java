@@ -1,9 +1,13 @@
 package com.golems.entity;
 
+import com.golems.blocks.BlockUtilityGlow;
+import com.golems.blocks.BlockUtilityPower;
+import com.golems.entity.ai.EntityAIPlaceSingleBlock;
 import com.golems.main.Config;
 import com.golems.main.GolemItems;
 import com.golems.util.WeightedItem;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -13,47 +17,31 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
 public final class EntityRedstoneGolem extends GolemBase {
-// TODO re-integrate redstone power from golem
-//	public static final String ALLOW_SPECIAL = "Allow Special: Redstone Power";
-//	public static final String ALLOW_SPECIAL = "Allow Special: Electrical Spark";
-//	public static final String FREQUENCY = "Chance of smiting foes";
+
+	public static final String ALLOW_SPECIAL = "Allow Special: Redstone Power";
+	public static final int FREQUENCY = 2;
 
 	/**
 	 * If you want to change power after constructor, add a {@link DataParameter}.
 	 **/
 
 
-	/**
-	 * Default constructor for Redstone Golem.
-	 **/
+	/** Default constructor for Redstone Golem **/
 	public EntityRedstoneGolem(final World world) {
-		this(world, Config.REDSTONE.getBaseAttack(), Blocks.REDSTONE_BLOCK);
+		this(world, Config.REDSTONE.getBaseAttack(), new ItemStack(Blocks.REDSTONE_BLOCK), Config.REDSTONE.getBoolean(ALLOW_SPECIAL), 15);
 	}
 
-	/**
-	 * Flexible constructor to allow child classes to customize.
-	 * 
-	 * @param world
-	 * @param attack
-	 * @param pick
-
-	 */
-	public EntityRedstoneGolem(final World world, final float attack, final Block pick) {
+	/** Flexible constructor to allow child classes to customize **/
+	public EntityRedstoneGolem(final World world, final float attack, final ItemStack pick, boolean allowSpecial, int power) {
 		super(world, attack, pick);
-	}
-
-	/**
-	 * Flexible constructor to allow child classes to customize.
-	 * 
-	 * @param world
-	 * @param attack
-	 */
-	public EntityRedstoneGolem(final World world, final float attack) {
-		this(world, attack, GolemItems.golemHead);
+		final IBlockState state = GolemItems.blockPowerSource.getDefaultState().withProperty(BlockUtilityPower.POWER_LEVEL, power);
+		this.tasks.addTask(9, new EntityAIPlaceSingleBlock(this, state, FREQUENCY, allowSpecial));
 	}
 
 	@Override
@@ -68,8 +56,6 @@ public final class EntityRedstoneGolem extends GolemBase {
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 
-
-
 	@Override
 	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
 		final int size = 8 + rand.nextInt(14 + lootingLevel * 4);
@@ -81,7 +67,12 @@ public final class EntityRedstoneGolem extends GolemBase {
 		return SoundEvents.BLOCK_STONE_STEP;
 	}
 	
-	/* TODO add this once redstone signal is working again
+	@Override
+	@SideOnly(Side.CLIENT)
+    public int getBrightnessForRender() {
+		return super.getBrightnessForRender() + 64;
+	}
+	
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
 		// does not fire for child classes
@@ -89,5 +80,4 @@ public final class EntityRedstoneGolem extends GolemBase {
 			list.add(TextFormatting.RED + trans("entitytip.emits_redstone_signal"));
 		return list;
 	}
-	*/
 }
