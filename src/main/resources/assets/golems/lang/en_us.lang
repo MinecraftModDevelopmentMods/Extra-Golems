@@ -1,6 +1,7 @@
 # Items and Blocks used by this mod
 item.golem_paper.name=§cGolem Spell§r
 item.spawn_bedrock_golem.name=Spawn Bedrock Golem
+item.info_book.name=Extra Golems Guide
 tile.golem_head.name=Golem Head
 
 # These will only show up in something like JEI
@@ -60,6 +61,8 @@ material.log=Log
 material.stained_clay=Stained Clay
 
 # Entity headings (for Waila and TOP)
+entitytip.name=Name
+entitytip.health=Health
 entitytip.attack=Attack
 entitytip.lights_area=Provides light
 entitytip.click_change_texture=Right click to change texture

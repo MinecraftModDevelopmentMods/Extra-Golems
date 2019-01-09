@@ -68,7 +68,7 @@ public final class Config {
 	 */
 	private static void initGolemConfigSets(final Configuration config) {
 		BEDROCK = new GolemConfigSet(config, "Bedrock Golem", 999.0D, 32.0F);
-		BONE = new GolemConfigSet(config, "Bone Golem", 74.0D, 6.5F);
+		BONE = new GolemConfigSet(config, "Bone Golem", 54.0D, 9.5F);
 		BOOKSHELF = new GolemConfigSet(config, "Bookshelf Golem", 28.0D, 1.5F)
 				.addKey(EntityBookshelfGolem.ALLOW_SPECIAL, true, "Whether this golem can give itself potion effects");
 		CLAY = new GolemConfigSet(config, "Clay Golem", 20.0D, 2.0F);
@@ -115,7 +115,7 @@ public final class Config {
 		PRISMARINE = new GolemConfigSet(config, "Prismarine Golem", 24.0D, 8.0F);
 		QUARTZ = new GolemConfigSet(config, "Quartz Golem", 85.0D, 8.5F);
 		RED_SANDSTONE = new GolemConfigSet(config, "Red Sandstone Golem", 15.0D, 4.0F);
-		REDSTONE = new GolemConfigSet(config, "Redstone Golem", 18.0D, 4.0F)
+		REDSTONE = new GolemConfigSet(config, "Redstone Golem", 18.0D, 2.0F)
 				.addKey(EntityRedstoneGolem.ALLOW_SPECIAL, true, "Whether this golem can emit redstone power");
 		SANDSTONE = new GolemConfigSet(config, "Sandstone Golem", 15.0D, 4.0F);
 		SEA_LANTERN = new GolemConfigSet(config, "Sea Lantern Golem", 24.0D, 6.0F)

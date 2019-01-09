@@ -46,6 +46,7 @@ public final class ClientProxy extends CommonProxy {
 		// items
 		registerRender(GolemItems.golemPaper);
 		registerRender(GolemItems.spawnBedrockGolem);
+		registerRender(GolemItems.infoBook);
 	}
 
 	@Override

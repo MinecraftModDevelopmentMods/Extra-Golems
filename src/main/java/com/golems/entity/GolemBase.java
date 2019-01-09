@@ -188,10 +188,8 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 
 	@Override
 	protected void collideWithEntity(final Entity entityIn) {
-		if (entityIn instanceof IMob && !(entityIn instanceof EntityCreeper)
+		if (entityIn instanceof IMob && entityIn instanceof EntityLivingBase && !(entityIn instanceof EntityCreeper)
 				&& this.getRNG().nextInt(20) == 0) {
-			// also copied from vanilla... seems like it will break if a non-EntityLivingBase
-			// implements IMob
 			this.setAttackTarget((EntityLivingBase) entityIn);
 		}
 
@@ -359,8 +357,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	protected void dropFewItems(final boolean recentlyHit, final int lootingLevel) {
 		// make and populate a list of WeightedItem instances
 		final List<WeightedItem> drops = new ArrayList<>();
-		this.addDrop(drops, rand.nextBoolean() ? Blocks.YELLOW_FLOWER : Blocks.RED_FLOWER, 0, 1, 2,
-				65);
+		//this.addDrop(drops, rand.nextBoolean() ? Blocks.YELLOW_FLOWER : Blocks.RED_FLOWER, 0, 1, 2, 65);
 		this.addDrop(drops, Items.REDSTONE, 0, 1, 1, 20 + lootingLevel * 10);
 
 		this.addGolemDrops(drops, recentlyHit, lootingLevel);

@@ -39,6 +39,7 @@ import com.golems.entity.GolemBase;
 import com.golems.entity.GolemColorizedMultiTextured;
 import com.golems.entity.GolemMultiTextured;
 import com.golems.events.GolemBuildEvent;
+import com.golems.items.ItemInfoBook;
 import com.golems.main.Config;
 
 import net.minecraft.block.BlockLeaves;
@@ -52,7 +53,9 @@ import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.init.Blocks;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 /** Handles events added specifically from this mod. **/
 public class GolemCommonEventHandler {
@@ -193,6 +196,14 @@ public class GolemCommonEventHandler {
 	        }
 	        zombie.targetTasks.addTask(3, new EntityAIAttackGolem(zombie));
 	    }
+	}
+	
+	@SubscribeEvent
+	public void onWorldLoad(final WorldEvent.Load event) {
+		// Try to initialize all the golem-book info
+		// The item will check if this has already been done
+		ItemInfoBook.initGolemInfo(event.getWorld());
+		//ItemInfoBook.printDesc();
 	}
 
 	private static final class EntityAIAttackGolem extends EntityAINearestAttackableTarget<GolemBase> {

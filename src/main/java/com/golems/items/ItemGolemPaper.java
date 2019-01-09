@@ -27,7 +27,7 @@ public class ItemGolemPaper extends Item {
 
 	/**
 	 * allows items to add custom lines of information to the mouseover description.
-	 */
+	 *
 
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -38,25 +38,25 @@ public class ItemGolemPaper extends Item {
 			// ":";
 			// par3List.add(loreListIntro);
 			final String C = ", "; // C = comma
-			final String toAdd = trans("tile.blockDiamond.name") + C + trans("tile.blockEmerald.name") + C
-					+ trans("tile.obsidian.name") + C + trans("tile.glass.name") + C
-					+ trans("tile.stainedGlass.name") + C + trans("tile.lightgem.name") + C
-					+ trans("tile.whiteStone.name") + C + trans("tile.quartzBlock.default.name") + C
-					+ trans("tile.blockGold.name") + C + trans("tile.prismarine.rough.name") + C
-					+ trans("tile.icePacked.name") + C + trans("tile.netherBrick.name") + C
-					+ trans("tile.blockIron.name") + C + trans("tile.seaLantern.name") + C
-					+ trans("tile.sandStone.name") + C + trans("tile.redSandStone.default.name") + C
-					+ trans("tile.clayHardened.name") + C + trans("tile.clayHardenedStained.name")
-					+ C + trans("material.shroom_block") + C + trans("material.log") + C
-					+ trans("tile.tnt.name") + C + trans("tile.blockCoal.name") + C
-					+ trans("tile.blockRedstone.name") + C + trans("tile.blockLapis.name") + C
-					+ trans("tile.slime.name") + C + trans("tile.clay.name") + C
-					+ trans("tile.bookshelf.name") + C + trans("tile.sponge.dry.name") + C
-					+ trans("tile.melon.name") + C + trans("tile.workbench.name") + C
-					+ trans("tile.cloth.name") + C + trans("tile.hayBlock.name") + C
-					+ trans("tile.leaves.name") + C + trans("tile.magma.name") + C
-					+ trans("tile.netherWartBlock.name") + C + trans("tile.redNetherBrick.name") + C
-					+ trans("tile.boneBlock.name");
+			final String toAdd = trans("tile.blockDiamond.name", C) + trans("tile.blockEmerald.name") 
+					+ add("tile.obsidian.name", C) + add("tile.glass.name") 
+					+ add("tile.stainedGlass.name", C) + add("tile.lightgem.name") 
+					+ add("tile.whiteStone.name", C) + add("tile.quartzBlock.default.name") 
+					+ add("tile.blockGold.name", C) + add("tile.prismarine.rough.name") 
+					+ add("tile.icePacked.name", C) + add("tile.netherBrick.name") 
+					+ add("tile.blockIron.name", C) + add("tile.seaLantern.name") 
+					+ add("tile.sandStone.name", C) + add("tile.redSandStone.default.name")
+					+ add("tile.clayHardened.name", C) + add("tile.clayHardenedStained.name")
+					 + add("material.shroom_block", C) + add("material.log") 
+					+ add("tile.tnt.name", C) + add("tile.blockCoal.name") 
+					+ add("tile.blockRedstone.name", C) + add("tile.blockLapis.name") 
+					+ add("tile.slime.name", C) +add("tile.clay.name") 
+					+ add("tile.bookshelf.name", C) + add("tile.sponge.dry.name") 
+					+ add("tile.melon.name", C) + add("tile.workbench.name") 
+					+ add("tile.cloth.name", C) + add("tile.hayBlock.name") 
+					+ add("tile.leaves.name", C) + add("tile.magma.name") 
+					+ add("tile.netherWartBlock.name", C) + add("tile.redNetherBrick.name") 
+					+ add("tile.boneBlock.name");
 			tooltip.add(toAdd);
 			GolemPaperAddInfoEvent event = new GolemPaperAddInfoEvent(stack, worldIn, tooltip,
 					flagIn);
@@ -68,9 +68,11 @@ public class ItemGolemPaper extends Item {
 			tooltip.add(lorePressShift);
 		}
 	}
-
+	
 	@SideOnly(Side.CLIENT)
-	private String trans(final String s, final Object... p) {
-		return I18n.format(s, p);
+	private List<String> add(List<String> list, String toAdd, String comma) {
+		list.add(I18n.format(toAdd) + comma);
+		return list;
 	}
+	*/
 }

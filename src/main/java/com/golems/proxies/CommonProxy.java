@@ -5,6 +5,7 @@ import com.golems.entity.*;
 import com.golems.events.handlers.GolemCommonEventHandler;
 import com.golems.items.ItemBedrockGolem;
 import com.golems.items.ItemGolemPaper;
+import com.golems.items.ItemInfoBook;
 import com.golems.main.Config;
 import com.golems.main.ExtraGolems;
 import com.golems.main.GolemItems;
@@ -105,6 +106,9 @@ public class CommonProxy {
 
 		event.getRegistry().register(new ItemGolemPaper().setTranslationKey("golem_paper")
 				.setRegistryName(ExtraGolems.MODID, "golem_paper"));
+		
+		event.getRegistry().register(new ItemInfoBook().setTranslationKey("info_book")
+				.setRegistryName(ExtraGolems.MODID, "info_book"));
 	}
 
 	// TODO: Reimplement old version

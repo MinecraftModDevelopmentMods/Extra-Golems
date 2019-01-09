@@ -16,6 +16,9 @@ public final class GolemItems {
 	@GameRegistry.ObjectHolder(ExtraGolems.MODID + ":spawn_bedrock_golem")
 	public static Item spawnBedrockGolem;
 	
+	@GameRegistry.ObjectHolder(ExtraGolems.MODID + ":info_book")
+	public static Item infoBook;
+	
 	////// BLOCKS //////
 	@GameRegistry.ObjectHolder(ExtraGolems.MODID + ":golem_head")
 	public static Block golemHead;

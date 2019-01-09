@@ -91,7 +91,8 @@ public final class BlockGolemHead extends BlockHorizontal {
 	@Override
 	public void onBlockAdded(final World world, final BlockPos pos, final IBlockState state) {
 		super.onBlockAdded(world, pos, state);
-		final Block blockBelow1 = world.getBlockState(pos.down(1)).getBlock();
+		final IBlockState stateBelow1 = world.getBlockState(pos.down(1));
+		final Block blockBelow1 = stateBelow1.getBlock();
 		final Block blockBelow2 = world.getBlockState(pos.down(2)).getBlock();
 		final int x = pos.getX();
 		final int y = pos.getY();
@@ -133,7 +134,8 @@ public final class BlockGolemHead extends BlockHorizontal {
 					}
 
 					// post an event that, when handled, will initialize the golem to spawn
-					final GolemBuildEvent event = new GolemBuildEvent(world, pos, flagX);
+					final boolean sameMeta = getAreGolemBlocksSameMeta(world, pos, stateBelow1, flagX);
+					final GolemBuildEvent event = new GolemBuildEvent(world, stateBelow1, sameMeta, flagX);
 					MinecraftForge.EVENT_BUS.post(event);
 					if (event.isGolemNull() || event.isGolemBanned()) {
 						return;
@@ -172,6 +174,28 @@ public final class BlockGolemHead extends BlockHorizontal {
 		final Block below = world.getBlockState(headPos.down(1)).getBlock();
 		return world.getBlockState(armsZ[0]).getBlock() == below
 				&& world.getBlockState(armsZ[1]).getBlock() == below;
+	}
+	
+	/**
+	 * @return true if all 4 construction blocks have the same metadata
+	 **/
+	public static boolean getAreGolemBlocksSameMeta(final World worldObj, final BlockPos headPos, IBlockState blockState, boolean isGolemXAligned) {
+		// SOUTH=z++; WEST=x--; NORTH=z--; EAST=x++
+		final Block blockBelow = blockState.getBlock();
+		final BlockPos[] armsX = { headPos.down(1).west(1), headPos.down(1).east(1) };
+		final BlockPos[] armsZ = { headPos.down(1).north(1), headPos.down(1).south(1) };
+		final int metaBelow1 = blockBelow.getMetaFromState(blockState);
+		IBlockState state;
+		state = worldObj.getBlockState(headPos.down(2));
+		final int metaBelow2 = blockBelow.getMetaFromState(state);
+		state = isGolemXAligned ? worldObj.getBlockState(armsX[0])
+				: worldObj.getBlockState(armsZ[0]);
+		final int metaArm1 = blockBelow.getMetaFromState(state);
+		state = isGolemXAligned ? worldObj.getBlockState(armsX[1])
+				: worldObj.getBlockState(armsZ[1]);
+		final int metaArm2 = blockBelow.getMetaFromState(state);
+
+		return metaBelow1 == metaBelow2 && metaBelow2 == metaArm1 && metaArm1 == metaArm2;
 	}
 
 	/**

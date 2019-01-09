@@ -33,7 +33,7 @@ public abstract class GolemDescriptionManager {
 
 	/**
 	 * Checks the passed golem for various characteristics, making a String for each one.
-	 *
+	 * Use this from a child class in order to populate your descriptions.
 	 * @return a LinkedList containing all descriptions that apply to the passed golem
 	 **/
 	@SuppressWarnings("WeakerAccess")
