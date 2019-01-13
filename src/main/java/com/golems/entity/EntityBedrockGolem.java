@@ -5,7 +5,6 @@ import java.util.List;
 import com.golems.items.ItemBedrockGolem;
 import com.golems.main.Config;
 import com.golems.main.GolemItems;
-import com.golems.util.WeightedItem;
 
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
@@ -73,11 +72,6 @@ public final class EntityBedrockGolem extends GolemBase {
 				.setBaseValue(Config.BEDROCK.getMaxHealth());
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.24D);
 		this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(1.0D);
-	}
-
-	@Override
-	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
-		//
 	}
 
 	@Override

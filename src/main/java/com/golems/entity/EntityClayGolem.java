@@ -1,13 +1,9 @@
 package com.golems.entity;
 
-import java.util.List;
-
 import com.golems.main.Config;
-import com.golems.util.WeightedItem;
 
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -31,10 +27,10 @@ public final class EntityClayGolem extends GolemBase {
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.22D);
 	}
 
-	@Override
-	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
-		this.addDrop(dropList, Items.CLAY_BALL, 0, 8, 10 + lootingLevel, 100);
-	}
+//	@Override
+//	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
+//		this.addDrop(dropList, Items.CLAY_BALL, 0, 8, 10 + lootingLevel, 100);
+//	}
 
 	@Override
 	public SoundEvent getGolemSound() {

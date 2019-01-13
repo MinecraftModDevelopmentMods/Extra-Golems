@@ -5,14 +5,12 @@ import java.util.List;
 import com.golems.events.EndGolemTeleportEvent;
 import com.golems.main.Config;
 import com.golems.main.GolemItems;
-import com.golems.util.WeightedItem;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
@@ -108,12 +106,12 @@ public final class EntityEndstoneGolem extends GolemBase {
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 
-	@Override
-	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
-		this.addDrop(dropList, Blocks.END_STONE, 0, 2, 2 + lootingLevel, 90);
-		this.addDrop(dropList, Items.ENDER_PEARL, 0, 2, 4 + lootingLevel, 40);
-		this.addDrop(dropList, Items.ENDER_EYE, 0, 1, 1 + lootingLevel, 6);
-	}
+//	@Override
+//	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
+//		this.addDrop(dropList, Blocks.END_STONE, 0, 2, 2 + lootingLevel, 90);
+//		this.addDrop(dropList, Items.ENDER_PEARL, 0, 2, 4 + lootingLevel, 40);
+//		this.addDrop(dropList, Items.ENDER_EYE, 0, 1, 1 + lootingLevel, 6);
+//	}
 
 	protected boolean teleportRandomly() {
 		final double d0 = this.posX + (this.rand.nextDouble() - 0.5D) * range;

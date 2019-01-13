@@ -1,15 +1,11 @@
 package com.golems.entity;
 
-import java.util.List;
-
 import com.golems.main.Config;
 import com.golems.main.ExtraGolems;
-import com.golems.util.WeightedItem;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundEvent;
@@ -50,14 +46,14 @@ public final class EntityWoodenGolem extends GolemMultiTextured {
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
 	}
 
-	@Override
-	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
-		final int size = 6 + this.rand.nextInt(4 + lootingLevel * 4);
-		final int meta = this.getTextureNum() % woodTypes.length;
-		this.addDrop(dropList, new ItemStack(Blocks.PLANKS, size > 16 ? 16 : size, meta), 100);
-		this.addDrop(dropList, Items.STICK, 0, 1, 4, 10 + lootingLevel * 4);
-		this.addDrop(dropList, Blocks.SAPLING, 0, 1, 2, 4 + lootingLevel * 4);
-	}
+//	@Override
+//	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
+//		final int size = 6 + this.rand.nextInt(4 + lootingLevel * 4);
+//		final int meta = this.getTextureNum() % woodTypes.length;
+//		this.addDrop(dropList, new ItemStack(Blocks.PLANKS, size > 16 ? 16 : size, meta), 100);
+//		this.addDrop(dropList, Items.STICK, 0, 1, 4, 10 + lootingLevel * 4);
+//		this.addDrop(dropList, Blocks.SAPLING, 0, 1, 2, 4 + lootingLevel * 4);
+//	}
 
 	@Override
 	public SoundEvent getGolemSound() {

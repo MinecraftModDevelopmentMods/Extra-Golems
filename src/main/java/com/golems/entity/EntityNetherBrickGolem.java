@@ -3,12 +3,10 @@ package com.golems.entity;
 import java.util.List;
 
 import com.golems.main.Config;
-import com.golems.util.WeightedItem;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -48,10 +46,10 @@ public final class EntityNetherBrickGolem extends GolemBase {
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
 	}
 
-	@Override
-	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
-		this.addDrop(dropList, Items.NETHERBRICK, 0, 4, 8 + lootingLevel, 100);
-	}
+//	@Override
+//	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
+//		this.addDrop(dropList, Items.NETHERBRICK, 0, 4, 8 + lootingLevel, 100);
+//	}
 
 	@Override
 	public SoundEvent getGolemSound() {
@@ -60,7 +58,7 @@ public final class EntityNetherBrickGolem extends GolemBase {
 	
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if(Config.NETHERBRICK.getBoolean(EntityNetherWartGolem.ALLOW_SPECIAL))
+		if(Config.NETHERBRICK.getBoolean(EntityNetherBrickGolem.ALLOW_FIRE_SPECIAL))
 			list.add(TextFormatting.RED + trans("entitytip.lights_mobs_on_fire"));
 		return list;
 	}

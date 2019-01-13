@@ -3,11 +3,9 @@ package com.golems.entity;
 import java.util.List;
 
 import com.golems.main.Config;
-import com.golems.util.WeightedItem;
 
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -65,13 +63,13 @@ public final class EntityLeafGolem extends GolemColorized {
 		}
 	}
 
-	@Override
-	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
-		this.addDrop(dropList, new ItemStack(Blocks.LEAVES, lootingLevel + 1), 100);
-		this.addDrop(dropList, Blocks.SAPLING, 0, 1, 1, 20 + lootingLevel * 10);
-		this.addDrop(dropList, Items.APPLE, 0, 1, 1, 15 + lootingLevel * 10);
-		this.addDrop(dropList, Items.STICK, 0, 1, 2, 5 + lootingLevel * 10);
-	}
+//	@Override
+//	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
+//		this.addDrop(dropList, new ItemStack(Blocks.LEAVES, lootingLevel + 1), 100);
+//		this.addDrop(dropList, Blocks.SAPLING, 0, 1, 1, 20 + lootingLevel * 10);
+//		this.addDrop(dropList, Items.APPLE, 0, 1, 1, 15 + lootingLevel * 10);
+//		this.addDrop(dropList, Items.STICK, 0, 1, 2, 5 + lootingLevel * 10);
+//	}
 
 	@Override
 	public SoundEvent getGolemSound() {
@@ -81,7 +79,7 @@ public final class EntityLeafGolem extends GolemColorized {
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
 		if(Config.LEAF.getBoolean(EntityLeafGolem.ALLOW_SPECIAL))
-			list.add(TextFormatting.DARK_GREEN + trans("entitytip.has_regen_1"));
+			list.add(TextFormatting.DARK_GREEN + trans("effect.regeneration") + " " + trans("enchantment.level.1"));
 		return list;
 	}
 }

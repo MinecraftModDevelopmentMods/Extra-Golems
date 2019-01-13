@@ -3,7 +3,6 @@ package com.golems.entity;
 import java.util.List;
 
 import com.golems.main.Config;
-import com.golems.util.WeightedItem;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -223,13 +222,13 @@ public final class EntityTNTGolem extends GolemBase {
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 
-	@Override
-	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
-		final int size = 2 + this.rand.nextInt(4);
-		this.addDrop(dropList, new ItemStack(Items.GUNPOWDER, size), 100);
-		this.addDrop(dropList, Blocks.TNT, 0, 1, 1, lootingLevel * 30);
-		this.addDrop(dropList, Blocks.SAND, 0, 1, 4, 5 + lootingLevel * 10);
-	}
+//	@Override
+//	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
+//		final int size = 2 + this.rand.nextInt(4);
+//		this.addDrop(dropList, new ItemStack(Items.GUNPOWDER, size), 100);
+//		this.addDrop(dropList, Blocks.TNT, 0, 1, 1, lootingLevel * 30);
+//		this.addDrop(dropList, Blocks.SAND, 0, 1, 4, 5 + lootingLevel * 10);
+//	}
 
 	@Override
 	public SoundEvent getGolemSound() {

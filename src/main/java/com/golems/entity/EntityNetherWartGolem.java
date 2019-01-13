@@ -4,16 +4,13 @@ import java.util.List;
 
 import com.golems.entity.ai.EntityAIPlaceRandomBlocksStrictly;
 import com.golems.main.Config;
-import com.golems.util.WeightedItem;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockNetherWart;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
@@ -58,22 +55,22 @@ public final class EntityNetherWartGolem extends GolemBase {
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 
-	@Override
-	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
-		Item netherwart;
-		int min;
-		int max;
-		if (Config.NETHERWART.getBoolean(DROP_NETHERWART_BLOCK)) {
-			netherwart = Item.getItemFromBlock(NETHERWART);
-			min = 0;
-			max = 4;
-		} else {
-			netherwart = Items.NETHER_WART;
-			min = 1;
-			max = 9;
-		}
-		this.addDrop(dropList, netherwart, 0, min, max, 90 + lootingLevel * 2);
-	}
+//	@Override
+//	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
+//		Item netherwart;
+//		int min;
+//		int max;
+//		if (Config.NETHERWART.getBoolean(DROP_NETHERWART_BLOCK)) {
+//			netherwart = Item.getItemFromBlock(NETHERWART);
+//			min = 0;
+//			max = 4;
+//		} else {
+//			netherwart = Items.NETHER_WART;
+//			min = 1;
+//			max = 9;
+//		}
+//		this.addDrop(dropList, netherwart, 0, min, max, 90 + lootingLevel * 2);
+//	}
 
 	@Override
 	public SoundEvent getGolemSound() {

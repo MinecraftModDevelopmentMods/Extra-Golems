@@ -74,7 +74,7 @@ public abstract class GolemDescriptionManager {
 	/**
 	 * Helper method for translation.
 	 **/
-	protected String trans(final String s, final Object... strings) {
+	protected static String trans(final String s, final Object... strings) {
 		return I18n.format(s, strings);
 	}
 

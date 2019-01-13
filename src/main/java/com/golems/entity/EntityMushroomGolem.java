@@ -5,7 +5,6 @@ import java.util.List;
 import com.golems.entity.ai.EntityAIPlaceRandomBlocksStrictly;
 import com.golems.main.Config;
 import com.golems.main.ExtraGolems;
-import com.golems.util.WeightedItem;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -50,12 +49,12 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
 	}
 
-	@Override
-	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
-		final int size = 4 + this.rand.nextInt(6 + lootingLevel * 2);
-		final Block shroom = rand.nextBoolean() ? Blocks.RED_MUSHROOM : Blocks.BROWN_MUSHROOM;
-		this.addDrop(dropList, new ItemStack(shroom, size), 100);
-	}
+//	@Override
+//	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
+//		final int size = 4 + this.rand.nextInt(6 + lootingLevel * 2);
+//		final Block shroom = rand.nextBoolean() ? Blocks.RED_MUSHROOM : Blocks.BROWN_MUSHROOM;
+//		this.addDrop(dropList, new ItemStack(shroom, size), 100);
+//	}
 
 	@Override
 	public SoundEvent getGolemSound() {

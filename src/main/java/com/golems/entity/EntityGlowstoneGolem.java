@@ -6,12 +6,10 @@ import com.golems.blocks.BlockUtilityGlow;
 import com.golems.entity.ai.EntityAIPlaceSingleBlock;
 import com.golems.main.Config;
 import com.golems.main.GolemItems;
-import com.golems.util.WeightedItem;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -59,11 +57,11 @@ public final class EntityGlowstoneGolem extends GolemBase {
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 
-	@Override
-	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
-		final int size = 6 + this.rand.nextInt(8 + lootingLevel * 2);
-		this.addDrop(dropList, new ItemStack(Items.GLOWSTONE_DUST, size), 100);
-	}
+//	@Override
+//	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
+//		final int size = 6 + this.rand.nextInt(8 + lootingLevel * 2);
+//		this.addDrop(dropList, new ItemStack(Items.GLOWSTONE_DUST, size), 100);
+//	}
 
 	@Override
 	public SoundEvent getGolemSound() {

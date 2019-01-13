@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.golems.entity.ai.EntityAIPlaceRandomBlocksStrictly;
 import com.golems.main.Config;
-import com.golems.util.WeightedItem;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
@@ -15,9 +14,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
@@ -46,13 +43,13 @@ public final class EntityMelonGolem extends GolemBase {
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 
-	@Override
-	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
-		final int size = 6 + this.rand.nextInt(6 + lootingLevel * 4);
-		this.addDrop(dropList, new ItemStack(Items.MELON, size), 100);
-		this.addDrop(dropList, Items.MELON_SEEDS, 0, 1, 6 + lootingLevel, 20 + lootingLevel * 10);
-		this.addDrop(dropList, Items.SPECKLED_MELON, 0, 1, 1, 2 + lootingLevel * 10);
-	}
+//	@Override
+//	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
+//		final int size = 6 + this.rand.nextInt(6 + lootingLevel * 4);
+//		this.addDrop(dropList, new ItemStack(Items.MELON, size), 100);
+//		this.addDrop(dropList, Items.MELON_SEEDS, 0, 1, 6 + lootingLevel, 20 + lootingLevel * 10);
+//		this.addDrop(dropList, Items.SPECKLED_MELON, 0, 1, 1, 2 + lootingLevel * 10);
+//	}
 
 	@Override
 	public SoundEvent getGolemSound() {

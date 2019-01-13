@@ -1,9 +1,6 @@
 package com.golems.entity;
 
-import java.util.List;
-
 import com.golems.main.Config;
-import com.golems.util.WeightedItem;
 
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
@@ -47,16 +44,16 @@ public final class EntityStainedGlassGolem extends GolemColorizedMultiTextured {
 		return true;
 	}
 
-	@Override
-	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
-		final int keyReturn = Config.STAINED_GLASS.getInt(DROP_META);
-		final int meta = keyReturn < 0 ? 15 - this.getTextureNum() : keyReturn;
-		final int size = lootingLevel + rand.nextInt(3 + lootingLevel);
-		this.addDrop(dropList, Blocks.STAINED_GLASS, meta, 0, size > 4 ? 4 : size,
-				50 + lootingLevel * 10);
-		this.addDrop(dropList, Blocks.STAINED_GLASS_PANE, meta, 1, 5 + lootingLevel,
-				80 + lootingLevel * 10);
-	}
+//	@Override
+//	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
+//		final int keyReturn = Config.STAINED_GLASS.getInt(DROP_META);
+//		final int meta = keyReturn < 0 ? 15 - this.getTextureNum() : keyReturn;
+//		final int size = lootingLevel + rand.nextInt(3 + lootingLevel);
+//		this.addDrop(dropList, Blocks.STAINED_GLASS, meta, 0, size > 4 ? 4 : size,
+//				50 + lootingLevel * 10);
+//		this.addDrop(dropList, Blocks.STAINED_GLASS_PANE, meta, 1, 5 + lootingLevel,
+//				80 + lootingLevel * 10);
+//	}
 
 	@Override
 	public SoundEvent getGolemSound() {

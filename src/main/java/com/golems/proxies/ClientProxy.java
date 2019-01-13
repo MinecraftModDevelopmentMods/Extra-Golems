@@ -1,7 +1,6 @@
 package com.golems.proxies;
 
 import com.golems.entity.*;
-import com.golems.events.handlers.GolemClientEventHandler;
 import com.golems.main.ExtraGolems;
 import com.golems.main.GolemItems;
 import com.golems.renders.RenderColoredGolem;
@@ -28,7 +27,6 @@ public final class ClientProxy extends CommonProxy {
 	@Override
 	public void registerEvents() {
 		super.registerEvents();
-		MinecraftForge.EVENT_BUS.register(new GolemClientEventHandler());
 	}
 
 

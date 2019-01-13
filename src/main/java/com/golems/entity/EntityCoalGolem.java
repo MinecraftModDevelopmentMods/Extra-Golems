@@ -3,16 +3,13 @@ package com.golems.entity;
 import java.util.List;
 
 import com.golems.main.Config;
-import com.golems.util.WeightedItem;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -66,12 +63,12 @@ public final class EntityCoalGolem extends GolemBase {
 		}
 	}
 
-	@Override
-	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
-		final int size = 8 + this.rand.nextInt(8 + lootingLevel * 2);
-		this.addDrop(dropList, new ItemStack(Items.COAL, size), 100);
-		this.addDrop(dropList, Items.COAL, 1, 1, size / 4, 40);
-	}
+//	@Override
+//	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
+//		final int size = 8 + this.rand.nextInt(8 + lootingLevel * 2);
+//		this.addDrop(dropList, new ItemStack(Items.COAL, size), 100);
+//		this.addDrop(dropList, Items.COAL, 1, 1, size / 4, 40);
+//	}
 
 	@Override
 	public SoundEvent getGolemSound() {

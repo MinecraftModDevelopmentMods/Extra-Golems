@@ -1,7 +1,9 @@
 package com.golems.entity;
 
+import java.util.List;
+
 import com.golems.main.Config;
-import com.golems.util.WeightedItem;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -14,8 +16,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-
-import java.util.List;
 
 public final class EntityMagmaGolem extends GolemBase {
 
@@ -92,11 +92,11 @@ public final class EntityMagmaGolem extends GolemBase {
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
 	}
 
-	@Override
-	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
-		final int size = lootingLevel + this.rand.nextInt(4);
-		this.addDrop(dropList, new ItemStack(MAGMA, size > 4 ? 4 : size), 90 + lootingLevel * 2);
-	}
+//	@Override
+//	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
+//		final int size = lootingLevel + this.rand.nextInt(4);
+//		this.addDrop(dropList, new ItemStack(MAGMA, size > 4 ? 4 : size), 90 + lootingLevel * 2);
+//	}
 
 	@Override
 	public SoundEvent getGolemSound() {

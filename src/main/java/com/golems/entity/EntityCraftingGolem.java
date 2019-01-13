@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.golems.blocks.ContainerPortableWorkbench;
 import com.golems.main.Config;
-import com.golems.util.WeightedItem;
 
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
@@ -55,11 +54,11 @@ public final class EntityCraftingGolem extends GolemBase {
 		return super.processInteract(player, hand);
 	}
 
-	@Override
-	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
-		this.addDrop(dropList, new ItemStack(Blocks.CRAFTING_TABLE, 1 + rand.nextInt(2)), 100);
-		this.addDrop(dropList, Blocks.PLANKS, 0, 1, 6, 70 + lootingLevel * 10);
-	}
+//	@Override
+//	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
+//		this.addDrop(dropList, new ItemStack(Blocks.CRAFTING_TABLE, 1 + rand.nextInt(2)), 100);
+//		this.addDrop(dropList, Blocks.PLANKS, 0, 1, 6, 70 + lootingLevel * 10);
+//	}
 
 	@Override
 	public SoundEvent getGolemSound() {

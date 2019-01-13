@@ -4,17 +4,18 @@ import com.golems.blocks.*;
 import com.golems.entity.*;
 import com.golems.events.handlers.GolemCommonEventHandler;
 import com.golems.items.ItemBedrockGolem;
-import com.golems.items.ItemGolemPaper;
 import com.golems.items.ItemInfoBook;
 import com.golems.main.Config;
 import com.golems.main.ExtraGolems;
 import com.golems.main.GolemItems;
 
 import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -41,9 +42,9 @@ public class CommonProxy {
 
 	public void registerEntities() {
 		CommonProxy.golemEntityCount = 0;
-		register(EntityBedrockGolem.class, "golem_bedrock");
-		register(EntityBoneGolem.class, "golem_bone");
-		register(EntityBookshelfGolem.class, "golem_bookshelf");
+		register(EntityBedrockGolem.class, "golem_bedrock", false);
+		register(EntityBoneGolem.class, "golem_bone", true);
+		register(EntityBookshelfGolem.class, "golem_bookshelf", true);
 		register(EntityClayGolem.class, "golem_clay");
 		register(EntityCoalGolem.class, "golem_coal");
 		register(EntityCraftingGolem.class, "golem_crafting");
@@ -80,12 +81,21 @@ public class CommonProxy {
 	}
 
 	/** registers the entity. **/
-	protected static void register(final Class<? extends GolemBase> entityClass, final String name) {
+	protected static void register(final Class<? extends GolemBase> entityClass, final String name, final boolean registerLootTable) {
 
 		EntityRegistry.registerModEntity(
 				new ResourceLocation(ExtraGolems.MODID + ":textures/entity/" + name + ".png"),
 				entityClass, ExtraGolems.MODID + "." + name, ++golemEntityCount,
 				ExtraGolems.instance, 16 * 4, 3, true);
+		if(registerLootTable) {
+			ResourceLocation rl = LootTableList.register(new ResourceLocation(ExtraGolems.MODID, name));
+			System.out.println("registered loot table at " + rl);
+		}
+	}
+	
+	/** registers the entity. **/
+	protected static void register(final Class<? extends GolemBase> entityClass, final String name) {
+		register(entityClass, name, false); // TODO change to TRUE after testing
 	}
 
 	// TODO: Reimplement old version
@@ -104,8 +114,8 @@ public class CommonProxy {
 				.register(new ItemBedrockGolem().setTranslationKey("spawn_bedrock_golem")
 						.setRegistryName(ExtraGolems.MODID, "spawn_bedrock_golem"));
 
-		event.getRegistry().register(new ItemGolemPaper().setTranslationKey("golem_paper")
-				.setRegistryName(ExtraGolems.MODID, "golem_paper"));
+		event.getRegistry().register(new Item().setTranslationKey("golem_paper")
+				.setRegistryName(ExtraGolems.MODID, "golem_paper").setCreativeTab(CreativeTabs.MISC));
 		
 		event.getRegistry().register(new ItemInfoBook().setTranslationKey("info_book")
 				.setRegistryName(ExtraGolems.MODID, "info_book"));

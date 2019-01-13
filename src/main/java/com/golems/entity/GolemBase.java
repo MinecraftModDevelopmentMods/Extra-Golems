@@ -1,12 +1,10 @@
 package com.golems.entity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.golems.entity.ai.EntityAIDefendAgainstMonsters;
 import com.golems.main.ExtraGolems;
 import com.golems.main.GolemItems;
-import com.golems.util.WeightedItem;
 import com.google.common.base.Predicate;
 
 import net.minecraft.block.Block;
@@ -33,8 +31,6 @@ import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.IAnimals;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathNavigateGround;
@@ -353,34 +349,34 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	 * @param lootingLevel
 	 *            - Level of Looting used to kill this mob.
 	 */
-	@Override
-	protected void dropFewItems(final boolean recentlyHit, final int lootingLevel) {
-		// make and populate a list of WeightedItem instances
-		final List<WeightedItem> drops = new ArrayList<>();
-		//this.addDrop(drops, rand.nextBoolean() ? Blocks.YELLOW_FLOWER : Blocks.RED_FLOWER, 0, 1, 2, 65);
-		this.addDrop(drops, Items.REDSTONE, 0, 1, 1, 20 + lootingLevel * 10);
-
-		this.addGolemDrops(drops, recentlyHit, lootingLevel);
-
-		// drop every item in the list if it passes a percent-chance check
-		for (final WeightedItem w : drops) {
-			if (w != null && w.shouldDrop(this.rand)) {
-				final ItemStack drop = w.makeStack(this.rand);
-				this.entityDropItem(drop, 0.0F);
-			}
-		}
-	}
+//	@Override
+//	protected void dropFewItems(final boolean recentlyHit, final int lootingLevel) {
+//		// make and populate a list of WeightedItem instances
+//		final List<WeightedItem> drops = new ArrayList<>();
+//		//this.addDrop(drops, rand.nextBoolean() ? Blocks.YELLOW_FLOWER : Blocks.RED_FLOWER, 0, 1, 2, 65);
+//		this.addDrop(drops, Items.REDSTONE, 0, 1, 1, 20 + lootingLevel * 10);
+//
+//		this.addGolemDrops(drops, recentlyHit, lootingLevel);
+//
+//		// drop every item in the list if it passes a percent-chance check
+//		for (final WeightedItem w : drops) {
+//			if (w != null && w.shouldDrop(this.rand)) {
+//				final ItemStack drop = w.makeStack(this.rand);
+//				this.entityDropItem(drop, 0.0F);
+//			}
+//		}
+//	}
 
 	/** Adds an ItemStack to the list of golem drops. **/
-	protected boolean addDrop(final List<WeightedItem> dropList, final ItemStack stack, final int percentChance) {
-		return dropList.add(new WeightedItem(stack, percentChance));
-	}
+//	protected boolean addDrop(final List<WeightedItem> dropList, final ItemStack stack, final int percentChance) {
+//		return dropList.add(new WeightedItem(stack, percentChance));
+//	}
 
 	/** Adds an Item to the list of golem drops. **/
-	protected boolean addDrop(final List<WeightedItem> dropList, final Item item, final int meta, final int min, final int max,
-			final int percentChance) {
-		return dropList.add(new WeightedItem(item, meta, min, max, percentChance));
-	}
+//	protected boolean addDrop(final List<WeightedItem> dropList, final Item item, final int meta, final int min, final int max,
+//			final int percentChance) {
+//		return dropList.add(new WeightedItem(item, meta, min, max, percentChance));
+//	}
 
 	/**
 	 * Adds a Block to the list of golem drops.
@@ -393,28 +389,28 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	 * @param percentChance
 	 * @return
 	 */
-	protected boolean addDrop(final List<WeightedItem> dropList, final Block block, final int meta, final int min, final int max,
-			final int percentChance) {
-		return dropList
-				.add(new WeightedItem(Item.getItemFromBlock(block), meta, min, max, percentChance));
-	}
+//	protected boolean addDrop(final List<WeightedItem> dropList, final Block block, final int meta, final int min, final int max,
+//			final int percentChance) {
+//		return dropList
+//				.add(new WeightedItem(Item.getItemFromBlock(block), meta, min, max, percentChance));
+//	}
 
 	/**
 	 * Iterates through a list of drops and removes any entries that contain the given item and
 	 * metadata. Useful for removing the default drops, which include redstone, yellow flowers, and
 	 * red flowers. Pass {@code OreDictionary.WILDCARD_VALUE} to ignore metadata.
 	 **/
-	protected boolean removeFromList(final List<WeightedItem> list, final Item in, final int meta) {
-		boolean flag = false;
-		for (final WeightedItem w : list) {
-			if (w != null && w.item == in
-					&& (meta == OreDictionary.WILDCARD_VALUE || w.meta == meta)) {
-				list.remove(w);
-				flag = true;
-			}
-		}
-		return flag;
-	}
+//	protected boolean removeFromList(final List<WeightedItem> list, final Item in, final int meta) {
+//		boolean flag = false;
+//		for (final WeightedItem w : list) {
+//			if (w != null && w.item == in
+//					&& (meta == OreDictionary.WILDCARD_VALUE || w.meta == meta)) {
+//				list.remove(w);
+//				flag = true;
+//			}
+//		}
+//		return flag;
+//	}
 
 	/////////////// OTHER SETTERS AND GETTERS /////////////////
 
@@ -586,8 +582,8 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	// * @see WeightedItem
 	// **/
 	// TODO: Use loot tables instead!
-	public abstract void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit,
-			int lootingLevel);
+//	public abstract void addGolemDrops(List<WeightedItem> dropList, boolean recentlyHit,
+//			int lootingLevel);
 
 	/**
 	 * @return A SoundEvent to play when the golem is attacking, walking, hurt, and on death

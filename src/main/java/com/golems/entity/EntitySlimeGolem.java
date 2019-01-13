@@ -3,14 +3,11 @@ package com.golems.entity;
 import java.util.List;
 
 import com.golems.main.Config;
-import com.golems.util.WeightedItem;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -69,11 +66,11 @@ public final class EntitySlimeGolem extends GolemBase {
 		this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.5D);
 	}
 
-	@Override
-	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
-		final int size = 11 + this.rand.nextInt(16 + lootingLevel * 4);
-		this.addDrop(dropList, new ItemStack(Items.SLIME_BALL, size), 100);
-	}
+//	@Override
+//	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
+//		final int size = 11 + this.rand.nextInt(16 + lootingLevel * 4);
+//		this.addDrop(dropList, new ItemStack(Items.SLIME_BALL, size), 100);
+//	}
 
 	@Override
 	public SoundEvent getGolemSound() {

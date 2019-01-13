@@ -4,14 +4,11 @@ import java.util.List;
 
 import com.golems.events.SpongeGolemSoakEvent;
 import com.golems.main.Config;
-import com.golems.util.WeightedItem;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -82,12 +79,12 @@ public final class EntitySpongeGolem extends GolemBase {
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.22D);
 	}
 
-	@Override
-	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
-		final int size = 1 + this.rand.nextInt(3 + lootingLevel);
-		this.addDrop(dropList,
-				new ItemStack(Item.getItemFromBlock(Blocks.SPONGE), size > 4 ? 4 : size), 100);
-	}
+//	@Override
+//	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
+//		final int size = 1 + this.rand.nextInt(3 + lootingLevel);
+//		this.addDrop(dropList,
+//				new ItemStack(Item.getItemFromBlock(Blocks.SPONGE), size > 4 ? 4 : size), 100);
+//	}
 
 	@Override
 	public SoundEvent getGolemSound() {

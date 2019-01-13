@@ -1,16 +1,15 @@
 package com.golems.entity;
 
-import com.golems.blocks.BlockUtilityGlow;
+import java.util.List;
+
 import com.golems.blocks.BlockUtilityPower;
 import com.golems.entity.ai.EntityAIPlaceSingleBlock;
 import com.golems.main.Config;
 import com.golems.main.GolemItems;
-import com.golems.util.WeightedItem;
-import net.minecraft.block.Block;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -19,8 +18,6 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.List;
 
 public final class EntityRedstoneGolem extends GolemBase {
 
@@ -56,11 +53,11 @@ public final class EntityRedstoneGolem extends GolemBase {
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 
-	@Override
-	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
-		final int size = 8 + rand.nextInt(14 + lootingLevel * 4);
-		this.addDrop(dropList, new ItemStack(Items.REDSTONE, size > 36 ? 36 : size), 100);
-	}
+//	@Override
+//	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
+//		final int size = 8 + rand.nextInt(14 + lootingLevel * 4);
+//		this.addDrop(dropList, new ItemStack(Items.REDSTONE, size > 36 ? 36 : size), 100);
+//	}
 
 	@Override
 	public SoundEvent getGolemSound() {

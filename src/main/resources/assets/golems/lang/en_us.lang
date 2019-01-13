@@ -73,7 +73,6 @@ entitytip.can_teleport=Teleports randomly
 entitytip.freezes_blocks=Freezes water and cools lava
 entitytip.knockback_resist=Knockback resistance
 entitytip.attacks_use_potion_effects=Inflicts bad potion effects
-entitytip.has_regen_1=Regeneration I
 entitytip.plants_flowers=Plants flowers
 entitytip.plants_shrooms=Plants mushrooms
 entitytip.plants_warts=Plants nether wart
@@ -86,3 +85,14 @@ entitytip.explodes=May explode randomly
 entitytip.emits_redstone_signal=Emits redstone signal
 entitytip.click_open_crafting=Right click to open a crafting menu
 entitytip.breathes_underwater=Breathes Underwater
+
+# Golem Guide Book entries
+golembook.intro=Welcome to Extra Golems! This guide will help you build your very own golem army. The first part has instructions to make a golem. The next part has information about each of the golems you can make. Turn the page to get started!
+golembook.recipe_spell.intro=Step 1: Make a %s.
+golembook.recipe_spell.recipe=Easy! To make a %1$s, combine 1 %2$s, 1 %3$s, 1 %4$s, and 1 %5$s
+golembook.recipe_head.intro=Step 2: Make a %s.
+golembook.recipe_head.recipe=Even easier! To make a %1$s, combine the %2$s and 1 %3$s
+golembook.build_golem.intro=Step 3: Build a golem.
+golembook.build_golem.howto1=Place 2 blocks, one on top of the other.
+golembook.build_golem.howto2=Place 2 more blocks on opposite sides of the top block.
+golembook.build_golem.howto3=Place a %s on top of the middle block, and you're done!
