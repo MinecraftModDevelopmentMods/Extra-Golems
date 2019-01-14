@@ -33,6 +33,7 @@ public final class EntityMagmaGolem extends GolemBase {
 		this.ticksStandingStill = 0;
 		this.stepHeight = 1.0F;
 		this.tasks.addTask(0, this.swimmingAI);
+		this.setLootTableLoc("golem_magma");
 	}
 
 	@Override

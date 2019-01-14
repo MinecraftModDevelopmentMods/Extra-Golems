@@ -14,6 +14,7 @@ public final class EntityStrawGolem extends GolemBase {
 	public EntityStrawGolem(final World world) {
 		super(world, Config.STRAW.getBaseAttack(), Blocks.HAY_BLOCK);
 		this.setCanSwim(true);
+		this.setLootTableLoc("golem_straw");
 	}
 
 	protected ResourceLocation applyTexture() {

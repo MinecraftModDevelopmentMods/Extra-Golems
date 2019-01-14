@@ -21,6 +21,7 @@ public final class EntitySeaLanternGolem extends GolemBase {
 		super(world, Config.SEA_LANTERN.getBaseAttack(), new ItemStack(Blocks.SEA_LANTERN));
 		//Invert result because method is 'canDrown' not 'cannotDrown'
 		this.canDrown = !(Config.SEA_LANTERN.getBoolean(ALLOW_SPECIAL));
+		this.setLootTableLoc("golem_sea_lantern");
 	}
 
 	protected ResourceLocation applyTexture() {

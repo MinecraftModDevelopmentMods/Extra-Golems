@@ -21,6 +21,7 @@ public final class EntityStainedClayGolem extends GolemColorizedMultiTextured {
 	public EntityStainedClayGolem(final World world) {
 		super(world, Config.STAINED_CLAY.getBaseAttack(), Blocks.STAINED_HARDENED_CLAY,
 				TEXTURE_BASE, TEXTURE_OVERLAY, ItemDye.DYE_COLORS);
+		this.setLootTableLoc("golem_stained_clay");
 	}
 
 	@Override

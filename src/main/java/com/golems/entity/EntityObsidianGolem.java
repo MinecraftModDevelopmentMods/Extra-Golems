@@ -13,6 +13,7 @@ public final class EntityObsidianGolem extends GolemBase {
 
 	public EntityObsidianGolem(final World world) {
 		super(world, Config.OBSIDIAN.getBaseAttack(), Blocks.OBSIDIAN);
+		this.setLootTableLoc("golem_obsidian");
 	}
 
 	@Override

@@ -22,6 +22,7 @@ public final class EntitySlimeGolem extends GolemBase {
 	public EntitySlimeGolem(final World world) {
 		super(world, Config.SLIME.getBaseAttack(), Blocks.SLIME_BLOCK);
 		this.setCanSwim(true);
+		this.setLootTableLoc("golem_slime");
 	}
 
 	@Override

@@ -33,6 +33,7 @@ public final class EntityGlowstoneGolem extends GolemBase {
 				Config.GLOWSTONE.getInt(FREQUENCY), Config.GLOWSTONE.getBoolean(ALLOW_SPECIAL));
 		this.isImmuneToFire = true;
 		this.setCanTakeFallDamage(true);
+		this.setLootTableLoc("golem_glowstone");
 	}
 	
 	/** Flexible constructor to allow child classes to customize **/

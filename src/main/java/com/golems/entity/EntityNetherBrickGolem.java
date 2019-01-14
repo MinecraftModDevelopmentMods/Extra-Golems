@@ -20,6 +20,7 @@ public final class EntityNetherBrickGolem extends GolemBase {
 	public EntityNetherBrickGolem(final World world) {
 		super(world, Config.NETHERBRICK.getBaseAttack(), Blocks.NETHER_BRICK);
 		this.setImmuneToFire(true);
+		this.setLootTableLoc("golem_nether_brick");
 	}
 
 	@Override

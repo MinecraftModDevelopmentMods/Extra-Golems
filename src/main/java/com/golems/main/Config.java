@@ -116,8 +116,7 @@ public final class Config {
 				.addKey(EntityNetherBrickGolem.ALLOW_FIRE_SPECIAL, true, "Whether this golem can light creatures on fire");
 		NETHERWART = new GolemConfigSet(config, "Nether Wart Golem", 22.0D, 1.5F)
 				.addKey(EntityNetherWartGolem.ALLOW_SPECIAL, true, "Whether this golem can plant netherwart randomly")
-				.addKey(EntityNetherWartGolem.FREQUENCY, 880, 1, 24000,	"Average number of ticks between planting nether wart if enabled")
-				.addKey(EntityNetherWartGolem.DROP_NETHERWART_BLOCK, true, "When true, this golem drops 0-4 netherwart blocks. When false, drops 1-9 netherwart");
+				.addKey(EntityNetherWartGolem.FREQUENCY, 880, 1, 24000,	"Average number of ticks between planting nether wart if enabled");
 		OBSIDIAN = new GolemConfigSet(config, "Obsidian Golem", 120.0D, 18.0F);
 		PRISMARINE = new GolemConfigSet(config, "Prismarine Golem", 24.0D, 8.0F);
 		QUARTZ = new GolemConfigSet(config, "Quartz Golem", 85.0D, 8.5F);

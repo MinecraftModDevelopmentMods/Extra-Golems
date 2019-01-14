@@ -45,6 +45,7 @@ public final class EntityEndstoneGolem extends GolemBase {
 		this(world, Config.ENDSTONE.getBaseAttack(), new ItemStack(Blocks.END_STONE), 32.0D,
 				Config.ENDSTONE.getBoolean(ALLOW_SPECIAL),
 				Config.ENDSTONE.getBoolean(ALLOW_WATER_HURT), true);
+		this.setLootTableLoc("golem_end_stone");
 	}
 
 	/**

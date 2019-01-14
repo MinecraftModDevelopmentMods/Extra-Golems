@@ -20,6 +20,7 @@ public final class EntityWoodenGolem extends GolemMultiTextured {
 	public EntityWoodenGolem(final World world) {
 		super(world, Config.WOOD.getBaseAttack(), new ItemStack(Blocks.LOG), WOOD_PREFIX, woodTypes);
 		this.setCanSwim(true);
+		this.setLootTableLoc("golem_wooden");
 	}
 
 	@Override

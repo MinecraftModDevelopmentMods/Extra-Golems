@@ -82,7 +82,8 @@ public class ItemInfoBook extends Item {
 			// use the sorted list
 			for(GolemBase golem : sorted) {
 				final List<String> desc = DESC.getEntityDescription(golem);
-				final String blockName = I18n.format("itemGroup.buildingBlocks") + " : " + golemMap.get(golem).getLocalizedName() + "\n";
+				final String blockName = TextFormatting.GRAY + I18n.format("itemGroup.buildingBlocks") 
+					+ " : " + TextFormatting.BLACK + golemMap.get(golem).getLocalizedName() + "\n";
 				// insert block name at beginning of description
 				desc.add(0, blockName);
 				// add the now-complete description to the main list
@@ -158,7 +159,7 @@ public class ItemInfoBook extends Item {
 		
 		this.addNBT(itemstack);
 		
-		if (playerIn.getEntityWorld().isRemote)
+		if(playerIn.getEntityWorld().isRemote)
 		{
 			Minecraft.getMinecraft().displayGuiScreen(new GuiScreenBook(playerIn, itemstack, false));
 		}
@@ -169,10 +170,10 @@ public class ItemInfoBook extends Item {
 	{
 		if(itemstack != null) {
 			NBTTagCompound nbt = itemstack.hasTagCompound() ? itemstack.getTagCompound() : new NBTTagCompound();
-			// skip this bit if the NBT already has been set
+			// skip this bit if the NBT has already been set
 			if(nbt.hasKey(KEY_PAGES))
 				return;
-			//create pages
+			// for each page in the list, add it to the NBT
 			NBTTagList pagesTag = new NBTTagList();
 			for (String pageText : PAGES) {
 				pagesTag.appendTag(new NBTTagString(pageText));
@@ -189,17 +190,22 @@ public class ItemInfoBook extends Item {
 		
 		private static final ArrayList<String> INTRO = new ArrayList<String>(); {
 			// page 1: "Welcome"
-			INTRO.add(trans("golembook.intro"));
-			// page 2: "Make Golem Spell"
+			INTRO.add(trans("golembook.intro1") + "\n" + trans("golembook.intro2"));
+			// page 2: "Part 1"
+			String partIntro = TextFormatting.GOLD + trans("golembook.part_intro") + TextFormatting.BLACK;
+			INTRO.add("\n\n" + partIntro + trans("golembook.part1") + "\n" + partIntro);
+			// page 3: "Make Golem Spell"
 			INTRO.add(TextFormatting.getTextWithoutFormattingCodes(I18n.format("golembook.recipe_spell.intro", trans("item.golem_paper.name")) 
 					+ "\n\n" + I18n.format("golembook.recipe_spell.recipe", trans("item.golem_paper.name"), trans("item.paper.name"), trans("item.feather.name"),
 					trans("item.dyePowder.black.name"), trans("item.redstone.name"))));
-			// page 3: "Make Golem Head"
+			// page 4: "Make Golem Head"
 			INTRO.add(TextFormatting.getTextWithoutFormattingCodes(I18n.format("golembook.recipe_head.intro", trans("tile.golem_head.name")) + "\n\n"
 					+ trans("golembook.recipe_head.recipe", trans("tile.golem_head.name"), trans("item.golem_paper.name"), trans("tile.pumpkin.name"))));
-			// page 4: "Make Golem"
+			// page 5: "Make Golem"
 			INTRO.add(trans("golembook.build_golem.intro") + "\n\n" + trans("golembook.build_golem.howto1") + " "
 					+ trans("golembook.build_golem.howto2") + "\n\n" + I18n.format("golembook.build_golem.howto3", trans("tile.golem_head.name")));
+			// page 6: "Part 2"
+			INTRO.add("\n\n" + partIntro + trans("golembook.part2") + "\n" + partIntro);
 		};
 		
 		public BookDescriptionManager() {
@@ -211,7 +217,7 @@ public class ItemInfoBook extends Item {
 			this.showKnockbackResist = false;
 		}
 		
-		/** @return a COPY of the introduction pages, each as a separate String element **/
+		/** @return a COPY of the introduction pages, each page as a separate String element **/
 		public List<String> getIntroduction() {
 			return (ArrayList<String>) INTRO.clone();
 		}
@@ -221,13 +227,13 @@ public class ItemInfoBook extends Item {
 			final List<String> list = new LinkedList<>();
 			
 			// ADD NAME TIP
-			list.add(TextFormatting.DARK_GRAY + trans("entitytip.name") + ": "
+			list.add(TextFormatting.GRAY + trans("entitytip.name") + ": "
 					+ TextFormatting.BLACK + golem.getName() + "\n");
 			// ADD HEALTH (ROUNDED) TIP
-			list.add(TextFormatting.DARK_GRAY + trans("entitytip.health") + " : " + TextFormatting.BLACK
+			list.add(TextFormatting.GRAY + trans("entitytip.health") + " : " + TextFormatting.BLACK
 					+ Math.round(golem.getMaxHealth()) + TextFormatting.DARK_RED + " \u2764" + TextFormatting.BLACK);
 			// ADD ATTACK POWER TIP
-			list.add(TextFormatting.DARK_GRAY + trans("entitytip.attack") + " : "
+			list.add(TextFormatting.GRAY + trans("entitytip.attack") + " : "
 					+ TextFormatting.BLACK + golem.getBaseAttackDamage() + " \u2694" + "\n");
 			// ADD FIREPROOF TIP
 			if (golem.isImmuneToFire() && !(golem instanceof EntityBedrockGolem)) {

@@ -22,6 +22,7 @@ public final class EntityCoalGolem extends GolemBase {
 
 	public EntityCoalGolem(final World world) {
 		super(world, Config.COAL.getBaseAttack(), Blocks.COAL_BLOCK);
+		this.setLootTableLoc("golem_coal");
 	}
 
 	@Override

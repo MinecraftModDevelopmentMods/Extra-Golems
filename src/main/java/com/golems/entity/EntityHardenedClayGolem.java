@@ -13,6 +13,7 @@ public final class EntityHardenedClayGolem extends GolemBase {
 
 	public EntityHardenedClayGolem(final World world) {
 		super(world, Config.HARD_CLAY.getBaseAttack(), Blocks.HARDENED_CLAY);
+		this.setLootTableLoc("golem_hardened_clay");
 	}
 
 	protected ResourceLocation applyTexture() {

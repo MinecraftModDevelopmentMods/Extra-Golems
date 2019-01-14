@@ -35,6 +35,7 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 		final boolean allowed = Config.MUSHROOM.getBoolean(ALLOW_SPECIAL);
 		this.tasks.addTask(2,
 				new EntityAIPlaceRandomBlocksStrictly(this, freq, mushrooms, soils, allowed));
+		this.setLootTableLoc("golem_shroom");
 	}
 
 	@Override
@@ -48,7 +49,7 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 				.setBaseValue(Config.MUSHROOM.getMaxHealth());
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
 	}
-
+// TODO
 //	@Override
 //	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
 //		final int size = 4 + this.rand.nextInt(6 + lootingLevel * 2);

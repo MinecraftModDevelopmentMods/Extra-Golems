@@ -14,6 +14,7 @@ public final class EntityGlassGolem extends GolemBase {
 	public EntityGlassGolem(final World world) {
 		super(world, Config.GLASS.getBaseAttack(), Blocks.GLASS);
 		this.setCanTakeFallDamage(true);
+		this.setLootTableLoc("golem_glass");
 	}
 
 	protected ResourceLocation applyTexture() {

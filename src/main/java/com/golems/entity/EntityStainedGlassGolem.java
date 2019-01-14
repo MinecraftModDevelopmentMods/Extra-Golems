@@ -25,6 +25,7 @@ public final class EntityStainedGlassGolem extends GolemColorizedMultiTextured {
 		super(world, Config.STAINED_GLASS.getBaseAttack(), Blocks.STAINED_GLASS, TEXTURE_BASE,
 				TEXTURE_OVERLAY, ItemDye.DYE_COLORS);
 		this.setCanTakeFallDamage(true);
+		this.setLootTableLoc("golem_stained_glass");
 	}
 
 	@Override

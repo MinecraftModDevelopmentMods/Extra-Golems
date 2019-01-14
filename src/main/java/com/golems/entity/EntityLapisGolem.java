@@ -26,6 +26,7 @@ public final class EntityLapisGolem extends GolemBase {
 
 	public EntityLapisGolem(final World world) {
 		super(world, Config.LAPIS.getBaseAttack(), Blocks.LAPIS_BLOCK);
+		this.setLootTableLoc("golem_lapis");
 	}
 
 	@Override
@@ -56,7 +57,7 @@ public final class EntityLapisGolem extends GolemBase {
 				.setBaseValue(Config.LAPIS.getMaxHealth());
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
 	}
-
+// TODO
 //	@Override
 //	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
 //		final int size = 8 + this.rand.nextInt(10) + lootingLevel * 4;

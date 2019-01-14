@@ -26,6 +26,7 @@ public final class EntityWoolGolem extends GolemMultiTextured {
 		super(world, Config.WOOL.getBaseAttack(), new ItemStack(Blocks.WOOL), WOOL_PREFIX,
 				coloredWoolTypes);
 		this.setCanSwim(true);
+		this.setLootTableLoc("golem_wool");
 	}
 	
 	@Override

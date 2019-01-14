@@ -29,6 +29,7 @@ public final class EntityMelonGolem extends GolemBase {
 		super(world, Config.MELON.getBaseAttack(), Blocks.MELON_BLOCK);
 		this.setCanSwim(true);
 		this.tasks.addTask(2, this.makeFlowerAI());
+		this.setLootTableLoc("golem_melon");
 	}
 
 	@Override

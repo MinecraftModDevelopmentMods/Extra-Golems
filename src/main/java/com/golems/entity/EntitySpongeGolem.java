@@ -29,6 +29,7 @@ public final class EntitySpongeGolem extends GolemBase {
 	public EntitySpongeGolem(final World world) {
 		super(world, Config.SPONGE.getBaseAttack(), Blocks.SPONGE);
 		this.setCanSwim(true);
+		this.setLootTableLoc("golem_sponge");
 	}
 
 	@Override

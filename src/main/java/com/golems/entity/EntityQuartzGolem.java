@@ -13,6 +13,7 @@ public final class EntityQuartzGolem extends GolemBase {
 
 	public EntityQuartzGolem(final World world) {
 		super(world, Config.QUARTZ.getBaseAttack(), Blocks.QUARTZ_BLOCK);
+		this.setLootTableLoc("golem_quartz");
 	}
 
 	@Override

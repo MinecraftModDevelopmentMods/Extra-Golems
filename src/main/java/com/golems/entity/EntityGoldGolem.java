@@ -13,6 +13,7 @@ public final class EntityGoldGolem extends GolemBase {
 
 	public EntityGoldGolem(final World world) {
 		super(world, Config.GOLD.getBaseAttack(), Blocks.GOLD_BLOCK);
+		this.setLootTableLoc("golem_gold");
 	}
 
 	protected ResourceLocation applyTexture() {

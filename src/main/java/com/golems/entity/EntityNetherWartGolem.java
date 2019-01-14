@@ -22,11 +22,12 @@ public final class EntityNetherWartGolem extends GolemBase {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Plant Netherwart";
 	public static final String FREQUENCY = "Netherwart Frequency";
-	public static final String DROP_NETHERWART_BLOCK = "Drop Netherwart Blocks";
+	//public static final String DROP_NETHERWART_BLOCK = "Drop Netherwart Blocks";
 
 	public EntityNetherWartGolem(final World world) {
 		super(world, Config.NETHERWART.getBaseAttack(), NETHERWART);
 		this.setCanSwim(true);
+		this.setLootTableLoc("golem_nether_wart");
 	}
 
 	@Override

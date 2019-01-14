@@ -32,6 +32,7 @@ public final class EntityRedstoneGolem extends GolemBase {
 	/** Default constructor for Redstone Golem **/
 	public EntityRedstoneGolem(final World world) {
 		this(world, Config.REDSTONE.getBaseAttack(), new ItemStack(Blocks.REDSTONE_BLOCK), Config.REDSTONE.getBoolean(ALLOW_SPECIAL), 15);
+		this.setLootTableLoc("golem_redstone");
 	}
 
 	/** Flexible constructor to allow child classes to customize **/

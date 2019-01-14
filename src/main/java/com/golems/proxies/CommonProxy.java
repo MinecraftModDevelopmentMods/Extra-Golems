@@ -24,7 +24,7 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(modid = ExtraGolems.MODID)
 public class CommonProxy {
 
 	// private static Map<String, Block> blocks = new ConcurrentHashMap<>();
@@ -42,6 +42,7 @@ public class CommonProxy {
 
 	public void registerEntities() {
 		CommonProxy.golemEntityCount = 0;
+		registerLootTable("_golem_base");
 		register(EntityBedrockGolem.class, "golem_bedrock", false);
 		register(EntityBoneGolem.class, "golem_bone", true);
 		register(EntityBookshelfGolem.class, "golem_bookshelf", true);
@@ -56,46 +57,50 @@ public class CommonProxy {
 		register(EntityGoldGolem.class, "golem_gold");
 		register(EntityHardenedClayGolem.class, "golem_hardened_clay");
 		register(EntityIceGolem.class, "golem_ice");
-		register(EntityLapisGolem.class, "golem_lapis");
+		register(EntityLapisGolem.class, "golem_lapis", false); // TODO
 		register(EntityLeafGolem.class, "golem_leaves");
 		register(EntityMagmaGolem.class, "golem_magma");
 		register(EntityMelonGolem.class, "golem_melon");
-		register(EntityMushroomGolem.class, "golem_shroom");
+		register(EntityMushroomGolem.class, "golem_shroom", false); // TODO
 		register(EntityNetherBrickGolem.class, "golem_nether_brick");
 		register(EntityNetherWartGolem.class, "golem_nether_wart");
 		register(EntityObsidianGolem.class, "golem_obsidian");
 		register(EntityPrismarineGolem.class, "golem_prismarine");
 		register(EntityQuartzGolem.class, "golem_quartz");
-		register(EntityRedSandstoneGolem.class, "golem_red_sandstone");
+		register(EntityRedSandstoneGolem.class, "golem_red_sandstone", false); // TODO
 		register(EntityRedstoneGolem.class, "golem_redstone");
 		register(EntitySandstoneGolem.class, "golem_sandstone");
 		register(EntitySeaLanternGolem.class, "golem_sea_lantern");
 		register(EntitySlimeGolem.class, "golem_slime");
 		register(EntitySpongeGolem.class, "golem_sponge");
-		register(EntityStainedClayGolem.class, "golem_stained_clay");
-		register(EntityStainedGlassGolem.class, "golem_stained_glass");
+		register(EntityStainedClayGolem.class, "golem_stained_clay", false); // TODO
+		register(EntityStainedGlassGolem.class, "golem_stained_glass", false); // TODO
 		register(EntityStrawGolem.class, "golem_straw");
 		register(EntityTNTGolem.class, "golem_tnt");
-		register(EntityWoodenGolem.class, "golem_wooden");
-		register(EntityWoolGolem.class, "golem_wool");
+		register(EntityWoodenGolem.class, "golem_wooden", false); // TODO
+		register(EntityWoolGolem.class, "golem_wool", false); // TODO
 	}
 
-	/** registers the entity. **/
+	/** registers the entity with an optional loot table. **/
 	protected static void register(final Class<? extends GolemBase> entityClass, final String name, final boolean registerLootTable) {
 
 		EntityRegistry.registerModEntity(
-				new ResourceLocation(ExtraGolems.MODID + ":textures/entity/" + name + ".png"),
-				entityClass, ExtraGolems.MODID + "." + name, ++golemEntityCount,
+				new ResourceLocation(ExtraGolems.MODID, name), entityClass, 
+				ExtraGolems.MODID + "." + name, ++golemEntityCount,
 				ExtraGolems.instance, 16 * 4, 3, true);
 		if(registerLootTable) {
-			ResourceLocation rl = LootTableList.register(new ResourceLocation(ExtraGolems.MODID, name));
-			System.out.println("registered loot table at " + rl);
+			registerLootTable(name);
 		}
 	}
 	
-	/** registers the entity. **/
+	/** registers the entity with a loot table. **/
 	protected static void register(final Class<? extends GolemBase> entityClass, final String name) {
-		register(entityClass, name, false); // TODO change to TRUE after testing
+		register(entityClass, name, true);
+	}
+	
+	protected static void registerLootTable(final String name) {
+		ResourceLocation rl = LootTableList.register(new ResourceLocation(ExtraGolems.MODID, "entities/" + name));
+		System.out.println("registered loot table at " + rl);
 	}
 
 	// TODO: Reimplement old version

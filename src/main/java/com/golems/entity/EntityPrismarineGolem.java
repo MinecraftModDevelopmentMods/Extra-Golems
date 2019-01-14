@@ -13,6 +13,7 @@ public final class EntityPrismarineGolem extends GolemBase {
 
 	public EntityPrismarineGolem(final World world) {
 		super(world, Config.PRISMARINE.getBaseAttack(), Blocks.PRISMARINE);
+		this.setLootTableLoc("golem_prismarine");
 	}
 
 	@Override

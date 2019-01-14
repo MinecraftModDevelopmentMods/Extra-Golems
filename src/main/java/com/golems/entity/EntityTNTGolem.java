@@ -43,6 +43,7 @@ public final class EntityTNTGolem extends GolemBase {
 	public EntityTNTGolem(final World world) {
 		this(world, Config.TNT.getBaseAttack(), new ItemStack(Blocks.TNT), 3, 6, 50, 10,
 				Config.TNT.getBoolean(ALLOW_SPECIAL));
+		this.setLootTableLoc("golem_tnt");
 	}
 
 	/**

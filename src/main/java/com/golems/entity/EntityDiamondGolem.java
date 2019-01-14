@@ -13,6 +13,7 @@ public final class EntityDiamondGolem extends GolemBase {
 
 	public EntityDiamondGolem(final World world) {
 		super(world, Config.DIAMOND.getBaseAttack(), Blocks.DIAMOND_BLOCK);
+		this.setLootTableLoc("golem_diamond");
 	}
 
 	@Override

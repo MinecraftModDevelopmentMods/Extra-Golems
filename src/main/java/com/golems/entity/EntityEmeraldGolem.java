@@ -13,6 +13,7 @@ public final class EntityEmeraldGolem extends GolemBase {
 
 	public EntityEmeraldGolem(final World world) {
 		super(world, Config.EMERALD.getBaseAttack(), Blocks.EMERALD_BLOCK);
+		this.setLootTableLoc("golem_emerald");
 	}
 
 	@Override

@@ -28,6 +28,7 @@ public final class EntityLeafGolem extends GolemColorized {
 		super(world, Config.LEAF.getBaseAttack(), new ItemStack(Blocks.LEAVES), 0x5F904A,
 				TEXTURE_BASE, TEXTURE_OVERLAY);
 		this.setCanSwim(true);
+		this.setLootTableLoc("golem_leaves");
 	}
 
 	@Override

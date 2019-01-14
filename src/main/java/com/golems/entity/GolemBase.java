@@ -55,6 +55,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	protected int attackTimer;
 	protected boolean isPlayerCreated;
 	protected ResourceLocation textureLoc;
+	protected ResourceLocation lootTableLoc;
 	protected ItemStack creativeReturn;
 	Village villageObj;
 	protected boolean hasHome = false;
@@ -70,6 +71,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	protected boolean takesFallDamage = false;
 	protected boolean canDrown = false;
 	protected boolean isLeashable = true;
+	
 
 	// swimming AI
 	protected EntityAIBase swimmingAI = new EntityAISwimming(this);
@@ -338,6 +340,12 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 
 		super.onDeath(src);
 	}
+	
+	@Override
+    protected ResourceLocation getLootTable()
+    {
+        return this.lootTableLoc;
+    }
 
 	///////////////// ITEM DROP LOGIC /////////////////////
 
@@ -414,6 +422,14 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 
 	/////////////// OTHER SETTERS AND GETTERS /////////////////
 
+	public void setLootTableLoc(final ResourceLocation lootTable) {
+		this.lootTableLoc = lootTable;
+	}
+	
+	public void setLootTableLoc(final String name) {
+		this.lootTableLoc = new ResourceLocation(ExtraGolems.MODID, "entities/" + name);
+	}
+	
 	public void setTextureType(final ResourceLocation texturelocation) {
 		this.textureLoc = texturelocation;
 	}

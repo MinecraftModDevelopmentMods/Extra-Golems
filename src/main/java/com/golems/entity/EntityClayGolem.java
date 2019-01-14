@@ -13,6 +13,7 @@ public final class EntityClayGolem extends GolemBase {
 
 	public EntityClayGolem(final World world) {
 		super(world, Config.CLAY.getBaseAttack(), Blocks.CLAY);
+		this.setLootTableLoc("golem_clay");
 	}
 
 	@Override

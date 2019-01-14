@@ -26,6 +26,7 @@ public final class EntityCraftingGolem extends GolemBase {
 	
 	public EntityCraftingGolem(final World world) {
 		super(world, Config.CRAFTING.getBaseAttack(), Blocks.CRAFTING_TABLE);
+		this.setLootTableLoc("golem_crafting");
 	}
 
 	@Override

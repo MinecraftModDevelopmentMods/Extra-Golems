@@ -25,6 +25,7 @@ public final class EntityBookshelfGolem extends GolemBase {
 
 	public EntityBookshelfGolem(final World world) {
 		super(world, Config.BOOKSHELF.getBaseAttack(), Blocks.BOOKSHELF);
+		this.setLootTableLoc("golem_bookshelf");
 	}
 
 	protected ResourceLocation applyTexture() {

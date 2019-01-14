@@ -13,6 +13,7 @@ public final class EntityRedSandstoneGolem extends GolemBase {
 
 	public EntityRedSandstoneGolem(final World world) {
 		super(world, Config.RED_SANDSTONE.getBaseAttack(), Blocks.RED_SANDSTONE);
+		this.setLootTableLoc("golem_red_sandstone");
 	}
 
 	protected ResourceLocation applyTexture() {
