@@ -12,7 +12,8 @@ import net.minecraft.world.World;
 
 public final class EntityStainedClayGolem extends GolemColorizedMultiTextured {
 
-	public static final String DROP_META = "Drop Metadata";
+	//public static final String DROP_META = "Drop Metadata";
+	public static final int[] COLORS = ItemDye.DYE_COLORS;
 
 	private static final ResourceLocation TEXTURE_BASE = GolemBase.makeGolemTexture("stained_clay");
 	private static final ResourceLocation TEXTURE_OVERLAY = GolemBase
@@ -20,8 +21,7 @@ public final class EntityStainedClayGolem extends GolemColorizedMultiTextured {
 
 	public EntityStainedClayGolem(final World world) {
 		super(world, Config.STAINED_CLAY.getBaseAttack(), Blocks.STAINED_HARDENED_CLAY,
-				TEXTURE_BASE, TEXTURE_OVERLAY, ItemDye.DYE_COLORS);
-		this.setLootTableLoc("golem_stained_clay");
+				TEXTURE_BASE, TEXTURE_OVERLAY, COLORS);
 	}
 
 	@Override

@@ -86,7 +86,7 @@ entitytip.breathes_underwater=Breathes Underwater
 # Golem Guide Book entries
 golembook.intro1=Welcome to Extra Golems! This guide will help you build your very own golem army.
 golembook.intro2=Turn the page to get started!
-golembook.part_intro=========
+golembook.part_intro=================
 golembook.part1=How to Build a Golem
 golembook.part2=Golem Stats
 golembook.recipe_spell.intro=Step 1: Make a %s.

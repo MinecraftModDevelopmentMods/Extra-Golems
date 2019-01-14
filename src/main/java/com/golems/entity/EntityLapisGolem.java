@@ -57,14 +57,6 @@ public final class EntityLapisGolem extends GolemBase {
 				.setBaseValue(Config.LAPIS.getMaxHealth());
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
 	}
-// TODO
-//	@Override
-//	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
-//		final int size = 8 + this.rand.nextInt(10) + lootingLevel * 4;
-//		this.addDrop(dropList, new ItemStack(Items.DYE, size, EnumDyeColor.BLUE.getDyeDamage()),
-//				100);
-//		this.addDrop(dropList, Items.GOLD_INGOT, 0, 1, 1 + lootingLevel, 8 + lootingLevel * 30);
-//	}
 
 	@Override
 	public SoundEvent getGolemSound() {

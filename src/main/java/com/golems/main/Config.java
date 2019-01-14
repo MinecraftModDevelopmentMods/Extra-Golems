@@ -134,12 +134,8 @@ public final class Config {
 				.addKey(EntitySpongeGolem.PARTICLES, true, "Whether this golem should always drip water")
 				.addKey(EntitySpongeGolem.RANGE, 4, 2, 8, "Radial distance at which this golem can absorb water (Warning: larger values cause lag)")
 				.addKey(EntitySpongeGolem.INTERVAL, 80, 1, 24000, "Number of ticks between each water-check; increase to reduce lag");
-		STAINED_CLAY = new GolemConfigSet(config, "Stained Clay Golem", 26.0D, 3.0F)
-				.addKey(EntityStainedClayGolem.DROP_META, -1, -1, 15,
-				"The metadata of stained clay dropped by this golem. Set to -1 to let it be based on current texture");
-		STAINED_GLASS = new GolemConfigSet(config, "Stained Glass Golem", 9.0D, 12.0F)
-				.addKey(EntityStainedGlassGolem.DROP_META, -1, -1, 15,
-				"The metadata of stained glass dropped by this golem. Set to -1 to let it be based on current texture");
+		STAINED_CLAY = new GolemConfigSet(config, "Stained Clay Golem", 26.0D, 3.0F);
+		STAINED_GLASS = new GolemConfigSet(config, "Stained Glass Golem", 9.0D, 12.0F);
 		STRAW = new GolemConfigSet(config, "Straw Golem", 10.0D, 1.0F);
 		TNT = new GolemConfigSet(config, "TNT Golem", 14.0D, 2.5F)
 				.addKey(EntityTNTGolem.ALLOW_SPECIAL, true,	"Whether this golem can explode when fighting or dying");

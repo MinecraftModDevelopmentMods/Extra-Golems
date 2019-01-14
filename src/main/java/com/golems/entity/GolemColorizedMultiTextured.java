@@ -1,5 +1,7 @@
 package com.golems.entity;
 
+import com.golems.main.ExtraGolems;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -17,6 +19,7 @@ public abstract class GolemColorizedMultiTextured extends GolemColorized {
 			.<Byte>createKey(GolemColorizedMultiTextured.class, DataSerializers.BYTE);
 	protected static final String NBT_TEXTURE = "GolemTextureData";
 	protected final int[] colors;
+	protected final ResourceLocation[] lootTables;
 
 	/**
 	 * Flexible constructor so child classes can "borrow" this class's behavior and customize.
@@ -29,6 +32,11 @@ public abstract class GolemColorizedMultiTextured extends GolemColorized {
 			final ResourceLocation base, final ResourceLocation overlay, final int[] lColors) {
 		super(world, damage, pick, 0L, base, overlay);
 		colors = lColors;
+		lootTables = new ResourceLocation[colors.length];
+		for (int n = 0, len = colors.length; n < len; n++) {
+			// initialize loot tables
+			this.lootTables[n] = new ResourceLocation(getModId(), "entities/" + this.getEntityString().replaceAll(getModId() + ":", "") + "/" + n);
+		}
 	}
 
 	/**
@@ -98,6 +106,13 @@ public abstract class GolemColorizedMultiTextured extends GolemColorized {
 	public boolean doesInteractChangeTexture() {
 		return true;
 	}
+	
+	@Override
+    protected ResourceLocation getLootTable()
+    {
+		System.out.println("[GCMT] getting loot table: " + this.lootTables[this.getTextureNum() % this.lootTables.length]);
+        return this.lootTables[this.getTextureNum() % this.lootTables.length];
+    }
 
 	public void setTextureNum(final byte toSet) {
 		this.getDataManager().set(DATA_TEXTURE, new Byte(toSet));
@@ -113,5 +128,9 @@ public abstract class GolemColorizedMultiTextured extends GolemColorized {
 
 	protected void updateTextureByData(final int data) {
 		this.setColor(this.colors[data]);
+	}
+	
+	public String getModId() {
+		return ExtraGolems.MODID;
 	}
 }

@@ -14,13 +14,12 @@ import net.minecraft.world.World;
 public final class EntityWoodenGolem extends GolemMultiTextured {
 
 	public static final String WOOD_PREFIX = "wooden";
-	protected static final String[] woodTypes = { "oak", "spruce", "birch", "jungle", "acacia",
+	public static final String[] woodTypes = { "oak", "spruce", "birch", "jungle", "acacia",
 			"big_oak" };
 
 	public EntityWoodenGolem(final World world) {
 		super(world, Config.WOOD.getBaseAttack(), new ItemStack(Blocks.LOG), WOOD_PREFIX, woodTypes);
 		this.setCanSwim(true);
-		this.setLootTableLoc("golem_wooden");
 	}
 
 	@Override

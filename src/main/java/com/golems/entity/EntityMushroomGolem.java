@@ -22,7 +22,7 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 	public static final String FREQUENCY = "Mushroom Frequency";
 
 	public static final String SHROOM_PREFIX = "shroom";
-	protected static final String[] SHROOM_TYPES = { "red", "brown" };
+	public static final String[] SHROOM_TYPES = { "red", "brown" };
 	public final IBlockState[] mushrooms = { Blocks.BROWN_MUSHROOM.getDefaultState(),
 			Blocks.RED_MUSHROOM.getDefaultState() };
 	protected static final Block[] soils = { Blocks.DIRT, Blocks.GRASS, Blocks.MYCELIUM };
@@ -35,7 +35,6 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 		final boolean allowed = Config.MUSHROOM.getBoolean(ALLOW_SPECIAL);
 		this.tasks.addTask(2,
 				new EntityAIPlaceRandomBlocksStrictly(this, freq, mushrooms, soils, allowed));
-		this.setLootTableLoc("golem_shroom");
 	}
 
 	@Override

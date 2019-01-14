@@ -7,6 +7,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -15,8 +16,8 @@ import net.minecraft.world.World;
 
 public final class EntityWoolGolem extends GolemMultiTextured {
 
-	private static final String WOOL_PREFIX = "wool";
-	private static final String[] coloredWoolTypes = { "black", "orange", "magenta", "light_blue",
+	public static final String WOOL_PREFIX = "wool";
+	public static final String[] coloredWoolTypes = { "black", "orange", "magenta", "light_blue",
 			"yellow", "lime", "pink", "gray", "silver", "cyan", "purple", "blue", "brown", "green",
 			"red", "white" };
 	private boolean secret = false;
@@ -26,7 +27,6 @@ public final class EntityWoolGolem extends GolemMultiTextured {
 		super(world, Config.WOOL.getBaseAttack(), new ItemStack(Blocks.WOOL), WOOL_PREFIX,
 				coloredWoolTypes);
 		this.setCanSwim(true);
-		this.setLootTableLoc("golem_wool");
 	}
 	
 	@Override
@@ -77,7 +77,7 @@ public final class EntityWoolGolem extends GolemMultiTextured {
 
 	@Override
 	public void setTextureNum(byte toSet, final boolean updateInstantly) {
-		toSet %= (byte) (coloredWoolTypes.length - 1);
+		toSet %= (byte) (coloredWoolTypes.length - 1); // skip texture for 'white'
 		super.setTextureNum(toSet, updateInstantly);
 	}
 	
@@ -89,7 +89,6 @@ public final class EntityWoolGolem extends GolemMultiTextured {
 		} else return super.getDisplayName();
 	}
 	
-	/** Note:  stringIn MUST be unformatted **/
 	private String getRainbowString(final String stringIn, final long timeIn) {
 		String in = TextFormatting.getTextWithoutFormattingCodes(stringIn);
 		String stringOut = "";
