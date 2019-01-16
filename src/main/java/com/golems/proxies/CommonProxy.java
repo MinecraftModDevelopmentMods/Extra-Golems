@@ -1,5 +1,7 @@
 package com.golems.proxies;
 
+import java.util.stream.IntStream;
+
 import com.golems.blocks.*;
 import com.golems.entity.*;
 import com.golems.events.handlers.GolemCommonEventHandler;
@@ -23,6 +25,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import scala.actors.threadpool.Arrays;
 
 @Mod.EventBusSubscriber(modid = ExtraGolems.MODID)
 public class CommonProxy {
@@ -85,13 +88,19 @@ public class CommonProxy {
 		registerLootTables(EntityWoodenGolem.WOOD_PREFIX, EntityWoodenGolem.woodTypes);
 		registerLootTables(EntityMushroomGolem.SHROOM_PREFIX, EntityMushroomGolem.SHROOM_TYPES);
 		
-		// register GolemColorizedMultiTextured loot tables
-		for(int i = 0, l = EntityStainedGlassGolem.COLORS.length; i < l; i++) {
-			LootTableList.register(new ResourceLocation(ExtraGolems.MODID, "entities/golem_stained_glass/" + i));
+		// prepare and register loot tables for GolemColorizedMultiTextured
+		String[] stainedGlass = new String[EntityStainedGlassGolem.COLORS.length];
+		for(int i = 0, l = stainedGlass.length; i < l; i++) {
+			stainedGlass[i] = Integer.toString(i);
 		}
-		for(int i = 0, l = EntityStainedClayGolem.COLORS.length; i < l; i++) {
-			LootTableList.register(new ResourceLocation(ExtraGolems.MODID, "entities/golem_stained_clay/" + i));
+		String[] stainedClay = new String[EntityStainedClayGolem.COLORS.length];
+		for(int i = 0, l = stainedGlass.length; i < l; i++) {
+			stainedClay[i] = Integer.toString(i);
 		}
+		registerLootTables(EntityStainedGlassGolem.PREFIX, stainedGlass);
+		registerLootTables(EntityStainedClayGolem.PREFIX, stainedClay);
+		
+		
 	}
 
 	/** registers the entity with an optional loot table. **/

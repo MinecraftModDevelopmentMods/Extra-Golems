@@ -14,7 +14,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public final class EntityStainedGlassGolem extends GolemColorizedMultiTextured {
 
-	//public static final String DROP_META = "Drop Metadata";
+	public static final String PREFIX = "stained_glass";
 	public static final int[] COLORS = ItemDye.DYE_COLORS;
 
 	private static final ResourceLocation TEXTURE_BASE = GolemBase

@@ -22,7 +22,7 @@ public class BlockUtilityPower extends BlockUtility
 	private static final IBlockState REPLACE_WITH = Blocks.AIR.getDefaultState();
 	private final int TICK_RATE;
 	
-	public BlockUtilityPower(int powerLevel, int tickRate) {
+	public BlockUtilityPower(final int powerLevel, final int tickRate) {
 		super();
 		this.setTickRandomly(true);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(POWER_LEVEL, powerLevel));
@@ -30,7 +30,7 @@ public class BlockUtilityPower extends BlockUtility
 	}
 	
 	@Override
-	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
+	public void updateTick(final World worldIn, final BlockPos pos, final IBlockState state, final Random rand) {
 		// make a slightly expanded AABB to check for the golem
 		AxisAlignedBB toCheck = new AxisAlignedBB(pos).grow(0.5D);
 		List<EntityRedstoneGolem> list = worldIn.getEntitiesWithinAABB(EntityRedstoneGolem.class, toCheck);
@@ -48,12 +48,12 @@ public class BlockUtilityPower extends BlockUtility
      * Called after the block is set in the Chunk data, but before the Tile Entity is set
      */
 	@Override
-    public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
+    public void onBlockAdded(final World worldIn, final BlockPos pos, final IBlockState state) {
     	worldIn.scheduleUpdate(pos, this, this.tickRate(worldIn));
     }
 	
     @Override
-	public int tickRate(World worldIn) {
+	public int tickRate(final World worldIn) {
         return TICK_RATE;
     }
 	
@@ -68,7 +68,8 @@ public class BlockUtilityPower extends BlockUtility
 	}
 	
 	/** Convert the given metadata into a BlockState for this Block **/
-    public IBlockState getStateFromMeta(int meta) {
+    public IBlockState getStateFromMeta(final int metaIn) {
+    	int meta = metaIn;
     	if(meta < 0)
     		meta = 0;
     	if(meta > 15)
@@ -77,12 +78,12 @@ public class BlockUtilityPower extends BlockUtility
     }
 
     /** Convert the BlockState into the correct metadata value **/
-    public int getMetaFromState(IBlockState state) {
+    public int getMetaFromState(final IBlockState state) {
         return state.getValue(POWER_LEVEL).intValue();
     }
 	
 	@Override
-	public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
+	public int getWeakPower(final IBlockState blockState, final IBlockAccess blockAccess, final BlockPos pos, final EnumFacing side) {
         return blockState.getValue(POWER_LEVEL);
     }
 	

@@ -25,7 +25,7 @@ public class BlockUtilityGlow extends BlockUtility
 	private static final IBlockState REPLACE_WITH = Blocks.AIR.getDefaultState();
 	private final int TICK_RATE;
 	
-	public BlockUtilityGlow(float defaultLight, int tickRate) {
+	public BlockUtilityGlow(final float defaultLight, final int tickRate) {
 		super();
 		int light = (int)(defaultLight * 15.0F);
 		this.setTickRandomly(true);
@@ -35,7 +35,7 @@ public class BlockUtilityGlow extends BlockUtility
 	}
 	
 	@Override
-	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
+	public void updateTick(final World worldIn, final BlockPos pos, final IBlockState state, final Random rand) {
 		// make a slightly expanded AABB to check for the golem
 		AxisAlignedBB toCheck = new AxisAlignedBB(pos).grow(0.5D);
 		List<EntityGlowstoneGolem> list = worldIn.getEntitiesWithinAABB(EntityGlowstoneGolem.class, toCheck);
@@ -53,12 +53,12 @@ public class BlockUtilityGlow extends BlockUtility
      * Called after the block is set in the Chunk data, but before the Tile Entity is set
      */
 	@Override
-    public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
+    public void onBlockAdded(final World worldIn, final BlockPos pos, final IBlockState state) {
     	worldIn.scheduleUpdate(pos, this, this.tickRate(worldIn));
     }
 	
     @Override
-	public int tickRate(World worldIn) {
+	public int tickRate(final World worldIn) {
         return TICK_RATE;
     }
 	
@@ -73,7 +73,8 @@ public class BlockUtilityGlow extends BlockUtility
 	}
 	
 	/** Convert the given metadata into a BlockState for this Block **/
-    public IBlockState getStateFromMeta(int meta) {
+    public IBlockState getStateFromMeta(final int metaIn) {
+    	int meta = metaIn;
     	if(meta < 0)
     		meta = 0;
     	if(meta > 15)
@@ -82,7 +83,7 @@ public class BlockUtilityGlow extends BlockUtility
     }
 
     /** Convert the BlockState into the correct metadata value **/
-    public int getMetaFromState(IBlockState state) {
+    public int getMetaFromState(final IBlockState state) {
         return state.getValue(LIGHT_LEVEL).intValue();
     }
 }

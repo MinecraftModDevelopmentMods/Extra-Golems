@@ -3,6 +3,7 @@ package com.golems.blocks;
 import javax.annotation.Nullable;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockEmptyDrops;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
@@ -18,7 +19,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public abstract class BlockUtility extends Block {
+public abstract class BlockUtility extends BlockEmptyDrops {
 
 	public static final AxisAlignedBB SINGULAR_AABB = new AxisAlignedBB(0.5D, 0.5D, 0.5D, 0.5D,
 			0.5D, 0.5D);
@@ -35,7 +36,7 @@ public abstract class BlockUtility extends Block {
      * @deprecated call via {@link IBlockState#getBoundingBox(IBlockAccess,BlockPos)} whenever possible.
      * Implementing/overriding is fine.
      */
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
+    public AxisAlignedBB getBoundingBox(final IBlockState state, final IBlockAccess source, final BlockPos pos)
     {
         return SINGULAR_AABB;
     }
@@ -45,7 +46,7 @@ public abstract class BlockUtility extends Block {
      * Implementing/overriding is fine.
      */
     @Nullable
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos)
+    public AxisAlignedBB getCollisionBoundingBox(final IBlockState blockState, final IBlockAccess worldIn, final BlockPos pos)
     {
         return NULL_AABB;
     }
@@ -54,7 +55,7 @@ public abstract class BlockUtility extends Block {
      * Used to determine ambient occlusion and culling when rebuilding chunks for render
      * @deprecated call via {@link IBlockState#isOpaqueCube()} whenever possible. Implementing/overriding is fine.
      */
-    public boolean isOpaqueCube(IBlockState state)
+    public boolean isOpaqueCube(final IBlockState state)
     {
         return false;
     }
@@ -62,7 +63,7 @@ public abstract class BlockUtility extends Block {
     /**
      * @deprecated call via {@link IBlockState#isFullCube()} whenever possible. Implementing/overriding is fine.
      */
-    public boolean isFullCube(IBlockState state)
+    public boolean isFullCube(final IBlockState state)
     {
         return false;
     }

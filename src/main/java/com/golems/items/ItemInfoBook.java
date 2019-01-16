@@ -51,6 +51,9 @@ public class ItemInfoBook extends Item {
 	protected static final BookDescriptionManager DESC = new BookDescriptionManager();
 	/** Used for NBT book. Each String entry is a separate page. **/
 	protected static final List<String> PAGES = new ArrayList();
+	// TEST_KEY and LOCALE are to detect language changes and re-init everything
+	private static final String TEST_KEY = "translation.test.none";
+	protected static String LOCALE = "";
 	
 	public ItemInfoBook() {
 		super();
@@ -59,8 +62,11 @@ public class ItemInfoBook extends Item {
 	
 	/** Meant to be called only once upon World initialization **/
 	public static void initGolemInfo(World world) {
-		if(PAGES.isEmpty())
+		if(PAGES.isEmpty() || !I18n.format(TEST_KEY).equals(LOCALE))
 		{
+			// clear all pre-existing info
+			LOCALE = I18n.format(TEST_KEY);
+			PAGES.clear();
 			// make a map of golems and their respective blocks
 			final Map<GolemBase, Block> golemMap = getDummyGolems(world);
 			// make a sorted version of this map by making a sorted list and using it later
@@ -188,7 +194,21 @@ public class ItemInfoBook extends Item {
 
 	protected static final class BookDescriptionManager extends GolemDescriptionManager {
 		
-		private static final ArrayList<String> INTRO = new ArrayList<String>(); {
+		private static final ArrayList<String> INTRO = new ArrayList<String>(); 
+		
+		public BookDescriptionManager() {
+			super();
+			this.showAttack = true;
+			this.showMultiTexture = true;
+			this.showSpecial = true;
+			this.showFireproof = true;
+			this.showKnockbackResist = false;
+		}
+		
+		/** @return a COPY of the introduction pages, each page as a separate String element **/
+		public List<String> getIntroduction() {
+			// reset INTRO and add pages
+			INTRO.clear();
 			// page 1: "Welcome"
 			INTRO.add(trans("golembook.intro1") + "\n" + trans("golembook.intro2"));
 			// page 2: "Part 1"
@@ -206,19 +226,7 @@ public class ItemInfoBook extends Item {
 					+ trans("golembook.build_golem.howto2") + "\n\n" + I18n.format("golembook.build_golem.howto3", trans("tile.golem_head.name")));
 			// page 6: "Part 2"
 			INTRO.add("\n\n" + partIntro + "\n\n" + trans("golembook.part2") + "\n\n" + partIntro);
-		};
-		
-		public BookDescriptionManager() {
-			super();
-			this.showAttack = true;
-			this.showMultiTexture = true;
-			this.showSpecial = true;
-			this.showFireproof = true;
-			this.showKnockbackResist = false;
-		}
-		
-		/** @return a COPY of the introduction pages, each page as a separate String element **/
-		public List<String> getIntroduction() {
+			
 			return (ArrayList<String>) INTRO.clone();
 		}
 

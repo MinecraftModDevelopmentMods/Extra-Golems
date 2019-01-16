@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 
 public final class EntityStainedClayGolem extends GolemColorizedMultiTextured {
 
-	//public static final String DROP_META = "Drop Metadata";
+	public static final String PREFIX = "stained_clay";
 	public static final int[] COLORS = ItemDye.DYE_COLORS;
 
 	private static final ResourceLocation TEXTURE_BASE = GolemBase.makeGolemTexture("stained_clay");
