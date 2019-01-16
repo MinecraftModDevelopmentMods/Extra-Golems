@@ -24,8 +24,8 @@ public abstract class BlockUtility extends BlockEmptyDrops {
 	public static final AxisAlignedBB SINGULAR_AABB = new AxisAlignedBB(0.5D, 0.5D, 0.5D, 0.5D,
 			0.5D, 0.5D);
 
-	public BlockUtility() {
-		super(Material.GLASS);
+	public BlockUtility(Material m) {
+		super(m);
 		setDefaultState(blockState.getBaseState());
 		setTickRandomly(false);
 		blockHardness = -1F;

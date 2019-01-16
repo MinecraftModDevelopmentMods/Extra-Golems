@@ -5,6 +5,7 @@ import java.util.Random;
 
 import com.golems.entity.EntityRedstoneGolem;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
@@ -23,7 +24,7 @@ public class BlockUtilityPower extends BlockUtility
 	private final int TICK_RATE;
 	
 	public BlockUtilityPower(final int powerLevel, final int tickRate) {
-		super();
+		super(Material.GLASS);
 		this.setTickRandomly(true);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(POWER_LEVEL, powerLevel));
 		TICK_RATE = tickRate;

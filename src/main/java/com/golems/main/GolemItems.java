@@ -25,6 +25,9 @@ public final class GolemItems {
 
 	@GameRegistry.ObjectHolder(ExtraGolems.MODID + ":light_provider_full")
 	public static Block blockLightSource;
+	
+	@GameRegistry.ObjectHolder(ExtraGolems.MODID + ":water_light_provider_full")
+	public static Block blockLightSourceWater;
 
 	@GameRegistry.ObjectHolder(ExtraGolems.MODID + ":power_provider_all")
 	public static Block blockPowerSource;

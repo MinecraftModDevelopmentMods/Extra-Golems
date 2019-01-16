@@ -4,7 +4,8 @@ item.spawn_bedrock_golem.name=Spawn Bedrock Golem
 tile.golem_head.name=Golem Head
 
 # These will only show up in something like JEI
-tile.light_provider_full.name=Dynamic Golem Light (Full)
+tile.light_provider_full.name=Dynamic Golem Light (Air)
+tile.water_light_provider_full.name=Dynamic Golem Light (Water)
 tile.power_provider_full.name=Dynamic Golem Power Source
 
 # Entity names

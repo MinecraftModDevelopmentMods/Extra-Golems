@@ -28,7 +28,7 @@ public class EntityAIPlaceSingleBlock extends EntityAIBase {
 	 * @param interval ticks between placing block
 	 * @param canReplacePred a Predicate to determine if {@code stateIn} should replace a certain IBlockState
 	 **/
-	public EntityAIPlaceSingleBlock(final GolemBase golemIn, final IBlockState stateIn, final int interval, boolean cfgAllows, Predicate<IBlockState> canReplacePred) {
+	public EntityAIPlaceSingleBlock(final GolemBase golemIn, final IBlockState stateIn, final int interval, final boolean cfgAllows, final Predicate<IBlockState> canReplacePred) {
 		this.setMutexBits(8);
 		this.golem = golemIn;
 		this.stateToPlace = stateIn;
@@ -72,11 +72,11 @@ public class EntityAIPlaceSingleBlock extends EntityAIBase {
 			final BlockPos blockPosIn = new BlockPos(x, y, z);
 			// test the predicate against each BlockPos in a vertical column around this golem
 			// when it passes, place the block and return
-			for(int i = -1; i < 3; i++)
+			for(int i = 0; i < 3; i++)
 			{
 				BlockPos temp = blockPosIn.up(i);
 				if(this.predicate.test(golem.getEntityWorld().getBlockState(temp))) {
-					this.golem.getEntityWorld().setBlockState(temp, this.stateToPlace, 3);
+					this.golem.getEntityWorld().setBlockState(temp, this.stateToPlace, 2);
 					return;
 				}
 			}

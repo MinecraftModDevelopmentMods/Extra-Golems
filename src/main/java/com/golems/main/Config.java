@@ -125,7 +125,8 @@ public final class Config {
 				.addKey(EntityRedstoneGolem.ALLOW_SPECIAL, true, "Whether this golem can emit redstone power");
 		SANDSTONE = new GolemConfigSet(config, "Sandstone Golem", 15.0D, 4.0F);
 		SEA_LANTERN = new GolemConfigSet(config, "Sea Lantern Golem", 24.0D, 6.0F)
-				.addKey(EntitySeaLanternGolem.ALLOW_SPECIAL, true, "When true, this golem cannot drown");
+				.addKey(EntitySeaLanternGolem.ALLOW_SPECIAL, true, "Whether this golem can place light sources")
+				.addKey(EntitySeaLanternGolem.FREQUENCY, 5, 1, 24000, "Number of ticks between placing light sources");
 		SLIME = new GolemConfigSet(config, "Slime Golem", 85.0D, 2.5F)
 				.addKey(EntitySlimeGolem.ALLOW_SPECIAL, true, "Whether this golem can apply extra knockback when attacking")
 				.addKey(EntitySlimeGolem.KNOCKBACK, 2.0012F, 0.001F, 10.0F,	"How powerful the Slime Golem knockback is (Higher Value = Further Knockback)");

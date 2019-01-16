@@ -12,7 +12,10 @@ import com.golems.main.ExtraGolems;
 import com.golems.main.GolemItems;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockLiquid;
+import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -158,10 +161,14 @@ public class CommonProxy {
 	@SubscribeEvent
 	public static void registerBlocks(final RegistryEvent.Register<Block> event) {
 		// TODO: Clean up
-		final int GLOW_FREQ = Config.GLOWSTONE.getInt(EntityGlowstoneGolem.FREQUENCY);
+		final int GLOWSTONE_FREQ = Config.GLOWSTONE.getInt(EntityGlowstoneGolem.FREQUENCY);
+		final int SEALANTERN_FREQ = Config.SEA_LANTERN.getInt(EntitySeaLanternGolem.FREQUENCY);
 		event.getRegistry().registerAll(
 				new BlockGolemHead().setTranslationKey("golem_head").setRegistryName(ExtraGolems.MODID, "golem_head"),
-				new BlockUtilityGlow(1.0F, GLOW_FREQ).setTranslationKey("light_provider_full").setRegistryName(ExtraGolems.MODID, "light_provider_full"),
+				new BlockUtilityGlow(Material.GLASS, 1.0F, GLOWSTONE_FREQ, Blocks.AIR.getDefaultState())
+					.setTranslationKey("light_provider_full").setRegistryName(ExtraGolems.MODID, "light_provider_full"),
+				new BlockUtilityGlowWater(Material.WATER, 1.0F, SEALANTERN_FREQ, Blocks.WATER.getDefaultState().withProperty(BlockLiquid.LEVEL, 0))
+					.setTranslationKey("water_light_provider_full").setRegistryName(ExtraGolems.MODID, "water_light_provider_full"),
 				new BlockUtilityPower(15, EntityRedstoneGolem.FREQUENCY).setTranslationKey("power_provider_all").setRegistryName(ExtraGolems.MODID, "power_provider_all"));
 	}
 
