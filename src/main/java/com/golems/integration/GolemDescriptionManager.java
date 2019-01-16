@@ -60,7 +60,7 @@ public abstract class GolemDescriptionManager {
 		if (this.showKnockbackResist
 				&& golem.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE)
 						.getBaseValue() > 0.8999D) {
-			final String sResist = TextFormatting.GRAY + trans("entitytip.knockback_resist");
+			final String sResist = TextFormatting.GRAY + trans("attribute.name.generic.knockbackResistance");
 			list.add(sResist);
 		}
 

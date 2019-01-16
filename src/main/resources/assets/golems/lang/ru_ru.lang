@@ -51,14 +51,9 @@ tooltip.creative_only_item=Только в творческом режиме.
 tooltip.press=Нажми
 tooltip.shift=Shift
 tooltip.for_more_details=Для дополнительной информации
-tooltip.for_golem_materials=чтобы увидеть подходящие для голема материалы
-tooltip.in_order_of_attack=Заказанный урон от атаки
 tooltip.use_to_spawn=Используй, чтобы призвать %s
 tooltip.use_on_existing=Используй на существующем %s
 tooltip.to_remove_it=чтобы убить его
-material.shroom_block=Грибной блок
-material.log=Лог
-material.stained_clay=Керамика
  
 # Entity headings (for Waila and TOP)
 entitytip.attack=Атака
@@ -71,7 +66,6 @@ entitytip.can_teleport=Телепортируется в рандомные то
 entitytip.freezes_blocks=Замораживает воду и воздействует на лаву
 entitytip.knockback_resist=Отдача неэффективна
 entitytip.attacks_use_potion_effects=Плохие эффекты зелий
-entitytip.has_regen_1=Имеет чары Регенерация I
 entitytip.plants_flowers=Садит цветы
 entitytip.plants_shrooms=Садит грибы
 entitytip.plants_warts=Садит адский нарост
@@ -83,3 +77,18 @@ entitytip.absorbs_water=Абсорбирует воду
 entitytip.explodes=Может взорваться!
 entitytip.emits_redstone_signal=Передает RF
 entitytip.click_open_crafting=ПКМ, чтобы открыть меню крафта
+
+# Golem Guide Book entries
+item.info_book.name=Руководство по Extra Golems
+golembook.intro1=Добро пожаловать в Extra Golems! Это руководство поможет вам создать собственную армию големов.
+golembook.intro2=Переверните страницу, чтобы начать!
+golembook.part1=Как построить голема
+golembook.part2=Информация о големе
+golembook.recipe_spell.intro=Шаг 1: Сделайте %s.
+golembook.recipe_spell.recipe=Легко! Чтобы получить %1$s, объедините  1 %2$s, 1 %3$s, 1 %4$s, и 1 %5$s
+golembook.recipe_head.intro=Шаг 2: Сделайте %s.
+golembook.recipe_head.recipe=Еще проще! Чтобы получить %1$s, объедините %2$s и 1 %3$s
+golembook.build_golem.intro=Шаг 3: Создайте голема.
+golembook.build_golem.howto1=Поместите 2 блока, один поверх другого.
+golembook.build_golem.howto2=Поместите еще 2 блока на противоположных сторонах верхнего блока.
+golembook.build_golem.howto3=Поместите %s поверх среднего блока, и все готово!

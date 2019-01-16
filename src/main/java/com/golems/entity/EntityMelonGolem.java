@@ -78,7 +78,7 @@ public final class EntityMelonGolem extends GolemBase {
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
 		if(Config.MELON.getBoolean(EntityMelonGolem.ALLOW_SPECIAL))
-			list.add(TextFormatting.GREEN + trans("entitytip.plants_flowers"));
+			list.add(TextFormatting.GREEN + trans("entitytip.plants_flowers", trans("tile.flower1.name")));
 		return list;
 	}
 }

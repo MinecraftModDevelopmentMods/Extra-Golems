@@ -51,14 +51,10 @@ tooltip.creative_only_item=Nur für den Kreativ-Modus
 tooltip.press=Drücke
 tooltip.shift=SHIFT
 tooltip.for_more_details=für mehr Details
-tooltip.for_golem_materials=für gültige Golem-Materialien
 tooltip.in_order_of_attack=Sortiert nach Angriffschaden
-tooltip.use_to_spawn=Benutzen um einen %s zu erschaffen
 tooltip.use_on_existing=Auf einen vorhandenen %s anwenden
 tooltip.to_remove_it=um ihn zu entfernen
-material.shroom_block=Pilzblock
-material.log=Baumstamm
-material.stained_clay=Gefärbter Ton
+
 
 # Entity headings (for Waila)
 entitytip.attack=Angriff
@@ -72,7 +68,6 @@ entitytip.can_teleport=Teleportiert willkürlich
 entitytip.freezes_blocks=Gefriert Wasser und kühlt Lava
 entitytip.knockback_resist=Rückstoß-Resistenz
 entitytip.attacks_use_potion_effects=Fügt Schaden mit Trankeffekten zu
-entitytip.has_regen_1=Regeneration I
 entitytip.plants_flowers=Pflanzt Blumen
 entitytip.plants_shrooms=Pflanzt Pilze
 entitytip.plants_warts=Pflanzt Netherwarzen
@@ -82,3 +77,18 @@ entitytip.has_knockback=Massiver Rückstoß-Angriff!
 entitytip.absorbs_water=Absorbiert Wasser
 entitytip.explodes=Kann zufällig explodieren
 entitytip.emits_redstone_signal=Sendet ein Redstone-Signal
+
+# Golem Guide Book entries
+item.info_book.name=Leitfaden für Extra Golems
+golembook.intro1=Willkommen bei Extra Golems! Dieser Leitfaden hilft Ihnen beim Aufbau Ihrer eigenen Golem-Armee.
+golembook.intro2=Wechseln Sie die Seite, um zu beginnen!
+golembook.part1=Anweisungen zum Bau eines Golems
+golembook.part2=Informationen zu Golems
+golembook.recipe_spell.intro=chritt 1: Erstellen Sie ein %s.
+golembook.recipe_spell.recipe=einfach! Um einen %1$s, kombiniere 1 %2$s, 1 %3$s, 1 %4$s, und 1 %5$s
+golembook.recipe_head.intro=Schritt 2: Erstellen Sie ein %s.
+golembook.recipe_head.recipe=Noch einfacher! Um einen %1$s, kombiniere %2$s und 1 %3$s
+golembook.build_golem.intro=Schritt 3: Erstelle einen Golem.
+golembook.build_golem.howto1=Platziere 2 Blöcke übereinander.
+golembook.build_golem.howto2=Platziere 2 weitere Blöcke auf den gegenüberliegenden Seiten des oberen Blocks.
+golembook.build_golem.howto3=Legen Sie einen %s auf den mittleren Block, und Sie sind fertig!
