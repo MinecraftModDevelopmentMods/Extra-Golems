@@ -1,21 +1,9 @@
 package com.golems.items;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.golems.entity.EntityBedrockGolem;
 import com.golems.entity.GolemBase;
 import com.golems.entity.GolemMultiTextured;
-import com.golems.events.GolemBuildEvent;
 import com.golems.integration.GolemDescriptionManager;
-
-import akka.japi.Pair;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreenBook;
@@ -23,7 +11,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -37,10 +24,10 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
+
+import java.util.*;
 
 public class ItemInfoBook extends Item {
 	
@@ -60,7 +47,7 @@ public class ItemInfoBook extends Item {
 		this.setCreativeTab(CreativeTabs.MISC);
 	}
 	
-	/** Meant to be called only once upon World initialization **/
+	/** Meant to be called only once upon World initialization, on the client. **/
 	public static void initGolemInfo(World world) {
 		if(PAGES.isEmpty() || !I18n.format(TEST_KEY).equals(LOCALE))
 		{
@@ -162,7 +149,6 @@ public class ItemInfoBook extends Item {
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
 		ItemStack itemstack = playerIn.getHeldItem(handIn);
-		
 		this.addNBT(itemstack);
 		
 		if(playerIn.getEntityWorld().isRemote)
