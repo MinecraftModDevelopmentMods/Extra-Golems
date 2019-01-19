@@ -1,29 +1,15 @@
 package com.golems.items;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.golems.entity.EntityBedrockGolem;
 import com.golems.entity.GolemBase;
 import com.golems.entity.GolemMultiTextured;
-import com.golems.events.GolemBuildEvent;
+import com.golems.gui.GuiLoader;
 import com.golems.integration.GolemDescriptionManager;
-
-import akka.japi.Pair;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreenBook;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -37,18 +23,16 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
+
+import java.util.*;
 
 public class ItemInfoBook extends Item {
 	
 	protected static final String KEY_PAGES = "pages";
 	protected static final String KEY_TITLE = "title";
 	protected static final String KEY_AUTHOR = "author";
-	/** The GolemDescriptionManager for this item to use in book displays **/
-	protected static final BookDescriptionManager DESC = new BookDescriptionManager();
 	/** Used for NBT book. Each String entry is a separate page. **/
 	protected static final List<String> PAGES = new ArrayList();
 	// TEST_KEY and LOCALE are to detect language changes and re-init everything
@@ -59,9 +43,10 @@ public class ItemInfoBook extends Item {
 		super();
 		this.setCreativeTab(CreativeTabs.MISC);
 	}
-	
-	/** Meant to be called only once upon World initialization **/
+
+	/** Meant to be called only once upon World initialization, on the client. **/
 	public static void initGolemInfo(World world) {
+		BookDescriptionManager manager = new BookDescriptionManager();
 		if(PAGES.isEmpty() || !I18n.format(TEST_KEY).equals(LOCALE))
 		{
 			// clear all pre-existing info
@@ -87,7 +72,7 @@ public class ItemInfoBook extends Item {
 			final List<List<String>> DESC_LIST = new LinkedList<List<String>>();
 			// use the sorted list
 			for(GolemBase golem : sorted) {
-				final List<String> desc = DESC.getEntityDescription(golem);
+				final List<String> desc = manager.getEntityDescription(golem);
 				final String blockName = TextFormatting.GRAY + I18n.format("itemGroup.buildingBlocks") 
 					+ " : " + TextFormatting.BLACK + golemMap.get(golem).getLocalizedName() + "\n";
 				// insert block name at beginning of description
@@ -96,13 +81,13 @@ public class ItemInfoBook extends Item {
 				DESC_LIST.add(desc);
 			}
 			// use the information gathered to populate the PAGES field
-			buildPages(DESC_LIST);
+			buildPages(DESC_LIST, manager);
 		}
 	}
 	
-	private static void buildPages(final List<List<String>> fromList) {
+	private static void buildPages(final List<List<String>> fromList, BookDescriptionManager manager) {
 		// first add the introduction to the book
-		PAGES.addAll(DESC.getIntroduction());
+		PAGES.addAll(manager.getIntroduction());
 		// use the list of descriptions to make the remaining pages of the book
 		final String SEP = "\n";
 		for(List<String> list : fromList) {
@@ -162,12 +147,11 @@ public class ItemInfoBook extends Item {
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
 		ItemStack itemstack = playerIn.getHeldItem(handIn);
-		
 		this.addNBT(itemstack);
 		
 		if(playerIn.getEntityWorld().isRemote)
 		{
-			Minecraft.getMinecraft().displayGuiScreen(new GuiScreenBook(playerIn, itemstack, false));
+			GuiLoader.loadBookGui(playerIn, itemstack);
 		}
 		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
 	}

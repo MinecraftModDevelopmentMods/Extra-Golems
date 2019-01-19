@@ -1,47 +1,8 @@
 package com.golems.events.handlers;
 
-import com.golems.entity.EntityBoneGolem;
-import com.golems.entity.EntityBookshelfGolem;
-import com.golems.entity.EntityClayGolem;
-import com.golems.entity.EntityCoalGolem;
-import com.golems.entity.EntityCraftingGolem;
-import com.golems.entity.EntityDiamondGolem;
-import com.golems.entity.EntityEmeraldGolem;
-import com.golems.entity.EntityEndstoneGolem;
-import com.golems.entity.EntityGlassGolem;
-import com.golems.entity.EntityGlowstoneGolem;
-import com.golems.entity.EntityGoldGolem;
-import com.golems.entity.EntityHardenedClayGolem;
-import com.golems.entity.EntityIceGolem;
-import com.golems.entity.EntityLapisGolem;
-import com.golems.entity.EntityLeafGolem;
-import com.golems.entity.EntityMagmaGolem;
-import com.golems.entity.EntityMelonGolem;
-import com.golems.entity.EntityMushroomGolem;
-import com.golems.entity.EntityNetherBrickGolem;
-import com.golems.entity.EntityNetherWartGolem;
-import com.golems.entity.EntityObsidianGolem;
-import com.golems.entity.EntityPrismarineGolem;
-import com.golems.entity.EntityQuartzGolem;
-import com.golems.entity.EntityRedSandstoneGolem;
-import com.golems.entity.EntityRedstoneGolem;
-import com.golems.entity.EntitySandstoneGolem;
-import com.golems.entity.EntitySeaLanternGolem;
-import com.golems.entity.EntitySlimeGolem;
-import com.golems.entity.EntitySpongeGolem;
-import com.golems.entity.EntityStainedClayGolem;
-import com.golems.entity.EntityStainedGlassGolem;
-import com.golems.entity.EntityStrawGolem;
-import com.golems.entity.EntityTNTGolem;
-import com.golems.entity.EntityWoodenGolem;
-import com.golems.entity.EntityWoolGolem;
-import com.golems.entity.GolemBase;
-import com.golems.entity.GolemColorizedMultiTextured;
-import com.golems.entity.GolemMultiTextured;
+import com.golems.entity.*;
 import com.golems.events.GolemBuildEvent;
-import com.golems.items.ItemInfoBook;
 import com.golems.main.Config;
-
 import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.BlockLog.EnumAxis;
@@ -53,9 +14,7 @@ import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.init.Blocks;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 /** Handles events added specifically from this mod. **/
 public class GolemCommonEventHandler {
@@ -198,13 +157,7 @@ public class GolemCommonEventHandler {
 	    }
 	}
 	
-	@SubscribeEvent
-	public void onWorldLoad(final WorldEvent.Load event) {
-		// Try to initialize all the golem-book info
-		// The item will check if this has already been done
-		ItemInfoBook.initGolemInfo(event.getWorld());
-		//ItemInfoBook.printDesc();
-	}
+
 
 	private static final class EntityAIAttackGolem extends EntityAINearestAttackableTarget<GolemBase> {
 	    private EntityAIAttackGolem(final EntityCreature creature) {
