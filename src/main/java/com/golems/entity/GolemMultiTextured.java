@@ -39,9 +39,9 @@ public abstract class GolemMultiTextured extends GolemBase {
 	 * <code>golem_example_two.png</code> and <code>golem_example_three.png</code>,
 	 * as well as loot tables for the same names with the JSON suffix
 	 **/
-	public GolemMultiTextured(final World world, final float attack, final ItemStack pick, final String prefix,
+	public GolemMultiTextured(final World world, final String prefix,
 			final String[] textureNames) {
-		super(world, attack, pick);
+		super(world);
 		this.textures = new ResourceLocation[textureNames.length];
 		this.lootTables = new ResourceLocation[textureNames.length];
 		for (int n = 0, len = textureNames.length; n < len; n++) {

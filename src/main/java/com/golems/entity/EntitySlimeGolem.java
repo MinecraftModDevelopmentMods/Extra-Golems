@@ -2,11 +2,10 @@ package com.golems.entity;
 
 import java.util.List;
 
-import com.golems.main.Config;
+import com.golems.util.GolemConfigSet;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
@@ -20,9 +19,11 @@ public final class EntitySlimeGolem extends GolemBase {
 	public static final String KNOCKBACK = "Knockback Factor";
 
 	public EntitySlimeGolem(final World world) {
-		super(world, Config.SLIME.getBaseAttack(), Blocks.SLIME_BLOCK);
+		super(world);
 		this.setCanSwim(true);
 		this.setLootTableLoc("golem_slime");
+		this.setBaseMoveSpeed(0.29D);
+		this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.5D);
 	}
 
 	@Override
@@ -33,8 +34,9 @@ public final class EntitySlimeGolem extends GolemBase {
 	@Override
 	public boolean attackEntityAsMob(final Entity entity) {
 		if (super.attackEntityAsMob(entity)) {
-			if (Config.SLIME.getBoolean(ALLOW_SPECIAL)) {
-				knockbackTarget(entity, Config.SLIME.getFloat(KNOCKBACK));
+			GolemConfigSet cfg = getConfig(this);
+			if (cfg.getBoolean(ALLOW_SPECIAL)) {
+				knockbackTarget(entity, cfg.getFloat(KNOCKBACK));
 			}
 			return true;
 		}
@@ -45,9 +47,10 @@ public final class EntitySlimeGolem extends GolemBase {
 	protected void damageEntity(final DamageSource source, final float amount) {
 		if (!this.isEntityInvulnerable(source)) {
 			super.damageEntity(source, amount);
-			if (source.getImmediateSource() != null && Config.SLIME.getBoolean(ALLOW_SPECIAL)) {
+			GolemConfigSet cfg = getConfig(this);
+			if (source.getImmediateSource() != null && cfg.getBoolean(ALLOW_SPECIAL)) {
 				knockbackTarget(source.getImmediateSource(),
-						Config.SLIME.getFloat(KNOCKBACK) * 0.325F);
+						cfg.getFloat(KNOCKBACK) * 0.325F);
 			}
 		}
 	}
@@ -60,27 +63,13 @@ public final class EntitySlimeGolem extends GolemBase {
 	}
 
 	@Override
-	protected void applyAttributes() {
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
-				.setBaseValue(Config.SLIME.getMaxHealth());
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.29D);
-		this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.5D);
-	}
-
-//	@Override
-//	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
-//		final int size = 11 + this.rand.nextInt(16 + lootingLevel * 4);
-//		this.addDrop(dropList, new ItemStack(Items.SLIME_BALL, size), 100);
-//	}
-
-	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_SLIME_STEP;
 	}
 	
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if(Config.SLIME.getBoolean(EntitySlimeGolem.ALLOW_SPECIAL))
+		if(getConfig(this).getBoolean(EntitySlimeGolem.ALLOW_SPECIAL))
 			list.add(TextFormatting.GREEN + trans("entitytip.has_knockback"));
 		return list;
 	}

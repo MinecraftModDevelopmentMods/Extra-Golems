@@ -1,17 +1,16 @@
 package com.golems.proxies;
 
 import com.golems.entity.*;
-import com.golems.items.ItemInfoBook;
 import com.golems.main.ExtraGolems;
 import com.golems.main.GolemItems;
 import com.golems.renders.RenderColoredGolem;
 import com.golems.renders.RenderGolem;
+
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -24,6 +23,8 @@ public final class ClientProxy extends CommonProxy {
 	public static final IRenderFactory<GolemBase> FACTORY_TEXTURED_GOLEM = RenderGolem::new;
 
 	public static final IRenderFactory<GolemColorized> FACTORY_COLORED_GOLEM = RenderColoredGolem::new;
+	
+	
 
 	@Override
 	public void registerEvents() {
@@ -111,13 +112,5 @@ public final class ClientProxy extends CommonProxy {
 
 	private void registerRender(final Item i, final int... meta) {
 		registerRender(i, i.getRegistryName().toString(), meta);
-	}
-
-	@SubscribeEvent
-	public void onWorldLoad(final WorldEvent.Load event) {
-		// Try to initialize all the golem-book info
-		// The item will check if this has already been done
-		ItemInfoBook.initGolemInfo(event.getWorld());
-		//ItemInfoBook.printDesc();
 	}
 }

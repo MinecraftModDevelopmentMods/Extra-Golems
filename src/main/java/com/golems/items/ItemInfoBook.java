@@ -1,18 +1,19 @@
 package com.golems.items;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 import com.golems.entity.EntityBedrockGolem;
 import com.golems.entity.GolemBase;
 import com.golems.entity.GolemMultiTextured;
 import com.golems.gui.GuiLoader;
 import com.golems.integration.GolemDescriptionManager;
-import net.minecraft.block.Block;
+
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -20,13 +21,8 @@ import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.EntityEntry;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
-
-import java.util.*;
 
 public class ItemInfoBook extends Item {
 	
@@ -35,55 +31,12 @@ public class ItemInfoBook extends Item {
 	protected static final String KEY_AUTHOR = "author";
 	/** Used for NBT book. Each String entry is a separate page. **/
 	protected static final List<String> PAGES = new ArrayList();
-	// TEST_KEY and LOCALE are to detect language changes and re-init everything
-	private static final String TEST_KEY = "translation.test.none";
-	protected static String LOCALE = "";
-	
+		
 	public ItemInfoBook() {
 		super();
 		this.setCreativeTab(CreativeTabs.MISC);
 	}
-
-	/** Meant to be called only once upon World initialization, on the client. **/
-	public static void initGolemInfo(World world) {
-		BookDescriptionManager manager = new BookDescriptionManager();
-		if(PAGES.isEmpty() || !I18n.format(TEST_KEY).equals(LOCALE))
-		{
-			// clear all pre-existing info
-			LOCALE = I18n.format(TEST_KEY);
-			PAGES.clear();
-			// make a map of golems and their respective blocks
-			final Map<GolemBase, Block> golemMap = getDummyGolems(world);
-			// make a sorted version of this map by making a sorted list and using it later
-			final List<GolemBase> sorted = new LinkedList(golemMap.keySet());
-			// make a comparator to sort golems by attack power
-			final Comparator<GolemBase> comparator = new Comparator<GolemBase>() {
-				@Override
-				public int compare(GolemBase arg0, GolemBase arg1) {
-					float attack0 = arg0.getBaseAttackDamage();
-					float attack1 = arg1.getBaseAttackDamage();
-					return attack0 < attack1 ? -1 : (attack0 - attack1 < 0.01F ? 0 : 1);
-				}
-			};
-			// sort the List using the above comparator
-			Collections.sort(sorted, comparator);
-			
-			// iterate through the sorted list and add Block+Description pairs to another list
-			final List<List<String>> DESC_LIST = new LinkedList<List<String>>();
-			// use the sorted list
-			for(GolemBase golem : sorted) {
-				final List<String> desc = manager.getEntityDescription(golem);
-				final String blockName = TextFormatting.GRAY + I18n.format("itemGroup.buildingBlocks") 
-					+ " : " + TextFormatting.BLACK + golemMap.get(golem).getLocalizedName() + "\n";
-				// insert block name at beginning of description
-				desc.add(0, blockName);
-				// add the now-complete description to the main list
-				DESC_LIST.add(desc);
-			}
-			// use the information gathered to populate the PAGES field
-			buildPages(DESC_LIST, manager);
-		}
-	}
+	
 	
 	private static void buildPages(final List<List<String>> fromList, BookDescriptionManager manager) {
 		// first add the introduction to the book
@@ -101,30 +54,6 @@ public class ItemInfoBook extends Item {
 		}
 	}
 	
-	/**
-	 * @param world used just to make the dummy golems
-	 * @return a Map that indicates which Golems require
-	 * which Blocks in their construction. Supports add-ons.
-	 **/
-	private static Map<GolemBase, Block> getDummyGolems(final World world) {
-		final Map<GolemBase, Block> map = new HashMap();
-		// for each entity, find out if it's a golem and if it's creative return includes a block.
-		final Set<ResourceLocation> set = EntityList.getEntityNameList();
-		for(EntityEntry entry : ForgeRegistries.ENTITIES) {
-			Entity e = entry.newInstance(world);
-			if(e instanceof GolemBase) {
-				GolemBase instance = (GolemBase) e;
-				final ItemStack stack = instance.getCreativeReturn();
-				if(stack != null && stack.getItem() instanceof ItemBlock) {
-					Block b = ((ItemBlock)stack.getItem()).getBlock();
-					map.put(instance, b);
-				}
-			}
-		}
-		
-		return map;
-	}
-	
 	// DEBUG
 	public static final void printDesc() {
 		System.out.println("\nPrinting DescriptionMap pages:");
@@ -133,24 +62,12 @@ public class ItemInfoBook extends Item {
 		}
 	}
 	
-	/**
-     * allows items to add custom lines of information to the mouseover description
-     *
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-    	//tooltip.add
-    }*/
-	
-	/**
-     * Called when the equipped item is right clicked.
-     */
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
 		ItemStack itemstack = playerIn.getHeldItem(handIn);
-		this.addNBT(itemstack);
-		
-		if(playerIn.getEntityWorld().isRemote)
-		{
+		//this.addNBT(itemstack);
+		if(playerIn.getEntityWorld().isRemote) {
+			
 			GuiLoader.loadBookGui(playerIn, itemstack);
 		}
 		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
@@ -171,7 +88,7 @@ public class ItemInfoBook extends Item {
 			
 			nbt.setTag(KEY_PAGES, pagesTag);
 			nbt.setString(KEY_AUTHOR, "");
-		 	nbt.setString(KEY_TITLE, I18n.format("item.info_book.name"));
+		 	nbt.setString(KEY_TITLE, "");
 			itemstack.setTagCompound(nbt);
 		}
 	}

@@ -1,8 +1,7 @@
 package com.golems.entity;
 
-import com.golems.main.GolemItems;
+import javax.annotation.Nullable;
 
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -28,11 +27,11 @@ public abstract class GolemColorized extends GolemBase {
 	/**
 	 * Flexible constructor so child classes can "borrow" this class's behavior and customize. It is
 	 * fine to pass 'null' for {@link rBase} or {@link rOverlay}, and null textures will not be
-	 * rendered. Args: world, attack, pickBlock, initialColor, rBase, rOverlay.
+	 * rendered. Args: world, attack, buildingBlock, initialColor, rBase, rOverlay.
 	 * 
 	 * @param world
-	 * @param attack
-	 * @param pickBlock
+	 * @param attack 
+	 * @param building the Block to use to build this golem
 	 * @param initial
 	 *            the (usually temporary) color to apply to this golem until it is updated by some
 	 *            other method.
@@ -42,22 +41,13 @@ public abstract class GolemColorized extends GolemBase {
 	 * @param rOverlay
 	 *            a texture that will be recolored and optionally rendered as transparent.
 	 **/
-	public GolemColorized(final World world, final float attack, final ItemStack pickBlock, final long initial,
-			final ResourceLocation rBase, final ResourceLocation rOverlay) {
-		super(world, attack, pickBlock);
+	public GolemColorized(final World world, final long initial,
+			@Nullable final ResourceLocation rBase, @Nullable final ResourceLocation rOverlay) {
+		super(world);
 		this.setColor(initial);
 		this.base = rBase;
 		this.overlay = rOverlay;
 		this.hasBase = this.base != null;
-	}
-
-	/**
-	 * @see {@link GolemColorized(World, float, ItemStack, long, ResourceLocation,
-	 *      ResourceLocation)}
-	 **/
-	public GolemColorized(final World world, final float attack, final long initial, final ResourceLocation rBase,
-			final ResourceLocation rOverlay) {
-		this(world, attack, new ItemStack(GolemItems.golemHead), initial, rBase, rOverlay);
 	}
 
 	@Override

@@ -3,11 +3,10 @@ package com.golems.entity;
 import com.golems.main.Config;
 import com.golems.main.ExtraGolems;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -24,9 +23,9 @@ public final class EntityWoolGolem extends GolemMultiTextured {
 	private byte[] iSecret = { 14, 1, 4, 5, 3, 11, 10, 2 };
 
 	public EntityWoolGolem(final World world) {
-		super(world, Config.WOOL.getBaseAttack(), new ItemStack(Blocks.WOOL), WOOL_PREFIX,
-				coloredWoolTypes);
+		super(world, WOOL_PREFIX, coloredWoolTypes);
 		this.setCanSwim(true);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
 	}
 	
 	@Override
@@ -55,22 +54,6 @@ public final class EntityWoolGolem extends GolemMultiTextured {
 	}
 
 	@Override
-	protected void applyAttributes() {
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
-				.setBaseValue(Config.WOOL.getMaxHealth());
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
-	}
-
-//	@Override
-//	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
-//		// final int size = 1 + this.rand.nextInt(3) + lootingLevel;
-//		final int meta = this.getTextureNum() % coloredWoolTypes.length;
-//		this.addDrop(dropList, new ItemStack(Blocks.WOOL, 1 + rand.nextInt(2), 0), 100);
-//		this.addDrop(dropList, Blocks.WOOL, meta, 1, 2, 60 + lootingLevel * 10);
-//		this.addDrop(dropList, Items.STRING, 0, 1, 2, 5 + lootingLevel * 10);
-//	}
-
-	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_CLOTH_STEP;
 	}
@@ -79,6 +62,15 @@ public final class EntityWoolGolem extends GolemMultiTextured {
 	public void setTextureNum(byte toSet, final boolean updateInstantly) {
 		toSet %= (byte) (coloredWoolTypes.length - 1); // skip texture for 'white'
 		super.setTextureNum(toSet, updateInstantly);
+	}
+	
+
+	@Override
+	public void onBuilt(IBlockState body, IBlockState legs, IBlockState arm1, IBlockState arm2) { 
+		// use block metadata to give this golem the right texture
+		final int meta = body.getBlock().getMetaFromState(body)
+				% this.getTextureArray().length;
+		this.setTextureNum((byte) meta);
 	}
 	
 	@Override

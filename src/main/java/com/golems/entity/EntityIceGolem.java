@@ -3,13 +3,11 @@ package com.golems.entity;
 import java.util.List;
 
 import com.golems.events.IceGolemFreezeEvent;
-import com.golems.main.Config;
+import com.golems.util.GolemConfigSet;
 import com.google.common.base.Function;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
@@ -28,9 +26,10 @@ public final class EntityIceGolem extends GolemBase {
 	public static final String AOE = "Area of Effect";
 
 	public EntityIceGolem(final World world) {
-		super(world, Config.ICE.getBaseAttack(), Blocks.PACKED_ICE);
+		super(world);
 		this.setCanSwim(true); // just in case
 		this.setLootTableLoc("golem_ice");
+		this.setBaseMoveSpeed(0.26D);
 	}
 
 	protected ResourceLocation applyTexture() {
@@ -54,10 +53,10 @@ public final class EntityIceGolem extends GolemBase {
 			if (this.world.getBiome(below).getTemperature(below) > 1.0F) {
 				this.attackEntityFrom(DamageSource.ON_FIRE, 1.0F);
 			}
-
-			if (Config.ICE.getBoolean(ALLOW_SPECIAL)) {
+			GolemConfigSet cfg = getConfig(this);
+			if (cfg.getBoolean(ALLOW_SPECIAL)) {
 				final IceGolemFreezeEvent event = new IceGolemFreezeEvent(this, below,
-						Config.ICE.getInt(AOE));
+						cfg.getInt(AOE));
 				if (!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Result.DENY) {
 					this.freezeBlocks(event.getAffectedPositions(), event.getFunction(),
 							event.updateFlag);
@@ -76,22 +75,6 @@ public final class EntityIceGolem extends GolemBase {
 		}
 		return false;
 	}
-
-	@Override
-	protected void applyAttributes() {
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
-				.setBaseValue(Config.ICE.getMaxHealth());
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
-	}
-
-//	@Override
-//	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
-//		final int size = 1 + lootingLevel;
-//		this.addDrop(dropList, new ItemStack(Blocks.ICE, size > 4 ? 4 : size), 100);
-//		if (lootingLevel > 0 || !Config.ICE.getBoolean(CAN_USE_REGULAR_ICE)) {
-//			this.addDrop(dropList, Blocks.PACKED_ICE, 0, 0, size > 2 ? 2 : size, 80);
-//		}
-//	}
 
 	@Override
 	protected SoundEvent getDeathSound() {
@@ -125,7 +108,7 @@ public final class EntityIceGolem extends GolemBase {
 	}
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if(Config.ICE.getBoolean(EntityIceGolem.ALLOW_SPECIAL))
+		if(getConfig(this).getBoolean(EntityIceGolem.ALLOW_SPECIAL))
 			list.add(TextFormatting.AQUA + trans("entitytip.freezes_blocks"));
 		return list;
 	}

@@ -2,13 +2,10 @@ package com.golems.entity;
 
 import java.util.List;
 
-import com.golems.main.Config;
+import com.golems.util.GolemConfigSet;
 
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -25,17 +22,10 @@ public final class EntityLeafGolem extends GolemColorized {
 			.makeGolemTexture("leaves_grayscale");
 
 	public EntityLeafGolem(final World world) {
-		super(world, Config.LEAF.getBaseAttack(), new ItemStack(Blocks.LEAVES), 0x5F904A,
-				TEXTURE_BASE, TEXTURE_OVERLAY);
+		super(world, 0x5F904A, TEXTURE_BASE, TEXTURE_OVERLAY);
 		this.setCanSwim(true);
 		this.setLootTableLoc("golem_leaves");
-	}
-
-	@Override
-	protected void applyAttributes() {
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
-				.setBaseValue(Config.LEAF.getMaxHealth());
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.31D);
+		this.setBaseMoveSpeed(0.31D);
 	}
 
 	/**
@@ -45,7 +35,8 @@ public final class EntityLeafGolem extends GolemColorized {
 	@Override
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
-		if (Config.LEAF.getBoolean(ALLOW_SPECIAL)
+		GolemConfigSet cfg = getConfig(this);
+		if (cfg.getBoolean(ALLOW_SPECIAL)
 				&& this.getActivePotionEffect(MobEffects.REGENERATION) == null
 				&& rand.nextInt(40) == 0) {
 			this.addPotionEffect(
@@ -64,14 +55,6 @@ public final class EntityLeafGolem extends GolemColorized {
 		}
 	}
 
-//	@Override
-//	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
-//		this.addDrop(dropList, new ItemStack(Blocks.LEAVES, lootingLevel + 1), 100);
-//		this.addDrop(dropList, Blocks.SAPLING, 0, 1, 1, 20 + lootingLevel * 10);
-//		this.addDrop(dropList, Items.APPLE, 0, 1, 1, 15 + lootingLevel * 10);
-//		this.addDrop(dropList, Items.STICK, 0, 1, 2, 5 + lootingLevel * 10);
-//	}
-
 	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_GRASS_STEP;
@@ -79,7 +62,7 @@ public final class EntityLeafGolem extends GolemColorized {
 	
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if(Config.LEAF.getBoolean(EntityLeafGolem.ALLOW_SPECIAL))
+		if(getConfig(this).getBoolean(EntityLeafGolem.ALLOW_SPECIAL))
 			list.add(TextFormatting.DARK_GREEN + trans("effect.regeneration") + " " + trans("enchantment.level.1"));
 		return list;
 	}

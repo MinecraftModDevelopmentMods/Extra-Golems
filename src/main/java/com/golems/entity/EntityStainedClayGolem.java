@@ -1,9 +1,6 @@
 package com.golems.entity;
 
-import com.golems.main.Config;
-
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemDye;
 import net.minecraft.util.ResourceLocation;
@@ -20,28 +17,20 @@ public final class EntityStainedClayGolem extends GolemColorizedMultiTextured {
 			.makeGolemTexture("stained_clay_grayscale");
 
 	public EntityStainedClayGolem(final World world) {
-		super(world, Config.STAINED_CLAY.getBaseAttack(), Blocks.STAINED_HARDENED_CLAY,
-				TEXTURE_BASE, TEXTURE_OVERLAY, COLORS);
+		super(world, TEXTURE_BASE, TEXTURE_OVERLAY, COLORS);
+		this.setBaseMoveSpeed(0.20D);
 	}
-
-	@Override
-	protected void applyAttributes() {
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
-				.setBaseValue(Config.STAINED_CLAY.getMaxHealth());
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.20D);
-	}
-
-//	@Override
-//	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
-//		final int keyReturn = Config.STAINED_CLAY.getInt(DROP_META);
-//		final int meta = keyReturn < 0 ? 15 - this.getTextureNum() : keyReturn;
-//		final int size = 1 + lootingLevel + rand.nextInt(3);
-//		this.addDrop(dropList,
-//				new ItemStack(Blocks.STAINED_HARDENED_CLAY, size > 4 ? 4 : size, meta), 100);
-//	}
 
 	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_STONE_STEP;
+	}
+	
+	@Override
+	public void onBuilt(IBlockState body, IBlockState legs, IBlockState arm1, IBlockState arm2) { 
+		// use block metadata to give this golem the right texture
+		final int meta = body.getBlock().getMetaFromState(body)
+				% this.getColorArray().length;
+		this.setTextureNum((byte) (this.getColorArray().length - meta - 1));
 	}
 }

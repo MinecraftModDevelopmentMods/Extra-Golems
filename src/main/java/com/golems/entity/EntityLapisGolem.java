@@ -2,12 +2,10 @@ package com.golems.entity;
 
 import java.util.List;
 
-import com.golems.main.Config;
+import com.golems.util.GolemConfigSet;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.potion.Potion;
@@ -25,8 +23,9 @@ public final class EntityLapisGolem extends GolemBase {
 			MobEffects.INSTANT_DAMAGE, MobEffects.WEAKNESS, MobEffects.WITHER, MobEffects.LEVITATION, MobEffects.GLOWING };
 
 	public EntityLapisGolem(final World world) {
-		super(world, Config.LAPIS.getBaseAttack(), Blocks.LAPIS_BLOCK);
+		super(world);
 		this.setLootTableLoc("golem_lapis");
+		this.setBaseMoveSpeed(0.28D);
 	}
 
 	@Override
@@ -39,7 +38,8 @@ public final class EntityLapisGolem extends GolemBase {
 	public boolean attackEntityAsMob(final Entity entityIn) {
 		if (super.attackEntityAsMob(entityIn) && entityIn instanceof EntityLivingBase) {
 			final EntityLivingBase entity = (EntityLivingBase) entityIn;
-			if (Config.LAPIS.getBoolean(ALLOW_SPECIAL)) {
+			final GolemConfigSet cfg = getConfig(this);
+			if (cfg.getBoolean(ALLOW_SPECIAL)) {
 				final Potion potionID = entity.isEntityUndead() ? MobEffects.INSTANT_HEALTH
 						: badEffects[rand.nextInt(badEffects.length)];
 				final int len = potionID.isInstant() ? 1 : 20 * (5 + rand.nextInt(9));
@@ -52,20 +52,13 @@ public final class EntityLapisGolem extends GolemBase {
 	}
 
 	@Override
-	protected void applyAttributes() {
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
-				.setBaseValue(Config.LAPIS.getMaxHealth());
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
-	}
-
-	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_STONE_STEP;
 	}
 	
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if(Config.LAPIS.getBoolean(EntityLapisGolem.ALLOW_SPECIAL))
+		if(getConfig(this).getBoolean(EntityLapisGolem.ALLOW_SPECIAL))
 			list.add( TextFormatting.LIGHT_PURPLE + trans("entitytip.attacks_use_potion_effects"));
 		return list;
 	}

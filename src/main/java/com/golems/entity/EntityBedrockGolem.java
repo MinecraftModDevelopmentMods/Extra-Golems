@@ -3,12 +3,10 @@ package com.golems.entity;
 import java.util.List;
 
 import com.golems.items.ItemBedrockGolem;
-import com.golems.main.Config;
 import com.golems.main.GolemItems;
 
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
@@ -23,7 +21,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public final class EntityBedrockGolem extends GolemBase {
 
 	public EntityBedrockGolem(final World world) {
-		super(world, Config.BEDROCK.getBaseAttack(), Blocks.BEDROCK);
+		super(world);
+		this.setCreativeReturn(new ItemStack(GolemItems.spawnBedrockGolem));
+		this.setBaseMoveSpeed(0.24D);
 	}
 
 	@Override
@@ -64,14 +64,6 @@ public final class EntityBedrockGolem extends GolemBase {
 	@Override
 	protected void damageEntity(final DamageSource source, final float amount) {
 		//
-	}
-
-	@Override
-	protected void applyAttributes() {
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
-				.setBaseValue(Config.BEDROCK.getMaxHealth());
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.24D);
-		this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(1.0D);
 	}
 
 	@Override
