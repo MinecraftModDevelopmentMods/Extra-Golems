@@ -7,18 +7,18 @@ import net.minecraft.world.World;
 
 public final class EntityClayGolem extends GolemBase {
 
-	public EntityClayGolem(final World world) {
-		super(world);
-		this.setLootTableLoc("golem_clay");
-	}
+    public EntityClayGolem(final World world) {
+        super(world);
+        this.setLootTableLoc("golem_clay");
+    }
 
-	@Override
-	protected ResourceLocation applyTexture() {
-		return makeGolemTexture("clay");
-	}
-	
-	@Override
-	public SoundEvent getGolemSound() {
-		return SoundEvents.BLOCK_GRAVEL_STEP;
-	}
+    @Override
+    protected ResourceLocation applyTexture() {
+        return makeGolemTexture("clay");
+    }
+
+    @Override
+    public SoundEvent getGolemSound() {
+        return SoundEvents.BLOCK_GRAVEL_STEP;
+    }
 }

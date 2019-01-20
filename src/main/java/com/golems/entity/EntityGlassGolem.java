@@ -8,24 +8,24 @@ import net.minecraft.world.World;
 
 public final class EntityGlassGolem extends GolemBase {
 
-	public EntityGlassGolem(final World world) {
-		super(world);
-		this.setCanTakeFallDamage(true);
-		this.setLootTableLoc("golem_glass");
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
-	}
+    public EntityGlassGolem(final World world) {
+        super(world);
+        this.setCanTakeFallDamage(true);
+        this.setLootTableLoc("golem_glass");
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
+    }
 
-	protected ResourceLocation applyTexture() {
-		return makeGolemTexture("glass");
-	}
+    protected ResourceLocation applyTexture() {
+        return makeGolemTexture("glass");
+    }
 
-	@Override
-	public SoundEvent getGolemSound() {
-		return SoundEvents.BLOCK_GLASS_STEP;
-	}
+    @Override
+    public SoundEvent getGolemSound() {
+        return SoundEvents.BLOCK_GLASS_STEP;
+    }
 
-	@Override
-	protected SoundEvent getDeathSound() {
-		return SoundEvents.BLOCK_GLASS_BREAK;
-	}
+    @Override
+    protected SoundEvent getDeathSound() {
+        return SoundEvents.BLOCK_GLASS_BREAK;
+    }
 }
