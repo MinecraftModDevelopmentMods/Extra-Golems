@@ -42,12 +42,12 @@ public class BlockUtilityGlow extends BlockUtility
 		// make a slightly expanded AABB to check for the golem
 		AxisAlignedBB toCheck = new AxisAlignedBB(pos).grow(0.5D);
 		List<GolemBase> list = worldIn.getEntitiesWithinAABB(GolemBase.class, toCheck);
-		boolean hasLightGolem = false;
+		boolean hasLightGolem = list != null && !list.isEmpty();
 		for(GolemBase g : list) {
 			hasLightGolem |= isLightGolem(g);
 		}
 		
-		if(list == null || list.isEmpty() || !hasLightGolem) {
+		if(!hasLightGolem) {
 			// remove this block
 			worldIn.setBlockState(pos, REPLACE_WITH, 3);
 		}

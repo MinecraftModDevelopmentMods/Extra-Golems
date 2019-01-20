@@ -3,7 +3,6 @@ package com.golems.main;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.golems.entity.*;
 import com.golems.util.GolemConfigSet;
 import com.golems.util.GolemLookup;
 

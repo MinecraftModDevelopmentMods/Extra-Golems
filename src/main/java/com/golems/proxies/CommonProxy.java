@@ -11,12 +11,12 @@ import javax.annotation.Nullable;
 import com.golems.blocks.*;
 import com.golems.entity.*;
 import com.golems.events.handlers.GolemCommonEventHandler;
+import com.golems.gui.GolemBookEntry;
 import com.golems.items.ItemBedrockGolem;
 import com.golems.items.ItemInfoBook;
 import com.golems.main.Config;
 import com.golems.main.ExtraGolems;
 import com.golems.main.GolemItems;
-import com.golems.util.GolemEntry;
 import com.golems.util.GolemLookup;
 
 import net.minecraft.block.Block;
@@ -45,12 +45,10 @@ import scala.actors.threadpool.Arrays;
 @Mod.EventBusSubscriber(modid = ExtraGolems.MODID)
 public class CommonProxy {
 
-	// private static Map<String, Block> blocks = new ConcurrentHashMap<>();
-	// private static Map<String, Item> items = new ConcurrentHashMap<>();
 	/**
 	 * A List containing default instances of each Golem.
-	 * They do not exist in the world, it's simply for reference
-	 * for things like the Info Book
+	 * They do not exist in the world, the list is simply a 
+	 * reference for things like Golem Info Book
 	 **/
 	public static final List<GolemBase> DUMMY_GOLEMS = new LinkedList();
 
@@ -58,19 +56,6 @@ public class CommonProxy {
 
 	public void preInitRenders() {
 		// Unused
-	}
-	
-	/** @return a List containing default instances of each Golem. They do not exist in the world. **/
-	public static List<GolemBase> getDummyGolemList(final World world) {
-		final List<GolemBase> list = new LinkedList();
-		// for each entity, find out if it's a golem and add it to the list
-		final Set<ResourceLocation> set = EntityList.getEntityNameList();
-		for(EntityEntry entry : ForgeRegistries.ENTITIES) {
-			if(GolemBase.class.isAssignableFrom(entry.getEntityClass())) {
-				list.add((GolemBase)entry.newInstance(world));
-			}
-		}
-		return list;
 	}
 
 	public void registerEvents() {

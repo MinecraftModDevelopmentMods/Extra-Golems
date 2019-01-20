@@ -1,55 +1,26 @@
 package com.golems.util;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.golems.entity.EntityBedrockGolem;
-import com.golems.entity.EntityBoneGolem;
-import com.golems.entity.EntityBookshelfGolem;
-import com.golems.entity.EntityClayGolem;
-import com.golems.entity.EntityCoalGolem;
-import com.golems.entity.EntityCraftingGolem;
-import com.golems.entity.EntityDiamondGolem;
-import com.golems.entity.EntityEmeraldGolem;
-import com.golems.entity.EntityEndstoneGolem;
-import com.golems.entity.EntityGlassGolem;
-import com.golems.entity.EntityGlowstoneGolem;
-import com.golems.entity.EntityGoldGolem;
-import com.golems.entity.EntityHardenedClayGolem;
-import com.golems.entity.EntityIceGolem;
-import com.golems.entity.EntityLapisGolem;
-import com.golems.entity.EntityLeafGolem;
-import com.golems.entity.EntityMagmaGolem;
-import com.golems.entity.EntityMelonGolem;
-import com.golems.entity.EntityMushroomGolem;
-import com.golems.entity.EntityNetherBrickGolem;
-import com.golems.entity.EntityNetherWartGolem;
-import com.golems.entity.EntityObsidianGolem;
-import com.golems.entity.EntityPrismarineGolem;
-import com.golems.entity.EntityQuartzGolem;
-import com.golems.entity.EntityRedSandstoneGolem;
-import com.golems.entity.EntityRedstoneGolem;
-import com.golems.entity.EntitySandstoneGolem;
-import com.golems.entity.EntitySeaLanternGolem;
-import com.golems.entity.EntitySlimeGolem;
-import com.golems.entity.EntitySpongeGolem;
-import com.golems.entity.EntityStainedClayGolem;
-import com.golems.entity.EntityStainedGlassGolem;
-import com.golems.entity.EntityStrawGolem;
-import com.golems.entity.EntityTNTGolem;
-import com.golems.entity.EntityWoodenGolem;
-import com.golems.entity.EntityWoolGolem;
-import com.golems.entity.GolemBase;
+import com.golems.entity.*;
 import com.golems.main.ExtraGolems;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.registry.EntityEntry;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 /**
  * This class contains methods to convert from building block to the
@@ -68,6 +39,16 @@ public class GolemLookup {
 	private static final Map<Class<? extends GolemBase>, GolemConfigSet> GOLEM_TO_CONFIG = new HashMap();
 	
 	private static boolean freezeConfig = false;
+	
+	// Comparator that sorts Golem Entries by attack power
+	private static final Comparator<GolemBase> SORTER = new Comparator<GolemBase>() {
+		@Override
+		public int compare(GolemBase arg0, GolemBase arg1) {
+			float attack0 = arg0.getBaseAttackDamage();
+			float attack1 = arg1.getBaseAttackDamage();
+			return Float.compare(attack0, attack1);
+		}
+	};
 	
 	/** Be VERY CAREFUL calling this after maps have been populated. You'll break things. **/
 	public static void clear() {
@@ -339,5 +320,21 @@ public class GolemLookup {
 	/** @return all Golem classes that have been mapped **/
 	public static Set<Class<? extends GolemBase>> getGolemSet() {
 		return GOLEM_TO_BLOCK.keySet();
+	}
+	
+	/** @return a List containing default instances of each Golem. They do not exist in the world. **/
+	public static List<GolemBase> getDummyGolemList(final World world) {
+		final List<GolemBase> list = new LinkedList();
+		// for each entity, find out if it's a golem and add it to the list
+		final Set<ResourceLocation> set = EntityList.getEntityNameList();
+		for(EntityEntry entry : ForgeRegistries.ENTITIES) {
+			if(GolemBase.class.isAssignableFrom(entry.getEntityClass())) {
+				list.add((GolemBase)entry.newInstance(world));
+			}
+		}
+		// sort the list
+		Collections.sort(list, SORTER);
+		
+		return list;
 	}
 }
