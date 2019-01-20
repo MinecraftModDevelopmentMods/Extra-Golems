@@ -3,15 +3,14 @@ package com.golems.entity;
 import java.util.List;
 
 import com.golems.entity.ai.EntityAIPlaceRandomBlocksStrictly;
-import com.golems.main.Config;
 import com.golems.main.ExtraGolems;
+import com.golems.util.GolemConfigSet;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -28,13 +27,14 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 	protected static final Block[] soils = { Blocks.DIRT, Blocks.GRASS, Blocks.MYCELIUM };
 
 	public EntityMushroomGolem(final World world) {
-		super(world, Config.MUSHROOM.getBaseAttack(), new ItemStack(Blocks.RED_MUSHROOM_BLOCK),
-				SHROOM_PREFIX, SHROOM_TYPES);
+		super(world, SHROOM_PREFIX, SHROOM_TYPES);
 		this.setCanSwim(true);
-		final int freq = Config.MUSHROOM.getInt(FREQUENCY);
-		final boolean allowed = Config.MUSHROOM.getBoolean(ALLOW_SPECIAL);
+		GolemConfigSet cfg = getConfig(this);
+		final boolean allowed = cfg.getBoolean(ALLOW_SPECIAL);
+		final int freq = allowed ? cfg.getInt(FREQUENCY) : Integer.MAX_VALUE;
 		this.tasks.addTask(2,
 				new EntityAIPlaceRandomBlocksStrictly(this, freq, mushrooms, soils, allowed));
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
 	}
 
 	@Override
@@ -43,27 +43,22 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 	}
 
 	@Override
-	protected void applyAttributes() {
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
-				.setBaseValue(Config.MUSHROOM.getMaxHealth());
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
-	}
-// TODO
-//	@Override
-//	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
-//		final int size = 4 + this.rand.nextInt(6 + lootingLevel * 2);
-//		final Block shroom = rand.nextBoolean() ? Blocks.RED_MUSHROOM : Blocks.BROWN_MUSHROOM;
-//		this.addDrop(dropList, new ItemStack(shroom, size), 100);
-//	}
-
-	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_GRASS_STEP;
 	}
 	
 	@Override
+	public void onBuilt(IBlockState body, IBlockState legs, IBlockState arm1, IBlockState arm2) {
+		// use block type to give this golem the right texture
+		byte textureNum = body == Blocks.RED_MUSHROOM_BLOCK ? (byte) 0
+				: (byte) 1;
+		textureNum %= this.getNumTextures();
+		this.setTextureNum(textureNum);
+	}
+	
+	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if(Config.MUSHROOM.getBoolean(EntityMushroomGolem.ALLOW_SPECIAL))
+		if(getConfig(this).getBoolean(EntityMushroomGolem.ALLOW_SPECIAL))
 			list.add(TextFormatting.DARK_GREEN + trans("entitytip.plants_shrooms"));
 		return list;
 	}

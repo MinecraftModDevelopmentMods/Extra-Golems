@@ -3,12 +3,10 @@ package com.golems.entity;
 import java.util.List;
 
 import com.golems.blocks.ContainerPortableWorkbench;
-import com.golems.main.Config;
 
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
@@ -25,14 +23,8 @@ public final class EntityCraftingGolem extends GolemBase {
 	public static final String ALLOW_SPECIAL = "Allow Special: Crafting";
 	
 	public EntityCraftingGolem(final World world) {
-		super(world, Config.CRAFTING.getBaseAttack(), Blocks.CRAFTING_TABLE);
+		super(world);
 		this.setLootTableLoc("golem_crafting");
-	}
-
-	@Override
-	protected void applyAttributes() {
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
-				.setBaseValue(Config.CRAFTING.getMaxHealth());
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.29D);
 	}
 
@@ -54,12 +46,6 @@ public final class EntityCraftingGolem extends GolemBase {
 
 		return super.processInteract(player, hand);
 	}
-
-//	@Override
-//	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
-//		this.addDrop(dropList, new ItemStack(Blocks.CRAFTING_TABLE, 1 + rand.nextInt(2)), 100);
-//		this.addDrop(dropList, Blocks.PLANKS, 0, 1, 6, 70 + lootingLevel * 10);
-//	}
 
 	@Override
 	public SoundEvent getGolemSound() {
@@ -86,8 +72,9 @@ public final class EntityCraftingGolem extends GolemBase {
 	
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if(Config.CRAFTING.getBoolean(ALLOW_SPECIAL))
+		if(getConfig(this).getBoolean(ALLOW_SPECIAL)) {
 			list.add(TextFormatting.BLUE + trans("entitytip.click_open_crafting"));
+		}
 		return list;
 	}
 }

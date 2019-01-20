@@ -4,12 +4,15 @@ import java.util.List;
 import java.util.Random;
 
 import com.golems.entity.EntityRedstoneGolem;
+import com.golems.entity.GolemBase;
+import com.golems.entity.ai.EntityAIPlaceSingleBlock;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.ai.EntityAITasks.EntityAITaskEntry;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -34,8 +37,13 @@ public class BlockUtilityPower extends BlockUtility
 	public void updateTick(final World worldIn, final BlockPos pos, final IBlockState state, final Random rand) {
 		// make a slightly expanded AABB to check for the golem
 		AxisAlignedBB toCheck = new AxisAlignedBB(pos).grow(0.5D);
-		List<EntityRedstoneGolem> list = worldIn.getEntitiesWithinAABB(EntityRedstoneGolem.class, toCheck);
-		if(list == null || list.isEmpty()) {
+		List<GolemBase> list = worldIn.getEntitiesWithinAABB(GolemBase.class, toCheck);
+		boolean hasPowerGolem = list != null && !list.isEmpty();
+		for(GolemBase g : list) {
+			hasPowerGolem |= isPowerGolem(g);
+		}
+		
+		if(!hasPowerGolem) {
 			// remove this block
 			worldIn.setBlockState(pos, REPLACE_WITH, 3);
 		}
@@ -91,5 +99,17 @@ public class BlockUtilityPower extends BlockUtility
 	@Override
 	public int getStrongPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
         return blockState.getValue(POWER_LEVEL);
+    }
+	
+	/** Search the golem's AI to determine if it is a light-providing golem **/
+    protected boolean isPowerGolem(GolemBase golem) {
+    	for(EntityAITaskEntry entry : golem.tasks.taskEntries) {
+    		if(entry.action instanceof com.golems.entity.ai.EntityAIPlaceSingleBlock) {
+    			if(((EntityAIPlaceSingleBlock)entry.action).stateToPlace.getBlock() instanceof BlockUtilityPower) {
+    				return true;
+    			}
+    		}
+    	}
+    	return false;
     }
 }

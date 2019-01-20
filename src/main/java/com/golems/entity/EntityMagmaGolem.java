@@ -2,14 +2,13 @@ package com.golems.entity;
 
 import java.util.List;
 
-import com.golems.main.Config;
+import com.golems.util.GolemConfigSet;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -22,18 +21,18 @@ public final class EntityMagmaGolem extends GolemBase {
 	public static final String ALLOW_FIRE_SPECIAL = "Allow Special: Burn Enemies";
 	public static final String ALLOW_LAVA_SPECIAL = "Allow Special: Melt Cobblestone";
 	public static final String MELT_DELAY = "Melting Delay";
-	public static final Block MAGMA = Blocks.MAGMA;
 
 	/** Golem should stand in one spot for number of ticks before affecting the block below it. */
 	private int ticksStandingStill;
 
 	public EntityMagmaGolem(final World world) {
-		super(world, Config.MAGMA.getBaseAttack(), new ItemStack(MAGMA));
+		super(world);
 		this.setImmuneToFire(true);
 		this.ticksStandingStill = 0;
 		this.stepHeight = 1.0F;
 		this.tasks.addTask(0, this.swimmingAI);
 		this.setLootTableLoc("golem_magma");
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
 	}
 
 	@Override
@@ -45,7 +44,8 @@ public final class EntityMagmaGolem extends GolemBase {
 	@Override
 	public boolean attackEntityAsMob(final Entity entity) {
 		if (super.attackEntityAsMob(entity)) {
-			if (Config.MAGMA.getBoolean(ALLOW_FIRE_SPECIAL)) {
+			GolemConfigSet cfg = getConfig(this);
+			if (cfg.getBoolean(ALLOW_FIRE_SPECIAL)) {
 				entity.setFire(2 + rand.nextInt(5));
 			}
 			return true;
@@ -60,7 +60,8 @@ public final class EntityMagmaGolem extends GolemBase {
 	@Override
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
-		if (Config.MAGMA.getBoolean(ALLOW_LAVA_SPECIAL)) {
+		GolemConfigSet cfg = getConfig(this);
+		if (cfg.getBoolean(ALLOW_LAVA_SPECIAL)) {
 			final int x = MathHelper.floor(this.posX);
 			final int y = MathHelper.floor(this.posY - 0.20000000298023224D);
 			final int z = MathHelper.floor(this.posZ);
@@ -75,7 +76,7 @@ public final class EntityMagmaGolem extends GolemBase {
 
 			if (x == MathHelper.floor(this.lastTickPosX)
 					&& z == MathHelper.floor(this.lastTickPosZ)) {
-				if (++this.ticksStandingStill >= Config.MAGMA.getInt(MELT_DELAY)
+				if (++this.ticksStandingStill >= cfg.getInt(MELT_DELAY)
 						&& b1 == Blocks.COBBLESTONE && rand.nextInt(16) == 0) {
 					this.world.setBlockState(below, Blocks.LAVA.getDefaultState(), 3);
 					this.ticksStandingStill = 0;
@@ -87,28 +88,16 @@ public final class EntityMagmaGolem extends GolemBase {
 	}
 
 	@Override
-	protected void applyAttributes() {
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
-				.setBaseValue(Config.MAGMA.getMaxHealth());
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
-	}
-
-//	@Override
-//	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
-//		final int size = lootingLevel + this.rand.nextInt(4);
-//		this.addDrop(dropList, new ItemStack(MAGMA, size > 4 ? 4 : size), 90 + lootingLevel * 2);
-//	}
-
-	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_STONE_STEP;
 	}
 	
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if (Config.MAGMA.getBoolean(EntityMagmaGolem.ALLOW_LAVA_SPECIAL))
+		GolemConfigSet cfg = getConfig(this);
+		if (cfg.getBoolean(EntityMagmaGolem.ALLOW_LAVA_SPECIAL))
 			list.add(TextFormatting.RED	+ trans("entitytip.slowly_melts", trans("tile.stonebrick.name")));
-		if (Config.MAGMA.getBoolean(EntityMagmaGolem.ALLOW_FIRE_SPECIAL))
+		if (cfg.getBoolean(EntityMagmaGolem.ALLOW_FIRE_SPECIAL))
 			list.add(TextFormatting.RED + trans("entitytip.lights_mobs_on_fire"));
 		return list;
 	}

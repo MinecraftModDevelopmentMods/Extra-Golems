@@ -4,6 +4,8 @@ import com.golems.entity.GolemBase;
 import com.golems.events.GolemBuildEvent;
 import com.golems.items.ItemBedrockGolem;
 import com.golems.main.ExtraGolems;
+import com.golems.util.GolemConfigSet;
+import com.golems.util.GolemLookup;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
@@ -92,16 +94,16 @@ public final class BlockGolemHead extends BlockHorizontal {
 	public void onBlockAdded(final World world, final BlockPos pos, final IBlockState state) {
 		super.onBlockAdded(world, pos, state);
 		final IBlockState stateBelow1 = world.getBlockState(pos.down(1));
+		final IBlockState stateBelow2 = world.getBlockState(pos.down(2));
 		final Block blockBelow1 = stateBelow1.getBlock();
-		final Block blockBelow2 = world.getBlockState(pos.down(2)).getBlock();
-		final int x = pos.getX();
-		final int y = pos.getY();
-		final int z = pos.getZ();
+		final Block blockBelow2 = stateBelow2.getBlock();
+		final double x = pos.getX() + 0.5D;
+		final double y = pos.getY() - 1.95D;
+		final double z = pos.getZ() + 0.5D;
 
 		if (blockBelow1 == blockBelow2) {
 			final boolean flagX = isGolemXAligned(world, pos);
 			final boolean flagZ = isGolemZAligned(world, pos);
-			// final IBlockState meta = world.getBlockState(pos.down(1));
 
 			// hard-coded support for Snow Golem
 			if (blockBelow1 == Blocks.SNOW) {
@@ -109,48 +111,57 @@ public final class BlockGolemHead extends BlockHorizontal {
 					removeGolemBody(world, pos);
 					final EntitySnowman entitysnowman = new EntitySnowman(world);
 					ExtraGolems.LOGGER.info("[Extra Golems]: Building regular boring Snow Golem\n");
-					entitysnowman.setLocationAndAngles((double) x + 0.5D, (double) y - 1.95D,
-							(double) z + 0.5D, 0.0F, 0.0F);
+					entitysnowman.setLocationAndAngles(x, y, z, 0.0F, 0.0F);
 					world.spawnEntity(entitysnowman);
 				}
 
-				ItemBedrockGolem.spawnParticles(world, x + 0.5D, y - 1.5D, z + 0.5D, 0.2D);
+				ItemBedrockGolem.spawnParticles(world, x, y + 0.5D, z, 0.2D);
 				return;
 			}
 
-			if (flagX || flagZ) {
-				if (!world.isRemote) {
-					// hard-coded support for Iron Golem
-					if (blockBelow1 == Blocks.IRON_BLOCK) {
-						removeAllGolemBlocks(world, pos, flagX);
-						// spawn the golem
-						final EntityIronGolem golem = new EntityIronGolem(world);
-						ExtraGolems.LOGGER.info("[Extra Golems]: Building regular boring Iron Golem\n");
-						golem.setPlayerCreated(true);
-						golem.setLocationAndAngles((double) x + 0.5D, (double) y - 1.95D,
-								(double) z + 0.5D, 0.0F, 0.0F);
-						world.spawnEntity(golem);
-						return;
-					}
+			if (!world.isRemote && (flagX || flagZ)) {
+				// determine each arm of the golem
+				EnumFacing face = flagX ? EnumFacing.EAST : EnumFacing.NORTH;
+				IBlockState arm1 = world.getBlockState(pos.down(1).offset(face, 1));
+				IBlockState arm2 = world.getBlockState(pos.down(1).offset(face.getOpposite(), 1));
+				
+				// hard-coded support for Iron Golem
+				if (blockBelow1 == Blocks.IRON_BLOCK) {
+					removeAllGolemBlocks(world, pos, flagX);
+					// build Iron Golem
+					final EntityIronGolem golem = new EntityIronGolem(world);
+					ExtraGolems.LOGGER.info("[Extra Golems]: Building regular boring Iron Golem\n");
+					golem.setPlayerCreated(true);
+					golem.setLocationAndAngles(x, y, z, 0.0F, 0.0F);
+					world.spawnEntity(golem);
+					return;
+				}
 
-					// post an event that, when handled, will initialize the golem to spawn
-					final boolean sameMeta = getAreGolemBlocksSameMeta(world, pos, stateBelow1, flagX);
-					final GolemBuildEvent event = new GolemBuildEvent(world, stateBelow1, sameMeta, flagX);
-					MinecraftForge.EVENT_BUS.post(event);
-					if (event.isGolemNull() || event.isGolemBanned()) {
-						return;
-					}
+				// query the GolemLookup to see if there is a golem that can be built with this
+				// if there is, double-check its spawn permissions, then build!
+				if(GolemLookup.isBuildingBlock(blockBelow1)) {
+					// get the golem
+					final GolemBase golem = GolemLookup.getGolem(world, blockBelow1);
+					System.out.println("golem = " + (golem != null ? golem.toString() : "null"));
+					System.out.println("block = " + blockBelow1.toString());
+					if(golem == null) return;
 
+					// get the spawn permissions (assume it's allowed if none found)
+					final GolemConfigSet cfg = GolemLookup.getConfig(golem.getClass());
+					boolean allowed = cfg != null ? cfg.canSpawn() : true;
+					System.out.println("CFG = " + (cfg != null ? cfg.toString() : "null"));
+					if(!allowed) return;
+					
 					// clear the area where the golem blocks were
 					removeAllGolemBlocks(world, pos, flagX);
 
 					// spawn the golem
-					final GolemBase golem = event.getGolem();
 					ExtraGolems.LOGGER.info("[Extra Golems]: Building golem " + golem.toString() + "\n");
 					golem.setPlayerCreated(true);
-					golem.setLocationAndAngles((double) x + 0.5D, (double) y - 1.95D,
-							(double) z + 0.5D, 0.0F, 0.0F);
+					golem.setLocationAndAngles(x, y, z, 0.0F, 0.0F);
 					world.spawnEntity(golem);
+					golem.onBuilt(stateBelow1, stateBelow2, arm1, arm2);
+					
 				}
 			}
 		}
@@ -176,28 +187,6 @@ public final class BlockGolemHead extends BlockHorizontal {
 				&& world.getBlockState(armsZ[1]).getBlock() == below;
 	}
 	
-	/**
-	 * @return true if all 4 construction blocks have the same metadata
-	 **/
-	public static boolean getAreGolemBlocksSameMeta(final World worldObj, final BlockPos headPos, IBlockState blockState, boolean isGolemXAligned) {
-		// SOUTH=z++; WEST=x--; NORTH=z--; EAST=x++
-		final Block blockBelow = blockState.getBlock();
-		final BlockPos[] armsX = { headPos.down(1).west(1), headPos.down(1).east(1) };
-		final BlockPos[] armsZ = { headPos.down(1).north(1), headPos.down(1).south(1) };
-		final int metaBelow1 = blockBelow.getMetaFromState(blockState);
-		IBlockState state;
-		state = worldObj.getBlockState(headPos.down(2));
-		final int metaBelow2 = blockBelow.getMetaFromState(state);
-		state = isGolemXAligned ? worldObj.getBlockState(armsX[0])
-				: worldObj.getBlockState(armsZ[0]);
-		final int metaArm1 = blockBelow.getMetaFromState(state);
-		state = isGolemXAligned ? worldObj.getBlockState(armsX[1])
-				: worldObj.getBlockState(armsZ[1]);
-		final int metaArm2 = blockBelow.getMetaFromState(state);
-
-		return metaBelow1 == metaBelow2 && metaBelow2 == metaArm1 && metaArm1 == metaArm2;
-	}
-
 	/**
 	 * Replaces this block and the four construction blocks with air.
 	 **/

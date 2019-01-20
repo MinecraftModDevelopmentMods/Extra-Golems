@@ -3,7 +3,7 @@ package com.golems.entity;
 import java.util.List;
 
 import com.golems.entity.ai.EntityAIPlaceRandomBlocksStrictly;
-import com.golems.main.Config;
+import com.golems.util.GolemConfigSet;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockNetherWart;
@@ -25,9 +25,10 @@ public final class EntityNetherWartGolem extends GolemBase {
 	//public static final String DROP_NETHERWART_BLOCK = "Drop Netherwart Blocks";
 
 	public EntityNetherWartGolem(final World world) {
-		super(world, Config.NETHERWART.getBaseAttack(), NETHERWART);
+		super(world);
 		this.setCanSwim(true);
 		this.setLootTableLoc("golem_nether_wart");
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 
 	@Override
@@ -38,8 +39,9 @@ public final class EntityNetherWartGolem extends GolemBase {
 				Blocks.NETHER_WART.getDefaultState().withProperty(BlockNetherWart.AGE, 1),
 				Blocks.NETHER_WART.getDefaultState().withProperty(BlockNetherWart.AGE, 2) };
 		final Block[] soils = { Blocks.SOUL_SAND };
-		final boolean spawn = Config.NETHERWART.getBoolean(ALLOW_SPECIAL);
-		final int freq = Config.NETHERWART.getInt(FREQUENCY);
+		GolemConfigSet cfg = getConfig(this);
+		final boolean spawn = cfg.getBoolean(ALLOW_SPECIAL);
+		final int freq = cfg.getInt(FREQUENCY);
 		this.tasks.addTask(2,
 				new EntityAIPlaceRandomBlocksStrictly(this, freq, flowers, soils, spawn));
 	}
@@ -50,37 +52,13 @@ public final class EntityNetherWartGolem extends GolemBase {
 	}
 
 	@Override
-	protected void applyAttributes() {
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
-				.setBaseValue(Config.NETHERWART.getMaxHealth());
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
-	}
-
-//	@Override
-//	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
-//		Item netherwart;
-//		int min;
-//		int max;
-//		if (Config.NETHERWART.getBoolean(DROP_NETHERWART_BLOCK)) {
-//			netherwart = Item.getItemFromBlock(NETHERWART);
-//			min = 0;
-//			max = 4;
-//		} else {
-//			netherwart = Items.NETHER_WART;
-//			min = 1;
-//			max = 9;
-//		}
-//		this.addDrop(dropList, netherwart, 0, min, max, 90 + lootingLevel * 2);
-//	}
-
-	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_WOOD_STEP;
 	}
 	
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if(Config.NETHERWART.getBoolean(EntityNetherWartGolem.ALLOW_SPECIAL))
+		if(getConfig(this).getBoolean(EntityNetherWartGolem.ALLOW_SPECIAL))
 			list.add(TextFormatting.RED + trans("entitytip.plants_warts"));
 		return list;
 	}

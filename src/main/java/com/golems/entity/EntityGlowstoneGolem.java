@@ -4,14 +4,12 @@ import java.util.List;
 
 import com.golems.blocks.BlockUtilityGlow;
 import com.golems.entity.ai.EntityAIPlaceSingleBlock;
-import com.golems.main.Config;
 import com.golems.main.GolemItems;
+import com.golems.util.GolemLookup;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
@@ -29,18 +27,20 @@ public final class EntityGlowstoneGolem extends GolemBase {
 
 	/** Default constructor for EntityGlowstoneGolem **/
 	public EntityGlowstoneGolem(final World world) {
-		this(world, Config.GLOWSTONE.getBaseAttack(), new ItemStack(Blocks.GLOWSTONE), 1.0F,
-				Config.GLOWSTONE.getInt(FREQUENCY), Config.GLOWSTONE.getBoolean(ALLOW_SPECIAL));
+		// dangerous ... too expensive to check for non-null in constructor call :(
+		this(world, 1.0F, GolemLookup.getConfig(EntityGlowstoneGolem.class).getInt(FREQUENCY), 
+				GolemLookup.getConfig(EntityGlowstoneGolem.class).getBoolean(ALLOW_SPECIAL));
 		this.isImmuneToFire = true;
 		this.setCanTakeFallDamage(true);
 		this.setCanSwim(true);
 		this.setLootTableLoc("golem_glowstone");
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 	
 	/** Flexible constructor to allow child classes to customize **/
-	public EntityGlowstoneGolem(final World world, final float attack, final ItemStack pick, 
+	public EntityGlowstoneGolem(final World world,
 			final float lightLevel, final int freq, final boolean allowed) {
-		super(world, attack, pick);
+		super(world);
 		int lightInt = (int)(lightLevel * 15.0F);
 		this.brightness = lightLevel;
 		final IBlockState state = GolemItems.blockLightSource.getDefaultState().withProperty(BlockUtilityGlow.LIGHT_LEVEL, lightInt);
@@ -51,19 +51,6 @@ public final class EntityGlowstoneGolem extends GolemBase {
 	protected ResourceLocation applyTexture() {
 		return makeGolemTexture("glowstone");
 	}
-
-	@Override
-	protected void applyAttributes() {
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
-				.setBaseValue(Config.GLOWSTONE.getMaxHealth());
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
-	}
-
-//	@Override
-//	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
-//		final int size = 6 + this.rand.nextInt(8 + lootingLevel * 2);
-//		this.addDrop(dropList, new ItemStack(Items.GLOWSTONE_DUST, size), 100);
-//	}
 
 	@Override
 	public SoundEvent getGolemSound() {
@@ -89,8 +76,9 @@ public final class EntityGlowstoneGolem extends GolemBase {
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
 		// does not fire for child classes
-		if(this.getClass() == EntityGlowstoneGolem.class && Config.GLOWSTONE.getBoolean(ALLOW_SPECIAL))
+		if(this.getClass() == EntityGlowstoneGolem.class && getConfig(this).getBoolean(ALLOW_SPECIAL)) {
 			list.add(TextFormatting.RED + trans("entitytip.lights_area"));
+		}
 		return list;
 	}
 }

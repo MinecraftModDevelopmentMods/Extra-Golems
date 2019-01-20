@@ -5,6 +5,7 @@ import java.util.List;
 import com.golems.entity.EntityBedrockGolem;
 import com.golems.entity.GolemBase;
 import com.golems.main.Config;
+import com.golems.util.GolemLookup;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -34,7 +35,7 @@ public final class ItemBedrockGolem extends Item {
 			final EnumHand hand, final EnumFacing facing, final float hitX, final float hitY, final float hitZ) {
 		final ItemStack stack = player.getHeldItem(hand);
 		// creative players can use this item to spawn a bedrock golem
-		if (Config.BEDROCK.canSpawn()) {
+		if (GolemLookup.getConfig(EntityBedrockGolem.class).canSpawn()) {
 			if (Config.bedrockGolemCreativeOnly && !player.capabilities.isCreativeMode) {
 				return EnumActionResult.PASS;
 			}

@@ -14,6 +14,8 @@ import net.minecraftforge.common.config.Configuration;
  * permissions, health, and attack. It can load any number of fields as a boolean, int, or float.
  **/
 public class GolemConfigSet {
+	
+	public static GolemConfigSet EMPTY;
 
 	private static final String GOLEM_PERMS = "Allow Golem";
 	private static final String GOLEM_HEALTH = "Golem Health";
