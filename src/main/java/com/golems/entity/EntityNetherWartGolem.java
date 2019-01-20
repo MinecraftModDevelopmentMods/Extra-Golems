@@ -34,15 +34,15 @@ public final class EntityNetherWartGolem extends GolemBase {
 	protected void initEntityAI() {
 		super.initEntityAI();
 		final IBlockState[] flowers = {
-				Blocks.NETHER_WART.getDefaultState().withProperty(BlockNetherWart.AGE, 0),
-				Blocks.NETHER_WART.getDefaultState().withProperty(BlockNetherWart.AGE, 1),
-				Blocks.NETHER_WART.getDefaultState().withProperty(BlockNetherWart.AGE, 2)};
+			Blocks.NETHER_WART.getDefaultState().withProperty(BlockNetherWart.AGE, 0),
+			Blocks.NETHER_WART.getDefaultState().withProperty(BlockNetherWart.AGE, 1),
+			Blocks.NETHER_WART.getDefaultState().withProperty(BlockNetherWart.AGE, 2)};
 		final Block[] soils = {Blocks.SOUL_SAND};
 		GolemConfigSet cfg = getConfig(this);
 		final boolean spawn = cfg.getBoolean(ALLOW_SPECIAL);
 		final int freq = cfg.getInt(FREQUENCY);
 		this.tasks.addTask(2,
-				new EntityAIPlaceRandomBlocksStrictly(this, freq, flowers, soils, spawn));
+			new EntityAIPlaceRandomBlocksStrictly(this, freq, flowers, soils, spawn));
 	}
 
 	@Override

@@ -23,7 +23,7 @@ public class EntityAIPlaceRandomBlocks extends EntityAIBase {
 	public final Predicate<EntityAIPlaceRandomBlocks> canExecute;
 
 	public EntityAIPlaceRandomBlocks(final GolemBase golemBase, final int ticksBetweenPlanting,
-									 final IBlockState[] plants, final Block[] soils, final Predicate<EntityAIPlaceRandomBlocks> pred) {
+					 final IBlockState[] plants, final Block[] soils, final Predicate<EntityAIPlaceRandomBlocks> pred) {
 		this.setMutexBits(8);
 		this.golem = golemBase;
 		this.tickDelay = ticksBetweenPlanting;
@@ -34,7 +34,7 @@ public class EntityAIPlaceRandomBlocks extends EntityAIBase {
 	}
 
 	public EntityAIPlaceRandomBlocks(final GolemBase golemBase, final int ticksBetweenPlanting,
-									 final IBlockState[] plants, final Predicate<EntityAIPlaceRandomBlocks> p) {
+					 final IBlockState[] plants, final Predicate<EntityAIPlaceRandomBlocks> p) {
 		this(golemBase, ticksBetweenPlanting, plants, null, p);
 	}
 

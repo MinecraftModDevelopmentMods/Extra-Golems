@@ -22,7 +22,7 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 	public static final String SHROOM_PREFIX = "shroom";
 	public static final String[] SHROOM_TYPES = {"red", "brown"};
 	public final IBlockState[] mushrooms = {Blocks.BROWN_MUSHROOM.getDefaultState(),
-			Blocks.RED_MUSHROOM.getDefaultState()};
+		Blocks.RED_MUSHROOM.getDefaultState()};
 	protected static final Block[] soils = {Blocks.DIRT, Blocks.GRASS, Blocks.MYCELIUM};
 
 	public EntityMushroomGolem(final World world) {
@@ -32,7 +32,7 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 		final boolean allowed = cfg.getBoolean(ALLOW_SPECIAL);
 		final int freq = allowed ? cfg.getInt(FREQUENCY) : Integer.MAX_VALUE;
 		this.tasks.addTask(2,
-				new EntityAIPlaceRandomBlocksStrictly(this, freq, mushrooms, soils, allowed));
+			new EntityAIPlaceRandomBlocksStrictly(this, freq, mushrooms, soils, allowed));
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
 	}
 
@@ -50,7 +50,7 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 	public void onBuilt(IBlockState body, IBlockState legs, IBlockState arm1, IBlockState arm2) {
 		// use block type to give this golem the right texture
 		byte textureNum = body == Blocks.RED_MUSHROOM_BLOCK ? (byte) 0
-				: (byte) 1;
+			: (byte) 1;
 		textureNum %= this.getNumTextures();
 		this.setTextureNum(textureNum);
 	}

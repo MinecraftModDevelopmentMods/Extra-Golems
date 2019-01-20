@@ -20,7 +20,7 @@ public final class EntityLapisGolem extends GolemBase {
 	public static final String ALLOW_SPECIAL = "Allow Special: Potion Effects";
 
 	private static final Potion[] badEffects = {MobEffects.BLINDNESS, MobEffects.SLOWNESS, MobEffects.POISON,
-			MobEffects.INSTANT_DAMAGE, MobEffects.WEAKNESS, MobEffects.WITHER, MobEffects.LEVITATION, MobEffects.GLOWING};
+		MobEffects.INSTANT_DAMAGE, MobEffects.WEAKNESS, MobEffects.WITHER, MobEffects.LEVITATION, MobEffects.GLOWING};
 
 	public EntityLapisGolem(final World world) {
 		super(world);
@@ -43,7 +43,7 @@ public final class EntityLapisGolem extends GolemBase {
 			final GolemConfigSet cfg = getConfig(this);
 			if (cfg.getBoolean(ALLOW_SPECIAL)) {
 				final Potion potionID = entity.isEntityUndead() ? MobEffects.INSTANT_HEALTH
-						: badEffects[rand.nextInt(badEffects.length)];
+					: badEffects[rand.nextInt(badEffects.length)];
 				final int len = potionID.isInstant() ? 1 : 20 * (5 + rand.nextInt(9));
 				final int amp = potionID.isInstant() ? rand.nextInt(2) : rand.nextInt(3);
 				entity.addPotionEffect(new PotionEffect(potionID, len, amp));

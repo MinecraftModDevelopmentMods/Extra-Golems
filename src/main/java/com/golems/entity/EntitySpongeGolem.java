@@ -45,30 +45,30 @@ public final class EntitySpongeGolem extends GolemBase {
 		final int interval = cfg != null ? cfg.getInt(INTERVAL) : 1000;
 		//TODO: Fix possible NPE
 		if (cfg.getBoolean(ALLOW_SPECIAL)
-				&& (interval <= 1 || this.ticksExisted % interval == 0)) {
+			&& (interval <= 1 || this.ticksExisted % interval == 0)) {
 			final int x = MathHelper.floor(this.posX);
 			final int y = MathHelper.floor(this.posY - 0.20000000298023224D) + 2;
 			final int z = MathHelper.floor(this.posZ);
 			final BlockPos center = new BlockPos(x, y, z);
 
 			final SpongeGolemSoakEvent event = new SpongeGolemSoakEvent(this, center,
-					cfg.getInt(RANGE));
+				cfg.getInt(RANGE));
 			if (!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Result.DENY) {
 				this.replaceWater(event.getPositionList(), event.getReplacementState(),
-						event.updateFlag);
+					event.updateFlag);
 			}
 		}
 
 		if (cfg.getBoolean(PARTICLES) && Math.abs(this.motionX) < 0.05D
-				&& Math.abs(this.motionZ) < 0.05D && world.isRemote) {
+			&& Math.abs(this.motionZ) < 0.05D && world.isRemote) {
 			final EnumParticleTypes particle = this.isBurning() ? EnumParticleTypes.SMOKE_NORMAL
-					: EnumParticleTypes.WATER_SPLASH;
+				: EnumParticleTypes.WATER_SPLASH;
 			final double x = this.rand.nextDouble() - 0.5D * (double) this.width * 0.6D;
 			final double y = this.rand.nextDouble() * (this.height - 0.75D);
 			final double z = this.rand.nextDouble() - 0.5D * (double) this.width;
 			this.world.spawnParticle(particle, this.posX + x, this.posY + y, this.posZ + z,
-					(this.rand.nextDouble() - 0.5D) * 0.5D, this.rand.nextDouble() - 0.5D,
-					(this.rand.nextDouble() - 0.5D) * 0.5D, new int[0]);
+				(this.rand.nextDouble() - 0.5D) * 0.5D, this.rand.nextDouble() - 0.5D,
+				(this.rand.nextDouble() - 0.5D) * 0.5D, new int[0]);
 		}
 	}
 
@@ -84,7 +84,7 @@ public final class EntitySpongeGolem extends GolemBase {
 	 * @return whether all setBlockState calls were successful.
 	 **/
 	public boolean replaceWater(final List<BlockPos> positions, final IBlockState replaceWater,
-								final int updateFlag) {
+				    final int updateFlag) {
 		boolean flag = true;
 		for (final BlockPos p : positions) {
 			flag &= this.world.setBlockState(p, replaceWater, updateFlag);

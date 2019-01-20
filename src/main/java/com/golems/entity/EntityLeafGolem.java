@@ -19,7 +19,7 @@ public final class EntityLeafGolem extends GolemColorized {
 
 	private static final ResourceLocation TEXTURE_BASE = GolemBase.makeGolemTexture("leaves");
 	private static final ResourceLocation TEXTURE_OVERLAY = GolemBase
-			.makeGolemTexture("leaves_grayscale");
+		.makeGolemTexture("leaves_grayscale");
 
 	public EntityLeafGolem(final World world) {
 		super(world, 0x5F904A, TEXTURE_BASE, TEXTURE_OVERLAY);
@@ -37,10 +37,10 @@ public final class EntityLeafGolem extends GolemColorized {
 		super.onLivingUpdate();
 		GolemConfigSet cfg = getConfig(this);
 		if (cfg.getBoolean(ALLOW_SPECIAL)
-				&& this.getActivePotionEffect(MobEffects.REGENERATION) == null
-				&& rand.nextInt(40) == 0) {
+			&& this.getActivePotionEffect(MobEffects.REGENERATION) == null
+			&& rand.nextInt(40) == 0) {
 			this.addPotionEffect(
-					new PotionEffect(MobEffects.REGENERATION, 200 + 20 * (1 + rand.nextInt(8)), 1));
+				new PotionEffect(MobEffects.REGENERATION, 200 + 20 * (1 + rand.nextInt(8)), 1));
 		}
 
 		if (this.ticksExisted % 10 == 2 && this.world.isRemote) {

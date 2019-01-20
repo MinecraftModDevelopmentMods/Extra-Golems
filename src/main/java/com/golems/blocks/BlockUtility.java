@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 public abstract class BlockUtility extends BlockEmptyDrops {
 
 	public static final AxisAlignedBB SINGULAR_AABB = new AxisAlignedBB(0.5D, 0.5D, 0.5D, 0.5D,
-			0.5D, 0.5D);
+		0.5D, 0.5D);
 
 	public BlockUtility(Material m) {
 		super(m);
@@ -109,7 +109,7 @@ public abstract class BlockUtility extends BlockEmptyDrops {
 	 */
 	@Override
 	public void dropBlockAsItemWithChance(final World worldIn, final BlockPos pos, final IBlockState state,
-										  final float chance, final int fortune) {
+					      final float chance, final int fortune) {
 		// Because we don't want to drop anything.
 	}
 
@@ -132,7 +132,7 @@ public abstract class BlockUtility extends BlockEmptyDrops {
 	@Deprecated
 	@Override
 	public IBlockState getStateForPlacement(final World worldIn, final BlockPos pos, final EnumFacing facing,
-											final float hitX, final float hitY, final float hitZ, final int meta, final EntityLivingBase placer) {
+						final float hitX, final float hitY, final float hitZ, final int meta, final EntityLivingBase placer) {
 		return getDefaultState();
 	}
 

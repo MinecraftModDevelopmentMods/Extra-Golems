@@ -61,7 +61,7 @@ public class RenderColoredGolem extends RenderLiving<GolemColorized> {
 
 	@Override
 	protected void applyRotations(final GolemColorized golem, final float p_77043_2_, final float rotationYaw,
-								  final float partialTicks) {
+				      final float partialTicks) {
 		super.applyRotations(golem, p_77043_2_, rotationYaw, partialTicks);
 
 		if ((double) golem.limbSwingAmount >= 0.01D) {

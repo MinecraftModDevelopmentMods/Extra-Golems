@@ -28,7 +28,7 @@ public final class TOPExtraGolems extends GolemDescriptionManager implements IPr
 	@Override
 	@Optional.Method(modid = ModIds.TOP)
 	public void addProbeEntityInfo(final ProbeMode mode, final IProbeInfo iprobeInfo, final EntityPlayer player,
-								   final World world, final Entity entity, final IProbeHitEntityData data) {
+				       final World world, final Entity entity, final IProbeHitEntityData data) {
 		if (entity instanceof GolemBase) {
 			final GolemBase golem = (GolemBase) entity;
 			// show attack if advanced mode

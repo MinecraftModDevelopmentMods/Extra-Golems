@@ -15,7 +15,7 @@ public final class EntityStainedClayGolem extends GolemColorizedMultiTextured {
 
 	private static final ResourceLocation TEXTURE_BASE = GolemBase.makeGolemTexture(PREFIX);
 	private static final ResourceLocation TEXTURE_OVERLAY = GolemBase
-			.makeGolemTexture("stained_clay_grayscale");
+		.makeGolemTexture("stained_clay_grayscale");
 
 	public EntityStainedClayGolem(final World world) {
 		super(world, TEXTURE_BASE, TEXTURE_OVERLAY, COLORS);
@@ -31,7 +31,7 @@ public final class EntityStainedClayGolem extends GolemColorizedMultiTextured {
 	public void onBuilt(IBlockState body, IBlockState legs, IBlockState arm1, IBlockState arm2) {
 		// use block metadata to give this golem the right texture
 		final int meta = body.getBlock().getMetaFromState(body)
-				% this.getColorArray().length;
+			% this.getColorArray().length;
 		this.setTextureNum((byte) (this.getColorArray().length - meta - 1));
 	}
 }

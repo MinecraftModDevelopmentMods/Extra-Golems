@@ -16,7 +16,7 @@ public final class EntityWoodenGolem extends GolemMultiTextured {
 
 	public static final String WOOD_PREFIX = "wooden";
 	public static final String[] woodTypes = {"oak", "spruce", "birch", "jungle", "acacia",
-			"big_oak"};
+		"big_oak"};
 
 	public EntityWoodenGolem(final World world) {
 		super(world, WOOD_PREFIX, woodTypes);
@@ -45,7 +45,7 @@ public final class EntityWoodenGolem extends GolemMultiTextured {
 	public void onBuilt(IBlockState body, IBlockState legs, IBlockState arm1, IBlockState arm2) {
 		// use block metadata to give this golem the right texture
 		final int meta = body.getBlock().getMetaFromState(
-				body.withProperty(BlockLog.LOG_AXIS, EnumAxis.NONE));
+			body.withProperty(BlockLog.LOG_AXIS, EnumAxis.NONE));
 		byte textureNum = body.getBlock() == Blocks.LOG2 ? (byte) (meta + 4) : (byte) meta;
 		textureNum %= this.getNumTextures();
 		this.setTextureNum(textureNum);

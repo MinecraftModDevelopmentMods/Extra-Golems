@@ -61,7 +61,7 @@ public final class EntityEndstoneGolem extends GolemBase {
 	 * @param ambientParticles   whether always to display "portal" particles
 	 **/
 	public EntityEndstoneGolem(final World world, final double teleportRange,
-							   final boolean ambientParticles) {
+				   final boolean ambientParticles) {
 		super(world);
 		this.ticksBetweenIdleTeleports = 200;
 		this.chanceToTeleportWhenHurt = 15;
@@ -111,11 +111,11 @@ public final class EntityEndstoneGolem extends GolemBase {
 		if (this.world.isRemote) {
 			for (int i = 0; this.hasAmbientParticles && i < 2; ++i) {
 				this.world.spawnParticle(EnumParticleTypes.PORTAL,
-						this.posX + (this.rand.nextDouble() - 0.5D) * (double) this.width,
-						this.posY + this.rand.nextDouble() * (double) this.height - 0.25D,
-						this.posZ + (this.rand.nextDouble() - 0.5D) * (double) this.width,
-						(this.rand.nextDouble() - 0.5D) * 2.0D, -this.rand.nextDouble(),
-						(this.rand.nextDouble() - 0.5D) * 2.0D, new int[0]);
+					this.posX + (this.rand.nextDouble() - 0.5D) * (double) this.width,
+					this.posY + this.rand.nextDouble() * (double) this.height - 0.25D,
+					this.posZ + (this.rand.nextDouble() - 0.5D) * (double) this.width,
+					(this.rand.nextDouble() - 0.5D) * 2.0D, -this.rand.nextDouble(),
+					(this.rand.nextDouble() - 0.5D) * 2.0D, new int[0]);
 			}
 		}
 
@@ -123,14 +123,14 @@ public final class EntityEndstoneGolem extends GolemBase {
 			if (this.getRevengeTarget() != null) {
 				if (this.getRevengeTarget() instanceof EntityMob) {
 					if (this.getRevengeTarget().getDistanceSq(this) < 16.0D && (rand.nextInt(5) == 0
-							|| this.getRevengeTarget().getRevengeTarget() == this)) {
+						|| this.getRevengeTarget().getRevengeTarget() == this)) {
 						this.teleportRandomly();
 					}
 
 					this.teleportDelay = 0;
 				} else if (this.getRevengeTarget().getDistanceSq(this) > 256.0D
-						&& this.teleportDelay++ >= 30
-						&& this.teleportToEntity(this.getRevengeTarget())) {
+					&& this.teleportDelay++ >= 30
+					&& this.teleportToEntity(this.getRevengeTarget())) {
 					this.teleportDelay = 0;
 				}
 			} else {
@@ -158,7 +158,7 @@ public final class EntityEndstoneGolem extends GolemBase {
 				return super.attackEntityFrom(src, amnt);
 			} else {
 				if (rand.nextInt(this.chanceToTeleportWhenHurt) == 0
-						|| (this.getRevengeTarget() != null && rand.nextBoolean())) {
+					|| (this.getRevengeTarget() != null && rand.nextBoolean())) {
 					this.teleportRandomly();
 				}
 
@@ -172,9 +172,9 @@ public final class EntityEndstoneGolem extends GolemBase {
 	 **/
 	protected boolean teleportToEntity(final Entity entity) {
 		Vec3d vec3d = new Vec3d(this.posX - entity.posX,
-				this.getEntityBoundingBox().minY + (double) (this.height / 2.0F) - entity.posY
-						+ (double) entity.getEyeHeight(),
-				this.posZ - entity.posZ);
+			this.getEntityBoundingBox().minY + (double) (this.height / 2.0F) - entity.posY
+				+ (double) entity.getEyeHeight(),
+			this.posZ - entity.posZ);
 		vec3d = vec3d.normalize();
 		final double d0 = 16.0D;
 		final double d1 = this.posX + (this.rand.nextDouble() - 0.5D) * 8.0D - vec3d.x * d0;
@@ -192,11 +192,11 @@ public final class EntityEndstoneGolem extends GolemBase {
 			return false;
 		}
 		final boolean flag = this.attemptTeleport(event.getTargetX(), event.getTargetY(),
-				event.getTargetZ());
+			event.getTargetZ());
 
 		if (flag) {
 			this.world.playSound((EntityPlayer) null, this.prevPosX, this.prevPosY, this.prevPosZ,
-					SoundEvents.ENTITY_ENDERMEN_TELEPORT, this.getSoundCategory(), 1.0F, 1.0F);
+				SoundEvents.ENTITY_ENDERMEN_TELEPORT, this.getSoundCategory(), 1.0F, 1.0F);
 			this.playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT, 1.0F, 1.0F);
 		}
 

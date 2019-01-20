@@ -78,9 +78,9 @@ public final class EntityMagmaGolem extends GolemBase {
 			// ticksStandingStill);
 
 			if (x == MathHelper.floor(this.lastTickPosX)
-					&& z == MathHelper.floor(this.lastTickPosZ)) {
+				&& z == MathHelper.floor(this.lastTickPosZ)) {
 				if (++this.ticksStandingStill >= cfg.getInt(MELT_DELAY)
-						&& b1 == Blocks.COBBLESTONE && rand.nextInt(16) == 0) {
+					&& b1 == Blocks.COBBLESTONE && rand.nextInt(16) == 0) {
 					this.world.setBlockState(below, Blocks.LAVA.getDefaultState(), 3);
 					this.ticksStandingStill = 0;
 				}

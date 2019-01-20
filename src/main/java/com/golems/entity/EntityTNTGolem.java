@@ -19,7 +19,7 @@ import java.util.List;
 public final class EntityTNTGolem extends GolemBase {
 
 	protected static final DataParameter<Boolean> DATA_IGNITED = EntityDataManager
-			.<Boolean>createKey(EntityTNTGolem.class, DataSerializers.BOOLEAN);
+		.<Boolean>createKey(EntityTNTGolem.class, DataSerializers.BOOLEAN);
 	public static final String ALLOW_SPECIAL = "Allow Special: Explode";
 
 	protected final int minExplosionRad;
@@ -57,7 +57,7 @@ public final class EntityTNTGolem extends GolemBase {
 	 * @param configAllowsExplode
 	 */
 	public EntityTNTGolem(final World world, final int minExplosionRange,
-						  final int maxExplosionRange, final int minFuseLength, final int randomExplosionChance) {
+			      final int maxExplosionRange, final int minFuseLength, final int randomExplosionChance) {
 		super(world);
 		this.minExplosionRad = minExplosionRange;
 		this.maxExplosionRad = maxExplosionRange;
@@ -90,8 +90,8 @@ public final class EntityTNTGolem extends GolemBase {
 		}
 
 		if (this.isWet() || (this.getAttackTarget() != null
-				&& this.getDistanceSq(this.getAttackTarget()) > this.minExplosionRad
-				* this.maxExplosionRad)) {
+			&& this.getDistanceSq(this.getAttackTarget()) > this.minExplosionRad
+			* this.maxExplosionRad)) {
 			this.resetIgnite();
 		}
 
@@ -101,23 +101,23 @@ public final class EntityTNTGolem extends GolemBase {
 			if (this.world instanceof WorldServer) {
 				for (int i = 0; i < 2; i++) {
 					this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX,
-							this.posY + 2.0D, this.posZ, 0.0D, 0.0D, 0.0D);
+						this.posY + 2.0D, this.posZ, 0.0D, 0.0D, 0.0D);
 					this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX + 0.75D,
-							this.posY + 1.0D + rand.nextDouble() * 2, this.posZ + 0.75D,
-							0.5 * (0.5D - rand.nextDouble()), 0.0D,
-							0.5 * (0.5D - rand.nextDouble()));
+						this.posY + 1.0D + rand.nextDouble() * 2, this.posZ + 0.75D,
+						0.5 * (0.5D - rand.nextDouble()), 0.0D,
+						0.5 * (0.5D - rand.nextDouble()));
 					this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX + 0.75D,
-							this.posY + 1.0D + rand.nextDouble() * 2, this.posZ - 0.75D,
-							0.5 * (0.5D - rand.nextDouble()), 0.0D,
-							0.5 * (0.5D - rand.nextDouble()));
+						this.posY + 1.0D + rand.nextDouble() * 2, this.posZ - 0.75D,
+						0.5 * (0.5D - rand.nextDouble()), 0.0D,
+						0.5 * (0.5D - rand.nextDouble()));
 					this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX - 0.75D,
-							this.posY + 1.0D + rand.nextDouble() * 2, this.posZ + 0.75D,
-							0.5 * (0.5D - rand.nextDouble()), 0.0D,
-							0.5 * (0.5D - rand.nextDouble()));
+						this.posY + 1.0D + rand.nextDouble() * 2, this.posZ + 0.75D,
+						0.5 * (0.5D - rand.nextDouble()), 0.0D,
+						0.5 * (0.5D - rand.nextDouble()));
 					this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX - 0.75D,
-							this.posY + 1.0D + rand.nextDouble() * 2, this.posZ - 0.75D,
-							0.5 * (0.5D - rand.nextDouble()), 0.0D,
-							0.5 * (0.5D - rand.nextDouble()));
+						this.posY + 1.0D + rand.nextDouble() * 2, this.posZ - 0.75D,
+						0.5 * (0.5D - rand.nextDouble()), 0.0D,
+						0.5 * (0.5D - rand.nextDouble()));
 				}
 			}
 			if (this.fuseTimer <= 0) {
@@ -141,7 +141,7 @@ public final class EntityTNTGolem extends GolemBase {
 		boolean flag = super.attackEntityAsMob(entity);
 
 		if (flag && !entity.isDead && rand.nextInt(100) < this.chanceToExplodeWhenAttacking
-				&& this.getDistanceSq(entity) <= this.minExplosionRad * this.minExplosionRad) {
+			&& this.getDistanceSq(entity) <= this.minExplosionRad * this.minExplosionRad) {
 			this.ignite();
 		}
 
@@ -153,8 +153,8 @@ public final class EntityTNTGolem extends GolemBase {
 		final ItemStack itemstack = player.getHeldItem(hand);
 		if (!itemstack.isEmpty() && itemstack.getItem() == Items.FLINT_AND_STEEL) {
 			this.world.playSound(player, this.posX, this.posY, this.posZ,
-					SoundEvents.ITEM_FLINTANDSTEEL_USE, this.getSoundCategory(), 1.0F,
-					this.rand.nextFloat() * 0.4F + 0.8F);
+				SoundEvents.ITEM_FLINTANDSTEEL_USE, this.getSoundCategory(), 1.0F,
+				this.rand.nextFloat() * 0.4F + 0.8F);
 			player.swingArm(hand);
 
 			if (!this.world.isRemote) {
@@ -202,8 +202,8 @@ public final class EntityTNTGolem extends GolemBase {
 			if (!this.world.isRemote) {
 				final boolean flag = this.world.getGameRules().getBoolean("mobGriefing");
 				final float range = this.maxExplosionRad > this.minExplosionRad
-						? rand.nextInt(maxExplosionRad - minExplosionRad)
-						: this.minExplosionRad;
+					? rand.nextInt(maxExplosionRad - minExplosionRad)
+					: this.minExplosionRad;
 				this.world.createExplosion(this, this.posX, this.posY, this.posZ, range, flag);
 				this.setDead();
 			}

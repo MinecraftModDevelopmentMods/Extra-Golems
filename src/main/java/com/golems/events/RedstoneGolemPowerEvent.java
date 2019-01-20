@@ -14,30 +14,30 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 @Cancelable
 public final class RedstoneGolemPowerEvent extends Event {
 
-    public final GolemBase golem;
-    public final BlockPos posToAffect;
+	public final GolemBase golem;
+	public final BlockPos posToAffect;
 
-    protected int powerLevel;
-    public int updateFlag = 3;
+	protected int powerLevel;
+	public int updateFlag = 3;
 
-    public RedstoneGolemPowerEvent(final GolemBase golemBase, final BlockPos toAffect, final int defPower) {
-        this.setResult(Result.ALLOW);
-        this.golem = golemBase;
-        this.posToAffect = toAffect;
-        this.powerLevel = defPower;
-    }
+	public RedstoneGolemPowerEvent(final GolemBase golemBase, final BlockPos toAffect, final int defPower) {
+		this.setResult(Result.ALLOW);
+		this.golem = golemBase;
+		this.posToAffect = toAffect;
+		this.powerLevel = defPower;
+	}
 
-    public void setPowerLevel(final int toSet) {
-        //TODO: Ensure this works. nested ternary operations are super confusing.
-        if (toSet > 15) {
-            this.powerLevel = 15;
-        } else {
-            this.powerLevel = toSet < 0 ? 0 : toSet;
-        }
-        //this.powerLevel = toSet > 15 ? 15 : ();
-    }
+	public void setPowerLevel(final int toSet) {
+		//TODO: Ensure this works. nested ternary operations are super confusing.
+		if (toSet > 15) {
+			this.powerLevel = 15;
+		} else {
+			this.powerLevel = toSet < 0 ? 0 : toSet;
+		}
+		//this.powerLevel = toSet > 15 ? 15 : ();
+	}
 
-    public int getPowerLevel() {
-        return this.powerLevel;
-    }
+	public int getPowerLevel() {
+		return this.powerLevel;
+	}
 }

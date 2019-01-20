@@ -11,7 +11,7 @@ public class ContainerPortableWorkbench extends ContainerWorkbench {
 	protected BlockPos blockPos;
 
 	public ContainerPortableWorkbench(final InventoryPlayer playerInventory, final World worldIn,
-									  final BlockPos posIn) {
+					  final BlockPos posIn) {
 		super(playerInventory, worldIn, posIn);
 		this.blockPos = posIn;
 	}

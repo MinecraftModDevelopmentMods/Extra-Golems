@@ -38,7 +38,7 @@ public final class EntityCraftingGolem extends GolemBase {
 		if (!player.world.isRemote && itemstack.isEmpty()) {
 			// display crafting grid for player
 			player.displayGui(new EntityCraftingGolem.InterfaceCraftingGrid(player.world,
-					player.bedLocation));
+				player.bedLocation));
 			player.addStat(StatList.CRAFTING_TABLE_INTERACTION);
 			player.swingArm(hand);
 		}
@@ -52,7 +52,7 @@ public final class EntityCraftingGolem extends GolemBase {
 	}
 
 	public static class InterfaceCraftingGrid
-			extends net.minecraft.block.BlockWorkbench.InterfaceCraftingTable {
+		extends net.minecraft.block.BlockWorkbench.InterfaceCraftingTable {
 
 		private final World world2;
 		private final BlockPos position2;

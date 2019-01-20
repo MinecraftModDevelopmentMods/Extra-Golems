@@ -31,7 +31,7 @@ public class EntityAIDefendAgainstMonsters extends EntityAITarget {
 			if (!this.isSuitableTarget(this.villageAgressorTarget, false)) {
 				if (this.taskOwner.getRNG().nextInt(20) == 0) {
 					this.villageAgressorTarget = village
-							.findNearestVillageAggressor(this.entityGolem);
+						.findNearestVillageAggressor(this.entityGolem);
 					return this.isSuitableTarget(this.villageAgressorTarget, false);
 				} else {
 					return false;

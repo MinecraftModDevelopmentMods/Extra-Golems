@@ -49,7 +49,7 @@ public final class EntitySlimeGolem extends GolemBase {
 			GolemConfigSet cfg = getConfig(this);
 			if (source.getImmediateSource() != null && cfg.getBoolean(ALLOW_SPECIAL)) {
 				knockbackTarget(source.getImmediateSource(),
-						cfg.getFloat(KNOCKBACK) * 0.325F);
+					cfg.getFloat(KNOCKBACK) * 0.325F);
 			}
 		}
 	}
