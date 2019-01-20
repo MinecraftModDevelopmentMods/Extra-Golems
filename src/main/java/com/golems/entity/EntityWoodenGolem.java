@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.BlockLog.EnumAxis;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -21,7 +22,7 @@ public final class EntityWoodenGolem extends GolemMultiTextured {
 	public EntityWoodenGolem(final World world) {
 		super(world, WOOD_PREFIX, woodTypes);
 		this.setCanSwim(true);
-		this.setBaseMoveSpeed(0.30D);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
 	}
 
 	@Override

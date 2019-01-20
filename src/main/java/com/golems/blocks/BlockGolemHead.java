@@ -97,9 +97,9 @@ public final class BlockGolemHead extends BlockHorizontal {
 		final IBlockState stateBelow2 = world.getBlockState(pos.down(2));
 		final Block blockBelow1 = stateBelow1.getBlock();
 		final Block blockBelow2 = stateBelow2.getBlock();
-		final int x = pos.getX();
-		final int y = pos.getY();
-		final int z = pos.getZ();
+		final double x = pos.getX() + 0.5D;
+		final double y = pos.getY() - 1.95D;
+		final double z = pos.getZ() + 0.5D;
 
 		if (blockBelow1 == blockBelow2) {
 			final boolean flagX = isGolemXAligned(world, pos);
@@ -111,12 +111,11 @@ public final class BlockGolemHead extends BlockHorizontal {
 					removeGolemBody(world, pos);
 					final EntitySnowman entitysnowman = new EntitySnowman(world);
 					ExtraGolems.LOGGER.info("[Extra Golems]: Building regular boring Snow Golem\n");
-					entitysnowman.setLocationAndAngles((double) x + 0.5D, (double) y - 1.95D,
-							(double) z + 0.5D, 0.0F, 0.0F);
+					entitysnowman.setLocationAndAngles(x, y, z, 0.0F, 0.0F);
 					world.spawnEntity(entitysnowman);
 				}
 
-				ItemBedrockGolem.spawnParticles(world, x + 0.5D, y - 1.5D, z + 0.5D, 0.2D);
+				ItemBedrockGolem.spawnParticles(world, x, y + 0.5D, z, 0.2D);
 				return;
 			}
 
@@ -133,8 +132,7 @@ public final class BlockGolemHead extends BlockHorizontal {
 					final EntityIronGolem golem = new EntityIronGolem(world);
 					ExtraGolems.LOGGER.info("[Extra Golems]: Building regular boring Iron Golem\n");
 					golem.setPlayerCreated(true);
-					golem.setLocationAndAngles((double) x + 0.5D, (double) y - 1.95D,
-							(double) z + 0.5D, 0.0F, 0.0F);
+					golem.setLocationAndAngles(x, y, z, 0.0F, 0.0F);
 					world.spawnEntity(golem);
 					return;
 				}
@@ -160,8 +158,7 @@ public final class BlockGolemHead extends BlockHorizontal {
 					// spawn the golem
 					ExtraGolems.LOGGER.info("[Extra Golems]: Building golem " + golem.toString() + "\n");
 					golem.setPlayerCreated(true);
-					golem.setLocationAndAngles((double) x + 0.5D, (double) y - 1.95D,
-							(double) z + 0.5D, 0.0F, 0.0F);
+					golem.setLocationAndAngles(x, y, z, 0.0F, 0.0F);
 					world.spawnEntity(golem);
 					golem.onBuilt(stateBelow1, stateBelow2, arm1, arm2);
 					

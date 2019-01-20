@@ -1,5 +1,6 @@
 package com.golems.entity;
 
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -11,7 +12,7 @@ public final class EntityStrawGolem extends GolemBase {
 		super(world);
 		this.setCanSwim(true);
 		this.setLootTableLoc("golem_straw");
-		this.setBaseMoveSpeed(0.35D);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.35D);
 	}
 
 	protected ResourceLocation applyTexture() {

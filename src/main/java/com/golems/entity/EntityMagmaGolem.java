@@ -6,6 +6,7 @@ import com.golems.util.GolemConfigSet;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
@@ -31,7 +32,7 @@ public final class EntityMagmaGolem extends GolemBase {
 		this.stepHeight = 1.0F;
 		this.tasks.addTask(0, this.swimmingAI);
 		this.setLootTableLoc("golem_magma");
-		this.setBaseMoveSpeed(0.28D);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
 	}
 
 	@Override

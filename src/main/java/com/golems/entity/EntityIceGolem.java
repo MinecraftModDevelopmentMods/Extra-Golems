@@ -8,6 +8,7 @@ import com.google.common.base.Function;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
@@ -29,7 +30,7 @@ public final class EntityIceGolem extends GolemBase {
 		super(world);
 		this.setCanSwim(true); // just in case
 		this.setLootTableLoc("golem_ice");
-		this.setBaseMoveSpeed(0.26D);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 
 	protected ResourceLocation applyTexture() {

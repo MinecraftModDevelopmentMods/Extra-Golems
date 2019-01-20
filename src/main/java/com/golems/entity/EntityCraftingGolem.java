@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.golems.blocks.ContainerPortableWorkbench;
 
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
@@ -24,7 +25,7 @@ public final class EntityCraftingGolem extends GolemBase {
 	public EntityCraftingGolem(final World world) {
 		super(world);
 		this.setLootTableLoc("golem_crafting");
-		this.setBaseMoveSpeed(0.29D);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.29D);
 	}
 
 	@Override
@@ -71,8 +72,9 @@ public final class EntityCraftingGolem extends GolemBase {
 	
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if(getConfig(this).getBoolean(ALLOW_SPECIAL))
+		if(getConfig(this).getBoolean(ALLOW_SPECIAL)) {
 			list.add(TextFormatting.BLUE + trans("entitytip.click_open_crafting"));
+		}
 		return list;
 	}
 }

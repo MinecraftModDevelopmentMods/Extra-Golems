@@ -1,5 +1,6 @@
 package com.golems.entity;
 
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -11,7 +12,7 @@ public final class EntityGlassGolem extends GolemBase {
 		super(world);
 		this.setCanTakeFallDamage(true);
 		this.setLootTableLoc("golem_glass");
-		this.setBaseMoveSpeed(0.30D);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
 	}
 
 	protected ResourceLocation applyTexture() {

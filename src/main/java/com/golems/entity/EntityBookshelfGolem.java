@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.golems.util.GolemConfigSet;
 
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.potion.Potion;
@@ -24,7 +25,7 @@ public final class EntityBookshelfGolem extends GolemBase {
 	public EntityBookshelfGolem(final World world) {
 		super(world);
 		this.setLootTableLoc("golem_bookshelf");
-		this.setBaseMoveSpeed(0.29D);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.29D);
 	}
 
 	protected ResourceLocation applyTexture() {

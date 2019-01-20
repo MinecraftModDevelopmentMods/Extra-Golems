@@ -1,6 +1,7 @@
 package com.golems.entity;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemDye;
 import net.minecraft.util.ResourceLocation;
@@ -18,7 +19,7 @@ public final class EntityStainedClayGolem extends GolemColorizedMultiTextured {
 
 	public EntityStainedClayGolem(final World world) {
 		super(world, TEXTURE_BASE, TEXTURE_OVERLAY, COLORS);
-		this.setBaseMoveSpeed(0.20D);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.20D);
 	}
 
 	@Override

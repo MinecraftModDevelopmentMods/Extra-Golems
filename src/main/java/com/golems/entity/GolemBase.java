@@ -77,6 +77,10 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	
 	// swimming AI
 	protected EntityAIBase swimmingAI = new EntityAISwimming(this);
+	
+	// used in GuiLoader and GolemBase#addSpecialDesc
+	// to indicate a String should be split before being translated
+	public static final String FORMAT_SEP = "::"; 
 
 	/////////////// CONSTRUCTORS /////////////////
 
@@ -99,6 +103,9 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 		Block pickBlock = GolemLookup.hasBuildingBlock(this.getClass()) 
 				? GolemLookup.getBuildingBlock(this.getClass()) : GolemItems.golemHead;
 		this.setCreativeReturn(pickBlock);
+		GolemConfigSet cfg = getConfig(this);
+		this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(cfg.getBaseAttack());
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(cfg.getMaxHealth());
 		this.experienceValue = 4 + rand.nextInt((int)8);
 	}
 
@@ -371,14 +378,6 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	public ItemStack getCreativeReturn() {
 		return this.creativeReturn;
 	}
-
-	private void setBaseAttackDamage(final float f) {
-		this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(f);
-	}
-	
-	protected void setBaseMoveSpeed(final double d) {
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(d);
-	}
 	
 	public float getBaseAttackDamage() {
 		return (float)this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getBaseValue();
@@ -442,8 +441,8 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	 * Allows each golem to add special information to in-game info (eg, Waila, Hwyla, TOP, etc.).
 	 * Typically checks if the Config allows this golem's special ability (if it has one) and adds a
 	 * formatted String to the passed list.
-	 * @param cfg The GolemConfigSet found for this golem, or an empty one if none is found
 	 * @param list The list to which the golem adds description strings (separate entries are separate lines)
+	 * @param isClient true if the String should be translated and formatted. Always check this!
 	 * @return the passed list with or without this golem's added description
 	 **/
 	public List<String> addSpecialDesc(final List<String> list) { return list; }

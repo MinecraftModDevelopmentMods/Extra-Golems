@@ -22,7 +22,7 @@ public final class EntitySlimeGolem extends GolemBase {
 		super(world);
 		this.setCanSwim(true);
 		this.setLootTableLoc("golem_slime");
-		this.setBaseMoveSpeed(0.29D);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.29D);
 		this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.5D);
 	}
 

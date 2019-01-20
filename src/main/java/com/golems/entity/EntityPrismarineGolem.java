@@ -1,5 +1,6 @@
 package com.golems.entity;
 
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -25,9 +26,9 @@ public final class EntityPrismarineGolem extends GolemBase {
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
 		if (this.isInWater()) {
-			this.setBaseMoveSpeed(0.41D);
+			this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.41D);
 		} else {
-			this.setBaseMoveSpeed(0.24D);
+			this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.24D);
 		}
 	}
 

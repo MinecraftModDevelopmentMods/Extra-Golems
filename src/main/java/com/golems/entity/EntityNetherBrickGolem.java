@@ -5,6 +5,7 @@ import java.util.List;
 import com.golems.util.GolemConfigSet;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -19,7 +20,7 @@ public final class EntityNetherBrickGolem extends GolemBase {
 		super(world);
 		this.setImmuneToFire(true);
 		this.setLootTableLoc("golem_nether_brick");
-		this.setBaseMoveSpeed(0.28D);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
 	}
 
 	@Override

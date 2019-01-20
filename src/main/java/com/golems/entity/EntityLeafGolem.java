@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.golems.util.GolemConfigSet;
 
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.potion.PotionEffect;
@@ -25,7 +26,7 @@ public final class EntityLeafGolem extends GolemColorized {
 		super(world, 0x5F904A, TEXTURE_BASE, TEXTURE_OVERLAY);
 		this.setCanSwim(true);
 		this.setLootTableLoc("golem_leaves");
-		this.setBaseMoveSpeed(0.31D);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.31D);
 	}
 
 	/**
@@ -62,8 +63,9 @@ public final class EntityLeafGolem extends GolemColorized {
 	
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if(getConfig(this).getBoolean(EntityLeafGolem.ALLOW_SPECIAL))
+		if(getConfig(this).getBoolean(EntityLeafGolem.ALLOW_SPECIAL)) {
 			list.add(TextFormatting.DARK_GREEN + trans("effect.regeneration") + " " + trans("enchantment.level.1"));
+		}
 		return list;
 	}
 }

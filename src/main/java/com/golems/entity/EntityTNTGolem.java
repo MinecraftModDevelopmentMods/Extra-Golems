@@ -3,6 +3,7 @@ package com.golems.entity;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
@@ -40,7 +41,7 @@ public final class EntityTNTGolem extends GolemBase {
 		this(world, 3, 6, 50, 10);
 		this.setLootTableLoc("golem_tnt");
 		this.allowedToExplode = getConfig(this).getBoolean(ALLOW_SPECIAL);
-		this.setBaseMoveSpeed(0.26D);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 
 	/**

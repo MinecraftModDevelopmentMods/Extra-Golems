@@ -8,6 +8,7 @@ import com.golems.main.GolemItems;
 import com.golems.util.GolemLookup;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -33,7 +34,7 @@ public final class EntityGlowstoneGolem extends GolemBase {
 		this.setCanTakeFallDamage(true);
 		this.setCanSwim(true);
 		this.setLootTableLoc("golem_glowstone");
-		this.setBaseMoveSpeed(0.26D);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 	
 	/** Flexible constructor to allow child classes to customize **/
@@ -75,8 +76,9 @@ public final class EntityGlowstoneGolem extends GolemBase {
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
 		// does not fire for child classes
-		if(this.getClass() == EntityGlowstoneGolem.class && getConfig(this).getBoolean(ALLOW_SPECIAL))
+		if(this.getClass() == EntityGlowstoneGolem.class && getConfig(this).getBoolean(ALLOW_SPECIAL)) {
 			list.add(TextFormatting.RED + trans("entitytip.lights_area"));
+		}
 		return list;
 	}
 }

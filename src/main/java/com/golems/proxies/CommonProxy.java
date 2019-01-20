@@ -2,6 +2,7 @@ package com.golems.proxies;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.IntStream;
 
 import javax.annotation.Nonnull;
@@ -22,17 +23,21 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityList;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import scala.actors.threadpool.Arrays;
@@ -43,16 +48,29 @@ public class CommonProxy {
 	// private static Map<String, Block> blocks = new ConcurrentHashMap<>();
 	// private static Map<String, Item> items = new ConcurrentHashMap<>();
 	/**
-	 * This is the master list which will be populated on the server,
-	 * sent to the client, and populated on client from there.
-	 * Its main use is in the Golem Book and related GUI.
+	 * A List containing default instances of each Golem.
+	 * They do not exist in the world, it's simply for reference
+	 * for things like the Info Book
 	 **/
-	public static final List<GolemEntry> GOLEMS = new LinkedList();
+	public static final List<GolemBase> DUMMY_GOLEMS = new LinkedList();
 
 	protected static int golemEntityCount;
 
 	public void preInitRenders() {
 		// Unused
+	}
+	
+	/** @return a List containing default instances of each Golem. They do not exist in the world. **/
+	public static List<GolemBase> getDummyGolemList(final World world) {
+		final List<GolemBase> list = new LinkedList();
+		// for each entity, find out if it's a golem and add it to the list
+		final Set<ResourceLocation> set = EntityList.getEntityNameList();
+		for(EntityEntry entry : ForgeRegistries.ENTITIES) {
+			if(GolemBase.class.isAssignableFrom(entry.getEntityClass())) {
+				list.add((GolemBase)entry.newInstance(world));
+			}
+		}
+		return list;
 	}
 
 	public void registerEvents() {
@@ -121,10 +139,6 @@ public class CommonProxy {
 		}
 		registerLootTables(ExtraGolems.MODID, EntityStainedGlassGolem.PREFIX, stainedGlass);
 		registerLootTables(ExtraGolems.MODID, EntityStainedClayGolem.PREFIX, stainedClay);
-		
-		// DEBUG:
-		System.out.println("Blocks:\n" + GolemLookup.getBlockSet());
-		System.out.println("Golems:\n" + GolemLookup.getGolemSet());
 	}
 	
 	/** registers the entity with an optional loot table. **/

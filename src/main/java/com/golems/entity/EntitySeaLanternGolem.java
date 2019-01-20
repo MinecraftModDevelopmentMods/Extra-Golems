@@ -11,6 +11,7 @@ import com.golems.util.GolemConfigSet;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.potion.PotionEffect;
@@ -39,7 +40,7 @@ public final class EntitySeaLanternGolem extends GolemBase {
 		super(world);
 		this.canDrown = false;
 		this.setLootTableLoc("golem_sea_lantern");
-		this.setBaseMoveSpeed(0.26D);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 		
 	}
 	

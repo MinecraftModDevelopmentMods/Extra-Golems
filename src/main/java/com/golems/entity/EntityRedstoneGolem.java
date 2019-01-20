@@ -8,6 +8,7 @@ import com.golems.main.GolemItems;
 import com.golems.util.GolemLookup;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -25,7 +26,7 @@ public final class EntityRedstoneGolem extends GolemBase {
 	public EntityRedstoneGolem(final World world) {
 		this(world, GolemLookup.getConfig(EntityRedstoneGolem.class).getBoolean(ALLOW_SPECIAL), 15, DEF_FREQ);
 		this.setLootTableLoc("golem_redstone");
-		this.setBaseMoveSpeed(0.26D);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 
 	/** Flexible constructor to allow child classes to customize **/

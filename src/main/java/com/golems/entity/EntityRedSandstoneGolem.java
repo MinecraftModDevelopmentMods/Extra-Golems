@@ -1,5 +1,6 @@
 package com.golems.entity;
 
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -10,7 +11,7 @@ public final class EntityRedSandstoneGolem extends GolemBase {
 	public EntityRedSandstoneGolem(final World world) {
 		super(world);
 		this.setLootTableLoc("golem_red_sandstone");
-		this.setBaseMoveSpeed(0.28D);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
 	}
 
 	protected ResourceLocation applyTexture() {

@@ -165,7 +165,6 @@ public class GolemLookup {
 					+ " with a Golem but Block has already been added! Skipping.");
 			return false;					
 		}
-		System.out.println("Added mapping from Block " + buildingBlock.getRegistryName().toString() + " to Golem " + golemClazz.toString());
 		BLOCK_TO_GOLEM.put(buildingBlock, golemClazz);
 		return true;
 	}
@@ -184,7 +183,6 @@ public class GolemLookup {
 		}
 		String clazzOut = golemClazz != null ? golemClazz.toString() : "null";
 		String blockOut = buildingBlock != null ? buildingBlock.getRegistryName().toString() : "null";
-		System.out.println("Added mapping from Golem " + clazzOut + " to Block " + blockOut);
 		GOLEM_TO_BLOCK.put(golemClazz, buildingBlock);
 		return true;
 	}
@@ -250,17 +248,9 @@ public class GolemLookup {
 	public static GolemBase getGolem(final World world, final Block block) {
 		
 		Class<? extends GolemBase> clazz = getGolemClass(block);
-		System.out.println("clazz retrieved: " + clazz);
 		if(clazz != null) {
 			// try to make a new instance of the golem
 			return (GolemBase)EntityList.newEntity(clazz, world);
-			/*try {
-				
-				//GolemBase golem = clazz.getConstructor(World.class).newInstance(world);
-			} catch (Exception e) {
-				ExtraGolems.LOGGER.error("Error trying to instantiate Golem of Block " + block.getRegistryName());
-				e.printStackTrace();
-			}*/
 		}
 		return null;
 	}

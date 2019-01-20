@@ -2,6 +2,7 @@ package com.golems.main;
 
 import com.golems.integration.ModIds;
 import com.golems.items.ItemInfoBook;
+import com.golems.network.GolemNetworkHandler;
 import com.golems.proxies.CommonProxy;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Loader;
@@ -34,7 +35,7 @@ public class ExtraGolems {
 	public static void preInit(final FMLPreInitializationEvent event) {
 		Config.mainRegistry(new Configuration(event.getSuggestedConfigurationFile()));
 		proxy.registerEntities();
-
+		//GolemNetworkHandler.init();
 	}
 
 	@Mod.EventHandler

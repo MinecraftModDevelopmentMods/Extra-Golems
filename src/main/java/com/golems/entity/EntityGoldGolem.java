@@ -11,7 +11,7 @@ public final class EntityGoldGolem extends GolemBase {
 	public EntityGoldGolem(final World world) {
 		super(world);
 		this.setLootTableLoc("golem_gold");
-		this.setBaseMoveSpeed(0.19D);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.19D);
 		this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.9D);
 	}
 

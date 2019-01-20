@@ -23,7 +23,7 @@ public final class EntityBedrockGolem extends GolemBase {
 	public EntityBedrockGolem(final World world) {
 		super(world);
 		this.setCreativeReturn(new ItemStack(GolemItems.spawnBedrockGolem));
-		this.setBaseMoveSpeed(0.24D);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.24D);
 	}
 
 	@Override

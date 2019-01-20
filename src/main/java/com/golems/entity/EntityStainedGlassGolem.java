@@ -1,6 +1,7 @@
 package com.golems.entity;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemDye;
 import net.minecraft.util.ResourceLocation;
@@ -23,7 +24,7 @@ public final class EntityStainedGlassGolem extends GolemColorizedMultiTextured {
 		super(world, TEXTURE_BASE, TEXTURE_OVERLAY, COLORS);
 		this.setCanTakeFallDamage(true);
 		this.setLootTableLoc("golem_stained_glass");
-		this.setBaseMoveSpeed(0.30D);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
 	}
 
 	/**

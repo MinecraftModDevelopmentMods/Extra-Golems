@@ -6,6 +6,7 @@ import com.golems.events.EndGolemTeleportEvent;
 import com.golems.util.GolemConfigSet;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -43,7 +44,7 @@ public final class EntityEndstoneGolem extends GolemBase {
 		this.setLootTableLoc("golem_end_stone");
 		this.isHurtByWater = cfg.getBoolean(ALLOW_WATER_HURT);
 		this.allowTeleport = cfg.getBoolean(ALLOW_SPECIAL);
-		this.setBaseMoveSpeed(0.26D);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 
 	/**
@@ -213,8 +214,9 @@ public final class EntityEndstoneGolem extends GolemBase {
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
 		// this will only fire for the Endstone Golem, not child classes
-		if (this.getClass() == EntityEndstoneGolem.class && getConfig(this).getBoolean(EntityEndstoneGolem.ALLOW_SPECIAL))
+		if (this.getClass() == EntityEndstoneGolem.class && getConfig(this).getBoolean(EntityEndstoneGolem.ALLOW_SPECIAL)) {
 			list.add(TextFormatting.DARK_AQUA + trans("entitytip.can_teleport"));
+		}
 		return list;
 	}
 }

@@ -1,5 +1,6 @@
 package com.golems.entity;
 
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -10,7 +11,7 @@ public final class EntityHardenedClayGolem extends GolemBase {
 	public EntityHardenedClayGolem(final World world) {
 		super(world);
 		this.setLootTableLoc("golem_hardened_clay");
-		this.setBaseMoveSpeed(0.18D);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.18D);
 	}
 
 	protected ResourceLocation applyTexture() {

@@ -8,6 +8,7 @@ import com.golems.util.GolemConfigSet;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundEvent;
@@ -33,7 +34,7 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 		final int freq = allowed ? cfg.getInt(FREQUENCY) : Integer.MAX_VALUE;
 		this.tasks.addTask(2,
 				new EntityAIPlaceRandomBlocksStrictly(this, freq, mushrooms, soils, allowed));
-		this.setBaseMoveSpeed(0.30D);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
 	}
 
 	@Override
