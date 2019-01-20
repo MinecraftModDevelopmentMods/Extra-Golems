@@ -1,7 +1,5 @@
 package com.golems.entity;
 
-import java.util.List;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,14 +9,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.util.*;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+
+import java.util.List;
 
 public final class EntityTNTGolem extends GolemBase {
 
@@ -29,14 +25,18 @@ public final class EntityTNTGolem extends GolemBase {
 	protected final int minExplosionRad;
 	protected final int maxExplosionRad;
 	protected final int fuseLen;
-	/** Percent chance to explode while attacking a mob. **/
+	/**
+	 * Percent chance to explode while attacking a mob.
+	 **/
 	protected final int chanceToExplodeWhenAttacking;
 	protected boolean allowedToExplode = false;
 
 	protected boolean willExplode;
 	protected int fuseTimer;
 
-	/** Default constructor for TNT golem. **/
+	/**
+	 * Default constructor for TNT golem.
+	 **/
 	public EntityTNTGolem(final World world) {
 		this(world, 3, 6, 50, 10);
 		this.setLootTableLoc("golem_tnt");
@@ -46,7 +46,7 @@ public final class EntityTNTGolem extends GolemBase {
 
 	/**
 	 * Flexible constructor to allow child classes to customize.
-	 * 
+	 *
 	 * @param world
 	 * @param attack
 	 * @param pick
@@ -57,7 +57,7 @@ public final class EntityTNTGolem extends GolemBase {
 	 * @param configAllowsExplode
 	 */
 	public EntityTNTGolem(final World world, final int minExplosionRange,
-			final int maxExplosionRange, final int minFuseLength, final int randomExplosionChance) {
+						  final int maxExplosionRange, final int minFuseLength, final int randomExplosionChance) {
 		super(world);
 		this.minExplosionRad = minExplosionRange;
 		this.maxExplosionRad = maxExplosionRange;
@@ -91,7 +91,7 @@ public final class EntityTNTGolem extends GolemBase {
 
 		if (this.isWet() || (this.getAttackTarget() != null
 				&& this.getDistanceSq(this.getAttackTarget()) > this.minExplosionRad
-						* this.maxExplosionRad)) {
+				* this.maxExplosionRad)) {
 			this.resetIgnite();
 		}
 
@@ -216,7 +216,7 @@ public final class EntityTNTGolem extends GolemBase {
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_GRAVEL_STEP;
 	}
-	
+
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
 		// only fires for this golem, not child classes

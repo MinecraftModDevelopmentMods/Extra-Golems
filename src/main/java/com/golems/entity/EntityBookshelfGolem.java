@@ -1,9 +1,6 @@
 package com.golems.entity;
 
-import java.util.List;
-
 import com.golems.util.GolemConfigSet;
-
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
@@ -14,13 +11,15 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
+import java.util.List;
+
 public final class EntityBookshelfGolem extends GolemBase {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Potion Effects";
-	private static final Potion[] goodEffects = { MobEffects.FIRE_RESISTANCE, MobEffects.REGENERATION,
+	private static final Potion[] goodEffects = {MobEffects.FIRE_RESISTANCE, MobEffects.REGENERATION,
 			MobEffects.STRENGTH, MobEffects.ABSORPTION, MobEffects.LUCK, MobEffects.INSTANT_HEALTH,
 			MobEffects.RESISTANCE, MobEffects.INVISIBILITY, MobEffects.SPEED,
-			MobEffects.JUMP_BOOST };
+			MobEffects.JUMP_BOOST};
 
 	public EntityBookshelfGolem(final World world) {
 		super(world);
@@ -52,10 +51,10 @@ public final class EntityBookshelfGolem extends GolemBase {
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_WOOD_STEP;
 	}
-	
+
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if(getConfig(this).getBoolean(EntityBookshelfGolem.ALLOW_SPECIAL))
+		if (getConfig(this).getBoolean(EntityBookshelfGolem.ALLOW_SPECIAL))
 			list.add(TextFormatting.LIGHT_PURPLE + trans("entitytip.grants_self_potion_effects"));
 		return list;
 	}

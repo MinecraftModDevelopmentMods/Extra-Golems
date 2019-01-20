@@ -1,11 +1,11 @@
 package com.golems.entity;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
 
 /**
  * This class should always be registered with RenderGolemColorized. It supports a 2-texture golem
@@ -28,21 +28,18 @@ public abstract class GolemColorized extends GolemBase {
 	 * Flexible constructor so child classes can "borrow" this class's behavior and customize. It is
 	 * fine to pass 'null' for {@link rBase} or {@link rOverlay}, and null textures will not be
 	 * rendered. Args: world, attack, buildingBlock, initialColor, rBase, rOverlay.
-	 * 
+	 *
 	 * @param world
-	 * @param attack 
+	 * @param attack
 	 * @param building the Block to use to build this golem
-	 * @param initial
-	 *            the (usually temporary) color to apply to this golem until it is updated by some
-	 *            other method.
-	 * @param rBase
-	 *            an optional texture that will not be recolored or rendered transparent, to render
-	 *            before {@link OVERLAY}
-	 * @param rOverlay
-	 *            a texture that will be recolored and optionally rendered as transparent.
+	 * @param initial  the (usually temporary) color to apply to this golem until it is updated by some
+	 *                 other method.
+	 * @param rBase    an optional texture that will not be recolored or rendered transparent, to render
+	 *                 before {@link OVERLAY}
+	 * @param rOverlay a texture that will be recolored and optionally rendered as transparent.
 	 **/
 	public GolemColorized(final World world, final long initial,
-			@Nullable final ResourceLocation rBase, @Nullable final ResourceLocation rOverlay) {
+						  @Nullable final ResourceLocation rBase, @Nullable final ResourceLocation rOverlay) {
 		super(world);
 		this.setColor(initial);
 		this.base = rBase;
@@ -55,17 +52,23 @@ public abstract class GolemColorized extends GolemBase {
 		return makeGolemTexture("clay");
 	}
 
-	/** An optional texture to render as-is, without coloring. **/
+	/**
+	 * An optional texture to render as-is, without coloring.
+	 **/
 	public ResourceLocation getTextureBase() {
 		return base;
 	}
 
-	/** The (probably grayscaled) texture that will be colored. **/
+	/**
+	 * The (probably grayscaled) texture that will be colored.
+	 **/
 	public ResourceLocation getTextureToColor() {
 		return overlay;
 	}
 
-	/** Whether this golem has a sub-texture that should not be colored. **/
+	/**
+	 * Whether this golem has a sub-texture that should not be colored.
+	 **/
 	public boolean hasBase() {
 		return this.hasBase;
 	}

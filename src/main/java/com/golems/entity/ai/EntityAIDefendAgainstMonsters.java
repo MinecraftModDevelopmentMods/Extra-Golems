@@ -1,7 +1,6 @@
 package com.golems.entity.ai;
 
 import com.golems.entity.GolemBase;
-
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAITarget;
 import net.minecraft.village.Village;
@@ -9,7 +8,9 @@ import net.minecraft.village.Village;
 public class EntityAIDefendAgainstMonsters extends EntityAITarget {
 
 	final GolemBase entityGolem;
-	/** The aggressor of the iron golem's village which is now the golem's attack target. */
+	/**
+	 * The aggressor of the iron golem's village which is now the golem's attack target.
+	 */
 	EntityLivingBase villageAgressorTarget;
 	// private List villageAgressors = new ArrayList();
 

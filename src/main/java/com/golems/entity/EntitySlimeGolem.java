@@ -1,9 +1,6 @@
 package com.golems.entity;
 
-import java.util.List;
-
 import com.golems.util.GolemConfigSet;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.SoundEvents;
@@ -12,6 +9,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 public final class EntitySlimeGolem extends GolemBase {
 
@@ -66,10 +65,10 @@ public final class EntitySlimeGolem extends GolemBase {
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_SLIME_STEP;
 	}
-	
+
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if(getConfig(this).getBoolean(EntitySlimeGolem.ALLOW_SPECIAL))
+		if (getConfig(this).getBoolean(EntitySlimeGolem.ALLOW_SPECIAL))
 			list.add(TextFormatting.GREEN + trans("entitytip.has_knockback"));
 		return list;
 	}

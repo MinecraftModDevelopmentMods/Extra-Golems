@@ -1,9 +1,6 @@
 package com.golems.entity;
 
-import java.util.List;
-
 import com.golems.blocks.ContainerPortableWorkbench;
-
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -18,10 +15,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
+import java.util.List;
+
 public final class EntityCraftingGolem extends GolemBase {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Crafting";
-	
+
 	public EntityCraftingGolem(final World world) {
 		super(world);
 		this.setLootTableLoc("golem_crafting");
@@ -69,10 +68,10 @@ public final class EntityCraftingGolem extends GolemBase {
 			return new ContainerPortableWorkbench(playerInventory, this.world2, this.position2);
 		}
 	}
-	
+
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if(getConfig(this).getBoolean(ALLOW_SPECIAL)) {
+		if (getConfig(this).getBoolean(ALLOW_SPECIAL)) {
 			list.add(TextFormatting.BLUE + trans("entitytip.click_open_crafting"));
 		}
 		return list;

@@ -19,7 +19,7 @@ public final class EntityBoneGolem extends GolemBase {
 		//return makeGolemTexture("bone");
 		return makeGolemTexture("bone_skeleton");
 	}
-	
+
 	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_STONE_STEP;

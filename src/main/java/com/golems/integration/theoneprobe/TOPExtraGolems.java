@@ -1,22 +1,17 @@
 package com.golems.integration.theoneprobe;
 
-import java.util.List;
-
 import com.golems.entity.GolemBase;
 import com.golems.integration.GolemDescriptionManager;
 import com.golems.integration.ModIds;
 import com.golems.main.ExtraGolems;
 import com.google.common.base.Function;
-
-import mcjty.theoneprobe.api.IProbeHitEntityData;
-import mcjty.theoneprobe.api.IProbeInfo;
-import mcjty.theoneprobe.api.IProbeInfoEntityProvider;
-import mcjty.theoneprobe.api.ITheOneProbe;
-import mcjty.theoneprobe.api.ProbeMode;
+import mcjty.theoneprobe.api.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
+
+import java.util.List;
 
 /**
  * TheOneProbe integration -- using theoneprobe-1.10-1.1.0.
@@ -33,7 +28,7 @@ public final class TOPExtraGolems extends GolemDescriptionManager implements IPr
 	@Override
 	@Optional.Method(modid = ModIds.TOP)
 	public void addProbeEntityInfo(final ProbeMode mode, final IProbeInfo iprobeInfo, final EntityPlayer player,
-			final World world, final Entity entity, final IProbeHitEntityData data) {
+								   final World world, final Entity entity, final IProbeHitEntityData data) {
 		if (entity instanceof GolemBase) {
 			final GolemBase golem = (GolemBase) entity;
 			// show attack if advanced mode

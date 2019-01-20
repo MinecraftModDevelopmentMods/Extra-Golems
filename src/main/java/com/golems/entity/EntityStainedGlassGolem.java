@@ -16,7 +16,7 @@ public final class EntityStainedGlassGolem extends GolemColorizedMultiTextured {
 	public static final int[] COLORS = ItemDye.DYE_COLORS;
 
 	private static final ResourceLocation TEXTURE_BASE = GolemBase
-			.makeGolemTexture("stained_glass");
+			.makeGolemTexture(PREFIX);
 	private static final ResourceLocation TEXTURE_OVERLAY = GolemBase
 			.makeGolemTexture("stained_glass_grayscale");
 
@@ -46,9 +46,9 @@ public final class EntityStainedGlassGolem extends GolemColorizedMultiTextured {
 	protected SoundEvent getDeathSound() {
 		return SoundEvents.BLOCK_GLASS_BREAK;
 	}
-	
+
 	@Override
-	public void onBuilt(IBlockState body, IBlockState legs, IBlockState arm1, IBlockState arm2) { 
+	public void onBuilt(IBlockState body, IBlockState legs, IBlockState arm1, IBlockState arm2) {
 		// use block metadata to give this golem the right texture
 		final int meta = body.getBlock().getMetaFromState(body)
 				% this.getColorArray().length;

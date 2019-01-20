@@ -1,7 +1,6 @@
 package com.golems.entity;
 
 import com.golems.main.ExtraGolems;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.BlockLog.EnumAxis;
@@ -16,8 +15,8 @@ import net.minecraft.world.World;
 public final class EntityWoodenGolem extends GolemMultiTextured {
 
 	public static final String WOOD_PREFIX = "wooden";
-	public static final String[] woodTypes = { "oak", "spruce", "birch", "jungle", "acacia",
-			"big_oak" };
+	public static final String[] woodTypes = {"oak", "spruce", "birch", "jungle", "acacia",
+			"big_oak"};
 
 	public EntityWoodenGolem(final World world) {
 		super(world, WOOD_PREFIX, woodTypes);
@@ -41,15 +40,15 @@ public final class EntityWoodenGolem extends GolemMultiTextured {
 	public String getModId() {
 		return ExtraGolems.MODID;
 	}
-	
+
 	@Override
-	public void onBuilt(IBlockState body, IBlockState legs, IBlockState arm1, IBlockState arm2) { 
+	public void onBuilt(IBlockState body, IBlockState legs, IBlockState arm1, IBlockState arm2) {
 		// use block metadata to give this golem the right texture
 		final int meta = body.getBlock().getMetaFromState(
 				body.withProperty(BlockLog.LOG_AXIS, EnumAxis.NONE));
 		byte textureNum = body.getBlock() == Blocks.LOG2 ? (byte) (meta + 4) : (byte) meta;
 		textureNum %= this.getNumTextures();
-		this.setTextureNum(textureNum);	
+		this.setTextureNum(textureNum);
 	}
 
 	@Override

@@ -1,11 +1,8 @@
 package com.golems.integration.waila;
 
-import java.util.List;
-
 import com.golems.entity.GolemBase;
 import com.golems.integration.GolemDescriptionManager;
 import com.golems.integration.ModIds;
-
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaEntityAccessor;
 import mcp.mobius.waila.api.IWailaEntityProvider;
@@ -15,6 +12,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
+
+import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
  * WAILA integration -- using Hwyla:1.8.23-B38_1.12.
@@ -48,8 +48,9 @@ public final class WailaExtraGolems extends GolemDescriptionManager implements I
 
 	@Override
 	@Optional.Method(modid = ModIds.WAILA)
+	@Nonnull
 	public NBTTagCompound getNBTData(final EntityPlayerMP player, final Entity entity, final NBTTagCompound tag,
-			final World world) {
+					 final World world) {
 		final NBTTagCompound tag2 = new NBTTagCompound();
 		entity.writeToNBT(tag2);
 		return tag2;
@@ -57,17 +58,18 @@ public final class WailaExtraGolems extends GolemDescriptionManager implements I
 
 	@Override
 	@Optional.Method(modid = ModIds.WAILA)
+	@Nonnull
 	public List<String> getWailaBody(final Entity entity, final List<String> tip, final IWailaEntityAccessor accessor,
-			final IWailaConfigHandler config) {
+					 final IWailaConfigHandler config) {
 		if (entity instanceof GolemBase) {
 			final GolemBase golem = (GolemBase) entity;
 
 			this.showAttack = config.getConfig(CONFIG_SHOW_ATTACK_DAMAGE)
-					&& accessor.getPlayer().isSneaking();
+				&& accessor.getPlayer().isSneaking();
 			this.showMultiTexture = config.getConfig(CONFIG_SHOW_MULTI_TEXTURE);
 			this.showSpecial = config.getConfig(CONFIG_SHOW_SPECIAL_ABILITIES);
 			this.showFireproof = config.getConfig(CONFIG_SHOW_FIREPROOF)
-					&& accessor.getPlayer().isSneaking();
+				&& accessor.getPlayer().isSneaking();
 			this.showKnockbackResist = config.getConfig(CONFIG_SHOW_KNOCKBACK_RESIST);
 
 			tip.addAll(this.getEntityDescription(golem));
@@ -77,8 +79,9 @@ public final class WailaExtraGolems extends GolemDescriptionManager implements I
 
 	@Override
 	@Optional.Method(modid = ModIds.WAILA)
+	@Nonnull
 	public List<String> getWailaHead(final Entity entity, final List<String> currenttip,
-			final IWailaEntityAccessor accessor, final IWailaConfigHandler config) {
+					 final IWailaEntityAccessor accessor, final IWailaConfigHandler config) {
 		return currenttip;
 	}
 
@@ -90,8 +93,9 @@ public final class WailaExtraGolems extends GolemDescriptionManager implements I
 
 	@Override
 	@Optional.Method(modid = ModIds.WAILA)
+	@Nonnull
 	public List<String> getWailaTail(final Entity entity, final List<String> currenttip,
-			final IWailaEntityAccessor accessor, final IWailaConfigHandler config) {
+					 final IWailaEntityAccessor accessor, final IWailaConfigHandler config) {
 		return currenttip;
 	}
 }

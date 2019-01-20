@@ -1,12 +1,9 @@
 package com.golems.items;
 
-import java.util.List;
-
 import com.golems.entity.EntityBedrockGolem;
 import com.golems.entity.GolemBase;
 import com.golems.main.Config;
 import com.golems.util.GolemLookup;
-
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -24,6 +21,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.List;
+
 public final class ItemBedrockGolem extends Item {
 
 	public ItemBedrockGolem() {
@@ -32,7 +31,7 @@ public final class ItemBedrockGolem extends Item {
 
 	@Override
 	public EnumActionResult onItemUse(final EntityPlayer player, final World worldIn, final BlockPos pos,
-			final EnumHand hand, final EnumFacing facing, final float hitX, final float hitY, final float hitZ) {
+					  final EnumHand hand, final EnumFacing facing, final float hitX, final float hitY, final float hitZ) {
 		final ItemStack stack = player.getHeldItem(hand);
 		// creative players can use this item to spawn a bedrock golem
 		if (GolemLookup.getConfig(EntityBedrockGolem.class).canSpawn()) {
@@ -67,10 +66,10 @@ public final class ItemBedrockGolem extends Item {
 		if (world.isRemote) {
 			for (int i1 = 60 + world.rand.nextInt(30); i1 > 0; --i1) {
 				world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, x + world.rand.nextDouble(),
-						y + world.rand.nextDouble(), z + world.rand.nextDouble(),
-						world.rand.nextDouble() * motion,
-						world.rand.nextDouble() * motion * 0.25D + 0.08D,
-						world.rand.nextDouble() * motion);
+					y + world.rand.nextDouble(), z + world.rand.nextDouble(),
+					world.rand.nextDouble() * motion,
+					world.rand.nextDouble() * motion * 0.25D + 0.08D,
+					world.rand.nextDouble() * motion);
 			}
 		}
 	}
@@ -78,7 +77,7 @@ public final class ItemBedrockGolem extends Item {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(final ItemStack par1ItemStack, final World world, final List<String> par3List,
-			final ITooltipFlag flag) {
+				   final ITooltipFlag flag) {
 		final String loreCreativeOnly = TextFormatting.RED + trans("tooltip.creative_only_item");
 		if (Config.bedrockGolemCreativeOnly) {
 			par3List.add(loreCreativeOnly);
@@ -87,12 +86,12 @@ public final class ItemBedrockGolem extends Item {
 		if (GuiScreen.isShiftKeyDown()) {
 			par3List.add(I18n.format("tooltip.use_to_spawn", trans("entity.golems.golem_bedrock.name")));
 			par3List.add(
-					I18n.format("tooltip.use_on_existing", trans("entity.golems.golem_bedrock.name")));
+				I18n.format("tooltip.use_on_existing", trans("entity.golems.golem_bedrock.name")));
 			par3List.add(trans("tooltip.to_remove_it") + ".");
 		} else {
 			final String lorePressShift = TextFormatting.GRAY + trans("tooltip.press") + " "
-					+ TextFormatting.YELLOW + trans("tooltip.shift").toUpperCase() + " "
-					+ TextFormatting.GRAY + trans("tooltip.for_more_details");
+				+ TextFormatting.YELLOW + trans("tooltip.shift").toUpperCase() + " "
+				+ TextFormatting.GRAY + trans("tooltip.for_more_details");
 			par3List.add(lorePressShift);
 		}
 	}

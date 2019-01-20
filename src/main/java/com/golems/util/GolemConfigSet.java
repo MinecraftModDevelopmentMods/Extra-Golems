@@ -14,7 +14,7 @@ import net.minecraftforge.common.config.Configuration;
  * permissions, health, and attack. It can load any number of fields as a boolean, int, or float.
  **/
 public class GolemConfigSet {
-	
+
 	public static GolemConfigSet EMPTY;
 
 	private static final String GOLEM_PERMS = "Allow Golem";
@@ -47,7 +47,7 @@ public class GolemConfigSet {
 	private static final byte FALSE = 0;
 
 	public GolemConfigSet(final Configuration configFile, final String name, final boolean spawn, final double health,
-			final float attack) {
+						  final float attack) {
 		this.mapInt = new TObjectIntHashMap<>(1);
 		this.mapFloat = new TObjectFloatHashMap<>(1);
 		this.mapBoolean = new TObjectByteHashMap<>(1);
@@ -64,7 +64,9 @@ public class GolemConfigSet {
 		this(configFile, name, true, health, attack);
 	}
 
-	/** Load some values like spawn permission, health, and attack right away. **/
+	/**
+	 * Load some values like spawn permission, health, and attack right away.
+	 **/
 	public GolemConfigSet loadFromConfig() {
 		this.canSpawn = config.getBoolean(GOLEM_PERMS, this.category, this.defSpawn,
 				"Whether the " + golemName + " can be built");

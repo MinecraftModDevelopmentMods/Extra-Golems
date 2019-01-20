@@ -1,10 +1,7 @@
 package com.golems.entity;
 
-import java.util.List;
-
 import com.golems.events.SpongeGolemSoakEvent;
 import com.golems.util.GolemConfigSet;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
@@ -16,6 +13,8 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
+
+import java.util.List;
 
 public final class EntitySpongeGolem extends GolemBase {
 
@@ -44,6 +43,7 @@ public final class EntitySpongeGolem extends GolemBase {
 		super.onLivingUpdate();
 		GolemConfigSet cfg = getConfig(this);
 		final int interval = cfg != null ? cfg.getInt(INTERVAL) : 1000;
+		//TODO: Fix possible NPE
 		if (cfg.getBoolean(ALLOW_SPECIAL)
 				&& (interval <= 1 || this.ticksExisted % interval == 0)) {
 			final int x = MathHelper.floor(this.posX);
@@ -84,17 +84,17 @@ public final class EntitySpongeGolem extends GolemBase {
 	 * @return whether all setBlockState calls were successful.
 	 **/
 	public boolean replaceWater(final List<BlockPos> positions, final IBlockState replaceWater,
-			final int updateFlag) {
+								final int updateFlag) {
 		boolean flag = true;
 		for (final BlockPos p : positions) {
 			flag &= this.world.setBlockState(p, replaceWater, updateFlag);
 		}
 		return flag;
 	}
-	
+
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if(getConfig(this).getBoolean(EntitySpongeGolem.ALLOW_SPECIAL))
+		if (getConfig(this).getBoolean(EntitySpongeGolem.ALLOW_SPECIAL))
 			list.add(TextFormatting.YELLOW + trans("entitytip.absorbs_water"));
 		return list;
 	}

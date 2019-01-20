@@ -1,43 +1,46 @@
 package com.golems.entity;
 
-import java.util.List;
-
 import com.golems.events.EndGolemTeleportEvent;
 import com.golems.util.GolemConfigSet;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntityDamageSourceIndirect;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.util.*;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+
+import java.util.List;
 
 public final class EntityEndstoneGolem extends GolemBase {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Teleporting";
 	public static final String ALLOW_WATER_HURT = "Can Take Water Damage";
 
-	/** countdown timer for next teleport. **/
+	/**
+	 * countdown timer for next teleport.
+	 **/
 	protected int teleportDelay;
-	/** Max distance for one teleport; range is 32.0 for endstone golem. **/
+	/**
+	 * Max distance for one teleport; range is 32.0 for endstone golem.
+	 **/
 	protected double range;
 	protected boolean allowTeleport;
 	protected boolean isHurtByWater;
 	protected boolean hasAmbientParticles;
 
 	protected int ticksBetweenIdleTeleports;
-	/** Percent chance to teleport away when hurt by non-projectile. **/
+	/**
+	 * Percent chance to teleport away when hurt by non-projectile.
+	 **/
 	protected int chanceToTeleportWhenHurt;
 
-	/** Default constructor. **/
+	/**
+	 * Default constructor.
+	 **/
 	public EntityEndstoneGolem(final World world) {
 		this(world, 32.0D, true);
 		GolemConfigSet cfg = getConfig(this);
@@ -50,21 +53,15 @@ public final class EntityEndstoneGolem extends GolemBase {
 	/**
 	 * Flexible constructor to allow child classes to customize.
 	 *
-	 * @param world
-	 *            the worldObj
-	 * @param attack
-	 *            base attack damage
-	 * @param pick
-	 *            Creative pick-block return
-	 * @param teleportRange
-	 *            64.0 for enderman, 32.0 for endstone golem
-	 * @param teleportingAllowed
-	 *            usually set by the config, checked here
-	 * @param ambientParticles
-	 *            whether always to display "portal" particles
+	 * @param world              the worldObj
+	 * @param attack             base attack damage
+	 * @param pick               Creative pick-block return
+	 * @param teleportRange      64.0 for enderman, 32.0 for endstone golem
+	 * @param teleportingAllowed usually set by the config, checked here
+	 * @param ambientParticles   whether always to display "portal" particles
 	 **/
-	public EntityEndstoneGolem(final World world, final double teleportRange, 
-			final boolean ambientParticles) {
+	public EntityEndstoneGolem(final World world, final double teleportRange,
+							   final boolean ambientParticles) {
 		super(world);
 		this.ticksBetweenIdleTeleports = 200;
 		this.chanceToTeleportWhenHurt = 15;
@@ -73,7 +70,7 @@ public final class EntityEndstoneGolem extends GolemBase {
 		this.hasAmbientParticles = ambientParticles;
 		this.allowTeleport = true;
 	}
-	
+
 	@Override
 	protected ResourceLocation applyTexture() {
 		return makeGolemTexture("end_stone");
@@ -210,7 +207,7 @@ public final class EntityEndstoneGolem extends GolemBase {
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_STONE_STEP;
 	}
-	
+
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
 		// this will only fire for the Endstone Golem, not child classes

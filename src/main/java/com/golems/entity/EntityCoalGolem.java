@@ -1,9 +1,6 @@
 package com.golems.entity;
 
-import java.util.List;
-
 import com.golems.util.GolemConfigSet;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -14,6 +11,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 public final class EntityCoalGolem extends GolemBase {
 
@@ -30,7 +29,9 @@ public final class EntityCoalGolem extends GolemBase {
 		return makeGolemTexture("coal");
 	}
 
-	/** Attack by adding potion effect as well. */
+	/**
+	 * Attack by adding potion effect as well.
+	 */
 	@Override
 	public boolean attackEntityAsMob(final Entity entity) {
 		if (super.attackEntityAsMob(entity)) {
@@ -63,10 +64,10 @@ public final class EntityCoalGolem extends GolemBase {
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_STONE_STEP;
 	}
-	
+
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if(getConfig(this).getBoolean(EntityCoalGolem.ALLOW_SPECIAL))
+		if (getConfig(this).getBoolean(EntityCoalGolem.ALLOW_SPECIAL))
 			list.add(TextFormatting.GRAY + trans("entitytip.blinds_creatures"));
 		return list;
 	}

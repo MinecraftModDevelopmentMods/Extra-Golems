@@ -16,7 +16,7 @@ public final class EntityClayGolem extends GolemBase {
 	protected ResourceLocation applyTexture() {
 		return makeGolemTexture("clay");
 	}
-	
+
 	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_GRAVEL_STEP;

@@ -1,7 +1,6 @@
 package com.golems.renders;
 
 import com.golems.entity.GolemBase;
-
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
@@ -12,17 +11,29 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ModelGolem extends ModelBase {
 
-	/** The head model for the iron golem. */
+	/**
+	 * The head model for the iron golem.
+	 */
 	public final ModelRenderer golemHead;
-	/** The body model for the iron golem. */
+	/**
+	 * The body model for the iron golem.
+	 */
 	public final ModelRenderer golemBody;
-	/** The right arm model for the iron golem. */
+	/**
+	 * The right arm model for the iron golem.
+	 */
 	public final ModelRenderer golemRightArm;
-	/** The left arm model for the iron golem. */
+	/**
+	 * The left arm model for the iron golem.
+	 */
 	public final ModelRenderer golemLeftArm;
-	/** The left leg model for the Iron Golem. */
+	/**
+	 * The left leg model for the Iron Golem.
+	 */
 	public final ModelRenderer golemLeftLeg;
-	/** The right leg model for the Iron Golem. */
+	/**
+	 * The right leg model for the Iron Golem.
+	 */
 	public final ModelRenderer golemRightLeg;
 
 	public ModelGolem() {
@@ -71,7 +82,7 @@ public class ModelGolem extends ModelBase {
 	 */
 	@Override
 	public void render(final Entity entityIn, final float limbSwing, final float limbSwingAmount, final float ageInTicks,
-			final float netHeadYaw, final float headPitch, final float scale) {
+					   final float netHeadYaw, final float headPitch, final float scale) {
 		this.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch,
 				scale, entityIn);
 		this.golemHead.render(scale);
@@ -89,7 +100,7 @@ public class ModelGolem extends ModelBase {
 	 */
 	@Override
 	public void setRotationAngles(final float limbSwing, final float limbSwingAmount, final float ageInTicks,
-			final float netHeadYaw, final float headPitch, final float scaleFactor, final Entity entityIn) {
+								  final float netHeadYaw, final float headPitch, final float scaleFactor, final Entity entityIn) {
 		this.golemHead.rotateAngleY = netHeadYaw / (180F / (float) Math.PI);
 		this.golemHead.rotateAngleX = headPitch / (180F / (float) Math.PI);
 		this.golemLeftLeg.rotateAngleX = -1.5F * this.triangleWave(limbSwing, 13.0F)
@@ -105,8 +116,8 @@ public class ModelGolem extends ModelBase {
 	 * are the same second and third as in the setRotationAngles method.
 	 */
 	@Override
-    public void setLivingAnimations(final EntityLivingBase entitylivingbaseIn, final float limbSwing,
-    		final 	float limbSwingAmount, final float partialTickTime) {
+	public void setLivingAnimations(final EntityLivingBase entitylivingbaseIn, final float limbSwing,
+									final float limbSwingAmount, final float partialTickTime) {
 		GolemBase entityirongolem = (GolemBase) entitylivingbaseIn;
 		int i = entityirongolem.getAttackTimer();
 

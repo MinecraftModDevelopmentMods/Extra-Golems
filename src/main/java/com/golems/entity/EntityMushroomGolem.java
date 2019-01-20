@@ -1,11 +1,8 @@
 package com.golems.entity;
 
-import java.util.List;
-
 import com.golems.entity.ai.EntityAIPlaceRandomBlocksStrictly;
 import com.golems.main.ExtraGolems;
 import com.golems.util.GolemConfigSet;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -15,16 +12,18 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
+import java.util.List;
+
 public final class EntityMushroomGolem extends GolemMultiTextured {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Plant Mushrooms";
 	public static final String FREQUENCY = "Mushroom Frequency";
 
 	public static final String SHROOM_PREFIX = "shroom";
-	public static final String[] SHROOM_TYPES = { "red", "brown" };
-	public final IBlockState[] mushrooms = { Blocks.BROWN_MUSHROOM.getDefaultState(),
-			Blocks.RED_MUSHROOM.getDefaultState() };
-	protected static final Block[] soils = { Blocks.DIRT, Blocks.GRASS, Blocks.MYCELIUM };
+	public static final String[] SHROOM_TYPES = {"red", "brown"};
+	public final IBlockState[] mushrooms = {Blocks.BROWN_MUSHROOM.getDefaultState(),
+			Blocks.RED_MUSHROOM.getDefaultState()};
+	protected static final Block[] soils = {Blocks.DIRT, Blocks.GRASS, Blocks.MYCELIUM};
 
 	public EntityMushroomGolem(final World world) {
 		super(world, SHROOM_PREFIX, SHROOM_TYPES);
@@ -46,7 +45,7 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_GRASS_STEP;
 	}
-	
+
 	@Override
 	public void onBuilt(IBlockState body, IBlockState legs, IBlockState arm1, IBlockState arm2) {
 		// use block type to give this golem the right texture
@@ -55,10 +54,10 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 		textureNum %= this.getNumTextures();
 		this.setTextureNum(textureNum);
 	}
-	
+
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if(getConfig(this).getBoolean(EntityMushroomGolem.ALLOW_SPECIAL))
+		if (getConfig(this).getBoolean(EntityMushroomGolem.ALLOW_SPECIAL))
 			list.add(TextFormatting.DARK_GREEN + trans("entitytip.plants_shrooms"));
 		return list;
 	}
