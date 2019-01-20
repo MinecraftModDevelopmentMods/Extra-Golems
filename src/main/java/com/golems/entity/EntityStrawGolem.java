@@ -8,19 +8,19 @@ import net.minecraft.world.World;
 
 public final class EntityStrawGolem extends GolemBase {
 
-	public EntityStrawGolem(final World world) {
-		super(world);
-		this.setCanSwim(true);
-		this.setLootTableLoc("golem_straw");
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.35D);
-	}
+    public EntityStrawGolem(final World world) {
+        super(world);
+        this.setCanSwim(true);
+        this.setLootTableLoc("golem_straw");
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.35D);
+    }
 
-	protected ResourceLocation applyTexture() {
-		return makeGolemTexture("straw");
-	}
+    protected ResourceLocation applyTexture() {
+        return makeGolemTexture("straw");
+    }
 
-	@Override
-	public SoundEvent getGolemSound() {
-		return SoundEvents.BLOCK_GRAVEL_STEP;
-	}
+    @Override
+    public SoundEvent getGolemSound() {
+        return SoundEvents.BLOCK_GRAVEL_STEP;
+    }
 }
