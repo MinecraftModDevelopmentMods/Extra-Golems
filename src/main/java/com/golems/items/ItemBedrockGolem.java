@@ -36,7 +36,7 @@ public final class ItemBedrockGolem extends Item {
 		final ItemStack stack = player.getHeldItem(hand);
 		// creative players can use this item to spawn a bedrock golem
 		if (GolemLookup.getConfig(EntityBedrockGolem.class).canSpawn()) {
-			if (Config.bedrockGolemCreativeOnly && !player.capabilities.isCreativeMode) {
+			if (Config.isBedrockGolemCreativeOnly() && !player.capabilities.isCreativeMode) {
 				return EnumActionResult.PASS;
 			}
 
@@ -80,7 +80,7 @@ public final class ItemBedrockGolem extends Item {
 	public void addInformation(final ItemStack par1ItemStack, final World world, final List<String> par3List,
 			final ITooltipFlag flag) {
 		final String loreCreativeOnly = TextFormatting.RED + trans("tooltip.creative_only_item");
-		if (Config.bedrockGolemCreativeOnly) {
+		if (Config.isBedrockGolemCreativeOnly()) {
 			par3List.add(loreCreativeOnly);
 		}
 

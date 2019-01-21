@@ -16,7 +16,6 @@ import com.golems.main.ExtraGolems;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityList;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.registry.EntityEntry;
@@ -29,7 +28,11 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
  * GolemConfigSet, rather than keeping them all as separate declarations.
  * @author skyjay1
  **/
-public class GolemLookup {
+public final class GolemLookup {
+	
+	private GolemLookup() {
+		//
+	}
 	
 	/** Map to determine which Golem is built from the given Block. This is used most. **/
 	private static final Map<Block, Class<? extends GolemBase>> BLOCK_TO_GOLEM = new HashMap();
@@ -162,8 +165,6 @@ public class GolemLookup {
 					+ " with a Block but Golem has already been added! Skipping.");
 			return false;					
 		}
-		String clazzOut = golemClazz != null ? golemClazz.toString() : "null";
-		String blockOut = buildingBlock != null ? buildingBlock.getRegistryName().toString() : "null";
 		GOLEM_TO_BLOCK.put(golemClazz, buildingBlock);
 		return true;
 	}
@@ -326,7 +327,6 @@ public class GolemLookup {
 	public static List<GolemBase> getDummyGolemList(final World world) {
 		final List<GolemBase> list = new LinkedList();
 		// for each entity, find out if it's a golem and add it to the list
-		final Set<ResourceLocation> set = EntityList.getEntityNameList();
 		for(EntityEntry entry : ForgeRegistries.ENTITIES) {
 			if(GolemBase.class.isAssignableFrom(entry.getEntityClass())) {
 				list.add((GolemBase)entry.newInstance(world));

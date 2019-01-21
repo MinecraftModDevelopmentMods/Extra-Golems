@@ -147,7 +147,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 		super.applyEntityAttributes();
 		GolemConfigSet cfg = getConfig(this);
 		this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE)
-				.setBaseValue(cfg != null ? cfg.getBaseAttack() : 7.0D);
+				.setBaseValue(cfg.getBaseAttack());
 		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(cfg != null ? cfg.getMaxHealth() : 20);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.22D);
 	}

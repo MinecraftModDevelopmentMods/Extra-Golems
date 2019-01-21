@@ -141,15 +141,6 @@ public abstract class GolemMultiTextured extends GolemBase {
 		return this.textures;
 	}
 
-	/**
-	 * @deprecated
-	 * automatically handled in {@link #setTextureNum(byte, boolean)}
-	 **/
-	@Deprecated
-	public void updateTexture() {
-		this.setTextureType(this.getTextureFromArray(this.getTextureNum()));
-	}
-
 	public ResourceLocation getTextureFromArray(final int index) {
 		return this.textures[index % this.textures.length];
 	}
@@ -157,7 +148,6 @@ public abstract class GolemMultiTextured extends GolemBase {
 	@Override
     protected ResourceLocation getLootTable()
     {
-		System.out.println("[GMT] getting loot table: " + this.lootTables[this.getTextureNum() % this.lootTables.length]);
         return this.lootTables[this.getTextureNum() % this.lootTables.length];
     }
 

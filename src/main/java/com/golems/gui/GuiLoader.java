@@ -1,26 +1,19 @@
 package com.golems.gui;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
-import com.golems.entity.EntityBedrockGolem;
-import com.golems.entity.GolemBase;
-import com.golems.entity.GolemMultiTextured;
 import com.golems.main.ExtraGolems;
 import com.golems.util.GolemLookup;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreenBook;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
-import net.minecraft.util.text.TextFormatting;
 
-public class GuiLoader {
+public final class GuiLoader {
+	
+	private GuiLoader() {
+		//
+	}
 
     public static void loadBookGui(EntityPlayer playerIn, ItemStack itemstack) {
     	// only load client-side, of course

@@ -20,7 +20,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
-public final class EntityTNTGolem extends GolemBase {
+public class EntityTNTGolem extends GolemBase {
 
 	protected static final DataParameter<Boolean> DATA_IGNITED = EntityDataManager
 			.<Boolean>createKey(EntityTNTGolem.class, DataSerializers.BOOLEAN);

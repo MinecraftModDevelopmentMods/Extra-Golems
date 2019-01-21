@@ -17,8 +17,8 @@ public final class Config {
 
 	public static final String CATEGORY_OTHER = "_other_";
 
-	public static boolean bedrockGolemCreativeOnly;
-	public static boolean itemGolemHeadHasGlint;
+	private static boolean bedrockGolemCreativeOnly;
+	private static boolean itemGolemHeadHasGlint;
 	
 	public static final Set<String> SECRET = new HashSet<String>();
 
@@ -46,6 +46,14 @@ public final class Config {
 				"When true, only players in creative mode can use a Bedrock Golem spawn item");
 		itemGolemHeadHasGlint = config.getBoolean("Golem Head Has Glint", CATEGORY_OTHER, true,
 				"Whether the Golem Head item always has 'enchanted' effect");
+	}
+	
+	public static boolean isBedrockGolemCreativeOnly() {
+		return bedrockGolemCreativeOnly;
+	}
+	
+	public static boolean golemHeadHasGlint() {
+		return itemGolemHeadHasGlint;
 	}
 	
 	public static boolean matchesSecret(String in) {

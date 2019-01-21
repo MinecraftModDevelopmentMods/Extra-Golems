@@ -122,8 +122,7 @@ public class GuiGolemBook extends GuiScreenBook {
 	}
 	
     /** Adds Book NBT data to the itemstack using the passed pages. Temporary until we stop using NBT for this **/
-	public static void addNBT(ItemStack itemstack, List<String> pages) 
-	{
+	public static void addNBT(ItemStack itemstack, List<String> pages) {
 		if(itemstack != null) {
 			NBTTagCompound nbt = itemstack.hasTagCompound() ? itemstack.getTagCompound() : new NBTTagCompound();
 			// skip this bit if the NBT has already been set
@@ -149,17 +148,19 @@ public class GuiGolemBook extends GuiScreenBook {
 		INTRO.add(trans("golembook.intro1") + "\n" + trans("golembook.intro2"));
 		// page 2: "Part 1"
 		String partIntro = TextFormatting.GOLD + trans("golembook.part_intro") + TextFormatting.BLACK;
+		String golemPaper = trans("item.golem_paper.name");
+		String golemHead = trans("tile.golem_head.name");
 		INTRO.add("\n\n" + partIntro + "\n\n" + trans("golembook.part1") + "\n\n" + partIntro);
 		// page 3: "Make Golem Spell"
-		INTRO.add(TextFormatting.getTextWithoutFormattingCodes(I18n.format("golembook.recipe_spell.intro", trans("item.golem_paper.name")) 
-				+ "\n\n" + I18n.format("golembook.recipe_spell.recipe", trans("item.golem_paper.name"), trans("item.paper.name"), trans("item.feather.name"),
+		INTRO.add(TextFormatting.getTextWithoutFormattingCodes(I18n.format("golembook.recipe_spell.intro", golemPaper) 
+				+ "\n\n" + I18n.format("golembook.recipe_spell.recipe", golemPaper, trans("item.paper.name"), trans("item.feather.name"),
 				trans("item.dyePowder.black.name"), trans("item.redstone.name"))));
 		// page 4: "Make Golem Head"
-		INTRO.add(TextFormatting.getTextWithoutFormattingCodes(I18n.format("golembook.recipe_head.intro", trans("tile.golem_head.name")) + "\n\n"
-				+ trans("golembook.recipe_head.recipe", trans("tile.golem_head.name"), trans("item.golem_paper.name"), trans("tile.pumpkin.name"))));
+		INTRO.add(TextFormatting.getTextWithoutFormattingCodes(I18n.format("golembook.recipe_head.intro", golemHead) + "\n\n"
+				+ trans("golembook.recipe_head.recipe", golemHead, trans("item.golem_paper.name"), trans("tile.pumpkin.name"))));
 		// page 5: "Make Golem"
 		INTRO.add(trans("golembook.build_golem.intro") + "\n\n" + trans("golembook.build_golem.howto1") + " "
-				+ trans("golembook.build_golem.howto2") + "\n\n" + I18n.format("golembook.build_golem.howto3", trans("tile.golem_head.name")));
+				+ trans("golembook.build_golem.howto2") + "\n\n" + I18n.format("golembook.build_golem.howto3", golemHead));
 		// page 6: "Part 2"
 		INTRO.add("\n\n" + partIntro + "\n\n" + trans("golembook.part2") + "\n\n" + partIntro);
 		

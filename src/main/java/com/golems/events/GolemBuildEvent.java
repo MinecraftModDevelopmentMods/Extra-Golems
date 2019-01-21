@@ -4,10 +4,10 @@ import com.golems.entity.GolemBase;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
+@Deprecated
 public class GolemBuildEvent extends Event {
 
 	/** The world in which theGolem was built. **/

@@ -2,8 +2,6 @@ package com.golems.proxies;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.IntStream;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -11,7 +9,6 @@ import javax.annotation.Nullable;
 import com.golems.blocks.*;
 import com.golems.entity.*;
 import com.golems.events.handlers.GolemCommonEventHandler;
-import com.golems.gui.GolemBookEntry;
 import com.golems.items.ItemBedrockGolem;
 import com.golems.items.ItemInfoBook;
 import com.golems.main.Config;
@@ -23,24 +20,19 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityList;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import scala.actors.threadpool.Arrays;
 
 @Mod.EventBusSubscriber(modid = ExtraGolems.MODID)
 public class CommonProxy {
@@ -164,7 +156,7 @@ public class CommonProxy {
 			@Override
 			@SideOnly(Side.CLIENT)
 			public boolean hasEffect(final ItemStack stack) {
-				return Config.itemGolemHeadHasGlint;
+				return Config.golemHeadHasGlint();
 			}
 		}.setRegistryName(GolemItems.golemHead.getRegistryName()));
 
@@ -179,10 +171,8 @@ public class CommonProxy {
 				.setRegistryName(ExtraGolems.MODID, "info_book"));
 	}
 
-	// TODO: Reimplement old version
 	@SubscribeEvent
 	public static void registerBlocks(final RegistryEvent.Register<Block> event) {
-		// TODO: Clean up
 		final int GLOWSTONE_FREQ = GolemLookup.getConfig(EntityGlowstoneGolem.class).getInt(EntityGlowstoneGolem.FREQUENCY);
 		final int SEALANTERN_FREQ = GolemLookup.getConfig(EntitySeaLanternGolem.class).getInt(EntitySeaLanternGolem.FREQUENCY);
 		event.getRegistry().registerAll(

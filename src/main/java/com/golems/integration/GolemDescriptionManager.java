@@ -1,7 +1,6 @@
 package com.golems.integration;
 
 import com.golems.entity.*;
-import com.golems.main.Config;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.text.TextFormatting;

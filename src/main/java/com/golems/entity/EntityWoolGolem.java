@@ -60,7 +60,8 @@ public final class EntityWoolGolem extends GolemMultiTextured {
 
 	@Override
 	public void setTextureNum(byte toSet, final boolean updateInstantly) {
-		toSet %= (byte) (coloredWoolTypes.length - 1); // skip texture for 'white'
+		 // note: skips texture for 'white'
+		toSet %= (byte) (coloredWoolTypes.length - 1);
 		super.setTextureNum(toSet, updateInstantly);
 	}
 	
@@ -81,7 +82,7 @@ public final class EntityWoolGolem extends GolemMultiTextured {
 		} else return super.getDisplayName();
 	}
 	
-	private String getRainbowString(final String stringIn, final long timeIn) {
+	private static String getRainbowString(final String stringIn, final long timeIn) {
 		String in = TextFormatting.getTextWithoutFormattingCodes(stringIn);
 		String stringOut = "";
 		int time = timeIn > Integer.MAX_VALUE / 2 ? Integer.MAX_VALUE / 2 : (int)timeIn;

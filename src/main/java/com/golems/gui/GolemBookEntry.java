@@ -41,21 +41,23 @@ public class GolemBookEntry {
 		this.SPECIALS = golem.addSpecialDesc(new ArrayList<String>());
 		
 		// initialize the block and search-string
-		this.SEARCHABLE = GOLEM_NAME;
+		final StringBuilder searchable = new StringBuilder();
+		searchable.append(GOLEM_NAME);
 		// set the block and block name if it exists
 		Block b = GolemLookup.getBuildingBlock(golem.getClass());
 		if(b != null) {
 			this.BLOCK = b;
-			this.SEARCHABLE += " - " + b.getLocalizedName();
+			searchable.append(" - " + b.getLocalizedName());
 		} else this.BLOCK = Blocks.AIR;
 		// add golem's special descriptions to the searchable string
 		final List<String> specials = golem.addSpecialDesc(new ArrayList<String>());
+		
 		for(String s : specials) {
-			this.SEARCHABLE += " - " + TextFormatting.getTextWithoutFormattingCodes(s);
+			searchable.append(" - " + TextFormatting.getTextWithoutFormattingCodes(s));
 		}
 		
 		// lowercase string for searching
-		this.SEARCHABLE = this.SEARCHABLE.toLowerCase();
+		this.SEARCHABLE = searchable.toString().toLowerCase();
 		
 		// make the page for this entry
 		this.PAGE = makePage();
@@ -68,33 +70,33 @@ public class GolemBookEntry {
 	
 	/** Temporarily here until we make parts of the page separately **/
 	private String makePage() {
-		String page = "";
+		StringBuilder page = new StringBuilder();
 		// ADD BLOCK TIP
-		page += TextFormatting.GRAY + I18n.format("itemGroup.buildingBlocks") 
-		+ ": " + TextFormatting.BLACK + BLOCK.getLocalizedName() + "\n";
+		page.append(TextFormatting.GRAY + I18n.format("itemGroup.buildingBlocks") 
+		+ ": " + TextFormatting.BLACK + BLOCK.getLocalizedName() + "\n");
 		// ADD NAME TIP
-		page += "\n" + TextFormatting.GRAY + trans("entitytip.name") + ": "
-				+ TextFormatting.BLACK + this.GOLEM_NAME + "\n";
+		page.append("\n" + TextFormatting.GRAY + trans("entitytip.name") + ": "
+				+ TextFormatting.BLACK + this.GOLEM_NAME + "\n");
 		// ADD HEALTH (ROUNDED) TIP
-		page += "\n" + TextFormatting.GRAY + trans("entitytip.health") + ": " + TextFormatting.BLACK
-				+ Math.round(this.HEALTH) + TextFormatting.DARK_RED + " \u2764" + TextFormatting.BLACK;
+		page.append("\n" + TextFormatting.GRAY + trans("entitytip.health") + ": " + TextFormatting.BLACK
+				+ this.HEALTH + TextFormatting.DARK_RED + " \u2764" + TextFormatting.BLACK);
 		// ADD ATTACK POWER TIP
-		page += "\n" + TextFormatting.GRAY + trans("entitytip.attack") + ": "
-				+ TextFormatting.BLACK + this.ATTACK + " \u2694" + "\n";
+		page.append("\n" + TextFormatting.GRAY + trans("entitytip.attack") + ": "
+				+ TextFormatting.BLACK + this.ATTACK + " \u2694" + "\n");
 		// ADD FIREPROOF TIP
 		if (this.FIREPROOF) {
-			page += "\n" + TextFormatting.GOLD + trans("entitytip.is_fireproof");
+			page.append("\n" + TextFormatting.GOLD + trans("entitytip.is_fireproof"));
 		}
 		// ADD INTERACT-TEXTURE TIP
 		if (this.MULTI_TEXTURE) {
-			page += "\n" + TextFormatting.BLUE + trans("entitytip.click_change_texture");
+			page.append("\n" + TextFormatting.BLUE + trans("entitytip.click_change_texture"));
 		}
 		// ADD SPECIALS
 		for(String s : this.SPECIALS) {
-			page += "\n" + s;
+			page.append("\n" + s);
 		}
 		
-		return page;
+		return page.toString();
 	}
 	
 	/** @return the localized version of this golem's name **/
