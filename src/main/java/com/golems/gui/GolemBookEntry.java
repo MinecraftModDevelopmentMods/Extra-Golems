@@ -93,7 +93,7 @@ public class GolemBookEntry {
 		}
 		// ADD SPECIALS
 		for(String s : this.SPECIALS) {
-			page.append("\n" + s.replaceAll(TextFormatting.WHITE.toString(), TextFormatting.BLACK.toString());
+			page.append("\n" + s.replaceAll(TextFormatting.WHITE.toString(), TextFormatting.BLACK.toString()));
 		}
 		
 		return page.toString();
