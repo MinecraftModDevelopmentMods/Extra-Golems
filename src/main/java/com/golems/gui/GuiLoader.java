@@ -23,10 +23,10 @@ public final class GuiLoader {
     	if(ExtraGolems.proxy.DUMMY_GOLEMS.isEmpty()) {
     		ExtraGolems.proxy.DUMMY_GOLEMS.addAll(GolemLookup.getDummyGolemList(playerIn.getEntityWorld()));
     	}
-    	// use DummyGolems list to build pages (need to rebuild in real-time for localization)
-    	GuiGolemBook.initGolemBookEntries(playerIn.getEntityWorld());
-    	final List<String> pages = GuiGolemBook.getPages(GuiGolemBook.GOLEMS);
-    	GuiGolemBook.addNBT(itemstack, pages);
+    	// use DummyGolems list to build pages
+    	//GuiGolemBook.initGolemBookEntries(playerIn.getEntityWorld());
+//    	final List<String> pages = GuiGolemBook.getPages(GuiGolemBook.GOLEMS);
+//    	GuiGolemBook.addNBT(itemstack, pages);
     	// open gui
         //Minecraft.getMinecraft().displayGuiScreen(new GuiScreenBook(playerIn, itemstack, false));
     	Minecraft.getMinecraft().displayGuiScreen(new GuiGolemBook(playerIn, itemstack));

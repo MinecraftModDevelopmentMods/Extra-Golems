@@ -142,14 +142,11 @@ public final class BlockGolemHead extends BlockHorizontal {
 				if(GolemLookup.isBuildingBlock(blockBelow1)) {
 					// get the golem
 					final GolemBase golem = GolemLookup.getGolem(world, blockBelow1);
-					System.out.println("golem = " + (golem != null ? golem.toString() : "null"));
-					System.out.println("block = " + blockBelow1.toString());
 					if(golem == null) return;
 
 					// get the spawn permissions (assume it's allowed if none found)
 					final GolemConfigSet cfg = GolemLookup.getConfig(golem.getClass());
 					boolean allowed = cfg != null ? cfg.canSpawn() : true;
-					System.out.println("CFG = " + (cfg != null ? cfg.toString() : "null"));
 					if(!allowed) return;
 					
 					// clear the area where the golem blocks were

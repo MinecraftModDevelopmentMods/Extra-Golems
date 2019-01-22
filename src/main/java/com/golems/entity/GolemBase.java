@@ -86,13 +86,13 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 
 	/**
 	 * Initializes this golem with the given World and attack damage. 
-	 * Also calls constructor that sets the following:
-	 * <br>{@code setCreativeReturn} with {@code GolemItems.golemHead}
+	 * Also sets the following:
 	 * <br>{@code setBaseAttackDamage} with passed value {@code attack}
 	 * <br>{@code takesFallDamage} to false
 	 * <br>{@code canSwim} to false.
 	 * <br>{@code creativeReturn} to the map result of {@code GolemLookup} with this golem.
-	 * Call {@code setCreativeReturn} if you want to return something different.
+	 * Defaults to the Golem Head if no block is found. Call {@link #setCreativeReturn(ItemStack)} 
+	 * if you want to return something different.
 	 * @param world the entity world
 	 **/
 	public GolemBase(final World world) {
@@ -148,7 +148,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 		GolemConfigSet cfg = getConfig(this);
 		this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE)
 				.setBaseValue(cfg.getBaseAttack());
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(cfg != null ? cfg.getMaxHealth() : 20);
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(cfg.getMaxHealth());
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.22D);
 	}
 
@@ -355,8 +355,12 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 		this.lootTableLoc = lootTable;
 	}
 	
+	public void setLootTableLoc(String modid, final String name) {
+		this.lootTableLoc = new ResourceLocation(modid, "entities/" + name);
+	}
+	
 	public void setLootTableLoc(final String name) {
-		this.lootTableLoc = new ResourceLocation(ExtraGolems.MODID, "entities/" + name);
+		this.setLootTableLoc(ExtraGolems.MODID, name);
 	}
 	
 	public void setTextureType(final ResourceLocation texturelocation) {
@@ -436,17 +440,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	public static GolemConfigSet getConfig(GolemBase golem) {
 		return GolemLookup.hasConfig(golem.getClass()) ? GolemLookup.getConfig(golem.getClass()) : GolemConfigSet.EMPTY;
 	}
-	
-	/**
-	 * Allows each golem to add special information to in-game info (eg, Waila, Hwyla, TOP, etc.).
-	 * Typically checks if the Config allows this golem's special ability (if it has one) and adds a
-	 * formatted String to the passed list.
-	 * @param list The list to which the golem adds description strings (separate entries are separate lines)
-	 * @param isClient true if the String should be translated and formatted. Always check this!
-	 * @return the passed list with or without this golem's added description
-	 **/
-	public List<String> addSpecialDesc(final List<String> list) { return list; }
-	
+
 	/** 
 	 * Helper method for translating text into local language using {@code I18n}
 	 * @see addSpecialDesc 
@@ -501,7 +495,16 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	////////////////////////////////////////////////////////////
 	// Override ALL OF THE FOLLOWING FUNCTIONS FOR EACH GOLEM //
 	////////////////////////////////////////////////////////////
-
+	
+	/**
+	 * Allows each golem to add special information to in-game info (eg, Waila, Hwyla, TOP, etc.).
+	 * Typically checks if the Config allows this golem's special ability (if it has one) and adds a
+	 * formatted String to the passed list.
+	 * @param list The list to which the golem adds description strings (separate entries are separate lines)
+	 * @return the passed list with or without this golem's added description
+	 **/
+	public List<String> addSpecialDesc(final List<String> list) { return list; }
+	
 	/**
 	 * Called from {@link #entityInit()} and used to set the texture type <b>before</b> the entity is
 	 * fully constructed or rendered. Example implementation: texture is at
