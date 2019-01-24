@@ -2,19 +2,25 @@ package com.golems.gui;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.golems.entity.GolemBase;
 import com.golems.main.ExtraGolems;
+import com.golems.main.GolemItems;
 import com.golems.util.GolemLookup;
+import com.google.common.base.Strings;
 
+import akka.japi.Pair;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -22,6 +28,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -56,56 +63,53 @@ public class GuiGolemBook extends GuiScreen {
 	////// attached at the upper-right corner of the book.
 	////// [ ] Typing into this bar shows a drop-down of possible matches.
 	////// [ ] Clicking on a match will take you directly to that page.
-	//[ ] PAGE 1 (Left): WELCOME
-	////// [ ] Small blurb about golems
+	//[X] PAGE 1 (Left): WELCOME
+	////// [X] Small blurb about golems
 	//[ ] PAGE 2 (Right): TABLE OF CONTENTS
 	////// [ ] Lists the title of pages 3, 4, and 5.
-	////// [ ] Lists the name of each Golem in the book.
+	////// [X] Lists the name of each Golem in the book.
 	////// [ ] Click-able (linked) list of all Golem names, maybe
 	////// with an icon of their building block.
 	////// [ ] Clicking that name will jump you to the correct page.
-	//[ ] PAGE 3 (Left): GOLEM SPELL RECIPE
-	////// [ ] Name of item + Picture of crafting grid.
-	////// [ ] Extra Fancy option:  hover-over text tells
-	////// you name of each ingredient.
-	//[ ] PAGE 4 (Right): GOLEM HEAD RECIPE
-	////// [ ] Name of block + Picture of crafting grid.
-	////// [ ] Maybe include hover-over text here too.
-	//[ ] PAGE 5 (Left): HOW TO BUILD A GOLEM
+	//[X] PAGE 3 (Left): GOLEM SPELL RECIPE
+	////// [X] Name of item + Picture of crafting grid.
+	//[X] PAGE 4 (Right): GOLEM HEAD RECIPE
+	////// [X] Name of block + Picture of crafting grid.
+	//[X] PAGE 5 (Left): HOW TO BUILD A GOLEM
 	////// Verbal instructions on where to place blocks, etc.
-	//[ ] PAGE 6 (Right): IMAGE OF HOW TO BUILD A GOLEM
-	////// [ ] Diagram of 4 blocks in golem-shape and a Golem Head
+	//[X] PAGE 6 (Right): IMAGE OF HOW TO BUILD A GOLEM
+	////// [X] Diagram of 4 blocks in golem-shape and a Golem Head
 	////// above them, indicating where to place the head.
-	////// [ ] Extra Fancy option:  blocks are 3d
-	//[X] PAGES 7 (Left) TO END: GOLEM ENTRIES
+	////// [X] Extra Fancy option:  blocks are 3d
+	//[X] PAGES 7+ (Left and Right): GOLEM ENTRIES
 	////// Defined in the GolemBookEntry object:
 	////// [X] Large picture of Building Block on upper-left of page.
 	////// [X] Hover-over text tells you the name of the Block.
 	////// [X] Page number in upper-right: "Page x of xx"
 	////// [X] Golem Name below page number, right-aligned
 	////// [X] Attributes listed:  
-	////// Health and Attack
-	////// "Multi-Textured" prompt if Golem has multiple textures
-	////// "Fireproof" if the Golem is fireproof
-	////// All Golem Specials as defined in GolemBase#addSpecialDesc(List<String>)
-	////// (each entry as a separate line)
+	//////     Health and Attack
+	//////     "Multi-Textured" prompt if Golem has multiple textures
+	//////     "Fireproof" if the Golem is fireproof
+	//////     All Golem Specials as defined in GolemBase#addSpecialDesc(List<String>)
+	//////     (each entry as a separate line)
 	
 	///////////////////////////////////////////////
 	
+	/** The texture used by the majority of this gui **/
 	protected static final ResourceLocation TEXTURE = new ResourceLocation(ExtraGolems.MODID, "textures/gui/info_book.png");
-	/** book texture goes this far down **/
-	protected static final int BOOK_HEIGHT = 164;
-	/** book texture is this wide **/
-	protected static final int BOOK_WIDTH = 256;
+	/** book texture has these dimensions **/
+	protected static final int BOOK_HEIGHT = 164, BOOK_WIDTH = 256;
 	/** icons are this many pixels apart **/
 	protected static final int DEF_SEP = 5;
 	
 	/** how far down the Minecraft screen the book starts **/
 	protected static final int SCR_OFFSET_Y = 16;
 	/** width of the arrow button and its texture **/
-	protected static final int ARROW_WIDTH = 13 + DEF_SEP;
-	/** height of the arrow button and its texture **/
-	protected static final int ARROW_HEIGHT = 10 + DEF_SEP;
+	protected static final int ARROW_WIDTH = 13 + DEF_SEP, ARROW_HEIGHT = 10 + DEF_SEP;
+	/** texture location and size of 2x2 crafting **/
+	protected static final int GRID2_X = 95, GRID2_Y = 15, GRID2_W = 78, GRID2_H = 40;
+	protected static final int FRAME2_W = 84, FRAME2_H = 46;
 
 	/** Button to exit GUI **/
 	private GuiButton buttonDone;
@@ -115,7 +119,7 @@ public class GuiGolemBook extends GuiScreen {
 	private GuiGolemBook.BlockButton buttonBlockRight;
 	/** Increments the page number by 2 **/
 	private GuiGolemBook.NextPageButton buttonNextPage;
-	/** De-increments the page number by 2 **/
+	/** Decrements the page number by 2 **/
     private GuiGolemBook.NextPageButton buttonPreviousPage;
     /** TODO shortcut tab to jump to page 0 **/
     private GuiButton tabIntro;
@@ -142,6 +146,17 @@ public class GuiGolemBook extends GuiScreen {
     
     private final float BLOCK_SCALE = 1.60F;
     private final int MARGIN = 12;
+    private static final int NUM_PAGES_INTRO = 6;
+    
+    // for use in drawing golem spell recipe
+    private static final ItemStack[] ingredientsSpell = new ItemStack[] 
+			{ new ItemStack(Items.PAPER), new ItemStack(Items.FEATHER), 
+			  new ItemStack(Items.REDSTONE), new ItemStack(Items.DYE, 1, EnumDyeColor.BLACK.getDyeDamage()) };
+	private static final ItemStack outputSpell = new ItemStack(GolemItems.golemPaper);
+	// for use in drawing golem head recipe
+	private static final ItemStack[] ingredientsHead = new ItemStack[] 
+				{ new ItemStack(Blocks.PUMPKIN), new ItemStack(GolemItems.golemPaper) };
+	private static final ItemStack outputHead = new ItemStack(GolemItems.golemHead);
 	
 //	private static final String KEY_PAGES = "pages";
 //	private static final String KEY_TITLE = "title";
@@ -155,7 +170,7 @@ public class GuiGolemBook extends GuiScreen {
 		this.player = playerIn;
 		this.book = itemIn;
 		this.curPage = 0;
-		this.totalPages = GOLEMS.size();
+		this.totalPages = NUM_PAGES_INTRO + GOLEMS.size();
 	}
 	
 	/** Populates the GolemEntry list to use in book gui **/
@@ -207,68 +222,168 @@ public class GuiGolemBook extends GuiScreen {
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        
+        // draw background (book)
         this.mc.getTextureManager().bindTexture(TEXTURE);
-        // DRAW BOOK
         int bookX = (this.width - BOOK_WIDTH) / 2;
         int bookY = SCR_OFFSET_Y;
         this.drawTexturedModalRect(bookX, bookY, 0, 0, BOOK_WIDTH, BOOK_HEIGHT);
 
-        // LEFT SIDE OF BOOK
-        int pageL = this.curPage;
-        int pageR = this.curPage + 1;
-        boolean pageLeftGolemEntry = isPageGolemEntry(pageL);
-        boolean pageRight = isPageGolemEntry(pageR);
-        Block blockL = null;
-        Block blockR = null;
-        
-        this.drawPageNum(pageL + 1, true);
-        this.drawPageNum(pageR + 1, false);
-        
-        if(pageLeftGolemEntry) {
-        	GolemBookEntry entryL = this.getEntryForPage(pageL);
-        	blockL = entryL.getBlock();
-        	this.drawBlock(blockL, BLOCK_SCALE, true);
-        	this.drawEntry(entryL, true);
-        }
-        // RIGHT SIDE OF BOOK
-        if(pageRight) {
-        	GolemBookEntry entryR = this.getEntryForPage(pageR);
-        	blockR = entryR.getBlock();
-        	this.drawBlock(blockR, BLOCK_SCALE, false);
-        	this.drawEntry(entryR, false);
-        }
+        // draw pages: left and right
+        this.drawPageAt(bookX + 1, bookY, this.curPage);
+        this.drawPageAt(bookX + (BOOK_WIDTH / 2) - 2, bookY, this.curPage + 1);
         
         // draw buttons, etc.
         super.drawScreen(mouseX, mouseY, partialTicks);
         
         // hovering text has to be the last thing you do
-        if(pageLeftGolemEntry && buttonList.get(idBlockLeft).isMouseOver()) {
+        if(this.isPageGolemEntry(this.curPage) && this.buttonBlockLeft.isMouseOver()) {
         	// check for hover-over on left side
-        	this.drawHoveringText(blockL.getLocalizedName(), mouseX, mouseY);
+        	GolemBookEntry entry = this.getGolemEntryForPage(this.curPage);
+        	if(entry.getBlock() != Blocks.AIR) {
+        		this.drawHoveringText(entry.getBlock().getLocalizedName(), mouseX, mouseY);
+        	}
         }
-        if(pageRight && buttonList.get(idBlockRight).isMouseOver()) {
+        if(this.isPageGolemEntry(this.curPage + 1) && this.buttonBlockRight.isMouseOver()) {
         	// check for hover-over on right side
-        	this.drawHoveringText(blockR.getLocalizedName(), mouseX, mouseY);
+        	GolemBookEntry entry = this.getGolemEntryForPage(this.curPage + 1);
+        	if(entry.getBlock() != Blocks.AIR) {
+        		this.drawHoveringText(entry.getBlock().getLocalizedName(), mouseX, mouseY);
+        	}        
         }
     }
-    
-    private void drawPageNum(final int pageNum, final boolean isLeft) {
+	
+	/**
+	 * Uses the given page number to calculate which page to draw
+	 * and calls the appropriate methods to do so.
+	 * @param cornerX the left corner of the page
+	 * @param cornerY the upper corner of the page
+	 * @param pageNum the page to draw
+	 **/
+	private void drawPageAt(final int cornerX, final int cornerY, final int pageNum) {
+		// draw the page number
+        this.drawPageNum(cornerX, cornerY, pageNum + 1);
+        // declare these for the following switch
+        String title, body;
+        float scale, unScale;
+        int startX, startY;
+        // using the page number, decides which page to draw and how to draw it
+        switch(pageNum) {
+        case 0:
+        	// draw introduction
+        	title = trans("item.info_book.name");
+        	body = trans("golembook.intro1") + "\n" + trans("golembook.intro2");
+        	drawBasicPage(cornerX, cornerY, title, body);
+        	return;
+        case 1:
+        	// draw Table of Contents
+        	scale = 0.50F;
+        	unScale = (float)Math.pow(scale,-1);
+        	title = trans("golembook.contents.title");
+        	body = getTableOfContents(GOLEMS);
+        	// split string in half (2 columns)
+        	int splitAt = body.length() / 2;
+        	while(body.charAt(splitAt) != '\n') {
+        		++splitAt;
+        	}
+        	// first column
+        	String body1 = body.substring(0, splitAt);
+        	// second column (omit the '\n')
+        	String body2 = body.substring(splitAt + 1, body.length());
+        	startX = (int)(cornerX / scale) + (MARGIN / 2);
+        	startY = (int)(cornerY / scale) + MARGIN;
+        	// draw title
+        	drawBasicPage(cornerX, cornerY, title, "");
+        	GlStateManager.scale(scale, scale, scale);
+        	// draw left column
+        	drawBasicPage(startX, startY, "", body1);
+        	// draw right column
+        	drawBasicPage((int)((cornerX + (BOOK_WIDTH / 4) - (MARGIN / 2)) / scale), startY, "", body2);
+        	GlStateManager.scale(unScale, unScale, unScale);
+        	return;
+        case 2:
+        	// draw Golem Spell instructions
+        	title = TextFormatting.getTextWithoutFormattingCodes(trans("item.golem_paper.name"));
+        	body = "\n\n\n\n" + I18n.format("golembook.recipe_spell.recipe", title, 
+        			trans("item.paper.name"), trans("item.feather.name"),
+    				trans("item.dyePowder.black.name"), trans("item.redstone.name"));
+        	drawBasicPage(cornerX, cornerY, title, body);
+        	draw2x2GridAt(cornerX + MARGIN * 2, cornerY + MARGIN * 2, ingredientsSpell, outputSpell);
+        	return;
+        case 3:
+        	// draw Golem Head instructions
+        	title = trans("tile.golem_head.name");
+        	body = "\n\n\n\n" + TextFormatting.getTextWithoutFormattingCodes(trans("golembook.recipe_head.recipe", title, 
+        			trans("item.golem_paper.name"), trans("tile.pumpkin.name")));
+        	drawBasicPage(cornerX, cornerY, title, body);
+        	draw2x2GridAt(cornerX + MARGIN * 2, cornerY + MARGIN * 2, ingredientsHead, outputHead);
+        	return;
+        case 4:
+        	// draw Make Golem instructions
+        	title = trans("golembook.build_golem.title");
+        	body = trans("golembook.build_golem.howto1") + " "
+    				+ trans("golembook.build_golem.howto2") + "\n\n" 
+    				+ I18n.format("golembook.build_golem.howto3", trans("tile.golem_head.name"));
+        	drawBasicPage(cornerX, cornerY, title, body);
+        	return;
+        case 5:
+        	// draw Golem diagram
+        	Block golemBody = Blocks.IRON_BLOCK;
+        	Block golemHead = GolemItems.golemHead;
+        	scale = 2.0F;
+        	final int blockW = (int)(8.0F * scale);
+        	startX = cornerX + (BOOK_WIDTH / 8);
+        	startY = cornerY + blockW;
+        	// head
+        	this.drawBlock(golemHead, startX, startY, scale);
+        	// middle-bottom
+        	startY += blockW * 4;
+        	this.drawBlock(golemBody, startX, startY, scale);
+        	// arm-right
+        	startX += blockW * 2;
+        	startY -= (blockW * 5) / 2;
+        	this.drawBlock(golemBody, startX, startY, scale);
+        	// middle-top
+        	startX -= blockW * 2;
+        	startY += (blockW / 2);
+        	this.drawBlock(golemBody, startX, startY, scale);
+        	// arm-left
+        	startX -= blockW * 2;
+        	startY += (blockW / 2);
+        	this.drawBlock(golemBody, startX, startY, scale);
+        	return;
+        case 6: default:
+        	// draw golem entry
+        	if(this.isPageGolemEntry(pageNum)) {
+        		GolemBookEntry entry = GOLEMS.get(pageNum - NUM_PAGES_INTRO);
+        		this.drawGolemEntry(cornerX, cornerY, entry);  
+        	}
+        	return;   	
+        }
+	}
+	
+	
+
+	private void drawPageNum(final int cornerX, final int cornerY, final int pageNum) {
+    	boolean isLeft = pageNum % 2 == 1;
     	// 'page x of xx'
  		//int numX = isLeft ? ((this.width / 2) - MARGIN) : ((this.width + BOOK_WIDTH) / 2 - MARGIN); // right-aligned
  		int numX = isLeft ? ((this.width / 2) - MARGIN) : ((this.width / 2) + MARGIN);
  		//int numY = SCR_OFFSET_Y + MARGIN;
- 		int numY = SCR_OFFSET_Y + BOOK_HEIGHT - (ARROW_HEIGHT * 3 / 2);
- 		String pageNumLeft = String.valueOf(pageNum);//trans("book.pageIndicator", pageNum, this.totalPages);
+ 		int numY = cornerY + BOOK_HEIGHT - (ARROW_HEIGHT * 3 / 2);
+ 		String pageNumLeft = String.valueOf(pageNum);
+ 		//trans("book.pageIndicator", pageNum, this.totalPages);
  		int sWidth = isLeft ? this.fontRenderer.getStringWidth(pageNumLeft) : 0;
         this.fontRenderer.drawString(pageNumLeft, numX - sWidth, numY , 0);
     }
     
-    private void drawBlock(final Block block, final float scale, final boolean isLeft) {
+    /** Draws the given Block in the upper-left corner of the passed page coordinates **/
+    private void drawBlock(final Block block, final int cornerX, final int cornerY, final float scale) {
     	// 'Blocks.AIR' is the flag for 'no block'
     	if(block != Blocks.AIR) {
         	// draw 'golem block'
-    		float blockX = isLeft ? (float)((this.width - BOOK_WIDTH) / 2 + MARGIN + 4) : (float)((this.width / 2) + MARGIN);
-        	float blockY = (float)(SCR_OFFSET_Y + MARGIN);
+    		float blockX = (float)(cornerX + MARGIN + 4);
+        	float blockY = (float)(cornerY + MARGIN);
         	float unScale = (float)Math.pow(scale,-1);
         	// Render the Block with given scale
         	GlStateManager.enableRescaleNormal();
@@ -281,23 +396,106 @@ public class GuiGolemBook extends GuiScreen {
         }
     }
     
-    private void drawEntry(final GolemBookEntry entry, final boolean isLeft) {
-    	final int cornerX = (this.width - BOOK_WIDTH) / 2;
-    	final int cornerY = SCR_OFFSET_Y;
+    /** Draws the GolemEntry name and description at the given location **/
+    private void drawGolemEntry(int cornerX, int cornerY, final GolemBookEntry entry) {
     	// DRAW TEXT FIELDS 
  		// 'golem name' text box
- 		//int nameX = isLeft ? (cornerX + (BOOK_WIDTH / 2) - MARGIN) : (cornerX + BOOK_WIDTH - MARGIN); // right-aligned
-    	int nameX = isLeft ? (cornerX + MARGIN * 4) : (cornerX + (BOOK_WIDTH / 2) + MARGIN * 4);
- 		int nameY = cornerY + MARGIN * 2;
+    	int nameX = cornerX + MARGIN * 4;
+ 		int nameY = cornerY + MARGIN;
  		String golemName = entry.getGolemName();
  		//int sWidth = this.fontRenderer.getStringWidth(golemName);
  		this.fontRenderer.drawSplitString(golemName, nameX, nameY, (BOOK_WIDTH / 2) - MARGIN * 5, 0);
 
  		// 'golem stats' text box
- 		int statsX = isLeft ? (cornerX + MARGIN + 4) : ((this.width / 2) + MARGIN); // left-aligned
- 		int statsY = nameY + MARGIN;
+ 		int statsX = cornerX + MARGIN;
+ 		int statsY = nameY + MARGIN * 2;
  		String stats = entry.getDescriptionPage();
- 		this.fontRenderer.drawSplitString(stats, statsX, statsY, (BOOK_WIDTH / 2) - (MARGIN * 2), 0);        
+ 		this.fontRenderer.drawSplitString(stats, statsX, statsY, (BOOK_WIDTH / 2) - (MARGIN * 2), 0);  
+ 		
+ 		// 'golem block'
+ 		this.drawBlock(entry.getBlock(), cornerX, cornerY, BLOCK_SCALE);
+    }
+    
+    private void drawBasicPage(int cornerX, int cornerY, String title, String body) {
+    	final int maxWidth = (BOOK_WIDTH / 2) - (MARGIN * 2);
+    	
+    	int titleX = cornerX + MARGIN + 4;
+    	int titleY = cornerY + MARGIN;
+    	int sWidth = this.fontRenderer.getStringWidth(title);
+    	if(sWidth > maxWidth) {
+    		// draw title wrapped
+    		this.fontRenderer.drawSplitString(title, titleX, titleY, maxWidth, 0);
+    	} 
+    	else {
+    		// draw title centered
+    		this.fontRenderer.drawString(title, titleX + ((maxWidth - sWidth) / 2), titleY, 0);
+    	}
+    	
+    	int bodyX = titleX;
+    	int bodyY = titleY + MARGIN * 2;
+    	this.fontRenderer.drawSplitString(body, bodyX, bodyY, maxWidth, 0);    	
+    }
+  
+    /** @return a new List of GolemBookEntry objects, sorted alphabetically **/
+    private String getTableOfContents(final List<GolemBookEntry> golemList) {
+		// sort alphabetically
+    	final List<GolemBookEntry> sorted = new LinkedList();
+    	sorted.addAll(golemList);
+    	Collections.sort(sorted, (GolemBookEntry g1, GolemBookEntry g2) -> g1.getGolemName().compareTo(g2.getGolemName()));
+    	// add all golems to the page
+    	StringBuilder page = new StringBuilder();
+    	for(GolemBookEntry entry : sorted) {
+    		page.append(entry.getGolemName());
+    		page.append("\n");
+    	}
+    	return page.toString();
+	}
+    
+    private void draw2x2GridAt(final int startX, final int startY, final ItemStack[] ingredients, final ItemStack result) {
+    	final int frameWidth = 3;
+    	final float scale = 1.0F;
+    	final float unScale = (float)Math.pow(scale,-1);
+    	GlStateManager.scale(scale, scale, scale);
+    	GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+    	// draw 2x2 grid background
+    	this.mc.getTextureManager().bindTexture(TEXTURE);
+    	this.drawTexturedModalRect(startX, startY, BOOK_WIDTH - FRAME2_W, BOOK_HEIGHT + DEF_SEP, FRAME2_W, FRAME2_H);
+    	
+    	// draw itemstacks
+    	GlStateManager.enableRescaleNormal();
+    	RenderHelper.enableGUIStandardItemLighting();
+    	float posX, posY;
+    	int iconW = 15;
+    	switch(ingredients.length) {
+    	// intentional omission of break statements
+    	case 4:
+    		posX = startX + iconW + frameWidth * 3;
+    		posY = startY + iconW + frameWidth * 3;
+    		this.itemRender.renderItemIntoGUI(ingredients[3], (int)(posX / scale), (int)(posY / scale));
+    	case 3:
+    		posX = startX + frameWidth * 2.0F;
+    		posY = startY + iconW + frameWidth * 3.0F;
+    		this.itemRender.renderItemIntoGUI(ingredients[2], (int)(posX / scale), (int)(posY / scale));
+    	case 2:
+    		posX = startX + iconW + frameWidth * 3.0F;
+    		posY = startY + frameWidth * 2.0F;
+    		this.itemRender.renderItemIntoGUI(ingredients[1], (int)(posX / scale), (int)(posY / scale));
+    	case 1:
+    		posX = startX + frameWidth * 2.0F;
+    		posY = startY + frameWidth * 2.0F;
+    		this.itemRender.renderItemIntoGUI(ingredients[0], (int)(posX / scale), (int)(posY / scale));
+    	default: break;
+    	}
+    	
+    	// draw result itemstack
+    	posX = startX + FRAME2_W - 16.0F - frameWidth * 2.0F;
+    	posY = startY + 16.0F;
+    	this.itemRender.renderItemIntoGUI(result, (int)(posX / scale), (int)(posY / scale));
+    	
+    	RenderHelper.disableStandardItemLighting();
+    	GlStateManager.disableRescaleNormal();
+    	// reset scale
+    	GlStateManager.scale(unScale, unScale, unScale);
     }
     
     @Override
@@ -326,84 +524,28 @@ public class GuiGolemBook extends GuiScreen {
 		 this.buttonNextPage.visible = this.curPage + 2 < this.totalPages;
 	}
 	
-	private boolean isPageGolemEntry(int page) {
-		return page > -1 && page < this.totalPages; // TODO
+	private boolean isPageGolemEntry(final int page) {
+		return page >= NUM_PAGES_INTRO && page < this.totalPages;
 	}
 	
-	private GolemBookEntry getEntryForPage(int page) {
-		return GOLEMS.get(page);
+	private GolemBookEntry getGolemEntryForPage(final int page) {
+		return GOLEMS.get(page - NUM_PAGES_INTRO);
 	}
-	/*
-	public void drawString(FontRenderer fontRendererIn, String text, int x, int y, float size, int color) {
-        GlStateManager.scale(size,size,size);
-        float mSize = (float)Math.pow(size,-1);
-        this.drawString(fontRendererIn,text,x,y,color);
-        GlStateManager.scale(mSize,mSize,mSize);
-    }
-
-	public void drawSplitString(FontRenderer fontRenderer, String str, int x, int y, int wrapWidth, float size, float padding, int textColor)
-    {
-        GlStateManager.scale(size,size,size);
-        float mSize = (float)Math.pow(size,-1);
-
-        int i = 0;
-        for (String string:fontRenderer.listFormattedStringToWidth(str,wrapWidth)) {
-            drawString(fontRenderer,string,x,y + Math.round(i * size * fontRenderer.FONT_HEIGHT * padding),size,textColor);
-            i++;
-        }
-
-        GlStateManager.scale(mSize,mSize,mSize);
-    }
-*/
-//	 /**
-//     * Uses the passed list of GolemEntry objects to make a list of
-//     * each page entry for the Golem Book. 
-//     * @param golemEntries
-//     * @return a List where each entry represents one page
-//     */
-//    public static final List<String> getPages(final List<GolemBookEntry> golemEntries) {
-//    	
-//    	final List<String> pages = new LinkedList();
-//		// first add the introduction to the book
-//		pages.addAll(getBookIntroduction());
-//		// make a page for each golem and add it to the list
-//		for(GolemBookEntry entry : golemEntries) {
-//			pages.add(entry.getPageString());
-//		}
-//		
-//		return pages;
-//	}
 	
-    /** Adds Book NBT data to the itemstack using the passed pages. Temporary until we stop using NBT for this **/
-//	public static void addNBT(ItemStack itemstack, List<String> pages) {
-//		if(itemstack != null) {
-//			NBTTagCompound nbt = itemstack.hasTagCompound() ? itemstack.getTagCompound() : new NBTTagCompound();
-//			// skip this bit if the NBT has already been set
-//			//if(nbt.hasKey(KEY_PAGES))
-//			//	return;
-//			// for each page in the list, add it to the NBT
-//			NBTTagList pagesTag = new NBTTagList();
-//			for (String pageText : pages) {
-//				pagesTag.appendTag(new NBTTagString(pageText));
-//			}
-//			
-//			nbt.setTag(KEY_PAGES, pagesTag);
-//			nbt.setString(KEY_AUTHOR, "");
-//		 	nbt.setString(KEY_TITLE, "");
-//			itemstack.setTagCompound(nbt);
-//		}
-//	}
-	 
-    /** @return a COPY of the introduction pages, each page as a separate String element **/
-	private static final List<String> getBookIntroduction() {
-		List<String> INTRO = new LinkedList();
-		// page 1: "Welcome"
-		INTRO.add(trans("golembook.intro1") + "\n" + trans("golembook.intro2"));
-		// page 2: "Part 1"
-		String partIntro = TextFormatting.GOLD + trans("golembook.part_intro") + TextFormatting.BLACK;
-		String golemPaper = trans("item.golem_paper.name");
-		String golemHead = trans("tile.golem_head.name");
-		INTRO.add("\n\n" + partIntro + "\n\n" + trans("golembook.part1") + "\n\n" + partIntro);
+	
+	/** A Pair of Strings (first=Title, second=Body) to draw on the given page **
+	private static final Pair<String, String> getBasicPage(final int page) {
+		final String partIntro = TextFormatting.GOLD + trans("golembook.part_intro") + TextFormatting.BLACK;
+		final String golemPaper = trans("item.golem_paper.name");
+		final String golemHead = trans("tile.golem_head.name");
+		
+		switch(page) {
+		case 0:		// page 1: "Welcome"
+			return new Pair(trans("item.info_book.name"), trans("golembook.intro1") + "\n" + trans("golembook.intro2"));
+		case 1:		// page 2: "Table of Contents"
+			// TODO
+			return new Pair("", "");//"\n\n" + partIntro + "\n\n" + trans("golembook.part1") + "\n\n" + partIntro;
+		case 2:		// page 3: "
 		// page 3: "Make Golem Spell"
 		INTRO.add(TextFormatting.getTextWithoutFormattingCodes(I18n.format("golembook.recipe_spell.intro", golemPaper) 
 				+ "\n\n" + I18n.format("golembook.recipe_spell.recipe", golemPaper, trans("item.paper.name"), trans("item.feather.name"),
@@ -416,10 +558,10 @@ public class GuiGolemBook extends GuiScreen {
 				+ trans("golembook.build_golem.howto2") + "\n\n" + I18n.format("golembook.build_golem.howto3", golemHead));
 		// page 6: "Part 2"
 		INTRO.add("\n\n" + partIntro + "\n\n" + trans("golembook.part2") + "\n\n" + partIntro);
-		
-		return INTRO;
+		}
+		return "";
 	}
-	
+	 */
 	/** Helper method for translating text into local language using {@code I18n} **/
 	protected static String trans(final String s, final Object... strings) {
 		return I18n.format(s, strings);

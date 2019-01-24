@@ -258,7 +258,10 @@ public final class GolemLookup {
 		return GOLEM_TO_BLOCK.keySet();
 	}
 	
-	/** @return a List containing default instances of each Golem. They do not exist in the world. **/
+	/** 
+	 * @return a List containing default instances of each Golem, sorted by attack power. 
+	 * They do not exist in the world. 
+	 **/
 	public static List<GolemBase> getDummyGolemList(final World world) {
 		final List<GolemBase> list = new LinkedList();
 		// for each entity, find out if it's a golem and add it to the list

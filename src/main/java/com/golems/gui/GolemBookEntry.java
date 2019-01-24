@@ -41,6 +41,7 @@ public class GolemBookEntry {
 		
 		// set the block and block name if it exists
 		Block b = GolemLookup.getBuildingBlock(golem.getClass());
+		// Blocks.AIR means there is no building block
 		this.BLOCK = b != null ? b : Blocks.AIR;
 		// add golem's special descriptions to the searchable string
 		// initialize the block and search-string
@@ -107,7 +108,7 @@ public class GolemBookEntry {
 	 * @return an all-lowercase String to search for input
 	 **/
 	public String getSearchableString() {
-		return SEARCHABLE + "-" + getGolemName() + "-" + getBlock().getLocalizedName();
+		return SEARCHABLE + "-" + getGolemName().toLowerCase() + "-" + getBlock().getLocalizedName().toLowerCase();
 	}
 	
 	/** Helper method for translating text into local language using {@code I18n} **/
