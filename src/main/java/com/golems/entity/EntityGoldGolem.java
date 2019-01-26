@@ -8,19 +8,19 @@ import net.minecraft.world.World;
 
 public final class EntityGoldGolem extends GolemBase {
 
-    public EntityGoldGolem(final World world) {
-        super(world);
-        this.setLootTableLoc("golem_gold");
-        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.19D);
-        this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.9D);
-    }
+	public EntityGoldGolem(final World world) {
+		super(world);
+		this.setLootTableLoc("golem_gold");
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.19D);
+		this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.9D);
+	}
 
-    protected ResourceLocation applyTexture() {
-        return makeGolemTexture("gold");
-    }
+	protected ResourceLocation applyTexture() {
+		return makeGolemTexture("gold");
+	}
 
-    @Override
-    public SoundEvent getGolemSound() {
-        return SoundEvents.BLOCK_STONE_STEP;
-    }
+	@Override
+	public SoundEvent getGolemSound() {
+		return SoundEvents.BLOCK_STONE_STEP;
+	}
 }

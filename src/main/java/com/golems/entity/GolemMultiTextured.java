@@ -1,6 +1,5 @@
 package com.golems.entity;
 
-import com.golems.main.ExtraGolems;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -10,15 +9,12 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import org.apache.logging.log4j.Level;
 
 public abstract class GolemMultiTextured extends GolemBase {
 
-	/**
-	 * The DataParameter that stores which texture this golem is using. Max value is 128
-	 **/
+	/** The DataParameter that stores which texture this golem is using. Max value is 128 **/
 	protected static final DataParameter<Byte> DATA_TEXTURE = EntityDataManager
-		.createKey(GolemMultiTextured.class, DataSerializers.BYTE);
+			.<Byte>createKey(GolemMultiTextured.class, DataSerializers.BYTE);
 	protected static final String NBT_TEXTURE = "GolemTextureData";
 
 	/**
@@ -26,10 +22,8 @@ public abstract class GolemMultiTextured extends GolemBase {
 	 * Max size is 128
 	 **/
 	public final ResourceLocation[] textures;
-
-	/**
-	 * Loot Table array to match texture array. If you don't want this, override {@link getLootTable}
-	 **/
+	
+	/** Loot Table array to match texture array. If you don't want this, override {@link getLootTable} **/
 	public final ResourceLocation[] lootTables;
 
 	/**
@@ -39,14 +33,14 @@ public abstract class GolemMultiTextured extends GolemBase {
 	 * <br/>
 	 * <code>
 	 * public EntityExampleGolem(World world) {<br/>
-	 * super(world, 1.0F, Blocks.AIR, "example", new String[] {"one","two","three"});<br/>
+	 *	super(world, 1.0F, Blocks.AIR, "example", new String[] {"one","two","three"});<br/>
 	 * }</code><br/>
 	 * This will initialize textures for <code>golem_example_one.png</code>,
 	 * <code>golem_example_two.png</code> and <code>golem_example_three.png</code>,
 	 * as well as loot tables for the same names with the JSON suffix
 	 **/
 	public GolemMultiTextured(final World world, final String prefix,
-				  final String[] textureNames) {
+			final String[] textureNames) {
 		super(world);
 		this.textures = new ResourceLocation[textureNames.length];
 		this.lootTables = new ResourceLocation[textureNames.length];
@@ -68,7 +62,7 @@ public abstract class GolemMultiTextured extends GolemBase {
 	@Override
 	protected void entityInit() {
 		super.entityInit();
-		this.getDataManager().register(DATA_TEXTURE, (byte) 0);
+		this.getDataManager().register(DATA_TEXTURE, Byte.valueOf((byte) 0));
 	}
 
 	@Override
@@ -125,18 +119,17 @@ public abstract class GolemMultiTextured extends GolemBase {
 	 * {@link #getTextureNum()}
 	 **/
 	public void setTextureNum(final byte toSet, final boolean updateInstantly) {
-		this.getDataManager().set(DATA_TEXTURE, toSet);
+		this.getDataManager().set(DATA_TEXTURE, Byte.valueOf(toSet));
 		if (updateInstantly) {
 			this.setTextureType(this.getTextureFromArray(this.getTextureNum()));
 		}
 	}
 
 	public int getTextureNum() {
-		return this.getDataManager().get(DATA_TEXTURE);
+		return this.getDataManager().get(DATA_TEXTURE).byteValue();
 	}
 
 	public int getNumTextures() {
-		//TODO: Inspect possible NPE
 		return this.textures != null ? this.textures.length : null;
 	}
 
@@ -148,23 +141,15 @@ public abstract class GolemMultiTextured extends GolemBase {
 		return this.textures;
 	}
 
-	/**
-	 * @deprecated automatically handled in {@link #setTextureNum(byte, boolean)}
-	 **/
-	@Deprecated
-	public void updateTexture() {
-		this.setTextureType(this.getTextureFromArray(this.getTextureNum()));
-	}
-
 	public ResourceLocation getTextureFromArray(final int index) {
 		return this.textures[index % this.textures.length];
 	}
-
+	
 	@Override
-	protected ResourceLocation getLootTable() {
-		ExtraGolems.LOGGER.log(Level.DEBUG, "[GMT] getting loot table: " + this.lootTables[this.getTextureNum() % this.lootTables.length]);
-		return this.lootTables[this.getTextureNum() % this.lootTables.length];
-	}
+    protected ResourceLocation getLootTable()
+    {
+        return this.lootTables[this.getTextureNum() % this.lootTables.length];
+    }
 
 	public abstract String getModId();
 }

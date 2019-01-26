@@ -11,7 +11,6 @@ import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
 import java.util.List;
-
 /**
  * This class will be used to easily connect
  * golems and their blocks and other info
@@ -29,8 +28,6 @@ public class GolemBookEntry {
 
 	private String SEARCHABLE;
 
-	private final String PAGE;
-
 	public GolemBookEntry(GolemBase golem) {
 		// initialize fields based on golem
 		this.GOLEM_NAME = golem.getName();
@@ -40,70 +37,35 @@ public class GolemBookEntry {
 		this.ATTACK = golem.getBaseAttackDamage();
 		this.SPECIALS = golem.addSpecialDesc(new ArrayList<String>());
 
-		// initialize the block and search-string
-		this.SEARCHABLE = GOLEM_NAME;
+
 		// set the block and block name if it exists
 		Block b = GolemLookup.getBuildingBlock(golem.getClass());
-		if (b != null) {
-			this.BLOCK = b;
-			this.SEARCHABLE += " - " + b.getLocalizedName();
-		} else this.BLOCK = Blocks.AIR;
+		// Blocks.AIR means there is no building block
+		this.BLOCK = b != null ? b : Blocks.AIR;
 		// add golem's special descriptions to the searchable string
+		// initialize the block and search-string
+		final StringBuilder searchable = new StringBuilder();
 		final List<String> specials = golem.addSpecialDesc(new ArrayList<String>());
-		StringBuilder sb = new StringBuilder();
+
 		for (String s : specials) {
-			sb.append(" - ");
-			sb.append(TextFormatting.getTextWithoutFormattingCodes(s));
+			searchable.append("-" + TextFormatting.getTextWithoutFormattingCodes(s));
 		}
-		SEARCHABLE = sb.toString();
 		// lowercase string for searching
-		this.SEARCHABLE = this.SEARCHABLE.toLowerCase();
-
-		// make the page for this entry
-		this.PAGE = makePage();
-	}
-
-	/**
-	 * Temporarily here until we make parts of the page separately
-	 **/
-	public String getPageString() {
-		return this.PAGE;
-	}
-
-	/**
-	 * Temporarily here until we make parts of the page separately
-	 **/
-	private String makePage() {
-		StringBuilder page = new StringBuilder();
-		// ADD BLOCK TIP
-		page.append(TextFormatting.GRAY).append(I18n.format("itemGroup.buildingBlocks")).append(": ").append(TextFormatting.BLACK).append(BLOCK.getLocalizedName()).append("\n");
-		// ADD NAME TIP
-		page.append("\n").append(TextFormatting.GRAY).append(trans("entitytip.name")).append(": ").append(TextFormatting.BLACK).append(this.GOLEM_NAME).append("\n");
-		// ADD HEALTH (ROUNDED) TIP
-		page.append("\n").append(TextFormatting.GRAY).append(trans("entitytip.health")).append(": ").append(TextFormatting.BLACK).append(this.HEALTH).append(TextFormatting.DARK_RED).append(" \u2764").append(TextFormatting.BLACK);
-		// ADD ATTACK POWER TIP
-		page.append("\n").append(TextFormatting.GRAY).append(trans("entitytip.attack")).append(": ").append(TextFormatting.BLACK).append(this.ATTACK).append(" \u2694").append("\n");
-		// ADD FIREPROOF TIP
-		if (this.FIREPROOF) {
-			page.append("\n").append(TextFormatting.GOLD).append(trans("entitytip.is_fireproof"));
-		}
-		// ADD INTERACT-TEXTURE TIP
-		if (this.MULTI_TEXTURE) {
-			page.append("\n").append(TextFormatting.BLUE).append(trans("entitytip.click_change_texture"));
-		}
-		// ADD SPECIALS
-		for (String s : this.SPECIALS) {
-			page.append("\n").append(s.replaceAll(TextFormatting.WHITE.toString(), TextFormatting.BLACK.toString()));
-		}
-
-		return page.toString();
+		this.SEARCHABLE = searchable.toString().toLowerCase();
 	}
 
 	/**
 	 * @return the localized version of this golem's name
 	 **/
 	public String getGolemName() {
-		return GOLEM_NAME;
+		return trans(this.GOLEM_NAME);
+	}
+
+	/**
+	 * @return the unlocalized version of this golem's name
+	 **/
+	public String getGolemNameRaw() {
+		return this.GOLEM_NAME;
 	}
 
 	/**
@@ -114,20 +76,58 @@ public class GolemBookEntry {
 	}
 
 	/**
-	 * For use if the Golem Book gets a Search bar.
-	 * Contains the golem's name, building block, and
-	 * any special abilities, all localized and lowercased
-	 *
-	 * @return an all-lowercase String to search for input
+	 * @return all Golem Stats as one String
 	 **/
-	public String getSearchableString() {
-		return SEARCHABLE;
+	public String getDescriptionPage() {
+		// re-make each time for real-time localization
+		return makePage();
 	}
 
 	/**
-	 * Helper method for translating text into local language using {@code I18n}
+	 * Temporarily here until we make parts of the page separately
 	 **/
+	private String makePage() {
+		StringBuilder page = new StringBuilder();
+		// ADD HEALTH (ROUNDED) TIP
+		page.append("\n" + TextFormatting.GRAY + trans("entitytip.health") + ": " + TextFormatting.BLACK
+				+ this.HEALTH + TextFormatting.DARK_RED + " \u2764" + TextFormatting.BLACK);
+		// ADD ATTACK POWER TIP
+		page.append("\n" + TextFormatting.GRAY + trans("entitytip.attack") + ": "
+				+ TextFormatting.BLACK + this.ATTACK + " \u2694" + "\n");
+		// ADD FIREPROOF TIP
+		if (this.FIREPROOF) {
+			page.append("\n" + TextFormatting.GOLD + trans("entitytip.is_fireproof"));
+		}
+		// ADD INTERACT-TEXTURE TIP
+		if (this.MULTI_TEXTURE) {
+			page.append("\n" + TextFormatting.BLUE + trans("entitytip.click_change_texture"));
+		}
+		// ADD SPECIALS
+		for (String s : this.SPECIALS) {
+			page.append("\n" + s.replaceAll(TextFormatting.WHITE.toString(), TextFormatting.BLACK.toString()));
+		}
+		
+		return page.toString();
+	}
+	
+	/** 
+	 * For use if the Golem Book gets a Search bar.
+	 * Contains the golem's name, building block, and
+	 * any special abilities, all localized and lowercased
+	 * @return an all-lowercase String to search for input
+	 **/
+	public String getSearchableString() {
+		return SEARCHABLE + "-" + getGolemName().toLowerCase() + "-" + getBlock().getLocalizedName().toLowerCase();
+	}
+	
+	/** Helper method for translating text into local language using {@code I18n} **/
 	protected static String trans(final String s, final Object... strings) {
 		return I18n.format(s, strings);
+	}
+
+	@Override
+	public String toString() {
+		return "[Block=" + this.BLOCK.getLocalizedName() + "; Golem=" + trans(this.GOLEM_NAME)
+			+ "; Desc=" + this.getDescriptionPage().replaceAll("\n", "; ");
 	}
 }

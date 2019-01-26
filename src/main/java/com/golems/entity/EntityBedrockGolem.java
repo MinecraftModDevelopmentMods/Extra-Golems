@@ -1,7 +1,10 @@
 package com.golems.entity;
 
+import java.util.List;
+
 import com.golems.items.ItemBedrockGolem;
 import com.golems.main.GolemItems;
+
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -14,8 +17,6 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.List;
 
 public final class EntityBedrockGolem extends GolemBase {
 
@@ -51,7 +52,7 @@ public final class EntityBedrockGolem extends GolemBase {
 				this.setDead();
 			} else {
 				ItemBedrockGolem.spawnParticles(this.world, this.posX - 0.5D, this.posY + 0.1D,
-					this.posZ - 0.5D, 0.1D);
+						this.posZ - 0.5D, 0.1D);
 			}
 		}
 
@@ -67,7 +68,7 @@ public final class EntityBedrockGolem extends GolemBase {
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_STONE_STEP;
 	}
-
+	
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
 		list.add(TextFormatting.WHITE + "" + TextFormatting.BOLD + trans("entitytip.indestructible"));

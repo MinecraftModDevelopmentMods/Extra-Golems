@@ -1,6 +1,9 @@
 package com.golems.entity;
 
+import javax.annotation.Nullable;
+
 import com.golems.main.ExtraGolems;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -10,14 +13,11 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import org.apache.logging.log4j.Level;
-
-import javax.annotation.Nullable;
 
 public abstract class GolemColorizedMultiTextured extends GolemColorized {
 
 	protected static final DataParameter<Byte> DATA_TEXTURE = EntityDataManager
-		.<Byte>createKey(GolemColorizedMultiTextured.class, DataSerializers.BYTE);
+			.<Byte>createKey(GolemColorizedMultiTextured.class, DataSerializers.BYTE);
 	protected static final String NBT_TEXTURE = "GolemTextureData";
 	protected final int[] colors;
 	protected final ResourceLocation[] lootTables;
@@ -25,13 +25,12 @@ public abstract class GolemColorizedMultiTextured extends GolemColorized {
 	/**
 	 * Flexible constructor so child classes can "borrow" this class's behavior and customize.
 	 * It is fine to pass 'null' for {@link base} or {@link overlay}, and null textures will not  be rendered.
-	 *
-	 * @param base    an optional texture that will not be recolored or rendered transparent, to render before {@link overlay}
+	 * @param base an optional texture that will not be recolored or rendered transparent, to render before {@link overlay}
 	 * @param overlay a texture that will be recolored and optionally rendered as transparent.
 	 * @param lColors an int[] of color values to use for rendering -- interacting with this golem  will go to the next color
 	 **/
-	public GolemColorizedMultiTextured(final World world, @Nullable final ResourceLocation base,
-					   @Nullable final ResourceLocation overlay, final int[] lColors) {
+	public GolemColorizedMultiTextured(final World world, @Nullable final ResourceLocation base, 
+			@Nullable final ResourceLocation overlay, final int[] lColors) {
 		super(world, 0L, base, overlay);
 		colors = lColors;
 		lootTables = new ResourceLocation[colors.length];
@@ -89,15 +88,15 @@ public abstract class GolemColorizedMultiTextured extends GolemColorized {
 	public boolean doesInteractChangeTexture() {
 		return true;
 	}
-
+	
 	@Override
-	protected ResourceLocation getLootTable() {
-		ExtraGolems.LOGGER.log(Level.DEBUG, "[GCMT] getting loot table: " + this.lootTables[this.getTextureNum() % this.lootTables.length]);
-		return this.lootTables[this.getTextureNum() % this.lootTables.length];
-	}
+    protected ResourceLocation getLootTable()
+    {
+        return this.lootTables[this.getTextureNum() % this.lootTables.length];
+    }
 
 	public void setTextureNum(final byte toSet) {
-		this.getDataManager().set(DATA_TEXTURE, toSet);
+		this.getDataManager().set(DATA_TEXTURE, new Byte(toSet));
 	}
 
 	public int getTextureNum() {
@@ -111,7 +110,7 @@ public abstract class GolemColorizedMultiTextured extends GolemColorized {
 	protected void updateTextureByData(final int data) {
 		this.setColor(this.colors[data]);
 	}
-
+	
 	public String getModId() {
 		return ExtraGolems.MODID;
 	}

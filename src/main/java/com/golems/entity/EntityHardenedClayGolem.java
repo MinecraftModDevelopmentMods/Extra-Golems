@@ -8,18 +8,18 @@ import net.minecraft.world.World;
 
 public final class EntityHardenedClayGolem extends GolemBase {
 
-    public EntityHardenedClayGolem(final World world) {
-        super(world);
-        this.setLootTableLoc("golem_hardened_clay");
-        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.18D);
-    }
+	public EntityHardenedClayGolem(final World world) {
+		super(world);
+		this.setLootTableLoc("golem_hardened_clay");
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.18D);
+	}
 
-    protected ResourceLocation applyTexture() {
-        return makeGolemTexture("hardened_clay");
-    }
+	protected ResourceLocation applyTexture() {
+		return makeGolemTexture("hardened_clay");
+	}
 
-    @Override
-    public SoundEvent getGolemSound() {
-        return SoundEvents.BLOCK_STONE_STEP;
-    }
+	@Override
+	public SoundEvent getGolemSound() {
+		return SoundEvents.BLOCK_STONE_STEP;
+	}
 }

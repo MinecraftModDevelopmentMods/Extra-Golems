@@ -16,7 +16,7 @@ import net.minecraft.world.WorldServer;
 
 import java.util.List;
 
-public final class EntityTNTGolem extends GolemBase {
+public class EntityTNTGolem extends GolemBase {
 
 	protected static final DataParameter<Boolean> DATA_IGNITED = EntityDataManager
 		.<Boolean>createKey(EntityTNTGolem.class, DataSerializers.BOOLEAN);
@@ -34,9 +34,7 @@ public final class EntityTNTGolem extends GolemBase {
 	protected boolean willExplode;
 	protected int fuseTimer;
 
-	/**
-	 * Default constructor for TNT golem.
-	 **/
+	/** Default constructor for TNT golem. **/
 	public EntityTNTGolem(final World world) {
 		this(world, 3, 6, 50, 10);
 		this.setLootTableLoc("golem_tnt");
@@ -46,7 +44,7 @@ public final class EntityTNTGolem extends GolemBase {
 
 	/**
 	 * Flexible constructor to allow child classes to customize.
-	 *
+	 * 
 	 * @param world
 	 * @param attack
 	 * @param pick
@@ -216,7 +214,7 @@ public final class EntityTNTGolem extends GolemBase {
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_GRAVEL_STEP;
 	}
-
+	
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
 		// only fires for this golem, not child classes

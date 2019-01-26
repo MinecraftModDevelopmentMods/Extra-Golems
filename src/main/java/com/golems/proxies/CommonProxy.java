@@ -40,7 +40,7 @@ public class CommonProxy {
 
 	/**
 	 * A List containing default instances of each Golem.
-	 * They do not exist in the world, the list is simply a
+	 * They do not exist in the world, the list is simply a 
 	 * reference for things like Golem Info Book
 	 **/
 	public static final List<GolemBase> DUMMY_GOLEMS = new LinkedList();
@@ -102,12 +102,12 @@ public class CommonProxy {
 		register(EntityWoodenGolem.class, new Block[]
 			{Blocks.LOG, Blocks.LOG2}, "golem_wooden", false);
 		register(EntityWoolGolem.class, Blocks.WOOL, "golem_wool", false);
-
+		
 		// register GolemMultiTextured loot tables
 		registerLootTables(ExtraGolems.MODID, EntityWoolGolem.WOOL_PREFIX, EntityWoolGolem.coloredWoolTypes);
 		registerLootTables(ExtraGolems.MODID, EntityWoodenGolem.WOOD_PREFIX, EntityWoodenGolem.woodTypes);
 		registerLootTables(ExtraGolems.MODID, EntityMushroomGolem.SHROOM_PREFIX, EntityMushroomGolem.SHROOM_TYPES);
-
+		
 		// prepare and register loot tables for GolemColorizedMultiTextured
 		String[] stainedGlass = new String[EntityStainedGlassGolem.COLORS.length];
 		for (int i = 0, l = stainedGlass.length; i < l; i++) {
@@ -121,16 +121,12 @@ public class CommonProxy {
 		registerLootTables(ExtraGolems.MODID, EntityStainedClayGolem.PREFIX, stainedClay);
 	}
 
-	/**
-	 * registers the entity with an optional loot table.
-	 **/
+	/** registers the entity with an optional loot table. **/
 	protected static void register(final Class<? extends GolemBase> entityClass, @Nullable final Block buildingBlock, final String name, final boolean registerLootTable) {
 		register(entityClass, new Block[]{buildingBlock}, name, registerLootTable);
 	}
 
-	/**
-	 * registers the entity with an optional loot table.
-	 **/
+	/** registers the entity with an optional loot table. **/
 	protected static void register(final Class<? extends GolemBase> entityClass, @Nonnull final Block[] buildingBlock, final String name, final boolean registerLootTable) {
 		// register the entity with Forge
 		EntityRegistry.registerModEntity(
@@ -144,15 +140,15 @@ public class CommonProxy {
 			registerLootTable(name);
 		}
 	}
-
+	
 	protected static void registerLootTable(final String name) {
 		/*ResourceLocation rl =*/
 		LootTableList.register(new ResourceLocation(ExtraGolems.MODID, "entities/" + name));
 		//System.out.println("registered loot table at " + rl);
 	}
-
+	
 	protected static void registerLootTables(final String MODID, final String prefix, final String[] names) {
-		for (String s : names) {
+		for(String s : names) {
 			LootTableList.register(new ResourceLocation(MODID, "entities/golem_" + prefix + "/" + s));
 		}
 	}
@@ -164,7 +160,7 @@ public class CommonProxy {
 			@Override
 			@SideOnly(Side.CLIENT)
 			public boolean hasEffect(final ItemStack stack) {
-				return Config.itemGolemHeadHasGlint;
+				return Config.golemHeadHasGlint();
 			}
 		}.setRegistryName(GolemItems.golemHead.getRegistryName()));
 
@@ -174,14 +170,13 @@ public class CommonProxy {
 
 		event.getRegistry().register(new Item().setTranslationKey("golem_paper")
 			.setRegistryName(ExtraGolems.MODID, "golem_paper").setCreativeTab(CreativeTabs.MISC));
-
+		
 		event.getRegistry().register(new ItemInfoBook().setTranslationKey("info_book")
 			.setRegistryName(ExtraGolems.MODID, "info_book"));
 	}
 
 	@SubscribeEvent
 	public static void registerBlocks(final RegistryEvent.Register<Block> event) {
-		// TODO: Clean up
 		final int GLOWSTONE_FREQ = GolemLookup.getConfig(EntityGlowstoneGolem.class).getInt(EntityGlowstoneGolem.FREQUENCY);
 		final int SEALANTERN_FREQ = GolemLookup.getConfig(EntitySeaLanternGolem.class).getInt(EntitySeaLanternGolem.FREQUENCY);
 		event.getRegistry().registerAll(

@@ -22,7 +22,6 @@ import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.apache.logging.log4j.Level;
 
 public final class BlockGolemHead extends BlockHorizontal {
 
@@ -141,14 +140,11 @@ public final class BlockGolemHead extends BlockHorizontal {
 				if (GolemLookup.isBuildingBlock(blockBelow1)) {
 					// get the golem
 					final GolemBase golem = GolemLookup.getGolem(world, blockBelow1);
-					ExtraGolems.LOGGER.log(Level.DEBUG, "golem = " + (golem != null ? golem.toString() : "null"));
-					ExtraGolems.LOGGER.log(Level.DEBUG, "block = " + blockBelow1.toString());
 					if (golem == null) return;
 
 					// get the spawn permissions (assume it's allowed if none found)
 					final GolemConfigSet cfg = GolemLookup.getConfig(golem.getClass());
-					boolean allowed = cfg == null || cfg.canSpawn();
-					ExtraGolems.LOGGER.log(Level.DEBUG, "CFG = " + (cfg != null ? cfg.toString() : "null"));
+					boolean allowed = cfg != null ? cfg.canSpawn() : true;
 					if (!allowed) return;
 
 					// clear the area where the golem blocks were

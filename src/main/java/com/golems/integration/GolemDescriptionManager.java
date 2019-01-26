@@ -35,7 +35,6 @@ public abstract class GolemDescriptionManager {
 	/**
 	 * Checks the passed golem for various characteristics, making a String for each one.
 	 * Use this from a child class in order to populate your descriptions.
-	 *
 	 * @return a LinkedList containing all descriptions that apply to the passed golem
 	 **/
 	@SuppressWarnings("WeakerAccess")
@@ -80,9 +79,6 @@ public abstract class GolemDescriptionManager {
 		return I18n.format(s, strings);
 	}
 
-	/**
-	 * @deprecated TODO: figure out why this is deprecated
-	 */
 	@Deprecated
 	protected List<String> addSpecial(List<String> list, GolemBase golem) {
 		return list;
