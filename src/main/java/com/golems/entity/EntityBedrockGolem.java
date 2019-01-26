@@ -46,15 +46,13 @@ public final class EntityBedrockGolem extends GolemBase {
 	protected boolean processInteract(final EntityPlayer player, final EnumHand hand) {
 		// creative players can "despawn" by using spawnBedrockGolem on this entity
 		final ItemStack itemstack = player.getHeldItem(hand);
-		if (player.capabilities.isCreativeMode) {
-			if (!itemstack.isEmpty() && itemstack.getItem() == GolemItems.spawnBedrockGolem) {
-				player.swingArm(hand);
-				if (!this.world.isRemote) {
-					this.setDead();
-				} else {
-					ItemBedrockGolem.spawnParticles(this.world, this.posX - 0.5D, this.posY + 0.1D,
-							this.posZ - 0.5D, 0.1D);
-				}
+		if (player.capabilities.isCreativeMode && !itemstack.isEmpty() && itemstack.getItem() == GolemItems.spawnBedrockGolem) {
+			player.swingArm(hand);
+			if (!this.world.isRemote) {
+				this.setDead();
+			} else {
+				ItemBedrockGolem.spawnParticles(this.world, this.posX - 0.5D, this.posY + 0.1D,
+						this.posZ - 0.5D, 0.1D);
 			}
 		}
 

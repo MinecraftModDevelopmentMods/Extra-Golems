@@ -28,9 +28,7 @@ public class GolemBookEntry {
 	private final List<String> SPECIALS;
 	
 	private String SEARCHABLE;
-	
-	private final String PAGE;
-	
+		
 	public GolemBookEntry(GolemBase golem) {
 		// initialize fields based on golem
 		this.GOLEM_NAME = golem.getName();
@@ -40,71 +38,67 @@ public class GolemBookEntry {
 		this.ATTACK = golem.getBaseAttackDamage();
 		this.SPECIALS = golem.addSpecialDesc(new ArrayList<String>());
 		
-		// initialize the block and search-string
-		this.SEARCHABLE = GOLEM_NAME;
+		
 		// set the block and block name if it exists
 		Block b = GolemLookup.getBuildingBlock(golem.getClass());
-		if(b != null) {
-			this.BLOCK = b;
-			this.SEARCHABLE += " - " + b.getLocalizedName();
-		} else this.BLOCK = Blocks.AIR;
+		// Blocks.AIR means there is no building block
+		this.BLOCK = b != null ? b : Blocks.AIR;
 		// add golem's special descriptions to the searchable string
+		// initialize the block and search-string
+		final StringBuilder searchable = new StringBuilder();
 		final List<String> specials = golem.addSpecialDesc(new ArrayList<String>());
+		
 		for(String s : specials) {
-			this.SEARCHABLE += " - " + TextFormatting.getTextWithoutFormattingCodes(s);
+			searchable.append("-" + TextFormatting.getTextWithoutFormattingCodes(s));
 		}
-		
 		// lowercase string for searching
-		this.SEARCHABLE = this.SEARCHABLE.toLowerCase();
-		
-		// make the page for this entry
-		this.PAGE = makePage();
-	}
-	
-	/** Temporarily here until we make parts of the page separately **/
-	public String getPageString() {
-		return this.PAGE;
-	}
-	
-	/** Temporarily here until we make parts of the page separately **/
-	private String makePage() {
-		String page = "";
-		// ADD BLOCK TIP
-		page += TextFormatting.GRAY + I18n.format("itemGroup.buildingBlocks") 
-		+ ": " + TextFormatting.BLACK + BLOCK.getLocalizedName() + "\n";
-		// ADD NAME TIP
-		page += "\n" + TextFormatting.GRAY + trans("entitytip.name") + ": "
-				+ TextFormatting.BLACK + this.GOLEM_NAME + "\n";
-		// ADD HEALTH (ROUNDED) TIP
-		page += "\n" + TextFormatting.GRAY + trans("entitytip.health") + ": " + TextFormatting.BLACK
-				+ Math.round(this.HEALTH) + TextFormatting.DARK_RED + " \u2764" + TextFormatting.BLACK;
-		// ADD ATTACK POWER TIP
-		page += "\n" + TextFormatting.GRAY + trans("entitytip.attack") + ": "
-				+ TextFormatting.BLACK + this.ATTACK + " \u2694" + "\n";
-		// ADD FIREPROOF TIP
-		if (this.FIREPROOF) {
-			page += "\n" + TextFormatting.GOLD + trans("entitytip.is_fireproof");
-		}
-		// ADD INTERACT-TEXTURE TIP
-		if (this.MULTI_TEXTURE) {
-			page += "\n" + TextFormatting.BLUE + trans("entitytip.click_change_texture");
-		}
-		// ADD SPECIALS
-		for(String s : this.SPECIALS) {
-			page += "\n" + s.replaceAll(TextFormatting.WHITE.toString(), TextFormatting.BLACK.toString());
-		}
-		
-		return page;
+		this.SEARCHABLE = searchable.toString().toLowerCase();
 	}
 	
 	/** @return the localized version of this golem's name **/
 	public String getGolemName() {
-		return GOLEM_NAME;
+		return trans(this.GOLEM_NAME);
+	}
+	
+	/** @return the unlocalized version of this golem's name **/
+	public String getGolemNameRaw() {
+		return this.GOLEM_NAME;
 	}
 	
 	/** @return the Block in this entry **/
 	public Block getBlock() {
 		return this.BLOCK;
+	}
+	
+	/** @return all Golem Stats as one String **/
+	public String getDescriptionPage() {
+		// re-make each time for real-time localization
+		return makePage();
+	}
+	
+	/** Temporarily here until we make parts of the page separately **/
+	private String makePage() {
+		StringBuilder page = new StringBuilder();
+		// ADD HEALTH (ROUNDED) TIP
+		page.append("\n" + TextFormatting.GRAY + trans("entitytip.health") + ": " + TextFormatting.BLACK
+				+ this.HEALTH + TextFormatting.DARK_RED + " \u2764" + TextFormatting.BLACK);
+		// ADD ATTACK POWER TIP
+		page.append("\n" + TextFormatting.GRAY + trans("entitytip.attack") + ": "
+				+ TextFormatting.BLACK + this.ATTACK + " \u2694" + "\n");
+		// ADD FIREPROOF TIP
+		if (this.FIREPROOF) {
+			page.append("\n" + TextFormatting.GOLD + trans("entitytip.is_fireproof"));
+		}
+		// ADD INTERACT-TEXTURE TIP
+		if (this.MULTI_TEXTURE) {
+			page.append("\n" + TextFormatting.BLUE + trans("entitytip.click_change_texture"));
+		}
+		// ADD SPECIALS
+		for(String s : this.SPECIALS) {
+			page.append("\n" + s.replaceAll(TextFormatting.WHITE.toString(), TextFormatting.BLACK.toString()));
+		}
+		
+		return page.toString();
 	}
 	
 	/** 
@@ -114,11 +108,17 @@ public class GolemBookEntry {
 	 * @return an all-lowercase String to search for input
 	 **/
 	public String getSearchableString() {
-		return SEARCHABLE;
+		return SEARCHABLE + "-" + getGolemName().toLowerCase() + "-" + getBlock().getLocalizedName().toLowerCase();
 	}
 	
 	/** Helper method for translating text into local language using {@code I18n} **/
 	protected static String trans(final String s, final Object... strings) {
 		return I18n.format(s, strings);
+	}
+	
+	@Override
+	public String toString() {
+		return "[Block=" + this.BLOCK.getLocalizedName() + "; Golem=" + trans(this.GOLEM_NAME)
+			+ "; Desc=" + this.getDescriptionPage().replaceAll("\n", "; ");
 	}
 }

@@ -51,6 +51,14 @@ public final class EntityCraftingGolem extends GolemBase {
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_WOOD_STEP;
 	}
+	
+	@Override
+	public List<String> addSpecialDesc(final List<String> list) {
+		if(getConfig(this).getBoolean(ALLOW_SPECIAL)) {
+			list.add(TextFormatting.BLUE + trans("entitytip.click_open_crafting"));
+		}
+		return list;
+	}
 
 	public static class InterfaceCraftingGrid
 			extends net.minecraft.block.BlockWorkbench.InterfaceCraftingTable {
@@ -68,13 +76,5 @@ public final class EntityCraftingGolem extends GolemBase {
 		public Container createContainer(final InventoryPlayer playerInventory, final EntityPlayer playerIn) {
 			return new ContainerPortableWorkbench(playerInventory, this.world2, this.position2);
 		}
-	}
-	
-	@Override
-	public List<String> addSpecialDesc(final List<String> list) {
-		if(getConfig(this).getBoolean(ALLOW_SPECIAL)) {
-			list.add(TextFormatting.BLUE + trans("entitytip.click_open_crafting"));
-		}
-		return list;
 	}
 }

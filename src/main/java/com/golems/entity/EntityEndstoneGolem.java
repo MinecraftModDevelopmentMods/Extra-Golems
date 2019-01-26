@@ -20,7 +20,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 
-public final class EntityEndstoneGolem extends GolemBase {
+public class EntityEndstoneGolem extends GolemBase {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Teleporting";
 	public static final String ALLOW_WATER_HURT = "Can Take Water Damage";

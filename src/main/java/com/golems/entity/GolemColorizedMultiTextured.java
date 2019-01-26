@@ -92,7 +92,6 @@ public abstract class GolemColorizedMultiTextured extends GolemColorized {
 	@Override
     protected ResourceLocation getLootTable()
     {
-		System.out.println("[GCMT] getting loot table: " + this.lootTables[this.getTextureNum() % this.lootTables.length]);
         return this.lootTables[this.getTextureNum() % this.lootTables.length];
     }
 
