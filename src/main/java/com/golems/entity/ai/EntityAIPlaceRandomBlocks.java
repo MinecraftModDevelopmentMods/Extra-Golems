@@ -1,15 +1,14 @@
 package com.golems.entity.ai;
 
-import java.util.function.Predicate;
-
 import com.golems.entity.GolemBase;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+
+import java.util.function.Predicate;
 
 /**
  * @see EntityAIPlaceRandomBlocksStrictly
@@ -24,7 +23,7 @@ public class EntityAIPlaceRandomBlocks extends EntityAIBase {
 	public final Predicate<EntityAIPlaceRandomBlocks> canExecute;
 
 	public EntityAIPlaceRandomBlocks(final GolemBase golemBase, final int ticksBetweenPlanting,
-			final IBlockState[] plants, final Block[] soils, final Predicate<EntityAIPlaceRandomBlocks> pred) {
+					 final IBlockState[] plants, final Block[] soils, final Predicate<EntityAIPlaceRandomBlocks> pred) {
 		this.setMutexBits(8);
 		this.golem = golemBase;
 		this.tickDelay = ticksBetweenPlanting;
@@ -35,7 +34,7 @@ public class EntityAIPlaceRandomBlocks extends EntityAIBase {
 	}
 
 	public EntityAIPlaceRandomBlocks(final GolemBase golemBase, final int ticksBetweenPlanting,
-			final IBlockState[] plants, final Predicate<EntityAIPlaceRandomBlocks> p) {
+					 final IBlockState[] plants, final Predicate<EntityAIPlaceRandomBlocks> p) {
 		this(golemBase, ticksBetweenPlanting, plants, null, p);
 	}
 
@@ -54,7 +53,6 @@ public class EntityAIPlaceRandomBlocks extends EntityAIBase {
 
 		if (golem.world.isAirBlock(below.up(1)) && isPlantSupport(golem.world, below)) {
 			setToPlant(golem.world, below.up(1));
-			return;
 		}
 	}
 

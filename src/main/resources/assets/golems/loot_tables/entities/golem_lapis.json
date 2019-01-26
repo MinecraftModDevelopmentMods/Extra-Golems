@@ -1,62 +1,62 @@
 {
-    "pools": [
+  "pools": [
+    {
+      "name": "main",
+      "rolls": 1,
+      "entries": [
         {
-			"name": "main",
-            "rolls": 1,
-            "entries": [
-                {
-                    "type": "item",
-                    "name": "minecraft:dye",
-					"weight": 1,
-					"functions": [
-                        {
-                            "function": "set_count",
-                            "count": {
-                                "min": 12,
-                                "max": 20
-                            }
-                        },
-                        {
-                            "function": "looting_enchant",
-                            "count": {
-                                "min": 2,
-                                "max": 6
-                            }
-                        },
-						{
-                            "function": "set_data",
-                            "data": 4
-                        }
-                    ]
-                }
-            ]
-        },
-		{
-			"name": "pool1",
-            "rolls": 1,
-			"bonus_rolls": 2,
-            "entries": [
-                {
-                    "type": "item",
-                    "name": "minecraft:gold_ingot",
-					"weight": 1,
-					"quality": 20
-                },
-				{
-                    "type": "empty",
-                    "weight": 15
-                }
-            ]
-        },
-		{
-			"name": "pool2",
-            "rolls": 1,
-            "entries": [
-                {
-                    "type": "loot_table",
-                    "name": "golems:entities/_golem_base"
-                }
-            ]
+          "type": "item",
+          "name": "minecraft:dye",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 12,
+                "max": 20
+              }
+            },
+            {
+              "function": "looting_enchant",
+              "count": {
+                "min": 2,
+                "max": 6
+              }
+            },
+            {
+              "function": "set_data",
+              "data": 4
+            }
+          ]
         }
-    ]
+      ]
+    },
+    {
+      "name": "pool1",
+      "rolls": 1,
+      "bonus_rolls": 2,
+      "entries": [
+        {
+          "type": "item",
+          "name": "minecraft:gold_ingot",
+          "weight": 1,
+          "quality": 20
+        },
+        {
+          "type": "empty",
+          "weight": 15
+        }
+      ]
+    },
+    {
+      "name": "pool2",
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "loot_table",
+          "name": "golems:entities/_golem_base"
+        }
+      ]
+    }
+  ]
 }

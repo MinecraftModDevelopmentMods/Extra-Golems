@@ -14,7 +14,7 @@ import net.minecraftforge.common.config.Configuration;
  * permissions, health, and attack. It can load any number of fields as a boolean, int, or float.
  **/
 public class GolemConfigSet {
-	
+
 	public static GolemConfigSet EMPTY;
 
 	private static final String GOLEM_PERMS = "Allow Golem";
@@ -47,7 +47,7 @@ public class GolemConfigSet {
 	private static final byte FALSE = 0;
 
 	public GolemConfigSet(final Configuration configFile, final String name, final boolean spawn, final double health,
-			final float attack) {
+			      final float attack) {
 		this.mapInt = new TObjectIntHashMap<>(1);
 		this.mapFloat = new TObjectFloatHashMap<>(1);
 		this.mapBoolean = new TObjectByteHashMap<>(1);
@@ -64,14 +64,16 @@ public class GolemConfigSet {
 		this(configFile, name, true, health, attack);
 	}
 
-	/** Load some values like spawn permission, health, and attack right away. **/
+	/**
+	 * Load some values like spawn permission, health, and attack right away.
+	 **/
 	public GolemConfigSet loadFromConfig() {
 		this.canSpawn = config.getBoolean(GOLEM_PERMS, this.category, this.defSpawn,
-				"Whether the " + golemName + " can be built");
+			"Whether the " + golemName + " can be built");
 		this.maxHealth = config.getFloat(GOLEM_HEALTH, this.category, (float) this.defHealth, 0.0F,
-				999.0F, "Max health for this golem");
+			999.0F, "Max health for this golem");
 		this.baseAttack = config.getFloat(GOLEM_ATTACK, this.category, this.defAttack, 0.0F,
-				300.0F, "Base attack damage dealt by this golem");
+			300.0F, "Base attack damage dealt by this golem");
 		return this;
 	}
 
@@ -98,7 +100,7 @@ public class GolemConfigSet {
 			return this.mapInt.get(key);
 		} else {
 			final String error = "Did not find an int value matching '" + key + IN_GOLEM_CONFIG_SET
-					+ this.golemName + DEFAULTING_TO + DEF_INT;
+				+ this.golemName + DEFAULTING_TO + DEF_INT;
 			ExtraGolems.LOGGER.error(error);
 			this.mapInt.put(key, DEF_INT);
 			return DEF_INT;
@@ -110,7 +112,7 @@ public class GolemConfigSet {
 			return this.mapFloat.get(key);
 		} else {
 			final String error = "Did not find a float value matching '" + key + IN_GOLEM_CONFIG_SET
-					+ this.golemName + DEFAULTING_TO + DEF_FLOAT;
+				+ this.golemName + DEFAULTING_TO + DEF_FLOAT;
 			ExtraGolems.LOGGER.error(error);
 			this.mapFloat.put(key, DEF_FLOAT);
 			return DEF_FLOAT;
@@ -122,7 +124,7 @@ public class GolemConfigSet {
 			return this.mapBoolean.get(key) == TRUE;
 		} else {
 			final String error = "Did not find a boolean value matching '" + key + IN_GOLEM_CONFIG_SET
-					+ this.golemName + DEFAULTING_TO + DEF_BOOL;
+				+ this.golemName + DEFAULTING_TO + DEF_BOOL;
 			ExtraGolems.LOGGER.error(error);
 			this.mapFloat.put(key, DEF_BOOL ? TRUE : FALSE);
 			return DEF_BOOL;

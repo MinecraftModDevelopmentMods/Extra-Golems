@@ -18,7 +18,7 @@ public final class EntityEmeraldGolem extends GolemBase {
 	protected ResourceLocation applyTexture() {
 		return makeGolemTexture("emerald_block");
 	}
-	
+
 	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_STONE_STEP;

@@ -1,12 +1,10 @@
 package com.golems.blocks;
 
 import com.golems.entity.GolemBase;
-import com.golems.events.GolemBuildEvent;
 import com.golems.items.ItemBedrockGolem;
 import com.golems.main.ExtraGolems;
 import com.golems.util.GolemConfigSet;
 import com.golems.util.GolemLookup;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.SoundType;
@@ -24,7 +22,6 @@ import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
 
 public final class BlockGolemHead extends BlockHorizontal {
 
@@ -41,13 +38,14 @@ public final class BlockGolemHead extends BlockHorizontal {
 	@Deprecated
 	@Override
 	public IBlockState getStateForPlacement(final World worldIn, final BlockPos pos, final EnumFacing facing,
-			final float hitX, final float hitY, final float hitZ, final int meta, final EntityLivingBase placer) {
+						final float hitX, final float hitY, final float hitZ, final int meta, final EntityLivingBase placer) {
 		return this.getDefaultState().withProperty(FACING,
-				placer.getHorizontalFacing().getOpposite());
+			placer.getHorizontalFacing().getOpposite());
 	}
 
 	/**
 	 * Convert the given metadata into a BlockState for this Block.
+	 *
 	 * @deprecated
 	 */
 	@Deprecated
@@ -66,7 +64,7 @@ public final class BlockGolemHead extends BlockHorizontal {
 
 	@Override
 	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, (IProperty[]) new IProperty[] { FACING });
+		return new BlockStateContainer(this, (IProperty[]) new IProperty[]{FACING});
 	}
 
 	/**
@@ -124,7 +122,7 @@ public final class BlockGolemHead extends BlockHorizontal {
 				EnumFacing face = flagX ? EnumFacing.EAST : EnumFacing.NORTH;
 				IBlockState arm1 = world.getBlockState(pos.down(1).offset(face, 1));
 				IBlockState arm2 = world.getBlockState(pos.down(1).offset(face.getOpposite(), 1));
-				
+
 				// hard-coded support for Iron Golem
 				if (blockBelow1 == Blocks.IRON_BLOCK) {
 					removeAllGolemBlocks(world, pos, flagX);
@@ -139,16 +137,16 @@ public final class BlockGolemHead extends BlockHorizontal {
 
 				// query the GolemLookup to see if there is a golem that can be built with this
 				// if there is, double-check its spawn permissions, then build!
-				if(GolemLookup.isBuildingBlock(blockBelow1)) {
+				if (GolemLookup.isBuildingBlock(blockBelow1)) {
 					// get the golem
 					final GolemBase golem = GolemLookup.getGolem(world, blockBelow1);
-					if(golem == null) return;
+					if (golem == null) return;
 
 					// get the spawn permissions (assume it's allowed if none found)
 					final GolemConfigSet cfg = GolemLookup.getConfig(golem.getClass());
 					boolean allowed = cfg != null ? cfg.canSpawn() : true;
-					if(!allowed) return;
-					
+					if (!allowed) return;
+
 					// clear the area where the golem blocks were
 					removeAllGolemBlocks(world, pos, flagX);
 
@@ -158,7 +156,7 @@ public final class BlockGolemHead extends BlockHorizontal {
 					golem.setLocationAndAngles(x, y, z, 0.0F, 0.0F);
 					world.spawnEntity(golem);
 					golem.onBuilt(stateBelow1, stateBelow2, arm1, arm2);
-					
+
 				}
 			}
 		}
@@ -168,22 +166,22 @@ public final class BlockGolemHead extends BlockHorizontal {
 	 * @return {@code true} if the blocks at x-1 and x+1 match the block at x.
 	 **/
 	public static boolean isGolemXAligned(final World world, final BlockPos headPos) {
-		final BlockPos[] armsX = { headPos.down(1).west(1), headPos.down(1).east(1) };
+		final BlockPos[] armsX = {headPos.down(1).west(1), headPos.down(1).east(1)};
 		final Block below = world.getBlockState(headPos.down(1)).getBlock();
 		return world.getBlockState(armsX[0]).getBlock() == below
-				&& world.getBlockState(armsX[1]).getBlock() == below;
+			&& world.getBlockState(armsX[1]).getBlock() == below;
 	}
 
 	/**
 	 * @return {@code true} if the blocks at z-1 and z+1 match the block at z.
 	 **/
 	public static boolean isGolemZAligned(final World world, final BlockPos headPos) {
-		final BlockPos[] armsZ = { headPos.down(1).north(1), headPos.down(1).south(1) };
+		final BlockPos[] armsZ = {headPos.down(1).north(1), headPos.down(1).south(1)};
 		final Block below = world.getBlockState(headPos.down(1)).getBlock();
 		return world.getBlockState(armsZ[0]).getBlock() == below
-				&& world.getBlockState(armsZ[1]).getBlock() == below;
+			&& world.getBlockState(armsZ[1]).getBlock() == below;
 	}
-	
+
 	/**
 	 * Replaces this block and the four construction blocks with air.
 	 **/
@@ -201,7 +199,9 @@ public final class BlockGolemHead extends BlockHorizontal {
 		world.setBlockToAir(head.down(2));
 	}
 
-	/** Replaces blocks at arm positions with air. **/
+	/**
+	 * Replaces blocks at arm positions with air.
+	 **/
 	public static void removeGolemArms(final World world, final BlockPos pos, final boolean isXAligned) {
 		if (isXAligned) {
 			world.setBlockToAir(pos.down(1).west(1));

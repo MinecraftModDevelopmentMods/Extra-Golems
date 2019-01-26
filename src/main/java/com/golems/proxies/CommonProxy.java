@@ -1,12 +1,9 @@
 package com.golems.proxies;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.golems.blocks.*;
+import com.golems.blocks.BlockGolemHead;
+import com.golems.blocks.BlockUtilityGlow;
+import com.golems.blocks.BlockUtilityGlowWater;
+import com.golems.blocks.BlockUtilityPower;
 import com.golems.entity.*;
 import com.golems.events.handlers.GolemCommonEventHandler;
 import com.golems.items.ItemBedrockGolem;
@@ -15,7 +12,6 @@ import com.golems.main.Config;
 import com.golems.main.ExtraGolems;
 import com.golems.main.GolemItems;
 import com.golems.util.GolemLookup;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
@@ -33,6 +29,11 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.LinkedList;
+import java.util.List;
 
 @Mod.EventBusSubscriber(modid = ExtraGolems.MODID)
 public class CommonProxy {
@@ -54,11 +55,13 @@ public class CommonProxy {
 		MinecraftForge.EVENT_BUS.register(new GolemCommonEventHandler());
 	}
 
-	/** Registers all golems with loot tables, building blocks, and textures **/
+	/**
+	 * Registers all golems with loot tables, building blocks, and textures
+	 **/
 	public void registerEntities() {
 		CommonProxy.golemEntityCount = 0;
 		registerLootTable("_golem_base");
-		register(EntityBedrockGolem.class, (Block)null, "golem_bedrock", false);
+		register(EntityBedrockGolem.class, (Block) null, "golem_bedrock", false);
 		register(EntityBoneGolem.class, Blocks.BONE_BLOCK, "golem_bone", true);
 		register(EntityBookshelfGolem.class, Blocks.BOOKSHELF, "golem_bookshelf", true);
 		register(EntityClayGolem.class, Blocks.CLAY, "golem_clay", true);
@@ -71,17 +74,17 @@ public class CommonProxy {
 		register(EntityGlowstoneGolem.class, Blocks.GLOWSTONE, "golem_glowstone", true);
 		register(EntityGoldGolem.class, Blocks.GOLD_BLOCK, "golem_gold", true);
 		register(EntityHardenedClayGolem.class, Blocks.HARDENED_CLAY, "golem_hardened_clay", true);
-		register(EntityIceGolem.class, new Block[] 
-				{ Blocks.ICE, Blocks.PACKED_ICE }, "golem_ice", true);
+		register(EntityIceGolem.class, new Block[]
+			{Blocks.ICE, Blocks.PACKED_ICE}, "golem_ice", true);
 		register(EntityLapisGolem.class, Blocks.LAPIS_BLOCK, "golem_lapis", true);
-		register(EntityLeafGolem.class, new Block[] 
-				{ Blocks.LEAVES, Blocks.LEAVES2}, "golem_leaves", true);
+		register(EntityLeafGolem.class, new Block[]
+			{Blocks.LEAVES, Blocks.LEAVES2}, "golem_leaves", true);
 		register(EntityMagmaGolem.class, Blocks.MAGMA, "golem_magma", true);
 		register(EntityMelonGolem.class, Blocks.MELON_BLOCK, "golem_melon", true);
-		register(EntityMushroomGolem.class, new Block[] 
-				{ Blocks.BROWN_MUSHROOM_BLOCK, Blocks.RED_MUSHROOM_BLOCK }, "golem_shroom", false);
-		register(EntityNetherBrickGolem.class, new Block[] { 
-				Blocks.NETHER_BRICK, Blocks.RED_NETHER_BRICK }, "golem_nether_brick", true);
+		register(EntityMushroomGolem.class, new Block[]
+			{Blocks.BROWN_MUSHROOM_BLOCK, Blocks.RED_MUSHROOM_BLOCK}, "golem_shroom", false);
+		register(EntityNetherBrickGolem.class, new Block[]{
+			Blocks.NETHER_BRICK, Blocks.RED_NETHER_BRICK}, "golem_nether_brick", true);
 		register(EntityNetherWartGolem.class, Blocks.NETHER_WART_BLOCK, "golem_nether_wart", true);
 		register(EntityObsidianGolem.class, Blocks.OBSIDIAN, "golem_obsidian", true);
 		register(EntityPrismarineGolem.class, Blocks.PRISMARINE, "golem_prismarine", true);
@@ -96,8 +99,8 @@ public class CommonProxy {
 		register(EntityStainedGlassGolem.class, Blocks.STAINED_GLASS, "golem_stained_glass", false);
 		register(EntityStrawGolem.class, Blocks.HAY_BLOCK, "golem_straw", true);
 		register(EntityTNTGolem.class, Blocks.TNT, "golem_tnt", true);
-		register(EntityWoodenGolem.class, new Block[] 
-				{ Blocks.LOG, Blocks.LOG2 }, "golem_wooden", false);
+		register(EntityWoodenGolem.class, new Block[]
+			{Blocks.LOG, Blocks.LOG2}, "golem_wooden", false);
 		register(EntityWoolGolem.class, Blocks.WOOL, "golem_wool", false);
 		
 		// register GolemMultiTextured loot tables
@@ -107,39 +110,40 @@ public class CommonProxy {
 		
 		// prepare and register loot tables for GolemColorizedMultiTextured
 		String[] stainedGlass = new String[EntityStainedGlassGolem.COLORS.length];
-		for(int i = 0, l = stainedGlass.length; i < l; i++) {
+		for (int i = 0, l = stainedGlass.length; i < l; i++) {
 			stainedGlass[i] = Integer.toString(i);
 		}
 		String[] stainedClay = new String[EntityStainedClayGolem.COLORS.length];
-		for(int i = 0, l = stainedGlass.length; i < l; i++) {
+		for (int i = 0, l = stainedGlass.length; i < l; i++) {
 			stainedClay[i] = Integer.toString(i);
 		}
 		registerLootTables(ExtraGolems.MODID, EntityStainedGlassGolem.PREFIX, stainedGlass);
 		registerLootTables(ExtraGolems.MODID, EntityStainedClayGolem.PREFIX, stainedClay);
 	}
-	
+
 	/** registers the entity with an optional loot table. **/
 	protected static void register(final Class<? extends GolemBase> entityClass, @Nullable final Block buildingBlock, final String name, final boolean registerLootTable) {
-		register(entityClass, new Block[] { buildingBlock }, name, registerLootTable);
+		register(entityClass, new Block[]{buildingBlock}, name, registerLootTable);
 	}
 
 	/** registers the entity with an optional loot table. **/
 	protected static void register(final Class<? extends GolemBase> entityClass, @Nonnull final Block[] buildingBlock, final String name, final boolean registerLootTable) {
 		// register the entity with Forge
 		EntityRegistry.registerModEntity(
-				new ResourceLocation(ExtraGolems.MODID, name), entityClass, 
-				ExtraGolems.MODID + "." + name, ++golemEntityCount,
-				ExtraGolems.instance, 16 * 4, 3, true);
+			new ResourceLocation(ExtraGolems.MODID, name), entityClass,
+			ExtraGolems.MODID + "." + name, ++golemEntityCount,
+			ExtraGolems.instance, 16 * 4, 3, true);
 		// register building block
 		GolemLookup.addGolem(entityClass, buildingBlock);
 		// register loot table
-		if(registerLootTable) {
+		if (registerLootTable) {
 			registerLootTable(name);
 		}
 	}
 	
 	protected static void registerLootTable(final String name) {
-		/*ResourceLocation rl =*/ LootTableList.register(new ResourceLocation(ExtraGolems.MODID, "entities/" + name));
+		/*ResourceLocation rl =*/
+		LootTableList.register(new ResourceLocation(ExtraGolems.MODID, "entities/" + name));
 		//System.out.println("registered loot table at " + rl);
 	}
 	
@@ -161,14 +165,14 @@ public class CommonProxy {
 		}.setRegistryName(GolemItems.golemHead.getRegistryName()));
 
 		event.getRegistry()
-				.register(new ItemBedrockGolem().setTranslationKey("spawn_bedrock_golem")
-						.setRegistryName(ExtraGolems.MODID, "spawn_bedrock_golem"));
+			.register(new ItemBedrockGolem().setTranslationKey("spawn_bedrock_golem")
+				.setRegistryName(ExtraGolems.MODID, "spawn_bedrock_golem"));
 
 		event.getRegistry().register(new Item().setTranslationKey("golem_paper")
-				.setRegistryName(ExtraGolems.MODID, "golem_paper").setCreativeTab(CreativeTabs.MISC));
+			.setRegistryName(ExtraGolems.MODID, "golem_paper").setCreativeTab(CreativeTabs.MISC));
 		
 		event.getRegistry().register(new ItemInfoBook().setTranslationKey("info_book")
-				.setRegistryName(ExtraGolems.MODID, "info_book"));
+			.setRegistryName(ExtraGolems.MODID, "info_book"));
 	}
 
 	@SubscribeEvent
@@ -176,12 +180,12 @@ public class CommonProxy {
 		final int GLOWSTONE_FREQ = GolemLookup.getConfig(EntityGlowstoneGolem.class).getInt(EntityGlowstoneGolem.FREQUENCY);
 		final int SEALANTERN_FREQ = GolemLookup.getConfig(EntitySeaLanternGolem.class).getInt(EntitySeaLanternGolem.FREQUENCY);
 		event.getRegistry().registerAll(
-				new BlockGolemHead().setTranslationKey("golem_head").setRegistryName(ExtraGolems.MODID, "golem_head"),
-				new BlockUtilityGlow(Material.GLASS, 1.0F, GLOWSTONE_FREQ, Blocks.AIR.getDefaultState())
-					.setTranslationKey("light_provider_full").setRegistryName(ExtraGolems.MODID, "light_provider_full"),
-				new BlockUtilityGlowWater(Material.WATER, 1.0F, SEALANTERN_FREQ, Blocks.WATER.getDefaultState().withProperty(BlockLiquid.LEVEL, 0))
-					.setTranslationKey("water_light_provider_full").setRegistryName(ExtraGolems.MODID, "water_light_provider_full"),
-				new BlockUtilityPower(15, EntityRedstoneGolem.DEF_FREQ).setTranslationKey("power_provider_all").setRegistryName(ExtraGolems.MODID, "power_provider_all"));
+			new BlockGolemHead().setTranslationKey("golem_head").setRegistryName(ExtraGolems.MODID, "golem_head"),
+			new BlockUtilityGlow(Material.GLASS, 1.0F, GLOWSTONE_FREQ, Blocks.AIR.getDefaultState())
+				.setTranslationKey("light_provider_full").setRegistryName(ExtraGolems.MODID, "light_provider_full"),
+			new BlockUtilityGlowWater(Material.WATER, 1.0F, SEALANTERN_FREQ, Blocks.WATER.getDefaultState().withProperty(BlockLiquid.LEVEL, 0))
+				.setTranslationKey("water_light_provider_full").setRegistryName(ExtraGolems.MODID, "water_light_provider_full"),
+			new BlockUtilityPower(15, EntityRedstoneGolem.DEF_FREQ).setTranslationKey("power_provider_all").setRegistryName(ExtraGolems.MODID, "power_provider_all"));
 	}
 
 }

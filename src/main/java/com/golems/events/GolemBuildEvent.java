@@ -1,7 +1,6 @@
 package com.golems.events;
 
 import com.golems.entity.GolemBase;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.world.World;
@@ -10,20 +9,34 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 @Deprecated
 public class GolemBuildEvent extends Event {
 
-	/** The world in which theGolem was built. **/
+	/**
+	 * The world in which theGolem was built.
+	 **/
 	public final World worldObj;
-	/** The Block type being used to build the golem. **/
+	/**
+	 * The Block type being used to build the golem.
+	 **/
 	public final Block blockBelow;
-	/** The metadata of blockBelow. **/
+	/**
+	 * The metadata of blockBelow.
+	 **/
 	public final IBlockState blockState;
-	/** Whether the golem's arms are aligned on the x-axis. **/
+	/**
+	 * Whether the golem's arms are aligned on the x-axis.
+	 **/
 	public final boolean isGolemXAligned;
-	/** Whether all 4 construction blocks are identical metadata. **/
+	/**
+	 * Whether all 4 construction blocks are identical metadata.
+	 **/
 	public final boolean areBlocksSameMeta;
 
-	/** The GolemBase to spawn if possible. **/
+	/**
+	 * The GolemBase to spawn if possible.
+	 **/
 	private GolemBase theGolem;
-	/** Whether theGolem is not allowed to be spawned. **/
+	/**
+	 * Whether theGolem is not allowed to be spawned.
+	 **/
 	private boolean isGolemBanned;
 
 	public GolemBuildEvent(final World world, final IBlockState blockBelowState, final boolean sameMeta, final boolean isXAligned) {
@@ -36,7 +49,9 @@ public class GolemBuildEvent extends Event {
 		this.isGolemBanned = false;
 	}
 
-	/** Assign this event a new GolemBase to spawn and its spawn permission. **/
+	/**
+	 * Assign this event a new GolemBase to spawn and its spawn permission.
+	 **/
 	public void setGolem(final GolemBase golem, final boolean isAllowedByConfig) {
 		this.theGolem = golem;
 		this.isGolemBanned = !isAllowedByConfig;

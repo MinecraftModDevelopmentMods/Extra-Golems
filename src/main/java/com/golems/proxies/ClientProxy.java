@@ -1,29 +1,19 @@
 package com.golems.proxies;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
 import com.golems.entity.*;
 import com.golems.main.ExtraGolems;
 import com.golems.main.GolemItems;
 import com.golems.renders.RenderColoredGolem;
 import com.golems.renders.RenderGolem;
-
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.entity.EntityList;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.EntityEntry;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = ExtraGolems.MODID)
@@ -32,8 +22,7 @@ public final class ClientProxy extends CommonProxy {
 	public static final IRenderFactory<GolemBase> FACTORY_TEXTURED_GOLEM = RenderGolem::new;
 
 	public static final IRenderFactory<GolemColorized> FACTORY_COLORED_GOLEM = RenderColoredGolem::new;
-	
-	
+
 
 	@Override
 	public void registerEvents() {
@@ -51,7 +40,7 @@ public final class ClientProxy extends CommonProxy {
 
 		// itemblocks
 		registerRender(Item.getItemFromBlock(GolemItems.golemHead),
-				Blocks.PUMPKIN.getRegistryName().toString());
+			Blocks.PUMPKIN.getRegistryName().toString());
 		// items
 		registerRender(GolemItems.golemPaper);
 		registerRender(GolemItems.spawnBedrockGolem);
@@ -100,7 +89,9 @@ public final class ClientProxy extends CommonProxy {
 		registerTextured(EntityWoolGolem.class);
 	}
 
-	/** Registers an entity with the RenderGolem rendering class. */
+	/**
+	 * Registers an entity with the RenderGolem rendering class.
+	 */
 	public static void registerTextured(final Class<? extends GolemBase> golem) {
 		RenderingRegistry.registerEntityRenderingHandler(golem, FACTORY_TEXTURED_GOLEM);
 	}
@@ -111,7 +102,7 @@ public final class ClientProxy extends CommonProxy {
 
 	private void registerRender(final Item i, final String name, int... meta) {
 		if (meta.length < 1) {
-			meta = new int[] { 0 };
+			meta = new int[]{0};
 		}
 		final ModelResourceLocation mrl = new ModelResourceLocation(name, "inventory");
 		for (final int m : meta) {
