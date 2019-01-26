@@ -1,6 +1,9 @@
 package com.golems.entity;
 
-import net.minecraft.block.Block;
+import javax.annotation.Nullable;
+
+import com.golems.main.ExtraGolems;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -17,6 +20,7 @@ public abstract class GolemColorizedMultiTextured extends GolemColorized {
 			.<Byte>createKey(GolemColorizedMultiTextured.class, DataSerializers.BYTE);
 	protected static final String NBT_TEXTURE = "GolemTextureData";
 	protected final int[] colors;
+	protected final ResourceLocation[] lootTables;
 
 	/**
 	 * Flexible constructor so child classes can "borrow" this class's behavior and customize.
@@ -25,29 +29,15 @@ public abstract class GolemColorizedMultiTextured extends GolemColorized {
 	 * @param overlay a texture that will be recolored and optionally rendered as transparent.
 	 * @param lColors an int[] of color values to use for rendering -- interacting with this golem  will go to the next color
 	 **/
-	public GolemColorizedMultiTextured(final World world, final float damage, final ItemStack pick,
-			final ResourceLocation base, final ResourceLocation overlay, final int[] lColors) {
-		super(world, damage, pick, 0L, base, overlay);
+	public GolemColorizedMultiTextured(final World world, @Nullable final ResourceLocation base, 
+			@Nullable final ResourceLocation overlay, final int[] lColors) {
+		super(world, 0L, base, overlay);
 		colors = lColors;
-	}
-
-	/**
-	 * Flexible constructor so child classes can "borrow" this class's behavior and customize. It is
-	 * fine to pass 'null' for {@link base} or {@link overlay}, and null textures will not be
-	 * rendered.
-	 *
-	 * @param base
-	 *            an optional texture that will not be recolored or rendered transparent, to render
-	 *            before {@link overlay}
-	 * @param overlay
-	 *            a texture that will be recolored and optionally rendered as transparent.
-	 * @param lColors
-	 *            an int[] of color values to use for rendering -- interacting with this golem will
-	 *            go to the next color
-	 **/
-	public GolemColorizedMultiTextured(final World world, final float damage, final Block pick,
-			final ResourceLocation base, final ResourceLocation overlay, final int[] lColors) {
-		this(world, damage, new ItemStack(pick), base, overlay, lColors);
+		lootTables = new ResourceLocation[colors.length];
+		for (int n = 0, len = colors.length; n < len; n++) {
+			// initialize loot tables
+			this.lootTables[n] = new ResourceLocation(getModId(), "entities/" + this.getEntityString().replaceAll(getModId() + ":", "") + "/" + n);
+		}
 	}
 
 	@Override
@@ -98,6 +88,12 @@ public abstract class GolemColorizedMultiTextured extends GolemColorized {
 	public boolean doesInteractChangeTexture() {
 		return true;
 	}
+	
+	@Override
+    protected ResourceLocation getLootTable()
+    {
+        return this.lootTables[this.getTextureNum() % this.lootTables.length];
+    }
 
 	public void setTextureNum(final byte toSet) {
 		this.getDataManager().set(DATA_TEXTURE, new Byte(toSet));
@@ -113,5 +109,9 @@ public abstract class GolemColorizedMultiTextured extends GolemColorized {
 
 	protected void updateTextureByData(final int data) {
 		this.setColor(this.colors[data]);
+	}
+	
+	public String getModId() {
+		return ExtraGolems.MODID;
 	}
 }

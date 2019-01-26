@@ -5,6 +5,7 @@ import java.util.List;
 import com.golems.entity.EntityBedrockGolem;
 import com.golems.entity.GolemBase;
 import com.golems.main.Config;
+import com.golems.util.GolemLookup;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -34,8 +35,8 @@ public final class ItemBedrockGolem extends Item {
 			final EnumHand hand, final EnumFacing facing, final float hitX, final float hitY, final float hitZ) {
 		final ItemStack stack = player.getHeldItem(hand);
 		// creative players can use this item to spawn a bedrock golem
-		if (Config.BEDROCK.canSpawn()) {
-			if (Config.bedrockGolemCreativeOnly && !player.capabilities.isCreativeMode) {
+		if (GolemLookup.getConfig(EntityBedrockGolem.class).canSpawn()) {
+			if (Config.isBedrockGolemCreativeOnly() && !player.capabilities.isCreativeMode) {
 				return EnumActionResult.PASS;
 			}
 
@@ -79,14 +80,14 @@ public final class ItemBedrockGolem extends Item {
 	public void addInformation(final ItemStack par1ItemStack, final World world, final List<String> par3List,
 			final ITooltipFlag flag) {
 		final String loreCreativeOnly = TextFormatting.RED + trans("tooltip.creative_only_item");
-		if (Config.bedrockGolemCreativeOnly) {
+		if (Config.isBedrockGolemCreativeOnly()) {
 			par3List.add(loreCreativeOnly);
 		}
 
 		if (GuiScreen.isShiftKeyDown()) {
-			par3List.add(I18n.format("tooltip.use_to_spawn", trans("entity.golem_bedrock.name")));
+			par3List.add(I18n.format("tooltip.use_to_spawn", trans("entity.golems.golem_bedrock.name")));
 			par3List.add(
-					I18n.format("tooltip.use_on_existing", trans("entity.golem_bedrock.name")));
+					I18n.format("tooltip.use_on_existing", trans("entity.golems.golem_bedrock.name")));
 			par3List.add(trans("tooltip.to_remove_it") + ".");
 		} else {
 			final String lorePressShift = TextFormatting.GRAY + trans("tooltip.press") + " "

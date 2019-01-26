@@ -2,6 +2,8 @@ package com.golems.entity.ai;
 
 import java.util.function.Predicate;
 
+import javax.annotation.Nullable;
+
 import com.golems.entity.GolemBase;
 
 import net.minecraft.block.Block;
@@ -10,7 +12,7 @@ import net.minecraft.block.state.IBlockState;
 public class EntityAIPlaceRandomBlocksStrictly extends EntityAIPlaceRandomBlocks {
 
 	public EntityAIPlaceRandomBlocksStrictly(final GolemBase golemBase, final int ticksBetweenPlanting,
-			final IBlockState[] plants, final Block[] soils, final boolean configAllows) {
+			final IBlockState[] plants, @Nullable final Block[] soils, final boolean configAllows) {
 		super(golemBase, ticksBetweenPlanting, plants, soils, getPredicate(configAllows));
 	}
 

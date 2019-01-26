@@ -4,16 +4,14 @@ import com.golems.entity.GolemBase;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
+@Deprecated
 public class GolemBuildEvent extends Event {
 
 	/** The world in which theGolem was built. **/
 	public final World worldObj;
-	/** The X,Y,Z coordinates of the Golem Head block. **/
-	public final BlockPos headPos;
 	/** The Block type being used to build the golem. **/
 	public final Block blockBelow;
 	/** The metadata of blockBelow. **/
@@ -28,13 +26,12 @@ public class GolemBuildEvent extends Event {
 	/** Whether theGolem is not allowed to be spawned. **/
 	private boolean isGolemBanned;
 
-	public GolemBuildEvent(final World world, final BlockPos pos, final boolean isXAligned) {
+	public GolemBuildEvent(final World world, final IBlockState blockBelowState, final boolean sameMeta, final boolean isXAligned) {
 		this.worldObj = world;
-		this.headPos = pos;
-		this.blockBelow = world.getBlockState(pos.down(1)).getBlock();
-		this.blockState = world.getBlockState(pos.down(1));
+		this.blockBelow = blockBelowState.getBlock();
+		this.blockState = blockBelowState;
 		this.isGolemXAligned = isXAligned;
-		this.areBlocksSameMeta = this.getAreGolemBlocksSameMeta();
+		this.areBlocksSameMeta = sameMeta;
 		this.theGolem = (GolemBase) null;
 		this.isGolemBanned = false;
 	}
@@ -75,26 +72,5 @@ public class GolemBuildEvent extends Event {
 	 **/
 	public boolean isGolemBanned() {
 		return this.isGolemBanned;
-	}
-
-	/**
-	 * @return true if all 4 construction blocks have the same metadata
-	 **/
-	protected boolean getAreGolemBlocksSameMeta() {
-		// SOUTH=z++; WEST=x--; NORTH=z--; EAST=x++
-		final BlockPos[] armsX = { this.headPos.down(1).west(1), this.headPos.down(1).east(1) };
-		final BlockPos[] armsZ = { this.headPos.down(1).north(1), this.headPos.down(1).south(1) };
-		final int metaBelow1 = this.blockBelow.getMetaFromState(this.blockState);
-		IBlockState state;
-		state = this.worldObj.getBlockState(this.headPos.down(2));
-		final int metaBelow2 = this.blockBelow.getMetaFromState(state);
-		state = this.isGolemXAligned ? this.worldObj.getBlockState(armsX[0])
-				: this.worldObj.getBlockState(armsZ[0]);
-		final int metaArm1 = this.blockBelow.getMetaFromState(state);
-		state = this.isGolemXAligned ? this.worldObj.getBlockState(armsX[1])
-				: this.worldObj.getBlockState(armsZ[1]);
-		final int metaArm2 = this.blockBelow.getMetaFromState(state);
-
-		return metaBelow1 == metaBelow2 && metaBelow2 == metaArm1 && metaArm1 == metaArm2;
 	}
 }

@@ -3,28 +3,24 @@ package com.golems.entity;
 import java.util.List;
 
 import com.golems.events.EndGolemTeleportEvent;
-import com.golems.main.Config;
-import com.golems.main.GolemItems;
-import com.golems.util.WeightedItem;
+import com.golems.util.GolemConfigSet;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 
-public final class EntityEndstoneGolem extends GolemBase {
+public class EntityEndstoneGolem extends GolemBase {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Teleporting";
 	public static final String ALLOW_WATER_HURT = "Can Take Water Damage";
@@ -33,7 +29,7 @@ public final class EntityEndstoneGolem extends GolemBase {
 	protected int teleportDelay;
 	/** Max distance for one teleport; range is 32.0 for endstone golem. **/
 	protected double range;
-	protected boolean canTeleport;
+	protected boolean allowTeleport;
 	protected boolean isHurtByWater;
 	protected boolean hasAmbientParticles;
 
@@ -43,9 +39,12 @@ public final class EntityEndstoneGolem extends GolemBase {
 
 	/** Default constructor. **/
 	public EntityEndstoneGolem(final World world) {
-		this(world, Config.ENDSTONE.getBaseAttack(), new ItemStack(Blocks.END_STONE), 32.0D,
-				Config.ENDSTONE.getBoolean(ALLOW_SPECIAL),
-				Config.ENDSTONE.getBoolean(ALLOW_WATER_HURT), true);
+		this(world, 32.0D, true);
+		GolemConfigSet cfg = getConfig(this);
+		this.setLootTableLoc("golem_end_stone");
+		this.isHurtByWater = cfg.getBoolean(ALLOW_WATER_HURT);
+		this.allowTeleport = cfg.getBoolean(ALLOW_SPECIAL);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 
 	/**
@@ -64,54 +63,20 @@ public final class EntityEndstoneGolem extends GolemBase {
 	 * @param ambientParticles
 	 *            whether always to display "portal" particles
 	 **/
-	public EntityEndstoneGolem(final World world, final float attack, final ItemStack pick, final double teleportRange,
-			final boolean teleportingAllowed, final boolean hurtByWater, final boolean ambientParticles) {
-		super(world, attack, pick);
+	public EntityEndstoneGolem(final World world, final double teleportRange, 
+			final boolean ambientParticles) {
+		super(world);
 		this.ticksBetweenIdleTeleports = 200;
 		this.chanceToTeleportWhenHurt = 15;
 		this.range = teleportRange;
-		this.canTeleport = teleportingAllowed;
-		this.isHurtByWater = hurtByWater;
+		this.isHurtByWater = false;
 		this.hasAmbientParticles = ambientParticles;
+		this.allowTeleport = true;
 	}
-
-	/**
-	 * Flexible contructor to allow child classes to customize.
-	 *
-	 * @param world
-	 *            the worldObj
-	 * @param attack
-	 *            base attack damage
-	 * @param teleportRange
-	 *            64.0 for enderman, 32.0 for endstone golem
-	 * @param teleportingAllowed
-	 *            usually set by the config, checked here
-	 * @param ambientParticles
-	 *            whether to always display "portal" particles
-	 **/
-	public EntityEndstoneGolem(final World world, final float attack, final double teleportRange,
-			final boolean teleportingAllowed, final boolean hurtByWater, final boolean ambientParticles) {
-		this(world, attack, new ItemStack(GolemItems.golemHead, 1), teleportRange,
-				teleportingAllowed, hurtByWater, ambientParticles);
-	}
-
+	
 	@Override
 	protected ResourceLocation applyTexture() {
 		return makeGolemTexture("end_stone");
-	}
-
-	@Override
-	protected void applyAttributes() {
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
-				.setBaseValue(Config.ENDSTONE.getMaxHealth());
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
-	}
-
-	@Override
-	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
-		this.addDrop(dropList, Blocks.END_STONE, 0, 2, 2 + lootingLevel, 90);
-		this.addDrop(dropList, Items.ENDER_PEARL, 0, 2, 4 + lootingLevel, 40);
-		this.addDrop(dropList, Items.ENDER_EYE, 0, 1, 1 + lootingLevel, 6);
 	}
 
 	protected boolean teleportRandomly() {
@@ -224,9 +189,9 @@ public final class EntityEndstoneGolem extends GolemBase {
 	/**
 	 * Teleport the golem.
 	 **/
-	private boolean teleportTo(final double x, final double y, final double z) {
+	protected boolean teleportTo(final double x, final double y, final double z) {
 		final EndGolemTeleportEvent event = new EndGolemTeleportEvent(this, x, y, z, 0);
-		if (!this.canTeleport || MinecraftForge.EVENT_BUS.post(event)) {
+		if (!this.allowTeleport || MinecraftForge.EVENT_BUS.post(event)) {
 			return false;
 		}
 		final boolean flag = this.attemptTeleport(event.getTargetX(), event.getTargetY(),
@@ -244,5 +209,14 @@ public final class EntityEndstoneGolem extends GolemBase {
 	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_STONE_STEP;
+	}
+	
+	@Override
+	public List<String> addSpecialDesc(final List<String> list) {
+		// this will only fire for the Endstone Golem, not child classes
+		if (this.getClass() == EntityEndstoneGolem.class && getConfig(this).getBoolean(EntityEndstoneGolem.ALLOW_SPECIAL)) {
+			list.add(TextFormatting.DARK_AQUA + trans("entitytip.can_teleport"));
+		}
+		return list;
 	}
 }

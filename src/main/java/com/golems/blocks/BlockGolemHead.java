@@ -4,6 +4,8 @@ import com.golems.entity.GolemBase;
 import com.golems.events.GolemBuildEvent;
 import com.golems.items.ItemBedrockGolem;
 import com.golems.main.ExtraGolems;
+import com.golems.util.GolemConfigSet;
+import com.golems.util.GolemLookup;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
@@ -91,16 +93,17 @@ public final class BlockGolemHead extends BlockHorizontal {
 	@Override
 	public void onBlockAdded(final World world, final BlockPos pos, final IBlockState state) {
 		super.onBlockAdded(world, pos, state);
-		final Block blockBelow1 = world.getBlockState(pos.down(1)).getBlock();
-		final Block blockBelow2 = world.getBlockState(pos.down(2)).getBlock();
-		final int x = pos.getX();
-		final int y = pos.getY();
-		final int z = pos.getZ();
+		final IBlockState stateBelow1 = world.getBlockState(pos.down(1));
+		final IBlockState stateBelow2 = world.getBlockState(pos.down(2));
+		final Block blockBelow1 = stateBelow1.getBlock();
+		final Block blockBelow2 = stateBelow2.getBlock();
+		final double x = pos.getX() + 0.5D;
+		final double y = pos.getY() - 1.95D;
+		final double z = pos.getZ() + 0.5D;
 
 		if (blockBelow1 == blockBelow2) {
 			final boolean flagX = isGolemXAligned(world, pos);
 			final boolean flagZ = isGolemZAligned(world, pos);
-			// final IBlockState meta = world.getBlockState(pos.down(1));
 
 			// hard-coded support for Snow Golem
 			if (blockBelow1 == Blocks.SNOW) {
@@ -108,47 +111,54 @@ public final class BlockGolemHead extends BlockHorizontal {
 					removeGolemBody(world, pos);
 					final EntitySnowman entitysnowman = new EntitySnowman(world);
 					ExtraGolems.LOGGER.info("[Extra Golems]: Building regular boring Snow Golem\n");
-					entitysnowman.setLocationAndAngles((double) x + 0.5D, (double) y - 1.95D,
-							(double) z + 0.5D, 0.0F, 0.0F);
+					entitysnowman.setLocationAndAngles(x, y, z, 0.0F, 0.0F);
 					world.spawnEntity(entitysnowman);
 				}
 
-				ItemBedrockGolem.spawnParticles(world, x + 0.5D, y - 1.5D, z + 0.5D, 0.2D);
+				ItemBedrockGolem.spawnParticles(world, x, y + 0.5D, z, 0.2D);
 				return;
 			}
 
-			if (flagX || flagZ) {
-				if (!world.isRemote) {
-					// hard-coded support for Iron Golem
-					if (blockBelow1 == Blocks.IRON_BLOCK) {
-						removeAllGolemBlocks(world, pos, flagX);
-						// spawn the golem
-						final EntityIronGolem golem = new EntityIronGolem(world);
-						ExtraGolems.LOGGER.info("[Extra Golems]: Building regular boring Iron Golem\n");
-						golem.setPlayerCreated(true);
-						golem.setLocationAndAngles((double) x + 0.5D, (double) y - 1.95D,
-								(double) z + 0.5D, 0.0F, 0.0F);
-						world.spawnEntity(golem);
-						return;
-					}
+			if (!world.isRemote && (flagX || flagZ)) {
+				// determine each arm of the golem
+				EnumFacing face = flagX ? EnumFacing.EAST : EnumFacing.NORTH;
+				IBlockState arm1 = world.getBlockState(pos.down(1).offset(face, 1));
+				IBlockState arm2 = world.getBlockState(pos.down(1).offset(face.getOpposite(), 1));
+				
+				// hard-coded support for Iron Golem
+				if (blockBelow1 == Blocks.IRON_BLOCK) {
+					removeAllGolemBlocks(world, pos, flagX);
+					// build Iron Golem
+					final EntityIronGolem golem = new EntityIronGolem(world);
+					ExtraGolems.LOGGER.info("[Extra Golems]: Building regular boring Iron Golem\n");
+					golem.setPlayerCreated(true);
+					golem.setLocationAndAngles(x, y, z, 0.0F, 0.0F);
+					world.spawnEntity(golem);
+					return;
+				}
 
-					// post an event that, when handled, will initialize the golem to spawn
-					final GolemBuildEvent event = new GolemBuildEvent(world, pos, flagX);
-					MinecraftForge.EVENT_BUS.post(event);
-					if (event.isGolemNull() || event.isGolemBanned()) {
-						return;
-					}
+				// query the GolemLookup to see if there is a golem that can be built with this
+				// if there is, double-check its spawn permissions, then build!
+				if(GolemLookup.isBuildingBlock(blockBelow1)) {
+					// get the golem
+					final GolemBase golem = GolemLookup.getGolem(world, blockBelow1);
+					if(golem == null) return;
 
+					// get the spawn permissions (assume it's allowed if none found)
+					final GolemConfigSet cfg = GolemLookup.getConfig(golem.getClass());
+					boolean allowed = cfg != null ? cfg.canSpawn() : true;
+					if(!allowed) return;
+					
 					// clear the area where the golem blocks were
 					removeAllGolemBlocks(world, pos, flagX);
 
 					// spawn the golem
-					final GolemBase golem = event.getGolem();
 					ExtraGolems.LOGGER.info("[Extra Golems]: Building golem " + golem.toString() + "\n");
 					golem.setPlayerCreated(true);
-					golem.setLocationAndAngles((double) x + 0.5D, (double) y - 1.95D,
-							(double) z + 0.5D, 0.0F, 0.0F);
+					golem.setLocationAndAngles(x, y, z, 0.0F, 0.0F);
 					world.spawnEntity(golem);
+					golem.onBuilt(stateBelow1, stateBelow2, arm1, arm2);
+					
 				}
 			}
 		}
@@ -173,7 +183,7 @@ public final class BlockGolemHead extends BlockHorizontal {
 		return world.getBlockState(armsZ[0]).getBlock() == below
 				&& world.getBlockState(armsZ[1]).getBlock() == below;
 	}
-
+	
 	/**
 	 * Replaces this block and the four construction blocks with air.
 	 **/

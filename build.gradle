@@ -222,15 +222,15 @@ repositories {
 dependencies {
   runtime "mezz.jei:jei_${mc_version}:${jei_version}"
 
-  deobfProvided "mcjty.theoneprobe:TheOneProbe-${mc_version}:${mc_version}-${top_version}:api"
-  runtime "mcjty.theoneprobe:TheOneProbe-${mc_version}:${mc_version}-${top_version}"
+  deobfCompile "mcjty.theoneprobe:TheOneProbe-${mc_version}:${mc_version}-${top_version}:api"
+  //runtime "mcjty.theoneprobe:TheOneProbe-${mc_version}:${mc_version}-${top_version}"
 
-  deobfProvided ("mcp.mobius.waila:Hwyla:${hwyla_version}") {
+  deobfCompile ("mcp.mobius.waila:Hwyla:${hwyla_version}") {
     exclude group: 'mezz.jei'
   }
-  runtime ("mcp.mobius.waila:Hwyla:${hwyla_version}") {
-    exclude group: 'mezz.jei'
-  }
+  //runtime ("mcp.mobius.waila:Hwyla:${hwyla_version}") {
+  //  exclude group: 'mezz.jei'
+  //}
 }
 
 processResources {

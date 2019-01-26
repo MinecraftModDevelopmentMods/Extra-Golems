@@ -7,9 +7,9 @@
   "mcversion": "${mcversion}",
   "url": "http://goo.gl/5IpqWW",
   "updateUrl": "",
-  "authorList": ["sky01"],
+  "authorList": ["skyjay1"],
   "credits": "Textures made with Gimp 2.8",
-  "logoFile": "assets/golems/logos/sky01_logo-sq.png",
+  "logoFile": "assets/golems/logos/skyjay1-logo1-400.png",
   "screenshots": [],
   "dependencies": []
 }

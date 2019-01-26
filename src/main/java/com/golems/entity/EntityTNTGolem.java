@@ -2,13 +2,9 @@ package com.golems.entity;
 
 import java.util.List;
 
-import com.golems.main.Config;
-import com.golems.util.WeightedItem;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -20,10 +16,11 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
-public final class EntityTNTGolem extends GolemBase {
+public class EntityTNTGolem extends GolemBase {
 
 	protected static final DataParameter<Boolean> DATA_IGNITED = EntityDataManager
 			.<Boolean>createKey(EntityTNTGolem.class, DataSerializers.BOOLEAN);
@@ -34,15 +31,17 @@ public final class EntityTNTGolem extends GolemBase {
 	protected final int fuseLen;
 	/** Percent chance to explode while attacking a mob. **/
 	protected final int chanceToExplodeWhenAttacking;
-	protected boolean allowedToExplode;
+	protected boolean allowedToExplode = false;
 
 	protected boolean willExplode;
 	protected int fuseTimer;
 
 	/** Default constructor for TNT golem. **/
 	public EntityTNTGolem(final World world) {
-		this(world, Config.TNT.getBaseAttack(), new ItemStack(Blocks.TNT), 3, 6, 50, 10,
-				Config.TNT.getBoolean(ALLOW_SPECIAL));
+		this(world, 3, 6, 50, 10);
+		this.setLootTableLoc("golem_tnt");
+		this.allowedToExplode = getConfig(this).getBoolean(ALLOW_SPECIAL);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 
 	/**
@@ -57,15 +56,13 @@ public final class EntityTNTGolem extends GolemBase {
 	 * @param randomExplosionChance
 	 * @param configAllowsExplode
 	 */
-	public EntityTNTGolem(final World world, final float attack, final ItemStack pick, final int minExplosionRange,
-			final int maxExplosionRange, final int minFuseLength, final int randomExplosionChance,
-			final boolean configAllowsExplode) {
-		super(world, attack, pick);
+	public EntityTNTGolem(final World world, final int minExplosionRange,
+			final int maxExplosionRange, final int minFuseLength, final int randomExplosionChance) {
+		super(world);
 		this.minExplosionRad = minExplosionRange;
 		this.maxExplosionRad = maxExplosionRange;
 		this.fuseLen = minFuseLength;
 		this.chanceToExplodeWhenAttacking = randomExplosionChance;
-		this.allowedToExplode = configAllowsExplode;
 		this.resetIgnite();
 	}
 
@@ -216,22 +213,15 @@ public final class EntityTNTGolem extends GolemBase {
 	}
 
 	@Override
-	protected void applyAttributes() {
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH)
-				.setBaseValue(Config.TNT.getMaxHealth());
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
-	}
-
-	@Override
-	public void addGolemDrops(final List<WeightedItem> dropList, final boolean recentlyHit, final int lootingLevel) {
-		final int size = 2 + this.rand.nextInt(4);
-		this.addDrop(dropList, new ItemStack(Items.GUNPOWDER, size), 100);
-		this.addDrop(dropList, Blocks.TNT, 0, 1, 1, lootingLevel * 30);
-		this.addDrop(dropList, Blocks.SAND, 0, 1, 4, 5 + lootingLevel * 10);
-	}
-
-	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_GRAVEL_STEP;
+	}
+	
+	@Override
+	public List<String> addSpecialDesc(final List<String> list) {
+		// only fires for this golem, not child classes
+		if (this.getClass() == EntityTNTGolem.class && getConfig(this).getBoolean(EntityTNTGolem.ALLOW_SPECIAL))
+			list.add(TextFormatting.RED + trans("entitytip.explodes"));
+		return list;
 	}
 }

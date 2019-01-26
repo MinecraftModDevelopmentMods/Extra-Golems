@@ -22,10 +22,13 @@ public abstract class GolemMultiTextured extends GolemBase {
 	 * Max size is 128
 	 **/
 	public final ResourceLocation[] textures;
+	
+	/** Loot Table array to match texture array. If you don't want this, override {@link getLootTable} **/
+	public final ResourceLocation[] lootTables;
 
 	/**
 	 * This is a base class for golems that change texture when player interacts. Pass Strings that
-	 * will be used to construct a ResourceLocation array of textures<br/>
+	 * will be used to construct a ResourceLocation array of textures as well as loot tables<br/>
 	 * <b>Example call to this constructor:</b><br/>
 	 * <br/>
 	 * <code>
@@ -33,15 +36,20 @@ public abstract class GolemMultiTextured extends GolemBase {
 	 *	super(world, 1.0F, Blocks.AIR, "example", new String[] {"one","two","three"});<br/>
 	 * }</code><br/>
 	 * This will initialize textures for <code>golem_example_one.png</code>,
-	 * <code>golem_example_two.png</code> and <code>golem_example_three.png</code>
+	 * <code>golem_example_two.png</code> and <code>golem_example_three.png</code>,
+	 * as well as loot tables for the same names with the JSON suffix
 	 **/
-	public GolemMultiTextured(final World world, final float attack, final ItemStack pick, final String prefix,
+	public GolemMultiTextured(final World world, final String prefix,
 			final String[] textureNames) {
-		super(world, attack, pick);
+		super(world);
 		this.textures = new ResourceLocation[textureNames.length];
+		this.lootTables = new ResourceLocation[textureNames.length];
 		for (int n = 0, len = textureNames.length; n < len; n++) {
+			// initialize textures
 			final String s = textureNames[n];
 			this.textures[n] = GolemBase.makeGolemTexture(getModId(), prefix + "_" + s);
+			// initialize loot tables
+			this.lootTables[n] = new ResourceLocation(getModId(), "entities/golem_" + prefix + "/" + s);
 		}
 	}
 
@@ -133,18 +141,15 @@ public abstract class GolemMultiTextured extends GolemBase {
 		return this.textures;
 	}
 
-	/**
-	 * @deprecated
-	 * automatically handled in {@link #setTextureNum(byte, boolean)}
-	 **/
-	@Deprecated
-	public void updateTexture() {
-		this.setTextureType(this.getTextureFromArray(this.getTextureNum()));
-	}
-
 	public ResourceLocation getTextureFromArray(final int index) {
 		return this.textures[index % this.textures.length];
 	}
+	
+	@Override
+    protected ResourceLocation getLootTable()
+    {
+        return this.lootTables[this.getTextureNum() % this.lootTables.length];
+    }
 
 	public abstract String getModId();
 }
