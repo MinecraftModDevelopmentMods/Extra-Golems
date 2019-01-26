@@ -1,9 +1,6 @@
 package com.golems.entity;
 
-import java.util.List;
-
 import com.golems.util.GolemConfigSet;
-
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
@@ -14,13 +11,15 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 
+import java.util.List;
+
 public final class EntityLeafGolem extends GolemColorized {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Regeneration";
 
 	private static final ResourceLocation TEXTURE_BASE = GolemBase.makeGolemTexture("leaves");
 	private static final ResourceLocation TEXTURE_OVERLAY = GolemBase
-			.makeGolemTexture("leaves_grayscale");
+		.makeGolemTexture("leaves_grayscale");
 
 	public EntityLeafGolem(final World world) {
 		super(world, 0x5F904A, TEXTURE_BASE, TEXTURE_OVERLAY);
@@ -38,10 +37,10 @@ public final class EntityLeafGolem extends GolemColorized {
 		super.onLivingUpdate();
 		GolemConfigSet cfg = getConfig(this);
 		if (cfg.getBoolean(ALLOW_SPECIAL)
-				&& this.getActivePotionEffect(MobEffects.REGENERATION) == null
-				&& rand.nextInt(40) == 0) {
+			&& this.getActivePotionEffect(MobEffects.REGENERATION) == null
+			&& rand.nextInt(40) == 0) {
 			this.addPotionEffect(
-					new PotionEffect(MobEffects.REGENERATION, 200 + 20 * (1 + rand.nextInt(8)), 1));
+				new PotionEffect(MobEffects.REGENERATION, 200 + 20 * (1 + rand.nextInt(8)), 1));
 		}
 
 		if (this.ticksExisted % 10 == 2 && this.world.isRemote) {
@@ -60,10 +59,10 @@ public final class EntityLeafGolem extends GolemColorized {
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_GRASS_STEP;
 	}
-	
+
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if(getConfig(this).getBoolean(EntityLeafGolem.ALLOW_SPECIAL)) {
+		if (getConfig(this).getBoolean(EntityLeafGolem.ALLOW_SPECIAL)) {
 			list.add(TextFormatting.DARK_GREEN + trans("effect.regeneration") + " " + trans("enchantment.level.1"));
 		}
 		return list;

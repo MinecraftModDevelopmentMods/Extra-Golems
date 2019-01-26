@@ -1,6 +1,8 @@
 package com.golems.integration;
 
-import com.golems.entity.*;
+import com.golems.entity.EntityBedrockGolem;
+import com.golems.entity.GolemBase;
+import com.golems.entity.GolemMultiTextured;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.text.TextFormatting;
@@ -40,25 +42,25 @@ public abstract class GolemDescriptionManager {
 		List<String> list = new LinkedList<>();
 		if (showAttack) {
 			list.add(TextFormatting.GRAY + trans("entitytip.attack") + " : "
-					+ TextFormatting.WHITE + golem.getBaseAttackDamage());
+				+ TextFormatting.WHITE + golem.getBaseAttackDamage());
 		}
 
 		// add right-click-texture to tip if possible
 		if (this.showMultiTexture
-				&& (golem instanceof GolemMultiTextured || golem.doesInteractChangeTexture())) {
+			&& (golem instanceof GolemMultiTextured || golem.doesInteractChangeTexture())) {
 			list.add(TextFormatting.BLUE + trans("entitytip.click_change_texture"));
 		}
 
 		// add fire immunity to tip if possible
 		if (this.showFireproof && golem.isImmuneToFire()
-				&& !(golem instanceof EntityBedrockGolem)) {
+			&& !(golem instanceof EntityBedrockGolem)) {
 			list.add(TextFormatting.GOLD + trans("entitytip.is_fireproof"));
 		}
 
 		// add knockback resist to tip if possible
 		if (this.showKnockbackResist
-				&& golem.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE)
-						.getBaseValue() > 0.8999D) {
+			&& golem.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE)
+			.getBaseValue() > 0.8999D) {
 			final String sResist = TextFormatting.GRAY + trans("attribute.name.generic.knockbackResistance");
 			list.add(sResist);
 		}

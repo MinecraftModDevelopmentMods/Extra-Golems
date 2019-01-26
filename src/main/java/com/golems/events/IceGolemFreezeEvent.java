@@ -1,12 +1,6 @@
 package com.golems.events;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 import com.golems.entity.GolemBase;
-import com.google.common.base.Function;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -14,6 +8,11 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.function.Function;
 
 /**
  * This event exists for other mods or addons to handle and modify the Sponge Golem's behavior. It
@@ -29,12 +28,18 @@ public final class IceGolemFreezeEvent extends Event {
 	public final GolemBase iceGolem;
 	public final BlockPos iceGolemPos;
 
-	/** This percentage of Packed Ice placed will become regular ice instead. **/
+	/**
+	 * This percentage of Packed Ice placed will become regular ice instead.
+	 **/
 	public static final int ICE_CHANCE = 52;
-	/** This percentage of Obsidian placed will become cobblestone instead. **/
+	/**
+	 * This percentage of Obsidian placed will become cobblestone instead.
+	 **/
 	public static final int COBBLE_CHANCE = 29;
 
-	/** This should be passed in World#setBlockState when using this event. **/
+	/**
+	 * This should be passed in World#setBlockState when using this event.
+	 **/
 	public int updateFlag;
 
 	public IceGolemFreezeEvent(final GolemBase golem, final BlockPos center, final int radius) {
@@ -84,11 +89,17 @@ public final class IceGolemFreezeEvent extends Event {
 
 	public static class DefaultFreezeFunction implements Function<IBlockState, IBlockState> {
 
-		/** Random instance. **/
+		/**
+		 * Random instance.
+		 **/
 		public final Random random;
-		/** This percentage of Packed Ice placed will become regular ice instead. **/
+		/**
+		 * This percentage of Packed Ice placed will become regular ice instead.
+		 **/
 		public final int iceChance;
-		/** This percentage of Obsidian placed will become cobblestone instead. **/
+		/**
+		 * This percentage of Obsidian placed will become cobblestone instead.
+		 **/
 		public final int cobbleChance;
 
 		public DefaultFreezeFunction(final Random randomIn, final int iceChanceIn, final int cobbleChanceIn) {

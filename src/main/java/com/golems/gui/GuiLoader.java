@@ -2,13 +2,12 @@ package com.golems.gui;
 
 import com.golems.main.ExtraGolems;
 import com.golems.util.GolemLookup;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 public final class GuiLoader {
-	
+
 	private GuiLoader() {
 		//
 	}

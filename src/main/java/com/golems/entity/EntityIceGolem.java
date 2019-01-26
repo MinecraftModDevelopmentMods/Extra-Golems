@@ -1,11 +1,7 @@
 package com.golems.entity;
 
-import java.util.List;
-
 import com.golems.events.IceGolemFreezeEvent;
 import com.golems.util.GolemConfigSet;
-import com.google.common.base.Function;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -19,6 +15,9 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
+
+import java.util.List;
+import java.util.function.Function;
 
 public final class EntityIceGolem extends GolemBase {
 
@@ -57,10 +56,10 @@ public final class EntityIceGolem extends GolemBase {
 			GolemConfigSet cfg = getConfig(this);
 			if (cfg.getBoolean(ALLOW_SPECIAL)) {
 				final IceGolemFreezeEvent event = new IceGolemFreezeEvent(this, below,
-						cfg.getInt(AOE));
+					cfg.getInt(AOE));
 				if (!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Result.DENY) {
 					this.freezeBlocks(event.getAffectedPositions(), event.getFunction(),
-							event.updateFlag);
+						event.updateFlag);
 				}
 			}
 		}
@@ -95,7 +94,7 @@ public final class EntityIceGolem extends GolemBase {
 	 * @return whether all setBlockState calls were successful.
 	 **/
 	public boolean freezeBlocks(final List<BlockPos> positions,
-			final Function<IBlockState, IBlockState> function, final int updateFlag) {
+				    final Function<IBlockState, IBlockState> function, final int updateFlag) {
 		boolean flag = false;
 		for (int i = 0, len = positions.size(); i < len; i++) {
 			final BlockPos pos = positions.get(i);
@@ -107,9 +106,10 @@ public final class EntityIceGolem extends GolemBase {
 		}
 		return flag;
 	}
+
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if(getConfig(this).getBoolean(EntityIceGolem.ALLOW_SPECIAL))
+		if (getConfig(this).getBoolean(EntityIceGolem.ALLOW_SPECIAL))
 			list.add(TextFormatting.AQUA + trans("entitytip.freezes_blocks"));
 		return list;
 	}
