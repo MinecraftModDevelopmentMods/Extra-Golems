@@ -107,9 +107,9 @@ public class GuiGolemBook extends GuiScreen {
 	protected static final int SCR_OFFSET_Y = 16;
 	/** width of the arrow button and its texture **/
 	protected static final int ARROW_WIDTH = 13 + DEF_SEP, ARROW_HEIGHT = 10 + DEF_SEP;
-	/** texture location and size of 2x2 crafting **/
-	protected static final int GRID2_X = 95, GRID2_Y = 15, GRID2_W = 78, GRID2_H = 40;
-	protected static final int FRAME2_W = 84, FRAME2_H = 46;
+	/** size of the supplemental (optional) image for each golem. As long as it's a 2:1 ratio, it'll work **/
+	protected static final int SUPP_WIDTH = 100, SUPP_HEIGHT = 50;
+	
 
 	/** Button to exit GUI **/
 	private GuiButton buttonDone;
@@ -135,17 +135,17 @@ public class GuiGolemBook extends GuiScreen {
     protected int totalPages;
     
     public static final List<GolemBookEntry> GOLEMS = new ArrayList();
-	private EntityPlayer player;
-	private ItemStack book;
+	private final EntityPlayer player;
+	private final ItemStack book;
     
-    private final int idDone = 0;
-	private final int idNextPage = 1;
-    private final int idPrevPage = 2;
-    private final int idBlockLeft = 3;
-    private final int idBlockRight = 4;
+    private static final int idDone = 0;
+	private static final int idNextPage = 1;
+    private static final int idPrevPage = 2;
+    private static final int idBlockLeft = 3;
+    private static final int idBlockRight = 4;
     
-    private final float BLOCK_SCALE = 1.60F;
-    private final int MARGIN = 12;
+    private static final float GOLEM_BLOCK_SCALE = 1.60F;
+    private static final int MARGIN = 12;
     private static final int NUM_PAGES_INTRO = 6;
     
     // for use in drawing golem spell recipe
@@ -157,10 +157,6 @@ public class GuiGolemBook extends GuiScreen {
 	private static final ItemStack[] ingredientsHead = new ItemStack[] 
 				{ new ItemStack(Blocks.PUMPKIN), new ItemStack(GolemItems.golemPaper) };
 	private static final ItemStack outputHead = new ItemStack(GolemItems.golemHead);
-	
-//	private static final String KEY_PAGES = "pages";
-//	private static final String KEY_TITLE = "title";
-//	private static final String KEY_AUTHOR = "author";
 	
 	public GuiGolemBook(EntityPlayer playerIn, ItemStack itemIn) {
 		super();
@@ -198,20 +194,22 @@ public class GuiGolemBook extends GuiScreen {
     public void initGui() {
 		// initialize buttons
     	this.buttonList.clear();
-    	int doneW = 98;
-    	int doneH = 20;
+    	// add the "close gui" button
+    	int doneW = 98, doneH = 20;
     	int doneX = (this.width - doneW) / 2;
     	int doneY = BOOK_HEIGHT + SCR_OFFSET_Y + 8;
     	this.buttonDone = this.addButton(new GuiButton(idDone, doneX, doneY, doneW, doneH, I18n.format("gui.done")));
+    	// locate and activate the "page change" arrows
 		int arrowX = (this.width - BOOK_WIDTH) / 2;
 		int arrowY = SCR_OFFSET_Y + BOOK_HEIGHT - (ARROW_HEIGHT * 3 / 2);
 		this.buttonPreviousPage = this.addButton(new GuiGolemBook.NextPageButton(idPrevPage, arrowX + ARROW_WIDTH, arrowY, false));
 		this.buttonNextPage = this.addButton(new GuiGolemBook.NextPageButton(idNextPage, arrowX + BOOK_WIDTH - ARROW_WIDTH * 2, arrowY, true));
-    	int blockX = ((this.width - BOOK_WIDTH ) / 2) + MARGIN + 4;
+    	// calculate location and size of blocks icons, if present
+		int blockX = ((this.width - BOOK_WIDTH ) / 2) + MARGIN + 4;
     	int blockY = SCR_OFFSET_Y + MARGIN;
-		this.buttonBlockLeft = this.addButton(new GuiGolemBook.BlockButton(idBlockLeft, blockX, blockY, BLOCK_SCALE));
+		this.buttonBlockLeft = this.addButton(new GuiGolemBook.BlockButton(idBlockLeft, blockX, blockY, GOLEM_BLOCK_SCALE));
 		blockX = (this.width / 2) + MARGIN;
-    	this.buttonBlockRight = this.addButton(new GuiGolemBook.BlockButton(idBlockRight, blockX, blockY, BLOCK_SCALE));
+    	this.buttonBlockRight = this.addButton(new GuiGolemBook.BlockButton(idBlockRight, blockX, blockY, GOLEM_BLOCK_SCALE));
 		this.updateButtons();
     }
 	
@@ -398,7 +396,6 @@ public class GuiGolemBook extends GuiScreen {
     
     /** Draws the GolemEntry name and description at the given location **/
     private void drawGolemEntry(int cornerX, int cornerY, final GolemBookEntry entry) {
-    	// DRAW TEXT FIELDS 
  		// 'golem name' text box
     	int nameX = cornerX + MARGIN * 4;
  		int nameY = cornerY + MARGIN;
@@ -413,7 +410,18 @@ public class GuiGolemBook extends GuiScreen {
  		this.fontRenderer.drawSplitString(stats, statsX, statsY, (BOOK_WIDTH / 2) - (MARGIN * 2), 0);  
  		
  		// 'golem block'
- 		this.drawBlock(entry.getBlock(), cornerX, cornerY, BLOCK_SCALE);
+ 		this.drawBlock(entry.getBlock(), cornerX, cornerY, GOLEM_BLOCK_SCALE);
+ 		
+ 		// 'screenshot' (supplemental image)
+ 		if(entry.hasImage()) {
+ 			float scale = 0.9F;
+ 			int imgX = cornerX + (BOOK_WIDTH / 4) - (int)((SUPP_WIDTH * scale) / 2.0F);
+ 			int imgY = cornerY + BOOK_HEIGHT - (int)(SUPP_HEIGHT * scale) - (MARGIN * 2);
+ 			this.mc.getTextureManager().bindTexture(entry.getImageResource());
+ 			int w = (int)(SUPP_WIDTH * scale);
+ 			int h = (int)(SUPP_HEIGHT * scale);
+ 			drawModalRectWithCustomSizedTexture(imgX, imgY, 0, 0, w, h, w, h);
+ 		}
     }
     
     private void drawBasicPage(int cornerX, int cornerY, String title, String body) {
@@ -455,11 +463,13 @@ public class GuiGolemBook extends GuiScreen {
     	final int frameWidth = 3;
     	final float scale = 1.0F;
     	final float unScale = (float)Math.pow(scale,-1);
+    	/** texture location and size of 2x2 crafting **/
+    	final int gridW = 84, gridH = 46;
     	GlStateManager.scale(scale, scale, scale);
     	GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
     	// draw 2x2 grid background
     	this.mc.getTextureManager().bindTexture(TEXTURE);
-    	this.drawTexturedModalRect(startX, startY, BOOK_WIDTH - FRAME2_W, BOOK_HEIGHT + DEF_SEP, FRAME2_W, FRAME2_H);
+    	this.drawTexturedModalRect(startX, startY, BOOK_WIDTH - gridW, BOOK_HEIGHT + DEF_SEP, gridW, gridH);
     	
     	// draw itemstacks
     	GlStateManager.enableRescaleNormal();
@@ -488,7 +498,7 @@ public class GuiGolemBook extends GuiScreen {
     	}
     	
     	// draw result itemstack
-    	posX = startX + FRAME2_W - 16.0F - frameWidth * 2.0F;
+    	posX = startX + gridW - 16.0F - frameWidth * 2.0F;
     	posY = startY + 16.0F;
     	this.itemRender.renderItemIntoGUI(result, (int)(posX / scale), (int)(posY / scale));
     	
@@ -532,36 +542,6 @@ public class GuiGolemBook extends GuiScreen {
 		return GOLEMS.get(page - NUM_PAGES_INTRO);
 	}
 	
-	
-	/** A Pair of Strings (first=Title, second=Body) to draw on the given page **
-	private static final Pair<String, String> getBasicPage(final int page) {
-		final String partIntro = TextFormatting.GOLD + trans("golembook.part_intro") + TextFormatting.BLACK;
-		final String golemPaper = trans("item.golem_paper.name");
-		final String golemHead = trans("tile.golem_head.name");
-		
-		switch(page) {
-		case 0:		// page 1: "Welcome"
-			return new Pair(trans("item.info_book.name"), trans("golembook.intro1") + "\n" + trans("golembook.intro2"));
-		case 1:		// page 2: "Table of Contents"
-			// TODO
-			return new Pair("", "");//"\n\n" + partIntro + "\n\n" + trans("golembook.part1") + "\n\n" + partIntro;
-		case 2:		// page 3: "
-		// page 3: "Make Golem Spell"
-		INTRO.add(TextFormatting.getTextWithoutFormattingCodes(I18n.format("golembook.recipe_spell.intro", golemPaper) 
-				+ "\n\n" + I18n.format("golembook.recipe_spell.recipe", golemPaper, trans("item.paper.name"), trans("item.feather.name"),
-				trans("item.dyePowder.black.name"), trans("item.redstone.name"))));
-		// page 4: "Make Golem Head"
-		INTRO.add(TextFormatting.getTextWithoutFormattingCodes(I18n.format("golembook.recipe_head.intro", golemHead) + "\n\n"
-				+ trans("golembook.recipe_head.recipe", golemHead, trans("item.golem_paper.name"), trans("tile.pumpkin.name"))));
-		// page 5: "Make Golem"
-		INTRO.add(trans("golembook.build_golem.intro") + "\n\n" + trans("golembook.build_golem.howto1") + " "
-				+ trans("golembook.build_golem.howto2") + "\n\n" + I18n.format("golembook.build_golem.howto3", golemHead));
-		// page 6: "Part 2"
-		INTRO.add("\n\n" + partIntro + "\n\n" + trans("golembook.part2") + "\n\n" + partIntro);
-		}
-		return "";
-	}
-	 */
 	/** Helper method for translating text into local language using {@code I18n} **/
 	protected static String trans(final String s, final Object... strings) {
 		return I18n.format(s, strings);

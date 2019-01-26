@@ -1,7 +1,5 @@
 package com.golems.gui;
 
-import java.util.List;
-
 import com.golems.main.ExtraGolems;
 import com.golems.util.GolemLookup;
 
@@ -23,12 +21,7 @@ public final class GuiLoader {
     	if(ExtraGolems.proxy.DUMMY_GOLEMS.isEmpty()) {
     		ExtraGolems.proxy.DUMMY_GOLEMS.addAll(GolemLookup.getDummyGolemList(playerIn.getEntityWorld()));
     	}
-    	// use DummyGolems list to build pages
-    	//GuiGolemBook.initGolemBookEntries(playerIn.getEntityWorld());
-//    	final List<String> pages = GuiGolemBook.getPages(GuiGolemBook.GOLEMS);
-//    	GuiGolemBook.addNBT(itemstack, pages);
-    	// open gui
-        //Minecraft.getMinecraft().displayGuiScreen(new GuiScreenBook(playerIn, itemstack, false));
+    	// open the gui
     	Minecraft.getMinecraft().displayGuiScreen(new GuiGolemBook(playerIn, itemstack));
     }   
 }
