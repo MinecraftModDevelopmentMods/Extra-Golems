@@ -64,9 +64,9 @@ public class GolemBookEntry {
 		String img = EntityList.getEntityString(golem).replaceFirst(".golem_", ":textures/gui/screenshots/golem_") + ".png";
 		try {
 			this.IMAGE = Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(img)).getResourceLocation();
-			System.out.println("Image found, yay! Loading " + img.toString() + " for " + this.GOLEM_NAME);
+			//System.out.println("Image found, yay! Loading " + img.toString() + " for " + this.GOLEM_NAME);
 		} catch (Exception e) {
-			System.out.println("No image found, skipping " + img.toString() + " for " + this.GOLEM_NAME);
+			//System.out.println("No image found, skipping " + img.toString() + " for " + this.GOLEM_NAME);
 		}
 	}
 
