@@ -58,7 +58,7 @@ public final class EntityMelonGolem extends GolemBase {
 		}
 		final IBlockState[] flowers = lFlowers.toArray(new IBlockState[lFlowers.size()]);
 		// get other parameters for the AI
-		final int freq = cfg != null ? cfg.getInt(FREQUENCY) : 1000;
+		final int freq = cfg.getInt(FREQUENCY);
 		//TODO: Fix possible NPE
 		final boolean allowed = cfg.getBoolean(ALLOW_SPECIAL);
 		return new EntityAIPlaceRandomBlocksStrictly(this, freq, flowers, soils, allowed);

@@ -115,11 +115,11 @@ public class EntityEndstoneGolem extends GolemBase {
 					this.posY + this.rand.nextDouble() * (double) this.height - 0.25D,
 					this.posZ + (this.rand.nextDouble() - 0.5D) * (double) this.width,
 					(this.rand.nextDouble() - 0.5D) * 2.0D, -this.rand.nextDouble(),
-					(this.rand.nextDouble() - 0.5D) * 2.0D, new int[0]);
+					(this.rand.nextDouble() - 0.5D) * 2.0D);
 			}
 		}
-
-		if (!this.world.isRemote && this.isEntityAlive()) {
+		//We can assume this.world.isRemote is false
+		else if (this.isEntityAlive()) {
 			if (this.getRevengeTarget() != null) {
 				if (this.getRevengeTarget() instanceof EntityMob) {
 					if (this.getRevengeTarget().getDistanceSq(this) < 16.0D && (rand.nextInt(5) == 0

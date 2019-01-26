@@ -42,7 +42,7 @@ public final class EntitySpongeGolem extends GolemBase {
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
 		GolemConfigSet cfg = getConfig(this);
-		final int interval = cfg != null ? cfg.getInt(INTERVAL) : 1000;
+		final int interval = cfg.getInt(INTERVAL);
 		//TODO: Fix possible NPE
 		if (cfg.getBoolean(ALLOW_SPECIAL)
 			&& (interval <= 1 || this.ticksExisted % interval == 0)) {

@@ -172,12 +172,10 @@ public abstract class BlockUtility extends BlockEmptyDrops {
 
 	@Override
 	public void onFallenUpon(final World worldIn, final BlockPos pos, final Entity entityIn, final float fallDistance) {
-		return;
 	}
 
 	@Override
 	public void onLanded(final World worldIn, final Entity entityIn) {
-		return;
 	}
 
 	/**
@@ -191,6 +189,8 @@ public abstract class BlockUtility extends BlockEmptyDrops {
 	 * @deprecated call via {@link IBlockState#getBlockFaceShape(IBlockAccess, BlockPos, EnumFacing)} whenever possible.
 	 * Implementing/overriding is fine.
 	 */
+	@Override
+	@Deprecated
 	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
 		return BlockFaceShape.UNDEFINED;
 	}

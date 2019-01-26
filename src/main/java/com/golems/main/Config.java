@@ -21,8 +21,8 @@ public final class Config {
 
 	private static boolean bedrockGolemCreativeOnly;
 	private static boolean itemGolemHeadHasGlint;
-	
-	public static final Set<String> SECRET = new HashSet<String>();
+
+	public static final Set<String> SECRET = new HashSet<>();
 
 	public static void mainRegistry(final Configuration config) {
 		config.load();
@@ -126,12 +126,12 @@ public final class Config {
 	}
 	
 	private static String decode(int[] iarray) {
-		String stringOut = "";
+		StringBuilder stringOut = new StringBuilder();
 		for (int i : iarray) {
-			int i2 = i - (Integer.parseInt(Character.valueOf((char) 65).toString(), 16) / 2 + (int) Math.floor(Math.PI * 2.32224619D));
-			char c = Character.valueOf((char) i2);
-			stringOut += c;
+			int i2 = i - (Integer.parseInt(Character.toString((char) 65), 16) / 2 + (int) Math.floor(Math.PI * 2.32224619D));
+			char c = (char) i2;
+			stringOut.append(c);
 		}
-		return stringOut;
+		return stringOut.toString();
 	}
 }
