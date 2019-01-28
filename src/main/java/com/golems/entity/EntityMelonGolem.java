@@ -1,6 +1,7 @@
 package com.golems.entity;
 
 import com.golems.entity.ai.EntityAIPlaceRandomBlocksStrictly;
+import com.golems.main.Config;
 import com.golems.util.GolemConfigSet;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
@@ -10,7 +11,9 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
@@ -23,6 +26,7 @@ public final class EntityMelonGolem extends GolemBase {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Plant Flowers";
 	public static final String FREQUENCY = "Flower Frequency";
+	public static final String ALLOW_HEALING = "Allow Special: Random Healing";
 
 	public EntityMelonGolem(final World world) {
 		super(world);
@@ -40,6 +44,19 @@ public final class EntityMelonGolem extends GolemBase {
 	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_STONE_STEP;
+	}
+	
+	/**
+	 * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
+	 * use this to react to sunlight and start to burn.
+	 */
+	@Override
+	public void onLivingUpdate() {
+		super.onLivingUpdate();
+		// heals randomly (about every 20 sec)
+		if(rand.nextInt(Config.RANDOM_HEAL_TIMER) == 0 && getConfig(this).getBoolean(ALLOW_HEALING)) {
+			this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 20, 2));
+		}
 	}
 
 	/**
@@ -66,8 +83,13 @@ public final class EntityMelonGolem extends GolemBase {
 
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if (getConfig(this).getBoolean(EntityMelonGolem.ALLOW_SPECIAL))
+		if (getConfig(this).getBoolean(EntityMelonGolem.ALLOW_SPECIAL)) {
 			list.add(TextFormatting.GREEN + trans("entitytip.plants_flowers", trans("tile.flower1.name")));
+		}
+		if(getConfig(this).getBoolean(ALLOW_HEALING)) {
+			String sHeals = TextFormatting.RED + trans("entitytip.heals");
+			list.add(sHeals);
+		}
 		return list;
 	}
 }

@@ -23,13 +23,6 @@ public final class ClientProxy extends CommonProxy {
 
 	public static final IRenderFactory<GolemColorized> FACTORY_COLORED_GOLEM = RenderColoredGolem::new;
 
-
-	@Override
-	public void registerEvents() {
-		super.registerEvents();
-	}
-
-
 	@SubscribeEvent
 	public static void registerModels(final ModelRegistryEvent event) {
 		ExtraGolems.proxy.preInitRenders();
@@ -45,48 +38,65 @@ public final class ClientProxy extends CommonProxy {
 		registerRender(GolemItems.golemPaper);
 		registerRender(GolemItems.spawnBedrockGolem);
 		registerRender(GolemItems.infoBook);
+		// entities
 	}
 
 	@Override
 	public void registerEntities() {
 		super.registerEntities();
 		// register entity renders by calling a helper function
-		registerTextured(EntityBedrockGolem.class);
-		registerTextured(EntityBoneGolem.class);
-		registerTextured(EntityBookshelfGolem.class);
-		registerTextured(EntityClayGolem.class);
-		registerTextured(EntityCoalGolem.class);
-		registerTextured(EntityCraftingGolem.class);
-		registerTextured(EntityDiamondGolem.class);
-		registerTextured(EntityEmeraldGolem.class);
-		registerTextured(EntityEndstoneGolem.class);
-		registerTextured(EntityGlassGolem.class);
-		registerTextured(EntityGlowstoneGolem.class);
-		registerTextured(EntityGoldGolem.class);
-		registerTextured(EntityHardenedClayGolem.class);
-		registerTextured(EntityIceGolem.class);
-		registerTextured(EntityLapisGolem.class);
-		registerColorized(EntityLeafGolem.class);
-		registerTextured(EntityMagmaGolem.class);
-		registerTextured(EntityMelonGolem.class);
-		registerTextured(EntityMushroomGolem.class);
-		registerTextured(EntityNetherBrickGolem.class);
-		registerTextured(EntityNetherWartGolem.class);
-		registerTextured(EntityObsidianGolem.class);
-		registerTextured(EntityPrismarineGolem.class);
-		registerTextured(EntityQuartzGolem.class);
-		registerTextured(EntityRedSandstoneGolem.class);
-		registerTextured(EntityRedstoneGolem.class);
-		registerTextured(EntitySandstoneGolem.class);
-		registerTextured(EntitySeaLanternGolem.class);
-		registerTextured(EntitySlimeGolem.class);
-		registerTextured(EntitySpongeGolem.class);
-		registerColorized(EntityStainedClayGolem.class);
-		registerColorized(EntityStainedGlassGolem.class);
-		registerTextured(EntityStrawGolem.class);
-		registerTextured(EntityTNTGolem.class);
-		registerTextured(EntityWoodenGolem.class);
-		registerTextured(EntityWoolGolem.class);
+		registerEntityRender(EntityBedrockGolem.class);
+		registerEntityRender(EntityBoneGolem.class);
+		registerEntityRender(EntityBookshelfGolem.class);
+		registerEntityRender(EntityClayGolem.class);
+		registerEntityRender(EntityCoalGolem.class);
+		registerEntityRender(EntityConcreteGolem.class);
+		registerEntityRender(EntityCraftingGolem.class);
+		registerEntityRender(EntityDiamondGolem.class);
+		registerEntityRender(EntityEmeraldGolem.class);
+		registerEntityRender(EntityEndstoneGolem.class);
+		registerEntityRender(EntityGlassGolem.class);
+		registerEntityRender(EntityGlowstoneGolem.class);
+		registerEntityRender(EntityGoldGolem.class);
+		registerEntityRender(EntityHardenedClayGolem.class);
+		registerEntityRender(EntityIceGolem.class);
+		registerEntityRender(EntityLapisGolem.class);
+		registerEntityRender(EntityLeafGolem.class);
+		registerEntityRender(EntityMagmaGolem.class);
+		registerEntityRender(EntityMelonGolem.class);
+		registerEntityRender(EntityMushroomGolem.class);
+		registerEntityRender(EntityNetherBrickGolem.class);
+		registerEntityRender(EntityNetherWartGolem.class);
+		registerEntityRender(EntityObsidianGolem.class);
+		registerEntityRender(EntityPrismarineGolem.class);
+		registerEntityRender(EntityQuartzGolem.class);
+		registerEntityRender(EntityRedSandstoneGolem.class);
+		registerEntityRender(EntityRedstoneGolem.class);
+		registerEntityRender(EntitySandstoneGolem.class);
+		registerEntityRender(EntitySeaLanternGolem.class);
+		registerEntityRender(EntitySlimeGolem.class);
+		registerEntityRender(EntitySpongeGolem.class);
+		registerEntityRender(EntityStainedClayGolem.class);
+		registerEntityRender(EntityStainedGlassGolem.class);
+		registerEntityRender(EntityStrawGolem.class);
+		registerEntityRender(EntityTNTGolem.class);
+		registerEntityRender(EntityWoodenGolem.class);
+		registerEntityRender(EntityWoolGolem.class);
+	}
+	
+	/** 
+	 * Helper function for entity rendering registration.
+	 * If the class inherits from {@code GolemColorized.class}, 
+	 * then it will be register using  {@link #registerColorized}.
+	 * Otherwise, the class will be registered using
+	 * {@link #registerTextured(Class)} by default.
+	 */
+	public static void registerEntityRender(final Class<? extends GolemBase> clazz) {
+		if(GolemColorized.class.isAssignableFrom(clazz)) {
+			registerColorized((Class<? extends GolemColorized>)clazz);
+		} else {
+			registerTextured(clazz);
+		}
 	}
 
 	/**
@@ -100,7 +110,7 @@ public final class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(golem, FACTORY_COLORED_GOLEM);
 	}
 
-	private void registerRender(final Item i, final String name, int... meta) {
+	private static void registerRender(final Item i, final String name, int... meta) {
 		if (meta.length < 1) {
 			meta = new int[]{0};
 		}
@@ -110,7 +120,7 @@ public final class ClientProxy extends CommonProxy {
 		}
 	}
 
-	private void registerRender(final Item i, final int... meta) {
+	private static void registerRender(final Item i, final int... meta) {
 		registerRender(i, i.getRegistryName().toString(), meta);
 	}
 }

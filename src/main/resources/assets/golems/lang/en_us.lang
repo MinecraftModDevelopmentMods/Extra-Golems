@@ -14,6 +14,7 @@ entity.golems.golem_bone.name=Bone Golem
 entity.golems.golem_bookshelf.name=Librarian Golem
 entity.golems.golem_clay.name=Clay Golem
 entity.golems.golem_coal.name=Coal Golem
+entity.golems.golem_concrete.name=Concrete Golem
 entity.golems.golem_crafting.name=Crafting Golem
 entity.golems.golem_diamond.name=Diamond Golem
 entity.golems.golem_emerald.name=Emerald Golem
@@ -75,10 +76,14 @@ entitytip.is_fireproof=Fireproof
 entitytip.slowly_melts=Slowly melts %s
 entitytip.has_knockback=Massive knockback attack!
 entitytip.absorbs_water=Absorbs water
-entitytip.explodes=May explode randomly
+entitytip.explodes=Caution: May explode randomly!
 entitytip.emits_redstone_signal=Emits redstone signal
 entitytip.click_open_crafting=Right click to open a crafting menu
 entitytip.breathes_underwater=Breathes Underwater
+
+entitytip.heals=Slowly heals
+entitytip.grows_crops=Grows nearby crops
+entitytip.splits_upon_death=Splits in two
 
 # Golem Guide Book entries
 item.info_book.name=Extra Golems Guide

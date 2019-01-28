@@ -21,6 +21,8 @@ public final class Config {
 
 	private static boolean bedrockGolemCreativeOnly;
 	private static boolean itemGolemHeadHasGlint;
+	
+	public static final int RANDOM_HEAL_TIMER = 450;
 
 	public static final Set<String> SECRET = new HashSet<>();
 
@@ -35,6 +37,7 @@ public final class Config {
 	}
 
 	private static void initGolemConfigSets(final Configuration config) {
+		int randomHealSec = RANDOM_HEAL_TIMER / 20;
 		GolemLookup.addConfig(EntityBedrockGolem.class, new GolemConfigSet(config, "Bedrock Golem", 999.0D, 32.0F));
 		GolemLookup.addConfig(EntityBoneGolem.class, new GolemConfigSet(config, "Bone Golem", 54.0D, 9.5F));
 		GolemLookup.addConfig(EntityBookshelfGolem.class, new GolemConfigSet(config, "Bookshelf Golem", 28.0D, 1.5F)
@@ -42,6 +45,8 @@ public final class Config {
 		GolemLookup.addConfig(EntityClayGolem.class, new GolemConfigSet(config, "Clay Golem", 20.0D, 2.0F));
 		GolemLookup.addConfig(EntityCoalGolem.class, new GolemConfigSet(config, "Coal Golem", 14.0D, 2.5F)
 			.addKey(EntityCoalGolem.ALLOW_SPECIAL, false, "Whether this golem can inflict blindness"));
+		GolemLookup.addConfig(EntityConcreteGolem.class, 
+				new GolemConfigSet(config, "Concrete Golem", 38.0D, 6.0F));
 		GolemLookup.addConfig(EntityCraftingGolem.class, new GolemConfigSet(config, "Crafting Golem", 24.0D, 2.0F)
 			.addKey(EntityCraftingGolem.ALLOW_SPECIAL, true, "Whether this golem can open a crafting grid"));
 		GolemLookup.addConfig(EntityDiamondGolem.class, new GolemConfigSet(config, "Diamond Golem", 220.0D, 20.0F));
@@ -63,19 +68,24 @@ public final class Config {
 			.addKey(EntityLapisGolem.ALLOW_SPECIAL, true, "Whether this golem can inflict harmful potion effects"));
 		GolemLookup.addConfig(EntityLeafGolem.class, new GolemConfigSet(config, "Leaf Golem", 6.0D, 0.5F)
 			.addKey(EntityLeafGolem.ALLOW_SPECIAL, true, "Whether this golem can heal itself"));
-		GolemLookup.addConfig(EntityMagmaGolem.class, new GolemConfigSet(config, "Magma Golem", 22.0D, 4.5F)
-			.addKey(EntityMagmaGolem.ALLOW_LAVA_SPECIAL, true, "Whether this golem can slowly melt cobblestone")
+		GolemLookup.addConfig(EntityMagmaGolem.class, new GolemConfigSet(config, "Magma Golem", 46.0D, 4.5F)
+			.addKey(EntityMagmaGolem.ALLOW_SPLITTING, true, "When true, this golem will split into 2 mini-golems upon death")
+			.addKey(EntityMagmaGolem.ALLOW_LAVA_SPECIAL, false, "Whether this golem can slowly melt cobblestone")
 			.addKey(EntityMagmaGolem.MELT_DELAY, 240, 1, 24000, "Number of ticks it takes to melt cobblestone if enabled (12 sec * 20 t/sec = 240 t)")
-			.addKey(EntityMagmaGolem.ALLOW_FIRE_SPECIAL, false, "Whether this golem can light creatures on fire"));
+			.addKey(EntityMagmaGolem.ALLOW_FIRE_SPECIAL, true, "Whether this golem can light creatures on fire")
+			.addKey(EntityMagmaGolem.ALLOW_WATER_DAMAGE, true, "When true, water will hurt this golem"));
 		GolemLookup.addConfig(EntityMelonGolem.class, new GolemConfigSet(config, "Melon Golem", 18.0D, 1.5F)
+			.addKey(EntityMelonGolem.ALLOW_HEALING, true, "Whether this golem can randomly heal (about every " + randomHealSec + " sec)")
 			.addKey(EntityMelonGolem.ALLOW_SPECIAL, true, "Whether this golem can plant flowers randomly")
 			.addKey(EntityMelonGolem.FREQUENCY, 240, 1, 24000, "Average number of ticks between planting flowers"));
 		GolemLookup.addConfig(EntityMushroomGolem.class, new GolemConfigSet(config, "Mushroom Golem", 30.0D, 3.0F)
+			.addKey(EntityMushroomGolem.ALLOW_HEALING, true, "Whether this golem can randomly heal at night (about every " + randomHealSec + " sec)")
 			.addKey(EntityMushroomGolem.ALLOW_SPECIAL, true, "Whether this golem can plant mushrooms randomly")
 			.addKey(EntityMushroomGolem.FREQUENCY, 420, 1, 24000, "Average number of ticks between planting mushrooms"));
 		GolemLookup.addConfig(EntityNetherBrickGolem.class, new GolemConfigSet(config, "Nether Brick Golem", 25.0D, 6.5F)
 			.addKey(EntityNetherBrickGolem.ALLOW_FIRE_SPECIAL, true, "Whether this golem can light creatures on fire"));
 		GolemLookup.addConfig(EntityNetherWartGolem.class, new GolemConfigSet(config, "Nether Wart Golem", 22.0D, 1.5F)
+			.addKey(EntityNetherWartGolem.ALLOW_HEALING, true, "Whether this golem can randomly heal at night (about every " + randomHealSec + " sec)")
 			.addKey(EntityNetherWartGolem.ALLOW_SPECIAL, true, "Whether this golem can plant netherwart randomly")
 			.addKey(EntityNetherWartGolem.FREQUENCY, 880, 1, 24000, "Average number of ticks between planting nether wart if enabled"));
 		GolemLookup.addConfig(EntityObsidianGolem.class, new GolemConfigSet(config, "Obsidian Golem", 120.0D, 18.0F));
@@ -86,19 +96,22 @@ public final class Config {
 			.addKey(EntityRedstoneGolem.ALLOW_SPECIAL, true, "Whether this golem can emit redstone power"));
 		GolemLookup.addConfig(EntitySandstoneGolem.class, new GolemConfigSet(config, "Sandstone Golem", 15.0D, 4.0F));
 		GolemLookup.addConfig(EntitySeaLanternGolem.class, new GolemConfigSet(config, "Sea Lantern Golem", 24.0D, 6.0F)
-			.addKey(EntitySeaLanternGolem.ALLOW_SPECIAL, true, "Whether this golem can place light sources")
-			.addKey(EntitySeaLanternGolem.FREQUENCY, 5, 1, 24000, "Number of ticks between placing light sources"));
-		GolemLookup.addConfig(EntitySlimeGolem.class, new GolemConfigSet(config, "Slime Golem", 85.0D, 2.5F)
+			.addKey(EntitySeaLanternGolem.ALLOW_SPECIAL, true, "Whether this golem lights up the area")
+			.addKey(EntitySeaLanternGolem.FREQUENCY, 5, 1, 24000, "Number of ticks between updating light"));
+		GolemLookup.addConfig(EntitySlimeGolem.class, new GolemConfigSet(config, "Slime Golem", 58.0D, 2.5F)
+			.addKey(EntitySlimeGolem.ALLOW_SPLITTING, true, "When true, this golem will split into 2 mini-golems upon death")
 			.addKey(EntitySlimeGolem.ALLOW_SPECIAL, true, "Whether this golem can apply extra knockback when attacking")
 			.addKey(EntitySlimeGolem.KNOCKBACK, 2.0012F, 0.001F, 10.0F, "How powerful the Slime Golem knockback is (Higher Value = Further Knockback)"));
 		GolemLookup.addConfig(EntitySpongeGolem.class, new GolemConfigSet(config, "Sponge Golem", 20.0D, 1.5F)
 			.addKey(EntitySpongeGolem.ALLOW_SPECIAL, true, "Whether this golem can absorb water")
 			.addKey(EntitySpongeGolem.PARTICLES, true, "Whether this golem should always drip water")
 			.addKey(EntitySpongeGolem.RANGE, 4, 2, 8, "Radial distance at which this golem can absorb water (Warning: larger values cause lag)")
-			.addKey(EntitySpongeGolem.INTERVAL, 80, 1, 24000, "Number of ticks between each water-check; increase to reduce lag"));
+			.addKey(EntitySpongeGolem.INTERVAL, 20, 1, 24000, "Number of ticks between each water-check; increase to reduce lag"));
 		GolemLookup.addConfig(EntityStainedClayGolem.class, new GolemConfigSet(config, "Stained Clay Golem", 26.0D, 3.0F));
 		GolemLookup.addConfig(EntityStainedGlassGolem.class, new GolemConfigSet(config, "Stained Glass Golem", 9.0D, 12.0F));
-		GolemLookup.addConfig(EntityStrawGolem.class, new GolemConfigSet(config, "Straw Golem", 10.0D, 1.0F));
+		GolemLookup.addConfig(EntityStrawGolem.class, new GolemConfigSet(config, "Straw Golem", 10.0D, 1.0F)
+				.addKey(EntityStrawGolem.ALLOW_SPECIAL, true, "Whether this golem can speed up crop growth")
+				.addKey(EntityStrawGolem.SPECIAL_FREQ, 640, 1, 24000, "Minimum number of ticks between crop-boosts"));
 		GolemLookup.addConfig(EntityTNTGolem.class, new GolemConfigSet(config, "TNT Golem", 14.0D, 2.5F)
 			.addKey(EntityTNTGolem.ALLOW_SPECIAL, true, "Whether this golem can explode when fighting or dying"));
 		GolemLookup.addConfig(EntityWoodenGolem.class, new GolemConfigSet(config, "Wooden Golem", 20.0D, 3.0F));

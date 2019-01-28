@@ -1,6 +1,7 @@
 package com.golems.entity;
 
 import com.golems.main.ExtraGolems;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.BlockLog.EnumAxis;
@@ -17,7 +18,7 @@ public final class EntityWoodenGolem extends GolemMultiTextured {
 	public static final String WOOD_PREFIX = "wooden";
 	public static final String[] woodTypes = {"oak", "spruce", "birch", "jungle", "acacia",
 		"big_oak"};
-
+	
 	public EntityWoodenGolem(final World world) {
 		super(world, WOOD_PREFIX, woodTypes);
 		this.setCanSwim(true);

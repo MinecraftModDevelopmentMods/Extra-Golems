@@ -13,7 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public final class EntityStainedGlassGolem extends GolemColorizedMultiTextured {
 
 	public static final String PREFIX = "stained_glass";
-	public static final int[] COLORS = ItemDye.DYE_COLORS;
+	public static final int[] COLOR_ARRAY = ItemDye.DYE_COLORS;
 
 	private static final ResourceLocation TEXTURE_BASE = GolemBase
 		.makeGolemTexture(PREFIX);
@@ -21,7 +21,7 @@ public final class EntityStainedGlassGolem extends GolemColorizedMultiTextured {
 		.makeGolemTexture("stained_glass_grayscale");
 
 	public EntityStainedGlassGolem(final World world) {
-		super(world, TEXTURE_BASE, TEXTURE_OVERLAY, COLORS);
+		super(world, TEXTURE_BASE, TEXTURE_OVERLAY, COLOR_ARRAY);
 		this.setCanTakeFallDamage(true);
 		this.setLootTableLoc("golem_stained_glass");
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
@@ -31,7 +31,6 @@ public final class EntityStainedGlassGolem extends GolemColorizedMultiTextured {
 	 * Whether {@link overlay} should be rendered as transparent. Is not called for rendering
 	 * {@link base}
 	 **/
-	@SideOnly(Side.CLIENT)
 	@Override
 	public boolean hasTransparency() {
 		return true;

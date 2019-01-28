@@ -66,6 +66,7 @@ public class CommonProxy {
 		register(EntityBookshelfGolem.class, Blocks.BOOKSHELF, "golem_bookshelf", true);
 		register(EntityClayGolem.class, Blocks.CLAY, "golem_clay", true);
 		register(EntityCoalGolem.class, Blocks.COAL_BLOCK, "golem_coal", true);
+		register(EntityConcreteGolem.class, Blocks.CONCRETE, "golem_concrete", false);
 		register(EntityCraftingGolem.class, Blocks.CRAFTING_TABLE, "golem_crafting", true);
 		register(EntityDiamondGolem.class, Blocks.DIAMOND_BLOCK, "golem_diamond", true);
 		register(EntityEmeraldGolem.class, Blocks.EMERALD_BLOCK, "golem_emerald", true);
@@ -103,22 +104,32 @@ public class CommonProxy {
 			{Blocks.LOG, Blocks.LOG2}, "golem_wooden", false);
 		register(EntityWoolGolem.class, Blocks.WOOL, "golem_wool", false);
 		
+		// register the loot tables for each entity that didn't have one auto-generated
+		registerEntityLootTables();
+	}
+	
+	private static void registerEntityLootTables() {
 		// register GolemMultiTextured loot tables
 		registerLootTables(ExtraGolems.MODID, EntityWoolGolem.WOOL_PREFIX, EntityWoolGolem.coloredWoolTypes);
 		registerLootTables(ExtraGolems.MODID, EntityWoodenGolem.WOOD_PREFIX, EntityWoodenGolem.woodTypes);
 		registerLootTables(ExtraGolems.MODID, EntityMushroomGolem.SHROOM_PREFIX, EntityMushroomGolem.SHROOM_TYPES);
 		
 		// prepare and register loot tables for GolemColorizedMultiTextured
-		String[] stainedGlass = new String[EntityStainedGlassGolem.COLORS.length];
+		String[] stainedGlass = new String[EntityStainedGlassGolem.COLOR_ARRAY.length];
 		for (int i = 0, l = stainedGlass.length; i < l; i++) {
 			stainedGlass[i] = Integer.toString(i);
 		}
-		String[] stainedClay = new String[EntityStainedClayGolem.COLORS.length];
+		String[] stainedClay = new String[EntityStainedClayGolem.COLOR_ARRAY.length];
 		for (int i = 0, l = stainedGlass.length; i < l; i++) {
 			stainedClay[i] = Integer.toString(i);
 		}
+		String[] concrete = new String[EntityConcreteGolem.COLOR_ARRAY.length];
+		for (int i = 0, l = concrete.length; i < l; i++) {
+			concrete[i] = Integer.toString(i);
+		}
 		registerLootTables(ExtraGolems.MODID, EntityStainedGlassGolem.PREFIX, stainedGlass);
 		registerLootTables(ExtraGolems.MODID, EntityStainedClayGolem.PREFIX, stainedClay);
+		registerLootTables(ExtraGolems.MODID, EntityConcreteGolem.PREFIX, concrete);
 	}
 
 	/** registers the entity with an optional loot table. **/

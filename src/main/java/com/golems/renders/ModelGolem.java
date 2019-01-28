@@ -1,8 +1,10 @@
 package com.golems.renders;
 
 import com.golems.entity.GolemBase;
+
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.fml.relauncher.Side;
@@ -83,14 +85,26 @@ public class ModelGolem extends ModelBase {
 	@Override
 	public void render(final Entity entityIn, final float limbSwing, final float limbSwingAmount, final float ageInTicks,
 			   final float netHeadYaw, final float headPitch, final float scale) {
+		
 		this.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch,
 			scale, entityIn);
+
+		float scaleChild = 0.5F;
+        GlStateManager.pushMatrix();
+        
+		if (this.isChild) {
+			GlStateManager.scale(scaleChild, scaleChild, scaleChild);
+			GlStateManager.translate(0.0F, 24.0F * scale, 0.0F);
+		}
+
 		this.golemHead.render(scale);
 		this.golemBody.render(scale);
 		this.golemLeftLeg.render(scale);
 		this.golemRightLeg.render(scale);
 		this.golemRightArm.render(scale);
 		this.golemLeftArm.render(scale);
+		
+		GlStateManager.popMatrix();
 	}
 
 	/**

@@ -8,25 +8,26 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public final class EntityStainedClayGolem extends GolemColorizedMultiTextured {
+public final class EntityConcreteGolem extends GolemColorizedMultiTextured {
 
-	public static final String PREFIX = "stained_clay";
+	public static final String PREFIX = "concrete";
 	public static final int[] COLOR_ARRAY = ItemDye.DYE_COLORS;
-
-	private static final ResourceLocation TEXTURE_BASE = GolemBase.makeGolemTexture(PREFIX);
-	private static final ResourceLocation TEXTURE_OVERLAY = GolemBase
-		.makeGolemTexture("stained_clay_grayscale");
-
-	public EntityStainedClayGolem(final World world) {
+	
+	private static final ResourceLocation TEXTURE_BASE = GolemBase
+			.makeGolemTexture(PREFIX + "_base");
+		private static final ResourceLocation TEXTURE_OVERLAY = GolemBase
+			.makeGolemTexture(PREFIX + "_grayscale");
+	
+	public EntityConcreteGolem(final World world) {
 		super(world, TEXTURE_BASE, TEXTURE_OVERLAY, COLOR_ARRAY);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.20D);
+		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 
 	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_STONE_STEP;
 	}
-
+	
 	@Override
 	public void onBuilt(IBlockState body, IBlockState legs, IBlockState arm1, IBlockState arm2) {
 		// use block metadata to give this golem the right texture

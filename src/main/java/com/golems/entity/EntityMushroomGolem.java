@@ -1,13 +1,16 @@
 package com.golems.entity;
 
 import com.golems.entity.ai.EntityAIPlaceRandomBlocksStrictly;
+import com.golems.main.Config;
 import com.golems.main.ExtraGolems;
 import com.golems.util.GolemConfigSet;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -18,6 +21,7 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Plant Mushrooms";
 	public static final String FREQUENCY = "Mushroom Frequency";
+	public static final String ALLOW_HEALING = "Allow Special: Random Healing";
 
 	public static final String SHROOM_PREFIX = "shroom";
 	public static final String[] SHROOM_TYPES = {"red", "brown"};
@@ -45,6 +49,19 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_GRASS_STEP;
 	}
+	
+	/**
+	 * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
+	 * use this to react to sunlight and start to burn.
+	 */
+	@Override
+	public void onLivingUpdate() {
+		super.onLivingUpdate();
+		// heals randomly, but only at night
+		if(!this.getEntityWorld().isDaytime() && rand.nextInt(Config.RANDOM_HEAL_TIMER) == 0 && getConfig(this).getBoolean(ALLOW_HEALING)) {
+			this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 20, 2));
+		}
+	}
 
 	@Override
 	public void onBuilt(IBlockState body, IBlockState legs, IBlockState arm1, IBlockState arm2) {
@@ -57,8 +74,13 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if (getConfig(this).getBoolean(EntityMushroomGolem.ALLOW_SPECIAL))
+		if (getConfig(this).getBoolean(EntityMushroomGolem.ALLOW_SPECIAL)) {
 			list.add(TextFormatting.DARK_GREEN + trans("entitytip.plants_shrooms"));
+		}
+		if(getConfig(this).getBoolean(ALLOW_HEALING)) {
+			String sHeals = TextFormatting.LIGHT_PURPLE + trans("entitytip.heals");
+			list.add(sHeals);
+		}
 		return list;
 	}
 }

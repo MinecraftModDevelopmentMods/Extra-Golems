@@ -11,7 +11,7 @@ public class EntityAIPlaceRandomBlocksStrictly extends EntityAIPlaceRandomBlocks
 
 	public EntityAIPlaceRandomBlocksStrictly(final GolemBase golemBase, final int ticksBetweenPlanting,
 						 final IBlockState[] plants, @Nullable final Block[] soils, final boolean configAllows) {
-		super(golemBase, ticksBetweenPlanting, plants, soils, getPredicate(configAllows));
+		super(golemBase, ticksBetweenPlanting, plants, soils, (t -> configAllows));
 	}
 
 	public EntityAIPlaceRandomBlocksStrictly(final GolemBase golemBase, final int ticksBetweenPlanting,
@@ -22,10 +22,6 @@ public class EntityAIPlaceRandomBlocksStrictly extends EntityAIPlaceRandomBlocks
 	@Override
 	public boolean shouldExecute() {
 		return canExecute.test(this) && golem.world.rand.nextInt(tickDelay) == 0;
-	}
-
-	public static Predicate<EntityAIPlaceRandomBlocks> getPredicate(final boolean ret) {
-		return t -> ret;
 	}
 
 	public static Predicate<EntityAIPlaceRandomBlocks> getGriefingPredicate() {

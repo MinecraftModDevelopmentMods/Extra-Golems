@@ -36,7 +36,8 @@ public abstract class GolemColorizedMultiTextured extends GolemColorized {
 		lootTables = new ResourceLocation[colors.length];
 		for (int n = 0, len = colors.length; n < len; n++) {
 			// initialize loot tables
-			this.lootTables[n] = new ResourceLocation(getModId(), "entities/" + this.getEntityString().replaceAll(getModId() + ":", "") + "/" + n);
+			this.lootTables[n] = new ResourceLocation(getModId(), "entities/" 
+					+ this.getEntityString().replaceAll(getModId() + ":", "") + "/" + n);
 		}
 	}
 

@@ -109,13 +109,11 @@ public abstract class GolemColorized extends GolemBase {
 		return this.colorAlpha;
 	}
 
-	/// **
-	// * Whether {@link overlay} should be rendered as transparent.
-	// * This is not called for rendering {@link base},
-	// * only for rendering the colorized layer.
-	// **/
-	// TODO: FIX ME!
-	@SideOnly(Side.CLIENT)
+	/**
+	* Whether {@link overlay} should be rendered as transparent.
+	* This is not called for rendering {@link base},
+	* only for rendering the colorized layer.
+	**/
 	public boolean hasTransparency() {
 		return false;
 	}

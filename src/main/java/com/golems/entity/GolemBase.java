@@ -17,6 +17,10 @@ import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.IAnimals;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
@@ -39,6 +43,9 @@ import java.util.List;
  **/
 public abstract class GolemBase extends EntityCreature implements IAnimals {
 
+	private static final DataParameter<Boolean> BABY = EntityDataManager.<Boolean>createKey(GolemBase.class, DataSerializers.BOOLEAN);
+	private static final String KEY_BABY = "isChild";
+	
 	protected int attackTimer;
 	protected boolean isPlayerCreated;
 	protected ResourceLocation textureLoc;
@@ -63,17 +70,13 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	
 	// swimming AI
 	protected EntityAIBase swimmingAI = new EntityAISwimming(this);
-	
-	// used in GuiLoader and GolemBase#addSpecialDesc
-	// to indicate a String should be split before being translated
-	public static final String FORMAT_SEP = "::"; 
 
 	/////////////// CONSTRUCTORS /////////////////
 
 	/**
-	 * Initializes this golem with the given World and attack damage. 
+	 * Initializes this golem with the given World. 
 	 * Also sets the following:
-	 * <br>{@code setBaseAttackDamage} with passed value {@code attack}
+	 * <br>{@code setBaseAttackDamage} using the config
 	 * <br>{@code takesFallDamage} to false
 	 * <br>{@code canSwim} to false.
 	 * <br>{@code creativeReturn} to the map result of {@code GolemLookup} with this golem.
@@ -126,6 +129,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	protected void entityInit() {
 		super.entityInit();
 		this.setTextureType(this.applyTexture());
+		this.getDataManager().register(BABY, false);
 	}
 
 	@Override
@@ -323,6 +327,17 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 
 		super.onDeath(src);
 	}
+	
+	@Override
+	public void writeEntityToNBT(NBTTagCompound compound) {
+        super.writeEntityToNBT(compound);
+        compound.setBoolean(KEY_BABY, this.isChild());
+    }
+	
+	public void readEntityFromNBT(NBTTagCompound compound) {
+		super.readEntityFromNBT(compound);
+		this.setChild(compound.getBoolean(KEY_BABY));
+	}
 
 	@Override
 	protected ResourceLocation getLootTable() {
@@ -379,6 +394,15 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 
 	public Village getVillage() {
 		return this.villageObj;
+	}
+	
+	public void setChild(boolean isChild) {
+		this.getDataManager().set(BABY, isChild);
+	}
+	
+	@Override
+	public boolean isChild() {
+		return this.getDataManager().get(BABY).booleanValue();
 	}
 
 	public void setCanTakeFallDamage(final boolean toSet) {

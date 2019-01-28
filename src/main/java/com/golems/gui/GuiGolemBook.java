@@ -194,7 +194,9 @@ public class GuiGolemBook extends GuiScreen {
 	private static final void initGolemBookEntries(World world) {
 		GOLEMS.clear();
 		for (GolemBase golem : GolemLookup.getDummyGolemList(world)) {
-			GOLEMS.add(new GolemBookEntry(golem));
+			if(GolemBase.getConfig(golem).canSpawn()) {
+				GOLEMS.add(new GolemBookEntry(golem));
+			}
 		}
 	}
 

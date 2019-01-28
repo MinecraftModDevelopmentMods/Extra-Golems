@@ -10,8 +10,10 @@ import net.minecraftforge.fml.common.eventhandler.Event;
  * other mods or addons to handle and modify the Redstone Golem's behavior. It is not handled in
  * Extra Golems.
  */
+@Deprecated
 @Event.HasResult
 @Cancelable
+// UNUSED, REMOVE IN NEXT RELEASE
 public final class RedstoneGolemPowerEvent extends Event {
 
 	public final GolemBase golem;
@@ -28,13 +30,13 @@ public final class RedstoneGolemPowerEvent extends Event {
 	}
 
 	public void setPowerLevel(final int toSet) {
-		//TODO: Ensure this works. nested ternary operations are super confusing.
 		if (toSet > 15) {
 			this.powerLevel = 15;
+		} else if(toSet < 0) {
+			this.powerLevel = 0;
 		} else {
-			this.powerLevel = toSet < 0 ? 0 : toSet;
+			this.powerLevel = toSet;
 		}
-		//this.powerLevel = toSet > 15 ? 15 : ();
 	}
 
 	public int getPowerLevel() {
