@@ -71,6 +71,9 @@ entitytip.explodes=Peut exploser de manière aléatoire
 entitytip.emits_redstone_signal=Donne le pouvoir redstone
 entitytip.click_open_crafting=Clic droit pour ouvrir un menu d'Établi
 entitytip.breathes_underwater=Respire sous l'eau
+entitytip.heals=Se guérit lentement
+entitytip.grows_crops=Cultive les cultures voisines
+entitytip.splits_upon_death=Divisé en deux!
 
 # Golem Guide Book entries
 item.info_book.name=Guide pour Extra Golems
@@ -83,3 +86,4 @@ golembook.build_golem.title=Comment construire un Golem
 golembook.build_golem.howto1=Placez 2 blocs l'un sur l'autre.
 golembook.build_golem.howto2=Placez 2 autres blocs de part et d'autre du bloc supérieur.
 golembook.build_golem.howto3=Placez une %s sur le bloc du milieu, et vous avez terminé!
+tile.concrete.name=Béton

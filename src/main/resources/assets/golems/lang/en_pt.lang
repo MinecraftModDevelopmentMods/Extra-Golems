@@ -49,7 +49,7 @@ tooltip.to_remove_it=t' swog it away
 
 # Entity headings (for Waila and TOP)
 entitytip.name=Name
-entitytip.health=Hearts
+entitytip.health=Hearties
 entitytip.attack=Floggin' Powrr
 entitytip.lights_area=Gives y' light
 entitytip.click_change_texture=Right click t' see moar pictures
@@ -71,6 +71,9 @@ entitytip.explodes=Boom out o' the blue!
 entitytip.emits_redstone_signal=Redstone Powerrr
 entitytip.click_open_crafting=Right click t' make somethin'
 entitytip.breathes_underwater=Mermaid's Blessin'
+entitytip.heals=Moarr Hearties
+entitytip.grows_crops=Grows yer seaweed
+entitytip.splits_upon_death=Swivles in two!
 
 # Golem Guide Book entries
 item.info_book.name=Logbook fer Extra Golems
@@ -83,3 +86,4 @@ golembook.build_golem.title=How t' Make yer Golem
 golembook.build_golem.howto1=Place 2 blocks, one atop o' t' other.
 golembook.build_golem.howto2=Place 2 moarr blocks 'n diff'rent sides o' t' top block.
 golembook.build_golem.howto3=Place yer %s atop o' th' middle block, an' yerr done!
+tile.concrete.name=Black Cement

@@ -77,6 +77,9 @@ entitytip.has_knockback=Massiver Rückstoß-Angriff!
 entitytip.absorbs_water=Absorbiert Wasser
 entitytip.explodes=Kann zufällig explodieren
 entitytip.emits_redstone_signal=Sendet ein Redstone-Signal
+entitytip.heals=Heilt sich langsam selbst
+entitytip.grows_crops=Wächst in der Nähe angebaute Kulturen
+entitytype.splits_upon_death=Splits in zwei!
 
 # Golem Guide Book entries
 item.info_book.name=Leitfaden für Extra Golems
@@ -89,3 +92,4 @@ golembook.build_golem.title=Anweisungen zum Bau eines Golems
 golembook.build_golem.howto1=Platziere 2 Blöcke übereinander.
 golembook.build_golem.howto2=Platziere 2 weitere Blöcke auf den gegenüberliegenden Seiten des oberen Blocks.
 golembook.build_golem.howto3=Legen Sie einen %s auf den mittleren Block, und Sie sind fertig!
+tile.concrete.name=Beton

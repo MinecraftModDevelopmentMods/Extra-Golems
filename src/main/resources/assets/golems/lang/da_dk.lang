@@ -69,6 +69,9 @@ entitytip.explodes=Kan eksplodere tilfældigt
 entitytip.emits_redstone_signal=Giver redstone magt
 entitytip.click_open_crafting=Højreklik på det for at åbne en Arbejdsbord menu
 entitytip.breathes_underwater=Trækker vejret under vandet
+entitytip.heals=Går langsomt sig selv
+entitytip.grows_crops=Vokser i nærheden afgrøder
+entitytip.splits_upon_death=Splitter i to!
 
 # Golem Guide Book entries
 item.info_book.name=Guide til Extra Golems
@@ -81,3 +84,4 @@ golembook.build_golem.title=Hvordan man opbygger en Golem
 golembook.build_golem.howto1=Placer 2 blokke, den ene oven på den anden.
 golembook.build_golem.howto2=Placer 2 flere blokke på modsatte sider af topblokken.
 golembook.build_golem.howto3=Anbring en %s oven på den midterste blok, og du er færdig!
+tile.concrete.name=Beton

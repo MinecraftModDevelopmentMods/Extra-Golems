@@ -79,6 +79,9 @@ entitytip.absorbs_water=Абсорбирует воду
 entitytip.explodes=Может взорваться!
 entitytip.emits_redstone_signal=Передает RF
 entitytip.click_open_crafting=ПКМ, чтобы открыть меню крафта
+entitytip.heals=медленно лечит себя
+entitytip.grows_crops=Выращивает близлежащие культуры
+entitytip.splits_upon_death=Разделить пополам
 
 # Golem Guide Book entries
 item.info_book.name=Руководство по Extra Golems
@@ -91,3 +94,4 @@ golembook.build_golem.title=Как построить голема
 golembook.build_golem.howto1=Поместите 2 блока, один поверх другого.
 golembook.build_golem.howto2=Поместите еще 2 блока на противоположных сторонах верхнего блока.
 golembook.build_golem.howto3=Поместите %s поверх среднего блока, и все готово!
+tile.concrete.name=бетон
