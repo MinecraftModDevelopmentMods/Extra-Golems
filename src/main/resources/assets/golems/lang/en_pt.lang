@@ -73,7 +73,7 @@ entitytip.click_open_crafting=Right click t' make somethin'
 entitytip.breathes_underwater=Mermaid's Blessin'
 entitytip.heals=Moarr Hearties
 entitytip.grows_crops=Grows yer seaweed
-entitytip.splits_upon_death=Swivles in two!
+entitytip.splits_upon_death=Splinters in two!
 
 # Golem Guide Book entries
 item.info_book.name=Logbook fer Extra Golems
@@ -86,4 +86,4 @@ golembook.build_golem.title=How t' Make yer Golem
 golembook.build_golem.howto1=Place 2 blocks, one atop o' t' other.
 golembook.build_golem.howto2=Place 2 moarr blocks 'n diff'rent sides o' t' top block.
 golembook.build_golem.howto3=Place yer %s atop o' th' middle block, an' yerr done!
-tile.concrete.name=Black Cement
+tile.concrete.name=Cement

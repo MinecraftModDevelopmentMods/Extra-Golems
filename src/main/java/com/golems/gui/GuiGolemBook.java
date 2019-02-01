@@ -1,9 +1,15 @@
 package com.golems.gui;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import com.golems.entity.GolemBase;
 import com.golems.main.ExtraGolems;
 import com.golems.main.GolemItems;
 import com.golems.util.GolemLookup;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -20,12 +26,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 
 public class GuiGolemBook extends GuiScreen {
 	
@@ -169,24 +169,13 @@ public class GuiGolemBook extends GuiScreen {
 				GOLEMS.add(new GolemBookEntry(golem));
 			}
 		}
+		// sort golems by attack power
+		Collections.sort(GOLEMS, (GolemBookEntry g1, GolemBookEntry g2) -> Float.compare(g1.getAttack(), g2.getAttack()));
+
+		// make and sort alphabetical list
 		ALPHABETICAL.clear();
 		ALPHABETICAL.addAll(GOLEMS);
 		Collections.sort(ALPHABETICAL, (GolemBookEntry g1, GolemBookEntry g2) -> g1.getGolemName().compareTo(g2.getGolemName()));
-	}
-
-	/**
-	 * @return a List of all entries containing the given text. List may be empty.
-	 **/
-	public static final List<GolemBookEntry> searchFor(final String text) {
-		final List<GolemBookEntry> list = new LinkedList();
-		GOLEMS.forEach((GolemBookEntry entry) -> addIfMatches(list, entry, text));
-		return list;
-	}
-
-	private static void addIfMatches(final List<GolemBookEntry> list, final GolemBookEntry entry, final String text) {
-		if (entry.getSearchableString().contains(text)) {
-			list.add(entry);
-		}
 	}
 
 	@Override

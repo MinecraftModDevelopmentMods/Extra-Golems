@@ -448,7 +448,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	/** The GolemConfigSet associated with this golem, or the empty GCS if there is none **/
 	@Nonnull
 	public static GolemConfigSet getConfig(GolemBase golem) {
-		return GolemLookup.hasConfig(golem.getClass()) ? GolemLookup.getConfig(golem.getClass()) : GolemConfigSet.EMPTY;
+		return golem != null && GolemLookup.hasConfig(golem.getClass()) ? GolemLookup.getConfig(golem.getClass()) : GolemConfigSet.EMPTY;
 	}
 
 	/** 

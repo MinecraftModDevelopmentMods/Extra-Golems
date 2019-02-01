@@ -3,12 +3,14 @@ package com.golems.gui;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.golems.entity.EntityBedrockGolem;
 import com.golems.entity.GolemBase;
 import com.golems.entity.GolemMultiTextured;
 import com.golems.util.GolemLookup;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -16,9 +18,6 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
-
-import java.util.ArrayList;
-import java.util.List;
 /**
  * This class will be used to easily connect
  * golems and their blocks and other info
@@ -35,9 +34,7 @@ public class GolemBookEntry {
 	private final float ATTACK;
 	private final List<String> SPECIALS;
 
-	private String SEARCHABLE;
-
-	public GolemBookEntry(GolemBase golem) {
+	public GolemBookEntry(@Nonnull GolemBase golem) {
 		// initialize fields based on golem attributes
 		this.GOLEM_NAME = "entity." + EntityList.getEntityString(golem) + ".name";
 		this.MULTI_TEXTURE = (golem instanceof GolemMultiTextured || golem.doesInteractChangeTexture());
@@ -50,14 +47,6 @@ public class GolemBookEntry {
 		Block b = GolemLookup.getBuildingBlock(golem.getClass());
 		// Blocks.AIR means there is no building block
 		this.BLOCK = b != null ? b : Blocks.AIR;
-		// add golem's special descriptions to the searchable string
-		// initialize the block and search-string
-		final StringBuilder searchable = new StringBuilder();
-		for(String s : this.SPECIALS) {
-			searchable.append("-" + TextFormatting.getTextWithoutFormattingCodes(s));
-		}
-		// lowercase string for searching
-		this.SEARCHABLE = searchable.toString().toLowerCase();
 		
 		// find the image to add to the book
 		// addon-friendly because it does not assume a specific mod id
@@ -89,6 +78,13 @@ public class GolemBookEntry {
 	 **/
 	public Block getBlock() {
 		return this.BLOCK;
+	}
+	
+	/**
+	 * @return the attack power of this golem
+	 **/
+	public float getAttack() {
+		return this.ATTACK;
 	}
 	
 	/** 
@@ -147,16 +143,6 @@ public class GolemBookEntry {
 		}
 		
 		return page.toString();
-	}
-	
-	/** 
-	 * For use if the Golem Book gets a Search bar.
-	 * Contains the golem's name, building block, and
-	 * any special abilities, all localized and lowercased
-	 * @return an all-lowercase String to search for input
-	 **/
-	public String getSearchableString() {
-		return SEARCHABLE + "-" + getGolemName().toLowerCase() + "-" + getBlock().getLocalizedName().toLowerCase();
 	}
 	
 	/** Helper method for translating text into local language using {@code I18n} **/

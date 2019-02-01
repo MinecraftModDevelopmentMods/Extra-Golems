@@ -72,6 +72,7 @@ public final class EntityBedrockGolem extends GolemBase {
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
 		list.add(TextFormatting.WHITE + "" + TextFormatting.BOLD + trans("entitytip.indestructible"));
+		list.add(TextFormatting.RED + trans("tooltip.creative_only_item"));
 		return list;
 	}
 }

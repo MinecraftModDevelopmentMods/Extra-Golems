@@ -1,16 +1,22 @@
 package com.golems.util;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.golems.entity.GolemBase;
 import com.golems.main.ExtraGolems;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityList;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.*;
 
 /**
  * This class contains methods to convert from building block to the
@@ -30,10 +36,6 @@ public final class GolemLookup {
 	/** Map to retrieve the GolemConfigSet for this golem **/
 	private static final Map<Class<? extends GolemBase>, GolemConfigSet> GOLEM_TO_CONFIG = new HashMap();
 		
-	// Comparator that sorts Golem Entries by attack power
-	private static final Comparator<GolemBase> SORTER =
-		(GolemBase g1, GolemBase g2) -> Float.compare(g1.getBaseAttackDamage(), g2.getBaseAttackDamage());
-
 	private GolemLookup() {
 		//
 	}
@@ -179,8 +181,7 @@ public final class GolemLookup {
 			return null;
 		} else if (BLOCK_TO_GOLEM.containsKey(block)) {
 			return BLOCK_TO_GOLEM.get(block);
-		}
-		else {
+		} else {
 			ExtraGolems.LOGGER.error("Tried to make a golem with an unknown block!");
 			return null;
 		}	
@@ -198,8 +199,7 @@ public final class GolemLookup {
 			return null;
 		} else if (GOLEM_TO_BLOCK.containsKey(golemClazz)) {
 			return GOLEM_TO_BLOCK.get(golemClazz);
-		}
-		else {
+		} else {
 			ExtraGolems.LOGGER.error("Tried to get a block for an unknown golem!");
 			return null;
 		}
@@ -227,8 +227,7 @@ public final class GolemLookup {
 			return null;
 		} else if (GOLEM_TO_CONFIG.containsKey(golemClazz)) {
 			return GOLEM_TO_CONFIG.get(golemClazz);
-		}
-		else {
+		} else {
 			ExtraGolems.LOGGER.error("Tried to get config file for unknown golem!");
 			return null;
 		}
@@ -260,10 +259,7 @@ public final class GolemLookup {
 			if (GolemBase.class.isAssignableFrom(entry.getEntityClass())) {
 				list.add((GolemBase) entry.newInstance(world));
 			}
-		}
-		// sort the list
-		Collections.sort(list, SORTER);
-		
+		}		
 		return list;
 	}
 }

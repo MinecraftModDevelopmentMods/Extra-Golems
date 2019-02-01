@@ -48,7 +48,7 @@ entity.golems.golem_wooden.name=Wooden Golem
 entity.golems.golem_wool.name=Wool Golem
 
 # Tooltip translations
-tooltip.creative_only_item=Creative-Only Item
+tooltip.creative_only_item=Creative-Mode Only
 tooltip.press=Press
 tooltip.shift=SHIFT
 tooltip.for_more_details=for more details
