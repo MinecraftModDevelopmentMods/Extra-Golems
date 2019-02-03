@@ -56,7 +56,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	/**
 	 * deincrements, and a distance-to-home check is done at 0.
 	 **/
-	private int homeCheckTimer = 70;
+	private int homeCheckTimer = 180;
 
 	// customizable variables with default values //
 	protected double knockbackY = 0.4000000059604645D;
@@ -147,18 +147,12 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	 */
 	@Override
 	protected void updateAITasks() {
-		if (--this.homeCheckTimer <= 0) {
-			this.homeCheckTimer = 70 + this.rand.nextInt(50);
-			this.villageObj = this.world.getVillageCollection()
-				.getNearestVillage(new BlockPos(this), 32);
-
-			if (this.villageObj == null) {
-				this.detachHome();
-			} else {
-				BlockPos blockpos = this.villageObj.getCenter();
-				this.setHomePosAndDistance(blockpos,
-					(int) ((float) this.villageObj.getVillageRadius() * 0.8F));
-			}
+		if(this.homeCheckTimer > 0) {
+			--homeCheckTimer;
+		} else {
+			// check for home village
+			this.updateHomeVillage();
+	        this.homeCheckTimer = 180;
 		}
 
 		super.updateAITasks();
@@ -334,6 +328,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
         compound.setBoolean(KEY_BABY, this.isChild());
     }
 	
+	@Override
 	public void readEntityFromNBT(NBTTagCompound compound) {
 		super.readEntityFromNBT(compound);
 		this.setChild(compound.getBoolean(KEY_BABY));
@@ -343,6 +338,22 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	protected ResourceLocation getLootTable() {
 		return this.lootTableLoc;
     }
+	
+	/** 
+	 * Updates this golem's home position IF there is a nearby village.
+	 * @return if the golem found a village home
+	 **/
+	public boolean updateHomeVillage() {
+		// set home position based on nearest village
+		this.villageObj = this.world.getVillageCollection().getNearestVillage(new BlockPos(this), 32);
+        if (this.villageObj != null) {
+        	final BlockPos home = this.villageObj.getCenter();
+            final int wanderDistance = (int)((float)this.villageObj.getVillageRadius() * 0.8F);
+            this.setHomePosAndDistance(home, wanderDistance);
+            return true;
+        }
+        return false;
+	}
 
 	/////////////// OTHER SETTERS AND GETTERS /////////////////
 	

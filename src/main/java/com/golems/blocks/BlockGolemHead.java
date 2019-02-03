@@ -91,6 +91,18 @@ public final class BlockGolemHead extends BlockHorizontal {
 	@Override
 	public void onBlockAdded(final World world, final BlockPos pos, final IBlockState state) {
 		super.onBlockAdded(world, pos, state);
+		trySpawnGolem(world, pos);
+	}
+	
+	/**
+	 * Attempts to build a golem with the given head position.
+	 * Checks if a golem can be built there and, if so, removes
+	 * the blocks and spawns the corresponding golem.
+	 * @param world current world
+	 * @param pos the position of the golem head block
+	 * @return if the golem was built and spawned
+	 */
+	public static boolean trySpawnGolem(final World world, final BlockPos pos) {
 		final IBlockState stateBelow1 = world.getBlockState(pos.down(1));
 		final IBlockState stateBelow2 = world.getBlockState(pos.down(2));
 		final Block blockBelow1 = stateBelow1.getBlock();
@@ -108,13 +120,13 @@ public final class BlockGolemHead extends BlockHorizontal {
 				if (!world.isRemote) {
 					removeGolemBody(world, pos);
 					final EntitySnowman entitysnowman = new EntitySnowman(world);
-					ExtraGolems.LOGGER.info("[Extra Golems]: Building regular boring Snow Golem\n");
+					ExtraGolems.LOGGER.info("[Extra Golems]: Building regular boring Snow Golem");
 					entitysnowman.setLocationAndAngles(x, y, z, 0.0F, 0.0F);
 					world.spawnEntity(entitysnowman);
 				}
 
 				ItemBedrockGolem.spawnParticles(world, x, y + 0.5D, z, 0.2D);
-				return;
+				return true;
 			}
 
 			if (!world.isRemote && (flagX || flagZ)) {
@@ -128,11 +140,11 @@ public final class BlockGolemHead extends BlockHorizontal {
 					removeAllGolemBlocks(world, pos, flagX);
 					// build Iron Golem
 					final EntityIronGolem golem = new EntityIronGolem(world);
-					ExtraGolems.LOGGER.info("[Extra Golems]: Building regular boring Iron Golem\n");
+					ExtraGolems.LOGGER.info("[Extra Golems]: Building regular boring Iron Golem");
 					golem.setPlayerCreated(true);
 					golem.setLocationAndAngles(x, y, z, 0.0F, 0.0F);
 					world.spawnEntity(golem);
-					return;
+					return true;
 				}
 
 				// query the GolemLookup to see if there is a golem that can be built with this
@@ -140,26 +152,30 @@ public final class BlockGolemHead extends BlockHorizontal {
 				if (GolemLookup.isBuildingBlock(blockBelow1)) {
 					// get the golem
 					final GolemBase golem = GolemLookup.getGolem(world, blockBelow1);
-					if (golem == null) return;
+					if (golem == null) return false;
 
 					// get the spawn permissions (assume it's allowed if none found)
 					final GolemConfigSet cfg = GolemLookup.getConfig(golem.getClass());
-					boolean allowed = cfg != null ? cfg.canSpawn() : true;
-					if (!allowed) return;
+					boolean allowed = cfg != null && cfg.canSpawn();
+					if (!allowed) return false;
 
 					// clear the area where the golem blocks were
 					removeAllGolemBlocks(world, pos, flagX);
 
 					// spawn the golem
-					ExtraGolems.LOGGER.info("[Extra Golems]: Building golem " + golem.toString() + "\n");
+					ExtraGolems.LOGGER.info("[Extra Golems]: Building golem " + golem.toString());
 					golem.setPlayerCreated(true);
 					golem.setLocationAndAngles(x, y, z, 0.0F, 0.0F);
 					world.spawnEntity(golem);
 					golem.onBuilt(stateBelow1, stateBelow2, arm1, arm2);
-
+					if(!golem.updateHomeVillage()) {
+						golem.setHomePosAndDistance(golem.getPosition(), 64);
+					}
+					return true;
 				}
 			}
 		}
+		return false;
 	}
 
 	/**

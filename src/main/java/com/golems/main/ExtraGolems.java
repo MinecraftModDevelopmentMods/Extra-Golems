@@ -47,5 +47,8 @@ public class ExtraGolems {
 			FMLInterModComms.sendFunctionMessage(ModIds.TOP, "getTheOneProbe",
 				"com.golems.integration.theoneprobe.TOPExtraGolems$GetTheOneProbe");
 		}
+		// Trial-run these methods to give the user feedback if there's errors
+		Config.getPlainsGolems();
+		Config.getDesertGolems();
 	}
 }

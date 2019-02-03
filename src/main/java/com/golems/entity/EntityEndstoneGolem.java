@@ -3,6 +3,7 @@ package com.golems.entity;
 import com.golems.events.EndGolemTeleportEvent;
 import com.golems.util.GolemConfigSet;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,6 +24,7 @@ public class EntityEndstoneGolem extends GolemBase {
 	/**
 	 * countdown timer for next teleport.
 	 **/
+	@Deprecated
 	protected int teleportDelay;
 	/** Max distance for one teleport; range is 32.0 for endstone golem. **/
 	protected double range;
@@ -76,31 +78,18 @@ public class EntityEndstoneGolem extends GolemBase {
 		return makeGolemTexture("end_stone");
 	}
 
-	protected boolean teleportRandomly() {
-		final double d0 = this.posX + (this.rand.nextDouble() - 0.5D) * range;
-		final double d1 = this.posY + (this.rand.nextDouble() - 0.5D) * range * 0.5D;
-		final double d2 = this.posZ + (this.rand.nextDouble() - 0.5D) * range;
-		return this.teleportTo(d0, d1, d2);
-	}
-
 	@Override
 	public void updateAITasks() {
 		super.updateAITasks();
-
-		if (this.isHurtByWater && this.isWet()) {
-			this.attackEntityFrom(DamageSource.DROWN, 1.0F);
-			for (int i = 0; i < 16; ++i) {
-				if (this.teleportRandomly()) {
-					break;
-				}
-			}
-		}
+		// try to teleport toward target entity
 		if (this.getRevengeTarget() != null) {
 			this.faceEntity(this.getRevengeTarget(), 100.0F, 100.0F);
-			if (rand.nextInt(5) == 0) {
+			if (this.getRevengeTarget().getDistanceSq(this) > 25.0D 
+					&& (rand.nextInt(30) == 0 || this.getRevengeTarget().getRevengeTarget() == this)) {
 				this.teleportToEntity(this.getRevengeTarget());
 			}
 		} else if (rand.nextInt(this.ticksBetweenIdleTeleports) == 0) {
+			// or just teleport randomly
 			this.teleportRandomly();
 		}
 
@@ -108,8 +97,8 @@ public class EntityEndstoneGolem extends GolemBase {
 
 	@Override
 	public void onLivingUpdate() {
-		if (this.world.isRemote) {
-			for (int i = 0; this.hasAmbientParticles && i < 2; ++i) {
+		if (this.world.isRemote && this.hasAmbientParticles) {
+			for (int i = 0; i < 2; ++i) {
 				this.world.spawnParticle(EnumParticleTypes.PORTAL,
 					this.posX + (this.rand.nextDouble() - 0.5D) * (double) this.width,
 					this.posY + this.rand.nextDouble() * (double) this.height - 0.25D,
@@ -118,26 +107,7 @@ public class EntityEndstoneGolem extends GolemBase {
 					(this.rand.nextDouble() - 0.5D) * 2.0D);
 			}
 		}
-		//We can assume this.world.isRemote is false
-		else if (this.isEntityAlive()) {
-			if (this.getRevengeTarget() != null) {
-				if (this.getRevengeTarget() instanceof EntityMob) {
-					if (this.getRevengeTarget().getDistanceSq(this) < 16.0D && (rand.nextInt(5) == 0
-						|| this.getRevengeTarget().getRevengeTarget() == this)) {
-						this.teleportRandomly();
-					}
-
-					this.teleportDelay = 0;
-				} else if (this.getRevengeTarget().getDistanceSq(this) > 256.0D
-					&& this.teleportDelay++ >= 30
-					&& this.teleportToEntity(this.getRevengeTarget())) {
-					this.teleportDelay = 0;
-				}
-			} else {
-				this.teleportDelay = 0;
-			}
-		}
-
+		
 		this.isJumping = false;
 		super.onLivingUpdate();
 	}
@@ -146,25 +116,43 @@ public class EntityEndstoneGolem extends GolemBase {
 	public boolean attackEntityFrom(final DamageSource src, final float amnt) {
 		if (this.isEntityInvulnerable(src)) {
 			return false;
-		} else {
-
-			if (src instanceof EntityDamageSourceIndirect) {
-				for (int i = 0; i < 32; ++i) {
-					if (this.teleportRandomly()) {
-						return true;
-					}
-				}
-
-				return super.attackEntityFrom(src, amnt);
-			} else {
-				if (rand.nextInt(this.chanceToTeleportWhenHurt) == 0
-					|| (this.getRevengeTarget() != null && rand.nextBoolean())) {
-					this.teleportRandomly();
-				}
-
+		}
+		
+		// if it's an arrow or something...
+		if (src instanceof EntityDamageSourceIndirect) {
+			// try to teleport to the attacker
+			if(src.getTrueSource() instanceof EntityLivingBase && this.teleportToEntity(src.getTrueSource())) {
+				this.setRevengeTarget((EntityLivingBase) src.getTrueSource());
 				return super.attackEntityFrom(src, amnt);
 			}
+			// if teleporting to the attacker didn't work, golem teleports AWAY
+			for (int i = 0; i < 32; ++i) {
+				if (this.teleportRandomly()) {
+					return false;
+				}
+			}
+		} else {
+			// if it's something else, golem MIGHT teleport away
+			// if it passes a random chance OR has no attack target
+			if (rand.nextInt(this.chanceToTeleportWhenHurt) == 0
+					|| (this.getRevengeTarget() == null && rand.nextBoolean())
+					|| (this.isHurtByWater && src == DamageSource.DROWN)) {
+				// attempt teleport
+				for (int i = 0; i < 16; ++i) {
+					if (this.teleportRandomly()) {
+						break;
+					}
+				}
+			}
 		}
+		return super.attackEntityFrom(src, amnt);
+	}
+	
+	protected boolean teleportRandomly() {
+		final double d0 = this.posX + (this.rand.nextDouble() - 0.5D) * range;
+		final double d1 = this.posY + (this.rand.nextDouble() - 0.5D) * range * 0.5D;
+		final double d2 = this.posZ + (this.rand.nextDouble() - 0.5D) * range;
+		return this.teleportTo(d0, d1, d2);
 	}
 
 	/**

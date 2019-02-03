@@ -3,9 +3,17 @@ package com.golems.main;
 import com.golems.entity.*;
 import com.golems.util.GolemConfigSet;
 import com.golems.util.GolemLookup;
-import net.minecraftforge.common.config.Configuration;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.registry.EntityEntry;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
+
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -19,8 +27,16 @@ public final class Config {
 
 	public static final String CATEGORY_OTHER = "_other_";
 
+	private static boolean pumpkinBuildsGolem;
 	private static boolean bedrockGolemCreativeOnly;
 	private static boolean itemGolemHeadHasGlint;
+	private static int villageGolemSpawnChance;
+	private static String[] villageGolemSpawnsDesert = new String[] {
+		"golem_wooden", "golem_straw", "golem_sandstone", "golem_sandstone", "golem_red_sandstone", "golem_bone"
+	};
+	private static String[] villageGolemSpawnsPlains = new String[] {
+		"golem_wooden", "golem_straw", "golem_melon", "golem_shroom", "golem_leaves", "golem_wool"
+	};
 	
 	public static final int RANDOM_HEAL_TIMER = 450;
 
@@ -124,6 +140,18 @@ public final class Config {
 			"When true, only players in creative mode can use a Bedrock Golem spawn item");
 		itemGolemHeadHasGlint = config.getBoolean("Golem Head Has Glint", CATEGORY_OTHER, true,
 			"Whether the Golem Head item always has 'enchanted' effect");
+		pumpkinBuildsGolem = config.getBoolean("Pumpkin Builds Golems", CATEGORY_OTHER, false, 
+				"(NOT FINISHED) When true, both a pumpkin or a golem head will function to build a golem");
+		villageGolemSpawnsDesert = config.getStringList("Desert Village Golem Spawns", CATEGORY_OTHER, villageGolemSpawnsDesert, 
+				"The following golems will appear in villages in Desert biomes. (Duplicate entries increase chances)");
+		villageGolemSpawnsPlains = config.getStringList("Plains Village Golem Spawns", CATEGORY_OTHER, villageGolemSpawnsPlains, 
+				"The following golems will appear in villages in Plains biomes. (Duplicate entries increase chances)");
+		villageGolemSpawnChance = config.getInt("Village Golem Spawn Chance", CATEGORY_OTHER, 60, 0, 100, 
+				"Percent chance for each village chunk to include an Extra Golems golem. Set to 0 to disable");
+	}
+	
+	public static boolean doesPumpkinBuildGolem() {
+		return pumpkinBuildsGolem;
 	}
 
 	public static boolean isBedrockGolemCreativeOnly() {
@@ -132,6 +160,34 @@ public final class Config {
 
 	public static boolean golemHeadHasGlint() {
 		return itemGolemHeadHasGlint;
+	}
+	
+	public static int getVillageGolemSpawnChance() {
+		return villageGolemSpawnChance;
+	}
+	
+	public static List<Class<? extends GolemBase>> getDesertGolems() {
+		List<Class<? extends GolemBase>> list = new ArrayList();
+		for(final String s : villageGolemSpawnsDesert) {
+			final ResourceLocation name = new ResourceLocation(ExtraGolems.MODID, s);
+			EntityEntry entityEntry = ForgeRegistries.ENTITIES.getValue(name);
+			if(entityEntry != null && (GolemBase.class).isAssignableFrom(entityEntry.getEntityClass())) {
+				list.add((Class<? extends GolemBase>)entityEntry.getEntityClass());
+			} else ExtraGolems.LOGGER.error("Tried to parse an unknown entity from the config! Skipping '" + s + "' in \"Desert Village Golem Spawns\"");
+		}
+		return list;
+	}
+	
+	public static List<Class<? extends GolemBase>> getPlainsGolems() {
+		List<Class<? extends GolemBase>> list = new ArrayList();
+		for(String s : villageGolemSpawnsPlains) {
+			final ResourceLocation name = new ResourceLocation(ExtraGolems.MODID, s);
+			EntityEntry entityEntry = ForgeRegistries.ENTITIES.getValue(name);
+			if(entityEntry != null && (GolemBase.class).isAssignableFrom(entityEntry.getEntityClass())) {
+				list.add((Class<? extends GolemBase>)entityEntry.getEntityClass());
+			} else ExtraGolems.LOGGER.error("Tried to parse an unknown entity from the config! Skipping '" + s + "' in \"Plains Village Golem Spawns\"");
+		}
+		return list;
 	}
 	
 	public static boolean matchesSecret(String in) {
