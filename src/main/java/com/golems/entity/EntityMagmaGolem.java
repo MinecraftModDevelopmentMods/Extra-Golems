@@ -1,5 +1,6 @@
 package com.golems.entity;
 
+import com.golems.main.ExtraGolems;
 import com.golems.util.GolemConfigSet;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -27,7 +28,14 @@ public final class EntityMagmaGolem extends GolemBase {
 	public static final String ALLOW_SPLITTING = "Allow Special: Split";
 	public static final String ALLOW_WATER_DAMAGE = "Enable Water Damage";
 	public static final String MELT_DELAY = "Melting Delay";
-
+	
+	private static final String TEXTURE_LOC = ExtraGolems.MODID + ":textures/entity/magma/golem_magma";
+	private static final ResourceLocation[] TEXTURES = new ResourceLocation[] {
+			new ResourceLocation(TEXTURE_LOC + "_0.png"), new ResourceLocation(TEXTURE_LOC + "_1.png"),
+			new ResourceLocation(TEXTURE_LOC + "_2.png"), new ResourceLocation(TEXTURE_LOC + "_3.png"),
+			new ResourceLocation(TEXTURE_LOC + "_2.png"), new ResourceLocation(TEXTURE_LOC + "_1.png")
+	};
+	
 	/**
 	 * Golem should stand in one spot for number of ticks before affecting the block below it.
 	 */
@@ -69,7 +77,7 @@ public final class EntityMagmaGolem extends GolemBase {
 			this.setSize(0.7F, 1.45F);
 			this.allowMelting = false;
 			this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(cfg.getBaseAttack() * 0.6F);
-			this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(cfg.getMaxHealth() / 4);
+			this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(cfg.getMaxHealth() / 3);
 		} else {
 			this.setSize(1.4F, 2.9F);
 			this.allowMelting = getConfig(this).getBoolean(ALLOW_LAVA_SPECIAL);
@@ -80,7 +88,14 @@ public final class EntityMagmaGolem extends GolemBase {
 
 	@Override
 	protected ResourceLocation applyTexture() {
-		return makeGolemTexture("magma");
+		return TEXTURES[0];
+	}
+	
+	@Override
+	public ResourceLocation getTextureType() {
+		final int changeInterval = 5;
+		int textureNum = ((this.ticksExisted + this.getEntityId()) / changeInterval) % TEXTURES.length;
+		return TEXTURES[textureNum];
 	}
 
 	/**

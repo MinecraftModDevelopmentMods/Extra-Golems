@@ -169,7 +169,7 @@ public final class BlockGolemHead extends BlockHorizontal {
 					world.spawnEntity(golem);
 					golem.onBuilt(stateBelow1, stateBelow2, arm1, arm2);
 					if(!golem.updateHomeVillage()) {
-						golem.setHomePosAndDistance(golem.getPosition(), 64);
+						golem.setHomePosAndDistance(golem.getPosition(), GolemBase.WANDER_DISTANCE);
 					}
 					return true;
 				}

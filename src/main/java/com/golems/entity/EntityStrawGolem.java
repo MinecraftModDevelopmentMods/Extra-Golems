@@ -22,6 +22,7 @@ public final class EntityStrawGolem extends GolemBase {
 	public static final String SPECIAL_FREQ = "Crop Boost Frequency";
 	private int range;
 	private int boostFreq;
+	private boolean allowed;
 
 	public EntityStrawGolem(final World world) {
 		super(world);
@@ -29,7 +30,9 @@ public final class EntityStrawGolem extends GolemBase {
 		this.setLootTableLoc("golem_straw");
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.35D);
 		this.boostFreq = getConfig(this).getInt(SPECIAL_FREQ);
+		this.boostFreq += boostFreq > 10 ? this.rand.nextInt(boostFreq / 2) : this.rand.nextInt(10);
 		this.range = 4;
+		this.allowed = getConfig(this).getBoolean(ALLOW_SPECIAL);
 	}
 	
 	/**
@@ -40,8 +43,7 @@ public final class EntityStrawGolem extends GolemBase {
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
 		// look for crops to boost
-		int timer = boostFreq + rand.nextInt(boostFreq);
-		if(this.getEntityWorld().getWorldTime() % timer == 0) {
+		if(this.allowed && this.rand.nextInt(boostFreq) == 0) {
 			tryBoostCrop();
 		}
 	}
@@ -98,7 +100,7 @@ public final class EntityStrawGolem extends GolemBase {
 	
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if(getConfig(this).getBoolean(ALLOW_SPECIAL)) {
+		if(this.allowed) {
 			String sCrops = TextFormatting.GREEN + trans("entitytip.grows_crops");
 			list.add(sCrops);
 		}

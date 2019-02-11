@@ -45,6 +45,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 
 	private static final DataParameter<Boolean> BABY = EntityDataManager.<Boolean>createKey(GolemBase.class, DataSerializers.BOOLEAN);
 	private static final String KEY_BABY = "isChild";
+	public static final int WANDER_DISTANCE = 64;
 	
 	protected int attackTimer;
 	protected boolean isPlayerCreated;
@@ -70,6 +71,8 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	
 	// swimming AI
 	protected EntityAIBase swimmingAI = new EntityAISwimming(this);
+	protected EntityAIBase wanderAvoidWater = null;
+	protected EntityAIBase wander = null;
 
 	/////////////// CONSTRUCTORS /////////////////
 
@@ -110,7 +113,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 			new EntityAIMoveThroughVillage(this, this.getBaseMoveSpeed() * 2.25D, true));
 		this.tasks.addTask(4,
 			new EntityAIMoveTowardsRestriction(this, this.getBaseMoveSpeed() * 4.0D));
-		this.tasks.addTask(5, new EntityAIWander(this, this.getBaseMoveSpeed() * 2.25D));
+		//// Wander AI has been moved to setCanSwim(boolean)
 		this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
 		this.tasks.addTask(7, new EntityAILookIdle(this));
 		this.targetTasks.addTask(1, new EntityAIDefendAgainstMonsters(this));
@@ -344,8 +347,8 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	 * @return if the golem found a village home
 	 **/
 	public boolean updateHomeVillage() {
-		// set home position based on nearest village
-		this.villageObj = this.world.getVillageCollection().getNearestVillage(new BlockPos(this), 32);
+		// set home position based on nearest village ONLY if one is close enough
+		this.villageObj = this.world.getVillageCollection().getNearestVillage(new BlockPos(this), WANDER_DISTANCE * 2);
         if (this.villageObj != null) {
         	final BlockPos home = this.villageObj.getCenter();
             final int wanderDistance = (int)((float)this.villageObj.getVillageRadius() * 0.8F);
@@ -426,10 +429,21 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 
 	public void setCanSwim(final boolean canSwim) {
 		((PathNavigateGround) this.getNavigator()).setCanSwim(canSwim);
+		if(null == wander) {
+			wander = new EntityAIWander(this, this.getBaseMoveSpeed() * 2.25D);
+		}
+		if(null == wanderAvoidWater) {
+			wanderAvoidWater = new EntityAIWanderAvoidWater(this, this.getBaseMoveSpeed() * 2.25D);
+		}
+		
 		if (canSwim) {
 			this.tasks.addTask(0, swimmingAI);
+			this.tasks.addTask(5, wander);
+			this.tasks.removeTask(wanderAvoidWater);
 		} else {
 			this.tasks.removeTask(swimmingAI);
+			this.tasks.removeTask(wander);
+			this.tasks.addTask(5, wanderAvoidWater);
 		}
 	}
 
@@ -445,7 +459,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 		this.isImmuneToFire = toSet;
 	}
 
-	/** Not used in this project. Will be used in the WAILA addon **/
+	/** Whether right-clicking on this entity triggers a texture change **/
 	public boolean doesInteractChangeTexture() {
 		return false;
 	}

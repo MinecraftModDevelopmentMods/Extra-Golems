@@ -1,9 +1,12 @@
 package com.golems.entity;
 
+import java.util.List;
+
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 public final class EntityPrismarineGolem extends GolemBase {
@@ -35,5 +38,11 @@ public final class EntityPrismarineGolem extends GolemBase {
 	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_STONE_STEP;
+	}
+	
+	@Override
+	public List<String> addSpecialDesc(final List<String> list) {
+		list.add(TextFormatting.AQUA + trans("entitytip.breathes_underwater"));
+		return list;
 	}
 }

@@ -117,7 +117,7 @@ public final class Config {
 		GolemLookup.addConfig(EntitySlimeGolem.class, new GolemConfigSet(config, "Slime Golem", 58.0D, 2.5F)
 			.addKey(EntitySlimeGolem.ALLOW_SPLITTING, true, "When true, this golem will split into 2 mini-golems upon death")
 			.addKey(EntitySlimeGolem.ALLOW_SPECIAL, true, "Whether this golem can apply extra knockback when attacking")
-			.addKey(EntitySlimeGolem.KNOCKBACK, 2.0012F, 0.001F, 10.0F, "How powerful the Slime Golem knockback is (Higher Value = Further Knockback)"));
+			.addKey(EntitySlimeGolem.KNOCKBACK, 1.9412F, 0.001F, 10.0F, "How powerful the Slime Golem knockback is (Higher Value = Further Knockback)"));
 		GolemLookup.addConfig(EntitySpongeGolem.class, new GolemConfigSet(config, "Sponge Golem", 20.0D, 1.5F)
 			.addKey(EntitySpongeGolem.ALLOW_SPECIAL, true, "Whether this golem can absorb water")
 			.addKey(EntitySpongeGolem.PARTICLES, true, "Whether this golem should always drip water")
@@ -127,7 +127,7 @@ public final class Config {
 		GolemLookup.addConfig(EntityStainedGlassGolem.class, new GolemConfigSet(config, "Stained Glass Golem", 9.0D, 12.0F));
 		GolemLookup.addConfig(EntityStrawGolem.class, new GolemConfigSet(config, "Straw Golem", 10.0D, 1.0F)
 				.addKey(EntityStrawGolem.ALLOW_SPECIAL, true, "Whether this golem can speed up crop growth")
-				.addKey(EntityStrawGolem.SPECIAL_FREQ, 640, 1, 24000, "Minimum number of ticks between crop-boosts"));
+				.addKey(EntityStrawGolem.SPECIAL_FREQ, 460, 1, 24000, "Minimum number of ticks between crop-boosts"));
 		GolemLookup.addConfig(EntityTNTGolem.class, new GolemConfigSet(config, "TNT Golem", 14.0D, 2.5F)
 			.addKey(EntityTNTGolem.ALLOW_SPECIAL, true, "Whether this golem can explode when fighting or dying"));
 		GolemLookup.addConfig(EntityWoodenGolem.class, new GolemConfigSet(config, "Wooden Golem", 20.0D, 3.0F));

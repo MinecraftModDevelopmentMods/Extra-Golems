@@ -434,26 +434,7 @@ public class GuiGolemBook extends GuiScreen {
     	int bodyX = titleX;
     	int bodyY = titleY + MARGIN * 2;
     	this.fontRenderer.drawSplitString(body, bodyX, bodyY, maxWidth, 0);    	
-    }
-  
-    /** 
-	 * return a new List of GolemBookEntry objects, sorted alphabetically 
-	 **
-    private String getTableOfContents(final List<GolemBookEntry> golemList) {
-		// sort alphabetically
-		final List<GolemBookEntry> sorted = new LinkedList();
-		sorted.addAll(golemList);
-		Collections.sort(sorted, (GolemBookEntry g1, GolemBookEntry g2) -> g1.getGolemName().compareTo(g2.getGolemName()));
-		// add all golems to the page
-		StringBuilder page = new StringBuilder();
-		for (GolemBookEntry entry : sorted) {
-			page.append(entry.getGolemName());
-			page.append("\n");
-		}
-		return page.toString();
-	}
-    */
-   
+    }   
     
     private void draw2x2GridAt(final int startX, final int startY, final ItemStack[] ingredients, final ItemStack result) {
     	final int frameWidth = 3;
@@ -499,8 +480,6 @@ public class GuiGolemBook extends GuiScreen {
     	posY = startY + 16.0F;
     	this.itemRender.renderItemIntoGUI(result, (int)(posX / scale), (int)(posY / scale));
     	
-    	//RenderHelper.disableStandardItemLighting();
-    	//GlStateManager.disableRescaleNormal();
     	// reset scale
     	GlStateManager.popMatrix();
     }

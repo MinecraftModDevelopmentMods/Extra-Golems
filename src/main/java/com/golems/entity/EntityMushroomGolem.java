@@ -34,7 +34,8 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 		this.setCanSwim(true);
 		GolemConfigSet cfg = getConfig(this);
 		final boolean allowed = cfg.getBoolean(ALLOW_SPECIAL);
-		final int freq = allowed ? cfg.getInt(FREQUENCY) : Integer.MAX_VALUE;
+		int freq = allowed ? cfg.getInt(FREQUENCY) : -100;
+		freq += freq > 10 ? this.rand.nextInt(freq / 2) : this.rand.nextInt(10);
 		this.tasks.addTask(2,
 			new EntityAIPlaceRandomBlocksStrictly(this, freq, mushrooms, soils, allowed));
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);

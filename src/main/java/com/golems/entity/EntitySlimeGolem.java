@@ -3,6 +3,7 @@ package com.golems.entity;
 import com.golems.util.GolemConfigSet;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.util.DamageSource;
@@ -42,7 +43,8 @@ public final class EntitySlimeGolem extends GolemBase {
 	public boolean attackEntityAsMob(final Entity entity) {
 		if (super.attackEntityAsMob(entity)) {
 			GolemConfigSet cfg = getConfig(this);
-			if (cfg.getBoolean(ALLOW_SPECIAL)) {
+			// knocks back the entity it's attacking (if it's adult and not attacking a slime)
+			if (cfg.getBoolean(ALLOW_SPECIAL) && !(entity instanceof EntitySlime) && !this.isChild()) {
 				knockbackTarget(entity, cfg.getFloat(KNOCKBACK));
 			}
 			return true;
@@ -54,7 +56,7 @@ public final class EntitySlimeGolem extends GolemBase {
 	protected void damageEntity(final DamageSource source, final float amount) {
 		if (!this.isEntityInvulnerable(source)) {
 			super.damageEntity(source, amount);
-			// extra knockback if applicable
+			// knocks back the entity that is attacking it
 			if (!this.isChild() && source.getImmediateSource() != null && getConfig(this).getBoolean(ALLOW_SPECIAL)) {
 				knockbackTarget(source.getImmediateSource(), this.knockbackPower);
 			}
@@ -101,14 +103,14 @@ public final class EntitySlimeGolem extends GolemBase {
 		if(this.isChild()) {
 			this.knockbackPower = 0.0F;
 			this.setSize(0.7F, 1.45F);
-			this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(getConfig(this).getMaxHealth() / 4);
+			this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(getConfig(this).getMaxHealth() / 3);
 			this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(getConfig(this).getBaseAttack() * 0.6F);
 			this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.0D);
 		} else {
 			this.knockbackPower = getConfig(this).getFloat(KNOCKBACK) * 0.325F;
 			this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(getConfig(this).getMaxHealth());
 			this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(getConfig(this).getBaseAttack());
-			this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.5D);
+			this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.35D);
 		}
 	}
 

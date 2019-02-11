@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.golems.entity.EntityBoneGolem;
 import com.golems.entity.EntityBookshelfGolem;
 import com.golems.entity.EntityClayGolem;
 import com.golems.entity.EntityCraftingGolem;
@@ -12,14 +11,9 @@ import com.golems.entity.EntityGlowstoneGolem;
 import com.golems.entity.EntityHardenedClayGolem;
 import com.golems.entity.EntityIceGolem;
 import com.golems.entity.EntityLeafGolem;
-import com.golems.entity.EntityMelonGolem;
-import com.golems.entity.EntityMushroomGolem;
 import com.golems.entity.EntityObsidianGolem;
-import com.golems.entity.EntityRedSandstoneGolem;
-import com.golems.entity.EntitySandstoneGolem;
 import com.golems.entity.EntitySlimeGolem;
 import com.golems.entity.EntityStainedClayGolem;
-import com.golems.entity.EntityStrawGolem;
 import com.golems.entity.EntityWoodenGolem;
 import com.golems.entity.EntityWoolGolem;
 import com.golems.entity.GolemBase;
@@ -30,10 +24,16 @@ import com.golems.main.Config;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.ai.EntityAIFindEntityNearest;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAITasks;
+import net.minecraft.entity.monster.AbstractIllager;
+import net.minecraft.entity.monster.AbstractSkeleton;
 import net.minecraft.entity.monster.EntityPigZombie;
+import net.minecraft.entity.monster.EntitySlime;
+import net.minecraft.entity.monster.EntitySpider;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.village.Village;
@@ -91,7 +91,7 @@ public class GolemCommonEventHandler {
 	private static BlockPos getSafeSpawnPos(final EntityLivingBase entity, final BlockPos near) {
 		final int radius = 6;
 		final int maxTries = 24;
-		BlockPos testing = near;
+		BlockPos testing;
 		for(int i = 0; i < maxTries; i++) {
 			// get a random position near the passed BlockPos
 			int x = near.getX() + entity.getEntityWorld().rand.nextInt(radius * 2) - radius;
@@ -187,16 +187,37 @@ public class GolemCommonEventHandler {
 	*/
 	@SubscribeEvent
 	public void onLivingSpawned(final EntityJoinWorldEvent event) {
-		// add custom 'attack golem' AI to zombies. They already have this for regular iron golems
-		if (event.getEntity() instanceof EntityZombie && !(event.getEntity() instanceof EntityPigZombie)) {
-			final EntityZombie zombie = (EntityZombie) event.getEntity();
-			for (final EntityAITasks.EntityAITaskEntry entry : zombie.targetTasks.taskEntries) {
-				if (entry.action instanceof EntityAIAttackGolem) {
-					return;
+		// add custom 'attack golem' AI to hostile mobs. They already have this for regular iron golems
+		if(event.getEntity() instanceof EntityCreature) {
+			final EntityCreature creature = (EntityCreature) event.getEntity();
+			if (creatureAttacksGolems(creature)) {
+				for (final EntityAITasks.EntityAITaskEntry entry : creature.targetTasks.taskEntries) {
+					if (entry.action instanceof EntityAIAttackGolem) {
+						return;
+					}
 				}
+				creature.targetTasks.addTask(3, new EntityAIAttackGolem(creature));
 			}
-			zombie.targetTasks.addTask(3, new EntityAIAttackGolem(zombie));
+		// add custom 'chase golem' AI to hostile entities that do not inherit from EntityCreature
+		// (currently just EntitySlime)
+		} else if(event.getEntity() instanceof EntityLiving) {
+			final EntityLiving living = (EntityLiving) event.getEntity();
+			if (livingAttacksGolems(living)) {
+				living.targetTasks.addTask(3, new EntityAIFindEntityNearest(living, GolemBase.class));
+			}
 		}
+	}
+	
+	/** Returns true if this entity is an EntityCreature AND normally attacks Iron Golems **/
+	private static boolean creatureAttacksGolems(EntityCreature e) {
+		return e instanceof AbstractSkeleton || e instanceof EntitySpider 
+				|| e instanceof AbstractIllager
+				|| (e instanceof EntityZombie && !(e instanceof EntityPigZombie));
+	}
+	
+	/** Returns true if this entity is any EntityLivingBase AND chases after Iron Golems **/
+	private static boolean livingAttacksGolems(EntityLivingBase e) {
+		return e instanceof EntitySlime;
 	}
 
 	private static final class EntityAIAttackGolem extends EntityAINearestAttackableTarget<GolemBase> {
