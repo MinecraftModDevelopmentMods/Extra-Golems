@@ -38,6 +38,9 @@ public final class Config {
 		"golem_wooden", "golem_straw", "golem_melon", "golem_shroom", "golem_leaves", "golem_wool"
 	};
 	
+	private static final List<Class<? extends GolemBase>> desertGolems = new ArrayList();
+	private static final List<Class<? extends GolemBase>> plainsGolems = new ArrayList();
+	
 	public static final int RANDOM_HEAL_TIMER = 450;
 
 	public static final Set<String> SECRET = new HashSet<>();
@@ -136,12 +139,11 @@ public final class Config {
 
 	private static void loadOther(final Configuration config) {
 		bedrockGolemCreativeOnly = config.getBoolean("Bedrock Golem Creative Only", CATEGORY_OTHER,
-			true,
-			"When true, only players in creative mode can use a Bedrock Golem spawn item");
+			true, "When true, only players in creative mode can use a Bedrock Golem spawn item");
 		itemGolemHeadHasGlint = config.getBoolean("Golem Head Has Glint", CATEGORY_OTHER, true,
 			"Whether the Golem Head item always has 'enchanted' effect");
 		pumpkinBuildsGolem = config.getBoolean("Pumpkin Builds Golems", CATEGORY_OTHER, false, 
-				"(NOT FINISHED) When true, both a pumpkin or a golem head will function to build a golem");
+				"(Experimental) When true, pumpkins can be used to build this mod's golems");
 		villageGolemSpawnsDesert = config.getStringList("Desert Village Golem Spawns", CATEGORY_OTHER, villageGolemSpawnsDesert, 
 				"The following golems will appear in villages in Desert biomes. (Duplicate entries increase chances)");
 		villageGolemSpawnsPlains = config.getStringList("Plains Village Golem Spawns", CATEGORY_OTHER, villageGolemSpawnsPlains, 
@@ -167,27 +169,32 @@ public final class Config {
 	}
 	
 	public static List<Class<? extends GolemBase>> getDesertGolems() {
-		List<Class<? extends GolemBase>> list = new ArrayList();
-		for(final String s : villageGolemSpawnsDesert) {
-			final ResourceLocation name = new ResourceLocation(ExtraGolems.MODID, s);
-			EntityEntry entityEntry = ForgeRegistries.ENTITIES.getValue(name);
-			if(entityEntry != null && (GolemBase.class).isAssignableFrom(entityEntry.getEntityClass())) {
-				list.add((Class<? extends GolemBase>)entityEntry.getEntityClass());
-			} else ExtraGolems.LOGGER.error("Tried to parse an unknown entity from the config! Skipping '" + s + "' in \"Desert Village Golem Spawns\"");
+		if(desertGolems.isEmpty()) {
+			// populate the list from the config values found earlier
+			for(final String s : villageGolemSpawnsDesert) {
+				final ResourceLocation name = new ResourceLocation(ExtraGolems.MODID, s);
+				EntityEntry entityEntry = ForgeRegistries.ENTITIES.getValue(name);
+				if(entityEntry != null && (GolemBase.class).isAssignableFrom(entityEntry.getEntityClass())) {
+					desertGolems.add((Class<? extends GolemBase>)entityEntry.getEntityClass());
+				} else ExtraGolems.LOGGER.error("Tried to parse an unknown entity from the config! Skipping '" + s + "' in \"Desert Village Golem Spawns\"");
+			}
 		}
-		return list;
+		
+		return desertGolems;
 	}
 	
 	public static List<Class<? extends GolemBase>> getPlainsGolems() {
-		List<Class<? extends GolemBase>> list = new ArrayList();
-		for(String s : villageGolemSpawnsPlains) {
+		if(plainsGolems.isEmpty()) {
+			for(String s : villageGolemSpawnsPlains) {
 			final ResourceLocation name = new ResourceLocation(ExtraGolems.MODID, s);
 			EntityEntry entityEntry = ForgeRegistries.ENTITIES.getValue(name);
 			if(entityEntry != null && (GolemBase.class).isAssignableFrom(entityEntry.getEntityClass())) {
-				list.add((Class<? extends GolemBase>)entityEntry.getEntityClass());
+				plainsGolems.add((Class<? extends GolemBase>)entityEntry.getEntityClass());
 			} else ExtraGolems.LOGGER.error("Tried to parse an unknown entity from the config! Skipping '" + s + "' in \"Plains Village Golem Spawns\"");
 		}
-		return list;
+		}
+		
+		return plainsGolems;
 	}
 	
 	public static boolean matchesSecret(String in) {

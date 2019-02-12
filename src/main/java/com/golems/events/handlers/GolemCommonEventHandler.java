@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.golems.blocks.BlockGolemHead;
 import com.golems.entity.EntityBookshelfGolem;
 import com.golems.entity.EntityClayGolem;
 import com.golems.entity.EntityCraftingGolem;
@@ -21,6 +22,9 @@ import com.golems.entity.GolemColorizedMultiTextured;
 import com.golems.entity.GolemMultiTextured;
 import com.golems.main.Config;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockHorizontal;
+import net.minecraft.block.BlockPumpkin;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
@@ -35,6 +39,9 @@ import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.monster.EntitySpider;
 import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.village.Village;
 import net.minecraft.world.biome.Biome;
@@ -46,8 +53,10 @@ import net.minecraft.world.biome.BiomeSavanna;
 import net.minecraft.world.biome.BiomeSnow;
 import net.minecraft.world.biome.BiomeSwamp;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * Handles events added specifically from this mod.
@@ -166,6 +175,47 @@ public class GolemCommonEventHandler {
 		}
 		// choose a random golem from the list
 		return options.get(rand.nextInt(options.size()));
+	}
+	
+	/**
+	 * Basically, this handler allows pumpkins to be placed anywhere 
+	 * (as long as it's done by a player). Then upon placement, we try
+	 * to spawn a golem based on the blocks the pumpkin is on.
+	 * 
+	 * Note:  This seems to be called twice on client and twice on server.
+	 * May have problems with dedicated server, or it might be fine.
+	 */
+	@SubscribeEvent
+	public void onPlayerInteract(PlayerInteractEvent.RightClickBlock event) {
+		ItemStack stack = event.getItemStack();
+		// check qualifications for running this event...
+		if(Config.doesPumpkinBuildGolem() && !event.isCanceled() 
+				&& !stack.isEmpty() && stack.getItem() instanceof ItemBlock) {
+			Block heldBlock = ((ItemBlock)stack.getItem()).getBlock();
+			// if player is holding pumpkin or lit pumpkin, try to place the block
+			if(heldBlock instanceof BlockPumpkin) {
+				// update the location to place block
+				BlockPos pumpkinPos = event.getPos();
+				Block clicked = event.getWorld().getBlockState(pumpkinPos).getBlock();
+				if (!clicked.isReplaceable(event.getWorld(), pumpkinPos)) {
+		            pumpkinPos = pumpkinPos.offset(event.getFace());
+				}
+				// now we're ready to place the block
+				if(event.getEntityPlayer().canPlayerEdit(pumpkinPos, event.getFace(), stack)) {
+					IBlockState pumpkin = heldBlock.getDefaultState().withProperty(BlockHorizontal.FACING, 
+							event.getEntityPlayer().getHorizontalFacing().getOpposite());
+					// set block and trigger golem-checking
+					if(event.getWorld().setBlockState(pumpkinPos, pumpkin)) {
+						event.setCanceled(true);
+						BlockGolemHead.trySpawnGolem(event.getWorld(), pumpkinPos);
+						// reduce itemstack
+						if(!event.getEntityPlayer().isCreative()) {
+							event.getItemStack().shrink(1);
+						}
+					}
+				}
+			}
+		}
 	}
 	
 	/*

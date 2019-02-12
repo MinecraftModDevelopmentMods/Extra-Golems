@@ -30,7 +30,7 @@ public final class EntityStrawGolem extends GolemBase {
 		this.setLootTableLoc("golem_straw");
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.35D);
 		this.boostFreq = getConfig(this).getInt(SPECIAL_FREQ);
-		this.boostFreq += boostFreq > 10 ? this.rand.nextInt(boostFreq / 2) : this.rand.nextInt(10);
+		this.boostFreq += this.rand.nextInt(Math.max(10, this.boostFreq / 2));
 		this.range = 4;
 		this.allowed = getConfig(this).getBoolean(ALLOW_SPECIAL);
 	}

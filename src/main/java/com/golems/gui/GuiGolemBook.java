@@ -164,7 +164,7 @@ public class GuiGolemBook extends GuiScreen {
 	 **/
 	private static final void initGolemBookEntries(World world) {
 		GOLEMS.clear();
-		for (GolemBase golem : GolemLookup.getDummyGolemList(world)) {
+		for (GolemBase golem : ExtraGolems.proxy.DUMMY_GOLEMS) {
 			if(GolemBase.getConfig(golem).canSpawn()) {
 				GOLEMS.add(new GolemBookEntry(golem));
 			}
@@ -256,7 +256,7 @@ public class GuiGolemBook extends GuiScreen {
 		this.drawPageNum(cornerX, cornerY, pageNum + 1);
 		// declare these for the following switch statement
 		String title, body;
-		float scale, unScale;
+		float scale;
 		int startX, startY;
 		// using the page number, decides which page to draw and how to draw it
 		switch (pageNum) {
@@ -347,7 +347,7 @@ public class GuiGolemBook extends GuiScreen {
 			default:
 				// draw golem entry
 				if (this.isPageGolemEntry(pageNum)) {
-					GolemBookEntry entry = GOLEMS.get(pageNum - NUM_PAGES_INTRO);
+					GolemBookEntry entry = this.getGolemEntryForPage(pageNum);
 					this.drawGolemEntry(cornerX, cornerY, entry);
 				}
 				return;
@@ -374,15 +374,17 @@ public class GuiGolemBook extends GuiScreen {
     	// draw 'golem block'
 		float blockX = (float)(cornerX + MARGIN + 4);
     	float blockY = (float)(cornerY + MARGIN);
-    	float unScale = (float)Math.pow(scale,-1);
+    	//float unScale = (float)Math.pow(scale,-1);
     	// Render the Block with given scale
+    	GlStateManager.pushMatrix();
     	GlStateManager.enableRescaleNormal();
     	RenderHelper.enableGUIStandardItemLighting();
     	GlStateManager.scale(scale, scale, scale);
     	this.itemRender.renderItemIntoGUI(new ItemStack(block), (int)(blockX / scale), (int)(blockY / scale));
-    	GlStateManager.scale(unScale, unScale, unScale);
-    	RenderHelper.disableStandardItemLighting();
-    	GlStateManager.disableRescaleNormal();
+    	//GlStateManager.scale(unScale, unScale, unScale);
+    	//RenderHelper.disableStandardItemLighting();
+    	//GlStateManager.disableRescaleNormal();
+    	GlStateManager.popMatrix();
     }
     
     /** 
@@ -655,12 +657,12 @@ public class GuiGolemBook extends GuiScreen {
 				final int wrap = this.width - 20;
 				float scale = 1.0F;
 				int nameH = gui.fontRenderer.getWordWrappedHeight(name, wrap);
+				if(nameH > this.height) {
+					scale = 0.7F;
+					nameH = (int) (scale * gui.fontRenderer.getWordWrappedHeight(name, (int)(wrap / scale)));
+				}
 				int nameX = this.x + 20;
 				int nameY = this.y + ((this.height - nameH) / 2) + 1;
-				if(nameH > this.height) {
-					nameY = this.y + 3;
-					scale = 0.7F;
-				}
 				// re-scale and draw the golem name
 				GlStateManager.scale(scale, scale, scale);
 				gui.fontRenderer.drawSplitString(name, (int)((nameX) / scale), (int)(nameY / scale), (int)(wrap / scale), 0);

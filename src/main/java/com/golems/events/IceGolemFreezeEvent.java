@@ -15,7 +15,7 @@ import java.util.Random;
 import java.util.function.Function;
 
 /**
- * This event exists for other mods or addons to handle and modify the Sponge Golem's behavior. It
+ * This event exists for other mods or addons to handle and modify the Ice Golem's behavior. It
  * is not handled in Extra Golems.
  */
 @Event.HasResult
