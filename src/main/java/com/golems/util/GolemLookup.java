@@ -1,5 +1,6 @@
 package com.golems.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,13 +11,17 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.golems.entity.GolemBase;
+import com.golems.main.Config;
 import com.golems.main.ExtraGolems;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityList;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.oredict.OreDictionary;
 
 /**
  * This class contains methods to convert from building block to the
@@ -49,8 +54,8 @@ public final class GolemLookup {
 	 * could call {@code addBlockAlias([Modded Leaves Block], EntityLeafGolem.class}
 	 * and the modded leaves will be seen as valid golem building blocks
 	 * for the Leaf Golem.
-	 * @param buildingBlock
-	 * @param golemClazz
+	 * @param buildingBlock The additional block to build this golem
+	 * @param golemClazz The golem that should be built with this block
 	 * @return if the mapping was added successfully
 	 **/
 	public static boolean addBlockAlias(@Nonnull final Block buildingBlock, final Class<? extends GolemBase> golemClazz) {
@@ -104,7 +109,7 @@ public final class GolemLookup {
 	 **/
 	public static boolean addGolem(@Nonnull final Class<? extends GolemBase> golemClazz,
 				       @Nullable final Block buildingBlock) {
-		boolean success = buildingBlock != null ? addBlockToGolemMapping(buildingBlock, golemClazz) : true;
+		boolean success = buildingBlock != null && addBlockToGolemMapping(buildingBlock, golemClazz);
 		success &= addGolemToBlockMapping(golemClazz, buildingBlock);
 
 		return success;
@@ -125,9 +130,9 @@ public final class GolemLookup {
 		if (buildingBlocks.length > 0) {
 			// use the first block listed as the default building block
 			success = addGolemToBlockMapping(golemClazz, buildingBlocks[0]);
-			for (Block b : buildingBlocks) {
+			for (final Block b : buildingBlocks) {
 				// add all other blocks as possible golem blocks
-				success &= b != null ? addBlockToGolemMapping(b, golemClazz) : true;
+				success &= b != null && addBlockToGolemMapping(b, golemClazz);
 			}
 		}
 
@@ -143,7 +148,7 @@ public final class GolemLookup {
 		// error check
 		if (GOLEM_TO_CONFIG.containsKey(golemClazz)) {
 			ExtraGolems.LOGGER.warn("Tried to add a Config for " + golemClazz.getName()
-				+ " but Golem has already been added! Skipping.");
+				+ " but Golem already has one! Skipping.");
 			return false;					
 		}
 		
@@ -182,9 +187,18 @@ public final class GolemLookup {
 		} else if (BLOCK_TO_GOLEM.containsKey(block)) {
 			return BLOCK_TO_GOLEM.get(block);
 		} else {
-			ExtraGolems.LOGGER.error("Tried to make a golem with an unknown block!");
-			return null;
+			// The block itself is not registered, try matching the OreDict name instead
+			if(Config.getUseOreDictBlocks()) {
+				for(Block b : getOreDictMatches(block)) {
+					if(b != null && BLOCK_TO_GOLEM.containsKey(b)) {
+						return BLOCK_TO_GOLEM.get(b);
+					}
+				}
+			} else {
+				ExtraGolems.LOGGER.error("Tried to make a golem with an unknown block: " + block.getRegistryName());
+			}
 		}	
+		return null;
 	}
 	
 	/**
@@ -200,14 +214,25 @@ public final class GolemLookup {
 		} else if (GOLEM_TO_BLOCK.containsKey(golemClazz)) {
 			return GOLEM_TO_BLOCK.get(golemClazz);
 		} else {
-			ExtraGolems.LOGGER.error("Tried to get a block for an unknown golem!");
+			ExtraGolems.LOGGER.error("Tried to get a block for an unknown golem: " + golemClazz.getName());
 			return null;
 		}
 	}
 
 	/** @return if this block can be used to build a golem **/
 	public static boolean isBuildingBlock(final Block block) {
-		return block != null && BLOCK_TO_GOLEM.containsKey(block) && BLOCK_TO_GOLEM.get(block) != null;
+		if(block != null && BLOCK_TO_GOLEM.containsKey(block) && BLOCK_TO_GOLEM.get(block) != null) {
+			return true;
+		} else if(Config.getUseOreDictBlocks()){
+			// search the OreDictionary for golem blocks under the given block's OreDict name
+			final Block[] matches = getOreDictMatches(block);
+			for(Block b : matches) {
+				if(b != null && BLOCK_TO_GOLEM.containsKey(b) && BLOCK_TO_GOLEM.get(b) != null) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/** @return if there are any valid building blocks for the given golem **/
@@ -261,5 +286,54 @@ public final class GolemLookup {
 			}
 		}		
 		return list;
+	}
+	
+	/**
+	 * Searches the OreDictionary for entries registered under the same
+	 * name as the passed block. Used in case the given block is considered
+	 * the same as a block we've already registered and should therefore
+	 * build the same golem.
+	 * @param original a block whose OreDict entries we should search for.
+	 * Passing null will result in an empty array.
+	 * @return an array of all valid golem blocks with this OreDict name,
+	 * or an empty array if none are found.
+	 **/
+	@Nonnull
+	private static Block[] getOreDictMatches(@Nullable final Block original) {
+		if(original == null) {
+			return new Block[] {};
+		}
+		final int[] ids = OreDictionary.getOreIDs(new ItemStack(original));
+		if(ids != null && ids.length > 0) {
+			for(final int id : ids) {
+				final String oreName = OreDictionary.getOreName(id);
+				if(oreName != null && !oreName.equals("Unknown")) {
+					// the name is valid, now look up the blocks for that name
+					final List<ItemStack> matches = OreDictionary.getOres(oreName);
+					final List<Block> blocks = new ArrayList(matches.size());
+					for(ItemStack stack : matches) {
+						if(stack != null && stack.getItem() instanceof ItemBlock) {
+							final Block b = ((ItemBlock)stack.getItem()).getBlock();
+							// check if the OreDict-supplied block builds a golem
+							if(b != null && BLOCK_TO_GOLEM.containsKey(b) && BLOCK_TO_GOLEM.get(b) != null) {
+								blocks.add(b);
+							}
+						}
+					}
+					// return all golem-building blocks that are registered in OreDict under this name
+					return !blocks.isEmpty() ? blocks.toArray(new Block[blocks.size()]) : new Block[] {};
+				}
+			}
+		}
+		return new Block[] {};
+	}
+
+	public static boolean matchesOreDict(Block block, String toCheck) {
+		if (OreDictionary.doesOreNameExist(toCheck)) {
+			ItemStack passedBlock = new ItemStack(block);
+			List<ItemStack> matches = OreDictionary.getOres(toCheck);
+			return matches.isEmpty() ? false : OreDictionary.itemMatches(passedBlock, matches.get(0), true);
+		} else
+			return false;
 	}
 }

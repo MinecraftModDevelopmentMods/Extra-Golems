@@ -114,7 +114,7 @@ public class CommonProxy {
 		registerLootTables(ExtraGolems.MODID, EntityWoodenGolem.WOOD_PREFIX, EntityWoodenGolem.woodTypes);
 		registerLootTables(ExtraGolems.MODID, EntityMushroomGolem.SHROOM_PREFIX, EntityMushroomGolem.SHROOM_TYPES);
 		
-		// prepare and register loot tables for GolemColorizedMultiTextured
+		// prepare and register loot tables for the indicated golems:
 		String[] stainedGlass = new String[EntityStainedGlassGolem.COLOR_ARRAY.length];
 		for (int i = 0, l = stainedGlass.length; i < l; i++) {
 			stainedGlass[i] = Integer.toString(i);

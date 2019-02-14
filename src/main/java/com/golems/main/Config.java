@@ -30,6 +30,7 @@ public final class Config {
 	private static boolean pumpkinBuildsGolem;
 	private static boolean bedrockGolemCreativeOnly;
 	private static boolean itemGolemHeadHasGlint;
+	private static boolean useOreDictName;
 	private static int villageGolemSpawnChance;
 	private static String[] villageGolemSpawnsDesert = new String[] {
 		"golem_wooden", "golem_straw", "golem_sandstone", "golem_sandstone", "golem_red_sandstone", "golem_bone"
@@ -37,6 +38,7 @@ public final class Config {
 	private static String[] villageGolemSpawnsPlains = new String[] {
 		"golem_wooden", "golem_straw", "golem_melon", "golem_shroom", "golem_leaves", "golem_wool"
 	};
+	
 	
 	private static final List<Class<? extends GolemBase>> desertGolems = new ArrayList();
 	private static final List<Class<? extends GolemBase>> plainsGolems = new ArrayList();
@@ -144,6 +146,9 @@ public final class Config {
 			"Whether the Golem Head item always has 'enchanted' effect");
 		pumpkinBuildsGolem = config.getBoolean("Pumpkin Builds Golems", CATEGORY_OTHER, false, 
 				"(Experimental) When true, pumpkins can be used to build this mod's golems");
+		// TODO set to false by default because it impacts performance and might be buggy. Or maybe leave it.
+		useOreDictName = config.getBoolean("Use OreDict Blocks", CATEGORY_OTHER, true, 
+				"When true, building a golem will work with any OreDictionary-registered blocks");
 		villageGolemSpawnsDesert = config.getStringList("Desert Village Golem Spawns", CATEGORY_OTHER, villageGolemSpawnsDesert, 
 				"The following golems will appear in villages in Desert biomes. (Duplicate entries increase chances)");
 		villageGolemSpawnsPlains = config.getStringList("Plains Village Golem Spawns", CATEGORY_OTHER, villageGolemSpawnsPlains, 
@@ -166,6 +171,10 @@ public final class Config {
 	
 	public static int getVillageGolemSpawnChance() {
 		return villageGolemSpawnChance;
+	}
+	
+	public static boolean getUseOreDictBlocks() {
+		return useOreDictName;
 	}
 	
 	public static List<Class<? extends GolemBase>> getDesertGolems() {
