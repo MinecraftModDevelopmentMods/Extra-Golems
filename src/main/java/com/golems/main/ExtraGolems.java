@@ -1,7 +1,7 @@
 package com.golems.main;
 
 import com.golems.integration.ModIds;
-import com.golems.proxies.CommonProxy;
+import com.golems.proxies.ProxyCommon;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -19,9 +19,9 @@ public class ExtraGolems {
 	protected static final String NAME = "Extra Golems";
 	protected static final String VERSION = "7.1.3";
 
-	@SidedProxy(clientSide = "com." + MODID + ".proxies.ClientProxy", serverSide = "com." + MODID
-		+ ".proxies.CommonProxy")
-	public static CommonProxy proxy;
+	@SidedProxy(clientSide = "com." + MODID + ".proxies.ProxyClient", serverSide = "com." + MODID
+		+ ".proxies.ProxyCommon")
+	public static ProxyCommon proxy;
 
 	@Mod.Instance(ExtraGolems.MODID)
 	public static ExtraGolems instance;

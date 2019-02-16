@@ -5,21 +5,18 @@ import com.golems.main.ExtraGolems;
 import com.golems.main.GolemItems;
 import com.golems.renders.RenderColoredGolem;
 import com.golems.renders.RenderGolem;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.EntityEntry;
-import net.minecraftforge.fml.relauncher.Side;
 
-@Mod.EventBusSubscriber(value = Side.CLIENT, modid = ExtraGolems.MODID)
-public final class ClientProxy extends CommonProxy {
+@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = ExtraGolems.MODID)
+public final class ProxyClient extends ProxyCommon {
 
 	public static final IRenderFactory<GolemBase> FACTORY_TEXTURED_GOLEM = RenderGolem::new;
 
@@ -107,7 +104,7 @@ public final class ClientProxy extends CommonProxy {
 		}
 		final ModelResourceLocation mrl = new ModelResourceLocation(name, "inventory");
 		for (final int m : meta) {
-			ModelLoader.setCustomModelResourceLocation(i, m, mrl);
+			//ModelLoader.setCustomModelResourceLocation(i, m, mrl);
 		}
 	}
 
