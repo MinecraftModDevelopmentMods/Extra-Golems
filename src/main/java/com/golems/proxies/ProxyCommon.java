@@ -5,7 +5,6 @@ import com.golems.blocks.BlockUtilityGlow;
 import com.golems.blocks.BlockUtilityGlowWater;
 import com.golems.blocks.BlockUtilityPower;
 import com.golems.entity.*;
-import com.golems.events.handlers.GolemCommonEventHandler;
 import com.golems.items.ItemBedrockGolem;
 import com.golems.items.ItemInfoBook;
 import com.golems.main.Config;
@@ -27,7 +26,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -50,10 +48,6 @@ public class ProxyCommon {
 
 	public void preInitRenders() {
 		// Unused
-	}
-
-	public void registerEvents() {
-		MinecraftForge.EVENT_BUS.register(new GolemCommonEventHandler());
 	}
 
 	private static EntityType build(final Class<? extends GolemBase> entityClass, Function<? super World, ? extends GolemBase> factoryIn, final String name, Block... blocks) {
