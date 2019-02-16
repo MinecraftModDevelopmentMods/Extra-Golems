@@ -4,8 +4,6 @@ import com.golems.entity.*;
 import com.golems.util.GolemConfigSet;
 import com.golems.util.GolemLookup;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.registry.EntityEntry;
@@ -67,7 +65,8 @@ public final class Config {
 		GolemLookup.addConfig(EntityCoalGolem.class, new GolemConfigSet(config, "Coal Golem", 14.0D, 2.5F)
 			.addKey(EntityCoalGolem.ALLOW_SPECIAL, false, "Whether this golem can inflict blindness"));
 		GolemLookup.addConfig(EntityConcreteGolem.class, 
-				new GolemConfigSet(config, "Concrete Golem", 38.0D, 6.0F));
+				new GolemConfigSet(config, "Concrete Golem", 38.0D, 6.0F)
+				.addKey(EntityConcreteGolem.ALLOW_RESIST, true, "Whether this golem reduces damage it takes"));
 		GolemLookup.addConfig(EntityCraftingGolem.class, new GolemConfigSet(config, "Crafting Golem", 24.0D, 2.0F)
 			.addKey(EntityCraftingGolem.ALLOW_SPECIAL, true, "Whether this golem can open a crafting grid"));
 		GolemLookup.addConfig(EntityDiamondGolem.class, new GolemConfigSet(config, "Diamond Golem", 220.0D, 20.0F));
@@ -146,7 +145,6 @@ public final class Config {
 			"Whether the Golem Head item always has 'enchanted' effect");
 		pumpkinBuildsGolem = config.getBoolean("Pumpkin Builds Golems", CATEGORY_OTHER, false, 
 				"(Experimental) When true, pumpkins can be used to build this mod's golems");
-		// TODO set to false by default because it impacts performance and might be buggy. Or maybe leave it.
 		useOreDictName = config.getBoolean("Use OreDict Blocks", CATEGORY_OTHER, true, 
 				"When true, building a golem will work with any OreDictionary-registered blocks");
 		villageGolemSpawnsDesert = config.getStringList("Desert Village Golem Spawns", CATEGORY_OTHER, villageGolemSpawnsDesert, 

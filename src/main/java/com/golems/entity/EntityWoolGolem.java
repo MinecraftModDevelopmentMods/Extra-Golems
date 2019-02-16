@@ -68,7 +68,7 @@ public final class EntityWoolGolem extends GolemMultiTextured {
 
 	@Override
 	public void onBuilt(IBlockState body, IBlockState legs, IBlockState arm1, IBlockState arm2) { 
-		// use block metadata to give this golem the right texture
+		// use block metadata to give this golem the right texture (defaults to 0)
 		final int meta = body.getBlock().getMetaFromState(body)
 				% this.getTextureArray().length;
 		this.setTextureNum((byte) meta);
@@ -77,14 +77,14 @@ public final class EntityWoolGolem extends GolemMultiTextured {
 	@Override
 	public ITextComponent getDisplayName() {
 		if(this.secret) {
-			String name = getRainbowString(this.getCustomNameTag(), this.getEntityWorld().getWorldTime());
+			String name = getRainbowString(this.getCustomNameTag(), this.ticksExisted / 2);
 			return new TextComponentString(name);
 		} else return super.getDisplayName();
 	}
 	
 	private static String getRainbowString(final String stringIn, final long timeIn) {
 		String in = TextFormatting.getTextWithoutFormattingCodes(stringIn);
-		String stringOut = "";
+		StringBuilder stringOut = new StringBuilder(stringIn.length() * 2);
 		int time = timeIn > Integer.MAX_VALUE / 2 ? Integer.MAX_VALUE / 2 : (int)timeIn;
 		   TextFormatting[] colorChar = 
 		      {
@@ -99,8 +99,8 @@ public final class EntityWoolGolem extends GolemMultiTextured {
 		      };
 		   for(int i = 0, l = in.length(), cl = colorChar.length; i < l; i++) {
 			   int meta = i + time ;
-			   stringOut = stringOut + colorChar[meta % cl] + in.charAt(i);
+			   stringOut.append(colorChar[meta % cl] + "" + in.charAt(i));
 		   }
-		   return stringOut;
+		   return stringOut.toString();
 	}
 }

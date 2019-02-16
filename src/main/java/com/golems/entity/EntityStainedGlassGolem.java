@@ -10,8 +10,6 @@ import net.minecraft.item.ItemDye;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public final class EntityStainedGlassGolem extends GolemColorizedMultiTextured {
 
@@ -51,7 +49,7 @@ public final class EntityStainedGlassGolem extends GolemColorizedMultiTextured {
 
 	@Override
 	public void onBuilt(IBlockState body, IBlockState legs, IBlockState arm1, IBlockState arm2) {
-		// use block metadata to give this golem the right texture
+		// use block metadata to give this golem the right texture (defaults to last item of color array)
 		final int meta = body.getBlock().getMetaFromState(body)
 			% this.getColorArray().length;
 		this.setTextureNum((byte) (this.getColorArray().length - meta - 1));

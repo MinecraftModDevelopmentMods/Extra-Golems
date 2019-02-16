@@ -5,6 +5,8 @@ import com.golems.main.ExtraGolems;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.BlockLog.EnumAxis;
+import net.minecraft.block.BlockNewLog;
+import net.minecraft.block.BlockOldLog;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
@@ -45,11 +47,14 @@ public final class EntityWoodenGolem extends GolemMultiTextured {
 	@Override
 	public void onBuilt(IBlockState body, IBlockState legs, IBlockState arm1, IBlockState arm2) {
 		// use block metadata to give this golem the right texture
-		final int meta = body.getBlock().getMetaFromState(
+		if(body.getBlock() instanceof BlockNewLog || body.getBlock() instanceof BlockOldLog) {
+			final int meta = body.getBlock().getMetaFromState(
 			body.withProperty(BlockLog.LOG_AXIS, EnumAxis.NONE));
-		byte textureNum = body.getBlock() == Blocks.LOG2 ? (byte) (meta + 4) : (byte) meta;
-		textureNum %= this.getNumTextures();
-		this.setTextureNum(textureNum);
+			byte textureNum = body.getBlock() == Blocks.LOG2 ? (byte) (meta + 4) : (byte) meta;
+			textureNum %= this.getNumTextures();
+			this.setTextureNum(textureNum);
+		}
+		
 	}
 
 	@Override

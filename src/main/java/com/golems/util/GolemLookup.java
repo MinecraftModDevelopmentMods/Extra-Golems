@@ -307,7 +307,7 @@ public final class GolemLookup {
 		if(ids != null && ids.length > 0) {
 			for(final int id : ids) {
 				final String oreName = OreDictionary.getOreName(id);
-				if(oreName != null && !oreName.equals("Unknown")) {
+				if(!"Unknown".equals(oreName)) {
 					// the name is valid, now look up the blocks for that name
 					final List<ItemStack> matches = OreDictionary.getOres(oreName);
 					final List<Block> blocks = new ArrayList(matches.size());
@@ -332,8 +332,9 @@ public final class GolemLookup {
 		if (OreDictionary.doesOreNameExist(toCheck)) {
 			ItemStack passedBlock = new ItemStack(block);
 			List<ItemStack> matches = OreDictionary.getOres(toCheck);
-			return matches.isEmpty() ? false : OreDictionary.itemMatches(passedBlock, matches.get(0), true);
-		} else
+			return !matches.isEmpty() && OreDictionary.itemMatches(passedBlock, matches.get(0), true);
+		} else {
 			return false;
+		}
 	}
 }

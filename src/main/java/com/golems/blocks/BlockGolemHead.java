@@ -111,10 +111,7 @@ public final class BlockGolemHead extends BlockHorizontal {
 		final double y = pos.getY() - 1.95D;
 		final double z = pos.getZ() + 0.5D;
 
-		if (blockBelow1 == blockBelow2) {
-			final boolean flagX = isGolemXAligned(world, pos);
-			final boolean flagZ = isGolemZAligned(world, pos);
-
+		if (blockBelow1 == blockBelow2 && blockBelow1 != Blocks.AIR) {
 			// hard-coded support for Snow Golem
 			if (blockBelow1 == Blocks.SNOW) {
 				if (!world.isRemote) {
@@ -128,7 +125,9 @@ public final class BlockGolemHead extends BlockHorizontal {
 				ItemBedrockGolem.spawnParticles(world, x, y + 0.5D, z, 0.2D);
 				return true;
 			}
-
+			
+			final boolean flagX = isGolemXAligned(world, pos);
+			final boolean flagZ = isGolemZAligned(world, pos);
 			if (!world.isRemote && (flagX || flagZ)) {
 				// determine each arm of the golem
 				EnumFacing face = flagX ? EnumFacing.EAST : EnumFacing.NORTH;

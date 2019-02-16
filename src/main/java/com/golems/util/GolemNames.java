@@ -2,7 +2,11 @@ package com.golems.util;
 
 import java.util.function.Consumer;
 
-public class GolemNames {
+public final class GolemNames {
+	
+	private GolemNames() {
+		//
+	}
 	
 	public static final String BEDROCK_GOLEM = "golem_bedrock";
 	public static final String BONE_GOLEM = "golem_bone";

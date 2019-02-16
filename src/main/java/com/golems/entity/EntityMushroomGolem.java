@@ -68,8 +68,8 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 
 	@Override
 	public void onBuilt(IBlockState body, IBlockState legs, IBlockState arm1, IBlockState arm2) {
-		// use block type to give this golem the right texture
-		byte textureNum = body == Blocks.RED_MUSHROOM_BLOCK ? (byte) 0
+		// use block type to give this golem the right texture (defaults to brown mushroom)
+		byte textureNum = body.getBlock() == Blocks.RED_MUSHROOM_BLOCK ? (byte) 0
 			: (byte) 1;
 		textureNum %= this.getNumTextures();
 		this.setTextureNum(textureNum);
