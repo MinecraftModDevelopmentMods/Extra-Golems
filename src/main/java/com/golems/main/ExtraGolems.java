@@ -31,7 +31,7 @@ public class ExtraGolems {
 	@Mod.EventHandler
 	public static void preInit(final FMLPreInitializationEvent event) {
 		Config.mainRegistry(new Configuration(event.getSuggestedConfigurationFile()));
-		proxy.registerEntities();
+		//proxy.registerEntities();
 	}
 
 	@Mod.EventHandler

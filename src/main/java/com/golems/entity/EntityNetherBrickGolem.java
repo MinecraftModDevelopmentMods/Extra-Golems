@@ -1,6 +1,9 @@
 package com.golems.entity;
 
+import com.golems.main.ExtraGolems;
 import com.golems.util.GolemConfigSet;
+import com.golems.util.GolemNames;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.SoundEvents;
@@ -18,13 +21,13 @@ public final class EntityNetherBrickGolem extends GolemBase {
 	public EntityNetherBrickGolem(final World world) {
 		super(world);
 		this.setImmuneToFire(true);
-		this.setLootTableLoc("golem_nether_brick");
+		this.setLootTableLoc(GolemNames.NETHERBRICK_GOLEM);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
 	}
 
 	@Override
 	protected ResourceLocation applyTexture() {
-		return makeGolemTexture("nether_brick");
+		return makeTexture(ExtraGolems.MODID, GolemNames.NETHERBRICK_GOLEM);
 	}
 
 	/**

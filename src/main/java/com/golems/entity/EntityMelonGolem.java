@@ -2,7 +2,10 @@ package com.golems.entity;
 
 import com.golems.entity.ai.EntityAIPlaceRandomBlocksStrictly;
 import com.golems.main.Config;
+import com.golems.main.ExtraGolems;
 import com.golems.util.GolemConfigSet;
+import com.golems.util.GolemNames;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.BlockFlower.EnumFlowerType;
@@ -32,13 +35,13 @@ public final class EntityMelonGolem extends GolemBase {
 		super(world);
 		this.setCanSwim(true);
 		this.tasks.addTask(2, this.makeFlowerAI());
-		this.setLootTableLoc("golem_melon");
+		this.setLootTableLoc(GolemNames.MELON_GOLEM);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 
 	@Override
 	protected ResourceLocation applyTexture() {
-		return makeGolemTexture("melon");
+		return makeTexture(ExtraGolems.MODID, GolemNames.MELON_GOLEM);
 	}
 
 	@Override

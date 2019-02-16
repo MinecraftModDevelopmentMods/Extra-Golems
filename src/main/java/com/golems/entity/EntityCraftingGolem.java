@@ -3,6 +3,8 @@ package com.golems.entity;
 import java.util.List;
 
 import com.golems.blocks.ContainerPortableWorkbench;
+import com.golems.main.ExtraGolems;
+import com.golems.util.GolemNames;
 
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,13 +26,13 @@ public final class EntityCraftingGolem extends GolemBase {
 	
 	public EntityCraftingGolem(final World world) {
 		super(world);
-		this.setLootTableLoc("golem_crafting");
+		this.setLootTableLoc(GolemNames.CRAFTING_GOLEM);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.29D);
 	}
 
 	@Override
 	protected ResourceLocation applyTexture() {
-		return makeGolemTexture("crafting");
+		return makeTexture(ExtraGolems.MODID, GolemNames.CRAFTING_GOLEM);
 	}
 
 	@Override

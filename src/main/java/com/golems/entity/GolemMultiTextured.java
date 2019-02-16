@@ -1,5 +1,8 @@
 package com.golems.entity;
 
+import com.golems.main.ExtraGolems;
+import com.golems.util.GolemNames;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -47,7 +50,7 @@ public abstract class GolemMultiTextured extends GolemBase {
 		for (int n = 0, len = textureNames.length; n < len; n++) {
 			// initialize textures
 			final String s = textureNames[n];
-			this.textures[n] = GolemBase.makeGolemTexture(getModId(), prefix + "_" + s);
+			this.textures[n] = GolemBase.makeTexture(getModId(), "golem_" + prefix + "_" + s);
 			// initialize loot tables
 			this.lootTables[n] = new ResourceLocation(getModId(), "entities/golem_" + prefix + "/" + s);
 		}
@@ -56,7 +59,7 @@ public abstract class GolemMultiTextured extends GolemBase {
 	@Override
 	protected ResourceLocation applyTexture() {
 		// apply TEMPORARY texture to avoid NPE. Actual texture is first applied in onLivingUpdate
-		return makeGolemTexture("clay");
+		return makeTexture(ExtraGolems.MODID, GolemNames.CLAY_GOLEM);
 	}
 
 	@Override

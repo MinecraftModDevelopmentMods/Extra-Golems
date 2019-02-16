@@ -16,6 +16,9 @@ import net.minecraft.world.WorldServer;
 
 import java.util.List;
 
+import com.golems.main.ExtraGolems;
+import com.golems.util.GolemNames;
+
 public class EntityTNTGolem extends GolemBase {
 
 	protected static final DataParameter<Boolean> DATA_IGNITED = EntityDataManager
@@ -37,7 +40,7 @@ public class EntityTNTGolem extends GolemBase {
 	/** Default constructor for TNT golem. **/
 	public EntityTNTGolem(final World world) {
 		this(world, 3, 6, 50, 10);
-		this.setLootTableLoc("golem_tnt");
+		this.setLootTableLoc(GolemNames.TNT_GOLEM);
 		this.allowedToExplode = getConfig(this).getBoolean(ALLOW_SPECIAL);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
@@ -72,7 +75,7 @@ public class EntityTNTGolem extends GolemBase {
 
 	@Override
 	protected ResourceLocation applyTexture() {
-		return makeGolemTexture("tnt");
+		return makeTexture(ExtraGolems.MODID, GolemNames.TNT_GOLEM);
 	}
 
 	/**

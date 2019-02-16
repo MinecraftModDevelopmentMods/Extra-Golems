@@ -1,6 +1,9 @@
 package com.golems.entity;
 
+import com.golems.main.ExtraGolems;
 import com.golems.util.GolemConfigSet;
+import com.golems.util.GolemNames;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntitySlime;
@@ -30,13 +33,13 @@ public final class EntitySlimeGolem extends GolemBase {
 		super(world);
 		this.setChild(isBaby);
 		this.setCanSwim(true);
-		this.setLootTableLoc("golem_slime");
+		this.setLootTableLoc(GolemNames.SLIME_GOLEM);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.29D);
 	}
 
 	@Override
 	protected ResourceLocation applyTexture() {
-		return makeGolemTexture("slime");
+		return makeTexture(ExtraGolems.MODID, GolemNames.SLIME_GOLEM);
 	}
 
 	@Override

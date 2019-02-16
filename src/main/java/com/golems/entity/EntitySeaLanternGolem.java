@@ -2,8 +2,11 @@ package com.golems.entity;
 
 import com.golems.blocks.BlockUtilityGlow;
 import com.golems.entity.ai.EntityAIPlaceSingleBlock;
+import com.golems.main.ExtraGolems;
 import com.golems.main.GolemItems;
 import com.golems.util.GolemConfigSet;
+import com.golems.util.GolemNames;
+
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -33,7 +36,7 @@ public final class EntitySeaLanternGolem extends GolemBase {
 	public EntitySeaLanternGolem(final World world) {
 		super(world);
 		this.canDrown = false;
-		this.setLootTableLoc("golem_sea_lantern");
+		this.setLootTableLoc(GolemNames.SEALANTERN_GOLEM);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 
 	}
@@ -62,7 +65,7 @@ public final class EntitySeaLanternGolem extends GolemBase {
 
 	@Override
 	protected ResourceLocation applyTexture() {
-		return makeGolemTexture("sea_lantern");
+		return makeTexture(ExtraGolems.MODID, GolemNames.SEALANTERN_GOLEM);
 	}
 
 	@Override

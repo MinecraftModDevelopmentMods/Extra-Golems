@@ -2,8 +2,11 @@ package com.golems.entity;
 
 import com.golems.blocks.BlockUtilityPower;
 import com.golems.entity.ai.EntityAIPlaceSingleBlock;
+import com.golems.main.ExtraGolems;
 import com.golems.main.GolemItems;
 import com.golems.util.GolemLookup;
+import com.golems.util.GolemNames;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.SoundEvents;
@@ -26,7 +29,7 @@ public final class EntityRedstoneGolem extends GolemBase {
 	 **/
 	public EntityRedstoneGolem(final World world) {
 		this(world, GolemLookup.getConfig(EntityRedstoneGolem.class).getBoolean(ALLOW_SPECIAL), 15, DEF_FREQ);
-		this.setLootTableLoc("golem_redstone");
+		this.setLootTableLoc(GolemNames.REDSTONE_GOLEM);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 
@@ -41,7 +44,7 @@ public final class EntityRedstoneGolem extends GolemBase {
 
 	@Override
 	protected ResourceLocation applyTexture() {
-		return makeGolemTexture("redstone");
+		return makeTexture(ExtraGolems.MODID, GolemNames.REDSTONE_GOLEM);
 	}
 
 	@Override

@@ -10,10 +10,12 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.relauncher.Side;
 
 @Mod.EventBusSubscriber(value = Side.CLIENT, modid = ExtraGolems.MODID)
@@ -25,12 +27,6 @@ public final class ClientProxy extends CommonProxy {
 
 	@SubscribeEvent
 	public static void registerModels(final ModelRegistryEvent event) {
-		ExtraGolems.proxy.preInitRenders();
-	}
-
-	@Override
-	public void preInitRenders() {
-
 		// itemblocks
 		registerRender(Item.getItemFromBlock(GolemItems.golemHead),
 			Blocks.PUMPKIN.getRegistryName().toString());
@@ -38,12 +34,7 @@ public final class ClientProxy extends CommonProxy {
 		registerRender(GolemItems.golemPaper);
 		registerRender(GolemItems.spawnBedrockGolem);
 		registerRender(GolemItems.infoBook);
-		// entities
-	}
-
-	@Override
-	public void registerEntities() {
-		super.registerEntities();
+	
 		// register entity renders by calling a helper function
 		registerEntityRender(EntityBedrockGolem.class);
 		registerEntityRender(EntityBoneGolem.class);
@@ -83,7 +74,7 @@ public final class ClientProxy extends CommonProxy {
 		registerEntityRender(EntityWoodenGolem.class);
 		registerEntityRender(EntityWoolGolem.class);
 	}
-	
+
 	/** 
 	 * Helper function for entity rendering registration.
 	 * If the class inherits from {@code GolemColorized.class}, 

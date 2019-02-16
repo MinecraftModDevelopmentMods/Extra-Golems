@@ -2,7 +2,10 @@ package com.golems.entity;
 
 import com.golems.entity.ai.EntityAIPlaceRandomBlocksStrictly;
 import com.golems.main.Config;
+import com.golems.main.ExtraGolems;
 import com.golems.util.GolemConfigSet;
+import com.golems.util.GolemNames;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockNetherWart;
 import net.minecraft.block.state.IBlockState;
@@ -29,7 +32,7 @@ public final class EntityNetherWartGolem extends GolemBase {
 	public EntityNetherWartGolem(final World world) {
 		super(world);
 		this.setCanSwim(true);
-		this.setLootTableLoc("golem_nether_wart");
+		this.setLootTableLoc(GolemNames.NETHERWART_GOLEM);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 	
@@ -64,7 +67,7 @@ public final class EntityNetherWartGolem extends GolemBase {
 
 	@Override
 	protected ResourceLocation applyTexture() {
-		return makeGolemTexture("nether_wart");
+		return makeTexture(ExtraGolems.MODID, GolemNames.NETHERWART_GOLEM);
 	}
 
 	@Override

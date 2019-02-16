@@ -2,8 +2,11 @@ package com.golems.entity;
 
 import com.golems.blocks.BlockUtilityGlow;
 import com.golems.entity.ai.EntityAIPlaceSingleBlock;
+import com.golems.main.ExtraGolems;
 import com.golems.main.GolemItems;
 import com.golems.util.GolemLookup;
+import com.golems.util.GolemNames;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.SoundEvents;
@@ -36,7 +39,7 @@ public final class EntityGlowstoneGolem extends GolemBase {
 		this.isImmuneToFire = true;
 		this.setCanTakeFallDamage(true);
 		this.setCanSwim(true);
-		this.setLootTableLoc("golem_glowstone");
+		this.setLootTableLoc(GolemNames.GLOWSTONE_GOLEM);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 
@@ -54,7 +57,7 @@ public final class EntityGlowstoneGolem extends GolemBase {
 
 	@Override
 	protected ResourceLocation applyTexture() {
-		return makeGolemTexture("glowstone");
+		return makeTexture(ExtraGolems.MODID, GolemNames.GLOWSTONE_GOLEM);
 	}
 
 	@Override

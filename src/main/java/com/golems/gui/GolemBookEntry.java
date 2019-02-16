@@ -1,5 +1,6 @@
 package com.golems.gui;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import javax.annotation.Nullable;
 import com.golems.entity.EntityBedrockGolem;
 import com.golems.entity.GolemBase;
 import com.golems.entity.GolemMultiTextured;
+import com.golems.main.ExtraGolems;
 import com.golems.util.GolemLookup;
 
 import net.minecraft.block.Block;
@@ -49,12 +51,11 @@ public class GolemBookEntry {
 		this.BLOCK = b != null ? b : Blocks.AIR;
 		
 		// find the image to add to the book
-		// addon-friendly because it does not assume a specific mod id
-		String img = EntityList.getEntityString(golem).replaceFirst(".golem_", ":textures/gui/screenshots/golem_") + ".png";
+		String img = (ExtraGolems.MODID + ":textures/gui/screenshots/").concat(EntityList.getEntityString(golem)).concat(".png");
 		try {
 			this.IMAGE = Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(img)).getResourceLocation();
 			//System.out.println("Image found, yay! Loading " + img.toString() + " for " + this.GOLEM_NAME);
-		} catch (Exception e) {
+		} catch (IOException e) {
 			//System.out.println("No image found, skipping " + img.toString() + " for " + this.GOLEM_NAME);
 		}
 	}

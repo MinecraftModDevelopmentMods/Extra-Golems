@@ -4,6 +4,8 @@ import com.golems.entity.ai.EntityAIPlaceRandomBlocksStrictly;
 import com.golems.main.Config;
 import com.golems.main.ExtraGolems;
 import com.golems.util.GolemConfigSet;
+import com.golems.util.GolemNames;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;

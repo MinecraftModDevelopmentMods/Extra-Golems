@@ -1,7 +1,10 @@
 package com.golems.entity;
 
 import com.golems.events.EndGolemTeleportEvent;
+import com.golems.main.ExtraGolems;
 import com.golems.util.GolemConfigSet;
+import com.golems.util.GolemNames;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -40,7 +43,7 @@ public class EntityEndstoneGolem extends GolemBase {
 	public EntityEndstoneGolem(final World world) {
 		this(world, 32.0D, true);
 		GolemConfigSet cfg = getConfig(this);
-		this.setLootTableLoc("golem_end_stone");
+		this.setLootTableLoc(GolemNames.ENDSTONE_GOLEM);
 		this.isHurtByWater = cfg.getBoolean(ALLOW_WATER_HURT);
 		this.allowTeleport = cfg.getBoolean(ALLOW_SPECIAL);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
@@ -75,7 +78,7 @@ public class EntityEndstoneGolem extends GolemBase {
 	
 	@Override
 	protected ResourceLocation applyTexture() {
-		return makeGolemTexture("end_stone");
+		return makeTexture(ExtraGolems.MODID, GolemNames.ENDSTONE_GOLEM);
 	}
 
 	@Override

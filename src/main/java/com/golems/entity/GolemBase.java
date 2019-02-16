@@ -487,6 +487,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	/////////////// TEXTURE HELPERS //////////////////
 
 	/** Makes a texture on the assumption that MODID is 'golems'. **/
+	@Deprecated
 	public static ResourceLocation makeGolemTexture(final String texture) {
 		return makeGolemTexture(ExtraGolems.MODID, texture);
 	}
@@ -497,8 +498,17 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	 *
 	 * @see {@link #applyTexture()}
 	 **/
+	@Deprecated
 	public static ResourceLocation makeGolemTexture(final String modid, final String texture) {
-		return new ResourceLocation(modid + ":textures/entity/golem_" + texture + ".png");
+		return makeTexture(modid, "golem_" + texture);
+	}
+	
+	/**
+	 * Makes a ResourceLocation using the passed mod id and part of the texture name. Texture should
+	 * be at 'assets/[MODID]/textures/entity/[TEXTURE].png'
+	 **/
+	public static ResourceLocation makeTexture(final String MODID, final String TEXTURE) {
+		return new ResourceLocation(MODID + ":textures/entity/" + TEXTURE + ".png");
 	}
 
 	///////////////////// SOUND OVERRIDES ////////////////////

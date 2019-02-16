@@ -2,6 +2,9 @@ package com.golems.entity;
 
 import java.util.List;
 
+import com.golems.main.ExtraGolems;
+import com.golems.util.GolemNames;
+
 import net.minecraft.block.BlockCrops;
 import net.minecraft.block.BlockStem;
 import net.minecraft.block.IGrowable;
@@ -27,7 +30,7 @@ public final class EntityStrawGolem extends GolemBase {
 	public EntityStrawGolem(final World world) {
 		super(world);
 		this.setCanSwim(true);
-		this.setLootTableLoc("golem_straw");
+		this.setLootTableLoc(GolemNames.STRAW_GOLEM);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.35D);
 		this.boostFreq = getConfig(this).getInt(SPECIAL_FREQ);
 		this.boostFreq += this.rand.nextInt(Math.max(10, this.boostFreq / 2));
@@ -90,7 +93,7 @@ public final class EntityStrawGolem extends GolemBase {
 	
 	@Override
 	protected ResourceLocation applyTexture() {
-		return makeGolemTexture("straw");
+		return makeTexture(ExtraGolems.MODID, GolemNames.STRAW_GOLEM);
 	}
 
 	@Override

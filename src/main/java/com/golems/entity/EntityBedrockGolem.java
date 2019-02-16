@@ -3,7 +3,9 @@ package com.golems.entity;
 import java.util.List;
 
 import com.golems.items.ItemBedrockGolem;
+import com.golems.main.ExtraGolems;
 import com.golems.main.GolemItems;
+import com.golems.util.GolemNames;
 
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,7 +30,7 @@ public final class EntityBedrockGolem extends GolemBase {
 
 	@Override
 	protected ResourceLocation applyTexture() {
-		return makeGolemTexture("bedrock");
+		return makeTexture(ExtraGolems.MODID, GolemNames.BEDROCK_GOLEM);
 	}
 
 	@Override

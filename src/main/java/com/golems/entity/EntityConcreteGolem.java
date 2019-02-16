@@ -1,5 +1,7 @@
 package com.golems.entity;
 
+import com.golems.main.ExtraGolems;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.SoundEvents;
@@ -14,9 +16,9 @@ public final class EntityConcreteGolem extends GolemColorizedMultiTextured {
 	public static final int[] COLOR_ARRAY = ItemDye.DYE_COLORS;
 	
 	private static final ResourceLocation TEXTURE_BASE = GolemBase
-			.makeGolemTexture(PREFIX + "_base");
+			.makeTexture(ExtraGolems.MODID, "golem_" + PREFIX + "_base");
 		private static final ResourceLocation TEXTURE_OVERLAY = GolemBase
-			.makeGolemTexture(PREFIX + "_grayscale");
+			.makeTexture(ExtraGolems.MODID, "golem_" + PREFIX + "_grayscale");
 	
 	public EntityConcreteGolem(final World world) {
 		super(world, TEXTURE_BASE, TEXTURE_OVERLAY, COLOR_ARRAY);

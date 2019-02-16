@@ -7,6 +7,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
+import com.golems.util.GolemNames;
+
+import com.golems.main.ExtraGolems;
+
 /**
  * This class should always be registered with RenderGolemColorized. It supports a 2-texture golem
  * where {@link getTextureBase()} returns a normal texture to be rendered and
@@ -49,7 +53,7 @@ public abstract class GolemColorized extends GolemBase {
 
 	@Override
 	protected ResourceLocation applyTexture() {
-		return makeGolemTexture("clay");
+		return makeTexture(ExtraGolems.MODID, GolemNames.CLAY_GOLEM);
 	}
 
 	/**

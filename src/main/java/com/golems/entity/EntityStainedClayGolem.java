@@ -1,5 +1,8 @@
 package com.golems.entity;
 
+import com.golems.main.ExtraGolems;
+import com.golems.util.GolemNames;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.SoundEvents;
@@ -13,9 +16,10 @@ public final class EntityStainedClayGolem extends GolemColorizedMultiTextured {
 	public static final String PREFIX = "stained_clay";
 	public static final int[] COLOR_ARRAY = ItemDye.DYE_COLORS;
 
-	private static final ResourceLocation TEXTURE_BASE = GolemBase.makeGolemTexture(PREFIX);
+	private static final ResourceLocation TEXTURE_BASE = GolemBase
+		.makeTexture(ExtraGolems.MODID, GolemNames.STAINEDTERRACOTTA_GOLEM);
 	private static final ResourceLocation TEXTURE_OVERLAY = GolemBase
-		.makeGolemTexture("stained_clay_grayscale");
+		.makeTexture(ExtraGolems.MODID, GolemNames.STAINEDTERRACOTTA_GOLEM + "_grayscale");
 
 	public EntityStainedClayGolem(final World world) {
 		super(world, TEXTURE_BASE, TEXTURE_OVERLAY, COLOR_ARRAY);

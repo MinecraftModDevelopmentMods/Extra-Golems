@@ -1,6 +1,9 @@
 package com.golems.entity;
 
+import com.golems.main.ExtraGolems;
 import com.golems.util.GolemConfigSet;
+import com.golems.util.GolemNames;
+
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
@@ -17,14 +20,15 @@ public final class EntityLeafGolem extends GolemColorized {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Regeneration";
 
-	private static final ResourceLocation TEXTURE_BASE = GolemBase.makeGolemTexture("leaves");
+	private static final ResourceLocation TEXTURE_BASE = 
+			GolemBase.makeTexture(ExtraGolems.MODID, GolemNames.LEAF_GOLEM);
 	private static final ResourceLocation TEXTURE_OVERLAY = GolemBase
-		.makeGolemTexture("leaves_grayscale");
+		.makeTexture(ExtraGolems.MODID, GolemNames.LEAF_GOLEM + "_grayscale");
 
 	public EntityLeafGolem(final World world) {
 		super(world, 0x5F904A, TEXTURE_BASE, TEXTURE_OVERLAY);
 		this.setCanSwim(true);
-		this.setLootTableLoc("golem_leaves");
+		this.setLootTableLoc(GolemNames.LEAF_GOLEM);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.31D);
 	}
 

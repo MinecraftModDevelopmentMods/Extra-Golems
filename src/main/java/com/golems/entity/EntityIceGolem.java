@@ -1,7 +1,10 @@
 package com.golems.entity;
 
 import com.golems.events.IceGolemFreezeEvent;
+import com.golems.main.ExtraGolems;
 import com.golems.util.GolemConfigSet;
+import com.golems.util.GolemNames;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -28,12 +31,12 @@ public final class EntityIceGolem extends GolemBase {
 	public EntityIceGolem(final World world) {
 		super(world);
 		this.setCanSwim(true); // just in case
-		this.setLootTableLoc("golem_ice");
+		this.setLootTableLoc(GolemNames.ICE_GOLEM);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 
 	protected ResourceLocation applyTexture() {
-		return makeGolemTexture("ice");
+		return makeTexture(ExtraGolems.MODID, GolemNames.ICE_GOLEM);
 	}
 
 	/**

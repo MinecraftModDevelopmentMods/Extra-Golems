@@ -1,7 +1,10 @@
 package com.golems.entity;
 
 import com.golems.events.SpongeGolemSoakEvent;
+import com.golems.main.ExtraGolems;
 import com.golems.util.GolemConfigSet;
+import com.golems.util.GolemNames;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
@@ -26,12 +29,12 @@ public final class EntitySpongeGolem extends GolemBase {
 	public EntitySpongeGolem(final World world) {
 		super(world);
 		this.setCanSwim(true);
-		this.setLootTableLoc("golem_sponge");
+		this.setLootTableLoc(GolemNames.SPONGE_GOLEM);
 	}
 
 	@Override
 	protected ResourceLocation applyTexture() {
-		return makeGolemTexture("sponge");
+		return makeTexture(ExtraGolems.MODID, GolemNames.SPONGE_GOLEM);
 	}
 
 	/**

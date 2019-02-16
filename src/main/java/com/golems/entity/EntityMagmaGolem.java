@@ -2,6 +2,8 @@ package com.golems.entity;
 
 import com.golems.main.ExtraGolems;
 import com.golems.util.GolemConfigSet;
+import com.golems.util.GolemNames;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -29,7 +31,7 @@ public final class EntityMagmaGolem extends GolemBase {
 	public static final String ALLOW_WATER_DAMAGE = "Enable Water Damage";
 	public static final String MELT_DELAY = "Melting Delay";
 	
-	private static final String TEXTURE_LOC = ExtraGolems.MODID + ":textures/entity/magma/golem_magma";
+	private static final String TEXTURE_LOC = ExtraGolems.MODID + ":textures/entity/magma/" + GolemNames.MAGMA_GOLEM;
 	private static final ResourceLocation[] TEXTURES = new ResourceLocation[] {
 			new ResourceLocation(TEXTURE_LOC + "_0.png"), new ResourceLocation(TEXTURE_LOC + "_1.png"),
 			new ResourceLocation(TEXTURE_LOC + "_2.png"), new ResourceLocation(TEXTURE_LOC + "_3.png"),
@@ -62,7 +64,7 @@ public final class EntityMagmaGolem extends GolemBase {
 		this.setImmuneToFire(true);
 		this.setCanSwim(!this.isHurtByWater);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
-		this.setLootTableLoc("golem_magma");
+		this.setLootTableLoc(GolemNames.MAGMA_GOLEM);
 	}
 	
 	public EntityMagmaGolem(final World world) {

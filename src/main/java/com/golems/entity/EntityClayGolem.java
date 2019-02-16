@@ -1,5 +1,8 @@
 package com.golems.entity;
 
+import com.golems.main.ExtraGolems;
+import com.golems.util.GolemNames;
+
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -9,12 +12,12 @@ public final class EntityClayGolem extends GolemBase {
 
 	public EntityClayGolem(final World world) {
 		super(world);
-		this.setLootTableLoc("golem_clay");
+		this.setLootTableLoc(GolemNames.CLAY_GOLEM);
 	}
 
 	@Override
 	protected ResourceLocation applyTexture() {
-		return makeGolemTexture("clay");
+		return makeTexture(ExtraGolems.MODID, GolemNames.CLAY_GOLEM);
 	}
 
 	@Override
