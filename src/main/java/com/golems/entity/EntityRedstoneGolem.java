@@ -6,7 +6,6 @@ import com.golems.main.ExtraGolems;
 import com.golems.main.GolemItems;
 import com.golems.util.GolemLookup;
 import com.golems.util.GolemNames;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.SoundEvents;
@@ -37,7 +36,7 @@ public final class EntityRedstoneGolem extends GolemBase {
 	 * Flexible constructor to allow child classes to customize
 	 **/
 	public EntityRedstoneGolem(final World world, boolean allowSpecial, int power, int frequency) {
-		super(world);
+		super(GolemEntityTypes.REDSTONE, world);
 		final IBlockState state = GolemItems.blockPowerSource.getDefaultState().withProperty(BlockUtilityPower.POWER_LEVEL, power);
 		this.tasks.addTask(9, new EntityAIPlaceSingleBlock(this, state, frequency, allowSpecial));
 	}

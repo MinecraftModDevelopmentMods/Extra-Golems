@@ -5,7 +5,6 @@ import com.golems.main.Config;
 import com.golems.main.ExtraGolems;
 import com.golems.util.GolemConfigSet;
 import com.golems.util.GolemNames;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockNetherWart;
 import net.minecraft.block.state.IBlockState;
@@ -30,7 +29,7 @@ public final class EntityNetherWartGolem extends GolemBase {
 	public static final String ALLOW_HEALING = "Allow Special: Random Healing";
 
 	public EntityNetherWartGolem(final World world) {
-		super(world);
+		super(GolemEntityTypes.NETHER_WART, world);
 		this.setCanSwim(true);
 		this.setLootTableLoc(GolemNames.NETHERWART_GOLEM);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);

@@ -4,8 +4,6 @@ import com.golems.entity.ai.EntityAIPlaceRandomBlocksStrictly;
 import com.golems.main.Config;
 import com.golems.main.ExtraGolems;
 import com.golems.util.GolemConfigSet;
-import com.golems.util.GolemNames;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -32,7 +30,7 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 	protected static final Block[] soils = {Blocks.DIRT, Blocks.GRASS, Blocks.MYCELIUM};
 
 	public EntityMushroomGolem(final World world) {
-		super(world, SHROOM_PREFIX, SHROOM_TYPES);
+		super(GolemEntityTypes.MUSHROOM, world, SHROOM_PREFIX, SHROOM_TYPES);
 		this.setCanSwim(true);
 		GolemConfigSet cfg = getConfig(this);
 		final boolean allowed = cfg.getBoolean(ALLOW_SPECIAL);

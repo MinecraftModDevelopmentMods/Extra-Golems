@@ -4,14 +4,15 @@ import com.golems.events.EndGolemTeleportEvent;
 import com.golems.main.ExtraGolems;
 import com.golems.util.GolemConfigSet;
 import com.golems.util.GolemNames;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.util.*;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSourceIndirect;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -67,7 +68,7 @@ public class EntityEndstoneGolem extends GolemBase {
 	 **/
 	public EntityEndstoneGolem(final World world, final double teleportRange,
 				   final boolean ambientParticles) {
-		super(world);
+		super(GolemEntityTypes.ENDSTONE, world);
 		this.ticksBetweenIdleTeleports = 200;
 		this.chanceToTeleportWhenHurt = 15;
 		this.range = teleportRange;

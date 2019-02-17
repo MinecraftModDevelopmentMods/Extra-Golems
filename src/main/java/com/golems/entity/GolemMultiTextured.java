@@ -2,7 +2,7 @@ package com.golems.entity;
 
 import com.golems.main.ExtraGolems;
 import com.golems.util.GolemNames;
-
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -42,9 +42,9 @@ public abstract class GolemMultiTextured extends GolemBase {
 	 * <code>golem_example_two.png</code> and <code>golem_example_three.png</code>,
 	 * as well as loot tables for the same names with the JSON suffix
 	 **/
-	public GolemMultiTextured(final World world, final String prefix,
-			final String[] textureNames) {
-		super(world);
+	public GolemMultiTextured(EntityType type, final World world, final String prefix,
+				  final String[] textureNames) {
+		super(type, world);
 		this.textures = new ResourceLocation[textureNames.length];
 		this.lootTables = new ResourceLocation[textureNames.length];
 		for (int n = 0, len = textureNames.length; n < len; n++) {

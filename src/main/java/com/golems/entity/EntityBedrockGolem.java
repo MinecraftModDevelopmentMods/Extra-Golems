@@ -1,12 +1,9 @@
 package com.golems.entity;
 
-import java.util.List;
-
 import com.golems.items.ItemBedrockGolem;
 import com.golems.main.ExtraGolems;
 import com.golems.main.GolemItems;
 import com.golems.util.GolemNames;
-
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -20,10 +17,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.List;
+
 public final class EntityBedrockGolem extends GolemBase {
 
 	public EntityBedrockGolem(final World world) {
-		super(world);
+		super(GolemEntityTypes.BEDROCK, world);
 		this.setCreativeReturn(new ItemStack(GolemItems.spawnBedrockGolem));
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.24D);
 	}

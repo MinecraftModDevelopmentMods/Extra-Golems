@@ -1,15 +1,8 @@
 package com.golems.gui;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import com.golems.entity.GolemBase;
 import com.golems.main.ExtraGolems;
 import com.golems.main.GolemItems;
-import com.golems.util.GolemLookup;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -26,6 +19,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class GuiGolemBook extends GuiScreen {
 	
@@ -164,7 +162,7 @@ public class GuiGolemBook extends GuiScreen {
 	 **/
 	private static final void initGolemBookEntries(World world) {
 		GOLEMS.clear();
-		for (GolemBase golem : ExtraGolems.proxy.DUMMY_GOLEMS) {
+		for (GolemBase golem : ExtraGolems.PROXY.DUMMY_GOLEMS) {
 			if(GolemBase.getConfig(golem).canSpawn()) {
 				GOLEMS.add(new GolemBookEntry(golem));
 			}

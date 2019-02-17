@@ -1,5 +1,7 @@
 package com.golems.entity;
 
+import com.golems.main.ExtraGolems;
+import com.golems.util.GolemNames;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,15 +11,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.*;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
 import java.util.List;
-
-import com.golems.main.ExtraGolems;
-import com.golems.util.GolemNames;
 
 public class EntityTNTGolem extends GolemBase {
 
@@ -59,7 +61,7 @@ public class EntityTNTGolem extends GolemBase {
 	 */
 	public EntityTNTGolem(final World world, final int minExplosionRange,
 			      final int maxExplosionRange, final int minFuseLength, final int randomExplosionChance) {
-		super(world);
+		super(GolemEntityTypes.TNTworld);
 		this.minExplosionRad = minExplosionRange;
 		this.maxExplosionRad = maxExplosionRange;
 		this.fuseLen = minFuseLength;

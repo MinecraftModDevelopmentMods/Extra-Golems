@@ -17,8 +17,8 @@ public final class GuiLoader {
     	if(!playerIn.getEntityWorld().isRemote)
     		return;
     	// populate the DummyGolems list if it is empty
-    	if(ExtraGolems.proxy.DUMMY_GOLEMS.isEmpty()) {
-    		ExtraGolems.proxy.DUMMY_GOLEMS.addAll(GolemLookup.getDummyGolemList(playerIn.getEntityWorld()));
+	    if (ExtraGolems.PROXY.DUMMY_GOLEMS.isEmpty()) {
+		    ExtraGolems.PROXY.DUMMY_GOLEMS.addAll(GolemLookup.getDummyGolemList(playerIn.getEntityWorld()));
     	}
     	// open the gui
     	Minecraft.getMinecraft().displayGuiScreen(new GuiGolemBook(playerIn, itemstack));

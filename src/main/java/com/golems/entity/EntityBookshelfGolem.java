@@ -3,7 +3,6 @@ package com.golems.entity;
 import com.golems.main.ExtraGolems;
 import com.golems.util.GolemConfigSet;
 import com.golems.util.GolemNames;
-
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
@@ -25,7 +24,7 @@ public final class EntityBookshelfGolem extends GolemBase {
 		MobEffects.JUMP_BOOST};
 
 	public EntityBookshelfGolem(final World world) {
-		super(world);
+		super(GolemEntityTypes.BOOKSHELF, world);
 		this.setLootTableLoc(GolemNames.BOOKSHELF_GOLEM);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.29D);
 	}

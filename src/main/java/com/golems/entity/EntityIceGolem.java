@@ -4,7 +4,6 @@ import com.golems.events.IceGolemFreezeEvent;
 import com.golems.main.ExtraGolems;
 import com.golems.util.GolemConfigSet;
 import com.golems.util.GolemNames;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -29,7 +28,7 @@ public final class EntityIceGolem extends GolemBase {
 	public static final String AOE = "Area of Effect";
 
 	public EntityIceGolem(final World world) {
-		super(world);
+		super(GolemEntityTypes.ICE, world);
 		this.setCanSwim(true); // just in case
 		this.setLootTableLoc(GolemNames.ICE_GOLEM);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);

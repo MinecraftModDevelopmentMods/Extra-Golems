@@ -6,7 +6,6 @@ import com.golems.main.ExtraGolems;
 import com.golems.main.GolemItems;
 import com.golems.util.GolemLookup;
 import com.golems.util.GolemNames;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.SoundEvents;
@@ -33,7 +32,7 @@ public final class EntityGlowstoneGolem extends GolemBase {
 	 * Default constructor for EntityGlowstoneGolem
 	 **/
 	public EntityGlowstoneGolem(final World world) {
-		// dangerous ... too expensive to check for non-null in constructor call :(
+		//HACK: dangerous ... too expensive to check for non-null in constructor call :(
 		this(world, 1.0F, GolemLookup.getConfig(EntityGlowstoneGolem.class).getInt(FREQUENCY),
 			GolemLookup.getConfig(EntityGlowstoneGolem.class).getBoolean(ALLOW_SPECIAL));
 		this.isImmuneToFire = true;
@@ -48,7 +47,7 @@ public final class EntityGlowstoneGolem extends GolemBase {
 	 **/
 	public EntityGlowstoneGolem(final World world,
 				    final float lightLevel, final int freq, final boolean allowed) {
-		super(world);
+		super(GolemEntityTypes.GLOWSTONE, world);
 		int lightInt = (int) (lightLevel * 15.0F);
 		this.brightness = lightLevel;
 		final IBlockState state = GolemItems.blockLightSource.getDefaultState().withProperty(BlockUtilityGlow.LIGHT_LEVEL, lightInt);

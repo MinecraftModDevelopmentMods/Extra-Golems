@@ -1,10 +1,7 @@
 package com.golems.entity;
 
-import java.util.List;
-
 import com.golems.main.ExtraGolems;
 import com.golems.util.GolemNames;
-
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
@@ -12,10 +9,12 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
+import java.util.List;
+
 public final class EntityPrismarineGolem extends GolemBase {
 
 	public EntityPrismarineGolem(final World world) {
-		super(world);
+		super(GolemEntityTypes.PRISMARINE, world);
 		this.setLootTableLoc(GolemNames.PRISMARINE_GOLEM);
 	}
 

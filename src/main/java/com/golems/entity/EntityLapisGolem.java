@@ -3,7 +3,6 @@ package com.golems.entity;
 import com.golems.main.ExtraGolems;
 import com.golems.util.GolemConfigSet;
 import com.golems.util.GolemNames;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -26,7 +25,7 @@ public final class EntityLapisGolem extends GolemBase {
 		MobEffects.INSTANT_DAMAGE, MobEffects.WEAKNESS, MobEffects.WITHER, MobEffects.LEVITATION, MobEffects.GLOWING};
 
 	public EntityLapisGolem(final World world) {
-		super(world);
+		super(GolemEntityTypes.LAPIS, world);
 		this.setLootTableLoc(GolemNames.LAPIS_GOLEM);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
 	}

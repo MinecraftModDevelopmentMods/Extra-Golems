@@ -5,7 +5,6 @@ import com.golems.main.Config;
 import com.golems.main.ExtraGolems;
 import com.golems.util.GolemConfigSet;
 import com.golems.util.GolemNames;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.BlockFlower.EnumFlowerType;
@@ -32,7 +31,7 @@ public final class EntityMelonGolem extends GolemBase {
 	public static final String ALLOW_HEALING = "Allow Special: Random Healing";
 
 	public EntityMelonGolem(final World world) {
-		super(world);
+		super(GolemEntityTypes.MELON, world);
 		this.setCanSwim(true);
 		this.tasks.addTask(2, this.makeFlowerAI());
 		this.setLootTableLoc(GolemNames.MELON_GOLEM);

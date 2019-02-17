@@ -6,7 +6,6 @@ import com.golems.main.ExtraGolems;
 import com.golems.main.GolemItems;
 import com.golems.util.GolemConfigSet;
 import com.golems.util.GolemNames;
-
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -34,7 +33,7 @@ public final class EntitySeaLanternGolem extends GolemBase {
 	private static final int BRIGHTNESS_INT = (int) (BRIGHTNESS * 15.0F);
 
 	public EntitySeaLanternGolem(final World world) {
-		super(world);
+		super(GolemEntityTypes.SEA_LANTERN, world);
 		this.canDrown = false;
 		this.setLootTableLoc(GolemNames.SEALANTERN_GOLEM);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);

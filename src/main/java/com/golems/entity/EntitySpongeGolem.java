@@ -4,7 +4,6 @@ import com.golems.events.SpongeGolemSoakEvent;
 import com.golems.main.ExtraGolems;
 import com.golems.util.GolemConfigSet;
 import com.golems.util.GolemNames;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
@@ -27,7 +26,7 @@ public final class EntitySpongeGolem extends GolemBase {
 	public static final String PARTICLES = "Can Render Sponge Particles";
 
 	public EntitySpongeGolem(final World world) {
-		super(world);
+		super(GolemEntityTypes.SPONGE, world);
 		this.setCanSwim(true);
 		this.setLootTableLoc(GolemNames.SPONGE_GOLEM);
 	}

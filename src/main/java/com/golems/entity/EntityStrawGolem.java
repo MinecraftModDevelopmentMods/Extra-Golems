@@ -1,10 +1,7 @@
 package com.golems.entity;
 
-import java.util.List;
-
 import com.golems.main.ExtraGolems;
 import com.golems.util.GolemNames;
-
 import net.minecraft.block.BlockCrops;
 import net.minecraft.block.BlockStem;
 import net.minecraft.block.IGrowable;
@@ -19,6 +16,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
+import java.util.List;
+
 public final class EntityStrawGolem extends GolemBase {
 	
 	public static final String ALLOW_SPECIAL = "Allow Special: Crop Boost";
@@ -28,7 +27,7 @@ public final class EntityStrawGolem extends GolemBase {
 	private boolean allowed;
 
 	public EntityStrawGolem(final World world) {
-		super(world);
+		super(GolemEntityTypes.STRAW, world);
 		this.setCanSwim(true);
 		this.setLootTableLoc(GolemNames.STRAW_GOLEM);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.35D);

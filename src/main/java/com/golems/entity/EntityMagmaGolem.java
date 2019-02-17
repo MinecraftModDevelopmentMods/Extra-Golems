@@ -3,7 +3,6 @@ package com.golems.entity;
 import com.golems.main.ExtraGolems;
 import com.golems.util.GolemConfigSet;
 import com.golems.util.GolemNames;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -55,7 +54,7 @@ public final class EntityMagmaGolem extends GolemBase {
 	private int meltDelay;
 
 	public EntityMagmaGolem(final World world, final boolean isChild) {
-		super(world);
+		super(GolemEntityTypes.MAGMA, world);
 		this.setChild(isChild);
 		this.isHurtByWater = getConfig(this).getBoolean(ALLOW_WATER_DAMAGE);
 		this.allowMelting = getConfig(this).getBoolean(ALLOW_LAVA_SPECIAL);

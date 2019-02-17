@@ -5,25 +5,24 @@ import com.golems.main.ExtraGolems;
 import com.golems.main.GolemItems;
 import com.golems.util.GolemConfigSet;
 import com.golems.util.GolemLookup;
-import com.google.common.base.Predicate;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.IMob;
-import net.minecraft.entity.passive.IAnimals;
+import net.minecraft.entity.passive.IAnimal;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Particles;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.particles.BlockParticleData;
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -31,8 +30,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,12 +40,11 @@ import java.util.List;
 /**
  * Base class for all golems in this mod.
  **/
-public abstract class GolemBase extends EntityCreature implements IAnimals {
+public abstract class GolemBase extends EntityCreature implements IAnimal {
 
 	private static final DataParameter<Boolean> BABY = EntityDataManager.<Boolean>createKey(GolemBase.class, DataSerializers.BOOLEAN);
 	private static final String KEY_BABY = "isChild";
 	public static final int WANDER_DISTANCE = 64;
-	
 	protected int attackTimer;
 	protected boolean isPlayerCreated;
 	protected ResourceLocation textureLoc;
@@ -58,7 +56,6 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	 * deincrements, and a distance-to-home check is done at 0.
 	 **/
 	private int homeCheckTimer = 180;
-
 	// customizable variables with default values //
 	protected double knockbackY = 0.4000000059604645D;
 	/** Amount by which to multiply damage if it's a critical. **/
@@ -87,8 +84,9 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	 * if you want to return something different.
 	 * @param world the entity world
 	 **/
-	public GolemBase(final World world) {
-		super(world);
+
+	public GolemBase(EntityType type, final World world) {
+		super(type, world);
 		this.setSize(1.4F, 2.9F);
 		this.setCanTakeFallDamage(false);
 		this.setCanSwim(false);
@@ -96,10 +94,11 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 			? GolemLookup.getBuildingBlock(this.getClass()) : GolemItems.golemHead;
 		this.setCreativeReturn(pickBlock);
 		GolemConfigSet cfg = getConfig(this);
-		this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(cfg.getBaseAttack());
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(cfg.getMaxHealth());
-		this.experienceValue = 4 + rand.nextInt((int)8);
+		this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(cfg.getBaseAttack());
+		this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(cfg.getMaxHealth());
+		this.experienceValue = 4 + rand.nextInt(8);
 	}
+
 
 	////////////// BEHAVIOR OVERRIDES //////////////////
 
@@ -118,31 +117,27 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 		this.tasks.addTask(7, new EntityAILookIdle(this));
 		this.targetTasks.addTask(1, new EntityAIDefendAgainstMonsters(this));
 		this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, false, (Class[]) new Class[0]));
-		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityLiving.class,
-			10, false, true, new Predicate<EntityLiving>() {
-
-			public boolean apply(final EntityLiving e) {
-				return e != null && IMob.VISIBLE_MOB_SELECTOR.apply(e)
-					&& !(e instanceof EntityCreeper);
-					}
-				}));
+		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<>(this,
+			EntityLiving.class, 10, false, true, (e) -> {
+			return e != null && IMob.VISIBLE_MOB_SELECTOR.test(e) && !(e instanceof EntityCreeper);
+		}));
 	}
 
 	@Override
-	protected void entityInit() {
-		super.entityInit();
+	protected void registerData() {
+		super.registerData();
 		this.setTextureType(this.applyTexture());
 		this.getDataManager().register(BABY, false);
 	}
 
 	@Override
-	protected void applyEntityAttributes() {
-		super.applyEntityAttributes();
+	protected void registerAttributes() {
+		super.registerAttributes();
 		GolemConfigSet cfg = getConfig(this);
 		this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE)
 			.setBaseValue(cfg.getBaseAttack());
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(cfg.getMaxHealth());
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.22D);
+		this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(cfg.getMaxHealth());
+		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.22D);
 	}
 
 	/**
@@ -184,33 +179,31 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 		super.collideWithEntity(entityIn);
 	}
 
+
 	/**
 	 * Called frequently so the entity can update its state every tick as required. For example,
 	 * zombies and skeletons use this to react to sunlight and start to burn.
 	 */
 	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
+	public void livingTick() {
+		super.livingTick();
 		if (this.attackTimer > 0) {
 			--this.attackTimer;
 		}
-
-		// spawn block particles when this golem moves
-		if (this.motionX * this.motionX + this.motionZ * this.motionZ > 2.500000277905201E-7D
+		//Ripped straight from EntityIronGolem
+		if (this.motionX * this.motionX + this.motionZ * this.motionZ > (double) 2.5000003E-7F
 			&& this.rand.nextInt(5) == 0) {
-			final int i = MathHelper.floor(this.posX);
-			final int j = MathHelper.floor(this.posY - 0.20000000298023224D);
-			final int k = MathHelper.floor(this.posZ);
-			final IBlockState iblockstate = this.world.getBlockState(new BlockPos(i, j, k));
-
-			if (iblockstate.getMaterial() != Material.AIR) {
-				this.world.spawnParticle(EnumParticleTypes.BLOCK_CRACK,
+			int i = MathHelper.floor(this.posX);
+			int j = MathHelper.floor(this.posY - (double) 0.2F);
+			int k = MathHelper.floor(this.posZ);
+			IBlockState iblockstate = this.world.getBlockState(new BlockPos(i, j, k));
+			if (!iblockstate.isAir()) {
+				this.world.spawnParticle(new BlockParticleData(Particles.BLOCK, iblockstate),
 					this.posX + ((double) this.rand.nextFloat() - 0.5D) * (double) this.width,
-					this.getEntityBoundingBox().minY + 0.1D,
-					this.posZ + ((double) this.rand.nextFloat() - 0.5D) * (double) this.width,
+					this.getBoundingBox().minY + 0.1D, this.posZ +
+						((double) this.rand.nextFloat() - 0.5D) * (double) this.width,
 					4.0D * ((double) this.rand.nextFloat() - 0.5D), 0.5D,
-					((double) this.rand.nextFloat() - 0.5D) * 4.0D,
-					new int[]{Block.getStateId(iblockstate) });
+					((double) this.rand.nextFloat() - 0.5D) * 4.0D);
 			}
 		}
 	}
@@ -220,8 +213,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	 */
 	@Override
 	public boolean canAttackClass(final Class<? extends EntityLivingBase> cls) {
-		return this.isPlayerCreated() && EntityPlayer.class.isAssignableFrom(cls) ? false
-			: (cls == EntityCreeper.class ? false : super.canAttackClass(cls));
+		return (!this.isPlayerCreated() || !EntityPlayer.class.isAssignableFrom(cls)) && (cls != EntityCreeper.class && super.canAttackClass(cls));
 	}
 
 	@Override
@@ -229,8 +221,8 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 		// (0.0 ~ 1.0] lower number results in less variance
 		final float VARIANCE = 0.8F;
 		// calculate damage based on current attack damage and variance
-		final float currentAttack = (float) this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE)
-			.getAttributeValue();
+		final float currentAttack = (float) this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE)
+			.getValue();
 		float damage = currentAttack
 			+ (float) (rand.nextDouble() - 0.5D) * VARIANCE * currentAttack;
 
@@ -253,7 +245,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void handleStatusUpdate(final byte b) {
 		if (b == 4) {
 			this.attackTimer = 10;
@@ -263,7 +255,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public int getAttackTimer() {
 		return this.attackTimer;
 	}
@@ -283,13 +275,13 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 
 	/** Plays sound of golem walking **/
 	@Override
-	protected void playStepSound(final BlockPos pos, final Block block) {
+	protected void playStepSound(BlockPos pos, IBlockState blockIn) {
 		this.playSound(this.getWalkingSound(), 0.76F, 0.9F + rand.nextFloat() * 0.2F);
 	}
 
 	/** Determines if an entity can be despawned, used on idle far away entities. **/
 	@Override
-	protected boolean canDespawn() {
+	public boolean canDespawn() {
 		return false;
 	}
 
@@ -324,16 +316,16 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 
 		super.onDeath(src);
 	}
-	
+
 	@Override
-	public void writeEntityToNBT(NBTTagCompound compound) {
-        super.writeEntityToNBT(compound);
+	public void writeAdditional(NBTTagCompound compound) {
+		super.writeAdditional(compound);
         compound.setBoolean(KEY_BABY, this.isChild());
     }
 	
 	@Override
-	public void readEntityFromNBT(NBTTagCompound compound) {
-		super.readEntityFromNBT(compound);
+	public void readAdditional(NBTTagCompound compound) {
+		super.readAdditional(compound);
 		this.setChild(compound.getBoolean(KEY_BABY));
 	}
 
@@ -399,11 +391,11 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	}
 	
 	public float getBaseAttackDamage() {
-		return (float) this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getBaseValue();
+		return (float) this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getBaseValue();
 	}
 
 	public double getBaseMoveSpeed() {
-		return this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getBaseValue();
+		return this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getBaseValue();
 	}
 
 	public Village getVillage() {
@@ -478,7 +470,6 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 
 	/** 
 	 * Helper method for translating text into local language using {@code I18n}
-	 * @see addSpecialDesc 
 	 **/
 	protected static String trans(final String s, final Object... strings) {
 		return I18n.format(s, strings);
@@ -552,7 +543,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	public List<String> addSpecialDesc(final List<String> list) { return list; }
 	
 	/**
-	 * Called from {@link #entityInit()} and used to set the texture type <b>before</b> the entity is
+	 * Called from {@link #registerData()} and used to set the texture type <b>before</b> the entity is
 	 * fully constructed or rendered. Example implementation: texture is at
 	 * 'assets/golems/textures/entity/golem_clay.png'
 	 *

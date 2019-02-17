@@ -3,7 +3,6 @@ package com.golems.entity;
 import com.golems.main.ExtraGolems;
 import com.golems.util.GolemConfigSet;
 import com.golems.util.GolemNames;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntitySlime;
@@ -30,7 +29,7 @@ public final class EntitySlimeGolem extends GolemBase {
 	}
 	
 	public EntitySlimeGolem(final World world, final boolean isBaby) {
-		super(world);
+		super(GolemEntityTypes.SLIMEworld);
 		this.setChild(isBaby);
 		this.setCanSwim(true);
 		this.setLootTableLoc(GolemNames.SLIME_GOLEM);
