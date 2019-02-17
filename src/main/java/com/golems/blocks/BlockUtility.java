@@ -5,16 +5,16 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.init.Items;
+import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 
@@ -24,61 +24,14 @@ public abstract class BlockUtility extends BlockEmptyDrops {
 		0.5D, 0.5D);
 
 	public BlockUtility(Material m) {
-		super(m);
-		setDefaultState(blockState.getBaseState());
-		setTickRandomly(false);
-		blockHardness = -1F;
-		this.translucent = true;
+		super(Properties.create(m).hardnessAndResistance(-1F).doesNotBlockMovement());
+		setDefaultState(getStateContainer().getBaseState());
 	}
 
-	/**
-	 * @deprecated call via {@link IBlockState#getBoundingBox(IBlockAccess, BlockPos)} whenever possible.
-	 * Implementing/overriding is fine.
-	 */
-	@Override
-	@Deprecated
-	public AxisAlignedBB getBoundingBox(final IBlockState state, final IBlockAccess source, final BlockPos pos) {
-		return SINGULAR_AABB;
-	}
 
-	/**
-	 * @deprecated call via {@link IBlockState#getCollisionBoundingBox(IBlockAccess, BlockPos)} whenever possible.
-	 * Implementing/overriding is fine.
-	 */
-	@Nullable
 	@Override
-	@Deprecated
-	public AxisAlignedBB getCollisionBoundingBox(final IBlockState blockState, final IBlockAccess worldIn, final BlockPos pos) {
-		return NULL_AABB;
-	}
-
-	/**
-	 * Used to determine ambient occlusion and culling when rebuilding chunks for render
-	 *
-	 * @deprecated call via {@link IBlockState#isOpaqueCube()} whenever possible. Implementing/overriding is fine.
-	 */
-	@Override
-	@Deprecated
-	public boolean isOpaqueCube(final IBlockState state) {
+	public boolean isFullCube(IBlockState state) {
 		return false;
-	}
-
-	/**
-	 * @deprecated call via {@link IBlockState#isFullCube()} whenever possible. Implementing/overriding is fine.
-	 */
-	@Override
-	@Deprecated
-	public boolean isFullCube(final IBlockState state) {
-		return false;
-	}
-
-	/**
-	 * @deprecated
-	 */
-	@Deprecated
-	@Override
-	public AxisAlignedBB getSelectedBoundingBox(final IBlockState blockState, final World world, final BlockPos pos) {
-		return SINGULAR_AABB;
 	}
 
 	/**
@@ -90,69 +43,41 @@ public abstract class BlockUtility extends BlockEmptyDrops {
 		return false;
 	}
 
-	/**
-	 * @deprecated
-	 */
-	@Deprecated
 	@Override
-	public boolean isFullBlock(final IBlockState state) {
+	public boolean isBlockNormalCube(IBlockState state) {
 		return false;
 	}
 
 	@Override
-	public boolean canCollideCheck(final IBlockState state, final boolean hitIfLiquid) {
-		return false;
+	public void dropBlockAsItemWithChance(IBlockState state, World worldIn, BlockPos pos, float chancePerItem, int fortune) {
+		//don't drop anything
 	}
 
-	/**
-	 * Spawns this Block's drops into the World as EntityItems.
-	 */
 	@Override
-	public void dropBlockAsItemWithChance(final World worldIn, final BlockPos pos, final IBlockState state,
-					      final float chance, final int fortune) {
-		// Because we don't want to drop anything.
+	public IItemProvider getItemDropped(IBlockState state, World worldIn, BlockPos pos, int fortune) {
+		//don't drop anything
+		return Items.AIR;
 	}
 
-	/**
-	 * Whether this Block can be replaced directly by other blocks (true for e.g. tall grass)
-	 */
 	@Override
-	public boolean isReplaceable(final IBlockAccess worldIn, final BlockPos pos) {
+	public boolean isReplaceable(IBlockState state, BlockItemUseContext useContext) {
 		return true;
 	}
 
+	@Nullable
 	@Override
-	public boolean canPlaceBlockAt(final World worldIn, final BlockPos pos) {
-		return true;
-	}
-
-	/**
-	 * @deprecated
-	 */
-	@Deprecated
-	@Override
-	public IBlockState getStateForPlacement(final World worldIn, final BlockPos pos, final EnumFacing facing,
-						final float hitX, final float hitY, final float hitZ, final int meta, final EntityLivingBase placer) {
+	public IBlockState getStateForPlacement(BlockItemUseContext context) {
 		return getDefaultState();
 	}
 
 	@Override
-	public void onBlockAdded(final World worldIn, final BlockPos pos, final IBlockState state) {
-		// Do nothing.
-	}
-
-	/**
-	 * @deprecated
-	 */
-	@Deprecated
-	@Override
-	public IBlockState getStateFromMeta(final int meta) {
+	public IBlockState getStateForPlacement(IBlockState state, EnumFacing facing, IBlockState state2, IWorld world, BlockPos pos1, BlockPos pos2, EnumHand hand) {
 		return getDefaultState();
 	}
 
 	@Override
-	public int getMetaFromState(final IBlockState state) {
-		return 0;
+	public void onBlockAdded(IBlockState state, World worldIn, BlockPos pos, IBlockState oldState) {
+		//do nothing
 	}
 
 	/**
@@ -165,7 +90,7 @@ public abstract class BlockUtility extends BlockEmptyDrops {
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public BlockRenderLayer getRenderLayer() {
 		return BlockRenderLayer.CUTOUT;
 	}
@@ -175,23 +100,12 @@ public abstract class BlockUtility extends BlockEmptyDrops {
 	}
 
 	@Override
-	public void onLanded(final World worldIn, final Entity entityIn) {
+	public void onLanded(IBlockReader worldIn, Entity entityIn) {
+		//do nothing
 	}
 
-	/**
-	 * Get the geometry of the queried face at the given position and state. This is used to decide whether things like
-	 * buttons are allowed to be placed on the face, or how glass panes connect to the face, among other things.
-	 * <p>
-	 * Common values are {@code SOLID}, which is the default, and {@code UNDEFINED}, which represents something that
-	 * does not fit the other descriptions and will generally cause other things not to connect to the face.
-	 *
-	 * @return an approximation of the form of the given face
-	 * @deprecated call via {@link IBlockState#getBlockFaceShape(IBlockAccess, BlockPos, EnumFacing)} whenever possible.
-	 * Implementing/overriding is fine.
-	 */
 	@Override
-	@Deprecated
-	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
+	public BlockFaceShape getBlockFaceShape(IBlockReader worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
 		return BlockFaceShape.UNDEFINED;
 	}
 }

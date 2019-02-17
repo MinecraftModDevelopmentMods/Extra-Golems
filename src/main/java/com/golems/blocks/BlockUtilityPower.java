@@ -26,7 +26,7 @@ public class BlockUtilityPower extends BlockUtility {
 	public BlockUtilityPower(final int powerLevel, final int tickRate) {
 		super(Material.GLASS);
 		this.setTickRandomly(true);
-		this.setDefaultState(this.blockState.getBaseState().withProperty(POWER_LEVEL, powerLevel));
+		this.setDefaultState(this.blockState.getBaseState().with(POWER_LEVEL, powerLevel));
 		TICK_RATE = tickRate;
 	}
 
@@ -81,7 +81,7 @@ public class BlockUtilityPower extends BlockUtility {
 			meta = 0;
 		if (meta > 15)
 			meta = 15;
-		return this.getDefaultState().withProperty(POWER_LEVEL, meta);
+		return this.getDefaultState().with(POWER_LEVEL, meta);
 	}
 
 	/**

@@ -18,7 +18,7 @@ public class BlockUtilityGlowWater extends BlockUtilityGlow {
 	public BlockUtilityGlowWater(final Material m, final float defaultLight, final int tickRate, final IBlockState replaceWith) {
 		super(m, defaultLight, tickRate, replaceWith);
 		int light = (int) (defaultLight * 15.0F);
-		this.setDefaultState(this.blockState.getBaseState().withProperty(BlockLiquid.LEVEL, 0).withProperty(BlockUtilityGlow.LIGHT_LEVEL, light));
+		this.setDefaultState(this.blockState.getBaseState().with(BlockLiquid.LEVEL, 0).with(BlockUtilityGlow.LIGHT_LEVEL, light));
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class BlockUtilityGlowWater extends BlockUtilityGlow {
 			meta = 0;
 		if (meta > 15)
 			meta = 15;
-		return this.getDefaultState().withProperty(BlockUtilityGlow.LIGHT_LEVEL, meta).withProperty(BlockLiquid.LEVEL, 0);
+		return this.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, meta).with(BlockLiquid.LEVEL, 0);
 	}
 
 	/**

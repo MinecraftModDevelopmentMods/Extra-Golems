@@ -25,7 +25,7 @@ public class BlockUtilityGlow extends BlockUtility {
 		int light = (int) (defaultLight * 15.0F);
 		this.setTickRandomly(true);
 		this.setLightLevel(defaultLight);
-		this.setDefaultState(this.blockState.getBaseState().withProperty(LIGHT_LEVEL, light));
+		this.setDefaultState(this.blockState.getBaseState().with(LIGHT_LEVEL, light));
 		this.TICK_RATE = tickRate;
 		this.REPLACE_WITH = replaceWith;
 	}
@@ -82,7 +82,7 @@ public class BlockUtilityGlow extends BlockUtility {
 			meta = 0;
 		if (meta > 15)
 			meta = 15;
-		return this.getDefaultState().withProperty(LIGHT_LEVEL, meta);
+		return this.getDefaultState().with(LIGHT_LEVEL, meta);
 	}
 
 	/**

@@ -7,91 +7,35 @@ import com.golems.util.GolemConfigSet;
 import com.golems.util.GolemLookup;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.EntitySnowman;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 public final class BlockGolemHead extends BlockHorizontal {
 
 	public BlockGolemHead() {
-		super(Material.GROUND);
-		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
-		this.setCreativeTab(CreativeTabs.MISC);
-		this.setSoundType(SoundType.WOOD);
+		super(Properties.from(Blocks.PUMPKIN));
+		this.setDefaultState(this.getStateContainer().getBaseState().with(HORIZONTAL_FACING, EnumFacing.NORTH));
 	}
 
-	/**
-	 * @deprecated
-	 */
-	@Deprecated
+	@Nullable
 	@Override
-	public IBlockState getStateForPlacement(final World worldIn, final BlockPos pos, final EnumFacing facing,
-						final float hitX, final float hitY, final float hitZ, final int meta, final EntityLivingBase placer) {
-		return this.getDefaultState().withProperty(FACING,
-			placer.getHorizontalFacing().getOpposite());
+	public IBlockState getStateForPlacement(BlockItemUseContext context) {
+		return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite());
 	}
 
-	/**
-	 * Convert the given metadata into a BlockState for this Block.
-	 *
-	 * @deprecated
-	 */
-	@Deprecated
-	@Override
-	public IBlockState getStateFromMeta(final int meta) {
-		return this.getDefaultState().withProperty(FACING, EnumFacing.byHorizontalIndex(meta));
-	}
-
-	/**
-	 * Convert the BlockState into the correct metadata value.
-	 */
-	@Override
-	public int getMetaFromState(final IBlockState state) {
-		return state.getValue(FACING).getHorizontalIndex();
-	}
 
 	@Override
-	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, (IProperty[]) new IProperty[]{FACING});
-	}
-
-	/**
-	 * @deprecated
-	 */
-	@Deprecated
-	@Override
-	public IBlockState withRotation(final IBlockState state, final Rotation rot) {
-		return state.withProperty(FACING, rot.rotate(state.getValue(FACING)));
-	}
-
-	/**
-	 * @deprecated
-	 */
-	@Deprecated
-	@Override
-	public IBlockState withMirror(final IBlockState state, final Mirror mirrorIn) {
-		return state.withRotation(mirrorIn.toRotation(state.getValue(FACING)));
-	}
-
-	/**
-	 * Called whenever the block is added into the world. Args: world, x, y, z
-	 */
-	@Override
-	public void onBlockAdded(final World world, final BlockPos pos, final IBlockState state) {
-		super.onBlockAdded(world, pos, state);
-		trySpawnGolem(world, pos);
+	public void onBlockAdded(IBlockState state, World worldIn, BlockPos pos, IBlockState oldState) {
+		super.onBlockAdded(state, worldIn, pos, state);
+		trySpawnGolem(worldIn, pos);
 	}
 	
 	/**
@@ -209,9 +153,9 @@ public final class BlockGolemHead extends BlockHorizontal {
 	 * Replaces this block and the two below it with air.
 	 **/
 	public static void removeGolemBody(final World world, final BlockPos head) {
-		world.setBlockToAir(head);
-		world.setBlockToAir(head.down(1));
-		world.setBlockToAir(head.down(2));
+		world.removeBlock(head);
+		world.removeBlock(head.down(1));
+		world.removeBlock(head.down(2));
 	}
 
 	/**
@@ -219,11 +163,11 @@ public final class BlockGolemHead extends BlockHorizontal {
 	 **/
 	public static void removeGolemArms(final World world, final BlockPos pos, final boolean isXAligned) {
 		if (isXAligned) {
-			world.setBlockToAir(pos.down(1).west(1));
-			world.setBlockToAir(pos.down(1).east(1));
+			world.removeBlock(pos.down(1).west(1));
+			world.removeBlock(pos.down(1).east(1));
 		} else {
-			world.setBlockToAir(pos.down(1).north(1));
-			world.setBlockToAir(pos.down(1).south(1));
+			world.removeBlock(pos.down(1).north(1));
+			world.removeBlock(pos.down(1).south(1));
 		}
 	}
 }

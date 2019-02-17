@@ -56,8 +56,8 @@ public class EntityAIPlaceSingleBlock extends EntityAIBase {
 	 * Keep ticking a continuous task that has already been started
 	 */
 	@Override
-	public void updateTask() {
-		long tickMod = this.golem.getEntityWorld().getWorldTime() % this.tickDelay;
+	public void tick() {
+		long tickMod = this.golem.getEntityWorld().getGameTime() % this.tickDelay;
 		if (this.configAllows && tickMod == (long) 0) {
 			final int x = MathHelper.floor(golem.posX);
 			final int y = MathHelper.floor(golem.posY - 0.20000000298023224D - golem.getYOffset());
@@ -77,6 +77,6 @@ public class EntityAIPlaceSingleBlock extends EntityAIBase {
 
 	@Override
 	public void startExecuting() {
-		this.updateTask();
+		this.tick();
 	}
 }

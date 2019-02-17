@@ -4,7 +4,7 @@ import com.golems.entity.GolemBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.eventbus.api.Event;
 
 @Deprecated
 public class GolemBuildEvent extends Event {

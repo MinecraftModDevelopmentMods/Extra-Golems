@@ -20,6 +20,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -101,7 +102,7 @@ public class ProxyCommon {
 
 	@SubscribeEvent
 	public static void registerItems(final RegistryEvent.Register<Item> event) {
-		event.getRegistry().register(new ItemBlock(GolemItems.golemHead, new Item.Properties()) {
+		event.getRegistry().register(new ItemBlock(GolemItems.golemHead, new Item.Properties().group(ItemGroup.MISC)) {
 
 			@Override
 			@OnlyIn(Dist.CLIENT)
