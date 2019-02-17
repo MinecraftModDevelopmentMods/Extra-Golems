@@ -26,7 +26,7 @@ public final class EntityCraftingGolem extends GolemBase {
 	public EntityCraftingGolem(final World world) {
 		super(GolemEntityTypes.CRAFTING, world);
 		this.setLootTableLoc(GolemNames.CRAFTING_GOLEM);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.29D);
+		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.29D);
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public final class EntityCraftingGolem extends GolemBase {
 			// display crafting grid for player
 			player.displayGui(new EntityCraftingGolem.InterfaceCraftingGrid(player.world,
 					player.bedLocation));
-			player.addStat(StatList.CRAFTING_TABLE_INTERACTION);
+			player.addStat(StatList.INTERACT_WITH_CRAFTING_TABLE);
 			player.swingArm(hand);
 		}
 

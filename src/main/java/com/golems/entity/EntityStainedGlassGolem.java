@@ -25,7 +25,7 @@
 //		super(world, TEXTURE_BASE, TEXTURE_OVERLAY, COLOR_ARRAY);
 //		this.setCanTakeFallDamage(true);
 //		this.setLootTableLoc("golem_stained_glass");
-//		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
+//		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
 //	}
 //
 //	/**

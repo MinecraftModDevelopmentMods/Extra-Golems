@@ -23,7 +23,7 @@ public final class EntityCoalGolem extends GolemBase {
 	public EntityCoalGolem(final World world) {
 		super(GolemEntityTypes.COAL, world);
 		this.setLootTableLoc(GolemNames.COAL_GOLEM);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
+		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
 	}
 
 	@Override
@@ -54,8 +54,8 @@ public final class EntityCoalGolem extends GolemBase {
 	 * zombies and skeletons use this to react to sunlight and start to burn.
 	 */
 	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
+	public void livingTick() {
+		super.livingTick();
 		// if burning, the fire never goes out on its own
 		if (this.isBurning()) {
 			this.setFire(2);

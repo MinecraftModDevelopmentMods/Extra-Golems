@@ -14,9 +14,9 @@ import com.golems.util.ConsumerLootTables;
 import com.golems.util.GolemLookup;
 import com.golems.util.GolemNames;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockFlowingFluid;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityType;
-import net.minecraft.fluid.WaterFluid;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -129,7 +129,7 @@ public class ProxyCommon {
 			new BlockGolemHead().setRegistryName(ExtraGolems.MODID, "golem_head"),
 			new BlockUtilityGlow(Material.GLASS, 1.0F, GLOWSTONE_FREQ, Blocks.AIR.getDefaultState())
 				.setRegistryName(ExtraGolems.MODID, "light_provider_full"),
-			new BlockUtilityGlowWater(Material.WATER, 1.0F, SEALANTERN_FREQ, Blocks.WATER.getDefaultState().with(WaterFluid.LEVEL_1_TO_8, 0))
+			new BlockUtilityGlowWater(Material.WATER, 1.0F, SEALANTERN_FREQ, Blocks.WATER.getDefaultState().with(BlockFlowingFluid.LEVEL, 0))
 				.setRegistryName(ExtraGolems.MODID, "water_light_provider_full"),
 			new BlockUtilityPower(15, EntityRedstoneGolem.DEF_FREQ).setRegistryName(ExtraGolems.MODID, "power_provider_all"));
 	}

@@ -58,14 +58,14 @@ public abstract class GolemMultiTextured extends GolemBase {
 
 	@Override
 	protected ResourceLocation applyTexture() {
-		// apply TEMPORARY texture to avoid NPE. Actual texture is first applied in onLivingUpdate
+		// apply TEMPORARY texture to avoid NPE. Actual texture is first applied in livingTick
 		return makeTexture(ExtraGolems.MODID, GolemNames.CLAY_GOLEM);
 	}
 
 	@Override
-	protected void entityInit() {
-		super.entityInit();
-		this.getDataManager().register(DATA_TEXTURE, Byte.valueOf((byte) 0));
+	protected void registerData() {
+		super.registerData();
+		this.getDataManager().register(DATA_TEXTURE, (byte) 0);
 	}
 
 	@Override
@@ -77,15 +77,14 @@ public abstract class GolemMultiTextured extends GolemBase {
 		} else {
 			final int incremented = (this.getTextureNum() + 1) % this.textures.length;
 			this.setTextureNum((byte) incremented);
-			// this.writeEntityToNBT(this.getEntityData());
 			player.swingArm(hand);
 			return true;
 		}
 	}
 
 	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
+	public void livingTick() {
+		super.livingTick();
 		// since textureNum is correct, update texture AFTER loading from NBT and init
 		if (this.ticksExisted == 2) {
 			this.setTextureType(this.getTextureFromArray(this.getTextureNum()));
@@ -93,14 +92,14 @@ public abstract class GolemMultiTextured extends GolemBase {
 	}
 
 	@Override
-	public void writeEntityToNBT(final NBTTagCompound nbt) {
-		super.writeEntityToNBT(nbt);
+	public void writeAdditional(final NBTTagCompound nbt) {
+		super.writeAdditional(nbt);
 		nbt.setByte(NBT_TEXTURE, (byte) this.getTextureNum());
 	}
 
 	@Override
-	public void readEntityFromNBT(final NBTTagCompound nbt) {
-		super.readEntityFromNBT(nbt);
+	public void readAdditional(final NBTTagCompound nbt) {
+		super.readAdditional(nbt);
 		this.setTextureNum(nbt.getByte(NBT_TEXTURE));
 	}
 

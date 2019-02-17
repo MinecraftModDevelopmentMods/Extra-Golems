@@ -6,6 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.init.Particles;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.DataParameter;
@@ -44,7 +45,7 @@ public class EntityTNTGolem extends GolemBase {
 		this(world, 3, 6, 50, 10);
 		this.setLootTableLoc(GolemNames.TNT_GOLEM);
 		this.allowedToExplode = getConfig(this).getBoolean(ALLOW_SPECIAL);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
+		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 
 	/**
@@ -61,7 +62,7 @@ public class EntityTNTGolem extends GolemBase {
 	 */
 	public EntityTNTGolem(final World world, final int minExplosionRange,
 			      final int maxExplosionRange, final int minFuseLength, final int randomExplosionChance) {
-		super(GolemEntityTypes.TNTworld);
+		super(GolemEntityTypes.TNT, world);
 		this.minExplosionRad = minExplosionRange;
 		this.maxExplosionRad = maxExplosionRange;
 		this.fuseLen = minFuseLength;
@@ -69,10 +70,11 @@ public class EntityTNTGolem extends GolemBase {
 		this.resetIgnite();
 	}
 
+
 	@Override
-	protected void entityInit() {
-		super.entityInit();
-		this.dataManager.register(DATA_IGNITED, Boolean.valueOf(false));
+	protected void registerData() {
+		super.registerData();
+		this.dataManager.register(DATA_IGNITED, false);
 	}
 
 	@Override
@@ -85,8 +87,8 @@ public class EntityTNTGolem extends GolemBase {
 	 * zombies and skeletons use this to react to sunlight and start to burn.
 	 */
 	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
+	public void livingTick() {
+		super.livingTick();
 
 		if (this.isBurning()) {
 			this.ignite();
@@ -103,21 +105,21 @@ public class EntityTNTGolem extends GolemBase {
 			this.fuseTimer--;
 			if (this.world instanceof WorldServer) {
 				for (int i = 0; i < 2; i++) {
-					this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX,
+					this.world.spawnParticle(Particles.LARGE_SMOKE, this.posX,
 						this.posY + 2.0D, this.posZ, 0.0D, 0.0D, 0.0D);
-					this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX + 0.75D,
+					this.world.spawnParticle(Particles.LARGE_SMOKE, this.posX + 0.75D,
 						this.posY + 1.0D + rand.nextDouble() * 2, this.posZ + 0.75D,
 						0.5 * (0.5D - rand.nextDouble()), 0.0D,
 						0.5 * (0.5D - rand.nextDouble()));
-					this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX + 0.75D,
+					this.world.spawnParticle(Particles.LARGE_SMOKE, this.posX + 0.75D,
 						this.posY + 1.0D + rand.nextDouble() * 2, this.posZ - 0.75D,
 						0.5 * (0.5D - rand.nextDouble()), 0.0D,
 						0.5 * (0.5D - rand.nextDouble()));
-					this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX - 0.75D,
+					this.world.spawnParticle(Particles.LARGE_SMOKE, this.posX - 0.75D,
 						this.posY + 1.0D + rand.nextDouble() * 2, this.posZ + 0.75D,
 						0.5 * (0.5D - rand.nextDouble()), 0.0D,
 						0.5 * (0.5D - rand.nextDouble()));
-					this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX - 0.75D,
+					this.world.spawnParticle(Particles.LARGE_SMOKE, this.posX - 0.75D,
 						this.posY + 1.0D + rand.nextDouble() * 2, this.posZ - 0.75D,
 						0.5 * (0.5D - rand.nextDouble()), 0.0D,
 						0.5 * (0.5D - rand.nextDouble()));
@@ -143,7 +145,7 @@ public class EntityTNTGolem extends GolemBase {
 	public boolean attackEntityAsMob(final Entity entity) {
 		boolean flag = super.attackEntityAsMob(entity);
 
-		if (flag && !entity.isDead && rand.nextInt(100) < this.chanceToExplodeWhenAttacking
+		if (flag && !entity.removed && rand.nextInt(100) < this.chanceToExplodeWhenAttacking
 			&& this.getDistanceSq(entity) <= this.minExplosionRad * this.minExplosionRad) {
 			this.ignite();
 		}
@@ -208,7 +210,7 @@ public class EntityTNTGolem extends GolemBase {
 					? rand.nextInt(maxExplosionRad - minExplosionRad)
 					: this.minExplosionRad;
 				this.world.createExplosion(this, this.posX, this.posY, this.posZ, range, flag);
-				this.setDead();
+				this.remove();
 			}
 		} else {
 			resetIgnite();

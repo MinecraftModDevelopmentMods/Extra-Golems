@@ -14,7 +14,7 @@
 //	public EntityHardenedClayGolem(final World world) {
 //		super(world);
 //		this.setLootTableLoc(GolemNames.TERRACOTTA_GOLEM);
-//		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.18D);
+//		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.18D);
 //	}
 //
 //	protected ResourceLocation applyTexture() {

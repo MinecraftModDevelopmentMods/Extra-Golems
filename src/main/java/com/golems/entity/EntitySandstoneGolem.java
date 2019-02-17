@@ -13,7 +13,7 @@ public final class EntitySandstoneGolem extends GolemBase {
 	public EntitySandstoneGolem(final World world) {
 		super(GolemEntityTypes.SANDSTONE, world);
 		this.setLootTableLoc(GolemNames.SANDSTONE_GOLEM);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
+		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
 	}
 
 	protected ResourceLocation applyTexture() {

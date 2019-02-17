@@ -8,6 +8,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Particles;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
@@ -47,7 +48,7 @@ public class EntityEndstoneGolem extends GolemBase {
 		this.setLootTableLoc(GolemNames.ENDSTONE_GOLEM);
 		this.isHurtByWater = cfg.getBoolean(ALLOW_WATER_HURT);
 		this.allowTeleport = cfg.getBoolean(ALLOW_SPECIAL);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
+		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 
 	/**
@@ -100,10 +101,10 @@ public class EntityEndstoneGolem extends GolemBase {
 	}
 
 	@Override
-	public void onLivingUpdate() {
+	public void livingTick() {
 		if (this.world.isRemote && this.hasAmbientParticles) {
 			for (int i = 0; i < 2; ++i) {
-				this.world.spawnParticle(EnumParticleTypes.PORTAL,
+				this.world.spawnParticle(Particles.PORTAL,
 					this.posX + (this.rand.nextDouble() - 0.5D) * (double) this.width,
 					this.posY + this.rand.nextDouble() * (double) this.height - 0.25D,
 					this.posZ + (this.rand.nextDouble() - 0.5D) * (double) this.width,
@@ -113,12 +114,12 @@ public class EntityEndstoneGolem extends GolemBase {
 		}
 		
 		this.isJumping = false;
-		super.onLivingUpdate();
+		super.livingTick();
 	}
 
 	@Override
 	public boolean attackEntityFrom(final DamageSource src, final float amnt) {
-		if (this.isEntityInvulnerable(src)) {
+		if (this.isInvulnerableTo(src)) {
 			return false;
 		}
 		
@@ -164,7 +165,7 @@ public class EntityEndstoneGolem extends GolemBase {
 	 **/
 	protected boolean teleportToEntity(final Entity entity) {
 		Vec3d vec3d = new Vec3d(this.posX - entity.posX,
-			this.getEntityBoundingBox().minY + (double) (this.height / 2.0F) - entity.posY
+			this.getBoundingBox().minY + (double) (this.height / 2.0F) - entity.posY
 				+ (double) entity.getEyeHeight(),
 			this.posZ - entity.posZ);
 		vec3d = vec3d.normalize();
@@ -188,8 +189,8 @@ public class EntityEndstoneGolem extends GolemBase {
 
 		if (flag) {
 			this.world.playSound((EntityPlayer) null, this.prevPosX, this.prevPosY, this.prevPosZ,
-				SoundEvents.ENTITY_ENDERMEN_TELEPORT, this.getSoundCategory(), 1.0F, 1.0F);
-			this.playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT, 1.0F, 1.0F);
+				SoundEvents.ENTITY_ENDERMAN_TELEPORT, this.getSoundCategory(), 1.0F, 1.0F);
+			this.playSound(SoundEvents.ENTITY_ENDERMAN_TELEPORT, 1.0F, 1.0F);
 		}
 
 		return flag;

@@ -21,7 +21,7 @@ public final class EntityNetherBrickGolem extends GolemBase {
 		super(GolemEntityTypes.NETHER_BRICK, world);
 		this.setImmuneToFire(true);
 		this.setLootTableLoc(GolemNames.NETHERBRICK_GOLEM);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
+		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
 	}
 
 	@Override

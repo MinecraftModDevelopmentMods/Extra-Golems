@@ -16,7 +16,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.eventbus.api.Event;
 
 import java.util.List;
 import java.util.function.Function;
@@ -31,7 +31,7 @@ public final class EntityIceGolem extends GolemBase {
 		super(GolemEntityTypes.ICE, world);
 		this.setCanSwim(true); // just in case
 		this.setLootTableLoc(GolemNames.ICE_GOLEM);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
+		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 
 	protected ResourceLocation applyTexture() {
@@ -43,8 +43,8 @@ public final class EntityIceGolem extends GolemBase {
 	 * zombies and skeletons use this to react to sunlight and start to burn.
 	 */
 	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
+	public void livingTick() {
+		super.livingTick();
 		// calling every other tick reduces lag by 50%
 		if (this.ticksExisted % 2 == 0) {
 			final int x = MathHelper.floor(this.posX);
@@ -59,7 +59,7 @@ public final class EntityIceGolem extends GolemBase {
 			if (cfg.getBoolean(ALLOW_SPECIAL)) {
 				final IceGolemFreezeEvent event = new IceGolemFreezeEvent(this, below,
 					cfg.getInt(AOE));
-				if (!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Result.DENY) {
+				if (!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Event.Result.DENY) {
 					this.freezeBlocks(event.getAffectedPositions(), event.getFunction(),
 						event.updateFlag);
 				}

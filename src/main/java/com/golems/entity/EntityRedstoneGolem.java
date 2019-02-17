@@ -13,8 +13,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ public final class EntityRedstoneGolem extends GolemBase {
 	public EntityRedstoneGolem(final World world) {
 		this(world, GolemLookup.getConfig(EntityRedstoneGolem.class).getBoolean(ALLOW_SPECIAL), 15, DEF_FREQ);
 		this.setLootTableLoc(GolemNames.REDSTONE_GOLEM);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
+		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 
 	/**
@@ -37,7 +37,7 @@ public final class EntityRedstoneGolem extends GolemBase {
 	 **/
 	public EntityRedstoneGolem(final World world, boolean allowSpecial, int power, int frequency) {
 		super(GolemEntityTypes.REDSTONE, world);
-		final IBlockState state = GolemItems.blockPowerSource.getDefaultState().withProperty(BlockUtilityPower.POWER_LEVEL, power);
+		final IBlockState state = GolemItems.blockPowerSource.getDefaultState().with(BlockUtilityPower.POWER_LEVEL, power);
 		this.tasks.addTask(9, new EntityAIPlaceSingleBlock(this, state, frequency, allowSpecial));
 	}
 
@@ -52,7 +52,7 @@ public final class EntityRedstoneGolem extends GolemBase {
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public int getBrightnessForRender() {
 		return super.getBrightnessForRender() + 64;
 	}

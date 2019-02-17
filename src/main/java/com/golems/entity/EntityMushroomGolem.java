@@ -38,7 +38,7 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 		freq += this.rand.nextInt(Math.max(10, freq / 2));
 		this.tasks.addTask(2,
 			new EntityAIPlaceRandomBlocksStrictly(this, freq, mushrooms, soils, allowed));
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
+		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
 	}
 
 	@Override
@@ -56,8 +56,8 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 	 * use this to react to sunlight and start to burn.
 	 */
 	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
+	public void livingTick() {
+		super.livingTick();
 		// heals randomly, but only at night
 		if(!this.getEntityWorld().isDaytime() && rand.nextInt(Config.RANDOM_HEAL_TIMER) == 0 && getConfig(this).getBoolean(ALLOW_HEALING)) {
 			this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 20, 2));

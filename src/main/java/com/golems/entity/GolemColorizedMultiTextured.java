@@ -42,9 +42,9 @@ public abstract class GolemColorizedMultiTextured extends GolemColorized {
 	}
 
 	@Override
-	protected void entityInit() {
-		super.entityInit();
-		this.getDataManager().register(DATA_TEXTURE, Byte.valueOf((byte) 0));
+	protected void registerData() {
+		super.registerData();
+		this.getDataManager().register(DATA_TEXTURE, (byte) 0);
 	}
 
 	@Override
@@ -57,15 +57,15 @@ public abstract class GolemColorizedMultiTextured extends GolemColorized {
 			int incremented = ((this.getTextureNum() + 1) % this.colors.length);
 			this.setTextureNum((byte) incremented);
 			this.updateTextureByData(this.getTextureNum());
-			this.writeEntityToNBT(this.getEntityData());
+			this.writeAdditional(this.getEntityData());
 			player.swingArm(hand);
 			return true;
 		}
 	}
 
 	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
+	public void livingTick() {
+		super.livingTick();
 		// since textureNum is correct, update texture AFTER loading from NBT and init
 		if (this.ticksExisted == 2) {
 			this.updateTextureByData(this.getTextureNum());
@@ -73,14 +73,14 @@ public abstract class GolemColorizedMultiTextured extends GolemColorized {
 	}
 
 	@Override
-	public void writeEntityToNBT(final NBTTagCompound nbt) {
-		super.writeEntityToNBT(nbt);
+	public void writeAdditional(final NBTTagCompound nbt) {
+		super.writeAdditional(nbt);
 		nbt.setByte(NBT_TEXTURE, (byte) this.getTextureNum());
 	}
 
 	@Override
-	public void readEntityFromNBT(final NBTTagCompound nbt) {
-		super.readEntityFromNBT(nbt);
+	public void readAdditional(final NBTTagCompound nbt) {
+		super.readAdditional(nbt);
 		this.setTextureNum(nbt.getByte(NBT_TEXTURE));
 		this.updateTextureByData(this.getTextureNum());
 	}
@@ -97,7 +97,7 @@ public abstract class GolemColorizedMultiTextured extends GolemColorized {
     }
 
 	public void setTextureNum(final byte toSet) {
-		this.getDataManager().set(DATA_TEXTURE, new Byte(toSet));
+		this.getDataManager().set(DATA_TEXTURE, toSet);
 	}
 
 	public int getTextureNum() {

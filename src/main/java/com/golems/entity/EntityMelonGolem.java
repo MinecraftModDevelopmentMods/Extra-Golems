@@ -6,9 +6,6 @@ import com.golems.main.ExtraGolems;
 import com.golems.util.GolemConfigSet;
 import com.golems.util.GolemNames;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockFlower;
-import net.minecraft.block.BlockFlower.EnumFlowerType;
-import net.minecraft.block.BlockTallGrass;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -21,7 +18,6 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public final class EntityMelonGolem extends GolemBase {
@@ -35,7 +31,7 @@ public final class EntityMelonGolem extends GolemBase {
 		this.setCanSwim(true);
 		this.tasks.addTask(2, this.makeFlowerAI());
 		this.setLootTableLoc(GolemNames.MELON_GOLEM);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
+		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 
 	@Override
@@ -53,8 +49,8 @@ public final class EntityMelonGolem extends GolemBase {
 	 * use this to react to sunlight and start to burn.
 	 */
 	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
+	public void livingTick() {
+		super.livingTick();
 		// heals randomly (about every 20 sec)
 		if(rand.nextInt(Config.RANDOM_HEAL_TIMER) == 0 && getConfig(this).getBoolean(ALLOW_HEALING)) {
 			this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 20, 2));
@@ -66,19 +62,11 @@ public final class EntityMelonGolem extends GolemBase {
 	 **/
 	protected EntityAIBase makeFlowerAI() {
 		GolemConfigSet cfg = getConfig(this);
-		final Block[] soils = {Blocks.DIRT, Blocks.GRASS, Blocks.MYCELIUM, Blocks.FARMLAND};
+		final Block[] soils = {Blocks.DIRT, Blocks.GRASS, Blocks.MYCELIUM};
 		// init list and AI for planting flowers
-		final List<IBlockState> lFlowers = new ArrayList<>();
-		for (final EnumFlowerType e : BlockFlower.EnumFlowerType.values()) {
-			lFlowers.add(e.getBlockType().getBlock().getStateFromMeta(e.getMeta()));
-		}
-		for (BlockTallGrass.EnumType e : BlockTallGrass.EnumType.values()) {
-			lFlowers.add(Blocks.TALLGRASS.getDefaultState().withProperty(BlockTallGrass.TYPE, e));
-		}
-		final IBlockState[] flowers = lFlowers.toArray(new IBlockState[lFlowers.size()]);
+		final IBlockState[] flowers = {Blocks.POPPY.getDefaultState()};
 		// get other parameters for the AI
 		final int freq = cfg.getInt(FREQUENCY);
-		//TODO: Fix possible NPE
 		final boolean allowed = cfg.getBoolean(ALLOW_SPECIAL);
 		return new EntityAIPlaceRandomBlocksStrictly(this, freq, flowers, soils, allowed);
 	}

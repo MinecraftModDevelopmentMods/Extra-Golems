@@ -27,7 +27,7 @@ public final class EntityLapisGolem extends GolemBase {
 	public EntityLapisGolem(final World world) {
 		super(GolemEntityTypes.LAPIS, world);
 		this.setLootTableLoc(GolemNames.LAPIS_GOLEM);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
+		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
 	}
 
 	@Override

@@ -1,27 +1,8 @@
 package com.golems.events.handlers;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 import com.golems.blocks.BlockGolemHead;
-import com.golems.entity.EntityBookshelfGolem;
-import com.golems.entity.EntityClayGolem;
-import com.golems.entity.EntityCraftingGolem;
-import com.golems.entity.EntityGlowstoneGolem;
-import com.golems.entity.EntityHardenedClayGolem;
-import com.golems.entity.EntityIceGolem;
-import com.golems.entity.EntityLeafGolem;
-import com.golems.entity.EntityObsidianGolem;
-import com.golems.entity.EntitySlimeGolem;
-import com.golems.entity.EntityStainedClayGolem;
-import com.golems.entity.EntityWoodenGolem;
-import com.golems.entity.EntityWoolGolem;
-import com.golems.entity.GolemBase;
-import com.golems.entity.GolemColorizedMultiTextured;
-import com.golems.entity.GolemMultiTextured;
+import com.golems.entity.*;
 import com.golems.main.Config;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.BlockPumpkin;
@@ -33,30 +14,20 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIFindEntityNearest;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAITasks;
-import net.minecraft.entity.monster.AbstractIllager;
-import net.minecraft.entity.monster.AbstractSkeleton;
-import net.minecraft.entity.monster.EntityPigZombie;
-import net.minecraft.entity.monster.EntitySlime;
-import net.minecraft.entity.monster.EntitySpider;
-import net.minecraft.entity.monster.EntityZombie;
-import net.minecraft.init.Blocks;
+import net.minecraft.entity.monster.*;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.village.Village;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeDesert;
-import net.minecraft.world.biome.BiomeJungle;
-import net.minecraft.world.biome.BiomeMesa;
-import net.minecraft.world.biome.BiomePlains;
-import net.minecraft.world.biome.BiomeSavanna;
-import net.minecraft.world.biome.BiomeSnow;
-import net.minecraft.world.biome.BiomeSwamp;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Handles events added specifically from this mod.
@@ -202,7 +173,7 @@ public class GolemCommonEventHandler {
 				}
 				// now we're ready to place the block
 				if(event.getEntityPlayer().canPlayerEdit(pumpkinPos, event.getFace(), stack)) {
-					IBlockState pumpkin = heldBlock.getDefaultState().withProperty(BlockHorizontal.FACING, 
+					IBlockState pumpkin = heldBlock.getDefaultState().with(BlockHorizontal.FACING,
 							event.getEntityPlayer().getHorizontalFacing().getOpposite());
 					// set block and trigger golem-checking
 					if(event.getWorld().setBlockState(pumpkinPos, pumpkin)) {

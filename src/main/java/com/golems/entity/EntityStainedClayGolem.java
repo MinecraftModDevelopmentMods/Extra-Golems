@@ -23,7 +23,7 @@
 //
 //	public EntityStainedClayGolem(final World world) {
 //		super(world, TEXTURE_BASE, TEXTURE_OVERLAY, COLOR_ARRAY);
-//		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.20D);
+//		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.20D);
 //	}
 //
 //	@Override

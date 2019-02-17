@@ -17,8 +17,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
 
@@ -62,7 +62,7 @@ public final class EntityMagmaGolem extends GolemBase {
 		this.ticksStandingStill = 0;
 		this.setImmuneToFire(true);
 		this.setCanSwim(!this.isHurtByWater);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
+		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
 		this.setLootTableLoc(GolemNames.MAGMA_GOLEM);
 	}
 	
@@ -77,13 +77,13 @@ public final class EntityMagmaGolem extends GolemBase {
 		if(this.isChild()) {
 			this.setSize(0.7F, 1.45F);
 			this.allowMelting = false;
-			this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(cfg.getBaseAttack() * 0.6F);
-			this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(cfg.getMaxHealth() / 3);
+			this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(cfg.getBaseAttack() * 0.6F);
+			this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(cfg.getMaxHealth() / 3);
 		} else {
 			this.setSize(1.4F, 2.9F);
 			this.allowMelting = getConfig(this).getBoolean(ALLOW_LAVA_SPECIAL);
-			this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(cfg.getBaseAttack());
-			this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(cfg.getMaxHealth());
+			this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(cfg.getBaseAttack());
+			this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(cfg.getMaxHealth());
 		}
 	}
 
@@ -118,8 +118,8 @@ public final class EntityMagmaGolem extends GolemBase {
 	 * zombies and skeletons use this to react to sunlight and start to burn.
 	 */
 	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
+	public void livingTick() {
+		super.livingTick();
 		// take damage from water/rain
 		if (this.isHurtByWater && this.isWet()) {
 			this.attackEntityFrom(DamageSource.DROWN, 0.5F);
@@ -136,7 +136,7 @@ public final class EntityMagmaGolem extends GolemBase {
 				// check if it's been holding still long enough AND on top of cobblestone
 				if (++this.ticksStandingStill >= this.meltDelay
 					&& b1 == Blocks.COBBLESTONE && rand.nextInt(16) == 0) {
-					IBlockState replace = Blocks.MAGMA.getDefaultState();
+					IBlockState replace = Blocks.MAGMA_BLOCK.getDefaultState();
 					this.world.setBlockState(below, replace, 3);
 					this.ticksStandingStill = 0;
 				}
@@ -154,7 +154,7 @@ public final class EntityMagmaGolem extends GolemBase {
 	}
 	
 	@Override
-	public void setDead() {
+	public void remove() {
 		// spawn baby golems here if possible 
 		if(!this.world.isRemote && !this.isChild() && getConfig(this).getBoolean(ALLOW_SPLITTING)) {
 			GolemBase slime1 = new EntityMagmaGolem(this.world, true);
@@ -173,12 +173,12 @@ public final class EntityMagmaGolem extends GolemBase {
 			this.getEntityWorld().spawnEntity(slime1);
 			this.getEntityWorld().spawnEntity(slime2);
 		}
-		
-		super.setDead();
+
+		super.remove();
 	}
 	
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public int getBrightnessForRender() {
 		return 15728880;
 	}

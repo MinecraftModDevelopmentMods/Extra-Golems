@@ -24,7 +24,7 @@
 //	public EntityWoodenGolem(final World world) {
 //		super(world, WOOD_PREFIX, woodTypes);
 //		this.setCanSwim(true);
-//		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
+//		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
 //	}
 //
 //	@Override
@@ -49,7 +49,7 @@
 //		// use block metadata to give this golem the right texture
 //		if(body.getBlock() instanceof BlockNewLog || body.getBlock() instanceof BlockOldLog) {
 //			final int meta = body.getBlock().getMetaFromState(
-//			body.withProperty(BlockLog.LOG_AXIS, EnumAxis.NONE));
+//			body.with(BlockLog.LOG_AXIS, EnumAxis.NONE));
 //			byte textureNum = body.getBlock() == Blocks.LOG2 ? (byte) (meta + 4) : (byte) meta;
 //			textureNum %= this.getNumTextures();
 //			this.setTextureNum(textureNum);

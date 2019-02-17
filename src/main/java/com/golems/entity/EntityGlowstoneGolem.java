@@ -13,8 +13,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
 
@@ -39,7 +39,7 @@ public final class EntityGlowstoneGolem extends GolemBase {
 		this.setCanTakeFallDamage(true);
 		this.setCanSwim(true);
 		this.setLootTableLoc(GolemNames.GLOWSTONE_GOLEM);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
+		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 
 	/**
@@ -50,7 +50,7 @@ public final class EntityGlowstoneGolem extends GolemBase {
 		super(GolemEntityTypes.GLOWSTONE, world);
 		int lightInt = (int) (lightLevel * 15.0F);
 		this.brightness = lightLevel;
-		final IBlockState state = GolemItems.blockLightSource.getDefaultState().withProperty(BlockUtilityGlow.LIGHT_LEVEL, lightInt);
+		final IBlockState state = GolemItems.blockLightSource.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, lightInt);
 		this.tasks.addTask(9, new EntityAIPlaceSingleBlock(this, state, freq, allowed));
 	}
 
@@ -70,7 +70,7 @@ public final class EntityGlowstoneGolem extends GolemBase {
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public int getBrightnessForRender() {
 		return (int) (15728880F * this.brightness);
 	}

@@ -32,7 +32,7 @@ public final class EntityNetherWartGolem extends GolemBase {
 		super(GolemEntityTypes.NETHER_WART, world);
 		this.setCanSwim(true);
 		this.setLootTableLoc(GolemNames.NETHERWART_GOLEM);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
+		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 	
 	/**
@@ -40,10 +40,10 @@ public final class EntityNetherWartGolem extends GolemBase {
 	 * use this to react to sunlight and start to burn.
 	 */
 	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
+	public void livingTick() {
+		super.livingTick();
 		// heals randomly, but only at night or in the nether
-		if((!this.getEntityWorld().isDaytime() || this.getEntityWorld().provider.isNether()) 
+		if ((!this.getEntityWorld().isDaytime() || this.getEntityWorld().dimension.isNether())
 				&& rand.nextInt(Config.RANDOM_HEAL_TIMER) == 0 && getConfig(this).getBoolean(ALLOW_HEALING)) {
 			this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 20, 2));
 		}
@@ -53,9 +53,9 @@ public final class EntityNetherWartGolem extends GolemBase {
 	protected void initEntityAI() {
 		super.initEntityAI();
 		final IBlockState[] flowers = {
-			Blocks.NETHER_WART.getDefaultState().withProperty(BlockNetherWart.AGE, 0),
-			Blocks.NETHER_WART.getDefaultState().withProperty(BlockNetherWart.AGE, 1),
-			Blocks.NETHER_WART.getDefaultState().withProperty(BlockNetherWart.AGE, 2)};
+			Blocks.NETHER_WART.getDefaultState().with(BlockNetherWart.AGE, 0),
+			Blocks.NETHER_WART.getDefaultState().with(BlockNetherWart.AGE, 1),
+			Blocks.NETHER_WART.getDefaultState().with(BlockNetherWart.AGE, 2)};
 		final Block[] soils = {Blocks.SOUL_SAND};
 		GolemConfigSet cfg = getConfig(this);
 		final boolean spawn = cfg.getBoolean(ALLOW_SPECIAL);

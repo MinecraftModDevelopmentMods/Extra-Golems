@@ -8,7 +8,7 @@ import net.minecraft.block.IGrowable;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemDye;
+import net.minecraft.item.ItemBoneMeal;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -30,7 +30,7 @@ public final class EntityStrawGolem extends GolemBase {
 		super(GolemEntityTypes.STRAW, world);
 		this.setCanSwim(true);
 		this.setLootTableLoc(GolemNames.STRAW_GOLEM);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.35D);
+		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.35D);
 		this.boostFreq = getConfig(this).getInt(SPECIAL_FREQ);
 		this.boostFreq += this.rand.nextInt(Math.max(10, this.boostFreq / 2));
 		this.range = 4;
@@ -42,8 +42,8 @@ public final class EntityStrawGolem extends GolemBase {
 	 * use this to react to sunlight and start to burn.
 	 */
 	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
+	public void livingTick() {
+		super.livingTick();
 		// look for crops to boost
 		if(this.allowed && this.rand.nextInt(boostFreq) == 0) {
 			tryBoostCrop();
@@ -81,7 +81,7 @@ public final class EntityStrawGolem extends GolemBase {
 					crop.grow(this.world, rand, blockpos, state);
 					// spawn particles
 					if(this.world.isRemote) {
-						ItemDye.spawnBonemealParticles(this.world, blockpos, 0);
+						ItemBoneMeal.spawnBonemealParticles(this.world, blockpos, 0);
 					}
 					return true;
 				}

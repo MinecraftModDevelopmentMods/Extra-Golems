@@ -17,7 +17,7 @@ public final class GolemEntityTypes {
 	public static final EntityType BOOKSHELF = build(EntityBookshelfGolem.class, EntityBookshelfGolem::new, GolemNames.BOOKSHELF_GOLEM, Blocks.BOOKSHELF);
 	public static final EntityType CLAY = build(EntityBookshelfGolem.class, EntityBookshelfGolem::new, GolemNames.BOOKSHELF_GOLEM, Blocks.BOOKSHELF);
 	public static final EntityType COAL = build(EntityCoalGolem.class, EntityCoalGolem::new, GolemNames.COAL_GOLEM, Blocks.COAL_BLOCK);
-	//	public static final EntityType CONCRETE = build(EntityConcreteGolem.class, GolemNames.CONCRETE_GOLEM, Blocks.CONCRETE);
+	//public static final EntityType CONCRETE = build(EntityConcreteGolem.class, GolemNames.CONCRETE_GOLEM, Blocks.CONCRETE);
 	public static final EntityType CRAFTING = build(EntityCraftingGolem.class, EntityCraftingGolem::new, GolemNames.CRAFTING_GOLEM, Blocks.CRAFTING_TABLE);
 	public static final EntityType DIAMOND = build(EntityDiamondGolem.class, EntityDiamondGolem::new, GolemNames.DIAMOND_GOLEM, Blocks.DIAMOND_BLOCK);
 	public static final EntityType EMERALD = build(EntityEmeraldGolem.class, EntityEmeraldGolem::new, GolemNames.EMERALD_GOLEM, Blocks.EMERALD_BLOCK);
@@ -31,8 +31,7 @@ public final class GolemEntityTypes {
 	//public static final EntityType LEAF = build(EntityLeafGolem.class, GolemNames.LEAF_GOLEM, Blocks.LEAVES, Blocks.LEAVES2)
 	public static final EntityType MAGMA = build(EntityMagmaGolem.class, EntityMagmaGolem::new, GolemNames.MAGMA_GOLEM, Blocks.MAGMA_BLOCK);
 	public static final EntityType MELON = build(EntityMelonGolem.class, EntityMelonGolem::new, GolemNames.MELON_GOLEM, Blocks.MELON);
-	public static final EntityType MUSHROOM = build(EntityMushroomGolem.class, EntityMushroomGolem::new, GolemNames.MUSHROOM_GOLEM,
-		Blocks.RED_MUSHROOM_BLOCK, Blocks.BROWN_MUSHROOM_BLOCK);
+	public static final EntityType MUSHROOM = build(EntityMushroomGolem.class, EntityMushroomGolem::new, GolemNames.MUSHROOM_GOLEM, Blocks.RED_MUSHROOM_BLOCK, Blocks.BROWN_MUSHROOM_BLOCK);
 	public static final EntityType NETHER_BRICK = build(EntityNetherBrickGolem.class, EntityNetherBrickGolem::new, GolemNames.NETHERBRICK_GOLEM, Blocks.NETHER_BRICKS, Blocks.RED_NETHER_BRICKS);
 	public static final EntityType NETHER_WART = build(EntityNetherWartGolem.class, EntityNetherWartGolem::new, GolemNames.NETHERWART_GOLEM, Blocks.NETHER_WART_BLOCK);
 	public static final EntityType OBSIDIAN = build(EntityObsidianGolem.class, EntityObsidianGolem::new, GolemNames.OBSIDIAN_GOLEM, Blocks.OBSIDIAN);

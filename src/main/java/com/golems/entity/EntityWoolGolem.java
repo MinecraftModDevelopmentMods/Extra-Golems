@@ -25,12 +25,12 @@
 //	public EntityWoolGolem(final World world) {
 //		super(world, WOOL_PREFIX, coloredWoolTypes);
 //		this.setCanSwim(true);
-//		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
+//		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
 //	}
 //
 //	@Override
-//	public void onLivingUpdate() {
-//		super.onLivingUpdate();
+//	public void livingTick() {
+//		super.livingTick();
 //
 //		if(this.getEntityWorld().getWorldTime() % 10 == 0) {
 //			this.secret = Config.matchesSecret(this.getCustomNameTag());

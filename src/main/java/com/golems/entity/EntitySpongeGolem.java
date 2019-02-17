@@ -5,8 +5,9 @@ import com.golems.main.ExtraGolems;
 import com.golems.util.GolemConfigSet;
 import com.golems.util.GolemNames;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Particles;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.particles.BasicParticleType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -14,7 +15,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.eventbus.api.Event;
 
 import java.util.List;
 
@@ -41,11 +42,11 @@ public final class EntitySpongeGolem extends GolemBase {
 	 * zombies and skeletons use this to react to sunlight and start to burn.
 	 */
 	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
+	public void livingTick() {
+		super.livingTick();
 		GolemConfigSet cfg = getConfig(this);
 		final int interval = cfg.getInt(INTERVAL);
-		//TODO: Fix possible NPE
+
 		if (cfg.getBoolean(ALLOW_SPECIAL)
 			&& (interval <= 1 || this.ticksExisted % interval == 0)) {
 			final int x = MathHelper.floor(this.posX);
@@ -55,7 +56,7 @@ public final class EntitySpongeGolem extends GolemBase {
 
 			final SpongeGolemSoakEvent event = new SpongeGolemSoakEvent(this, center,
 				cfg.getInt(RANGE));
-			if (!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Result.DENY) {
+			if (!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Event.Result.DENY) {
 				this.replaceWater(event.getPositionList(), event.getReplacementState(),
 					event.updateFlag);
 			}
@@ -63,20 +64,20 @@ public final class EntitySpongeGolem extends GolemBase {
 
 		if (cfg.getBoolean(PARTICLES) && Math.abs(this.motionX) < 0.05D
 			&& Math.abs(this.motionZ) < 0.05D && world.isRemote) {
-			final EnumParticleTypes particle = this.isBurning() ? EnumParticleTypes.SMOKE_NORMAL
-				: EnumParticleTypes.WATER_SPLASH;
+			final BasicParticleType particle = this.isBurning() ? Particles.SMOKE
+				: Particles.DRIPPING_WATER;
 			final double x = this.rand.nextDouble() - 0.5D * (double) this.width * 0.6D;
 			final double y = this.rand.nextDouble() * (this.height - 0.75D);
 			final double z = this.rand.nextDouble() - 0.5D * (double) this.width;
 			this.world.spawnParticle(particle, this.posX + x, this.posY + y, this.posZ + z,
 				(this.rand.nextDouble() - 0.5D) * 0.5D, this.rand.nextDouble() - 0.5D,
-				(this.rand.nextDouble() - 0.5D) * 0.5D, new int[0]);
+				(this.rand.nextDouble() - 0.5D) * 0.5D);
 		}
 	}
 
 	@Override
 	public SoundEvent getGolemSound() {
-		return SoundEvents.BLOCK_CLOTH_STEP;
+		return SoundEvents.BLOCK_WOOL_STEP;
 	}
 
 	/**
