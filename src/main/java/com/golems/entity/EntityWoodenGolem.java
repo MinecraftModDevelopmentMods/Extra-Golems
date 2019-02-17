@@ -24,7 +24,7 @@
 //	public EntityWoodenGolem(final World world) {
 //		super(world, WOOD_PREFIX, woodTypes);
 //		this.setCanSwim(true);
-//		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
+//		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
 //	}
 //
 //	@Override

@@ -41,8 +41,8 @@ public final class EntitySpongeGolem extends GolemBase {
 	 * zombies and skeletons use this to react to sunlight and start to burn.
 	 */
 	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
+	public void livingTick() {
+		super.livingTick();
 		GolemConfigSet cfg = getConfig(this);
 		final int interval = cfg.getInt(INTERVAL);
 		//TODO: Fix possible NPE

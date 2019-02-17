@@ -33,7 +33,7 @@ public final class EntitySlimeGolem extends GolemBase {
 		this.setChild(isBaby);
 		this.setCanSwim(true);
 		this.setLootTableLoc(GolemNames.SLIME_GOLEM);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.29D);
+		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.29D);
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public final class EntitySlimeGolem extends GolemBase {
 
 	@Override
 	protected void damageEntity(final DamageSource source, final float amount) {
-		if (!this.isEntityInvulnerable(source)) {
+		if (!this.isInvulnerableTo(source)) {
 			super.damageEntity(source, amount);
 			// knocks back the entity that is attacking it
 			if (!this.isChild() && source.getImmediateSource() != null && getConfig(this).getBoolean(ALLOW_SPECIAL)) {
@@ -105,14 +105,14 @@ public final class EntitySlimeGolem extends GolemBase {
 		if(this.isChild()) {
 			this.knockbackPower = 0.0F;
 			this.setSize(0.7F, 1.45F);
-			this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(getConfig(this).getMaxHealth() / 3);
-			this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(getConfig(this).getBaseAttack() * 0.6F);
-			this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.0D);
+			this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(getConfig(this).getMaxHealth() / 3);
+			this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(getConfig(this).getBaseAttack() * 0.6F);
+			this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.0D);
 		} else {
 			this.knockbackPower = getConfig(this).getFloat(KNOCKBACK) * 0.325F;
-			this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(getConfig(this).getMaxHealth());
-			this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(getConfig(this).getBaseAttack());
-			this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.35D);
+			this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(getConfig(this).getMaxHealth());
+			this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(getConfig(this).getBaseAttack());
+			this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.35D);
 		}
 	}
 

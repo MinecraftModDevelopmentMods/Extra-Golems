@@ -58,7 +58,7 @@ public abstract class GolemMultiTextured extends GolemBase {
 
 	@Override
 	protected ResourceLocation applyTexture() {
-		// apply TEMPORARY texture to avoid NPE. Actual texture is first applied in onLivingUpdate
+		// apply TEMPORARY texture to avoid NPE. Actual texture is first applied in livingTick
 		return makeTexture(ExtraGolems.MODID, GolemNames.CLAY_GOLEM);
 	}
 
@@ -84,8 +84,8 @@ public abstract class GolemMultiTextured extends GolemBase {
 	}
 
 	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
+	public void livingTick() {
+		super.livingTick();
 		// since textureNum is correct, update texture AFTER loading from NBT and init
 		if (this.ticksExisted == 2) {
 			this.setTextureType(this.getTextureFromArray(this.getTextureNum()));

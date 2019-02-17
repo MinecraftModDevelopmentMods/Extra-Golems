@@ -13,7 +13,7 @@ public final class EntityQuartzGolem extends GolemBase {
 	public EntityQuartzGolem(final World world) {
 		super(GolemEntityTypes.QUARTZ, world);
 		this.setLootTableLoc(GolemNames.QUARTZ_GOLEM);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
+		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
 	}
 
 	@Override

@@ -35,7 +35,7 @@ public final class EntityMelonGolem extends GolemBase {
 		this.setCanSwim(true);
 		this.tasks.addTask(2, this.makeFlowerAI());
 		this.setLootTableLoc(GolemNames.MELON_GOLEM);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
+		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 
 	@Override
@@ -53,8 +53,8 @@ public final class EntityMelonGolem extends GolemBase {
 	 * use this to react to sunlight and start to burn.
 	 */
 	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
+	public void livingTick() {
+		super.livingTick();
 		// heals randomly (about every 20 sec)
 		if(rand.nextInt(Config.RANDOM_HEAL_TIMER) == 0 && getConfig(this).getBoolean(ALLOW_HEALING)) {
 			this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 20, 2));

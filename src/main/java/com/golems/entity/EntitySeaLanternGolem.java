@@ -36,7 +36,7 @@ public final class EntitySeaLanternGolem extends GolemBase {
 		super(GolemEntityTypes.SEA_LANTERN, world);
 		this.canDrown = false;
 		this.setLootTableLoc(GolemNames.SEALANTERN_GOLEM);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
+		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 
 	}
 
@@ -54,8 +54,8 @@ public final class EntitySeaLanternGolem extends GolemBase {
 	}
 
 	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
+	public void livingTick() {
+		super.livingTick();
 		// speed boost in water
 		if (this.isInWater()) {
 			this.addPotionEffect(new PotionEffect(MobEffects.SPEED, 20, 2, false, false));

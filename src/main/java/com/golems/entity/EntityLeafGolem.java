@@ -29,7 +29,7 @@
 //		super(world, 0x5F904A, TEXTURE_BASE, TEXTURE_OVERLAY);
 //		this.setCanSwim(true);
 //		this.setLootTableLoc(GolemNames.LEAF_GOLEM);
-//		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.31D);
+//		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.31D);
 //	}
 //
 //	/**
@@ -37,8 +37,8 @@
 //	 * zombies and skeletons use this to react to sunlight and start to burn.
 //	 */
 //	@Override
-//	public void onLivingUpdate() {
-//		super.onLivingUpdate();
+//	public void livingTick() {
+//		super.livingTick();
 //		GolemConfigSet cfg = getConfig(this);
 //		if (cfg.getBoolean(ALLOW_SPECIAL)
 //			&& this.getActivePotionEffect(MobEffects.REGENERATION) == null

@@ -32,7 +32,7 @@ public final class EntityNetherWartGolem extends GolemBase {
 		super(GolemEntityTypes.NETHER_WART, world);
 		this.setCanSwim(true);
 		this.setLootTableLoc(GolemNames.NETHERWART_GOLEM);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
+		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 	
 	/**
@@ -40,8 +40,8 @@ public final class EntityNetherWartGolem extends GolemBase {
 	 * use this to react to sunlight and start to burn.
 	 */
 	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
+	public void livingTick() {
+		super.livingTick();
 		// heals randomly, but only at night or in the nether
 		if((!this.getEntityWorld().isDaytime() || this.getEntityWorld().provider.isNether()) 
 				&& rand.nextInt(Config.RANDOM_HEAL_TIMER) == 0 && getConfig(this).getBoolean(ALLOW_HEALING)) {

@@ -26,7 +26,7 @@ public final class EntityBookshelfGolem extends GolemBase {
 	public EntityBookshelfGolem(final World world) {
 		super(GolemEntityTypes.BOOKSHELF, world);
 		this.setLootTableLoc(GolemNames.BOOKSHELF_GOLEM);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.29D);
+		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.29D);
 	}
 
 	protected ResourceLocation applyTexture() {
@@ -37,9 +37,10 @@ public final class EntityBookshelfGolem extends GolemBase {
 	 * Called frequently so the entity can update its state every tick as required. For example,
 	 * zombies and skeletons use this to react to sunlight and start to burn.
 	 */
+
 	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
+	public void livingTick() {
+		super.livingTick();
 		GolemConfigSet cfg = getConfig(this);
 		if (cfg.getBoolean(ALLOW_SPECIAL) && this.getActivePotionEffects().isEmpty()
 			&& rand.nextInt(40) == 0) {

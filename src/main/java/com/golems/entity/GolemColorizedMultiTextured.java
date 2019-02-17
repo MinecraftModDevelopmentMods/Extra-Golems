@@ -64,8 +64,8 @@ public abstract class GolemColorizedMultiTextured extends GolemColorized {
 	}
 
 	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
+	public void livingTick() {
+		super.livingTick();
 		// since textureNum is correct, update texture AFTER loading from NBT and init
 		if (this.ticksExisted == 2) {
 			this.updateTextureByData(this.getTextureNum());

@@ -59,7 +59,7 @@ public abstract class GolemDescriptionManager {
 
 		// add knockback resist to tip if possible
 		if (this.showKnockbackResist
-			&& golem.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE)
+			&& golem.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE)
 			.getBaseValue() > 0.8999D) {
 			final String sResist = TextFormatting.GRAY + trans("attribute.name.generic.knockbackResistance");
 			list.add(sResist);

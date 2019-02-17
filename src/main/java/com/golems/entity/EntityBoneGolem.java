@@ -14,7 +14,7 @@ public final class EntityBoneGolem extends GolemBase {
 		super(GolemEntityTypes.BONE, world);
 		this.setCanTakeFallDamage(true);
 		this.setLootTableLoc(GolemNames.BONE_GOLEM);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
+		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
 	}
 
 	protected ResourceLocation applyTexture() {

@@ -13,7 +13,7 @@ public final class EntityEmeraldGolem extends GolemBase {
 	public EntityEmeraldGolem(final World world) {
 		super(GolemEntityTypes.EMERALD, world);
 		this.setLootTableLoc(GolemNames.EMERALD_GOLEM);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
+		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
 	}
 
 	@Override

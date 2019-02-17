@@ -29,7 +29,7 @@ public final class EntityRedstoneGolem extends GolemBase {
 	public EntityRedstoneGolem(final World world) {
 		this(world, GolemLookup.getConfig(EntityRedstoneGolem.class).getBoolean(ALLOW_SPECIAL), 15, DEF_FREQ);
 		this.setLootTableLoc(GolemNames.REDSTONE_GOLEM);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
+		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 
 	/**

@@ -28,12 +28,12 @@ public final class EntityPrismarineGolem extends GolemBase {
 	 * zombies and skeletons use this to react to sunlight and start to burn.
 	 */
 	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
+	public void livingTick() {
+		super.livingTick();
 		if (this.isInWater()) {
-			this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.41D);
+			this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.41D);
 		} else {
-			this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.24D);
+			this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.24D);
 		}
 	}
 
