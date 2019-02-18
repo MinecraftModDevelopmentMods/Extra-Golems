@@ -3,6 +3,7 @@ package com.golems.entity;
 import java.util.List;
 
 import com.golems.main.ExtraGolems;
+import com.golems.util.GolemNames;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -21,9 +22,9 @@ public final class EntityConcreteGolem extends GolemColorizedMultiTextured {
 	public static final int[] COLOR_ARRAY = ItemDye.DYE_COLORS;
 	
 	private static final ResourceLocation TEXTURE_BASE = GolemBase
-			.makeTexture(ExtraGolems.MODID, "golem_" + PREFIX + "_base");
+			.makeTexture(ExtraGolems.MODID, GolemNames.CONCRETE_GOLEM + "_base");
 		private static final ResourceLocation TEXTURE_OVERLAY = GolemBase
-			.makeTexture(ExtraGolems.MODID, "golem_" + PREFIX + "_grayscale");
+			.makeTexture(ExtraGolems.MODID, GolemNames.CONCRETE_GOLEM + "_grayscale");
 	
 	public EntityConcreteGolem(final World world) {
 		super(world, TEXTURE_BASE, TEXTURE_OVERLAY, COLOR_ARRAY);

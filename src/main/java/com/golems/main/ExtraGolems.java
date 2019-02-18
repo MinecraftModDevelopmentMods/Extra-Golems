@@ -17,7 +17,7 @@ public class ExtraGolems {
 
 	public static final String MODID = "golems";
 	protected static final String NAME = "Extra Golems";
-	protected static final String VERSION = "7.1.3";
+	protected static final String VERSION = "7.1.4";
 
 	@SidedProxy(clientSide = "com." + MODID + ".proxies.ClientProxy", serverSide = "com." + MODID
 		+ ".proxies.CommonProxy")
@@ -31,7 +31,6 @@ public class ExtraGolems {
 	@Mod.EventHandler
 	public static void preInit(final FMLPreInitializationEvent event) {
 		Config.mainRegistry(new Configuration(event.getSuggestedConfigurationFile()));
-		//proxy.registerEntities();
 	}
 
 	@Mod.EventHandler
