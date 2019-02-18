@@ -1,11 +1,6 @@
 package com.mcmoddev.golems.util;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,7 +34,7 @@ public final class GolemLookup {
 	/** Map to retrieve the GolemConfigSet for this golem **/
 	private static final Map<Class<? extends GolemBase>, GolemConfigSet> GOLEM_TO_CONFIG = new HashMap();
 	/**  Map to retrive EntityType from Golem's unique Class **/
-	private static final Map<Class<? extends GolemBase>, EntityType<?>> GOLEM_ENTITY_TYPES = new HashMap();
+	private static final Map<Class<? extends GolemBase>, EntityType> GOLEM_ENTITY_TYPES = new HashMap();
 		
 	private GolemLookup() {
 		//
@@ -65,7 +60,7 @@ public final class GolemLookup {
 	}
 	
 	@Nullable
-	public static EntityType<?> getEntityType(final Class<? extends GolemBase> golemClazz) {
+	public static EntityType getEntityType(final Class<? extends GolemBase> golemClazz) {
 		if (golemClazz == null) {
 			ExtraGolems.LOGGER.error("Can't get an EntityType from a null golem!");
 			return null;
@@ -75,6 +70,9 @@ public final class GolemLookup {
 			ExtraGolems.LOGGER.error("Tried to get an EntityType for an unknown golem: " + golemClazz.getName());
 			return null;
 		}
+	}
+	public static Collection<EntityType> getAllEntityTypes() {
+		return GOLEM_ENTITY_TYPES.values();
 	}
 
 	/**

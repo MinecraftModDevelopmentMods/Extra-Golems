@@ -72,28 +72,7 @@ public class ProxyCommon {
 	public static void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
 		golemEntityCount = 0;
 		// Register Golem EntityEntries as well as building blocks
-		event.getRegistry().registerAll(
-			GolemEntityTypes.BEDROCK, GolemEntityTypes.BONE, GolemEntityTypes.BOOKSHELF,
-			GolemEntityTypes.CLAY, GolemEntityTypes.COAL,
-			//GolemEntityTypes.CONCRETE,
-			GolemEntityTypes.CRAFTING, GolemEntityTypes.DIAMOND, GolemEntityTypes.EMERALD,
-			GolemEntityTypes.ENDSTONE, GolemEntityTypes.GLASS, GolemEntityTypes.GLOWSTONE,
-			GolemEntityTypes.GOLD,
-			//GolemEntityTypes.HARDENED_CLAY,
-			GolemEntityTypes.ICE, GolemEntityTypes.LAPIS,
-			//GolemEntityTypes.LEAF,
-			GolemEntityTypes.MAGMA, GolemEntityTypes.MELON, GolemEntityTypes.MUSHROOM,
-			GolemEntityTypes.NETHER_BRICK, GolemEntityTypes.NETHER_WART, GolemEntityTypes.OBSIDIAN,
-			GolemEntityTypes.PRISMARINE, GolemEntityTypes.QUARTZ, GolemEntityTypes.RED_SANDSTONE,
-			GolemEntityTypes.REDSTONE, GolemEntityTypes.SANDSTONE, GolemEntityTypes.SEA_LANTERN,
-			GolemEntityTypes.SLIME, GolemEntityTypes.SPONGE,
-			//GolemEntityTypes.STAINED_CLAY,
-			//GolemEntityTypes.STAINED_GLASS,
-			GolemEntityTypes.STRAW,
-			GolemEntityTypes.TNT//,
-			//GolemEntityTypes.WOOD,
-			//GolemEntityTypes.WOOL
-			);
+		GolemLookup.getAllEntityTypes().forEach(type -> event.getRegistry().register(type));
 		
 		// Also register Golem Loot Tables
 		LootTableList.register(new ResourceLocation(ExtraGolems.MODID, "entities/_golem_base"));
