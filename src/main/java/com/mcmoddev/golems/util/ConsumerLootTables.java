@@ -1,6 +1,5 @@
 package com.mcmoddev.golems.util;
 
-import com.golems.entity.*;
 import com.mcmoddev.golems.entity.EntityMushroomGolem;
 import com.mcmoddev.golems.main.ExtraGolems;
 import net.minecraft.util.ResourceLocation;
@@ -16,22 +15,22 @@ public class ConsumerLootTables implements Consumer<String> {
 			case GolemNames.BEDROCK_GOLEM:
 				return;
 			case GolemNames.WOOL_GOLEM:
-				registerLootTables(ExtraGolems.MODID, NAME, EntityWoolGolem.coloredWoolTypes);
+				//registerLootTables(ExtraGolems.MODID, NAME, EntityWoolGolem.coloredWoolTypes);
 				return;
 			case GolemNames.WOODEN_GOLEM:
-				registerLootTables(ExtraGolems.MODID, NAME, EntityWoodenGolem.woodTypes);
+				//registerLootTables(ExtraGolems.MODID, NAME, EntityWoodenGolem.woodTypes);
 				return;
 			case GolemNames.MUSHROOM_GOLEM:
 				registerLootTables(ExtraGolems.MODID, NAME, EntityMushroomGolem.SHROOM_TYPES);
 				return;			
 			case GolemNames.STAINEDGLASS_GOLEM:
-				registerLootTables(ExtraGolems.MODID, NAME, EntityStainedGlassGolem.COLOR_ARRAY.length);
+				//registerLootTables(ExtraGolems.MODID, NAME, EntityStainedGlassGolem.COLOR_ARRAY.length);
 				return;
 			case GolemNames.STAINEDTERRACOTTA_GOLEM:
-				registerLootTables(ExtraGolems.MODID, NAME, EntityStainedClayGolem.COLOR_ARRAY.length);
+				//registerLootTables(ExtraGolems.MODID, NAME, EntityStainedClayGolem.COLOR_ARRAY.length);
 				return;
 			case GolemNames.CONCRETE_GOLEM:
-				registerLootTables(ExtraGolems.MODID, NAME, EntityConcreteGolem.COLOR_ARRAY.length);
+				//registerLootTables(ExtraGolems.MODID, NAME, EntityConcreteGolem.COLOR_ARRAY.length);
 				return;
 			default:
 				LootTableList.register(new ResourceLocation(ExtraGolems.MODID, "entities/" + NAME));
