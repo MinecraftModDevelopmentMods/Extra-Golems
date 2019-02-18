@@ -1,49 +1,32 @@
 package com.mcmoddev.golems.blocks;
 
-import net.minecraft.block.BlockLiquid;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockFlowingFluid;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockFaceShape;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.state.StateContainer;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorldReader;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class BlockUtilityGlowWater extends BlockUtilityGlow {
 	public BlockUtilityGlowWater(final Material m, final float defaultLight, final int tickRate, final IBlockState replaceWith) {
 		super(m, defaultLight, tickRate, replaceWith);
 		int light = (int) (defaultLight * 15.0F);
-		this.setDefaultState(this.blockState.getBaseState().with(BlockLiquid.LEVEL, 0).with(BlockUtilityGlow.LIGHT_LEVEL, light));
+		this.setDefaultState(this.stateContainer.getBaseState().with(BlockFlowingFluid.LEVEL, 0).with(BlockUtilityGlow.LIGHT_LEVEL, light));
 	}
 
 	@Override
-	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[]{BlockUtilityGlow.LIGHT_LEVEL, BlockLiquid.LEVEL});
+	protected void fillStateContainer(StateContainer.Builder<Block, IBlockState> builder) {
+		builder.add(BlockUtilityGlow.LIGHT_LEVEL, BlockFlowingFluid.LEVEL);
 	}
 
-	/**
-	 * Convert the given metadata into a BlockState for this Block
-	 **/
-	public IBlockState getStateFromMeta(final int metaIn) {
-		int meta = metaIn;
-		if (meta < 0)
-			meta = 0;
-		if (meta > 15)
-			meta = 15;
-		return this.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, meta).with(BlockLiquid.LEVEL, 0);
-	}
-
-	/**
-	 * Convert the BlockState into the correct metadata value
-	 **/
-	public int getMetaFromState(final IBlockState state) {
-		return state.getValue(BlockUtilityGlow.LIGHT_LEVEL).intValue();
-	}
 
 	/**
 	 * @deprecated
@@ -55,36 +38,45 @@ public class BlockUtilityGlowWater extends BlockUtilityGlow {
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public BlockRenderLayer getRenderLayer() {
 		return BlockRenderLayer.TRANSLUCENT;
 	}
 
 	/**
-	 * @deprecated call via {@link IBlockState#shouldSideBeRendered(IBlockAccess, BlockPos, EnumFacing)} whenever
-	 * possible. Implementing/overriding is fine.
+	 * Check if the face of a block should block rendering.
+	 *
+	 * Faces which are fully opaque should return true, faces with transparency
+	 * or faces which do not span the full size of the block should return false.
+	 *
+	 * @param state The current block state
+	 * @param world The current world
+	 * @param pos Block position in world
+	 * @param face The side to check
+	 * @return True if the block is opaque on the specified side.
 	 */
-	@Deprecated
 	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
-		IBlockState offset = blockAccess.getBlockState(pos.offset(side, 1));
-		return !offset.isSideSolid(blockAccess, pos.offset(side, 1), side.getOpposite()) && offset.getMaterial() != Material.WATER;
+	public boolean doesSideBlockRendering(IBlockState state, IWorldReader world, BlockPos pos, EnumFacing face) {
+		IBlockState offset = world.getBlockState(pos.offset(face, 1));
+		//TODO: Make sure this works
+		return !(offset.isSideInvisible(offset, face) && offset.getMaterial() != Material.WATER);
 	}
 
-	/**
-	 * Get the geometry of the queried face at the given position and state. This is used to decide whether things like
-	 * buttons are allowed to be placed on the face, or how glass panes connect to the face, among other things.
-	 * <p>
-	 * Common values are {@code SOLID}, which is the default, and {@code UNDEFINED}, which represents something that
-	 * does not fit the other descriptions and will generally cause other things not to connect to the face.
-	 *
-	 * @return an approximation of the form of the given face
-	 * @deprecated call via {@link IBlockState#getBlockFaceShape(IBlockAccess, BlockPos, EnumFacing)} whenever possible.
-	 * Implementing/overriding is fine.
-	 */
-	@Deprecated
-	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
+//	/**
+//	 * @deprecated call via {@link IBlockState#shouldSideBeRendered(IBlockAccess, BlockPos, EnumFacing)} whenever
+//	 * possible. Implementing/overriding is fine.
+//	 */
+//	@Deprecated
+//	@Override
+//	@OnlyIn(Dist.CLIENT)
+//	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
+//		IBlockState offset = blockAccess.getBlockState(pos.offset(side, 1));
+//		return !offset.isSideSolid(blockAccess, pos.offset(side, 1), side.getOpposite()) && offset.getMaterial() != Material.WATER;
+//	}
+
+
+	@Override
+	public BlockFaceShape getBlockFaceShape(IBlockReader worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
 		return face == EnumFacing.UP ? BlockFaceShape.SOLID : BlockFaceShape.UNDEFINED;
 	}
 }

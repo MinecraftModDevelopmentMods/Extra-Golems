@@ -47,7 +47,7 @@ public class BlockUtilityPower extends BlockUtility {
 		} else {
 			// schedule another update
 			//TODO: Ensure this works properly
-			worldIn.notifyNeighborsOfStateChange(pos, this);
+			worldIn.notifyNeighbors(pos, this);
 			//worldIn.scheduleUpdate(pos, this, TICK_RATE);
 		}
 	}
