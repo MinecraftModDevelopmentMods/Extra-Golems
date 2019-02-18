@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 public final class EntitySandstoneGolem extends GolemBase {
 
 	public EntitySandstoneGolem(final World world) {
-		super(GolemEntityTypes.SANDSTONE, world);
+		super(EntitySandstoneGolem.class, world);
 		this.setLootTableLoc(GolemNames.SANDSTONE_GOLEM);
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
 	}

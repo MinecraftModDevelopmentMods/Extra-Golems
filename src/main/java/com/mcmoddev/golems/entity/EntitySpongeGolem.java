@@ -1,9 +1,12 @@
 package com.mcmoddev.golems.entity;
 
+import java.util.List;
+
 import com.mcmoddev.golems.events.SpongeGolemSoakEvent;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemConfigSet;
 import com.mcmoddev.golems.util.GolemNames;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Particles;
 import net.minecraft.init.SoundEvents;
@@ -17,8 +20,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
 
-import java.util.List;
-
 public final class EntitySpongeGolem extends GolemBase {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Absorb Water";
@@ -27,7 +28,7 @@ public final class EntitySpongeGolem extends GolemBase {
 	public static final String PARTICLES = "Can Render Sponge Particles";
 
 	public EntitySpongeGolem(final World world) {
-		super(GolemEntityTypes.SPONGE, world);
+		super(EntitySpongeGolem.class, world);
 		this.setCanSwim(true);
 		this.setLootTableLoc(GolemNames.SPONGE_GOLEM);
 	}

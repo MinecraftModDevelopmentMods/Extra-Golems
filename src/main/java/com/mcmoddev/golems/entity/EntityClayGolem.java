@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 public final class EntityClayGolem extends GolemBase {
 
 	public EntityClayGolem(final World world) {
-		super(GolemEntityTypes.CLAY, world);
+		super(EntityClayGolem.class, world);
 		this.setLootTableLoc(GolemNames.CLAY_GOLEM);
 	}
 

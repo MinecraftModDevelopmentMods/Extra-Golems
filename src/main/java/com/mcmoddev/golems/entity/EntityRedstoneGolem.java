@@ -27,7 +27,7 @@ public final class EntityRedstoneGolem extends GolemBase {
 	 * Default constructor for Redstone Golem
 	 **/
 	public EntityRedstoneGolem(final World world) {
-		this(world, GolemLookup.getConfig(EntityRedstoneGolem.class).getBoolean(ALLOW_SPECIAL), 15, DEF_FREQ);
+		this(EntityRedstoneGolem.class, world, GolemLookup.getConfig(EntityRedstoneGolem.class).getBoolean(ALLOW_SPECIAL), 15, DEF_FREQ);
 		this.setLootTableLoc(GolemNames.REDSTONE_GOLEM);
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
@@ -35,8 +35,9 @@ public final class EntityRedstoneGolem extends GolemBase {
 	/**
 	 * Flexible constructor to allow child classes to customize
 	 **/
-	public EntityRedstoneGolem(final World world, boolean allowSpecial, int power, int frequency) {
-		super(GolemEntityTypes.REDSTONE, world);
+	public EntityRedstoneGolem(final Class<? extends EntityRedstoneGolem> clazz, final World world, 
+			boolean allowSpecial, int power, int frequency) {
+		super(clazz, world);
 		final IBlockState state = GolemItems.blockPowerSource.getDefaultState().with(BlockUtilityPower.POWER_LEVEL, power);
 		this.tasks.addTask(9, new EntityAIPlaceSingleBlock(this, state, frequency, allowSpecial));
 	}

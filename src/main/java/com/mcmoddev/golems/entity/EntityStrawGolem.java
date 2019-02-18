@@ -27,7 +27,7 @@ public final class EntityStrawGolem extends GolemBase {
 	private boolean allowed;
 
 	public EntityStrawGolem(final World world) {
-		super(GolemEntityTypes.STRAW, world);
+		super(EntityStrawGolem.class, world);
 		this.setCanSwim(true);
 		this.setLootTableLoc(GolemNames.STRAW_GOLEM);
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.35D);

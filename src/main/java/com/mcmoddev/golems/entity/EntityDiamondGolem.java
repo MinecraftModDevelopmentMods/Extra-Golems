@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 public final class EntityDiamondGolem extends GolemBase {
 
 	public EntityDiamondGolem(final World world) {
-		super(GolemEntityTypes.DIAMOND, world);
+		super(EntityDiamondGolem.class, world);
 		this.setLootTableLoc(GolemNames.DIAMOND_GOLEM);
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
 	}

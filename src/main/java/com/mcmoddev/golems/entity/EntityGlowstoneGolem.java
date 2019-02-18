@@ -33,7 +33,7 @@ public final class EntityGlowstoneGolem extends GolemBase {
 	 **/
 	public EntityGlowstoneGolem(final World world) {
 		//HACK: dangerous ... too expensive to check for non-null in constructor call :(
-		this(world, 1.0F, GolemLookup.getConfig(EntityGlowstoneGolem.class).getInt(FREQUENCY),
+		this(EntityGlowstoneGolem.class, world, 1.0F, GolemLookup.getConfig(EntityGlowstoneGolem.class).getInt(FREQUENCY),
 			GolemLookup.getConfig(EntityGlowstoneGolem.class).getBoolean(ALLOW_SPECIAL));
 		this.isImmuneToFire = true;
 		this.setCanTakeFallDamage(true);
@@ -45,9 +45,9 @@ public final class EntityGlowstoneGolem extends GolemBase {
 	/**
 	 * Flexible constructor to allow child classes to customize
 	 **/
-	public EntityGlowstoneGolem(final World world,
+	public EntityGlowstoneGolem(final Class<? extends EntityGlowstoneGolem> clazz, final World world,
 				    final float lightLevel, final int freq, final boolean allowed) {
-		super(GolemEntityTypes.GLOWSTONE, world);
+		super(clazz, world);
 		int lightInt = (int) (lightLevel * 15.0F);
 		this.brightness = lightLevel;
 		final IBlockState state = GolemItems.blockLightSource.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, lightInt);

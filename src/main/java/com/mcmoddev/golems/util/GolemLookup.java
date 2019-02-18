@@ -1,20 +1,25 @@
 package com.mcmoddev.golems.util;
 
-import com.mcmoddev.golems.entity.GolemBase;
-import com.mcmoddev.golems.main.Config;
-import com.mcmoddev.golems.main.ExtraGolems;
-import net.minecraft.block.Block;
-import net.minecraft.entity.EntityList;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.EntityEntry;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.oredict.OreDictionary;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+
+import com.mcmoddev.golems.entity.GolemBase;
+import com.mcmoddev.golems.main.Config;
+import com.mcmoddev.golems.main.ExtraGolems;
+
+import net.minecraft.block.Block;
+import net.minecraft.entity.EntityType;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
+import net.minecraftforge.oredict.OreDictionary;
 
 /**
  * This class contains methods to convert from building block to the
@@ -33,9 +38,43 @@ public final class GolemLookup {
 	private static final Map<Class<? extends GolemBase>, Block> GOLEM_TO_BLOCK = new HashMap();
 	/** Map to retrieve the GolemConfigSet for this golem **/
 	private static final Map<Class<? extends GolemBase>, GolemConfigSet> GOLEM_TO_CONFIG = new HashMap();
+	/**  Map to retrive EntityType from Golem's unique Class **/
+	private static final Map<Class<? extends GolemBase>, EntityType<?>> GOLEM_ENTITY_TYPES = new HashMap();
 		
 	private GolemLookup() {
 		//
+	}
+	
+	/**
+	 * Used to associate an EntityType to associate with this Golem.
+	 * @return The EntityType that was added, if successful
+	 **/
+	public static boolean addEntityType(@Nonnull final Class<? extends GolemBase> golemClazz, 
+			@Nonnull final EntityType<?> type) {
+		if(GOLEM_ENTITY_TYPES.containsKey(golemClazz)) {
+			ExtraGolems.LOGGER.warn("Tried to associate Class " + golemClazz.getName()
+					+ " with an EntityType but Class has already been added! Skipping.");
+				return false;
+		}
+		GOLEM_ENTITY_TYPES.put(golemClazz, type);
+		return true;
+	}
+	
+	public static boolean hasEntityType(final Class<? extends GolemBase> golemClazz) {
+		return golemClazz != null && GOLEM_ENTITY_TYPES.containsKey(golemClazz) && GOLEM_ENTITY_TYPES.get(golemClazz) != null;
+	}
+	
+	@Nullable
+	public static EntityType<?> getEntityType(final Class<? extends GolemBase> golemClazz) {
+		if (golemClazz == null) {
+			ExtraGolems.LOGGER.error("Can't get an EntityType from a null golem!");
+			return null;
+		} else if (GOLEM_ENTITY_TYPES.containsKey(golemClazz)) {
+			return GOLEM_ENTITY_TYPES.get(golemClazz);
+		} else {
+			ExtraGolems.LOGGER.error("Tried to get an EntityType for an unknown golem: " + golemClazz.getName());
+			return null;
+		}
 	}
 
 	/**
@@ -159,9 +198,9 @@ public final class GolemLookup {
 	public static GolemBase getGolem(final World world, final Block block) {
 		
 		Class<? extends GolemBase> clazz = getGolemClass(block);
-		if(clazz != null) {
+		if(clazz != null && GOLEM_ENTITY_TYPES.containsKey(clazz)) {
 			// try to make a new instance of the golem
-			return (GolemBase) EntityList.newEntity(clazz, world);
+			return (GolemBase) GOLEM_ENTITY_TYPES.get(clazz).create(world);
 		}
 		return null;
 	}
@@ -273,9 +312,9 @@ public final class GolemLookup {
 	public static List<GolemBase> getDummyGolemList(final World world) {
 		final List<GolemBase> list = new LinkedList();
 		// for each entity, find out if it's a golem and add it to the list
-		for (EntityEntry entry : ForgeRegistries.ENTITIES) {
+		for (EntityType<?> entry : net.minecraftforge.registries.ForgeRegistries.ENTITIES) {
 			if (GolemBase.class.isAssignableFrom(entry.getEntityClass())) {
-				list.add((GolemBase) entry.newInstance(world));
+				list.add((GolemBase) entry.create(world));
 			}
 		}		
 		return list;

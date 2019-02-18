@@ -18,7 +18,7 @@ public final class EntityNetherBrickGolem extends GolemBase {
 	public static final String ALLOW_FIRE_SPECIAL = "Allow Special: Burn Enemies";
 
 	public EntityNetherBrickGolem(final World world) {
-		super(GolemEntityTypes.NETHER_BRICK, world);
+		super(EntityNetherBrickGolem.class, world);
 		this.setImmuneToFire(true);
 		this.setLootTableLoc(GolemNames.NETHERBRICK_GOLEM);
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);

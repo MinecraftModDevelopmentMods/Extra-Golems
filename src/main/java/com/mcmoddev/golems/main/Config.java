@@ -4,6 +4,8 @@ import com.golems.entity.*;
 import com.mcmoddev.golems.entity.*;
 import com.mcmoddev.golems.util.GolemConfigSet;
 import com.mcmoddev.golems.util.GolemLookup;
+import com.mcmoddev.golems.util.GolemNames;
+
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.registry.EntityEntry;
@@ -31,10 +33,13 @@ public final class Config {
 	private static boolean useOreDictName;
 	private static int villageGolemSpawnChance;
 	private static String[] villageGolemSpawnsDesert = new String[] {
-		"golem_wooden", "golem_straw", "golem_sandstone", "golem_sandstone", "golem_red_sandstone", "golem_bone"
+		GolemNames.STRAW_GOLEM, GolemNames.SANDSTONE_GOLEM, GolemNames.SANDSTONE_GOLEM,
+		GolemNames.SANDSTONE_GOLEM, GolemNames.REDSANDSTONE_GOLEM, GolemNames.BONE_GOLEM,
+		GolemNames.TERRACOTTA_GOLEM, GolemNames.ENDSTONE_GOLEM
 	};
 	private static String[] villageGolemSpawnsPlains = new String[] {
-		"golem_wooden", "golem_straw", "golem_melon", "golem_shroom", "golem_leaves", "golem_wool"
+		GolemNames.WOODEN_GOLEM, GolemNames.STRAW_GOLEM, GolemNames.MELON_GOLEM,
+		GolemNames.MUSHROOM_GOLEM, GolemNames.LEAF_GOLEM, GolemNames.WOOL_GOLEM
 	};
 	
 	

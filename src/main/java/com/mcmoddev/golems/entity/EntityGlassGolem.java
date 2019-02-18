@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 public final class EntityGlassGolem extends GolemBase {
 
 	public EntityGlassGolem(final World world) {
-		super(GolemEntityTypes.GLASS, world);
+		super(EntityGlassGolem.class, world);
 		this.setCanTakeFallDamage(true);
 		this.setLootTableLoc(GolemNames.GLASS_GOLEM);
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);

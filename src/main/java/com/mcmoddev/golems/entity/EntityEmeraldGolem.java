@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 public final class EntityEmeraldGolem extends GolemBase {
 
 	public EntityEmeraldGolem(final World world) {
-		super(GolemEntityTypes.EMERALD, world);
+		super(EntityEmeraldGolem.class, world);
 		this.setLootTableLoc(GolemNames.EMERALD_GOLEM);
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
 	}

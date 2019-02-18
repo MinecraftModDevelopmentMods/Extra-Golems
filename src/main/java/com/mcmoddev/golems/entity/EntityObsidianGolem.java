@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 public final class EntityObsidianGolem extends GolemBase {
 
 	public EntityObsidianGolem(final World world) {
-		super(GolemEntityTypes.OBSIDIAN, world);
+		super(EntityObsidianGolem.class, world);
 		this.setLootTableLoc(GolemNames.OBSIDIAN_GOLEM);
 		this.setImmuneToFire(true);
 	}

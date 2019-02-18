@@ -1,7 +1,9 @@
 package com.mcmoddev.golems.entity;
 
+import javax.annotation.Nullable;
+
 import com.mcmoddev.golems.main.ExtraGolems;
-import net.minecraft.entity.EntityType;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -11,8 +13,6 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
 
 public abstract class GolemColorizedMultiTextured extends GolemColorized {
 
@@ -29,8 +29,8 @@ public abstract class GolemColorizedMultiTextured extends GolemColorized {
 	 * @param overlay a texture that will be recolored and optionally rendered as transparent.
 	 * @param lColors an int[] of color values to use for rendering -- interacting with this golem  will go to the next color
 	 **/
-	public GolemColorizedMultiTextured(EntityType type, final World world, @Nullable final ResourceLocation base,
-					   @Nullable final ResourceLocation overlay, final int[] lColors) {
+	public GolemColorizedMultiTextured(Class<? extends GolemColorizedMultiTextured> type, final World world, 
+			@Nullable final ResourceLocation base, @Nullable final ResourceLocation overlay, final int[] lColors) {
 		super(type, world, 0L, base, overlay);
 		colors = lColors;
 		lootTables = new ResourceLocation[colors.length];

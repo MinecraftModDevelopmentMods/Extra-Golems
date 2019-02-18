@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 public final class EntityGoldGolem extends GolemBase {
 
 	public EntityGoldGolem(final World world) {
-		super(GolemEntityTypes.GOLD, world);
+		super(EntityGoldGolem.class, world);
 		this.setLootTableLoc(GolemNames.GOLD_GOLEM);
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.19D);
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.9D);

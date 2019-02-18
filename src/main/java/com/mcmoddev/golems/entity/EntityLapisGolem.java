@@ -25,7 +25,7 @@ public final class EntityLapisGolem extends GolemBase {
 		MobEffects.INSTANT_DAMAGE, MobEffects.WEAKNESS, MobEffects.WITHER, MobEffects.LEVITATION, MobEffects.GLOWING};
 
 	public EntityLapisGolem(final World world) {
-		super(GolemEntityTypes.LAPIS, world);
+		super(EntityLapisGolem.class, world);
 		this.setLootTableLoc(GolemNames.LAPIS_GOLEM);
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
 	}

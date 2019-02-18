@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 public final class EntityBoneGolem extends GolemBase {
 
 	public EntityBoneGolem(final World world) {
-		super(GolemEntityTypes.BONE, world);
+		super(EntityBoneGolem.class, world);
 		this.setCanTakeFallDamage(true);
 		this.setLootTableLoc(GolemNames.BONE_GOLEM);
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);

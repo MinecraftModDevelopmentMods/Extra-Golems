@@ -14,7 +14,7 @@ import java.util.List;
 public final class EntityPrismarineGolem extends GolemBase {
 
 	public EntityPrismarineGolem(final World world) {
-		super(GolemEntityTypes.PRISMARINE, world);
+		super(EntityPrismarineGolem.class, world);
 		this.setLootTableLoc(GolemNames.PRISMARINE_GOLEM);
 	}
 

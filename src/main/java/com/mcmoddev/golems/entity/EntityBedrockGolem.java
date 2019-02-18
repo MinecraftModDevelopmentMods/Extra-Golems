@@ -22,7 +22,7 @@ import java.util.List;
 public final class EntityBedrockGolem extends GolemBase {
 
 	public EntityBedrockGolem(final World world) {
-		super(GolemEntityTypes.BEDROCK, world);
+		super(EntityBedrockGolem.class, world);
 		this.setCreativeReturn(new ItemStack(GolemItems.spawnBedrockGolem));
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.24D);
 	}

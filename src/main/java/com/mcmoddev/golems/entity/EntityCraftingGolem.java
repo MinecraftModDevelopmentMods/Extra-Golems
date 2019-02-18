@@ -24,7 +24,7 @@ public final class EntityCraftingGolem extends GolemBase {
 	public static final String ALLOW_SPECIAL = "Allow Special: Crafting";
 	
 	public EntityCraftingGolem(final World world) {
-		super(GolemEntityTypes.CRAFTING, world);
+		super(EntityCraftingGolem.class, world);
 		this.setLootTableLoc(GolemNames.CRAFTING_GOLEM);
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.29D);
 	}

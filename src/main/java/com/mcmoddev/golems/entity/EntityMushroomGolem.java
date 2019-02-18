@@ -30,7 +30,7 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 	protected static final Block[] soils = {Blocks.DIRT, Blocks.GRASS, Blocks.MYCELIUM};
 
 	public EntityMushroomGolem(final World world) {
-		super(GolemEntityTypes.MUSHROOM, world, SHROOM_PREFIX, SHROOM_TYPES);
+		super(EntityMushroomGolem.class, world, SHROOM_PREFIX, SHROOM_TYPES);
 		this.setCanSwim(true);
 		GolemConfigSet cfg = getConfig(this);
 		final boolean allowed = cfg.getBoolean(ALLOW_SPECIAL);

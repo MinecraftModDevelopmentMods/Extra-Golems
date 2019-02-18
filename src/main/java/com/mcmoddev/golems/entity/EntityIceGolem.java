@@ -28,7 +28,7 @@ public final class EntityIceGolem extends GolemBase {
 	public static final String AOE = "Area of Effect";
 
 	public EntityIceGolem(final World world) {
-		super(GolemEntityTypes.ICE, world);
+		super(EntityIceGolem.class, world);
 		this.setCanSwim(true); // just in case
 		this.setLootTableLoc(GolemNames.ICE_GOLEM);
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);

@@ -85,8 +85,8 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 	 * @param world the entity world
 	 **/
 
-	public GolemBase(EntityType type, final World world) {
-		super(type, world);
+	public GolemBase(Class<? extends GolemBase> clazz, final World world) {
+		super(GolemBase.getGolemType(clazz), world);
 		this.setSize(1.4F, 2.9F);
 		this.setCanTakeFallDamage(false);
 		this.setCanSwim(false);
@@ -466,6 +466,12 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 	@Nonnull
 	public static GolemConfigSet getConfig(GolemBase golem) {
 		return golem != null && GolemLookup.hasConfig(golem.getClass()) ? GolemLookup.getConfig(golem.getClass()) : GolemConfigSet.EMPTY;
+	}
+	
+	/** The EntityType associated with this golem, or null if there is none **/
+	@Nullable
+	public static EntityType<?> getGolemType(Class<? extends GolemBase> golem) {
+		return GolemLookup.getEntityType(golem);
 	}
 
 	/** 

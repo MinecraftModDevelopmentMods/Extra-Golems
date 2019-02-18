@@ -27,7 +27,7 @@ public final class EntityMelonGolem extends GolemBase {
 	public static final String ALLOW_HEALING = "Allow Special: Random Healing";
 
 	public EntityMelonGolem(final World world) {
-		super(GolemEntityTypes.MELON, world);
+		super(EntityMelonGolem.class, world);
 		this.setCanSwim(true);
 		this.tasks.addTask(2, this.makeFlowerAI());
 		this.setLootTableLoc(GolemNames.MELON_GOLEM);

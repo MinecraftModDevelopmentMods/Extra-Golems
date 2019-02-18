@@ -24,7 +24,7 @@ public final class EntityBookshelfGolem extends GolemBase {
 		MobEffects.JUMP_BOOST};
 
 	public EntityBookshelfGolem(final World world) {
-		super(GolemEntityTypes.BOOKSHELF, world);
+		super(EntityBookshelfGolem.class, world);
 		this.setLootTableLoc(GolemNames.BOOKSHELF_GOLEM);
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.29D);
 	}

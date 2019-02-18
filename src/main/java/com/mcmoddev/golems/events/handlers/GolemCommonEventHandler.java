@@ -146,7 +146,7 @@ public class GolemCommonEventHandler {
 			options.add(EntityBookshelfGolem.class);
 		}
 		// choose a random golem from the list
-		return options.get(rand.nextInt(options.size()));
+		return options.isEmpty() ? null : options.get(rand.nextInt(options.size()));
 	}
 	
 	/**

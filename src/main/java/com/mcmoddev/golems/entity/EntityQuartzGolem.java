@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 public final class EntityQuartzGolem extends GolemBase {
 
 	public EntityQuartzGolem(final World world) {
-		super(GolemEntityTypes.QUARTZ, world);
+		super(EntityQuartzGolem.class, world);
 		this.setLootTableLoc(GolemNames.QUARTZ_GOLEM);
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
 	}

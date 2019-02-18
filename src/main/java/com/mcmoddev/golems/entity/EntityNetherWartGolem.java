@@ -29,7 +29,7 @@ public final class EntityNetherWartGolem extends GolemBase {
 	public static final String ALLOW_HEALING = "Allow Special: Random Healing";
 
 	public EntityNetherWartGolem(final World world) {
-		super(GolemEntityTypes.NETHER_WART, world);
+		super(EntityNetherWartGolem.class, world);
 		this.setCanSwim(true);
 		this.setLootTableLoc(GolemNames.NETHERWART_GOLEM);
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);

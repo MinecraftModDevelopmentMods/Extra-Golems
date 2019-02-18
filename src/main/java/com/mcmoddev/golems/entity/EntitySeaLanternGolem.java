@@ -34,7 +34,7 @@ public final class EntitySeaLanternGolem extends GolemBase {
 	private static final int BRIGHTNESS_INT = (int) (BRIGHTNESS * 15.0F);
 
 	public EntitySeaLanternGolem(final World world) {
-		super(GolemEntityTypes.SEA_LANTERN, world);
+		super(EntitySeaLanternGolem.class, world);
 		this.canDrown = false;
 		this.setLootTableLoc(GolemNames.SEALANTERN_GOLEM);
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);

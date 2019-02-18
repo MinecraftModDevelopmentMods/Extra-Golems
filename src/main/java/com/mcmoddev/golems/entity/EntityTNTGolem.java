@@ -42,7 +42,7 @@ public class EntityTNTGolem extends GolemBase {
 
 	/** Default constructor for TNT golem. **/
 	public EntityTNTGolem(final World world) {
-		this(world, 3, 6, 50, 10);
+		this(EntityTNTGolem.class, world, 3, 6, 50, 10);
 		this.setLootTableLoc(GolemNames.TNT_GOLEM);
 		this.allowedToExplode = getConfig(this).getBoolean(ALLOW_SPECIAL);
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
@@ -60,9 +60,9 @@ public class EntityTNTGolem extends GolemBase {
 	 * @param randomExplosionChance
 	 * @param configAllowsExplode
 	 */
-	public EntityTNTGolem(final World world, final int minExplosionRange,
+	public EntityTNTGolem(final Class<? extends EntityTNTGolem> clazz, final World world, final int minExplosionRange,
 			      final int maxExplosionRange, final int minFuseLength, final int randomExplosionChance) {
-		super(GolemEntityTypes.TNT, world);
+		super(clazz, world);
 		this.minExplosionRad = minExplosionRange;
 		this.maxExplosionRad = maxExplosionRange;
 		this.fuseLen = minFuseLength;
