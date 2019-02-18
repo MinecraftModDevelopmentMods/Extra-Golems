@@ -51,7 +51,7 @@ public class ProxyCommon {
 		// Unused
 	}
 
-	public static EntityType build(final Class<? extends GolemBase> entityClass, Function<? super World, ? extends GolemBase> factoryIn, final String name, Block... blocks) {
+	public static EntityType<?> build(final Class<? extends GolemBase> entityClass, Function<? super World, ? extends GolemBase> factoryIn, final String name, Block... blocks) {
 		// register block(s) with GolemLookup
 		if(blocks != null && blocks.length > 0) {
 			GolemLookup.addGolem(entityClass, blocks);
