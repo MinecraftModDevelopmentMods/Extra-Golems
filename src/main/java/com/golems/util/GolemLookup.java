@@ -22,6 +22,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.registries.IRegistryDelegate;
 
 /**
  * This class contains methods to convert from building block to the
@@ -35,9 +36,9 @@ public final class GolemLookup {
 	/**
 	 * Map to retrieve the Golem that is built from the given Block. This is used most.
 	 **/
-	private static final Map<Block, Class<? extends GolemBase>> BLOCK_TO_GOLEM = new HashMap();
+	private static final Map<IRegistryDelegate<Block>, Class<? extends GolemBase>> BLOCK_TO_GOLEM = new HashMap();
 	/** Map to retrieve the preferred Block this Golem uses. Used for Golem Book. **/
-	private static final Map<Class<? extends GolemBase>, Block> GOLEM_TO_BLOCK = new HashMap();
+	private static final Map<Class<? extends GolemBase>, IRegistryDelegate<Block>> GOLEM_TO_BLOCK = new HashMap();
 	/** Map to retrieve the GolemConfigSet for this golem **/
 	private static final Map<Class<? extends GolemBase>, GolemConfigSet> GOLEM_TO_CONFIG = new HashMap();
 		
@@ -70,12 +71,12 @@ public final class GolemLookup {
 	private static boolean addBlockToGolemMapping(@Nonnull final Block buildingBlock,
 						      @Nonnull final Class<? extends GolemBase> golemClazz) {
 		// Error check for duplicate keys
-		if (BLOCK_TO_GOLEM.containsKey(buildingBlock)) {
+		if (BLOCK_TO_GOLEM.containsKey(buildingBlock.delegate)) {
 			ExtraGolems.LOGGER.warn("Tried to associate Block " + buildingBlock
 				+ " with a Golem but Block has already been added! Skipping.");
 			return false;					
 		}
-		BLOCK_TO_GOLEM.put(buildingBlock, golemClazz);
+		BLOCK_TO_GOLEM.put(buildingBlock.delegate, golemClazz);
 		return true;
 	}
 
@@ -92,7 +93,7 @@ public final class GolemLookup {
 				+ " with a Block but Golem has already been added! Skipping.");
 			return false;					
 		}
-		GOLEM_TO_BLOCK.put(golemClazz, buildingBlock);
+		GOLEM_TO_BLOCK.put(golemClazz, buildingBlock != null ? buildingBlock.delegate : null);
 		return true;
 	}
 
@@ -184,14 +185,14 @@ public final class GolemLookup {
 		if(block == null) {
 			ExtraGolems.LOGGER.error("Can't make a golem with a null block!");
 			return null;
-		} else if (BLOCK_TO_GOLEM.containsKey(block)) {
-			return BLOCK_TO_GOLEM.get(block);
+		} else if (BLOCK_TO_GOLEM.containsKey(block.delegate)) {
+			return BLOCK_TO_GOLEM.get(block.delegate);
 		} else {
 			// The block itself is not registered, try matching the OreDict name instead
 			if(Config.getUseOreDictBlocks()) {
 				for(Block b : getOreDictMatches(block)) {
-					if(b != null && BLOCK_TO_GOLEM.containsKey(b)) {
-						return BLOCK_TO_GOLEM.get(b);
+					if(b != null && BLOCK_TO_GOLEM.containsKey(b.delegate)) {
+						return BLOCK_TO_GOLEM.get(b.delegate);
 					}
 				}
 			} else {
@@ -212,7 +213,7 @@ public final class GolemLookup {
 			ExtraGolems.LOGGER.error("Can't get a block from a null golem!");
 			return null;
 		} else if (GOLEM_TO_BLOCK.containsKey(golemClazz)) {
-			return GOLEM_TO_BLOCK.get(golemClazz);
+			return GOLEM_TO_BLOCK.get(golemClazz) != null ? GOLEM_TO_BLOCK.get(golemClazz).get() : null;
 		} else {
 			ExtraGolems.LOGGER.error("Tried to get a block for an unknown golem: " + golemClazz.getName());
 			return null;
@@ -221,13 +222,13 @@ public final class GolemLookup {
 
 	/** @return if this block can be used to build a golem **/
 	public static boolean isBuildingBlock(final Block block) {
-		if(block != null && BLOCK_TO_GOLEM.containsKey(block) && BLOCK_TO_GOLEM.get(block) != null) {
+		if(block != null && BLOCK_TO_GOLEM.containsKey(block.delegate) && BLOCK_TO_GOLEM.get(block.delegate) != null) {
 			return true;
 		} else if(Config.getUseOreDictBlocks()){
 			// search the OreDictionary for golem blocks under the given block's OreDict name
 			final Block[] matches = getOreDictMatches(block);
 			for(Block b : matches) {
-				if(b != null && BLOCK_TO_GOLEM.containsKey(b) && BLOCK_TO_GOLEM.get(b) != null) {
+				if(b != null && BLOCK_TO_GOLEM.containsKey(b.delegate) && BLOCK_TO_GOLEM.get(b.delegate) != null) {
 					return true;
 				}
 			}
@@ -264,7 +265,7 @@ public final class GolemLookup {
 	}
 
 	/** @return all valid Blocks to build a golem **/
-	public static Set<Block> getBlockSet() {
+	public static Set<IRegistryDelegate<Block>> getBlockSet() {
 		return BLOCK_TO_GOLEM.keySet();
 	}
 
@@ -315,7 +316,7 @@ public final class GolemLookup {
 						if(stack != null && stack.getItem() instanceof ItemBlock) {
 							final Block b = ((ItemBlock)stack.getItem()).getBlock();
 							// check if the OreDict-supplied block builds a golem
-							if(b != null && BLOCK_TO_GOLEM.containsKey(b) && BLOCK_TO_GOLEM.get(b) != null) {
+							if(b != null && BLOCK_TO_GOLEM.containsKey(b.delegate) && BLOCK_TO_GOLEM.get(b.delegate) != null) {
 								blocks.add(b);
 							}
 						}
