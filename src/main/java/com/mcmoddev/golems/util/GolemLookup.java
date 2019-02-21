@@ -207,6 +207,22 @@ public final class GolemLookup {
 		}
 		return null;
 	}
+	
+	/**
+	 * Used to get a Golem instance based on the Class given
+	 * @param world The entity world to spawn in.
+	 * @param clazz The type of Golem to spawn
+	 * @return The Golem instance, or null if none is found.
+	 **/
+	@Nullable
+	public static GolemBase getGolem(final World world, final Class<? extends GolemBase> clazz) {
+		
+		if(clazz != null && GOLEM_ENTITY_TYPES.containsKey(clazz)) {
+			// try to make a new instance of the golem
+			return (GolemBase) GOLEM_ENTITY_TYPES.get(clazz).create(world);
+		}
+		return null;
+	}
 
 	/**
 	 * Used to get a Golem instance based on the given block
