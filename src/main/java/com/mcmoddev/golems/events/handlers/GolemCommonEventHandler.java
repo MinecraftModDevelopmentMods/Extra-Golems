@@ -1,40 +1,46 @@
 package com.mcmoddev.golems.events.handlers;
 
-import com.golems.entity.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 import com.mcmoddev.golems.blocks.BlockGolemHead;
 import com.mcmoddev.golems.entity.*;
 import com.mcmoddev.golems.main.Config;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.BlockPumpkin;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIFindEntityNearest;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAITasks;
-import net.minecraft.entity.monster.*;
+import net.minecraft.entity.monster.AbstractIllager;
+import net.minecraft.entity.monster.AbstractSkeleton;
+import net.minecraft.entity.monster.EntityPigZombie;
+import net.minecraft.entity.monster.EntitySlime;
+import net.minecraft.entity.monster.EntitySpider;
+import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.village.Village;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.terraingen.PopulateChunkEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /**
  * Handles events added specifically from this mod.
  **/
 public class GolemCommonEventHandler {
 	
+	/*
+	// TODO find out when we can handle this
 	@SubscribeEvent
 	public void onPopulateChunk(PopulateChunkEvent.Post event) {
 		////// Spawn some basic golems in villages //////
@@ -45,10 +51,9 @@ public class GolemCommonEventHandler {
 			Village village = event.getWorld().villageCollection.getNearestVillage(pos, 32);
 			if(village != null) {
 				// spawn a golem based on the village biome
-				Biome biome = event.getWorld().getBiome(pos);
-				Class<? extends GolemBase> golemClazz = getGolemForBiome(biome, event.getRand());
-				if(golemClazz != null) {	
-					GolemBase golemInstance = (GolemBase)EntityList.newEntity(golemClazz, event.getWorld());
+				Class<? extends GolemBase> golemClazz = getGolemForBiome(event.getWorld().getBiome(pos).getCategory(), event.getRand());
+				GolemBase golemInstance = golemClazz != null ? GolemLookup.getGolem(event.getWorld(), golemClazz) : null;
+				if(golemInstance != null) {	
 					BlockPos spawn = getSafeSpawnPos(golemInstance, pos.add(8, 0, 8));
 					if(spawn != null) {
 						// spawn the golem
@@ -68,7 +73,7 @@ public class GolemCommonEventHandler {
 			}
 		}
 	}
-	
+	*/
 	private static BlockPos getSafeSpawnPos(final EntityLivingBase entity, final BlockPos near) {
 		final int radius = 6;
 		final int maxTries = 24;
@@ -77,7 +82,7 @@ public class GolemCommonEventHandler {
 			// get a random position near the passed BlockPos
 			int x = near.getX() + entity.getEntityWorld().rand.nextInt(radius * 2) - radius;
 			int z = near.getZ() + entity.getEntityWorld().rand.nextInt(radius * 2) - radius;
-			int y = entity.getEntityWorld().getHeight(x, z) + 16;
+			int y = 128;
 			testing = new BlockPos(x, y, z);
 			// make sure to end up with a solid block
 			while(entity.getEntityWorld().isAirBlock(testing) && testing.getY() > 0) {
@@ -100,32 +105,32 @@ public class GolemCommonEventHandler {
 	 * @param rand the random number generator.
 	 * @return a Golem Class based on the biome and random chance.
 	 */
-	private static Class<? extends GolemBase> getGolemForBiome(final Biome biome, final Random rand) {
-		List<Class<? extends GolemBase>> options = new ArrayList();
-		
+	private static Class<? extends GolemBase> getGolemForBiome(final Biome.Category biome, final Random rand) {
+		List<Class<? extends GolemBase>> options = new ArrayList<>();
 		// the following will be added to the options in certain biomes:
-		if(biome instanceof BiomeDesert) {
+		if(biome == Biome.Category.DESERT) {
 			// use the config to get desert-type golems
 			options.addAll(Config.getDesertGolems());
-		} else if(biome instanceof BiomePlains || biome instanceof BiomeSavanna) {
+		} else if(biome == Biome.Category.PLAINS || biome == Biome.Category.SAVANNA 
+				|| biome == Biome.Category.TAIGA) {
 			// use the config to get plains-type golems
 			options.addAll(Config.getPlainsGolems());
-		} else if(biome instanceof BiomeMesa) {
+		} else if(biome == Biome.Category.MESA) {
 			// mesa-type golems
-			options.add(EntityHardenedClayGolem.class);
-			options.add(EntityStainedClayGolem.class);
-		} else if(biome instanceof BiomeJungle) {
+			////options.add(EntityHardenedClayGolem.class);
+			////options.add(EntityStainedClayGolem.class);
+		} else if(biome == Biome.Category.JUNGLE) {
 			// jungle-type golems
-			options.add(EntityLeafGolem.class);
-		} else if(biome instanceof BiomeSnow) {
+			////options.add(EntityLeafGolem.class);
+		} else if(biome == Biome.Category.ICY) {
 			// snow-type golems
 			options.add(EntityIceGolem.class);
-			options.add(EntityWoolGolem.class);
-		} else if(biome instanceof BiomeSwamp) {
+			////options.add(EntityWoolGolem.class);
+		} else if(biome == Biome.Category.SWAMP) {
 			// swamp-type golems
-			options.add(EntityWoodenGolem.class);
+			////options.add(EntityWoodenGolem.class);
 			options.add(EntitySlimeGolem.class);
-			options.add(EntityLeafGolem.class);
+			////options.add(EntityLeafGolem.class);
 			options.add(EntityClayGolem.class);
 		}
 		// add some rare and semi-rare golems
@@ -160,6 +165,9 @@ public class GolemCommonEventHandler {
 	@SubscribeEvent
 	public void onPlayerInteract(PlayerInteractEvent.RightClickBlock event) {
 		ItemStack stack = event.getItemStack();
+		float hitX = (float) event.getHitVec().x;
+		float hitY = (float) event.getHitVec().y;
+		float hitZ = (float) event.getHitVec().z;
 		// check qualifications for running this event...
 		if(Config.doesPumpkinBuildGolem() && !event.isCanceled() 
 				&& !stack.isEmpty() && stack.getItem() instanceof ItemBlock) {
@@ -168,13 +176,14 @@ public class GolemCommonEventHandler {
 			if(heldBlock instanceof BlockPumpkin) {
 				// update the location to place block
 				BlockPos pumpkinPos = event.getPos();
-				Block clicked = event.getWorld().getBlockState(pumpkinPos).getBlock();
-				if (!clicked.isReplaceable(event.getWorld(), pumpkinPos)) {
+				IBlockState clicked = event.getWorld().getBlockState(pumpkinPos);
+				if (!clicked.isReplaceable(
+						new BlockItemUseContext(event.getWorld(), event.getEntityPlayer(), stack, pumpkinPos, event.getFace(), hitX, hitY, hitZ))) {
 		            pumpkinPos = pumpkinPos.offset(event.getFace());
 				}
 				// now we're ready to place the block
 				if(event.getEntityPlayer().canPlayerEdit(pumpkinPos, event.getFace(), stack)) {
-					IBlockState pumpkin = heldBlock.getDefaultState().with(BlockHorizontal.FACING,
+					IBlockState pumpkin = heldBlock.getDefaultState().with(BlockHorizontal.HORIZONTAL_FACING,
 							event.getEntityPlayer().getHorizontalFacing().getOpposite());
 					// set block and trigger golem-checking
 					if(event.getWorld().setBlockState(pumpkinPos, pumpkin)) {

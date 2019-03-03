@@ -21,6 +21,6 @@ public final class GuiLoader {
 		    ExtraGolems.PROXY.DUMMY_GOLEMS.addAll(GolemLookup.getDummyGolemList(playerIn.getEntityWorld()));
     	}
     	// open the gui
-    	Minecraft.getMinecraft().displayGuiScreen(new GuiGolemBook(playerIn, itemstack));
+    	Minecraft.getInstance().displayGuiScreen(new GuiGolemBook(playerIn, itemstack));
     }   
 }

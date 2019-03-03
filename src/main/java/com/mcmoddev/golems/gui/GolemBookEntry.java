@@ -1,23 +1,25 @@
 package com.mcmoddev.golems.gui;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.mcmoddev.golems.entity.EntityBedrockGolem;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.entity.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemLookup;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityType;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 /**
  * This class will be used to easily connect
  * golems and their blocks and other info
@@ -36,7 +38,8 @@ public class GolemBookEntry {
 
 	public GolemBookEntry(@Nonnull GolemBase golem) {
 		// initialize fields based on golem attributes
-		this.GOLEM_NAME = "entity." + EntityType.getEntityList.getEntityString(golem) + ".name";
+		EntityType<?> golemType = GolemLookup.getEntityType(golem.getClass());
+		this.GOLEM_NAME = "entity." + golemType.getTranslationKey() + ".name";
 		this.MULTI_TEXTURE = (golem instanceof GolemMultiTextured || golem.doesInteractChangeTexture());
 		this.FIREPROOF = (golem.isImmuneToFire() && !(golem instanceof EntityBedrockGolem));
 		this.HEALTH = (int) golem.getMaxHealth();
@@ -49,9 +52,9 @@ public class GolemBookEntry {
 		this.BLOCK = b != null ? b : Blocks.AIR;
 		
 		// find the image to add to the book
-		String img = (ExtraGolems.MODID + ":textures/gui/screenshots/").concat(EntityList.getEntityString(golem)).concat(".png");
+		String img = (ExtraGolems.MODID + ":textures/gui/screenshots/").concat(golemType.getTranslationKey()).concat(".png");
 		try {
-			this.IMAGE = Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(img)).getResourceLocation();
+			this.IMAGE = Minecraft.getInstance().getResourceManager().getResource(new ResourceLocation(img)).getLocation();
 			//System.out.println("Image found, yay! Loading " + img.toString() + " for " + this.GOLEM_NAME);
 		} catch (IOException e) {
 			//System.out.println("No image found, skipping " + img.toString() + " for " + this.GOLEM_NAME);
@@ -77,6 +80,13 @@ public class GolemBookEntry {
 	 **/
 	public Block getBlock() {
 		return this.BLOCK;
+	}
+	
+	/**
+	 * @return the Block in this entry
+	 **/
+	public String getBlockName() {
+		return this.BLOCK.getNameTextComponent().toString();
 	}
 	
 	/**
@@ -151,7 +161,7 @@ public class GolemBookEntry {
 
 	@Override
 	public String toString() {
-		return "[Block=" + this.BLOCK.getLocalizedName() + "; Golem=" + trans(this.GOLEM_NAME)
+		return "[Block=" + this.BLOCK.getTranslationKey() + "; Golem=" + trans(this.GOLEM_NAME)
 			+ "; Desc=" + this.getDescriptionPage().replaceAll("\n", "; ");
 	}
 }
