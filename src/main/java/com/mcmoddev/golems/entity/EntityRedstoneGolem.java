@@ -2,6 +2,7 @@ package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.blocks.BlockUtilityPower;
 import com.mcmoddev.golems.entity.ai.EntityAIPlaceSingleBlock;
+import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.util.GolemLookup;

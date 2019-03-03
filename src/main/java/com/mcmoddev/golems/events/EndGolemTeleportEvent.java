@@ -2,7 +2,7 @@ package com.mcmoddev.golems.events;
 
 import com.mcmoddev.golems.entity.EntityEndstoneGolem;
 import net.minecraftforge.event.entity.living.EnderTeleportEvent;
-import net.minecraftforge.fml.common.eventhandler.Cancelable;
+import net.minecraftforge.eventbus.api.Cancelable;
 
 /**
  * Fired when an Endstone Golem (or child class of such) tries to teleport. The destination can be

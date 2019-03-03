@@ -2,6 +2,7 @@ package com.mcmoddev.golems.entity;
 
 import java.util.List;
 
+import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.events.SpongeGolemSoakEvent;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemConfigSet;

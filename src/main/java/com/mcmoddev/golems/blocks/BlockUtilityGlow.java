@@ -1,6 +1,6 @@
 package com.mcmoddev.golems.blocks;
 
-import com.mcmoddev.golems.entity.GolemBase;
+import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.ai.EntityAIPlaceSingleBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;

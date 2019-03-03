@@ -1,7 +1,7 @@
 package com.mcmoddev.golems.renders;
 
-import com.mcmoddev.golems.entity.GolemBase;
-import com.mcmoddev.golems.entity.GolemColorized;
+import com.mcmoddev.golems.entity.base.GolemBase;
+import com.mcmoddev.golems.entity.base.GolemColorized;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -38,7 +38,7 @@ public class RenderColoredGolem extends RenderLiving<GolemColorized> {
 		// prepare to render the complicated layer
 		GlStateManager.pushMatrix();
 		// enable transparency if needed
-		GlStateManager.color(colorRed, colorGreen, colorBlue, colorAlpha);
+		GlStateManager.color4f(colorRed, colorGreen, colorBlue, colorAlpha);
 		if (golem.hasTransparency()) {
 			GlStateManager.enableNormalize();
 			GlStateManager.enableBlend();
@@ -68,7 +68,7 @@ public class RenderColoredGolem extends RenderLiving<GolemColorized> {
 			float f = 13.0F;
 			float f1 = golem.limbSwing - golem.limbSwingAmount * (1.0F - partialTicks) + 6.0F;
 			float f2 = (Math.abs(f1 % f - f * 0.5F) - f * 0.25F) / (f * 0.25F);
-			GlStateManager.rotate(6.5F * f2, 0.0F, 0.0F, 1.0F);
+			GlStateManager.rotatef(6.5F * f2, 0.0F, 0.0F, 1.0F);
 		}
 	}
 

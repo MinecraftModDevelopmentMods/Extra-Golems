@@ -1,5 +1,6 @@
 package com.mcmoddev.golems.entity;
 
+import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
 import net.minecraft.block.BlockCrops;

@@ -1,7 +1,8 @@
 package com.mcmoddev.golems.proxies;
 
-import com.golems.entity.*;
 import com.mcmoddev.golems.entity.*;
+import com.mcmoddev.golems.entity.base.GolemBase;
+import com.mcmoddev.golems.entity.base.GolemColorized;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.renders.RenderColoredGolem;
@@ -39,7 +40,7 @@ public final class ProxyClient extends ProxyCommon {
 		registerEntityRender(EntityBookshelfGolem.class);
 		registerEntityRender(EntityClayGolem.class);
 		registerEntityRender(EntityCoalGolem.class);
-		registerEntityRender(EntityConcreteGolem.class);
+		//registerEntityRender(EntityConcreteGolem.class);
 		registerEntityRender(EntityCraftingGolem.class);
 		registerEntityRender(EntityDiamondGolem.class);
 		registerEntityRender(EntityEmeraldGolem.class);
@@ -47,10 +48,10 @@ public final class ProxyClient extends ProxyCommon {
 		registerEntityRender(EntityGlassGolem.class);
 		registerEntityRender(EntityGlowstoneGolem.class);
 		registerEntityRender(EntityGoldGolem.class);
-		registerEntityRender(EntityHardenedClayGolem.class);
+		//registerEntityRender(EntityHardenedClayGolem.class);
 		registerEntityRender(EntityIceGolem.class);
 		registerEntityRender(EntityLapisGolem.class);
-		registerEntityRender(EntityLeafGolem.class);
+		//registerEntityRender(EntityLeafGolem.class);
 		registerEntityRender(EntityMagmaGolem.class);
 		registerEntityRender(EntityMelonGolem.class);
 		registerEntityRender(EntityMushroomGolem.class);
@@ -65,12 +66,12 @@ public final class ProxyClient extends ProxyCommon {
 		registerEntityRender(EntitySeaLanternGolem.class);
 		registerEntityRender(EntitySlimeGolem.class);
 		registerEntityRender(EntitySpongeGolem.class);
-		registerEntityRender(EntityStainedClayGolem.class);
-		registerEntityRender(EntityStainedGlassGolem.class);
+		//registerEntityRender(EntityStainedClayGolem.class);
+		//registerEntityRender(EntityStainedGlassGolem.class);
 		registerEntityRender(EntityStrawGolem.class);
 		registerEntityRender(EntityTNTGolem.class);
-		registerEntityRender(EntityWoodenGolem.class);
-		registerEntityRender(EntityWoolGolem.class);
+		//registerEntityRender(EntityWoodenGolem.class);
+		//registerEntityRender(EntityWoolGolem.class);
 	}
 
 	/** 

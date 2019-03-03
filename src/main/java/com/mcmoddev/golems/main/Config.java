@@ -2,6 +2,7 @@ package com.mcmoddev.golems.main;
 
 import com.golems.entity.*;
 import com.mcmoddev.golems.entity.*;
+import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.util.GolemConfigSet;
 import com.mcmoddev.golems.util.GolemLookup;
 import com.mcmoddev.golems.util.GolemNames;

@@ -1,6 +1,7 @@
 package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.entity.ai.EntityAIPlaceRandomBlocksStrictly;
+import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.Config;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemConfigSet;

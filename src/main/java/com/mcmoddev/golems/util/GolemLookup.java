@@ -12,7 +12,7 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.mcmoddev.golems.entity.GolemBase;
+import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.Config;
 import com.mcmoddev.golems.main.ExtraGolems;
 
