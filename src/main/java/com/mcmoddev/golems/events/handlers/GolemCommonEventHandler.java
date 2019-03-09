@@ -7,6 +7,7 @@ import java.util.Random;
 
 import com.mcmoddev.golems.blocks.BlockGolemHead;
 import com.mcmoddev.golems.entity.*;
+import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.Config;
 
 import net.minecraft.block.Block;

@@ -5,6 +5,7 @@ import com.mcmoddev.golems.blocks.BlockUtilityGlow;
 import com.mcmoddev.golems.blocks.BlockUtilityGlowWater;
 import com.mcmoddev.golems.blocks.BlockUtilityPower;
 import com.mcmoddev.golems.entity.*;
+import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.items.ItemBedrockGolem;
 import com.mcmoddev.golems.items.ItemInfoBook;
 import com.mcmoddev.golems.main.Config;
@@ -13,6 +14,7 @@ import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.util.ConsumerLootTables;
 import com.mcmoddev.golems.util.GolemLookup;
 import com.mcmoddev.golems.util.GolemNames;
+import com.mcmoddev.golems.util.config.GolemRegistrar;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlowingFluid;
 import net.minecraft.block.material.Material;
@@ -72,31 +74,7 @@ public class ProxyCommon {
 	public static void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
 		golemEntityCount = 0;
 		// Register Golem EntityEntries as well as building blocks
-		GolemLookup.getEntityTypes().forEach((EntityType<?> e) -> event.getRegistry().register(e));
-				/*
-			GolemEntityTypes.BEDROCK, GolemEntityTypes.BONE, GolemEntityTypes.BOOKSHELF,
-			GolemEntityTypes.CLAY, GolemEntityTypes.COAL,
-			//GolemEntityTypes.CONCRETE,
-			GolemEntityTypes.CRAFTING, GolemEntityTypes.DIAMOND, GolemEntityTypes.EMERALD,
-			GolemEntityTypes.ENDSTONE, GolemEntityTypes.GLASS, GolemEntityTypes.GLOWSTONE,
-			GolemEntityTypes.GOLD,
-			//GolemEntityTypes.HARDENED_CLAY,
-			GolemEntityTypes.ICE, GolemEntityTypes.LAPIS,
-			//GolemEntityTypes.LEAF,
-			GolemEntityTypes.MAGMA, GolemEntityTypes.MELON, GolemEntityTypes.MUSHROOM,
-			GolemEntityTypes.NETHER_BRICK, GolemEntityTypes.NETHER_WART, GolemEntityTypes.OBSIDIAN,
-			GolemEntityTypes.PRISMARINE, GolemEntityTypes.QUARTZ, GolemEntityTypes.RED_SANDSTONE,
-			GolemEntityTypes.REDSTONE, GolemEntityTypes.SANDSTONE, GolemEntityTypes.SEA_LANTERN,
-			GolemEntityTypes.SLIME, GolemEntityTypes.SPONGE,
-			//GolemEntityTypes.STAINED_CLAY,
-			//GolemEntityTypes.STAINED_GLASS,
-			GolemEntityTypes.STRAW,
-			GolemEntityTypes.TNT//,
-			//GolemEntityTypes.WOOD,
-			//GolemEntityTypes.WOOL
-			 */
-			
-		
+		GolemRegistrar.getContainers().forEach(container -> event.getRegistry().register(container.entityType));
 		// Also register Golem Loot Tables
 		LootTableList.register(new ResourceLocation(ExtraGolems.MODID, "entities/_golem_base"));
 		GolemNames.forEach(new ConsumerLootTables());

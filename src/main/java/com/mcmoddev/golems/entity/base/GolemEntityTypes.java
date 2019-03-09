@@ -1,15 +1,15 @@
-package com.mcmoddev.golems.entity;
+package com.mcmoddev.golems.entity.base;
 
-import static com.mcmoddev.golems.proxies.ProxyCommon.build;
-
-import java.util.function.Function;
-
+import com.mcmoddev.golems.entity.*;
 import com.mcmoddev.golems.util.GolemLookup;
 import com.mcmoddev.golems.util.GolemNames;
-
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
+
+import java.util.function.Function;
+
+import static com.mcmoddev.golems.proxies.ProxyCommon.build;
 
 public final class GolemEntityTypes {
 	
@@ -18,7 +18,7 @@ public final class GolemEntityTypes {
 		
 	}
 
-	//public static final EntityType<GolemBase> CONCRETE = build(EntityConcreteGolem.class, GolemNames.CONCRETE_GOLEM, Blocks.CONCRETE);
+	//public static final EntityType<GolemBase> CONCRETE = build(EntityConcreteGolem.class, GolemNames.CONCRETE_GOLEM, Blocks.CONCRETE); TODO: Fully implement these
 
 	//public static final EntityType<GolemBase> HARDENED_CLAY = build(EntityHardenedClayGolem.class, GolemNames.TERRACOTTA_GOLEM, Blocks.HARDENED_CLAY);
 
@@ -36,6 +36,7 @@ public final class GolemEntityTypes {
 		buildEntity(EntityBookshelfGolem.class, EntityBookshelfGolem::new, GolemNames.BOOKSHELF_GOLEM, Blocks.BOOKSHELF);
 		buildEntity(EntityBookshelfGolem.class, EntityBookshelfGolem::new, GolemNames.BOOKSHELF_GOLEM, Blocks.BOOKSHELF);
 		buildEntity(EntityCoalGolem.class, EntityCoalGolem::new, GolemNames.COAL_GOLEM, Blocks.COAL_BLOCK);
+		//buildEntity(EntityConcreteGolem.class, EntityConcreteGolem::new, GolemNames.CONCRETE_GOLEM /*TODO: use tags for these things*/);
 		buildEntity(EntityCraftingGolem.class, EntityCraftingGolem::new, GolemNames.CRAFTING_GOLEM, Blocks.CRAFTING_TABLE);
 		buildEntity(EntityDiamondGolem.class, EntityDiamondGolem::new, GolemNames.DIAMOND_GOLEM, Blocks.DIAMOND_BLOCK);
 		buildEntity(EntityEmeraldGolem.class, EntityEmeraldGolem::new, GolemNames.EMERALD_GOLEM, Blocks.EMERALD_BLOCK);
@@ -63,8 +64,8 @@ public final class GolemEntityTypes {
 		buildEntity(EntityTNTGolem.class, EntityTNTGolem::new, GolemNames.TNT_GOLEM, Blocks.TNT);
 	}
 	
-	private static void buildEntity(final Class<? extends GolemBase> entityClass, Function<? super World, ? extends GolemBase> factoryIn, 
-			final String name, Block... blocks) {
+	private static void buildEntity(final Class<? extends GolemBase> entityClass, Function<? super World, ? extends GolemBase> factoryIn,
+					final String name, Block... blocks) {
 		GolemLookup.addEntityType(entityClass, build(entityClass, factoryIn, name, blocks));
 	}
 }

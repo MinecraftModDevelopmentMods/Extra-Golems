@@ -1,6 +1,6 @@
 package com.mcmoddev.golems.events;
 
-import com.mcmoddev.golems.entity.GolemBase;
+import com.mcmoddev.golems.entity.base.GolemBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;

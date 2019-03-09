@@ -1,12 +1,11 @@
-package com.mcmoddev.golems.entity;
-
-import javax.annotation.Nullable;
+package com.mcmoddev.golems.entity.base;
 
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
-
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 /**
  * This class should always be registered with RenderGolemColorized. It supports a 2-texture golem
@@ -31,8 +30,6 @@ public abstract class GolemColorized extends GolemBase {
 	 * rendered. Args: world, attack, buildingBlock, initialColor, rBase, rOverlay.
 	 *
 	 * @param world
-	 * @param attack
-	 * @param building the Block to use to build this golem
 	 * @param initial  the (usually temporary) color to apply to this golem until it is updated by some
 	 *                 other method.
 	 * @param rBase    an optional texture that will not be recolored or rendered transparent, to render

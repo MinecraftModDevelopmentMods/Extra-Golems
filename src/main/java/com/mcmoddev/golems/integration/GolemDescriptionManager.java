@@ -1,8 +1,8 @@
 package com.mcmoddev.golems.integration;
 
 import com.mcmoddev.golems.entity.EntityBedrockGolem;
-import com.mcmoddev.golems.entity.GolemBase;
-import com.mcmoddev.golems.entity.GolemMultiTextured;
+import com.mcmoddev.golems.entity.base.GolemBase;
+import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.text.TextFormatting;

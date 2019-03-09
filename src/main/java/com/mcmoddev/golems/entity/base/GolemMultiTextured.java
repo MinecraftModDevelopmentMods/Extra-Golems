@@ -1,4 +1,4 @@
-package com.mcmoddev.golems.entity;
+package com.mcmoddev.golems.entity.base;
 
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;

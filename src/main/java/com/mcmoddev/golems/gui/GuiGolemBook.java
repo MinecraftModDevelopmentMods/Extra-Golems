@@ -1,6 +1,6 @@
 package com.mcmoddev.golems.gui;
 
-import com.mcmoddev.golems.entity.GolemBase;
+import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
 import net.minecraft.block.Block;

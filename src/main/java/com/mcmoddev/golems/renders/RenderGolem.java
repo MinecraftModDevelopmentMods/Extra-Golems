@@ -1,6 +1,6 @@
 package com.mcmoddev.golems.renders;
 
-import com.mcmoddev.golems.entity.GolemBase;
+import com.mcmoddev.golems.entity.base.GolemBase;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;

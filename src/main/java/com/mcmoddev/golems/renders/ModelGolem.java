@@ -1,15 +1,15 @@
 package com.mcmoddev.golems.renders;
 
-import com.mcmoddev.golems.entity.GolemBase;
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelRenderer;
+import com.mcmoddev.golems.entity.base.GolemBase;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.entity.model.ModelBase;
+import net.minecraft.client.renderer.entity.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class ModelGolem extends ModelBase {
 
 	/**
@@ -90,10 +90,10 @@ public class ModelGolem extends ModelBase {
 
 		float scaleChild = 0.5F;
         GlStateManager.pushMatrix();
-        
+
 		if (this.isChild) {
-			GlStateManager.scale(scaleChild, scaleChild, scaleChild);
-			GlStateManager.translate(0.0F, 24.0F * scale, 0.0F);
+			GlStateManager.scalef(scaleChild, scaleChild, scaleChild);
+			GlStateManager.translatef(0.0F, 24.0F * scale, 0.0F);
 		}
 
 		this.golemHead.render(scale);

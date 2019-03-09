@@ -1,10 +1,9 @@
-package com.mcmoddev.golems.entity;
+package com.mcmoddev.golems.entity.base;
 
 import com.mcmoddev.golems.entity.ai.EntityAIDefendAgainstMonsters;
 import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.main.GolemItems;
-import com.mcmoddev.golems.util.GolemConfigSet;
-import com.mcmoddev.golems.util.GolemLookup;
+import com.mcmoddev.golems.util.config.GolemContainer;
+import com.mcmoddev.golems.util.config.GolemRegistrar;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
@@ -21,7 +20,6 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.BlockParticleData;
-import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -33,7 +31,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -65,6 +62,8 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 	protected boolean takesFallDamage = false;
 	protected boolean canDrown = false;
 	protected boolean isLeashable = true;
+
+	protected final GolemContainer container;
 	
 	// swimming AI
 	protected EntityAIBase swimmingAI = new EntityAISwimming(this);
@@ -87,15 +86,14 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 
 	public GolemBase(Class<? extends GolemBase> clazz, final World world) {
 		super(GolemBase.getGolemType(clazz), world);
+		container = GolemRegistrar.getContainer(clazz);
 		this.setSize(1.4F, 2.9F);
 		this.setCanTakeFallDamage(false);
 		this.setCanSwim(false);
-		Block pickBlock = GolemLookup.hasBuildingBlock(this.getClass())
-			? GolemLookup.getBuildingBlock(this.getClass()) : GolemItems.golemHead;
+		Block pickBlock = container.validBuildingBlocks.get(0); //get the first valid building block
 		this.setCreativeReturn(pickBlock);
-		GolemConfigSet cfg = getConfig(this);
-		this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(cfg.getBaseAttack());
-		this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(cfg.getMaxHealth());
+		this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.attack);
+		this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.health);
 		this.experienceValue = 4 + rand.nextInt(8);
 	}
 
@@ -118,9 +116,8 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 		this.targetTasks.addTask(1, new EntityAIDefendAgainstMonsters(this));
 		this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, false, (Class[]) new Class[0]));
 		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<>(this,
-			EntityLiving.class, 10, false, true, (e) -> {
-			return e != null && IMob.VISIBLE_MOB_SELECTOR.test(e) && !(e instanceof EntityCreeper);
-		}));
+			EntityLiving.class, 10, false, true,
+			e -> e != null && IMob.VISIBLE_MOB_SELECTOR.test(e) && !(e instanceof EntityCreeper)));
 	}
 
 	@Override
@@ -133,10 +130,9 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 	@Override
 	protected void registerAttributes() {
 		super.registerAttributes();
-		GolemConfigSet cfg = getConfig(this);
 		this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE)
-			.setBaseValue(cfg.getBaseAttack());
-		this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(cfg.getMaxHealth());
+			.setBaseValue(container.attack);
+		this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.health);
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.22D);
 	}
 
@@ -347,7 +343,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
             this.setHomePosAndDistance(home, wanderDistance);
             return true;
         }
-        return false;
+        else return false;
 	}
 
 	/////////////// OTHER SETTERS AND GETTERS /////////////////
@@ -389,7 +385,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 	public ItemStack getCreativeReturn() {
 		return this.creativeReturn;
 	}
-	
+
 	public float getBaseAttackDamage() {
 		return (float) this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getBaseValue();
 	}
@@ -420,7 +416,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 	}
 
 	public void setCanSwim(final boolean canSwim) {
-		((PathNavigateGround) this.getNavigator()).setCanSwim(canSwim);
+		this.getNavigator().setCanSwim(canSwim);
 		if(null == wander) {
 			wander = new EntityAIWander(this, this.getBaseMoveSpeed() * 2.25D);
 		}
@@ -456,22 +452,14 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 		return false;
 	}
 
-	/** @return The Block used to build this golem, or null if there is none **/
-	@Nullable
-	public static Block getBuildingBlock(GolemBase golem) {
-		return GolemLookup.getBuildingBlock(golem.getClass());
-	}
-
-	/** The GolemConfigSet associated with this golem, or the empty GCS if there is none **/
-	@Nonnull
-	public static GolemConfigSet getConfig(GolemBase golem) {
-		return golem != null && GolemLookup.hasConfig(golem.getClass()) ? GolemLookup.getConfig(golem.getClass()) : GolemConfigSet.EMPTY;
+	public GolemContainer getGolemContainer() {
+		return container;
 	}
 	
 	/** The EntityType associated with this golem, or null if there is none **/
 	@Nullable
 	public static EntityType<?> getGolemType(Class<? extends GolemBase> golem) {
-		return GolemLookup.getEntityType(golem);
+		return GolemRegistrar.getContainer(golem).entityType;
 	}
 
 	/** 

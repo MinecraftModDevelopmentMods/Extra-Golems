@@ -1,7 +1,7 @@
 package com.mcmoddev.golems.items;
 
 import com.mcmoddev.golems.entity.EntityBedrockGolem;
-import com.mcmoddev.golems.entity.GolemBase;
+import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.Config;
 import com.mcmoddev.golems.util.GolemLookup;
 import net.minecraft.client.gui.GuiScreen;
