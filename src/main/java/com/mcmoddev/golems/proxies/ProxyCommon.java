@@ -43,7 +43,7 @@ public class ProxyCommon {
 	 * They do not exist in the world, the list is simply a 
 	 * reference for things like Golem Info Book
 	 **/
-	public static final List<GolemBase> DUMMY_GOLEMS = new LinkedList();
+	public static final List<GolemBase> DUMMY_GOLEMS = new LinkedList<>();
 	
 	protected static int golemEntityCount;
 
@@ -72,7 +72,8 @@ public class ProxyCommon {
 	public static void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
 		golemEntityCount = 0;
 		// Register Golem EntityEntries as well as building blocks
-		event.getRegistry().registerAll(
+		GolemLookup.getEntityTypes().forEach((EntityType<?> e) -> event.getRegistry().register(e));
+				/*
 			GolemEntityTypes.BEDROCK, GolemEntityTypes.BONE, GolemEntityTypes.BOOKSHELF,
 			GolemEntityTypes.CLAY, GolemEntityTypes.COAL,
 			//GolemEntityTypes.CONCRETE,
@@ -93,7 +94,8 @@ public class ProxyCommon {
 			GolemEntityTypes.TNT//,
 			//GolemEntityTypes.WOOD,
 			//GolemEntityTypes.WOOL
-			);
+			 */
+			
 		
 		// Also register Golem Loot Tables
 		LootTableList.register(new ResourceLocation(ExtraGolems.MODID, "entities/_golem_base"));

@@ -1,5 +1,8 @@
 package com.mcmoddev.golems.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.mcmoddev.golems.main.ExtraGolems;
 import gnu.trove.map.TObjectByteMap;
 import gnu.trove.map.TObjectFloatMap;
@@ -27,9 +30,9 @@ public class GolemConfigSet {
 	private String golemName;
 	private String category;
 
-	private final TObjectIntMap<String> mapInt;
-	private final TObjectFloatMap<String> mapFloat;
-	private final TObjectByteMap<String> mapBoolean;
+	private final Map<String, Integer> mapInt;
+	private final Map<String, Float> mapFloat;
+	private final Map<String, Boolean> mapBoolean;
 
 	private boolean canSpawn;
 	private double maxHealth;
@@ -48,9 +51,9 @@ public class GolemConfigSet {
 
 	public GolemConfigSet(final Configuration configFile, final String name, final boolean spawn, final double health,
 			      final float attack) {
-		this.mapInt = new TObjectIntHashMap<>(1);
-		this.mapFloat = new TObjectFloatHashMap<>(1);
-		this.mapBoolean = new TObjectByteHashMap<>(1);
+		this.mapInt = new HashMap<>(1);
+		this.mapFloat = new HashMap<>(1);
+		this.mapBoolean = new HashMap<>(1);
 		this.config = configFile;
 		this.golemName = name;
 		this.category = this.golemName.toLowerCase().replace(' ', '_');
