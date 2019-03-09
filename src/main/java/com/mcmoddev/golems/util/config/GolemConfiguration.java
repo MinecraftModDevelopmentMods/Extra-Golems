@@ -10,10 +10,12 @@ import java.util.HashMap;
 public class GolemConfiguration {
 
 	protected HashMap<GolemContainer, GolemConfigurationSection> sections = new HashMap<>();
+	
+	private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 
-	public GolemConfiguration(ForgeConfigSpec.Builder builder) {
+	public GolemConfiguration() {
 		for(GolemContainer c : GolemRegistrar.golemList.values()) {
-			sections.put(c, new GolemConfigurationSection(c, builder));
+			sections.put(c, new GolemConfigurationSection(c, BUILDER));
 		}
 	}
 	/**
@@ -26,5 +28,9 @@ public class GolemConfiguration {
 			c.health = section.health.get();
 			c.canUseSpecial = section.allowSpecial.get();
 		}
+	}
+	
+	public ForgeConfigSpec build() {
+		return BUILDER.build();
 	}
 }

@@ -56,12 +56,19 @@ public final class GolemNames {
 		STRAW_GOLEM, TERRACOTTA_GOLEM, TNT_GOLEM, WOODEN_GOLEM, WOOL_GOLEM
 	};
 	
+	/**
+	 * Apply the given Consumer for each Golem Name in this class
+	 */
 	public static void forEach(Consumer<String> consumer) {
 		for(final String s : ALL_GOLEMS) {
 			consumer.accept(s);
 		}
 	}
 	
+	/**
+	 * @param nameIn a value from GolemNames
+	 * @return the given name without the "golem_" prefix
+	 */
 	public static String strip(final String nameIn) {
 		final String GOLEM = "golem_";
 		if(nameIn.contains(GOLEM)) {

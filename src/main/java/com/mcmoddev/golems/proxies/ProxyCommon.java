@@ -52,22 +52,10 @@ public class ProxyCommon {
 	public void preInitRenders() {
 		// Unused
 	}
-
-	public static EntityType<?> build(final Class<? extends GolemBase> entityClass, Function<? super World, ? extends GolemBase> factoryIn, final String name, Block... blocks) {
-		// register block(s) with GolemLookup
-		if(blocks != null && blocks.length > 0) {
-			GolemLookup.addGolem(entityClass, blocks);
-		}
-		EntityType.Builder<GolemBase> builder = EntityType.Builder.create(entityClass, factoryIn);
-//		// build an EntityType to return
-		builder.tracker(48, 3, true);
-		return builder.build(name).setRegistryName(ExtraGolems.MODID, name);
-	}
 	
 	/**
-	 * THIS IS 100% THE MOST IMPORTANT EVENT HANDLER IN THE ENTIRE MOD.
-	 * This method 1) registers all golems 2) registers their loot tables
-	 * and 3) registers which block to use for which golem.
+	 * 1) register all golems 
+	 * 2) register their loot tables
 	 * @param event The EntityEntry registration event
 	 */
 	@SubscribeEvent
@@ -87,7 +75,7 @@ public class ProxyCommon {
 			@Override
 			@OnlyIn(Dist.CLIENT)
 			public boolean hasEffect(final ItemStack stack) {
-				return Config.golemHeadHasGlint();
+				return true;
 			}
 		}.setRegistryName(GolemItems.golemHead.getRegistryName()));
 
@@ -104,8 +92,9 @@ public class ProxyCommon {
 
 	@SubscribeEvent
 	public static void registerBlocks(final RegistryEvent.Register<Block> event) {
-		final int GLOWSTONE_FREQ = GolemLookup.getConfig(EntityGlowstoneGolem.class).getInt(EntityGlowstoneGolem.FREQUENCY);
-		final int SEALANTERN_FREQ = GolemLookup.getConfig(EntitySeaLanternGolem.class).getInt(EntitySeaLanternGolem.FREQUENCY);
+		// TODO use config once it's working
+		final int GLOWSTONE_FREQ = 4;//GolemLookup.getConfig(EntityGlowstoneGolem.class).getInt(EntityGlowstoneGolem.FREQUENCY);
+		final int SEALANTERN_FREQ = 4;//GolemLookup.getConfig(EntitySeaLanternGolem.class).getInt(EntitySeaLanternGolem.FREQUENCY);
 		event.getRegistry().registerAll(
 			new BlockGolemHead().setRegistryName(ExtraGolems.MODID, "golem_head"),
 			new BlockUtilityGlow(Material.GLASS, 1.0F, GLOWSTONE_FREQ, Blocks.AIR.getDefaultState())

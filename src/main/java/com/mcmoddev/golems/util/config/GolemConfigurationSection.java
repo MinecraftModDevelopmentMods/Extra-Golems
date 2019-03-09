@@ -7,7 +7,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
  */
 public class GolemConfigurationSection {
 
-	public String entityName;
+	public final String entityName;
 	public ForgeConfigSpec.DoubleValue health;
 	public ForgeConfigSpec.DoubleValue attack;
 	public ForgeConfigSpec.BooleanValue allowSpecial;

@@ -35,12 +35,13 @@ public final class GolemRegistrar {
 	public static GolemBase getGolem(World world, Block buildingBlock) {
 		GolemContainer container = null;
 		for(GolemContainer c : golemList.values()) {
-			if(c.validBuildingBlocks.contains(buildingBlock)) {
+			if(c.isBuildingBlock(buildingBlock)) {
 				container = c;
+				break;
 			}
 		}
 		if(container == null) return null;
-		else return (GolemBase) container.entityType.create(world);
+		else return container.entityType.create(world);
 	}
 
 	public static Collection<GolemContainer> getContainers() {

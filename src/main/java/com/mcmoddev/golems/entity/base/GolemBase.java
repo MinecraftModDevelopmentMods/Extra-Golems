@@ -40,10 +40,11 @@ import java.util.List;
 public abstract class GolemBase extends EntityCreature implements IAnimal {
 
 	private static final DataParameter<Boolean> BABY = EntityDataManager.<Boolean>createKey(GolemBase.class, DataSerializers.BOOLEAN);
+	private static final DataParameter<Boolean> PLAYER_CREATED = EntityDataManager.<Boolean>createKey(GolemBase.class, DataSerializers.BOOLEAN);
 	private static final String KEY_BABY = "isChild";
+	private static final String KEY_PLAYER_CREATED = "isPlayerCreated";
 	public static final int WANDER_DISTANCE = 64;
 	protected int attackTimer;
-	protected boolean isPlayerCreated;
 	protected ResourceLocation textureLoc;
 	protected ResourceLocation lootTableLoc;
 	protected ItemStack creativeReturn;
@@ -89,11 +90,11 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 		container = GolemRegistrar.getContainer(clazz);
 		this.setSize(1.4F, 2.9F);
 		this.setCanTakeFallDamage(false);
-		this.setCanSwim(false);
 		Block pickBlock = container.validBuildingBlocks.get(0); //get the first valid building block
 		this.setCreativeReturn(pickBlock);
 		this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.attack);
 		this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.health);
+		this.setCanSwim(false);
 		this.experienceValue = 4 + rand.nextInt(8);
 	}
 
@@ -125,6 +126,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 		super.registerData();
 		this.setTextureType(this.applyTexture());
 		this.getDataManager().register(BABY, false);
+		this.getDataManager().register(PLAYER_CREATED, false);
 	}
 
 	@Override
@@ -192,8 +194,9 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 			int i = MathHelper.floor(this.posX);
 			int j = MathHelper.floor(this.posY - (double) 0.2F);
 			int k = MathHelper.floor(this.posZ);
-			IBlockState iblockstate = this.world.getBlockState(new BlockPos(i, j, k));
-			if (!iblockstate.isAir()) {
+			BlockPos pos = new BlockPos(i, j, k);
+			if (!world.isAirBlock(pos)) {
+				IBlockState iblockstate = this.world.getBlockState(pos);
 				this.world.spawnParticle(new BlockParticleData(Particles.BLOCK, iblockstate),
 					this.posX + ((double) this.rand.nextFloat() - 0.5D) * (double) this.width,
 					this.getBoundingBox().minY + 0.1D, this.posZ +
@@ -317,12 +320,14 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 	public void writeAdditional(NBTTagCompound compound) {
 		super.writeAdditional(compound);
         compound.setBoolean(KEY_BABY, this.isChild());
+        compound.setBoolean(KEY_PLAYER_CREATED, this.isPlayerCreated());
     }
 	
 	@Override
 	public void readAdditional(NBTTagCompound compound) {
 		super.readAdditional(compound);
 		this.setChild(compound.getBoolean(KEY_BABY));
+		this.setPlayerCreated(compound.getBoolean(KEY_PLAYER_CREATED));
 	}
 
 	@Override
@@ -425,9 +430,9 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 		}
 		
 		if (canSwim) {
+			this.tasks.removeTask(wanderAvoidWater);
 			this.tasks.addTask(0, swimmingAI);
 			this.tasks.addTask(5, wander);
-			this.tasks.removeTask(wanderAvoidWater);
 		} else {
 			this.tasks.removeTask(swimmingAI);
 			this.tasks.removeTask(wander);
@@ -436,11 +441,11 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 	}
 
 	public void setPlayerCreated(final boolean bool) {
-		this.isPlayerCreated = bool;
+		this.getDataManager().set(PLAYER_CREATED, bool);
 	}
 
 	public boolean isPlayerCreated() {
-		return this.isPlayerCreated;
+		return this.getDataManager().get(PLAYER_CREATED).booleanValue();
 	}
 
 	public void setImmuneToFire(final boolean toSet) {
@@ -458,7 +463,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 	
 	/** The EntityType associated with this golem, or null if there is none **/
 	@Nullable
-	public static EntityType<?> getGolemType(Class<? extends GolemBase> golem) {
+	public static EntityType<GolemBase> getGolemType(Class<? extends GolemBase> golem) {
 		return GolemRegistrar.getContainer(golem).entityType;
 	}
 
@@ -470,24 +475,14 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 	}
 
 	/////////////// TEXTURE HELPERS //////////////////
-
-	/** Makes a texture on the assumption that MODID is 'golems'. **/
-	@Deprecated
-	public static ResourceLocation makeGolemTexture(final String texture) {
-		return makeGolemTexture(ExtraGolems.MODID, texture);
-	}
-
-	/**
-	 * Makes a ResourceLocation using the passed mod id and part of the texture name. Texture should
-	 * be at 'assets/<b>MODID</b>/textures/entity/golem_<b>suffix</b>.png'
-	 *
-	 * @see {@link #applyTexture()}
-	 **/
-	@Deprecated
-	public static ResourceLocation makeGolemTexture(final String modid, final String texture) {
-		return makeTexture(modid, "golem_" + texture);
-	}
 	
+	/**
+	 * Calls {@link #makeTexture(String, String)} on the assumption that MODID is 'golems'.
+	 * Texture should be at 'assets/golems/textures/entity/[TEXTURE].png'
+	 **/
+	public static ResourceLocation makeTexture(final String TEXTURE) {
+		return makeTexture(ExtraGolems.MODID, TEXTURE);
+	}
 	/**
 	 * Makes a ResourceLocation using the passed mod id and part of the texture name. Texture should
 	 * be at 'assets/[MODID]/textures/entity/[TEXTURE].png'
