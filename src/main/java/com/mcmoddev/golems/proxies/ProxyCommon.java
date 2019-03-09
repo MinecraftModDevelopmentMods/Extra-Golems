@@ -14,6 +14,7 @@ import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.util.ConsumerLootTables;
 import com.mcmoddev.golems.util.GolemLookup;
 import com.mcmoddev.golems.util.GolemNames;
+import com.mcmoddev.golems.util.config.GolemRegistrar;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlowingFluid;
 import net.minecraft.block.material.Material;
@@ -73,8 +74,7 @@ public class ProxyCommon {
 	public static void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
 		golemEntityCount = 0;
 		// Register Golem EntityEntries as well as building blocks
-		GolemLookup.getAllEntityTypes().forEach(type -> event.getRegistry().register(type));
-		
+		GolemRegistrar.getContainers().forEach(container -> event.getRegistry().register(container.entityType));
 		// Also register Golem Loot Tables
 		LootTableList.register(new ResourceLocation(ExtraGolems.MODID, "entities/_golem_base"));
 		GolemNames.forEach(new ConsumerLootTables());

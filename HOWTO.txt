@@ -1,3 +1,4 @@
+--NO LONGER VALID AS OF 8.0.0
 HOW TO ADD A GOLEM TO EXTRA GOLEMS:
 
 1) Add a static GolemConfigSet to Config
