@@ -5,8 +5,8 @@ import com.mcmoddev.golems.entity.ai.EntityAIPlaceSingleBlock;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
-import com.mcmoddev.golems.util.GolemLookup;
 import com.mcmoddev.golems.util.GolemNames;
+import com.mcmoddev.golems.util.config.GolemRegistrar;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.SoundEvents;
@@ -28,7 +28,7 @@ public final class EntityRedstoneGolem extends GolemBase {
 	 * Default constructor for Redstone Golem
 	 **/
 	public EntityRedstoneGolem(final World world) {
-		this(EntityRedstoneGolem.class, world, GolemLookup.getConfig(EntityRedstoneGolem.class).getBoolean(ALLOW_SPECIAL), 15, DEF_FREQ);
+		this(EntityRedstoneGolem.class, world, GolemRegistrar.getContainer(EntityRedstoneGolem.class).canUseSpecial, 15, DEF_FREQ);
 		this.setLootTableLoc(GolemNames.REDSTONE_GOLEM);
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
@@ -61,8 +61,7 @@ public final class EntityRedstoneGolem extends GolemBase {
 
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		// does not fire for child classes
-		if (this.getClass() == EntityRedstoneGolem.class && getConfig(this).getBoolean(ALLOW_SPECIAL))
+		if (container.canUseSpecial)
 			list.add(TextFormatting.RED + trans("entitytip.emits_redstone_signal"));
 		return list;
 	}

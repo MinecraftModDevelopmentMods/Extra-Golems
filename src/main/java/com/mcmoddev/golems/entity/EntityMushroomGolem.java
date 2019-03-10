@@ -2,9 +2,7 @@ package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.entity.ai.EntityAIPlaceRandomBlocksStrictly;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
-import com.mcmoddev.golems.main.Config;
 import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.util.GolemConfigSet;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -33,14 +31,15 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 	public EntityMushroomGolem(final World world) {
 		super(EntityMushroomGolem.class, world, SHROOM_PREFIX, SHROOM_TYPES);
 		this.setCanSwim(true);
-		GolemConfigSet cfg = getConfig(this);
-		final boolean allowed = cfg.getBoolean(ALLOW_SPECIAL);
-		int freq = allowed ? cfg.getInt(FREQUENCY) : -100;
+		final boolean allowed = container.canUseSpecial;
+		//TODO: reimpl
+		int freq = allowed ? 420 : -100;
 		freq += this.rand.nextInt(Math.max(10, freq / 2));
 		this.tasks.addTask(2,
 			new EntityAIPlaceRandomBlocksStrictly(this, freq, mushrooms, soils, allowed));
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
 	}
+
 
 	@Override
 	public String getModId() {
@@ -60,7 +59,10 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 	public void livingTick() {
 		super.livingTick();
 		// heals randomly, but only at night
-		if(!this.getEntityWorld().isDaytime() && rand.nextInt(Config.RANDOM_HEAL_TIMER) == 0 && getConfig(this).getBoolean(ALLOW_HEALING)) {
+		//TODO: reimpl config
+
+		//Note how it goes from least expensive to most expensive
+		if(this.container.canUseSpecial && !this.getEntityWorld().isDaytime() && rand.nextInt(450) == 0) {
 			this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 20, 2));
 		}
 	}
@@ -76,10 +78,11 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if (getConfig(this).getBoolean(EntityMushroomGolem.ALLOW_SPECIAL)) {
+		if (container.canUseSpecial) {
 			list.add(TextFormatting.DARK_GREEN + trans("entitytip.plants_shrooms"));
 		}
-		if(getConfig(this).getBoolean(ALLOW_HEALING)) {
+		//TODO: reimpl config
+		if(container.canUseSpecial) {
 			String sHeals = TextFormatting.LIGHT_PURPLE + trans("entitytip.heals");
 			list.add(sHeals);
 		}

@@ -2,7 +2,6 @@ package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.util.GolemConfigSet;
 import com.mcmoddev.golems.util.GolemNames;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.MobEffects;
@@ -42,8 +41,7 @@ public final class EntityBookshelfGolem extends GolemBase {
 	@Override
 	public void livingTick() {
 		super.livingTick();
-		GolemConfigSet cfg = getConfig(this);
-		if (cfg.getBoolean(ALLOW_SPECIAL) && this.getActivePotionEffects().isEmpty()
+		if (container.canUseSpecial && this.getActivePotionEffects().isEmpty()
 			&& rand.nextInt(40) == 0) {
 			final Potion potion = goodEffects[rand.nextInt(goodEffects.length)];
 			final int len = potion.isInstant() ? 1 : 200 + 100 * (1 + rand.nextInt(5));
@@ -58,7 +56,7 @@ public final class EntityBookshelfGolem extends GolemBase {
 
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if (getConfig(this).getBoolean(EntityBookshelfGolem.ALLOW_SPECIAL))
+		if (container.canUseSpecial)
 			list.add(TextFormatting.LIGHT_PURPLE + trans("entitytip.grants_self_potion_effects"));
 		return list;
 	}

@@ -2,9 +2,7 @@ package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.entity.ai.EntityAIPlaceRandomBlocksStrictly;
 import com.mcmoddev.golems.entity.base.GolemBase;
-import com.mcmoddev.golems.main.Config;
 import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.util.GolemConfigSet;
 import com.mcmoddev.golems.util.GolemNames;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -52,8 +50,9 @@ public final class EntityMelonGolem extends GolemBase {
 	@Override
 	public void livingTick() {
 		super.livingTick();
+		if(!container.canUseSpecial) return;
 		// heals randomly (about every 20 sec)
-		if(rand.nextInt(Config.RANDOM_HEAL_TIMER) == 0 && getConfig(this).getBoolean(ALLOW_HEALING)) {
+		if(rand.nextInt(450) == 0) {
 			this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 20, 2));
 		}
 	}
@@ -62,22 +61,24 @@ public final class EntityMelonGolem extends GolemBase {
 	 * Create an EntityAIPlaceRandomBlocks.
 	 **/
 	protected EntityAIBase makeFlowerAI() {
-		GolemConfigSet cfg = getConfig(this);
+
 		final Block[] soils = {Blocks.DIRT, Blocks.GRASS, Blocks.MYCELIUM};
 		// init list and AI for planting flowers
 		final IBlockState[] flowers = {Blocks.POPPY.getDefaultState()};
 		// get other parameters for the AI
-		final int freq = cfg.getInt(FREQUENCY);
-		final boolean allowed = cfg.getBoolean(ALLOW_SPECIAL);
+		//TODO: reimpl config
+		final int freq = 240;
+		final boolean allowed = container.canUseSpecial;
 		return new EntityAIPlaceRandomBlocksStrictly(this, freq, flowers, soils, allowed);
 	}
 
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if (getConfig(this).getBoolean(EntityMelonGolem.ALLOW_SPECIAL)) {
+		if (container.canUseSpecial) {
 			list.add(TextFormatting.GREEN + trans("entitytip.plants_flowers", trans("tile.flower1.name")));
 		}
-		if(getConfig(this).getBoolean(ALLOW_HEALING)) {
+		//TODO: reimpl
+		if(container.canUseSpecial) {
 			String sHeals = TextFormatting.RED + trans("entitytip.heals");
 			list.add(sHeals);
 		}

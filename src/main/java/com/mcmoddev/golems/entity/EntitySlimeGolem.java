@@ -2,7 +2,6 @@ package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.util.GolemConfigSet;
 import com.mcmoddev.golems.util.GolemNames;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -45,10 +44,9 @@ public final class EntitySlimeGolem extends GolemBase {
 	@Override
 	public boolean attackEntityAsMob(final Entity entity) {
 		if (super.attackEntityAsMob(entity)) {
-			GolemConfigSet cfg = getConfig(this);
 			// knocks back the entity it's attacking (if it's adult and not attacking a slime)
-			if (cfg.getBoolean(ALLOW_SPECIAL) && !(entity instanceof EntitySlime) && !this.isChild()) {
-				knockbackTarget(entity, cfg.getFloat(KNOCKBACK));
+			if (container.canUseSpecial && !(entity instanceof EntitySlime) && !this.isChild()) {
+				knockbackTarget(entity, 1.9412); //TODO: reimpl config
 			}
 			return true;
 		}
@@ -60,7 +58,7 @@ public final class EntitySlimeGolem extends GolemBase {
 		if (!this.isInvulnerableTo(source)) {
 			super.damageEntity(source, amount);
 			// knocks back the entity that is attacking it
-			if (!this.isChild() && source.getImmediateSource() != null && getConfig(this).getBoolean(ALLOW_SPECIAL)) {
+			if (!this.isChild() && source.getImmediateSource() != null && container.canUseSpecial) {
 				knockbackTarget(source.getImmediateSource(), this.knockbackPower);
 			}
 		}
@@ -78,8 +76,8 @@ public final class EntitySlimeGolem extends GolemBase {
 	
 	@Override
 	public void remove() {
-		// spawn baby golems here if possible 
-		if(!this.world.isRemote && !this.isChild() && getConfig(this).getBoolean(ALLOW_SPLITTING)) {
+		// spawn baby golems here if possible TODO: reimpl config
+		if(!this.world.isRemote && !this.isChild() && container.canUseSpecial) {
 			GolemBase slime1 = new EntitySlimeGolem(this.world, true);
 			GolemBase slime2 = new EntitySlimeGolem(this.world, true);
 			// copy attack target info
@@ -102,17 +100,17 @@ public final class EntitySlimeGolem extends GolemBase {
 	
 	@Override
 	public void notifyDataManagerChange(DataParameter<?> key) {
-		// change stats if this is a child vs. an adult golem
+		// change stats if this is a child vs. an adult golem TODO reimpl config
 		if(this.isChild()) {
 			this.knockbackPower = 0.0F;
 			this.setSize(0.7F, 1.45F);
-			this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(getConfig(this).getMaxHealth() / 3);
-			this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(getConfig(this).getBaseAttack() * 0.6F);
+			this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.health / 3);
+			this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.attack * 0.6F);
 			this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.0D);
 		} else {
-			this.knockbackPower = getConfig(this).getFloat(KNOCKBACK) * 0.325F;
-			this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(getConfig(this).getMaxHealth());
-			this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(getConfig(this).getBaseAttack());
+			this.knockbackPower = 1.9412F * 0.325F;
+			this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.health);
+			this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.attack);
 			this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.35D);
 		}
 	}
@@ -124,11 +122,11 @@ public final class EntitySlimeGolem extends GolemBase {
 
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		final GolemConfigSet cfg = getConfig(this);
-		if (cfg.getBoolean(EntitySlimeGolem.ALLOW_SPECIAL)) {
+		if (container.canUseSpecial) {
 			list.add(TextFormatting.GREEN + trans("entitytip.has_knockback"));
 		}
-		if(!this.isChild() && cfg.getBoolean(ALLOW_SPLITTING)) {
+		//TODO reimpl config
+		if(!this.isChild() && container.canUseSpecial) {
 			list.add(TextFormatting.GREEN + trans("entitytip.splits_upon_death"));
 		}
 		return list;

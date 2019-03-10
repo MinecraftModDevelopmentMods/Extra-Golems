@@ -2,19 +2,14 @@ package com.mcmoddev.golems.entity.base;
 
 import com.mcmoddev.golems.entity.*;
 import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.util.GolemLookup;
 import com.mcmoddev.golems.util.GolemNames;
 import com.mcmoddev.golems.util.config.GolemContainer;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
-
 import net.minecraft.block.Block;
-import net.minecraft.entity.EntityType;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 
 import java.util.function.Function;
-
-import static com.mcmoddev.golems.proxies.ProxyCommon.build;
 
 public final class GolemEntityTypes {
 	
@@ -35,7 +30,7 @@ public final class GolemEntityTypes {
 	//public static final EntityType<GolemBase> WOOD = build(EntityWoodenGolem.class, GolemNames.WOODEN_GOLEM, Blocks.LOG, Blocks.LOG2);
 	//public static final EntityType<GolemBase> WOOL = build(EntityWoolGolem.class, GolemNames.WOOL_GOLEM, Blocks.WOOL);
 
-	static {
+	public static void init() {
 		buildEntity(EntityBedrockGolem.class, EntityBedrockGolem::new, GolemNames.BEDROCK_GOLEM, 999.0D, 32.0D, false, (Block) null);
 		buildEntity(EntityBoneGolem.class, EntityBoneGolem::new, GolemNames.BONE_GOLEM, 54.0D, 9.5D, false, Blocks.BONE_BLOCK);
 		buildEntity(EntityBookshelfGolem.class, EntityBookshelfGolem::new, GolemNames.BOOKSHELF_GOLEM, 28.0D, 1.5D, true, Blocks.BOOKSHELF);
@@ -68,7 +63,7 @@ public final class GolemEntityTypes {
 		buildEntity(EntityStrawGolem.class, EntityStrawGolem::new, GolemNames.STRAW_GOLEM, 10.0D, 1.0D, true, Blocks.HAY_BLOCK);
 		buildEntity(EntityTNTGolem.class, EntityTNTGolem::new, GolemNames.TNT_GOLEM, 14.0D, 2.5D, true, Blocks.TNT);
 	}
-	
+	//TODO: Take a look again later
 	private static void buildEntity(final Class<? extends GolemBase> entityClass, Function<? super World, ? extends GolemBase> factoryIn,
 			final String name, final double baseHealth, final double baseAttack, final boolean useSpecial,
 			final Block... blocks) {

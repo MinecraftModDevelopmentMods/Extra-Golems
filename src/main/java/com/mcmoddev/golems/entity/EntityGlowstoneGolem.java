@@ -5,8 +5,8 @@ import com.mcmoddev.golems.entity.ai.EntityAIPlaceSingleBlock;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
-import com.mcmoddev.golems.util.GolemLookup;
 import com.mcmoddev.golems.util.GolemNames;
+import com.mcmoddev.golems.util.config.GolemRegistrar;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.SoundEvents;
@@ -34,8 +34,8 @@ public final class EntityGlowstoneGolem extends GolemBase {
 	 **/
 	public EntityGlowstoneGolem(final World world) {
 		//HACK: dangerous ... too expensive to check for non-null in constructor call :(
-		this(EntityGlowstoneGolem.class, world, 1.0F, GolemLookup.getConfig(EntityGlowstoneGolem.class).getInt(FREQUENCY),
-			GolemLookup.getConfig(EntityGlowstoneGolem.class).getBoolean(ALLOW_SPECIAL));
+		this(EntityGlowstoneGolem.class, world, 1.0F, 4 /*TODO: reimpl config*/,
+			GolemRegistrar.getContainer(EntityGlowstoneGolem.class).canUseSpecial);
 		this.isImmuneToFire = true;
 		this.setCanTakeFallDamage(true);
 		this.setCanSwim(true);
@@ -84,7 +84,7 @@ public final class EntityGlowstoneGolem extends GolemBase {
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
 		// does not fire for child classes
-		if (this.getClass() == EntityGlowstoneGolem.class && getConfig(this).getBoolean(ALLOW_SPECIAL)) {
+		if (this.getClass() == EntityGlowstoneGolem.class && container.canUseSpecial) {
 			list.add(TextFormatting.RED + trans("entitytip.lights_area"));
 		}
 		return list;

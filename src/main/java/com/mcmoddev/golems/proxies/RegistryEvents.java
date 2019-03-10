@@ -5,7 +5,6 @@ import com.mcmoddev.golems.blocks.BlockUtilityGlow;
 import com.mcmoddev.golems.blocks.BlockUtilityGlowWater;
 import com.mcmoddev.golems.blocks.BlockUtilityPower;
 import com.mcmoddev.golems.entity.EntityRedstoneGolem;
-import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.items.ItemBedrockGolem;
 import com.mcmoddev.golems.items.ItemInfoBook;
 import com.mcmoddev.golems.main.ExtraGolems;
@@ -30,33 +29,11 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.LinkedList;
-import java.util.List;
+@Mod.EventBusSubscriber(modid = ExtraGolems.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+public class RegistryEvents {
 
-@Mod.EventBusSubscriber(modid = ExtraGolems.MODID)
-public class ProxyCommon {
-
-	/**
-	 * A List containing default instances of each Golem.
-	 * They do not exist in the world, the list is simply a 
-	 * reference for things like Golem Info Book
-	 **/
-	public final List<GolemBase> DUMMY_GOLEMS = new LinkedList<>();
-	
-	protected static int golemEntityCount;
-
-	public void preInitRenders() {
-		// Unused
-	}
-	
-	/**
-	 * 1) register all golems 
-	 * 2) register their loot tables
-	 * @param event The EntityEntry registration event
-	 */
 	@SubscribeEvent
 	public static void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
-		golemEntityCount = 0;
 		// Register Golem EntityEntries as well as building blocks
 		GolemRegistrar.getContainers().forEach(container -> event.getRegistry().register(container.entityType));
 		// Also register Golem Loot Tables
@@ -65,7 +42,7 @@ public class ProxyCommon {
 	}
 
 	@SubscribeEvent
-	public void registerItems(final RegistryEvent.Register<Item> event) {
+	public static void registerItems(final RegistryEvent.Register<Item> event) {
 		event.getRegistry().register(new ItemBlock(GolemItems.golemHead, new Item.Properties().group(ItemGroup.MISC)) {
 
 			@Override
@@ -87,7 +64,7 @@ public class ProxyCommon {
 	}
 
 	@SubscribeEvent
-	public void registerBlocks(final RegistryEvent.Register<Block> event) {
+	public static void registerBlocks(final RegistryEvent.Register<Block> event) {
 		// TODO use config once it's working
 		final int GLOWSTONE_FREQ = 4;//GolemLookup.getConfig(EntityGlowstoneGolem.class).getInt(EntityGlowstoneGolem.FREQUENCY);
 		final int SEALANTERN_FREQ = 4;//GolemLookup.getConfig(EntitySeaLanternGolem.class).getInt(EntitySeaLanternGolem.FREQUENCY);

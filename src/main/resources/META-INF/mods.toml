@@ -20,8 +20,14 @@ issueTrackerURL="https://github.com/MinecraftModDevelopmentMods/Extra-Golems/iss
     a lot of golems!
     '''
     [[dependencies.golems]]
-        modid="forge"
+        modId="forge"
         mandatory=true
-        versionRange="[25.0.13,)"
+        versionRange="[25.0.76,)"
+        ordering="NONE"
+        side="BOTH"
+    [[dependencies.examplemod]]
+        modId="minecraft"
+        mandatory=true
+        versionRange="[1.13.2]"
         ordering="NONE"
         side="BOTH"

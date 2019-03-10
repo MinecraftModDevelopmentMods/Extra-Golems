@@ -1,6 +1,5 @@
 package com.mcmoddev.golems.util.config;
 
-import com.google.common.collect.Lists;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
@@ -9,7 +8,6 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -17,9 +15,9 @@ import java.util.function.Function;
  */
 public class GolemContainer {
 
+	private final List<Block> validBuildingBlocks;
+	//Avoid making setters/getters for non-final fields for now
 	public final EntityType<GolemBase> entityType;
-	private Consumer<GolemConfigurationSection> configConsumer;
-	private List<Block> validBuildingBlocks;
 	public String name;
 	public double health;
 	public double attack;
@@ -36,11 +34,11 @@ public class GolemContainer {
 		this.attack = lAttack;
 		this.canUseSpecial = lCanUseSpecial;
 	}
-
+	//TODO: Delete if unused
 	public boolean hasBuildingBlock() {
 		return !this.validBuildingBlocks.isEmpty();
 	}
-	
+	//TODO: Delete if unused
 	public Block[] getBuildingBlocks() {
 		return this.validBuildingBlocks.toArray(new Block[this.validBuildingBlocks.size()]);
 	}
@@ -49,10 +47,8 @@ public class GolemContainer {
 		// TODO:  check Block Tags either here or when the blocks are added in Builder
 		return this.validBuildingBlocks.contains(b);
 	}
-	
-	public GolemConfigurationSection applyConfig(GolemConfigurationSection config) {
-		this.configConsumer.accept(config);
-		return config;
+	public Block getPrimaryBuildingBlock() {
+		return this.validBuildingBlocks.get(0);
 	}
 
 	/**
@@ -60,13 +56,12 @@ public class GolemContainer {
 	 * @author Glitch
 	 */
 	public static final class Builder {
-		private final String modId;
+		private final String modid;
 		private final String golemName;
 		private final EntityType.Builder<GolemBase> entityTypeBuilder;
 		private double health = 100.0D;
 		private double attack = 14.0D; //Average iron golem attack in Normal mode
 		private boolean allowSpecial = true;
-		private boolean enabled = true;
 		//This is a list to allow determining the "priority" of golem blocks. This could be used to our
 		//advantage in golem building logic for conflicts in the future.
 		private List<Block> validBuildingBlocks = new ArrayList<>();
@@ -79,19 +74,12 @@ public class GolemContainer {
 		 */
 		public Builder(final String modid, final String golemName, final Class<? extends GolemBase> entityClazz,
 				final Function<? super World, ? extends GolemBase> entityFunction) {
-			this(modid, golemName, EntityType.Builder.<GolemBase>create(entityClazz, entityFunction).tracker(48, 3, true));
+			this.modid = modid;
+			this.golemName = golemName;
+			this.entityTypeBuilder = EntityType.Builder.<GolemBase>create(entityClazz, entityFunction)
+				.tracker(48, 3, true);
 		}
 
-		/**
-		 * Creates the builder.
-		 * @param golemName the name of the golem
-		 * @param builder the builder of the golem, with any needed options already set
-		 */
-		public Builder(final String modid, final String golemName, final EntityType.Builder<GolemBase> builder) {
-			this.modId = modid;
-			this.entityTypeBuilder = builder;
-			this.golemName = golemName;
-		}
 		/**
 		 * Sets the max health of a golem
 		 * @param lHealth The max health (in half hearts) of the golem. <b>Defaults to 100</b>
@@ -129,8 +117,8 @@ public class GolemContainer {
 		 * @return a copy of the newly constructed GolemContainer
 		 */
 		public GolemContainer build() {
-			final EntityType<GolemBase> entityType = entityTypeBuilder.build(golemName);
-			entityType.setRegistryName(modId, golemName);
+			EntityType<GolemBase> entityType = entityTypeBuilder.build(golemName);
+			entityType.setRegistryName(modid, golemName);
 			return new GolemContainer(entityType, golemName, validBuildingBlocks, health, attack, allowSpecial);
 		}
 	}

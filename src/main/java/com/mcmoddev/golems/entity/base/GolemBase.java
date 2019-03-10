@@ -90,7 +90,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 		container = GolemRegistrar.getContainer(clazz);
 		this.setSize(1.4F, 2.9F);
 		this.setCanTakeFallDamage(false);
-		Block pickBlock = container.validBuildingBlocks.get(0); //get the first valid building block
+		Block pickBlock = container.getPrimaryBuildingBlock();
 		this.setCreativeReturn(pickBlock);
 		this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.attack);
 		this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.health);
@@ -128,9 +128,10 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 		this.getDataManager().register(BABY, false);
 		this.getDataManager().register(PLAYER_CREATED, false);
 	}
-
+	//NOTE: This is called before the constructor gets to adding the container
 	@Override
 	protected void registerAttributes() {
+		GolemContainer container = GolemRegistrar.getContainer(getClass());
 		super.registerAttributes();
 		this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE)
 			.setBaseValue(container.attack);

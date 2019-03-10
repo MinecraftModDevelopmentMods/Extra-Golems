@@ -56,7 +56,7 @@ public final class EntityCraftingGolem extends GolemBase {
 	
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if(getConfig(this).getBoolean(ALLOW_SPECIAL)) {
+		if(container.canUseSpecial) {
 			list.add(TextFormatting.BLUE + trans("entitytip.click_open_crafting"));
 		}
 		return list;

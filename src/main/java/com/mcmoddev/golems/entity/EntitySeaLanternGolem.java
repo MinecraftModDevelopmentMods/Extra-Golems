@@ -5,7 +5,6 @@ import com.mcmoddev.golems.entity.ai.EntityAIPlaceSingleBlock;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
-import com.mcmoddev.golems.util.GolemConfigSet;
 import com.mcmoddev.golems.util.GolemNames;
 import net.minecraft.block.BlockFlowingFluid;
 import net.minecraft.block.material.Material;
@@ -45,14 +44,13 @@ public final class EntitySeaLanternGolem extends GolemBase {
 	@Override
 	protected void initEntityAI() {
 		super.initEntityAI();
-		// lights above and below water... need to add to different lists to run concurrently
-		GolemConfigSet cfg = getConfig(this);
+		// lights above and below water... need to add to different lists to run concurrently TODO reimpl config
 		this.tasks.addTask(8, new EntityAIPlaceSingleBlock(this, GolemItems.blockLightSourceWater.getDefaultState()
-			.with(BlockUtilityGlow.LIGHT_LEVEL, BRIGHTNESS_INT), cfg.getInt(FREQUENCY),
-			cfg.getBoolean(ALLOW_SPECIAL), WATER_PRED));
+			.with(BlockUtilityGlow.LIGHT_LEVEL, BRIGHTNESS_INT), 5,
+			container.canUseSpecial, WATER_PRED));
 		this.targetTasks.addTask(8, new EntityAIPlaceSingleBlock(this, GolemItems.blockLightSource.getDefaultState()
-			.with(BlockUtilityGlow.LIGHT_LEVEL, BRIGHTNESS_INT), cfg.getInt(FREQUENCY),
-			cfg.getBoolean(ALLOW_SPECIAL)));
+			.with(BlockUtilityGlow.LIGHT_LEVEL, BRIGHTNESS_INT), 5,
+			container.canUseSpecial));
 	}
 
 	@Override
@@ -87,7 +85,7 @@ public final class EntitySeaLanternGolem extends GolemBase {
 
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if (getConfig(this).getBoolean(EntitySeaLanternGolem.ALLOW_SPECIAL)) {
+		if (container.canUseSpecial) {
 			list.add(TextFormatting.GOLD + trans("entitytip.lights_area"));
 		}
 		list.add(TextFormatting.AQUA + trans("entitytip.breathes_underwater"));

@@ -25,14 +25,14 @@ public final class ProxyClient extends ProxyCommon {
 	public static final IRenderFactory<GolemColorized> FACTORY_COLORED_GOLEM = RenderColoredGolem::new;
 
 	@SubscribeEvent
-	public static void registerModels(final ModelRegistryEvent event) {
+	public void registerModels(final ModelRegistryEvent event) {
 		// itemblocks
 		registerRender(Item.getItemFromBlock(GolemItems.golemHead),
-			Blocks.PUMPKIN.getRegistryName().toString());
+			Blocks.CARVED_PUMPKIN.getRegistryName().toString());
 		// items
-		registerRender(GolemItems.golemPaper);
-		registerRender(GolemItems.spawnBedrockGolem);
-		registerRender(GolemItems.infoBook);
+//		registerRender(GolemItems.golemPaper);
+//		registerRender(GolemItems.spawnBedrockGolem);
+//		registerRender(GolemItems.infoBook);
 	
 		// register entity renders by calling a helper function
 		registerEntityRender(EntityBedrockGolem.class);
@@ -81,7 +81,7 @@ public final class ProxyClient extends ProxyCommon {
 	 * Otherwise, the class will be registered using
 	 * {@link #registerTextured(Class)} by default.
 	 */
-	public static void registerEntityRender(final Class<? extends GolemBase> clazz) {
+	public void registerEntityRender(final Class<? extends GolemBase> clazz) {
 		if(GolemColorized.class.isAssignableFrom(clazz)) {
 			registerColorized((Class<? extends GolemColorized>)clazz);
 		} else {
@@ -92,15 +92,15 @@ public final class ProxyClient extends ProxyCommon {
 	/**
 	 * Registers an entity with the RenderGolem rendering class.
 	 */
-	public static void registerTextured(final Class<? extends GolemBase> golem) {
+	public void registerTextured(final Class<? extends GolemBase> golem) {
 		RenderingRegistry.registerEntityRenderingHandler(golem, FACTORY_TEXTURED_GOLEM);
 	}
 
-	public static void registerColorized(final Class<? extends GolemColorized> golem) {
+	public void registerColorized(final Class<? extends GolemColorized> golem) {
 		RenderingRegistry.registerEntityRenderingHandler(golem, FACTORY_COLORED_GOLEM);
 	}
 
-	private static void registerRender(final Item i, final String name, int... meta) {
+	private void registerRender(final Item i, final String name, int... meta) {
 		if (meta.length < 1) {
 			meta = new int[]{0};
 		}
@@ -110,7 +110,7 @@ public final class ProxyClient extends ProxyCommon {
 		}
 	}
 
-	private static void registerRender(final Item i, final int... meta) {
+	private void registerRender(final Item i, final int... meta) {
 		registerRender(i, i.getRegistryName().toString(), meta);
 	}
 }

@@ -45,7 +45,7 @@ public class EntityTNTGolem extends GolemBase {
 	public EntityTNTGolem(final World world) {
 		this(EntityTNTGolem.class, world, 3, 6, 50, 10);
 		this.setLootTableLoc(GolemNames.TNT_GOLEM);
-		this.allowedToExplode = getConfig(this).getBoolean(ALLOW_SPECIAL);
+		this.allowedToExplode = container.canUseSpecial;
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 
@@ -226,7 +226,7 @@ public class EntityTNTGolem extends GolemBase {
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
 		// only fires for this golem, not child classes
-		if (this.getClass() == EntityTNTGolem.class && getConfig(this).getBoolean(EntityTNTGolem.ALLOW_SPECIAL))
+		if (this.getClass() == EntityTNTGolem.class && container.canUseSpecial)
 			list.add(TextFormatting.RED + trans("entitytip.explodes"));
 		return list;
 	}

@@ -2,9 +2,7 @@ package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.entity.ai.EntityAIPlaceRandomBlocksStrictly;
 import com.mcmoddev.golems.entity.base.GolemBase;
-import com.mcmoddev.golems.main.Config;
 import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.util.GolemConfigSet;
 import com.mcmoddev.golems.util.GolemNames;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockNetherWart;
@@ -43,9 +41,9 @@ public final class EntityNetherWartGolem extends GolemBase {
 	@Override
 	public void livingTick() {
 		super.livingTick();
-		// heals randomly, but only at night or in the nether
-		if ((!this.getEntityWorld().isDaytime() || this.getEntityWorld().dimension.isNether())
-				&& rand.nextInt(Config.RANDOM_HEAL_TIMER) == 0 && getConfig(this).getBoolean(ALLOW_HEALING)) {
+		// heals randomly, but only at night or in the nether (least to most expensive)
+		if (container.canUseSpecial && (!this.getEntityWorld().isDaytime() || this.getEntityWorld().dimension.isNether())
+				&& rand.nextInt(450) == 0 ) {
 			this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 20, 2));
 		}
 	}
@@ -58,9 +56,9 @@ public final class EntityNetherWartGolem extends GolemBase {
 			Blocks.NETHER_WART.getDefaultState().with(BlockNetherWart.AGE, 1),
 			Blocks.NETHER_WART.getDefaultState().with(BlockNetherWart.AGE, 2)};
 		final Block[] soils = {Blocks.SOUL_SAND};
-		GolemConfigSet cfg = getConfig(this);
-		final boolean spawn = cfg.getBoolean(ALLOW_SPECIAL);
-		final int freq = cfg.getInt(FREQUENCY);
+		final boolean spawn = container.canUseSpecial;
+		//TODO: reimpl config
+		final int freq = 880;
 		this.tasks.addTask(2,
 			new EntityAIPlaceRandomBlocksStrictly(this, freq, flowers, soils, spawn));
 	}
@@ -77,10 +75,11 @@ public final class EntityNetherWartGolem extends GolemBase {
 
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if (getConfig(this).getBoolean(EntityNetherWartGolem.ALLOW_SPECIAL)) {
+		if (container.canUseSpecial) {
 			list.add(TextFormatting.RED + trans("entitytip.plants_warts"));
 		}
-		if(getConfig(this).getBoolean(ALLOW_HEALING)) {
+		//TODO: reimpl config
+		if(container.canUseSpecial) {
 			String sHeals = TextFormatting.RED + trans("entitytip.heals");
 			list.add(sHeals);
 		}

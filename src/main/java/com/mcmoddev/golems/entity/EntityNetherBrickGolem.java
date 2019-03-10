@@ -2,7 +2,6 @@ package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.util.GolemConfigSet;
 import com.mcmoddev.golems.util.GolemNames;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -36,8 +35,7 @@ public final class EntityNetherBrickGolem extends GolemBase {
 	@Override
 	public boolean attackEntityAsMob(final Entity entity) {
 		if (super.attackEntityAsMob(entity)) {
-			final GolemConfigSet cfg = getConfig(this);
-			if (cfg.getBoolean(ALLOW_FIRE_SPECIAL)) {
+			if (container.canUseSpecial) {
 				entity.setFire(2 + rand.nextInt(5));
 			}
 			return true;
@@ -52,7 +50,7 @@ public final class EntityNetherBrickGolem extends GolemBase {
 
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if (getConfig(this).getBoolean(EntityNetherBrickGolem.ALLOW_FIRE_SPECIAL))
+		if (container.canUseSpecial)
 			list.add(TextFormatting.RED + trans("entitytip.lights_mobs_on_fire"));
 		return list;
 	}

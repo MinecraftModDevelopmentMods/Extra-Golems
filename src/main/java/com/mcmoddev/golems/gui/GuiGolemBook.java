@@ -3,6 +3,7 @@ package com.mcmoddev.golems.gui;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
+import com.mcmoddev.golems.util.config.GolemRegistrar;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -137,7 +138,7 @@ public class GuiGolemBook extends GuiScreen {
 	private static final ItemStack outputSpell = new ItemStack(GolemItems.golemPaper);
 	// for use in drawing golem head recipe
 	private static final ItemStack[] ingredientsHead = new ItemStack[]
-		{new ItemStack(Blocks.PUMPKIN), new ItemStack(GolemItems.golemPaper)};
+		{new ItemStack(Blocks.CARVED_PUMPKIN), new ItemStack(GolemItems.golemPaper)};
 	private static final ItemStack outputHead = new ItemStack(GolemItems.golemHead);
 	
 	public GuiGolemBook(EntityPlayer playerIn, ItemStack itemIn) {
@@ -160,7 +161,7 @@ public class GuiGolemBook extends GuiScreen {
 	private static final void initGolemBookEntries() {
 		GOLEMS.clear();
 		for (GolemBase golem : ExtraGolems.PROXY.DUMMY_GOLEMS) {
-			if(GolemBase.getConfig(golem).canSpawn()) {
+			if(GolemRegistrar.getContainer(golem.getClass()).enabled) {
 				GOLEMS.add(new GolemBookEntry(golem));
 			}
 		}

@@ -2,8 +2,7 @@ package com.mcmoddev.golems.items;
 
 import com.mcmoddev.golems.entity.EntityBedrockGolem;
 import com.mcmoddev.golems.entity.base.GolemBase;
-import com.mcmoddev.golems.main.Config;
-import com.mcmoddev.golems.util.GolemLookup;
+import com.mcmoddev.golems.util.config.GolemRegistrar;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -39,8 +38,8 @@ public final class ItemBedrockGolem extends Item {
 		BlockPos pos = context.getPos();
 		final ItemStack stack = player.getHeldItem(hand);
 		// creative players can use this item to spawn a bedrock golem
-		if (GolemLookup.getConfig(EntityBedrockGolem.class).canSpawn()) {
-			if (Config.isBedrockGolemCreativeOnly() && !player.abilities.isCreativeMode) {
+		if (GolemRegistrar.getContainer(EntityBedrockGolem.class).enabled) {
+			if (/*Config.isBedrockGolemCreativeOnly() &&*/ !player.abilities.isCreativeMode) {
 				return EnumActionResult.PASS;
 			}
 
@@ -84,7 +83,7 @@ public final class ItemBedrockGolem extends Item {
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
 		final String loreCreativeOnly = TextFormatting.RED + trans("tooltip.creative_only_item");
-		if (Config.isBedrockGolemCreativeOnly()) {
+		if (/*Config.isBedrockGolemCreativeOnly()*/ true) {
 			tooltip.add(wrap(loreCreativeOnly));
 		}
 

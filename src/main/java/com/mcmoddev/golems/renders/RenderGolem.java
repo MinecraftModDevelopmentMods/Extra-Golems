@@ -25,7 +25,7 @@ public class RenderGolem extends RenderLiving<GolemBase> {
 			final float f = 13.0F;
 			final float f1 = golem.limbSwing - golem.limbSwingAmount * (1.0F - partialTicks) + 6.0F;
 			final float f2 = (Math.abs(f1 % f - f * 0.5F) - f * 0.25F) / (f * 0.25F);
-			GlStateManager.rotate(6.5F * f2, 0.0F, 0.0F, 1.0F);
+			GlStateManager.rotatef(6.5F * f2, 0.0F, 0.0F, 1.0F);
 		}
 	}
 
@@ -37,4 +37,6 @@ public class RenderGolem extends RenderLiving<GolemBase> {
 	protected ResourceLocation getEntityTexture(final GolemBase golem) {
 		return golem.getTextureType();
 	}
+
+
 }

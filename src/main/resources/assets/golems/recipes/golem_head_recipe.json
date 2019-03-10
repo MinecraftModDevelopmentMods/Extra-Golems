@@ -5,7 +5,7 @@
   "type": "forge:ore_shapeless",
   "ingredients": [
     {
-      "item": "minecraft:pumpkin"
+      "item": "minecraft:carved_pumpkin"
     },
     {
       "item": "golems:golem_paper"

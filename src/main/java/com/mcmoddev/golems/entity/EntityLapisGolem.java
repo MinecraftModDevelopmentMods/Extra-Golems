@@ -2,7 +2,6 @@ package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.util.GolemConfigSet;
 import com.mcmoddev.golems.util.GolemNames;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -43,8 +42,7 @@ public final class EntityLapisGolem extends GolemBase {
 	public boolean attackEntityAsMob(final Entity entityIn) {
 		if (super.attackEntityAsMob(entityIn) && entityIn instanceof EntityLivingBase) {
 			final EntityLivingBase entity = (EntityLivingBase) entityIn;
-			final GolemConfigSet cfg = getConfig(this);
-			if (cfg.getBoolean(ALLOW_SPECIAL)) {
+			if (container.canUseSpecial) {
 				final Potion potionID = entity.isEntityUndead() ? MobEffects.INSTANT_HEALTH
 					: badEffects[rand.nextInt(badEffects.length)];
 				final int len = potionID.isInstant() ? 1 : 20 * (5 + rand.nextInt(9));
@@ -63,7 +61,7 @@ public final class EntityLapisGolem extends GolemBase {
 
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if (getConfig(this).getBoolean(EntityLapisGolem.ALLOW_SPECIAL))
+		if (container.canUseSpecial)
 			list.add(TextFormatting.LIGHT_PURPLE + trans("entitytip.attacks_use_potion_effects"));
 		return list;
 	}

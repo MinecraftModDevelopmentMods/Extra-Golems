@@ -10,26 +10,26 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.EntitySnowman;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
 
 public final class BlockGolemHead extends BlockHorizontal {
 
 	public BlockGolemHead() {
-		super(Properties.from(Blocks.PUMPKIN));
-		this.setDefaultState(this.getStateContainer().getBaseState().with(HORIZONTAL_FACING, EnumFacing.NORTH));
+		super(Properties.from(Blocks.CARVED_PUMPKIN));
+//		this.setDefaultState(this.getStateContainer().getBaseState().with(HORIZONTAL_FACING, EnumFacing.NORTH));
 	}
 
-	@Nullable
+
+
+
 	@Override
-	public IBlockState getStateForPlacement(BlockItemUseContext context) {
-		return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite());
+	public IBlockState getStateForPlacement(IBlockState state, EnumFacing facing, IBlockState state2, IWorld world, BlockPos pos1, BlockPos pos2, EnumHand hand) {
+		return this.getDefaultState().with(HORIZONTAL_FACING, facing.getOpposite());
 	}
-
 
 	@Override
 	public void onBlockAdded(IBlockState state, World worldIn, BlockPos pos, IBlockState oldState) {

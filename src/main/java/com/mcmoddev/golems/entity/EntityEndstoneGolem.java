@@ -3,7 +3,6 @@ package com.mcmoddev.golems.entity;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.events.EndGolemTeleportEvent;
 import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.util.GolemConfigSet;
 import com.mcmoddev.golems.util.GolemNames;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -45,10 +44,9 @@ public class EntityEndstoneGolem extends GolemBase {
 	/** Default constructor. **/
 	public EntityEndstoneGolem(final World world) {
 		this(EntityEndstoneGolem.class, world, 32.0D, true);
-		GolemConfigSet cfg = getConfig(this);
 		this.setLootTableLoc(GolemNames.ENDSTONE_GOLEM);
-		this.isHurtByWater = cfg.getBoolean(ALLOW_WATER_HURT);
-		this.allowTeleport = cfg.getBoolean(ALLOW_SPECIAL);
+		this.isHurtByWater = true; //TODO reimpl config
+		this.allowTeleport = container.canUseSpecial;
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 
@@ -205,7 +203,7 @@ public class EntityEndstoneGolem extends GolemBase {
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
 		// this will only fire for the Endstone Golem, not child classes
-		if (this.getClass() == EntityEndstoneGolem.class && getConfig(this).getBoolean(EntityEndstoneGolem.ALLOW_SPECIAL)) {
+		if (this.getClass() == EntityEndstoneGolem.class && container.canUseSpecial) {
 			list.add(TextFormatting.DARK_AQUA + trans("entitytip.can_teleport"));
 		}
 		return list;

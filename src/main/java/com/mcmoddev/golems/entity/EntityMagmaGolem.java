@@ -2,7 +2,6 @@ package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.util.GolemConfigSet;
 import com.mcmoddev.golems.util.GolemNames;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -57,9 +56,11 @@ public final class EntityMagmaGolem extends GolemBase {
 	public EntityMagmaGolem(final World world, final boolean isChild) {
 		super(EntityMagmaGolem.class, world);
 		this.setChild(isChild);
-		this.isHurtByWater = getConfig(this).getBoolean(ALLOW_WATER_DAMAGE);
-		this.allowMelting = getConfig(this).getBoolean(ALLOW_LAVA_SPECIAL);
-		this.meltDelay = getConfig(this).getInt(MELT_DELAY);
+		//TODO: reimpl config
+		this.isHurtByWater = true;
+		this.allowMelting = container.canUseSpecial;
+		this.meltDelay = 240;
+		//End config
 		this.ticksStandingStill = 0;
 		this.setImmuneToFire(true);
 		this.setCanSwim(!this.isHurtByWater);
@@ -74,17 +75,17 @@ public final class EntityMagmaGolem extends GolemBase {
 	@Override
 	public void notifyDataManagerChange(DataParameter<?> key) {
 		// change stats if this is a child vs. an adult golem
-		GolemConfigSet cfg = getConfig(this);
+
 		if(this.isChild()) {
 			this.setSize(0.7F, 1.45F);
 			this.allowMelting = false;
-			this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(cfg.getBaseAttack() * 0.6F);
-			this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(cfg.getMaxHealth() / 3);
+			this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.attack * 0.6F);
+			this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.health / 3);
 		} else {
 			this.setSize(1.4F, 2.9F);
-			this.allowMelting = getConfig(this).getBoolean(ALLOW_LAVA_SPECIAL);
-			this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(cfg.getBaseAttack());
-			this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(cfg.getMaxHealth());
+			this.allowMelting = container.canUseSpecial;
+			this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.attack);
+			this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.health);
 		}
 	}
 
@@ -106,7 +107,7 @@ public final class EntityMagmaGolem extends GolemBase {
 	@Override
 	public boolean attackEntityAsMob(final Entity entity) {
 		if (super.attackEntityAsMob(entity)) {
-			if (getConfig(this).getBoolean(ALLOW_FIRE_SPECIAL)) {
+			if (container.canUseSpecial) {
 				entity.setFire(2 + rand.nextInt(5));
 			}
 			return true;
@@ -157,7 +158,7 @@ public final class EntityMagmaGolem extends GolemBase {
 	@Override
 	public void remove() {
 		// spawn baby golems here if possible 
-		if(!this.world.isRemote && !this.isChild() && getConfig(this).getBoolean(ALLOW_SPLITTING)) {
+		if(!this.world.isRemote && !this.isChild() && this.container.canUseSpecial/*getConfig(this).getBoolean(ALLOW_SPLITTING) //TODO: reimpl*/) {
 			GolemBase slime1 = new EntityMagmaGolem(this.world, true);
 			GolemBase slime2 = new EntityMagmaGolem(this.world, true);
 			// copy attack target info
@@ -191,17 +192,18 @@ public final class EntityMagmaGolem extends GolemBase {
 
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		GolemConfigSet cfg = getConfig(this);
+		//TODO: reimpl
+
 		// 'melts lava'
-		if(!this.isChild() && cfg.getBoolean(ALLOW_LAVA_SPECIAL)) {
+		if(!this.isChild() && container.canUseSpecial) {
 			list.add(TextFormatting.RED + trans("entitytip.slowly_melts", trans("tile.stonebrick.name")));
 		}
 		// 'ignites mobs'
-		if (cfg.getBoolean(ALLOW_FIRE_SPECIAL)) {
+		if (container.canUseSpecial) {
 			list.add(TextFormatting.GOLD + trans("entitytip.lights_mobs_on_fire"));
 		}
 		// 'splits upon death'
-		if(!this.isChild() && cfg.getBoolean(ALLOW_SPLITTING)) {
+		if(!this.isChild() && container.canUseSpecial) {
 			list.add(TextFormatting.RED + trans("entitytip.splits_upon_death"));
 		}
 		return list;

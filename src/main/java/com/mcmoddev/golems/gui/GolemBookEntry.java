@@ -1,18 +1,10 @@
 package com.mcmoddev.golems.gui;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.mcmoddev.golems.entity.EntityBedrockGolem;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.util.GolemLookup;
-
+import com.mcmoddev.golems.util.config.GolemRegistrar;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -20,6 +12,12 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 /**
  * This class will be used to easily connect
  * golems and their blocks and other info
@@ -38,7 +36,7 @@ public class GolemBookEntry {
 
 	public GolemBookEntry(@Nonnull GolemBase golem) {
 		// initialize fields based on golem attributes
-		EntityType<?> golemType = GolemLookup.getEntityType(golem.getClass());
+		EntityType<?> golemType = GolemRegistrar.getContainer(golem.getClass()).entityType;
 		this.GOLEM_NAME = "entity." + golemType.getTranslationKey() + ".name";
 		this.MULTI_TEXTURE = (golem instanceof GolemMultiTextured || golem.doesInteractChangeTexture());
 		this.FIREPROOF = (golem.isImmuneToFire() && !(golem instanceof EntityBedrockGolem));
@@ -47,7 +45,7 @@ public class GolemBookEntry {
 		this.SPECIALS = golem.addSpecialDesc(new ArrayList<String>());
 
 		// set the block and block name if it exists
-		Block b = GolemLookup.getBuildingBlock(golem.getClass());
+		Block b = GolemRegistrar.getContainer(golem.getClass()).getPrimaryBuildingBlock();
 		// Blocks.AIR means there is no building block
 		this.BLOCK = b != null ? b : Blocks.AIR;
 		

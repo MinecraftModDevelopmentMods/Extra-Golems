@@ -3,7 +3,6 @@ package com.mcmoddev.golems.entity;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.events.IceGolemFreezeEvent;
 import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.util.GolemConfigSet;
 import com.mcmoddev.golems.util.GolemNames;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -56,10 +55,9 @@ public final class EntityIceGolem extends GolemBase {
 			if (this.world.getBiome(below).getTemperature(below) > 1.0F) {
 				this.attackEntityFrom(DamageSource.ON_FIRE, 1.0F);
 			}
-			GolemConfigSet cfg = getConfig(this);
-			if (cfg.getBoolean(ALLOW_SPECIAL)) {
+			if (container.canUseSpecial) {
 				final IceGolemFreezeEvent event = new IceGolemFreezeEvent(this, below,
-					cfg.getInt(AOE));
+					3 /*TODO: reimpl config*/);
 				if (!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Event.Result.DENY) {
 					this.freezeBlocks(event.getAffectedPositions(), event.getFunction(),
 						event.updateFlag);
@@ -112,7 +110,7 @@ public final class EntityIceGolem extends GolemBase {
 
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if (getConfig(this).getBoolean(EntityIceGolem.ALLOW_SPECIAL))
+		if (container.canUseSpecial)
 			list.add(TextFormatting.AQUA + trans("entitytip.freezes_blocks"));
 		return list;
 	}

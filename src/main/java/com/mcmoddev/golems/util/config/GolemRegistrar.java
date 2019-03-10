@@ -1,7 +1,5 @@
 package com.mcmoddev.golems.util.config;
 
-//TODO: Make this class usable by other mods - it's private right now because it may explode
-
 import com.mcmoddev.golems.entity.base.GolemBase;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
@@ -17,7 +15,7 @@ import java.util.HashMap;
  */
 public final class GolemRegistrar {
 
-	protected static HashMap<Class<? extends GolemBase>, GolemContainer> golemList;
+	protected static HashMap<Class<? extends GolemBase>, GolemContainer> golemList = new HashMap<>();
 
 	private GolemRegistrar() {
 		//

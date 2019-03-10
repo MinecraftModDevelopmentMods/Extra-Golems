@@ -2,7 +2,6 @@ package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.util.GolemConfigSet;
 import com.mcmoddev.golems.util.GolemNames;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -39,9 +38,7 @@ public final class EntityCoalGolem extends GolemBase {
 	public boolean attackEntityAsMob(final Entity entity) {
 		if (super.attackEntityAsMob(entity)) {
 			final int BLIND_CHANCE = 4;
-			GolemConfigSet cfg = getConfig(this);
-			if (cfg.getBoolean(ALLOW_SPECIAL) && entity instanceof EntityLivingBase
-				&& this.rand.nextInt(BLIND_CHANCE) == 0) {
+			if (container.canUseSpecial && entity instanceof EntityLivingBase && this.rand.nextInt(BLIND_CHANCE) == 0) {
 				((EntityLivingBase) entity).addPotionEffect(
 					new PotionEffect(MobEffects.BLINDNESS, 20 * (3 + rand.nextInt(5)), 0));
 			}
@@ -70,7 +67,7 @@ public final class EntityCoalGolem extends GolemBase {
 
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if (getConfig(this).getBoolean(EntityCoalGolem.ALLOW_SPECIAL))
+		if (container.canUseSpecial)
 			list.add(TextFormatting.GRAY + trans("entitytip.blinds_creatures"));
 		return list;
 	}

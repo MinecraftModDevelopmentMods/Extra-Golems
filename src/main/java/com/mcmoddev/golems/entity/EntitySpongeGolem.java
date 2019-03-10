@@ -1,13 +1,9 @@
 package com.mcmoddev.golems.entity;
 
-import java.util.List;
-
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.events.SpongeGolemSoakEvent;
 import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.util.GolemConfigSet;
 import com.mcmoddev.golems.util.GolemNames;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Particles;
 import net.minecraft.init.SoundEvents;
@@ -20,6 +16,8 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
+
+import java.util.List;
 
 public final class EntitySpongeGolem extends GolemBase {
 
@@ -46,25 +44,25 @@ public final class EntitySpongeGolem extends GolemBase {
 	@Override
 	public void livingTick() {
 		super.livingTick();
-		GolemConfigSet cfg = getConfig(this);
-		final int interval = cfg.getInt(INTERVAL);
+		//TODO reimpl config
+		final int interval = 20;
 
-		if (cfg.getBoolean(ALLOW_SPECIAL)
-			&& (interval <= 1 || this.ticksExisted % interval == 0)) {
+		if (container.canUseSpecial
+			&& (this.ticksExisted % interval == 0)) {
 			final int x = MathHelper.floor(this.posX);
 			final int y = MathHelper.floor(this.posY - 0.20000000298023224D) + 2;
 			final int z = MathHelper.floor(this.posZ);
 			final BlockPos center = new BlockPos(x, y, z);
-
+			//TODO reimpl config
 			final SpongeGolemSoakEvent event = new SpongeGolemSoakEvent(this, center,
-				cfg.getInt(RANGE));
+				4);
 			if (!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Event.Result.DENY) {
 				this.replaceWater(event.getPositionList(), event.getReplacementState(),
 					event.updateFlag);
 			}
 		}
-
-		if (cfg.getBoolean(PARTICLES) && Math.abs(this.motionX) < 0.05D
+		//TODO reimpl config
+		if (true && Math.abs(this.motionX) < 0.05D
 			&& Math.abs(this.motionZ) < 0.05D && world.isRemote) {
 			final BasicParticleType particle = this.isBurning() ? Particles.SMOKE
 				: Particles.DRIPPING_WATER;
@@ -99,7 +97,7 @@ public final class EntitySpongeGolem extends GolemBase {
 
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if (getConfig(this).getBoolean(EntitySpongeGolem.ALLOW_SPECIAL))
+		if (container.canUseSpecial)
 			list.add(TextFormatting.YELLOW + trans("entitytip.absorbs_water"));
 		return list;
 	}
