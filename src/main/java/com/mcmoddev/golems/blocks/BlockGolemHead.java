@@ -57,7 +57,7 @@ public final class BlockGolemHead extends BlockHorizontal {
 			return false;
 		}
 		// hard-coded support for Snow Golem
-		if (blockBelow1 == Blocks.SNOW) {
+		if (blockBelow1 == Blocks.SNOW_BLOCK) {
 			if (!world.isRemote) {
 				removeGolemBody(world, pos);
 				final EntitySnowman entitysnowman = new EntitySnowman(world);
