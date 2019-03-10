@@ -91,10 +91,10 @@ public final class BlockGolemHead extends BlockHorizontal {
 			}
 			final GolemBase golem = GolemRegistrar.getGolem(world, blockBelow1);
 			if (golem == null) return false;
-
 			//get the spawn permissions
 			if(!golem.getGolemContainer().enabled) return false;
 
+			removeAllGolemBlocks(world, pos, flagX);
 			ExtraGolems.LOGGER.info("[Extra Golems]: Building golem " + golem.toString());
 			golem.setPlayerCreated(true);
 			golem.setLocationAndAngles(x, y, z, 0.0F, 0.0F);
@@ -140,9 +140,9 @@ public final class BlockGolemHead extends BlockHorizontal {
 	 * Replaces this block and the two below it with air.
 	 **/
 	public static void removeGolemBody(final World world, final BlockPos head) {
-		world.removeBlock(head);
-		world.removeBlock(head.down(1));
-		world.removeBlock(head.down(2));
+		world.destroyBlock(head, false);
+		world.destroyBlock(head.down(1), false);
+		world.destroyBlock(head.down(2), false);
 	}
 
 	/**
@@ -150,11 +150,11 @@ public final class BlockGolemHead extends BlockHorizontal {
 	 **/
 	public static void removeGolemArms(final World world, final BlockPos pos, final boolean isXAligned) {
 		if (isXAligned) {
-			world.removeBlock(pos.down(1).west(1));
-			world.removeBlock(pos.down(1).east(1));
+			world.destroyBlock(pos.down(1).west(1), false);
+			world.destroyBlock(pos.down(1).east(1), false);
 		} else {
-			world.removeBlock(pos.down(1).north(1));
-			world.removeBlock(pos.down(1).south(1));
+			world.destroyBlock(pos.down(1).north(1), false);
+			world.destroyBlock(pos.down(1).south(1), false);
 		}
 	}
 }
