@@ -39,8 +39,8 @@ import java.util.List;
  **/
 public abstract class GolemBase extends EntityCreature implements IAnimal {
 
-	private static final DataParameter<Boolean> BABY = EntityDataManager.<Boolean>createKey(GolemBase.class, DataSerializers.BOOLEAN);
-	private static final DataParameter<Boolean> PLAYER_CREATED = EntityDataManager.<Boolean>createKey(GolemBase.class, DataSerializers.BOOLEAN);
+	protected static final DataParameter<Boolean> BABY = EntityDataManager.<Boolean>createKey(GolemBase.class, DataSerializers.BOOLEAN);
+	protected static final DataParameter<Boolean> PLAYER_CREATED = EntityDataManager.<Boolean>createKey(GolemBase.class, DataSerializers.BOOLEAN);
 	private static final String KEY_BABY = "isChild";
 	private static final String KEY_PLAYER_CREATED = "isPlayerCreated";
 	public static final int WANDER_DISTANCE = 64;
@@ -362,10 +362,11 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 
 	public void setLootTableLoc(final ResourceLocation lootTable) {
 		this.lootTableLoc = lootTable;
+		System.out.println("Loot Table for '" + this.getName().getUnformattedComponentText() + "' should be at " + lootTable.toString());
 	}
 
 	public void setLootTableLoc(String modid, final String name) {
-		this.lootTableLoc = new ResourceLocation(modid, "entities/" + name);
+		this.setLootTableLoc(new ResourceLocation(modid, "loot_tables/entities/" + name));
 	}
 	
 	public void setLootTableLoc(final String name) {

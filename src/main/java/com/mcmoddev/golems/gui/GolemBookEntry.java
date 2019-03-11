@@ -37,7 +37,7 @@ public class GolemBookEntry {
 	public GolemBookEntry(@Nonnull GolemBase golem) {
 		// initialize fields based on golem attributes
 		EntityType<?> golemType = GolemRegistrar.getContainer(golem.getClass()).entityType;
-		this.GOLEM_NAME = "entity." + golemType.getTranslationKey() + ".name";
+		this.GOLEM_NAME = golemType.getTranslationKey();
 		this.MULTI_TEXTURE = (golem instanceof GolemMultiTextured || golem.doesInteractChangeTexture());
 		this.FIREPROOF = (golem.isImmuneToFire() && !(golem instanceof EntityBedrockGolem));
 		this.HEALTH = (int) golem.getMaxHealth();

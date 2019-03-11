@@ -24,18 +24,9 @@ public final class EntityPrismarineGolem extends GolemBase {
 		return makeTexture(ExtraGolems.MODID, GolemNames.PRISMARINE_GOLEM);
 	}
 
-	/**
-	 * Called frequently so the entity can update its state every tick as required. For example,
-	 * zombies and skeletons use this to react to sunlight and start to burn.
-	 */
 	@Override
-	public void livingTick() {
-		super.livingTick();
-		if (this.isInWater()) {
-			this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.41D);
-		} else {
-			this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.24D);
-		}
+	protected float getWaterSlowDown() {
+		return 1.1F;
 	}
 
 	@Override

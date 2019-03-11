@@ -261,7 +261,7 @@ public class GuiGolemBook extends GuiScreen {
 		switch (pageNum) {
 			case 0:
 				// draw introduction
-				title = trans("item.info_book.name");
+				title = trans("item.golems.info_book");
 				body = trans("golembook.intro1") + "\n" + trans("golembook.intro2");
 				drawBasicPage(cornerX, cornerY, title, body);
 				return;
@@ -293,18 +293,18 @@ public class GuiGolemBook extends GuiScreen {
 				return;
 			case 2:
 				// draw Golem Spell instructions
-				title = TextFormatting.getTextWithoutFormattingCodes(trans("item.golem_paper.name"));
+				title = TextFormatting.getTextWithoutFormattingCodes(trans("item.golems.golem_paper"));
 				body = "\n\n\n\n" + I18n.format("golembook.recipe_spell.recipe", title,
-					trans("item.paper.name"), trans("item.feather.name"),
-					trans("item.dyePowder.black.name"), trans("item.redstone.name"));
+					trans("item.minecraft.paper"), trans("item.minecraft.feather"),
+					trans("item.minecraft.ink_sac"), trans("item.minecraft.redstone"));
 				drawBasicPage(cornerX, cornerY, title, body);
 				draw2x2GridAt(cornerX + MARGIN * 2, cornerY + MARGIN * 2, ingredientsSpell, outputSpell);
 				return;
 			case 3:
 				// draw Golem Head instructions
-				title = trans("tile.golem_head.name");
+				title = trans("block.golems.golem_head");
 				body = "\n\n\n\n" + TextFormatting.getTextWithoutFormattingCodes(trans("golembook.recipe_head.recipe", title,
-					trans("item.golem_paper.name"), trans("tile.pumpkin.name")));
+					trans("item.golems.golem_paper"), trans("block.minecraft.pumpkin")));
 				drawBasicPage(cornerX, cornerY, title, body);
 				draw2x2GridAt(cornerX + MARGIN * 2, cornerY + MARGIN * 2, ingredientsHead, outputHead);
 				return;
@@ -313,7 +313,7 @@ public class GuiGolemBook extends GuiScreen {
 				title = trans("golembook.build_golem.title");
 				body = trans("golembook.build_golem.howto1") + " "
 					+ trans("golembook.build_golem.howto2") + "\n\n"
-					+ I18n.format("golembook.build_golem.howto3", trans("tile.golem_head.name"));
+					+ I18n.format("golembook.build_golem.howto3", trans("block.golems.golem_head"));
 				drawBasicPage(cornerX, cornerY, title, body);
 				return;
 			case 5:
@@ -618,6 +618,7 @@ public class GuiGolemBook extends GuiScreen {
 				page = Math.floorDiv(page, 2) * 2;
 				this.gui.curPage = page;
 			}
+			this.gui.updateButtons();
 		}
 		
 		@Override
@@ -673,6 +674,7 @@ public class GuiGolemBook extends GuiScreen {
            } else {
         	   this.gui.curPage -= 2;
            }
+           this.gui.updateButtons();
          }
 
 		/**

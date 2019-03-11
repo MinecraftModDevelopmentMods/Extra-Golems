@@ -19,6 +19,8 @@ build
 .gradle
 
 # other
+logs
+config
 eclipse
 run
 classes

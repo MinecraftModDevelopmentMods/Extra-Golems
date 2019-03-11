@@ -22,7 +22,6 @@ public final class GolemEntityTypes {
 
 	//public static final EntityType<GolemBase> HARDENED_CLAY = build(EntityHardenedClayGolem.class, GolemNames.TERRACOTTA_GOLEM, Blocks.HARDENED_CLAY);
 
-	//public static final EntityType<GolemBase> LEAF = build(EntityLeafGolem.class, GolemNames.LEAF_GOLEM, Blocks.LEAVES, Blocks.LEAVES2)
 
 	//public static final EntityType<GolemBase> STAINED_CLAY = build(EntityStainedClayGolem.class, GolemNames.STAINEDTERRACOTTA_GOLEM, Blocks.STAINED_HARDENED_CLAY);
 	//public static final EntityType<GolemBase> STAINED_GLASS = build(EntityStainedGlassGolem.class, GolemNames.STAINEDGLASS_GOLEM, Blocks.STAINED_GLASS);
@@ -46,6 +45,7 @@ public final class GolemEntityTypes {
 		buildEntity(EntityGoldGolem.class, EntityGoldGolem::new, GolemNames.GOLD_GOLEM, 80.0D, 8.0D, false, Blocks.GOLD_BLOCK);
 		buildEntity(EntityIceGolem.class, EntityIceGolem::new, GolemNames.ICE_GOLEM, 18.0D, 6.0D, true, Blocks.PACKED_ICE, Blocks.ICE);
 		buildEntity(EntityLapisGolem.class, EntityLapisGolem::new, GolemNames.LAPIS_GOLEM, 50.0D, 1.5D, true, Blocks.LAPIS_BLOCK);
+		buildEntity(EntityLeafGolem.class, EntityLeafGolem::new, GolemNames.LEAF_GOLEM, 6.0D, 0.5D, true, Blocks.OAK_LEAVES /* TODO block tags */);
 		buildEntity(EntityMagmaGolem.class, EntityMagmaGolem::new, GolemNames.MAGMA_GOLEM, 46.0D, 4.5D, true, Blocks.MAGMA_BLOCK);
 		buildEntity(EntityMelonGolem.class, EntityMelonGolem::new, GolemNames.MELON_GOLEM, 18.0D, 1.5D, true, Blocks.MELON);
 		buildEntity(EntityMushroomGolem.class, EntityMushroomGolem::new, GolemNames.MUSHROOM_GOLEM, 30.0D, 3.0D, true, Blocks.RED_MUSHROOM_BLOCK, Blocks.BROWN_MUSHROOM_BLOCK);
@@ -62,6 +62,7 @@ public final class GolemEntityTypes {
 		buildEntity(EntitySpongeGolem.class, EntitySpongeGolem::new, GolemNames.SPONGE_GOLEM, 20.0D, 1.5D, true, Blocks.SPONGE);
 		buildEntity(EntityStrawGolem.class, EntityStrawGolem::new, GolemNames.STRAW_GOLEM, 10.0D, 1.0D, true, Blocks.HAY_BLOCK);
 		buildEntity(EntityTNTGolem.class, EntityTNTGolem::new, GolemNames.TNT_GOLEM, 14.0D, 2.5D, true, Blocks.TNT);
+		buildEntity(EntityWoodenGolem.class, EntityWoodenGolem::new, GolemNames.WOODEN_GOLEM, 20.0D, 3.0D, false, Blocks.OAK_LOG /* TODO block tags */);
 	}
 	//TODO: Take a look again later
 	private static void buildEntity(final Class<? extends GolemBase> entityClass, Function<? super World, ? extends GolemBase> factoryIn,

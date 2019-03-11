@@ -101,17 +101,20 @@ public final class EntitySlimeGolem extends GolemBase {
 	@Override
 	public void notifyDataManagerChange(DataParameter<?> key) {
 		// change stats if this is a child vs. an adult golem TODO reimpl config
-		if(this.isChild()) {
-			this.knockbackPower = 0.0F;
-			this.setSize(0.7F, 1.45F);
-			this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.health / 3);
-			this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.attack * 0.6F);
-			this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.0D);
-		} else {
-			this.knockbackPower = 1.9412F * 0.325F;
-			this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.health);
-			this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.attack);
-			this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.35D);
+		super.notifyDataManagerChange(key);
+		if(BABY.equals(key)) {
+			if(this.isChild()) {
+				this.knockbackPower = 0.0F;
+				this.setSize(0.7F, 1.45F);
+				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.health / 3);
+				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.attack * 0.6F);
+				this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.0D);
+			} else {
+				this.knockbackPower = 1.9412F * 0.325F;
+				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.health);
+				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.attack);
+				this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.35D);
+			}
 		}
 	}
 

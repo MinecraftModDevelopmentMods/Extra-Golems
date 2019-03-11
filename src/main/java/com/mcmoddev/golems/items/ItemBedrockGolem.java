@@ -88,9 +88,9 @@ public final class ItemBedrockGolem extends Item {
 		}
 
 		if (GuiScreen.isShiftKeyDown()) {
-			tooltip.add(wrap(I18n.format("tooltip.use_to_spawn", trans("entity.golems.golem_bedrock.name"))));
+			tooltip.add(wrap(I18n.format("tooltip.use_to_spawn", trans("entity.golems.golem_bedrock"))));
 			tooltip.add(wrap(I18n.format("tooltip.use_on_existing",
-				trans("entity.golems.golem_bedrock.name"))));
+				trans("entity.golems.golem_bedrock"))));
 			tooltip.add(wrap(trans("tooltip.to_remove_it") + "."));
 		} else {
 			final String lorePressShift = TextFormatting.GRAY + trans("tooltip.press") + " "

@@ -1,13 +1,13 @@
 {
     "_comment": "Items and Blocks used by this mod",
-    "item.golem_paper": "§cGolem Spell§r",
-    "item.spawn_bedrock_golem": "Spawn Bedrock Golem",
-    "block.golem_head": "Golem Head",
+    "item.golems.golem_paper": "Golem Spell",
+    "item.golems.spawn_bedrock_golem": "Spawn Bedrock Golem",
+    "block.golems.golem_head": "Golem Head",
 
     "_comment": "These will only show up in something like JEI",
-    "block.light_provider_full": "Dynamic Golem Light (Air)",
-    "block.water_light_provider_full": "Dynamic Golem Light (Water)",
-    "block.power_provider_full": "Dynamic Golem Power Source",
+    "block.golems.light_provider_full": "Dynamic Golem Light (Air)",
+    "block.golems.water_light_provider_full": "Dynamic Golem Light (Water)",
+    "block.golems.power_provider_full": "Dynamic Golem Power Source",
 
     "_comment": "Entity names",
     "entity.golems.golem_bedrock": "Bedrock Golem",
@@ -86,7 +86,7 @@
     "entitytip.splits_upon_death": "Splits in two!",
 
     "_comment": "Golem Guide Book entries",
-    "item.info_book": "Extra Golems Guide",
+    "item.golems.info_book": "Extra Golems Guide",
     "golembook.intro1": "Welcome to Extra Golems! This guide will help you build your very own golem army.",
     "golembook.intro2": "Turn the page to get started!",
     "golembook.contents.title": "Table of Contents",

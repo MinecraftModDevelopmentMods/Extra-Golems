@@ -10,6 +10,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.EntitySnowman;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.state.StateContainer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -20,11 +22,16 @@ public final class BlockGolemHead extends BlockHorizontal {
 
 	public BlockGolemHead() {
 		super(Properties.from(Blocks.CARVED_PUMPKIN));
-//		this.setDefaultState(this.getStateContainer().getBaseState().with(HORIZONTAL_FACING, EnumFacing.NORTH));
+		this.setDefaultState(this.getStateContainer().getBaseState().with(HORIZONTAL_FACING, EnumFacing.NORTH));
 	}
 
+	public IBlockState getStateForPlacement(BlockItemUseContext context) {
+		return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite());
+	}
 
-
+	protected void fillStateContainer(StateContainer.Builder<Block, IBlockState> builder) {
+		builder.add(HORIZONTAL_FACING);
+	}
 
 	@Override
 	public IBlockState getStateForPlacement(IBlockState state, EnumFacing facing, IBlockState state2, IWorld world, BlockPos pos1, BlockPos pos2, EnumHand hand) {
@@ -95,9 +102,9 @@ public final class BlockGolemHead extends BlockHorizontal {
 			if(!golem.getGolemContainer().enabled) return false;
 
 			removeAllGolemBlocks(world, pos, flagX);
-			ExtraGolems.LOGGER.info("[Extra Golems]: Building golem " + golem.toString());
 			golem.setPlayerCreated(true);
 			golem.setLocationAndAngles(x, y, z, 0.0F, 0.0F);
+			ExtraGolems.LOGGER.info("[Extra Golems]: Building golem " + golem.toString());
 			world.spawnEntity(golem);
 			golem.onBuilt(stateBelow1, stateBelow2, arm1, arm2);
 			if(!golem.updateHomeVillage()) {

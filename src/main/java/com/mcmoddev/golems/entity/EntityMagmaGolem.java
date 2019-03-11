@@ -54,8 +54,12 @@ public final class EntityMagmaGolem extends GolemBase {
 	private int meltDelay;
 
 	public EntityMagmaGolem(final World world, final boolean isChild) {
-		super(EntityMagmaGolem.class, world);
+		this(world);
 		this.setChild(isChild);
+	}
+	
+	public EntityMagmaGolem(final World world) {
+		super(EntityMagmaGolem.class, world);
 		//TODO: reimpl config
 		this.isHurtByWater = true;
 		this.allowMelting = container.canUseSpecial;
@@ -68,24 +72,22 @@ public final class EntityMagmaGolem extends GolemBase {
 		this.setLootTableLoc(GolemNames.MAGMA_GOLEM);
 	}
 	
-	public EntityMagmaGolem(final World world) {
-		this(world, false);
-	}
-	
 	@Override
 	public void notifyDataManagerChange(DataParameter<?> key) {
 		// change stats if this is a child vs. an adult golem
-
-		if(this.isChild()) {
-			this.setSize(0.7F, 1.45F);
-			this.allowMelting = false;
-			this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.attack * 0.6F);
-			this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.health / 3);
-		} else {
-			this.setSize(1.4F, 2.9F);
-			this.allowMelting = container.canUseSpecial;
-			this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.attack);
-			this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.health);
+		super.notifyDataManagerChange(key);
+		if(BABY.equals(key)) {
+			if (this.isChild()) {
+				this.setSize(0.7F, 1.45F);
+				this.allowMelting = false;
+				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.attack * 0.6F);
+				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.health / 3);
+			} else {
+				this.setSize(1.4F, 2.9F);
+				this.allowMelting = container.canUseSpecial;
+				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.attack);
+				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.health);
+			}
 		}
 	}
 
@@ -196,7 +198,7 @@ public final class EntityMagmaGolem extends GolemBase {
 
 		// 'melts lava'
 		if(!this.isChild() && container.canUseSpecial) {
-			list.add(TextFormatting.RED + trans("entitytip.slowly_melts", trans("tile.stonebrick.name")));
+			list.add(TextFormatting.RED + trans("entitytip.slowly_melts", trans("block.minecraft.cobblestone")));
 		}
 		// 'ignites mobs'
 		if (container.canUseSpecial) {

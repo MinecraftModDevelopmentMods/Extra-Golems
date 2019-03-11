@@ -10,53 +10,54 @@ import java.util.function.Consumer;
 public class ConsumerLootTables implements Consumer<String> {
 		
 	@Override
-		public void accept(final String NAME) {
-			switch(NAME) {
-			case GolemNames.BEDROCK_GOLEM:
-				return;
-			case GolemNames.WOOL_GOLEM:
-				//registerLootTables(ExtraGolems.MODID, NAME, EntityWoolGolem.coloredWoolTypes);
-				return;
-			case GolemNames.WOODEN_GOLEM:
-				//registerLootTables(ExtraGolems.MODID, NAME, EntityWoodenGolem.woodTypes);
-				return;
-			case GolemNames.MUSHROOM_GOLEM:
-				registerLootTables(ExtraGolems.MODID, NAME, EntityMushroomGolem.SHROOM_TYPES);
-				return;			
-			case GolemNames.STAINEDGLASS_GOLEM:
-				//registerLootTables(ExtraGolems.MODID, NAME, EntityStainedGlassGolem.COLOR_ARRAY.length);
-				return;
-			case GolemNames.STAINEDTERRACOTTA_GOLEM:
-				//registerLootTables(ExtraGolems.MODID, NAME, EntityStainedClayGolem.COLOR_ARRAY.length);
-				return;
-			case GolemNames.CONCRETE_GOLEM:
-				//registerLootTables(ExtraGolems.MODID, NAME, EntityConcreteGolem.COLOR_ARRAY.length);
-				return;
-			default:
-				LootTableList.register(new ResourceLocation(ExtraGolems.MODID, "entities/" + NAME));
-				return;
-			}
+	public void accept(final String NAME) {
+		switch(NAME) {
+		case GolemNames.BEDROCK_GOLEM:
+			return;
+		case GolemNames.WOOL_GOLEM:
+			//registerLootTables(ExtraGolems.MODID, NAME, EntityWoolGolem.coloredWoolTypes);
+			return;
+		case GolemNames.WOODEN_GOLEM:
+			//registerLootTables(ExtraGolems.MODID, NAME, EntityWoodenGolem.woodTypes);
+			return;
+		case GolemNames.MUSHROOM_GOLEM:
+			registerLootTables(ExtraGolems.MODID, NAME, EntityMushroomGolem.SHROOM_TYPES);
+			return;			
+		case GolemNames.STAINEDGLASS_GOLEM:
+			//registerLootTables(ExtraGolems.MODID, NAME, EntityStainedGlassGolem.COLOR_ARRAY.length);
+			return;
+		case GolemNames.STAINEDTERRACOTTA_GOLEM:
+			//registerLootTables(ExtraGolems.MODID, NAME, EntityStainedClayGolem.COLOR_ARRAY.length);
+			return;
+		case GolemNames.CONCRETE_GOLEM:
+			//registerLootTables(ExtraGolems.MODID, NAME, EntityConcreteGolem.COLOR_ARRAY.length);
+			return;
+		default:
+			ResourceLocation rl = LootTableList.register(new ResourceLocation(ExtraGolems.MODID, "loot_tables/entities/" + NAME));
+			System.out.println("Loot table for '" + NAME + "' has been registered at '" + (rl != null ? rl.toString() : "null") + "'");
+			return;
 		}
+	}
 		
-		/**
-		 * Registers multiple loot tables for each of the textures specified. They are registered under
-		 * the subfile [name] and individually named according to each element in [textures]
-		 */
-		private static void registerLootTables(final String MODID, final String name, final String[] textures) {
-			for(String s : textures) {
-				LootTableList.register(new ResourceLocation(MODID, "entities/" + name + "/" + s));
-			}
+	/**
+	 * Registers multiple loot tables for each of the textures specified. They are registered under
+	 * the subfile [name] and individually named according to each element in [textures]
+	 */
+	private static void registerLootTables(final String MODID, final String name, final String[] textures) {
+		for(String s : textures) {
+			LootTableList.register(new ResourceLocation(MODID, "loot_tables/entities/" + name + "/" + s));
 		}
-		
-		/**
-		 * Registers loot tables for GolemColorizedMultiTextured, with loot tables 
-		 * registered under the subfile [name] and individually named '0' through '[max-1]'
-		 */
-		private static void registerLootTables(final String MODID, final String name, final int max) {
-			String[] array = new String[max];
-			for (int i = 0; i < max; i++) {
-				array[i] = Integer.toString(i);
-			}
-			registerLootTables(MODID, name, array);
+	}
+	
+	/**
+	 * Registers loot tables for GolemColorizedMultiTextured, with loot tables 
+	 * registered under the subfile [name] and individually named '0' through '[max-1]'
+	 */
+	private static void registerLootTables(final String MODID, final String name, final int max) {
+		String[] array = new String[max];
+		for (int i = 0; i < max; i++) {
+			array[i] = Integer.toString(i);
 		}
+		registerLootTables(MODID, name, array);
+	}
 }
