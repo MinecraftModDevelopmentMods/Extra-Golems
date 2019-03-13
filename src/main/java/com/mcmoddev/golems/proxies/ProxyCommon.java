@@ -1,8 +1,5 @@
 package com.mcmoddev.golems.proxies;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import com.mcmoddev.golems.blocks.BlockGolemHead;
 import com.mcmoddev.golems.blocks.BlockUtilityGlow;
 import com.mcmoddev.golems.blocks.BlockUtilityGlowWater;
@@ -17,7 +14,6 @@ import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.util.ConsumerLootTables;
 import com.mcmoddev.golems.util.GolemNames;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlowingFluid;
 import net.minecraft.block.material.Material;
@@ -32,6 +28,9 @@ import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.RegistryEvent;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class ProxyCommon {
 
@@ -62,7 +61,7 @@ public class ProxyCommon {
 				return true;
 			}
 		}.setRegistryName(GolemItems.golemHead.getRegistryName()));
-		System.out.println("RegistryEvents registering items");
+		ExtraGolems.LOGGER.info("RegistryEvents registering items");
 		event.getRegistry()
 			.register(new ItemBedrockGolem()
 				.setRegistryName(ExtraGolems.MODID, "spawn_bedrock_golem"));
