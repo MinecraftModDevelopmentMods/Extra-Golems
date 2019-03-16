@@ -23,7 +23,6 @@ public class GolemConfiguration {
 				specials.put(specialC, new GolemSpecialSection(specialC, builder));
 			}
 			builder.pop();
-			specials.putAll(specials);
 		}
 	}
 	/**
