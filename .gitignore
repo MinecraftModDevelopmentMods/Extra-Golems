@@ -20,9 +20,9 @@ build
 
 # other
 logs
-config
 eclipse
-run
+/config
+/run
 classes
 
 /README.txt
