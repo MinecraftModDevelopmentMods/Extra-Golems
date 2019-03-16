@@ -1,13 +1,12 @@
 package com.mcmoddev.golems.util.config;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
+import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 
 /**
@@ -21,26 +20,28 @@ public class GolemContainer {
 	public String name;
 	public double health;
 	public double attack;
-	public boolean canUseSpecial;
 	public boolean enabled = true;
+
+	public Map<String, GolemSpecialContainer> specialContainers;
 
 	private GolemContainer(final EntityType<GolemBase> lEntityType, final String lPath, 
 			final List<Block> lValidBuildingBlocks, final double lHealth, 
-			final double lAttack, final boolean lCanUseSpecial) {
+			final double lAttack, final HashMap<String, GolemSpecialContainer> lSpecialContainers) {
 		this.entityType = lEntityType;
 		this.validBuildingBlocks = lValidBuildingBlocks;
 		this.name = lPath;
 		this.health = lHealth;
 		this.attack = lAttack;
-		this.canUseSpecial = lCanUseSpecial;
+		this.specialContainers = lSpecialContainers;
 	}
-	//TODO: Delete if unused
+
+
 	public boolean hasBuildingBlock() {
 		return !this.validBuildingBlocks.isEmpty();
 	}
-	//TODO: Delete if unused
+
 	public Block[] getBuildingBlocks() {
-		return this.validBuildingBlocks.toArray(new Block[this.validBuildingBlocks.size()]);
+		return this.validBuildingBlocks.toArray(new Block[0]);
 	}
 	
 	public boolean isBuildingBlock(final Block b) {
@@ -61,10 +62,10 @@ public class GolemContainer {
 		private final EntityType.Builder<GolemBase> entityTypeBuilder;
 		private double health = 100.0D;
 		private double attack = 14.0D; //Average iron golem attack in Normal mode
-		private boolean allowSpecial = true;
 		//This is a list to allow determining the "priority" of golem blocks. This could be used to our
 		//advantage in golem building logic for conflicts in the future.
 		private List<Block> validBuildingBlocks = new ArrayList<>();
+		private List<GolemSpecialContainer> containers = new ArrayList<>();
 
 		/**
 		 * Creates the builder
@@ -102,7 +103,7 @@ public class GolemContainer {
 
 		/**
 		 * Adds building blocks that may be used for creating the golem
-		 * @param additionalBlocks blocks
+		 * @param additionalBlocks blocks that may be used for building
 		 * @return instance to allow chaining of methods
 		 */
 		public Builder addValidBlocks(final Block... additionalBlocks) {
@@ -113,13 +114,27 @@ public class GolemContainer {
 		}
 
 		/**
+		 * Adds any GolemSpecialContainers to be used by the golem
+		 * @param specialContainers specials to be added
+		 * @return instance to allow chaining of methods
+		 */
+		public Builder addSpecials(final GolemSpecialContainer... specialContainers) {
+			containers.addAll(Arrays.asList(specialContainers));
+			return this;
+		}
+		/**
 		 * Builds the container
 		 * @return a copy of the newly constructed GolemContainer
 		 */
 		public GolemContainer build() {
 			EntityType<GolemBase> entityType = entityTypeBuilder.build(golemName);
 			entityType.setRegistryName(modid, golemName);
-			return new GolemContainer(entityType, golemName, validBuildingBlocks, health, attack, allowSpecial);
+			HashMap<String, GolemSpecialContainer> containerMap = new HashMap<>();
+			for(GolemSpecialContainer c : containers) {
+				containerMap.put(c.name, c);
+			}
+			return new GolemContainer(entityType, golemName, validBuildingBlocks, health, attack, containerMap);
 		}
 	}
+
 }

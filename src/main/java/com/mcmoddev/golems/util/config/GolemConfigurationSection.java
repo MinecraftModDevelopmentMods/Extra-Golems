@@ -10,7 +10,7 @@ public class GolemConfigurationSection {
 	public final String entityName;
 	public ForgeConfigSpec.DoubleValue health;
 	public ForgeConfigSpec.DoubleValue attack;
-	public ForgeConfigSpec.BooleanValue allowSpecial;
+
 	public ForgeConfigSpec.BooleanValue enabled;
 
 	protected GolemConfigurationSection(GolemContainer container, ForgeConfigSpec.Builder builder) {
@@ -27,7 +27,5 @@ public class GolemConfigurationSection {
 			" of config settings.").worldRestart().define("enabled", true);
 		health = builder.worldRestart().defineInRange("health", container.health, 1, 999);
 		attack = builder.worldRestart().defineInRange("attack", container.attack, 1, 999);
-		allowSpecial = builder.comment("Allow usage of special. Does nothing on most golems.")
-			.worldRestart().define("allowSpecial", true);
 	}
 }
