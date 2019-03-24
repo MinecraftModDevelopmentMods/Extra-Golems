@@ -2,6 +2,7 @@ package com.mcmoddev.golems.entity.base;
 
 import com.mcmoddev.golems.entity.ai.EntityAIDefendAgainstMonsters;
 import com.mcmoddev.golems.main.ExtraGolems;
+import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mcmoddev.golems.util.config.GolemContainer;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
 import net.minecraft.block.Block;
@@ -13,6 +14,7 @@ import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.IAnimal;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.init.Particles;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -30,6 +32,7 @@ import net.minecraft.village.Village;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -215,22 +218,44 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 	public boolean canAttackClass(final Class<? extends EntityLivingBase> cls) {
 		return (!this.isPlayerCreated() || !EntityPlayer.class.isAssignableFrom(cls)) && (cls != EntityCreeper.class && super.canAttackClass(cls));
 	}
+	
+	@Override
+	protected void damageEntity(final DamageSource source, final float amount) {
+		if (!this.isInvulnerableTo(source)) {
+			float adjusted = amount;
+			if (this.isPotionActive(MobEffects.LUCK)) {
+				adjusted *= 0.89F;
+			}
+			else if (this.isPotionActive(MobEffects.UNLUCK)) {
+				adjusted *= 1.25F;
+			}
+			super.damageEntity(source, adjusted);
+		}
+	}
 
 	@Override
 	public boolean attackEntityAsMob(final Entity entity) {
 		// (0.0 ~ 1.0] lower number results in less variance
 		final float VARIANCE = 0.8F;
+		// (0.0 ~ 1.0] based on luck / unluck and critical chance
+		float multiplier = 1.0F;
+		// try to increase damage if random critical chance succeeds
+		if (this.isPotionActive(MobEffects.LUCK)) {
+			multiplier += 0.5F * this.criticalModifier;
+		}
+		else if (this.isPotionActive(MobEffects.UNLUCK)) {
+			multiplier -= 0.65F;
+		}
+		else if (rand.nextInt(100) < this.criticalChance) {
+			multiplier = this.criticalModifier;
+		}
 		// calculate damage based on current attack damage and variance
 		final float currentAttack = (float) this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE)
 			.getValue();
-		float damage = currentAttack
-			+ (float) (rand.nextDouble() - 0.5D) * VARIANCE * currentAttack;
-
-		// try to increase damage if random critical chance succeeds
-		if (rand.nextInt(100) < this.criticalChance) {
-			damage *= this.criticalModifier;
-		}
-
+		
+		float damage = multiplier * (currentAttack
+			+ (float) (rand.nextDouble() - 0.5D) * VARIANCE * currentAttack);
+		
 		this.attackTimer = 10;
 		this.world.setEntityState(this, (byte) 4);
 		final boolean flag = entity.attackEntityFrom(DamageSource.causeMobDamage(this), damage);
@@ -461,6 +486,22 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 
 	public GolemContainer getGolemContainer() {
 		return container;
+	}
+	
+	public ForgeConfigSpec.ConfigValue getConfigValue(String name) {
+		return (ExtraGolemsConfig.GOLEM_CONFIG.specials.get(this.getGolemContainer().specialContainers.get(name))).value;
+	}
+	
+	public boolean getConfigBool(final String name) {
+		return ((Boolean)getConfigValue(name).get()).booleanValue();
+	}
+	
+	public int getConfigInt(final String name) {
+		return ((Integer)getConfigValue(name).get()).intValue();
+	}
+	
+	public double getConfigDouble(final String name) {
+		return ((Double)getConfigValue(name).get()).doubleValue();
 	}
 	
 	/** The EntityType associated with this golem, or null if there is none **/

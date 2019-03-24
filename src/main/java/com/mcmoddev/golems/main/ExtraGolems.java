@@ -1,6 +1,5 @@
 package com.mcmoddev.golems.main;
 
-import com.mcmoddev.golems.entity.base.GolemEntityTypes;
 import com.mcmoddev.golems.events.handlers.GolemCommonEventHandler;
 import com.mcmoddev.golems.proxies.ProxyClient;
 import com.mcmoddev.golems.proxies.ProxyCommon;
@@ -35,7 +34,7 @@ public class ExtraGolems {
 		MinecraftForge.EVENT_BUS.register(new GolemCommonEventHandler());
 
 
-		GolemEntityTypes.init();
+		ExtraGolemsEntities.initEntityTypes();
 		ExtraGolemsConfig.setupConfig();
 		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER /*world*/, ExtraGolemsConfig.SERVER_CONFIG);
 	}

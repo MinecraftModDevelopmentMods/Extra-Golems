@@ -1,6 +1,7 @@
 package com.mcmoddev.golems.util.config;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
+import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
@@ -49,7 +50,7 @@ public class GolemContainer {
 		return this.validBuildingBlocks.contains(b);
 	}
 	public Block getPrimaryBuildingBlock() {
-		return this.validBuildingBlocks.get(0);
+		return this.validBuildingBlocks.isEmpty() ? null : this.validBuildingBlocks.get(0);
 	}
 
 	/**
@@ -57,9 +58,9 @@ public class GolemContainer {
 	 * @author Glitch
 	 */
 	public static final class Builder {
-		private final String modid;
 		private final String golemName;
 		private final EntityType.Builder<GolemBase> entityTypeBuilder;
+		private String modid = ExtraGolems.MODID;
 		private double health = 100.0D;
 		private double attack = 14.0D; //Average iron golem attack in Normal mode
 		//This is a list to allow determining the "priority" of golem blocks. This could be used to our
@@ -73,12 +74,21 @@ public class GolemContainer {
 		 * @param entityClazz the class of the golem (e.g. EntityFooGolem.class)
 		 * @param entityFunction the constructor function of the class (e.g. EntityFooGolem::new)
 		 */
-		public Builder(final String modid, final String golemName, final Class<? extends GolemBase> entityClazz,
+		public Builder(final String golemName, final Class<? extends GolemBase> entityClazz,
 				final Function<? super World, ? extends GolemBase> entityFunction) {
-			this.modid = modid;
 			this.golemName = golemName;
 			this.entityTypeBuilder = EntityType.Builder.<GolemBase>create(entityClazz, entityFunction)
 				.tracker(48, 3, true);
+		}
+		
+		/**
+		 * Sets the Mod ID of the golem for registry name
+		 * @param lModId the MODID to use to register the golem. <b>Defaults to "golems"</b>
+		 * @return instance to allow chaining of methods
+		 */
+		public Builder setModId(final String lModId) {
+			this.modid = lModId;
+			return this;
 		}
 
 		/**
@@ -106,7 +116,7 @@ public class GolemContainer {
 		 * @param additionalBlocks blocks that may be used for building
 		 * @return instance to allow chaining of methods
 		 */
-		public Builder addValidBlocks(final Block... additionalBlocks) {
+		public Builder addBlocks(final Block... additionalBlocks) {
 			if(additionalBlocks != null && additionalBlocks.length > 0) {
 				this.validBuildingBlocks.addAll(Arrays.asList(additionalBlocks));
 			}

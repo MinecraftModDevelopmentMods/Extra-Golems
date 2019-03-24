@@ -11,18 +11,20 @@ import java.util.HashMap;
  */
 public class GolemConfiguration {
 
-	protected HashMap<GolemContainer, GolemConfigurationSection> sections = new HashMap<>();
-	protected HashMap<GolemSpecialContainer, GolemSpecialSection> specials = new HashMap<>();
+	public HashMap<GolemContainer, GolemConfigurationSection> sections = new HashMap<>();
+	public HashMap<GolemSpecialContainer, GolemSpecialSection> specials = new HashMap<>();
 
 
 	public GolemConfiguration(ForgeConfigSpec.Builder builder) {
 		for(GolemContainer c : GolemRegistrar.golemList.values()) {
 			sections.put(c, new GolemConfigurationSection(c, builder));
-			builder.push("specials");
-			for(GolemSpecialContainer specialC : c.specialContainers.values()) {
-				specials.put(specialC, new GolemSpecialSection(specialC, builder));
+			if(c.specialContainers != null && !c.specialContainers.isEmpty()) {
+				builder.push("specials");
+				for(GolemSpecialContainer specialC : c.specialContainers.values()) {
+					specials.put(specialC, new GolemSpecialSection(specialC, builder));
+				}
+				builder.pop();
 			}
-			builder.pop();
 		}
 	}
 	/**

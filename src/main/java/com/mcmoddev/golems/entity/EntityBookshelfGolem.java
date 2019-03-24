@@ -41,7 +41,7 @@ public final class EntityBookshelfGolem extends GolemBase {
 	@Override
 	public void livingTick() {
 		super.livingTick();
-		if (container.canUseSpecial && this.getActivePotionEffects().isEmpty()
+		if (getConfigBool(ALLOW_SPECIAL) && this.getActivePotionEffects().isEmpty()
 			&& rand.nextInt(40) == 0) {
 			final Potion potion = goodEffects[rand.nextInt(goodEffects.length)];
 			final int len = potion.isInstant() ? 1 : 200 + 100 * (1 + rand.nextInt(5));
@@ -56,8 +56,9 @@ public final class EntityBookshelfGolem extends GolemBase {
 
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if (container.canUseSpecial)
+		if (getConfigBool(ALLOW_SPECIAL)) {
 			list.add(TextFormatting.LIGHT_PURPLE + trans("entitytip.grants_self_potion_effects"));
+		}
 		return list;
 	}
 }

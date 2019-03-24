@@ -13,7 +13,7 @@ import org.apache.commons.lang3.tuple.Pair;
 @Mod.EventBusSubscriber(modid = ExtraGolems.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ExtraGolemsConfig {
 
-	private static GolemConfiguration GOLEM_CONFIG = null;
+	public static GolemConfiguration GOLEM_CONFIG = null;
 
 	public static ForgeConfigSpec SERVER_CONFIG = null;
 
