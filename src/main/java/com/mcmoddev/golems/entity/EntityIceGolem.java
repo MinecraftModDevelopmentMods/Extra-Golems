@@ -23,8 +23,6 @@ import java.util.function.Function;
 
 public final class EntityIceGolem extends GolemBase {
 
-	public static final String ALLOW_SPECIAL = "Allow Special: Freeze Blocks";
-	public static final String CAN_USE_REGULAR_ICE = "Can Use Regular Ice";
 	public static final String AOE = "Area of Effect";
 
 	public EntityIceGolem(final World world) {
@@ -55,9 +53,9 @@ public final class EntityIceGolem extends GolemBase {
 			if (this.world.getBiome(below).getTemperature(below) > 1.0F) {
 				this.attackEntityFrom(DamageSource.ON_FIRE, 1.0F);
 			}
-			if (container.canUseSpecial) {
-				final IceGolemFreezeEvent event = new IceGolemFreezeEvent(this, below,
-					3 /*TODO: reimpl config*/);
+			int aoe = this.getConfigInt(AOE);
+			if (aoe > 0) {
+				final IceGolemFreezeEvent event = new IceGolemFreezeEvent(this, below, aoe);
 				if (!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Event.Result.DENY) {
 					this.freezeBlocks(event.getAffectedPositions(), event.getFunction(),
 						event.updateFlag);
@@ -110,8 +108,9 @@ public final class EntityIceGolem extends GolemBase {
 
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if (container.canUseSpecial)
+		if (this.getConfigInt(AOE) > 0) {
 			list.add(TextFormatting.AQUA + trans("entitytip.freezes_blocks"));
+		}
 		return list;
 	}
 }

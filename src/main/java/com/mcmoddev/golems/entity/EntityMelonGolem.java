@@ -50,10 +50,10 @@ public final class EntityMelonGolem extends GolemBase {
 	@Override
 	public void livingTick() {
 		super.livingTick();
-		if(!container.canUseSpecial) return;
+		if(!this.getConfigBool(ALLOW_HEALING)) return;
 		// heals randomly (about every 20 sec)
 		if(rand.nextInt(450) == 0) {
-			this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 20, 2));
+			this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 50, 1));
 		}
 	}
 
@@ -66,19 +66,17 @@ public final class EntityMelonGolem extends GolemBase {
 		// init list and AI for planting flowers
 		final IBlockState[] flowers = {Blocks.POPPY.getDefaultState()};
 		// get other parameters for the AI
-		//TODO: reimpl config
-		final int freq = 240;
-		final boolean allowed = container.canUseSpecial;
+		final int freq = this.getConfigInt(FREQUENCY);
+		final boolean allowed = this.getConfigBool(ALLOW_SPECIAL);
 		return new EntityAIPlaceRandomBlocksStrictly(this, freq, flowers, soils, allowed);
 	}
 
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if (container.canUseSpecial) {
+		if (this.getConfigBool(ALLOW_SPECIAL)) {
 			list.add(TextFormatting.GREEN + trans("entitytip.plants_flowers", trans("tile.flower1.name")));
 		}
-		//TODO: reimpl
-		if(container.canUseSpecial) {
+		if(this.getConfigBool(ALLOW_HEALING)) {
 			String sHeals = TextFormatting.RED + trans("entitytip.heals");
 			list.add(sHeals);
 		}

@@ -35,7 +35,7 @@ public final class EntityNetherBrickGolem extends GolemBase {
 	@Override
 	public boolean attackEntityAsMob(final Entity entity) {
 		if (super.attackEntityAsMob(entity)) {
-			if (container.canUseSpecial) {
+			if (this.getConfigBool(ALLOW_FIRE_SPECIAL)) {
 				entity.setFire(2 + rand.nextInt(5));
 			}
 			return true;
@@ -50,8 +50,9 @@ public final class EntityNetherBrickGolem extends GolemBase {
 
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if (container.canUseSpecial)
+		if (this.getConfigBool(ALLOW_FIRE_SPECIAL)) {
 			list.add(TextFormatting.RED + trans("entitytip.lights_mobs_on_fire"));
+		}
 		return list;
 	}
 }

@@ -26,27 +26,22 @@ public class EntityEndstoneGolem extends GolemBase {
 	public static final String ALLOW_SPECIAL = "Allow Special: Teleporting";
 	public static final String ALLOW_WATER_HURT = "Can Take Water Damage";
 
-	/**
-	 * countdown timer for next teleport.
-	 **/
-	@Deprecated
-	protected int teleportDelay;
-	/** Max distance for one teleport; range is 32.0 for endstone golem. **/
-	protected double range;
-	protected boolean allowTeleport;
-	protected boolean isHurtByWater;
-	protected boolean hasAmbientParticles;
+	/** Max distance for one teleport; range is 32.0 for endstone golem, 64 for enderman. **/
+	protected double range = 32.0D;
+	protected boolean allowTeleport = true;
+	protected boolean isHurtByWater = true;
+	protected boolean hasAmbientParticles = true;
 
-	protected int ticksBetweenIdleTeleports;
+	protected int ticksBetweenIdleTeleports = 200;
 	/** Percent chance to teleport away when hurt by non-projectile. **/
-	protected int chanceToTeleportWhenHurt;
+	protected int chanceToTeleportWhenHurt = 15;
 
 	/** Default constructor. **/
 	public EntityEndstoneGolem(final World world) {
 		this(EntityEndstoneGolem.class, world, 32.0D, true);
 		this.setLootTableLoc(GolemNames.ENDSTONE_GOLEM);
-		this.isHurtByWater = true; //TODO reimpl config
-		this.allowTeleport = container.canUseSpecial;
+		this.isHurtByWater = this.getConfigBool(ALLOW_WATER_HURT);
+		this.allowTeleport = this.getConfigBool(ALLOW_SPECIAL);
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 
@@ -69,12 +64,8 @@ public class EntityEndstoneGolem extends GolemBase {
 	public EntityEndstoneGolem(final Class<? extends EntityEndstoneGolem> clazz, final World world, 
 			final double teleportRange, final boolean ambientParticles) {
 		super(clazz, world);
-		this.ticksBetweenIdleTeleports = 200;
-		this.chanceToTeleportWhenHurt = 15;
 		this.range = teleportRange;
-		this.isHurtByWater = false;
 		this.hasAmbientParticles = ambientParticles;
-		this.allowTeleport = true;
 	}
 	
 	@Override
@@ -203,7 +194,7 @@ public class EntityEndstoneGolem extends GolemBase {
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
 		// this will only fire for the Endstone Golem, not child classes
-		if (this.getClass() == EntityEndstoneGolem.class && container.canUseSpecial) {
+		if (this.getClass() == EntityEndstoneGolem.class && this.getConfigBool(ALLOW_SPECIAL)) {
 			list.add(TextFormatting.DARK_AQUA + trans("entitytip.can_teleport"));
 		}
 		return list;

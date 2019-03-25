@@ -24,7 +24,6 @@ public final class EntitySpongeGolem extends GolemBase {
 	public static final String ALLOW_SPECIAL = "Allow Special: Absorb Water";
 	public static final String INTERVAL = "Water Soaking Frequency";
 	public static final String RANGE = "Water Soaking Range";
-	public static final String PARTICLES = "Can Render Sponge Particles";
 
 	public EntitySpongeGolem(final World world) {
 		super(EntitySpongeGolem.class, world);
@@ -44,28 +43,24 @@ public final class EntitySpongeGolem extends GolemBase {
 	@Override
 	public void livingTick() {
 		super.livingTick();
-		//TODO reimpl config
-		final int interval = 20;
-
-		if (container.canUseSpecial
+		final int interval = this.getConfigInt(INTERVAL);
+		if (this.getConfigBool(ALLOW_SPECIAL)
 			&& (this.ticksExisted % interval == 0)) {
 			final int x = MathHelper.floor(this.posX);
 			final int y = MathHelper.floor(this.posY - 0.20000000298023224D) + 2;
 			final int z = MathHelper.floor(this.posZ);
 			final BlockPos center = new BlockPos(x, y, z);
-			//TODO reimpl config
 			final SpongeGolemSoakEvent event = new SpongeGolemSoakEvent(this, center,
-				4);
+				this.getConfigInt(RANGE));
 			if (!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Event.Result.DENY) {
 				this.replaceWater(event.getPositionList(), event.getReplacementState(),
 					event.updateFlag);
 			}
 		}
-		//TODO reimpl config
-		if (true && Math.abs(this.motionX) < 0.05D
+		if (Math.abs(this.motionX) < 0.05D
 			&& Math.abs(this.motionZ) < 0.05D && world.isRemote) {
 			final BasicParticleType particle = this.isBurning() ? Particles.SMOKE
-				: Particles.DRIPPING_WATER;
+				: Particles.SPLASH;
 			final double x = this.rand.nextDouble() - 0.5D * (double) this.width * 0.6D;
 			final double y = this.rand.nextDouble() * (this.height - 0.75D);
 			final double z = this.rand.nextDouble() - 0.5D * (double) this.width;
@@ -97,7 +92,7 @@ public final class EntitySpongeGolem extends GolemBase {
 
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if (container.canUseSpecial)
+		if (this.getConfigBool(ALLOW_SPECIAL))
 			list.add(TextFormatting.YELLOW + trans("entitytip.absorbs_water"));
 		return list;
 	}

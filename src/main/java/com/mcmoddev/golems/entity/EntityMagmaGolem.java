@@ -60,11 +60,9 @@ public final class EntityMagmaGolem extends GolemBase {
 	
 	public EntityMagmaGolem(final World world) {
 		super(EntityMagmaGolem.class, world);
-		//TODO: reimpl config
-		this.isHurtByWater = true;
-		this.allowMelting = container.canUseSpecial;
-		this.meltDelay = 240;
-		//End config
+		this.isHurtByWater = this.getConfigBool(ALLOW_WATER_DAMAGE);
+		this.allowMelting = this.getConfigBool(ALLOW_LAVA_SPECIAL);
+		this.meltDelay = this.getConfigInt(MELT_DELAY);
 		this.ticksStandingStill = 0;
 		this.setImmuneToFire(true);
 		this.setCanSwim(!this.isHurtByWater);
@@ -84,7 +82,7 @@ public final class EntityMagmaGolem extends GolemBase {
 				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.health / 3);
 			} else {
 				this.setSize(1.4F, 2.9F);
-				this.allowMelting = container.canUseSpecial;
+				this.allowMelting = this.getConfigBool(ALLOW_LAVA_SPECIAL);
 				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.attack);
 				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.health);
 			}
@@ -109,7 +107,7 @@ public final class EntityMagmaGolem extends GolemBase {
 	@Override
 	public boolean attackEntityAsMob(final Entity entity) {
 		if (super.attackEntityAsMob(entity)) {
-			if (container.canUseSpecial) {
+			if (!this.isChild() && this.getConfigBool(ALLOW_FIRE_SPECIAL)) {
 				entity.setFire(2 + rand.nextInt(5));
 			}
 			return true;
@@ -160,7 +158,7 @@ public final class EntityMagmaGolem extends GolemBase {
 	@Override
 	public void remove() {
 		// spawn baby golems here if possible 
-		if(!this.world.isRemote && !this.isChild() && this.container.canUseSpecial/*getConfig(this).getBoolean(ALLOW_SPLITTING) //TODO: reimpl*/) {
+		if(!this.world.isRemote && !this.isChild() && this.getConfigBool(ALLOW_SPLITTING)) {
 			GolemBase slime1 = new EntityMagmaGolem(this.world, true);
 			GolemBase slime2 = new EntityMagmaGolem(this.world, true);
 			// copy attack target info
@@ -194,18 +192,16 @@ public final class EntityMagmaGolem extends GolemBase {
 
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		//TODO: reimpl
-
 		// 'melts lava'
-		if(!this.isChild() && container.canUseSpecial) {
+		if(!this.isChild() && this.getConfigBool(ALLOW_LAVA_SPECIAL)) {
 			list.add(TextFormatting.RED + trans("entitytip.slowly_melts", trans("block.minecraft.cobblestone")));
 		}
 		// 'ignites mobs'
-		if (container.canUseSpecial) {
+		if (this.getConfigBool(ALLOW_FIRE_SPECIAL)) {
 			list.add(TextFormatting.GOLD + trans("entitytip.lights_mobs_on_fire"));
 		}
 		// 'splits upon death'
-		if(!this.isChild() && container.canUseSpecial) {
+		if(!this.isChild() && this.getConfigBool(ALLOW_SPLITTING)) {
 			list.add(TextFormatting.RED + trans("entitytip.splits_upon_death"));
 		}
 		return list;

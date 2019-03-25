@@ -1,19 +1,11 @@
 package com.mcmoddev.golems.main;
 
 import com.mcmoddev.golems.entity.*;
-import com.mcmoddev.golems.entity.base.*;
-import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
 import com.mcmoddev.golems.util.config.GolemContainer;
-import com.mcmoddev.golems.util.config.GolemContainer.Builder;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
-import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
 
-import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
-import net.minecraft.world.World;
-
-import java.util.function.Function;
 
 public class ExtraGolemsEntities {
 	
@@ -40,18 +32,21 @@ public class ExtraGolemsEntities {
 		// BOOKSHELF GOLEM
 		GolemRegistrar.registerGolem(EntityBookshelfGolem.class, new GolemContainer.Builder(GolemNames.BOOKSHELF_GOLEM, EntityBookshelfGolem.class, EntityBookshelfGolem::new)
 				.setHealth(28.0D).setAttack(1.5D).addBlocks(Blocks.BOOKSHELF)
-				.addSpecials(new GolemSpecialContainer.Builder<Boolean>(EntityBookshelfGolem.ALLOW_SPECIAL, true)
-					.setComment("Whether this golem can give itself potion effects").build())
+				.addSpecial(EntityBookshelfGolem.ALLOW_SPECIAL, Boolean.valueOf(true), "Whether this golem can give itself potion effects")
 				.build());
 		// CLAY GOLEM
 		GolemRegistrar.registerGolem(EntityClayGolem.class, new GolemContainer.Builder(GolemNames.CLAY_GOLEM, EntityClayGolem.class, EntityClayGolem::new)
 				.setHealth(20.0D).setAttack(2.0D).addBlocks(Blocks.CLAY).build());
 		// COAL GOLEM
 		GolemRegistrar.registerGolem(EntityCoalGolem.class,	new GolemContainer.Builder(GolemNames.COAL_GOLEM, EntityCoalGolem.class, EntityCoalGolem::new)
-				.setHealth(14.0D).setAttack(2.5D).addBlocks(Blocks.COAL_BLOCK).build());
+				.setHealth(14.0D).setAttack(2.5D).addBlocks(Blocks.COAL_BLOCK)
+				.addSpecial(EntityCoalGolem.ALLOW_SPECIAL, false, "Whether this golem can inflict blindness")
+				.build());
 		// CRAFTING GOLEM
 		GolemRegistrar.registerGolem(EntityCraftingGolem.class,	new GolemContainer.Builder(GolemNames.CRAFTING_GOLEM, EntityCraftingGolem.class, EntityCraftingGolem::new)
-				.setHealth(24.0D).setAttack(2.0D).addBlocks(Blocks.CRAFTING_TABLE).build());
+				.setHealth(24.0D).setAttack(2.0D).addBlocks(Blocks.CRAFTING_TABLE)
+				.addSpecial(EntityCraftingGolem.ALLOW_SPECIAL, true, "Whether this golem can open a crafting grid")
+				.build());
 		// DIAMOND GOLEM
 		GolemRegistrar.registerGolem(EntityDiamondGolem.class,
 				new GolemContainer.Builder(GolemNames.DIAMOND_GOLEM, EntityDiamondGolem.class, EntityDiamondGolem::new)
@@ -63,7 +58,10 @@ public class ExtraGolemsEntities {
 		// ENDSTONE GOLEM
 		GolemRegistrar.registerGolem(EntityEndstoneGolem.class,
 				new GolemContainer.Builder(GolemNames.ENDSTONE_GOLEM, EntityEndstoneGolem.class, EntityEndstoneGolem::new)
-				.setHealth(50.0D).setAttack(8.0D).addBlocks(Blocks.END_STONE).build());
+				.setHealth(50.0D).setAttack(8.0D).addBlocks(Blocks.END_STONE)
+				.addSpecial(EntityEndstoneGolem.ALLOW_SPECIAL, true, "Whether this golem can teleport")
+				.addSpecial(EntityEndstoneGolem.ALLOW_WATER_HURT, true, "Whether the Endstone Golem takes damage from water")
+				.build());
 		// GLASS GOLEM
 		GolemRegistrar.registerGolem(EntityGlassGolem.class,
 				new GolemContainer.Builder(GolemNames.GLASS_GOLEM, EntityGlassGolem.class, EntityGlassGolem::new)
@@ -71,7 +69,10 @@ public class ExtraGolemsEntities {
 		// GLOWSTONE GOLEM
 		GolemRegistrar.registerGolem(EntityGlowstoneGolem.class,
 				new GolemContainer.Builder(GolemNames.GLOWSTONE_GOLEM, EntityGlowstoneGolem.class, EntityGlowstoneGolem::new)
-				.setHealth(8.0D).setAttack(12.0D).addBlocks(Blocks.GLOWSTONE).build());
+				.setHealth(8.0D).setAttack(12.0D).addBlocks(Blocks.GLOWSTONE)
+				.addSpecial(EntityGlowstoneGolem.ALLOW_SPECIAL, true, "Whether this golem can glow")
+				.addSpecial(EntityGlowstoneGolem.FREQUENCY, Integer.valueOf(2), "Number of ticks between updating light")
+				.build());
 		// GOLD GOLEM
 		GolemRegistrar.registerGolem(EntityGoldGolem.class,
 				new GolemContainer.Builder(GolemNames.GOLD_GOLEM, EntityGoldGolem.class, EntityGoldGolem::new)
@@ -79,35 +80,61 @@ public class ExtraGolemsEntities {
 		// ICE GOLEM
 		GolemRegistrar.registerGolem(EntityIceGolem.class,
 				new GolemContainer.Builder(GolemNames.ICE_GOLEM, EntityIceGolem.class, EntityIceGolem::new)
-				.setHealth(18.0D).setAttack(6.0D).addBlocks(Blocks.PACKED_ICE, Blocks.ICE).build());
+				.setHealth(18.0D).setAttack(6.0D).addBlocks(Blocks.PACKED_ICE, Blocks.ICE)
+				.addSpecial(EntityIceGolem.AOE, Integer.valueOf(3), "Radial distance at which this golem can freeze / cool liquids (0=disable)")
+				.build());
 		// LAPIS GOLEM
 		GolemRegistrar.registerGolem(EntityLapisGolem.class,
 				new GolemContainer.Builder(GolemNames.LAPIS_GOLEM, EntityLapisGolem.class, EntityLapisGolem::new)
-				.setHealth(50.0D).setAttack(1.5D).addBlocks(Blocks.LAPIS_BLOCK).build());
+				.setHealth(50.0D).setAttack(1.5D).addBlocks(Blocks.LAPIS_BLOCK)
+				.addSpecial(EntityLapisGolem.ALLOW_SPECIAL, true, "Whether this golem can inflict harmful potion effects")
+				.build());
 		// LEAF GOLEM
 		GolemRegistrar.registerGolem(EntityLeafGolem.class,
 				new GolemContainer.Builder(GolemNames.LEAF_GOLEM, EntityLeafGolem.class, EntityLeafGolem::new)
-				.setHealth(6.0D).setAttack(0.5D).addBlocks(Blocks.OAK_LEAVES /* TODO block tags */).build());
+				.setHealth(6.0D).setAttack(0.5D).addBlocks(Blocks.OAK_LEAVES /* TODO block tags */)
+				.addSpecial(EntityLeafGolem.ALLOW_SPECIAL, true, "Whether this golem can heal itself")
+				.build());
 		// MAGMA GOLEM
 		GolemRegistrar.registerGolem(EntityMagmaGolem.class,
 				new GolemContainer.Builder(GolemNames.MAGMA_GOLEM, EntityMagmaGolem.class, EntityMagmaGolem::new)
-				.setHealth(46.0D).setAttack(4.5D).addBlocks(Blocks.MAGMA_BLOCK).build());
+				.setHealth(46.0D).setAttack(4.5D).addBlocks(Blocks.MAGMA_BLOCK)
+				.addSpecial(EntityMagmaGolem.ALLOW_SPLITTING, true, "When true, this golem will split into 2 mini-golems upon death")
+				.addSpecial(EntityMagmaGolem.ALLOW_LAVA_SPECIAL, false, "Whether this golem can slowly melt cobblestone")
+				.addSpecial(EntityMagmaGolem.MELT_DELAY, Integer.valueOf(240), "Number of ticks it takes to melt cobblestone if enabled (12 sec * 20 t/sec = 240 t)")
+				.addSpecial(EntityMagmaGolem.ALLOW_FIRE_SPECIAL, true, "Whether this golem can light creatures on fire")
+				.addSpecial(EntityMagmaGolem.ALLOW_WATER_DAMAGE, true, "When true, water will hurt this golem")
+				.build());
 		// MELON GOLEM
 		GolemRegistrar.registerGolem(EntityMelonGolem.class,
 				new GolemContainer.Builder(GolemNames.MELON_GOLEM, EntityMelonGolem.class, EntityMelonGolem::new)
-				.setHealth(18.0D).setAttack(1.5D).addBlocks(Blocks.MELON).build());
+				.setHealth(18.0D).setAttack(1.5D).addBlocks(Blocks.MELON)
+				.addSpecial(EntityMelonGolem.ALLOW_HEALING, true, "Whether this golem can occasionally heal")
+				.addSpecial(EntityMelonGolem.ALLOW_SPECIAL, true, "Whether this golem can plant flowers randomly")
+				.addSpecial(EntityMelonGolem.FREQUENCY, Integer.valueOf(240), "Average number of ticks between planting flowers")
+				.build());
 		// MUSHROOM GOLEM
 		GolemRegistrar.registerGolem(EntityMushroomGolem.class,
 				new GolemContainer.Builder(GolemNames.MUSHROOM_GOLEM, EntityMushroomGolem.class, EntityMushroomGolem::new)
-				.setHealth(30.0D).setAttack(3.0D).addBlocks(Blocks.RED_MUSHROOM_BLOCK, Blocks.BROWN_MUSHROOM_BLOCK).build());
+				.setHealth(30.0D).setAttack(3.0D).addBlocks(Blocks.RED_MUSHROOM_BLOCK, Blocks.BROWN_MUSHROOM_BLOCK)
+				.addSpecial(EntityMushroomGolem.ALLOW_HEALING, true, "Whether this golem can randomly heal (at night)")
+				.addSpecial(EntityMushroomGolem.ALLOW_SPECIAL, true, "Whether this golem can plant mushrooms randomly")
+				.addSpecial(EntityMushroomGolem.FREQUENCY, Integer.valueOf(420), "Average number of ticks between planting mushrooms")
+				.build());
 		// NETHER BRICK GOLEM
 		GolemRegistrar.registerGolem(EntityNetherBrickGolem.class,
 				new GolemContainer.Builder(GolemNames.NETHERBRICK_GOLEM, EntityNetherBrickGolem.class, EntityNetherBrickGolem::new)
-				.setHealth(25.0D).setAttack(6.5D).addBlocks(Blocks.NETHER_BRICKS, Blocks.RED_NETHER_BRICKS).build());
+				.setHealth(25.0D).setAttack(6.5D).addBlocks(Blocks.NETHER_BRICKS, Blocks.RED_NETHER_BRICKS)
+				.addSpecial(EntityNetherBrickGolem.ALLOW_FIRE_SPECIAL, true, "Whether this golem can light creatures on fire")
+				.build());
 		// NETHER WART GOLEM
 		GolemRegistrar.registerGolem(EntityNetherWartGolem.class,
 				new GolemContainer.Builder(GolemNames.NETHERWART_GOLEM, EntityNetherWartGolem.class, EntityNetherWartGolem::new)
-				.setHealth(22.0D).setAttack(1.5D).addBlocks(Blocks.NETHER_WART_BLOCK).build());
+				.setHealth(22.0D).setAttack(1.5D).addBlocks(Blocks.NETHER_WART_BLOCK)
+				.addSpecial(EntityNetherWartGolem.ALLOW_HEALING, true, "Whether this golem can randomly heal (at night)")
+				.addSpecial(EntityNetherWartGolem.ALLOW_SPECIAL, true, "Whether this golem can plant netherwart randomly")
+				.addSpecial(EntityNetherWartGolem.FREQUENCY, Integer.valueOf(880), "Average number of ticks between planting nether wart (if enabled)")
+				.build());
 		// OBSIDIAN GOLEM
 		GolemRegistrar.registerGolem(EntityObsidianGolem.class,
 				new GolemContainer.Builder(GolemNames.OBSIDIAN_GOLEM, EntityObsidianGolem.class, EntityObsidianGolem::new)
@@ -127,7 +154,9 @@ public class ExtraGolemsEntities {
 		// REDSTONE GOLEM
 		GolemRegistrar.registerGolem(EntityRedstoneGolem.class,
 				new GolemContainer.Builder(GolemNames.REDSTONE_GOLEM, EntityRedstoneGolem.class, EntityRedstoneGolem::new)
-				.setHealth(18.0D).setAttack(2.0D).addBlocks(Blocks.REDSTONE_BLOCK).build());
+				.setHealth(18.0D).setAttack(2.0D).addBlocks(Blocks.REDSTONE_BLOCK)
+				.addSpecial(EntityRedstoneGolem.ALLOW_SPECIAL, true, "Whether this golem can emit redstone power")
+				.build());
 		// SANDSTONE GOLEM
 		GolemRegistrar.registerGolem(EntitySandstoneGolem.class,
 				new GolemContainer.Builder(GolemNames.SANDSTONE_GOLEM, EntitySandstoneGolem.class, EntityRedSandstoneGolem::new)
@@ -135,30 +164,39 @@ public class ExtraGolemsEntities {
 		// SEA LANTERN GOLEM
 		GolemRegistrar.registerGolem(EntitySeaLanternGolem.class,
 				new GolemContainer.Builder(GolemNames.SEALANTERN_GOLEM, EntitySeaLanternGolem.class, EntitySeaLanternGolem::new)
-				.setHealth(24.0D).setAttack(6.0D).addBlocks(Blocks.SEA_LANTERN).build());
+				.setHealth(24.0D).setAttack(6.0D).addBlocks(Blocks.SEA_LANTERN)
+				.addSpecial(EntitySeaLanternGolem.ALLOW_SPECIAL, true, "Whether this golem lights up the area")
+				.addSpecial(EntitySeaLanternGolem.FREQUENCY, Integer.valueOf(5), "Number of ticks between updating light")
+				.build());
 		// SLIME GOLEM
 		GolemRegistrar.registerGolem(EntitySlimeGolem.class,
 				new GolemContainer.Builder(GolemNames.SLIME_GOLEM, EntitySlimeGolem.class, EntitySlimeGolem::new)
 				.setHealth(58.0D).setAttack(2.5D).addBlocks(Blocks.SLIME_BLOCK)
-				.addSpecials(new GolemSpecialContainer.Builder<Boolean>(EntitySlimeGolem.ALLOW_SPLITTING, true)
-					.setComment("When true, this golem will split into 2 mini-golems upon death").build(),
-					new GolemSpecialContainer.Builder<Boolean>(EntitySlimeGolem.ALLOW_SPECIAL, true)
-					.setComment("Whether this golem can apply extra knockback when attacking").build(),
-					new GolemSpecialContainer.Builder<Double>(EntitySlimeGolem.KNOCKBACK, 1.9412D)
-					.setComment("Slime Golem knockback power (Higher Value = Further Knockback)").build())
+				.addSpecial(EntitySlimeGolem.ALLOW_SPLITTING, true, "When true, this golem will split into 2 mini-golems upon death")
+				.addSpecial(EntitySlimeGolem.ALLOW_SPECIAL, true, "Whether this golem can apply extra knockback when attacking")
+				.addSpecial(EntitySlimeGolem.KNOCKBACK, Double.valueOf(1.9412D), "Slime Golem knockback power (Higher Value = Further Knockback)")
 				.build());
 		// SPONGE GOLEM
 		GolemRegistrar.registerGolem(EntitySpongeGolem.class,
 				new GolemContainer.Builder(GolemNames.SPONGE_GOLEM, EntitySpongeGolem.class, EntitySpongeGolem::new)
-				.setHealth(20.0D).setAttack(1.5D).addBlocks(Blocks.SPONGE).build());
+				.setHealth(20.0D).setAttack(1.5D).addBlocks(Blocks.SPONGE, Blocks.WET_SPONGE)
+				.addSpecial(EntitySpongeGolem.ALLOW_SPECIAL, true, "Whether this golem can absorb water")
+				.addSpecial(EntitySpongeGolem.RANGE, Integer.valueOf(4), "Radial distance at which this golem can absorb water (Warning: larger values cause lag)")
+				.addSpecial(EntitySpongeGolem.INTERVAL, Integer.valueOf(10), "Number of ticks between each water-check; increase to reduce lag")
+				.build());
 		// STRAW GOLEM
 		GolemRegistrar.registerGolem(EntityStrawGolem.class,
 				new GolemContainer.Builder(GolemNames.STRAW_GOLEM, EntityStrawGolem.class, EntityStrawGolem::new)
-				.setHealth(10.0D).setAttack(1.0D).addBlocks(Blocks.HAY_BLOCK).build());
+				.setHealth(10.0D).setAttack(1.0D).addBlocks(Blocks.HAY_BLOCK)
+				.addSpecial(EntityStrawGolem.ALLOW_SPECIAL, true, "Whether this golem can speed up crop growth")
+				.addSpecial(EntityStrawGolem.SPECIAL_FREQ, Integer.valueOf(460), "Minimum number of ticks between crop-boosts")
+				.build());
 		// TNT GOLEM
 		GolemRegistrar.registerGolem(EntityTNTGolem.class, 
 				new GolemContainer.Builder(GolemNames.TNT_GOLEM, EntityTNTGolem.class, EntityTNTGolem::new)
-				.setHealth(14.0D).setAttack(2.5D).addBlocks(Blocks.TNT).build());
+				.setHealth(14.0D).setAttack(2.5D).addBlocks(Blocks.TNT)
+				.addSpecial(EntityTNTGolem.ALLOW_SPECIAL, true, "Whether this golem can explode when fighting or dying")
+				.build());
 		// WOODEN GOLEM
 		GolemRegistrar.registerGolem(EntityWoodenGolem.class,
 				new GolemContainer.Builder(GolemNames.WOODEN_GOLEM, EntityWoodenGolem.class, EntityWoodenGolem::new)

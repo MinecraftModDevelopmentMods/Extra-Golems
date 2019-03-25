@@ -64,7 +64,15 @@ public class BlockUtilityGlow extends BlockUtility {
 		builder.add(LIGHT_LEVEL);
 	}
 
-
+	/**
+	 * Amount of light emitted
+	 * 
+	 * @deprecated prefer calling {@link IBlockState#getLightValue()}
+	 */
+	@Deprecated
+	public int getLightValue(IBlockState state) {
+		return state.get(LIGHT_LEVEL);
+	}
 
 	/**
 	 * Search the golem's AI to determine if it is a light-providing golem

@@ -132,6 +132,17 @@ public class GolemContainer {
 			containers.addAll(Arrays.asList(specialContainers));
 			return this;
 		}
+		
+		/**
+		 * Adds any GolemSpecialContainers to be used by the golem
+		 * @param specialContainers specials to be added
+		 * @return instance to allow chaining of methods
+		 */
+		public Builder addSpecial(final String name, final Object value, final String comment) {
+			containers.add(new GolemSpecialContainer.Builder(name, value, comment).build());
+			return this;
+		}
+		
 		/**
 		 * Builds the container
 		 * @return a copy of the newly constructed GolemContainer

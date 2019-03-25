@@ -26,14 +26,14 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 	public static final String[] SHROOM_TYPES = {"red", "brown"};
 	public final IBlockState[] mushrooms = {Blocks.BROWN_MUSHROOM.getDefaultState(),
 		Blocks.RED_MUSHROOM.getDefaultState()};
-	protected static final Block[] soils = {Blocks.DIRT, Blocks.GRASS, Blocks.MYCELIUM};
+	protected static final Block[] soils = 
+		{ Blocks.DIRT, Blocks.GRASS, Blocks.MYCELIUM, Blocks.PODZOL, Blocks.NETHERRACK, Blocks.SOUL_SAND };
 
 	public EntityMushroomGolem(final World world) {
 		super(EntityMushroomGolem.class, world, SHROOM_PREFIX, SHROOM_TYPES);
 		this.setCanSwim(true);
-		final boolean allowed = container.canUseSpecial;
-		//TODO: reimpl
-		int freq = allowed ? 420 : -100;
+		final boolean allowed = this.getConfigBool(ALLOW_SPECIAL);
+		int freq = allowed ? this.getConfigInt(FREQUENCY) : -100;
 		freq += this.rand.nextInt(Math.max(10, freq / 2));
 		this.tasks.addTask(2,
 			new EntityAIPlaceRandomBlocksStrictly(this, freq, mushrooms, soils, allowed));
@@ -59,11 +59,9 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 	public void livingTick() {
 		super.livingTick();
 		// heals randomly, but only at night
-		//TODO: reimpl config
-
 		//Note how it goes from least expensive to most expensive
-		if(this.container.canUseSpecial && !this.getEntityWorld().isDaytime() && rand.nextInt(450) == 0) {
-			this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 20, 2));
+		if(!this.getEntityWorld().isDaytime() && this.getConfigBool(ALLOW_HEALING) && rand.nextInt(450) == 0) {
+			this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 50, 1));
 		}
 	}
 
@@ -78,11 +76,10 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if (container.canUseSpecial) {
+		if (this.getConfigBool(ALLOW_SPECIAL)) {
 			list.add(TextFormatting.DARK_GREEN + trans("entitytip.plants_shrooms"));
 		}
-		//TODO: reimpl config
-		if(container.canUseSpecial) {
+		if(this.getConfigBool(ALLOW_HEALING)) {
 			String sHeals = TextFormatting.LIGHT_PURPLE + trans("entitytip.heals");
 			list.add(sHeals);
 		}

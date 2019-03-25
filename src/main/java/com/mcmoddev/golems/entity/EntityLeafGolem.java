@@ -40,12 +40,10 @@ public final class EntityLeafGolem extends GolemColorized {
 	@Override
 	public void livingTick() {
 		super.livingTick();
-		//GolemConfigSet cfg = getConfig(this);
-		if (/*cfg.getBoolean(ALLOW_SPECIAL)
-			&&*/ this.getActivePotionEffect(MobEffects.REGENERATION) == null
+		if (this.getConfigBool(ALLOW_SPECIAL) && this.getActivePotionEffect(MobEffects.REGENERATION) == null
 			&& rand.nextInt(40) == 0) {
 			this.addPotionEffect(
-				new PotionEffect(MobEffects.REGENERATION, 200 + 20 * (1 + rand.nextInt(8)), 1));
+				new PotionEffect(MobEffects.REGENERATION, 200 + 20 * (1 + rand.nextInt(8)), rand.nextInt(2)));
 		}
 
 		if (this.ticksExisted % 10 == 2 && this.world.isRemote) {
@@ -55,7 +53,7 @@ public final class EntityLeafGolem extends GolemColorized {
 		}
 
 		// slow falling for this entity
-		if (this.motionY < -0.1D) {
+		if (this.motionY < -0.05D) {
 			this.motionY *= 4.0D / 5.0D;
 		}
 	}
@@ -67,9 +65,9 @@ public final class EntityLeafGolem extends GolemColorized {
 
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		//if (getConfig(this).getBoolean(EntityLeafGolem.ALLOW_SPECIAL)) {
-			list.add(TextFormatting.DARK_GREEN + trans("item.minecraft.potion.effect.regeneration") + " " + trans("enchantment.level.1"));
-		//}
+		if (this.getConfigBool(ALLOW_SPECIAL)) {
+			list.add(TextFormatting.DARK_GREEN + trans("effect.minecraft.regeneration") + " " + trans("enchantment.level.1"));
+		}
 		return list;
 	}
 }

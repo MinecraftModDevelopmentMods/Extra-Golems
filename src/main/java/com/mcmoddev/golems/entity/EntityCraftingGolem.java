@@ -1,6 +1,5 @@
 package com.mcmoddev.golems.entity;
 
-import com.mcmoddev.golems.blocks.ContainerPortableWorkbench;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
@@ -9,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ContainerWorkbench;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.EnumHand;
@@ -56,10 +56,23 @@ public final class EntityCraftingGolem extends GolemBase {
 	
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if(container.canUseSpecial) {
+		if(this.getConfigBool(ALLOW_SPECIAL)) {
 			list.add(TextFormatting.BLUE + trans("entitytip.click_open_crafting"));
 		}
 		return list;
+	}
+	
+	public static class ContainerPortableWorkbench extends ContainerWorkbench {
+
+		public ContainerPortableWorkbench(final InventoryPlayer playerInventory, final World worldIn,
+						  final BlockPos posIn) {
+			super(playerInventory, worldIn, posIn);
+		}
+
+		@Override
+		public boolean canInteractWith(final EntityPlayer playerIn) {
+			return true;
+		}
 	}
 
 	public static class InterfaceCraftingGrid

@@ -42,7 +42,7 @@ public final class EntityLapisGolem extends GolemBase {
 	public boolean attackEntityAsMob(final Entity entityIn) {
 		if (super.attackEntityAsMob(entityIn) && entityIn instanceof EntityLivingBase) {
 			final EntityLivingBase entity = (EntityLivingBase) entityIn;
-			if (container.canUseSpecial) {
+			if (this.getConfigBool(ALLOW_SPECIAL)) {
 				final Potion potionID = entity.isEntityUndead() ? MobEffects.INSTANT_HEALTH
 					: badEffects[rand.nextInt(badEffects.length)];
 				final int len = potionID.isInstant() ? 1 : 20 * (5 + rand.nextInt(9));
@@ -61,8 +61,9 @@ public final class EntityLapisGolem extends GolemBase {
 
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if (container.canUseSpecial)
+		if (this.getConfigBool(ALLOW_SPECIAL)) {
 			list.add(TextFormatting.LIGHT_PURPLE + trans("entitytip.attacks_use_potion_effects"));
+		}
 		return list;
 	}
 }

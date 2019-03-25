@@ -23,8 +23,7 @@ public class GolemConfigurationSection {
 	}
 
 	public void loadConfig(ForgeConfigSpec.Builder builder, GolemContainer container) {
-		enabled = builder.comment("Disables building of the golem. It may still be spawned through commands, regardless" +
-			" of config settings.").worldRestart().define("enabled", true);
+		enabled = builder.comment("Disables in-world building of the golem.").worldRestart().define("enabled", true);
 		health = builder.worldRestart().defineInRange("health", container.health, 1, 999);
 		attack = builder.worldRestart().defineInRange("attack", container.attack, 1, 999);
 	}

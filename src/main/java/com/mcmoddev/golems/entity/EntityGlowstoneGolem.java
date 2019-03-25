@@ -6,7 +6,6 @@ import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.util.GolemNames;
-import com.mcmoddev.golems.util.config.GolemRegistrar;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.SoundEvents;
@@ -29,30 +28,17 @@ public final class EntityGlowstoneGolem extends GolemBase {
 	 **/
 	private final float brightness;
 
-	/**
-	 * Default constructor for EntityGlowstoneGolem
-	 **/
 	public EntityGlowstoneGolem(final World world) {
-		//HACK: dangerous ... too expensive to check for non-null in constructor call :(
-		this(EntityGlowstoneGolem.class, world, 1.0F, 4 /*TODO: reimpl config*/,
-			GolemRegistrar.getContainer(EntityGlowstoneGolem.class).canUseSpecial);
+		super(EntityGlowstoneGolem.class, world);
+		int lightInt = 15;
+		this.brightness = 1.0F;
+		final IBlockState state = GolemItems.blockLightSource.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, lightInt);
+		this.tasks.addTask(9, new EntityAIPlaceSingleBlock(this, state, this.getConfigInt(FREQUENCY), this.getConfigBool(ALLOW_SPECIAL)));
 		this.isImmuneToFire = true;
 		this.setCanTakeFallDamage(true);
 		this.setCanSwim(true);
 		this.setLootTableLoc(GolemNames.GLOWSTONE_GOLEM);
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
-	}
-
-	/**
-	 * Flexible constructor to allow child classes to customize
-	 **/
-	public EntityGlowstoneGolem(final Class<? extends EntityGlowstoneGolem> clazz, final World world,
-				    final float lightLevel, final int freq, final boolean allowed) {
-		super(clazz, world);
-		int lightInt = (int) (lightLevel * 15.0F);
-		this.brightness = lightLevel;
-		final IBlockState state = GolemItems.blockLightSource.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, lightInt);
-		this.tasks.addTask(9, new EntityAIPlaceSingleBlock(this, state, freq, allowed));
 	}
 
 	@Override
@@ -84,7 +70,7 @@ public final class EntityGlowstoneGolem extends GolemBase {
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
 		// does not fire for child classes
-		if (this.getClass() == EntityGlowstoneGolem.class && container.canUseSpecial) {
+		if (this.getClass() == EntityGlowstoneGolem.class && this.getConfigBool(ALLOW_SPECIAL)) {
 			list.add(TextFormatting.RED + trans("entitytip.lights_area"));
 		}
 		return list;

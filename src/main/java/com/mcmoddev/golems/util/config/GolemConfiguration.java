@@ -18,13 +18,13 @@ public class GolemConfiguration {
 	public GolemConfiguration(ForgeConfigSpec.Builder builder) {
 		for(GolemContainer c : GolemRegistrar.golemList.values()) {
 			sections.put(c, new GolemConfigurationSection(c, builder));
-			if(c.specialContainers != null && !c.specialContainers.isEmpty()) {
+			//if(c.specialContainers != null && !c.specialContainers.isEmpty()) {
 				builder.push("specials");
 				for(GolemSpecialContainer specialC : c.specialContainers.values()) {
 					specials.put(specialC, new GolemSpecialSection(specialC, builder));
 				}
 				builder.pop();
-			}
+			//}
 		}
 	}
 	/**

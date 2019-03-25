@@ -10,9 +10,7 @@ import net.minecraft.block.BlockFlowingFluid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
@@ -27,7 +25,8 @@ public final class EntitySeaLanternGolem extends GolemBase {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Emit Light";
 	public static final String FREQUENCY = "Light Frequency";
-	public static final Predicate<IBlockState> WATER_PRED = toReplace -> toReplace.getBlock() != GolemItems.blockLightSourceWater && toReplace.getMaterial() == Material.WATER
+	public static final Predicate<IBlockState> WATER_PRED = toReplace -> 
+		toReplace.getBlock() != GolemItems.blockLightSourceWater && toReplace.getMaterial() == Material.WATER
 		&& toReplace.get(BlockFlowingFluid.LEVEL) == 0;
 
 	private static final float BRIGHTNESS = 1.0F;
@@ -38,19 +37,18 @@ public final class EntitySeaLanternGolem extends GolemBase {
 		this.canDrown = false;
 		this.setLootTableLoc(GolemNames.SEALANTERN_GOLEM);
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
-
 	}
 
 	@Override
 	protected void initEntityAI() {
 		super.initEntityAI();
-		// lights above and below water... need to add to different lists to run concurrently TODO reimpl config
+		// lights above and below water... need to add to different lists to run concurrently
+		final boolean allow = this.getConfigBool(ALLOW_SPECIAL);
+		final int freq = this.getConfigInt(FREQUENCY);
 		this.tasks.addTask(8, new EntityAIPlaceSingleBlock(this, GolemItems.blockLightSourceWater.getDefaultState()
-			.with(BlockUtilityGlow.LIGHT_LEVEL, BRIGHTNESS_INT), 5,
-			container.canUseSpecial, WATER_PRED));
+			.with(BlockUtilityGlow.LIGHT_LEVEL, BRIGHTNESS_INT), freq, allow, WATER_PRED));
 		this.targetTasks.addTask(8, new EntityAIPlaceSingleBlock(this, GolemItems.blockLightSource.getDefaultState()
-			.with(BlockUtilityGlow.LIGHT_LEVEL, BRIGHTNESS_INT), 5,
-			container.canUseSpecial));
+			.with(BlockUtilityGlow.LIGHT_LEVEL, BRIGHTNESS_INT), freq, allow));
 	}
 
 	@Override
@@ -81,7 +79,7 @@ public final class EntitySeaLanternGolem extends GolemBase {
 
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if (container.canUseSpecial) {
+		if (this.getConfigBool(ALLOW_SPECIAL)) {
 			list.add(TextFormatting.GOLD + trans("entitytip.lights_area"));
 		}
 		list.add(TextFormatting.AQUA + trans("entitytip.breathes_underwater"));

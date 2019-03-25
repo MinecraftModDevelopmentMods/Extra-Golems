@@ -24,18 +24,23 @@ public class GolemSpecialContainer<K> {
 		private final K defaultValue;
 
 		private String comment = "";
-
+	
 		public Builder(String name, K defaultValue) {
 			this.id = name;
 			this.defaultValue = defaultValue;
 		}
+		
+		public Builder(String name, K defaultValue, String comment) {
+			this(name, defaultValue);
+			this.setComment(comment);
+		}
 
-		public Builder setComment(String comment) {
+		public Builder<K> setComment(String comment) {
 			this.comment = comment;
 			return this;
 		}
 
-		public GolemSpecialContainer build() {
+		public GolemSpecialContainer<K> build() {
 			return new GolemSpecialContainer<>(id, defaultValue, comment);
 		}
 

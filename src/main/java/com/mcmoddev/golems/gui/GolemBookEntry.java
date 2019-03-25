@@ -84,7 +84,7 @@ public class GolemBookEntry {
 	 * @return the Block in this entry
 	 **/
 	public String getBlockName() {
-		return this.BLOCK.getNameTextComponent().toString();
+		return trans(this.BLOCK.getTranslationKey());
 	}
 	
 	/**

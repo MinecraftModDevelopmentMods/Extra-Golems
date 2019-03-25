@@ -19,7 +19,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 
 import java.util.List;
 
@@ -45,21 +44,19 @@ public class EntityTNTGolem extends GolemBase {
 	public EntityTNTGolem(final World world) {
 		this(EntityTNTGolem.class, world, 3, 6, 50, 10);
 		this.setLootTableLoc(GolemNames.TNT_GOLEM);
-		this.allowedToExplode = container.canUseSpecial;
+		this.allowedToExplode = this.getConfigBool(ALLOW_SPECIAL);
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 
 	/**
 	 * Flexible constructor to allow child classes to customize.
 	 * 
+	 * @param clazz
 	 * @param world
-	 * @param attack
-	 * @param pick
 	 * @param minExplosionRange
 	 * @param maxExplosionRange
 	 * @param minFuseLength
 	 * @param randomExplosionChance
-	 * @param configAllowsExplode
 	 */
 	public EntityTNTGolem(final Class<? extends EntityTNTGolem> clazz, final World world, final int minExplosionRange,
 			      final int maxExplosionRange, final int minFuseLength, final int randomExplosionChance) {
@@ -70,7 +67,6 @@ public class EntityTNTGolem extends GolemBase {
 		this.chanceToExplodeWhenAttacking = randomExplosionChance;
 		this.resetIgnite();
 	}
-
 
 	@Override
 	protected void registerData() {
@@ -104,7 +100,7 @@ public class EntityTNTGolem extends GolemBase {
 		if (this.isIgnited()) {
 			this.motionX = this.motionZ = 0;
 			this.fuseTimer--;
-			if (this.world instanceof WorldServer) {
+			if (!this.world.isRemote) {
 				for (int i = 0; i < 2; i++) {
 					this.world.spawnParticle(Particles.LARGE_SMOKE, this.posX,
 						this.posY + 2.0D, this.posZ, 0.0D, 0.0D, 0.0D);
@@ -225,9 +221,9 @@ public class EntityTNTGolem extends GolemBase {
 	
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		// only fires for this golem, not child classes
-		if (this.getClass() == EntityTNTGolem.class && container.canUseSpecial)
+		if (this.getConfigBool(ALLOW_SPECIAL)) {
 			list.add(TextFormatting.RED + trans("entitytip.explodes"));
+		}
 		return list;
 	}
 }

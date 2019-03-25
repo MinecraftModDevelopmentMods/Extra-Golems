@@ -37,8 +37,8 @@ public final class EntityCoalGolem extends GolemBase {
 	@Override
 	public boolean attackEntityAsMob(final Entity entity) {
 		if (super.attackEntityAsMob(entity)) {
-			final int BLIND_CHANCE = 4;
-			if (container.canUseSpecial && entity instanceof EntityLivingBase && this.rand.nextInt(BLIND_CHANCE) == 0) {
+			final int BLIND_CHANCE = 2;
+			if (entity instanceof EntityLivingBase && this.getConfigBool(ALLOW_SPECIAL) && this.rand.nextInt(BLIND_CHANCE) == 0) {
 				((EntityLivingBase) entity).addPotionEffect(
 					new PotionEffect(MobEffects.BLINDNESS, 20 * (3 + rand.nextInt(5)), 0));
 			}
@@ -67,7 +67,7 @@ public final class EntityCoalGolem extends GolemBase {
 
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		if (container.canUseSpecial)
+		if (this.getConfigBool(ALLOW_SPECIAL))
 			list.add(TextFormatting.GRAY + trans("entitytip.blinds_creatures"));
 		return list;
 	}
