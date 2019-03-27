@@ -1,7 +1,7 @@
 package com.mcmoddev.golems.proxies;
 
-import com.mcmoddev.golems.entity.*;
-import com.mcmoddev.golems.entity.base.*;
+import com.mcmoddev.golems.entity.base.GolemBase;
+import com.mcmoddev.golems.entity.base.GolemColorized;
 import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.renders.RenderColoredGolem;
 import com.mcmoddev.golems.renders.RenderGolem;

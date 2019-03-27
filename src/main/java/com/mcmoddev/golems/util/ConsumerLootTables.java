@@ -1,6 +1,7 @@
 package com.mcmoddev.golems.util;
 
 import com.mcmoddev.golems.entity.EntityMushroomGolem;
+import com.mcmoddev.golems.entity.EntityWoodenGolem;
 import com.mcmoddev.golems.main.ExtraGolems;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.LootTableList;
@@ -8,6 +9,8 @@ import net.minecraft.world.storage.loot.LootTableList;
 import java.util.function.Consumer;
 
 public class ConsumerLootTables implements Consumer<String> {
+	
+	public static final ConsumerLootTables CONSUMER = new ConsumerLootTables();
 		
 	@Override
 	public void accept(final String NAME) {
@@ -18,7 +21,7 @@ public class ConsumerLootTables implements Consumer<String> {
 			//registerLootTables(ExtraGolems.MODID, NAME, EntityWoolGolem.coloredWoolTypes);
 			return;
 		case GolemNames.WOODEN_GOLEM:
-			//registerLootTables(ExtraGolems.MODID, NAME, EntityWoodenGolem.woodTypes);
+			registerLootTables(ExtraGolems.MODID, NAME, EntityWoodenGolem.woodTypes);
 			return;
 		case GolemNames.MUSHROOM_GOLEM:
 			registerLootTables(ExtraGolems.MODID, NAME, EntityMushroomGolem.SHROOM_TYPES);
@@ -33,7 +36,7 @@ public class ConsumerLootTables implements Consumer<String> {
 			//registerLootTables(ExtraGolems.MODID, NAME, EntityConcreteGolem.COLOR_ARRAY.length);
 			return;
 		default:
-			ResourceLocation rl = LootTableList.register(new ResourceLocation(ExtraGolems.MODID, "loot_tables/entities/" + NAME));
+			ResourceLocation rl = LootTableList.register(new ResourceLocation(ExtraGolems.MODID, "entities/" + NAME));
 			System.out.println("Loot table for '" + NAME + "' has been registered at '" + (rl != null ? rl.toString() : "null") + "'");
 			return;
 		}

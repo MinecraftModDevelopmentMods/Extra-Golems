@@ -13,6 +13,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -39,6 +40,11 @@ public final class EntityBedrockGolem extends GolemBase {
 		return true;
 	}
 
+	@Override
+	public boolean isImmuneToExplosions() {
+		return true;
+	}
+
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	public boolean canRenderOnFire() {
@@ -55,7 +61,7 @@ public final class EntityBedrockGolem extends GolemBase {
 				this.remove();
 			} else {
 				ItemBedrockGolem.spawnParticles(this.world, this.posX - 0.5D, this.posY + 0.1D,
-						this.posZ - 0.5D, 0.1D);
+						this.posZ - 0.5D, 0.12D);
 			}
 		}
 
@@ -77,5 +83,10 @@ public final class EntityBedrockGolem extends GolemBase {
 		list.add(TextFormatting.WHITE + "" + TextFormatting.BOLD + trans("entitytip.indestructible"));
 		list.add(TextFormatting.DARK_RED + trans("tooltip.creative_only_item"));
 		return list;
+	}
+	
+	@Override
+	public ItemStack getPickedResult(final RayTraceResult target) {
+		return new ItemStack(GolemItems.spawnBedrockGolem);
 	}
 }

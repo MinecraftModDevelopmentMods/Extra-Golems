@@ -5,7 +5,9 @@ import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.loot.LootTableList;
 
 import java.util.*;
 import java.util.function.Function;

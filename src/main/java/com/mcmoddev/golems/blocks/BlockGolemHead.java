@@ -72,8 +72,6 @@ public final class BlockGolemHead extends BlockHorizontal {
 				entitysnowman.setLocationAndAngles(x, y, z, 0.0F, 0.0F);
 				world.spawnEntity(entitysnowman);
 			}
-
-			ItemBedrockGolem.spawnParticles(world, x, y + 0.5D, z, 0.2D);
 			return true;
 		}
 

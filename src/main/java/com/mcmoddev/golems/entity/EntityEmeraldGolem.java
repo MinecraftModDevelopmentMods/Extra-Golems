@@ -7,6 +7,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public final class EntityEmeraldGolem extends GolemBase {
@@ -25,5 +26,17 @@ public final class EntityEmeraldGolem extends GolemBase {
 	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_STONE_STEP;
+	}
+	
+	/** 
+	 * Updates this golem's home position IF there is a nearby village.
+	 * @return if the golem found a village home
+	 * @see #updateHomeVillageInRange(BlockPos, int)
+	 **/
+	@Override
+	public boolean updateHomeVillage() {
+		// EMERALD golem checks a much larger radius than usual
+		final int radius = WANDER_DISTANCE * 4;
+		return updateHomeVillageInRange(new BlockPos(this), radius);
 	}
 }

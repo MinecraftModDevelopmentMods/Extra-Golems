@@ -33,6 +33,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ProxyCommon {
+	
+	static { registerLootTables(); }
 
 	/**
 	 * A List containing default instances of each Golem.
@@ -48,9 +50,6 @@ public class ProxyCommon {
 	public void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
 		// Register Golem EntityEntries as well as building blocks
 		GolemRegistrar.getContainers().forEach(container -> event.getRegistry().register(container.entityType));
-		// Also register Golem Loot Tables
-		LootTableList.register(new ResourceLocation(ExtraGolems.MODID, "loot_tables/entities/_golem_base"));
-		GolemNames.forEach(new ConsumerLootTables());
 	}
 
 	public void registerItems(final RegistryEvent.Register<Item> event) {
@@ -84,5 +83,12 @@ public class ProxyCommon {
 			new BlockUtilityGlowWater(Material.WATER, 1.0F, SEALANTERN_FREQ, Blocks.WATER.getDefaultState().with(BlockFlowingFluid.LEVEL, 0))
 				.setRegistryName(ExtraGolems.MODID, "water_light_provider_full"),
 			new BlockUtilityPower(15, EntityRedstoneGolem.DEF_FREQ).setRegistryName(ExtraGolems.MODID, "power_provider_all"));
+	}
+	
+
+	public static void registerLootTables() {
+		// register Golem Loot Tables
+		LootTableList.register(new ResourceLocation(ExtraGolems.MODID, "entities/_golem_base"));
+		GolemNames.forEach(ConsumerLootTables.CONSUMER);
 	}
 }

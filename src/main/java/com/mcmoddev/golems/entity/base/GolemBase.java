@@ -2,6 +2,7 @@ package com.mcmoddev.golems.entity.base;
 
 import com.mcmoddev.golems.entity.ai.EntityAIDefendAgainstMonsters;
 import com.mcmoddev.golems.main.ExtraGolems;
+import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mcmoddev.golems.util.config.GolemContainer;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
@@ -51,7 +52,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 	protected ResourceLocation textureLoc;
 	protected ResourceLocation lootTableLoc;
 	protected ItemStack creativeReturn;
-	Village villageObj;
+	protected Village villageObj;
 	protected boolean hasHome = false;
 	/**
 	 * deincrements, and a distance-to-home check is done at 0.
@@ -90,13 +91,13 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 
 	public GolemBase(Class<? extends GolemBase> clazz, final World world) {
 		super(GolemBase.getGolemType(clazz), world);
-		container = GolemRegistrar.getContainer(clazz);
+		this.container = GolemRegistrar.getContainer(clazz);
 		this.setSize(1.4F, 2.9F);
 		this.setCanTakeFallDamage(false);
 		Block pickBlock = container.getPrimaryBuildingBlock();
-		this.setCreativeReturn(pickBlock);
-		this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.attack);
-		this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.health);
+		this.setCreativeReturn(pickBlock != null ? pickBlock : GolemItems.golemHead);
+		//this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.attack);
+		//this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.health);
 		this.setCanSwim(false);
 		this.experienceValue = 4 + rand.nextInt(8);
 	}
@@ -249,10 +250,10 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 		else if (rand.nextInt(100) < this.criticalChance) {
 			multiplier = this.criticalModifier;
 		}
-		// calculate damage based on current attack damage and variance
+		
 		final float currentAttack = (float) this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE)
 			.getValue();
-		
+		// calculate damage based on current attack damage, variance, and luck/unluck/critical
 		float damage = multiplier * (currentAttack
 			+ (float) (rand.nextDouble() - 0.5D) * VARIANCE * currentAttack);
 		
@@ -358,23 +359,38 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 
 	@Override
 	protected ResourceLocation getLootTable() {
+		System.out.println("Getting Loot Table at " + this.lootTableLoc + "...");
 		return this.lootTableLoc;
     }
 	
 	/** 
 	 * Updates this golem's home position IF there is a nearby village.
 	 * @return if the golem found a village home
+	 * @see #updateHomeVillageInRange(BlockPos, int)
 	 **/
 	public boolean updateHomeVillage() {
+		final int radius = (WANDER_DISTANCE * 3) / 2;
+		return updateHomeVillageInRange(new BlockPos(this), radius);
+	}
+	
+	/** 
+	 * Updates this golem's home position IF there is a nearby village
+	 * in the specified radius
+	 * @param POS the center of the radius to check for a village
+	 * @param RADIUS the size of the area to check for a village
+	 * @return if the golem found a village home
+	 * @see #updateHomeVillage()
+	 **/
+	protected boolean updateHomeVillageInRange(final BlockPos POS, final int RADIUS) {
 		// set home position based on nearest village ONLY if one is close enough
-		this.villageObj = this.world.getVillageCollection().getNearestVillage(new BlockPos(this), WANDER_DISTANCE * 2);
+		this.villageObj = this.world.getVillageCollection().getNearestVillage(POS, RADIUS);
         if (this.villageObj != null) {
         	final BlockPos home = this.villageObj.getCenter();
             final int wanderDistance = (int)((float)this.villageObj.getVillageRadius() * 0.8F);
             this.setHomePosAndDistance(home, wanderDistance);
             return true;
         }
-        else return false;
+        return false;
 	}
 
 	/////////////// OTHER SETTERS AND GETTERS /////////////////
@@ -387,23 +403,15 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 
 	public void setLootTableLoc(final ResourceLocation lootTable) {
 		this.lootTableLoc = lootTable;
-		System.out.println("Loot Table for '" + this.getName().getUnformattedComponentText() + "' should be at " + lootTable.toString());
+		//System.out.println("Loot Table for '" + this.getName().getUnformattedComponentText() + "' should be at " + lootTable.toString());
 	}
 
 	public void setLootTableLoc(String modid, final String name) {
-		this.setLootTableLoc(new ResourceLocation(modid, "loot_tables/entities/" + name));
+		this.setLootTableLoc(new ResourceLocation(modid, "entities/" + name));
 	}
 	
 	public void setLootTableLoc(final String name) {
 		this.setLootTableLoc(ExtraGolems.MODID, name);
-	}
-	
-	public void setTextureType(final ResourceLocation texturelocation) {
-		this.textureLoc = texturelocation;
-	}
-
-	public ResourceLocation getTextureType() {
-		return this.textureLoc;
 	}
 
 	public void setCreativeReturn(final Block blockToReturn) {
@@ -519,6 +527,14 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 
 	/////////////// TEXTURE HELPERS //////////////////
 	
+	public void setTextureType(final ResourceLocation texturelocation) {
+		this.textureLoc = texturelocation;
+	}
+
+	public ResourceLocation getTextureType() {
+		return this.textureLoc;
+	}
+
 	/**
 	 * Calls {@link #makeTexture(String, String)} on the assumption that MODID is 'golems'.
 	 * Texture should be at 'assets/golems/textures/entity/[TEXTURE].png'

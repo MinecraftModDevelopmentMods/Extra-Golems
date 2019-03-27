@@ -150,7 +150,7 @@ public class ExtraGolemsEntities {
 		// RED SANDSTONE GOLEM
 		GolemRegistrar.registerGolem(EntityRedSandstoneGolem.class,
 				new GolemContainer.Builder(GolemNames.REDSANDSTONE_GOLEM, EntityRedSandstoneGolem.class, EntityRedSandstoneGolem::new)
-				.setHealth(15.0D).setAttack(4.0D).addBlocks(Blocks.RED_SANDSTONE).build());
+				.setHealth(15.0D).setAttack(4.0D).addBlocks(Blocks.RED_SANDSTONE /* TODO block tags */).build());
 		// REDSTONE GOLEM
 		GolemRegistrar.registerGolem(EntityRedstoneGolem.class,
 				new GolemContainer.Builder(GolemNames.REDSTONE_GOLEM, EntityRedstoneGolem.class, EntityRedstoneGolem::new)
@@ -159,8 +159,8 @@ public class ExtraGolemsEntities {
 				.build());
 		// SANDSTONE GOLEM
 		GolemRegistrar.registerGolem(EntitySandstoneGolem.class,
-				new GolemContainer.Builder(GolemNames.SANDSTONE_GOLEM, EntitySandstoneGolem.class, EntityRedSandstoneGolem::new)
-				.setHealth(15.0D).setAttack(4.0D).addBlocks(Blocks.SANDSTONE).build());
+				new GolemContainer.Builder(GolemNames.SANDSTONE_GOLEM, EntitySandstoneGolem.class, EntitySandstoneGolem::new)
+				.setHealth(15.0D).setAttack(4.0D).addBlocks(Blocks.SANDSTONE /* TODO block tags */).build());
 		// SEA LANTERN GOLEM
 		GolemRegistrar.registerGolem(EntitySeaLanternGolem.class,
 				new GolemContainer.Builder(GolemNames.SEALANTERN_GOLEM, EntitySeaLanternGolem.class, EntitySeaLanternGolem::new)
@@ -174,7 +174,7 @@ public class ExtraGolemsEntities {
 				.setHealth(58.0D).setAttack(2.5D).addBlocks(Blocks.SLIME_BLOCK)
 				.addSpecial(EntitySlimeGolem.ALLOW_SPLITTING, true, "When true, this golem will split into 2 mini-golems upon death")
 				.addSpecial(EntitySlimeGolem.ALLOW_SPECIAL, true, "Whether this golem can apply extra knockback when attacking")
-				.addSpecial(EntitySlimeGolem.KNOCKBACK, Double.valueOf(1.9412D), "Slime Golem knockback power (Higher Value = Further Knockback)")
+				.addSpecial(EntitySlimeGolem.KNOCKBACK, Double.valueOf(1.1412D), "Slime Golem knockback power (Higher Value = Further Knockback)")
 				.build());
 		// SPONGE GOLEM
 		GolemRegistrar.registerGolem(EntitySpongeGolem.class,
@@ -201,5 +201,9 @@ public class ExtraGolemsEntities {
 		GolemRegistrar.registerGolem(EntityWoodenGolem.class,
 				new GolemContainer.Builder(GolemNames.WOODEN_GOLEM, EntityWoodenGolem.class, EntityWoodenGolem::new)
 				.setHealth(20.0D).setAttack(3.0D).addBlocks(Blocks.OAK_LOG /* TODO block tags */).build());
+		// WOOL GOLEM
+		GolemRegistrar.registerGolem(EntityWoolGolem.class,
+				new GolemContainer.Builder(GolemNames.WOOL_GOLEM, EntityWoolGolem.class, EntityWoolGolem::new)
+				.setHealth(10.0D).setAttack(1.0D).addBlocks(Blocks.WHITE_WOOL /* TODO block tags */).build());
 	}
 }

@@ -8,6 +8,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.loot.LootTableList;
 
 public final class EntityBoneGolem extends GolemBase {
 

@@ -81,6 +81,15 @@ public abstract class GolemMultiTextured extends GolemBase {
 			return true;
 		}
 	}
+	
+	@Override
+	public void notifyDataManagerChange(DataParameter<?> key) {
+		super.notifyDataManagerChange(key);
+		// attempt to sync texture from client -> server -> other clients
+		if(DATA_TEXTURE.equals(key)) {
+			this.setTextureType(this.getTextureFromArray(this.getTextureNum()));
+		}
+	}
 
 	@Override
 	public void livingTick() {

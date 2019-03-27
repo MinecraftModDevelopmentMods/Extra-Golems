@@ -98,7 +98,6 @@ public final class EntitySlimeGolem extends GolemBase {
 	
 	@Override
 	public void notifyDataManagerChange(DataParameter<?> key) {
-		// change stats if this is a child vs. an adult golem TODO reimpl config
 		super.notifyDataManagerChange(key);
 		if(BABY.equals(key)) {
 			if(this.isChild()) {
