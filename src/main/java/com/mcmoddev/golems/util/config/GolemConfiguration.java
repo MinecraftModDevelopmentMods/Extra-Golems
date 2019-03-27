@@ -19,11 +19,11 @@ public class GolemConfiguration {
 		for(GolemContainer c : GolemRegistrar.golemList.values()) {
 			builder.push(c.name);
 			sections.put(c, new GolemConfigurationSection(c, builder));
-			builder.push("specials"); //golem.specials
-			for(GolemSpecialContainer specialC : c.specialContainers.values()) {
-				specials.put(specialC, new GolemSpecialSection(specialC, builder));
-			}
-			builder.pop(2); //Pops specials and the golem
+				builder.push("specials"); //golem.specials
+				for(GolemSpecialContainer specialC : c.specialContainers.values()) {
+					specials.put(specialC, new GolemSpecialSection(specialC, builder));
+				}
+				builder.pop(2); //Pops specials and the golem
 		}
 	}
 	/**
