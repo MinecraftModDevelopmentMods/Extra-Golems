@@ -14,12 +14,8 @@ public class GolemConfigurationSection {
 	public ForgeConfigSpec.BooleanValue enabled;
 
 	protected GolemConfigurationSection(GolemContainer container, ForgeConfigSpec.Builder builder) {
-		builder.push(container.name);
-
 		this.entityName = container.name;
 		loadConfig(builder, container);
-
-		builder.pop();
 	}
 
 	public void loadConfig(ForgeConfigSpec.Builder builder, GolemContainer container) {
