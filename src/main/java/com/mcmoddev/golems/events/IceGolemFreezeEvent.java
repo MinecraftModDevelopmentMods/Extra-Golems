@@ -1,5 +1,6 @@
 package com.mcmoddev.golems.events;
 
+import com.mcmoddev.golems.entity.EntityIceGolem;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -47,7 +48,8 @@ public final class IceGolemFreezeEvent extends Event {
 		this.iceGolemPos = center;
 		this.updateFlag = 3;
 		this.initAffectedBlockList(radius);
-		this.setFunction(new DefaultFreezeFunction(golem.getRNG(), ICE_CHANCE, COBBLE_CHANCE));
+		boolean useFrost = golem.getConfigBool(EntityIceGolem.FROST);
+		this.setFunction(new DefaultFreezeFunction(golem.getRNG(), useFrost, ICE_CHANCE, COBBLE_CHANCE));
 	}
 
 	public void initAffectedBlockList(final int range) {
@@ -100,10 +102,16 @@ public final class IceGolemFreezeEvent extends Event {
 		 * This percentage of Obsidian placed will become cobblestone instead.
 		 **/
 		public final int cobbleChance;
+		/**
+		 * When true, all water will turn to Frosted Ice
+		 **/
+		public final boolean frostedIce;
 
-		public DefaultFreezeFunction(final Random randomIn, final int iceChanceIn, final int cobbleChanceIn) {
+		public DefaultFreezeFunction(final Random randomIn, final boolean useFrost, 
+				final int iceChanceIn, final int cobbleChanceIn) {
 			super();
 			this.random = randomIn;
+			this.frostedIce = useFrost;
 			this.iceChance = iceChanceIn;
 			this.cobbleChance = cobbleChanceIn;
 		}
@@ -111,13 +119,14 @@ public final class IceGolemFreezeEvent extends Event {
 		@Override
 		public IBlockState apply(final IBlockState input) {
 			final IBlockState cobbleState = Blocks.COBBLESTONE.getDefaultState();
-			final IBlockState iceState = Blocks.ICE.getDefaultState();
+			final IBlockState iceState = this.frostedIce ? Blocks.FROSTED_ICE.getDefaultState() 
+					: Blocks.ICE.getDefaultState();
 			final Material material = input.getMaterial();
 			if (material.isLiquid()) {
 				final Block block = input.getBlock();
 
 				if (block == Blocks.WATER) {
-					final boolean isNotPacked = this.random.nextInt(100) < this.iceChance;
+					final boolean isNotPacked = this.frostedIce || this.random.nextInt(100) < this.iceChance;
 					return isNotPacked ? iceState : Blocks.PACKED_ICE.getDefaultState();
 				} else if (block == Blocks.LAVA) {
 					final boolean isNotObsidian = this.random.nextInt(100) < this.cobbleChance;

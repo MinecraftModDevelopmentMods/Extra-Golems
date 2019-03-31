@@ -1,12 +1,15 @@
 package com.mcmoddev.golems.entity;
 
+import java.util.List;
+import java.util.function.Function;
+
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.events.IceGolemFreezeEvent;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
@@ -18,18 +21,15 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
 
-import java.util.List;
-import java.util.function.Function;
-
 public final class EntityIceGolem extends GolemBase {
 
 	public static final String AOE = "Area of Effect";
+	public static final String FROST = "Use Frosted Ice";
 
 	public EntityIceGolem(final World world) {
 		super(EntityIceGolem.class, world);
 		this.setCanSwim(true); // just in case
 		this.setLootTableLoc(GolemNames.ICE_GOLEM);
-		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 
 	protected ResourceLocation applyTexture() {

@@ -1,9 +1,12 @@
 package com.mcmoddev.golems.entity;
 
+import java.util.List;
+
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.events.SpongeGolemSoakEvent;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Particles;
 import net.minecraft.init.SoundEvents;
@@ -16,8 +19,6 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
-
-import java.util.List;
 
 public final class EntitySpongeGolem extends GolemBase {
 

@@ -1,12 +1,14 @@
 package com.mcmoddev.golems.entity;
 
+import java.util.List;
+
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.events.EndGolemTeleportEvent;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Particles;
 import net.minecraft.init.SoundEvents;
@@ -18,8 +20,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-
-import java.util.List;
 
 public class EntityEndstoneGolem extends GolemBase {
 
@@ -42,7 +42,6 @@ public class EntityEndstoneGolem extends GolemBase {
 		this.setLootTableLoc(GolemNames.ENDSTONE_GOLEM);
 		this.isHurtByWater = this.getConfigBool(ALLOW_WATER_HURT);
 		this.allowTeleport = this.getConfigBool(ALLOW_SPECIAL);
-		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 
 	/**

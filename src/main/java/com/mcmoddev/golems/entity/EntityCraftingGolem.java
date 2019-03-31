@@ -1,9 +1,11 @@
 package com.mcmoddev.golems.entity;
 
+import java.util.List;
+
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
-import net.minecraft.entity.SharedMonsterAttributes;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
@@ -18,8 +20,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
-import java.util.List;
-
 public final class EntityCraftingGolem extends GolemBase {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Crafting";
@@ -27,7 +27,6 @@ public final class EntityCraftingGolem extends GolemBase {
 	public EntityCraftingGolem(final World world) {
 		super(EntityCraftingGolem.class, world);
 		this.setLootTableLoc(GolemNames.CRAFTING_GOLEM);
-		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.29D);
 	}
 
 	@Override

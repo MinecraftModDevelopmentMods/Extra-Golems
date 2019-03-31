@@ -4,7 +4,6 @@ import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
 
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
@@ -22,7 +21,6 @@ public final class EntityWoolGolem extends GolemMultiTextured {
 	public EntityWoolGolem(final World world) {
 		super(EntityWoolGolem.class, world, WOOL_PREFIX, coloredWoolTypes);
 		this.setCanSwim(true);
-		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
 	}
 
 //	@Override

@@ -22,10 +22,6 @@
                 "min": 2,
                 "max": 4
               }
-            },
-            {
-              "function": "set_data",
-              "data": 1
             }
           ]
         }

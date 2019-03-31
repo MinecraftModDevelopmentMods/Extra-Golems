@@ -25,9 +25,16 @@ public class ExtraGolemsConfig {
 
 	@SubscribeEvent
 	public static void onLoad(final ModConfig.Loading configEvent) {
-		ExtraGolems.LOGGER.debug("Loading {} {}", ExtraGolems.MODID, configEvent.getConfig().getFileName());
 		if(configEvent.getConfig().getSpec() == SERVER_CONFIG) {
 			GOLEM_CONFIG.loadData();
 		}
+	}
+	
+	public static boolean bedrockGolemCreativeOnly() {
+		return GOLEM_CONFIG != null ? GOLEM_CONFIG.bedrockGolemCreativeOnly.get() : false;
+	}
+	
+	public static boolean pumpkinBuildsGolems() {
+		return GOLEM_CONFIG != null ? GOLEM_CONFIG.pumpkinBuildsGolem.get() : false;
 	}
 }

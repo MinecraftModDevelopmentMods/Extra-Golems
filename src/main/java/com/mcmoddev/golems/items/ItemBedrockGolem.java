@@ -2,6 +2,7 @@ package com.mcmoddev.golems.items;
 
 import com.mcmoddev.golems.entity.EntityBedrockGolem;
 import com.mcmoddev.golems.entity.base.GolemBase;
+import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
 
 import net.minecraft.block.state.IBlockState;
@@ -41,12 +42,13 @@ public final class ItemBedrockGolem extends Item {
 		final BlockPos pos = context.getPos();
 		final ItemStack stack = context.getItem();
 
-		if((/* Config.isBedrockGolemCreativeOnly() && */ !player.abilities.isCreativeMode) || facing == EnumFacing.DOWN) {
+		if((ExtraGolemsConfig.bedrockGolemCreativeOnly() && !player.abilities.isCreativeMode) 
+				|| facing == EnumFacing.DOWN) {
 			return EnumActionResult.FAIL;
 		}
 
 		// check if the golem is enabled
-		if (GolemRegistrar.getContainer(EntityBedrockGolem.class).enabled) {
+		if (GolemRegistrar.getContainer(EntityBedrockGolem.class).isEnabled()) {
 			// make sure the golem can be spawned here (empty block)
 			IBlockState state = worldIn.getBlockState(pos);
 			BlockPos spawnPos;

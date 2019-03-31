@@ -1,7 +1,9 @@
 package com.mcmoddev.golems.util;
 
+import com.mcmoddev.golems.entity.EntityConcreteGolem;
 import com.mcmoddev.golems.entity.EntityMushroomGolem;
 import com.mcmoddev.golems.entity.EntityWoodenGolem;
+import com.mcmoddev.golems.entity.EntityWoolGolem;
 import com.mcmoddev.golems.main.ExtraGolems;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.LootTableList;
@@ -18,7 +20,7 @@ public class ConsumerLootTables implements Consumer<String> {
 		case GolemNames.BEDROCK_GOLEM:
 			return;
 		case GolemNames.WOOL_GOLEM:
-			//registerLootTables(ExtraGolems.MODID, NAME, EntityWoolGolem.coloredWoolTypes);
+			registerLootTables(ExtraGolems.MODID, NAME, EntityWoolGolem.coloredWoolTypes);
 			return;
 		case GolemNames.WOODEN_GOLEM:
 			registerLootTables(ExtraGolems.MODID, NAME, EntityWoodenGolem.woodTypes);
@@ -33,7 +35,7 @@ public class ConsumerLootTables implements Consumer<String> {
 			//registerLootTables(ExtraGolems.MODID, NAME, EntityStainedClayGolem.COLOR_ARRAY.length);
 			return;
 		case GolemNames.CONCRETE_GOLEM:
-			//registerLootTables(ExtraGolems.MODID, NAME, EntityConcreteGolem.COLOR_ARRAY.length);
+			registerLootTables(ExtraGolems.MODID, NAME, EntityConcreteGolem.dyeColorArray.length);
 			return;
 		default:
 			ResourceLocation rl = LootTableList.register(new ResourceLocation(ExtraGolems.MODID, "entities/" + NAME));
@@ -46,9 +48,9 @@ public class ConsumerLootTables implements Consumer<String> {
 	 * Registers multiple loot tables for each of the textures specified. They are registered under
 	 * the subfile [name] and individually named according to each element in [textures]
 	 */
-	private static void registerLootTables(final String MODID, final String name, final String[] textures) {
+	public static void registerLootTables(final String MODID, final String name, final String[] textures) {
 		for(String s : textures) {
-			LootTableList.register(new ResourceLocation(MODID, "loot_tables/entities/" + name + "/" + s));
+			LootTableList.register(new ResourceLocation(MODID, "entities/" + name + "/" + s));
 		}
 	}
 	
@@ -56,7 +58,7 @@ public class ConsumerLootTables implements Consumer<String> {
 	 * Registers loot tables for GolemColorizedMultiTextured, with loot tables 
 	 * registered under the subfile [name] and individually named '0' through '[max-1]'
 	 */
-	private static void registerLootTables(final String MODID, final String name, final int max) {
+	public static void registerLootTables(final String MODID, final String name, final int max) {
 		String[] array = new String[max];
 		for (int i = 0; i < max; i++) {
 			array[i] = Integer.toString(i);

@@ -1,7 +1,12 @@
 package com.mcmoddev.golems.events.handlers;
 
 
+import com.mcmoddev.golems.blocks.BlockGolemHead;
 import com.mcmoddev.golems.entity.base.GolemBase;
+import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockCarvedPumpkin;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
@@ -9,9 +14,19 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIFindEntityNearest;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAITasks;
-import net.minecraft.entity.monster.*;
+import net.minecraft.entity.monster.AbstractIllager;
+import net.minecraft.entity.monster.AbstractSkeleton;
+import net.minecraft.entity.monster.EntityPigZombie;
+import net.minecraft.entity.monster.EntitySlime;
+import net.minecraft.entity.monster.EntitySpider;
+import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUseContext;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /**
@@ -137,28 +152,55 @@ public class GolemCommonEventHandler {
 
 
 
-//	/**
-//	 * Basically, this handler allows pumpkins to be placed anywhere
-//	 * (as long as it's done by a player). Then upon placement, we try
-//	 * to spawn a golem based on the blocks the pumpkin is on.
-//	 *
-//	 * Note:  This seems to be called twice on client and twice on server.
-//	 * May have problems with dedicated server, or it might be fine.
-//	 */
-//	@SubscribeEvent
-//	public void onPlayerInteract(PlayerInteractEvent.RightClickBlock event) {
-//		ItemStack stack = event.getItemStack();
-//		float hitX = (float) event.getHitVec().x;
-//		float hitY = (float) event.getHitVec().y;
-//		float hitZ = (float) event.getHitVec().z;
-//		// check qualifications for running this event...
-//		//TODO: reimpl config
-//		if(false && !event.isCanceled()
-//				&& !stack.isEmpty() && stack.getItem() instanceof ItemBlock) {
-//			Block heldBlock = ((ItemBlock)stack.getItem()).getBlock();
-//			// if player is holding pumpkin or lit pumpkin, try to place the block
-//			if(heldBlock instanceof BlockCarvedPumpkin) {
-//				// update the location to place block
+	/**
+	 * Basically, this handler allows pumpkins to be placed anywhere
+	 * (as long as it's done by a player). Then upon placement, we try
+	 * to spawn a golem based on the blocks the pumpkin is on.
+	 *
+	 * Note:  This seems to be called twice on client and twice on server.
+	 * May have problems with dedicated server, or it might be fine.
+	 */
+	@SubscribeEvent
+	public void onPlayerInteract(PlayerInteractEvent.RightClickBlock event) {
+		ItemStack stack = event.getItemStack();
+		final int prevCount = stack.getCount();
+		// check qualifications for running this event...
+		if(ExtraGolemsConfig.pumpkinBuildsGolems() && !event.isCanceled()
+				&& !stack.isEmpty() && stack.getItem() instanceof ItemBlock) {
+			Block heldBlock = ((ItemBlock)stack.getItem()).getBlock();
+			// if player is holding pumpkin or lit pumpkin, try to place the block
+			if(heldBlock instanceof BlockCarvedPumpkin) {
+				//event.setCanceled(true);
+				// try to manually place the block
+				EnumActionResult result = EnumActionResult.PASS;
+				if (event.getUseItem() != net.minecraftforge.eventbus.api.Event.Result.DENY) {
+					result = stack.onItemUse(new ItemUseContext(event.getEntityPlayer(), stack, event.getPos(),
+							event.getFace(), (float) event.getHitVec().x, (float) event.getHitVec().y,
+							(float) event.getHitVec().z));
+					if (result == EnumActionResult.SUCCESS) {
+						// this means a pumpkin was placed, let's check where it was placed
+						// first, update count if creative-player
+						if(event.getEntityPlayer().isCreative()) {
+							stack.setCount(prevCount);
+						}
+						// assume the clicked block was NOT replaced
+						BlockPos pumpkinPos = event.getPos().offset(event.getFace());
+						if (!(event.getWorld().getBlockState(pumpkinPos).getBlock() instanceof BlockCarvedPumpkin)) {
+							// the offset position didn't work out, try the clicked position
+							pumpkinPos = event.getPos();
+						}
+						if (event.getWorld().getBlockState(pumpkinPos).getBlock() instanceof BlockCarvedPumpkin) {
+							// alright, there's a pumpkin in-world at this position
+							// let's spawn a golem
+							BlockGolemHead.trySpawnGolem(event.getWorld(), pumpkinPos);
+							
+						}
+					}
+				}
+				
+//				float hitX = (float) event.getHitVec().x;
+//				float hitY = (float) event.getHitVec().y;
+//				float hitZ = (float) event.getHitVec().z;
 //				BlockPos pumpkinPos = event.getPos();
 //				IBlockState clicked = event.getWorld().getBlockState(pumpkinPos);
 //				if (!clicked.isReplaceable(
@@ -179,27 +221,10 @@ public class GolemCommonEventHandler {
 //						}
 //					}
 //				}
-//			}
-//		}
-//	}
-	
-	/*
-	@SubscribeEvent
-	public void onItemUse(LivingEntityUseItemEvent.Finish event) {
-		// check if the item used was a pumpkin block, and if it was NOT placed
-		if(Config.doesPumpkinBuildGolem() &&
-			(event.getItem().getItem() instanceof ItemBlock 
-			&& ((ItemBlock)event.getItem().getItem()).getBlock() == Blocks.PUMPKIN) 
-			//&& (event.getResultStack().getCount() == event.getItem().getCount())
-			) {
-			// find out where to spawn the golem
-			BlockPos placePos = new BlockPos(event.getEntityLiving().getLookVec());
-			if(BlockGolemHead.trySpawnGolem(event.getEntityLiving().getEntityWorld(), placePos)) {
-				event.getResultStack().shrink(1);
 			}
 		}
 	}
-	*/
+	
 	@SubscribeEvent
 	public void onLivingSpawned(final EntityJoinWorldEvent event) {
 		// add custom 'attack golem' AI to hostile mobs. They already have this for regular iron golems

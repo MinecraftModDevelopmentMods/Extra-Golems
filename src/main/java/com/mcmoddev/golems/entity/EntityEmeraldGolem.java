@@ -3,7 +3,7 @@ package com.mcmoddev.golems.entity;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
-import net.minecraft.entity.SharedMonsterAttributes;
+
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -15,7 +15,6 @@ public final class EntityEmeraldGolem extends GolemBase {
 	public EntityEmeraldGolem(final World world) {
 		super(EntityEmeraldGolem.class, world);
 		this.setLootTableLoc(GolemNames.EMERALD_GOLEM);
-		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
 	}
 
 	@Override
@@ -36,7 +35,7 @@ public final class EntityEmeraldGolem extends GolemBase {
 	@Override
 	public boolean updateHomeVillage() {
 		// EMERALD golem checks a much larger radius than usual
-		final int radius = WANDER_DISTANCE * 4;
+		final int radius = WANDER_DISTANCE * 6;
 		return updateHomeVillageInRange(new BlockPos(this), radius);
 	}
 }

@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "item",
-          "name": "minecraft:netherbrick",
+          "name": "minecraft:nether_brick",
           "weight": 1,
           "functions": [
             {

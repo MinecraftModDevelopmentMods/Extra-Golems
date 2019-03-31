@@ -1,22 +1,38 @@
 package com.mcmoddev.golems.entity.base;
 
 import com.mcmoddev.golems.main.ExtraGolems;
+
+import net.minecraft.block.material.MaterialColor;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumDyeColor;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+
+import java.util.Arrays;
 
 import javax.annotation.Nullable;
 
 @SuppressWarnings("EntityConstructor")
-public abstract class GolemColorizedMultiTextured extends GolemColorized {
+public abstract class GolemMultiColorized extends GolemColorized {
 
 	protected static final DataParameter<Byte> DATA_TEXTURE = EntityDataManager
-			.<Byte>createKey(GolemColorizedMultiTextured.class, DataSerializers.BYTE);
+			.<Byte>createKey(GolemMultiColorized.class, DataSerializers.BYTE);
 	protected static final String NBT_TEXTURE = "GolemTextureData";
 	protected final int[] colors;
 	protected final ResourceLocation[] lootTables;
+	
+	// just here for convenience, not actually used except by child classes
+	public static final int[] dyeColorArray = {
+			16383998, 16351261, 13061821, 3847130,
+			16701501, 8439583,  15961002, 4673362,
+			10329495, 1481884,  8991416,  3949738,
+			8606770,  6192150,  11546150, 1908001 };
 
 	/**
 	 * Flexible constructor so child classes can "borrow" this class's behavior and customize.
@@ -25,7 +41,7 @@ public abstract class GolemColorizedMultiTextured extends GolemColorized {
 	 * @param overlay a texture that will be recolored and optionally rendered as transparent.
 	 * @param lColors an int[] of color values to use for rendering -- interacting with this golem  will go to the next color
 	 **/
-	public GolemColorizedMultiTextured(Class<? extends GolemColorizedMultiTextured> type, final World world,
+	public GolemMultiColorized(Class<? extends GolemMultiColorized> type, final World world,
 					   @Nullable final ResourceLocation base, @Nullable final ResourceLocation overlay, final int[] lColors) {
 		super(type, world, 0L, base, overlay);
 		colors = lColors;
@@ -43,29 +59,49 @@ public abstract class GolemColorizedMultiTextured extends GolemColorized {
 		this.getDataManager().register(DATA_TEXTURE, (byte) 0);
 	}
 
+	@Override
+	public boolean processInteract(final EntityPlayer player, final EnumHand hand) {
+		final ItemStack stack = player.getHeldItem(hand);
+		// only change texture when player has empty hand
+		if (!stack.isEmpty()) {
+			return super.processInteract(player, hand);
+		} else {
+			final int incremented = (this.getTextureNum() + 1) % this.getColorArray().length;
+			this.setTextureNum((byte) incremented);
+			player.swingArm(hand);
+			return true;
+		}
+	}
+	
+	@Override
+	public void notifyDataManagerChange(DataParameter<?> key) {
+		super.notifyDataManagerChange(key);
+		// attempt to sync texture from client -> server -> other clients
+		if(DATA_TEXTURE.equals(key)) {
+			this.updateTextureByData(this.getTextureNum());
+		}
+	}
 
+	@Override
+	public void livingTick() {
+		super.livingTick();
+		// since textureNum is correct, update texture AFTER loading from NBT and init
+		if (this.ticksExisted == 2) {
+			this.updateTextureByData(this.getTextureNum());
+		}
+	}
 
-//	@Override
-//	public void livingTick() {
-//		super.livingTick();
-//		// since textureNum is correct, update texture AFTER loading from NBT and init
-//		if (this.ticksExisted == 2) {
-//			this.updateTextureByData(this.getTextureNum());
-//		}
-//	}
-//
-//	@Override
-//	public void writeAdditional(final NBTTagCompound nbt) {
-//		super.writeAdditional(nbt);
-//		nbt.setByte(NBT_TEXTURE, (byte) this.getTextureNum());
-//	}
-//
-//	@Override
-//	public void readAdditional(final NBTTagCompound nbt) {
-//		super.readAdditional(nbt);
-//		this.setTextureNum(nbt.getByte(NBT_TEXTURE));
-//		this.updateTextureByData(this.getTextureNum());
-//	}
+	@Override
+	public void writeAdditional(final NBTTagCompound nbt) {
+		super.writeAdditional(nbt);
+		nbt.setByte(NBT_TEXTURE, (byte) this.getTextureNum());
+	}
+
+	@Override
+	public void readAdditional(final NBTTagCompound nbt) {
+		super.readAdditional(nbt);
+		this.setTextureNum(nbt.getByte(NBT_TEXTURE));
+	}
 
 	@Override
 	public boolean doesInteractChangeTexture() {

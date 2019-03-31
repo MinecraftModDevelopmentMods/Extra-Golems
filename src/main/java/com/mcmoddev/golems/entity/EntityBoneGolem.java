@@ -3,12 +3,11 @@ package com.mcmoddev.golems.entity;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
-import net.minecraft.entity.SharedMonsterAttributes;
+
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.loot.LootTableList;
 
 public final class EntityBoneGolem extends GolemBase {
 
@@ -16,7 +15,6 @@ public final class EntityBoneGolem extends GolemBase {
 		super(EntityBoneGolem.class, world);
 		this.setCanTakeFallDamage(true);
 		this.setLootTableLoc(GolemNames.BONE_GOLEM);
-		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
 	}
 
 	protected ResourceLocation applyTexture() {

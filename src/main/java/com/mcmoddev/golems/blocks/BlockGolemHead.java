@@ -1,7 +1,6 @@
 package com.mcmoddev.golems.blocks;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
-import com.mcmoddev.golems.items.ItemBedrockGolem;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
 import net.minecraft.block.Block;
@@ -25,10 +24,12 @@ public final class BlockGolemHead extends BlockHorizontal {
 		this.setDefaultState(this.getStateContainer().getBaseState().with(HORIZONTAL_FACING, EnumFacing.NORTH));
 	}
 
+	@Override
 	public IBlockState getStateForPlacement(BlockItemUseContext context) {
 		return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite());
 	}
 
+	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, IBlockState> builder) {
 		builder.add(HORIZONTAL_FACING);
 	}
@@ -49,88 +50,102 @@ public final class BlockGolemHead extends BlockHorizontal {
 	 * Checks if a golem can be built there and, if so, removes
 	 * the blocks and spawns the corresponding golem.
 	 * @param world current world
-	 * @param pos the position of the golem head block
+	 * @param headPos the position of the golem head block
 	 * @return if the golem was built and spawned
 	 */
-	public static boolean trySpawnGolem(final World world, final BlockPos pos) {
-		final IBlockState stateBelow1 = world.getBlockState(pos.down(1));
-		final IBlockState stateBelow2 = world.getBlockState(pos.down(2));
+	public static boolean trySpawnGolem(final World world, final BlockPos headPos) {
+		if(world.isRemote) return false;
+		
+		// get all the block and state values that we will be using in the following code
+		final IBlockState stateBelow1 = world.getBlockState(headPos.down(1));
+		final IBlockState stateBelow2 = world.getBlockState(headPos.down(2));
+		final IBlockState stateArmNorth = world.getBlockState(headPos.down(1).north(1));
+		final IBlockState stateArmSouth = world.getBlockState(headPos.down(1).south(1));
+		final IBlockState stateArmEast = world.getBlockState(headPos.down(1).east(1));
+		final IBlockState stateArmWest = world.getBlockState(headPos.down(1).west(1));
 		final Block blockBelow1 = stateBelow1.getBlock();
 		final Block blockBelow2 = stateBelow2.getBlock();
-		final double x = pos.getX() + 0.5D;
-		final double y = pos.getY() - 1.95D;
-		final double z = pos.getZ() + 0.5D;
-		if(!(blockBelow1 == blockBelow2 && blockBelow1 != Blocks.AIR)) {
-			return false;
-		}
-		// hard-coded support for Snow Golem
-		if (blockBelow1 == Blocks.SNOW_BLOCK) {
-			if (!world.isRemote) {
-				removeGolemBody(world, pos);
-				final EntitySnowman entitysnowman = new EntitySnowman(world);
-				ExtraGolems.LOGGER.info("[Extra Golems]: Building regular boring Snow Golem");
-				entitysnowman.setLocationAndAngles(x, y, z, 0.0F, 0.0F);
-				world.spawnEntity(entitysnowman);
-			}
+		final Block blockArmNorth = stateArmNorth.getBlock();
+		final Block blockArmSouth = stateArmSouth.getBlock();
+		final Block blockArmEast = stateArmEast.getBlock();
+		final Block blockArmWest = stateArmWest.getBlock();
+		// this is where the golem will spawn at the end
+		final double spawnX = headPos.getX() + 0.5D;
+		final double spawnY = headPos.getY() - 1.95D;
+		final double spawnZ = headPos.getZ() + 0.5D;
+		// true if the golem is East-West aligned
+		boolean flagX;
+		// true if the golem is completely Iron Blocks
+		boolean isIron;
+		
+		////// Hard-coded support for Snow Golem //////
+		if (doBlocksMatch(Blocks.SNOW_BLOCK, blockBelow1, blockBelow2)) {
+			removeGolemBody(world, headPos);
+			final EntitySnowman entitysnowman = new EntitySnowman(world);
+			ExtraGolems.LOGGER.info("[Extra Golems]: Building regular boring Snow Golem");
+			entitysnowman.setLocationAndAngles(spawnX, spawnY, spawnZ, 0.0F, 0.0F);
+			world.spawnEntity(entitysnowman);
 			return true;
 		}
+		
+		////// Hard-coded support for Iron Golem //////
+		isIron = doBlocksMatch(Blocks.IRON_BLOCK, blockBelow1, blockBelow2, blockArmNorth, blockArmSouth);
+		flagX = false;
+		if(!isIron) {
+			// try to find an Iron Golem east-west aligned
+			isIron = doBlocksMatch(Blocks.IRON_BLOCK, blockBelow1, blockBelow2, blockArmEast, blockArmWest);
+			flagX = true;
+		}
+		
+		if (isIron) {
+			removeAllGolemBlocks(world, headPos, flagX);
+			// build Iron Golem
+			final EntityIronGolem ironGolem = new EntityIronGolem(world);
+			ExtraGolems.LOGGER.info("[Extra Golems]: Building regular boring Iron Golem");
+			ironGolem.setPlayerCreated(true);
+			ironGolem.setLocationAndAngles(spawnX, spawnY, spawnZ, 0.0F, 0.0F);
+			world.spawnEntity(ironGolem);
+			return true;
+		}
+		
+		////// Attempt to spawn a Golem from this mod //////
+		GolemBase golem = GolemRegistrar.getGolem(world, blockBelow1, blockBelow2, blockArmNorth, blockArmSouth);
+		flagX = false;
+		// if no golem found for North-South, try to find one for East-West pattern
+		if(golem == null) {
+			golem = GolemRegistrar.getGolem(world, blockBelow1, blockBelow2, blockArmEast, blockArmWest);
+			flagX = true;
+		}
 
-		final boolean flagX = isGolemXAligned(world, pos);
-		final boolean flagZ = isGolemZAligned(world, pos);
-		if (!world.isRemote && (flagX || flagZ)) {
-			// determine each arm of the golem
-			EnumFacing face = flagX ? EnumFacing.EAST : EnumFacing.NORTH;
-			IBlockState arm1 = world.getBlockState(pos.down(1).offset(face, 1));
-			IBlockState arm2 = world.getBlockState(pos.down(1).offset(face.getOpposite(), 1));
-
-			// hard-coded support for Iron Golem
-			if (blockBelow1 == Blocks.IRON_BLOCK) {
-				removeAllGolemBlocks(world, pos, flagX);
-				// build Iron Golem
-				final EntityIronGolem golem = new EntityIronGolem(world);
-				ExtraGolems.LOGGER.info("[Extra Golems]: Building regular boring Iron Golem");
-				golem.setPlayerCreated(true);
-				golem.setLocationAndAngles(x, y, z, 0.0F, 0.0F);
-				world.spawnEntity(golem);
-				return true;
-			}
-			final GolemBase golem = GolemRegistrar.getGolem(world, blockBelow1);
-			if (golem == null) return false;
-			//get the spawn permissions
-			if(!golem.getGolemContainer().enabled) return false;
-
-			removeAllGolemBlocks(world, pos, flagX);
+		if(golem != null && golem.getGolemContainer().isEnabled()) {
+			// spawn the golem!
+			removeAllGolemBlocks(world, headPos, flagX);
 			golem.setPlayerCreated(true);
-			golem.setLocationAndAngles(x, y, z, 0.0F, 0.0F);
+			golem.setLocationAndAngles(spawnX, spawnY, spawnZ, 0.0F, 0.0F);
 			ExtraGolems.LOGGER.info("[Extra Golems]: Building golem " + golem.toString());
 			world.spawnEntity(golem);
-			golem.onBuilt(stateBelow1, stateBelow2, arm1, arm2);
+			golem.onBuilt(stateBelow1, stateBelow2, flagX ? stateArmEast : stateArmWest, flagX ? stateArmNorth : stateArmSouth);
 			if(!golem.updateHomeVillage()) {
 				golem.setHomePosAndDistance(golem.getPosition(), GolemBase.WANDER_DISTANCE);
 			}
 			return true;
 		}
+		// No Golems of any kind were spawned :(
 		return false;
 	}
 
 	/**
-	 * @return {@code true} if the blocks at x-1 and x+1 match the block at x.
+	 * 
+	 * @param master the Block to check against
+	 * @param toCheck other Block values that you want to ensure are equal
+	 * @return true if [every Block in {@code toCheck}] == master
 	 **/
-	public static boolean isGolemXAligned(final World world, final BlockPos headPos) {
-		final BlockPos[] armsX = {headPos.down(1).west(1), headPos.down(1).east(1)};
-		final Block below = world.getBlockState(headPos.down(1)).getBlock();
-		return world.getBlockState(armsX[0]).getBlock() == below
-			&& world.getBlockState(armsX[1]).getBlock() == below;
-	}
-
-	/**
-	 * @return {@code true} if the blocks at z-1 and z+1 match the block at z.
-	 **/
-	public static boolean isGolemZAligned(final World world, final BlockPos headPos) {
-		final BlockPos[] armsZ = {headPos.down(1).north(1), headPos.down(1).south(1)};
-		final Block below = world.getBlockState(headPos.down(1)).getBlock();
-		return world.getBlockState(armsZ[0]).getBlock() == below
-			&& world.getBlockState(armsZ[1]).getBlock() == below;
+	public static boolean doBlocksMatch(Block master, Block... toCheck) {
+		boolean success = toCheck != null && toCheck.length > 0;
+		for(Block b : toCheck) {
+			success &= b == master;
+		}
+		return success;
 	}
 
 	/**

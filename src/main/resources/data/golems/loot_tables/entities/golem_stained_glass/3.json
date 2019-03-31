@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "item",
-          "name": "minecraft:stained_glass",
+          "name": "minecraft:light_blue_stained_glass",
           "weight": 1,
           "functions": [
             {
@@ -19,10 +19,6 @@
             {
               "function": "looting_enchant",
               "count": 1
-            },
-            {
-              "function": "set_data",
-              "data": 12
             }
           ]
         }

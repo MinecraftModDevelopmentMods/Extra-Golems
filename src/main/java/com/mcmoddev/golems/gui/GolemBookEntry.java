@@ -25,7 +25,7 @@ import java.util.List;
  **/
 public class GolemBookEntry {
 
-	private final Block BLOCK;
+	private final Block[] BLOCKS;
 	private final String GOLEM_NAME;
 	private ResourceLocation IMAGE = null;
 	private final boolean MULTI_TEXTURE;
@@ -45,12 +45,10 @@ public class GolemBookEntry {
 		this.SPECIALS = golem.addSpecialDesc(new ArrayList<String>());
 
 		// set the block and block name if it exists
-		Block b = GolemRegistrar.getContainer(golem.getClass()).getPrimaryBuildingBlock();
-		// Blocks.AIR means there is no building block
-		this.BLOCK = b != null ? b : Blocks.AIR;
+		this.BLOCKS = GolemRegistrar.getContainer(golem.getClass()).getBuildingBlocks();
 		
 		// find the image to add to the book
-		String img = (ExtraGolems.MODID + ":textures/gui/screenshots/").concat(golemType.getTranslationKey()).concat(".png");
+		String img = (ExtraGolems.MODID + ":textures/gui/screenshots/").concat(golemType.getRegistryName().getPath()).concat(".png");
 		try {
 			this.IMAGE = Minecraft.getInstance().getResourceManager().getResource(new ResourceLocation(img)).getLocation();
 			//System.out.println("Image found, yay! Loading " + img.toString() + " for " + this.GOLEM_NAME);
@@ -72,19 +70,34 @@ public class GolemBookEntry {
 	public String getGolemNameRaw() {
 		return this.GOLEM_NAME;
 	}
+	
+	/**
+	 * @return true if building blocks were found for this golem
+	 **/
+	public boolean hasBlocks() {
+		return this.BLOCKS != null && this.BLOCKS.length > 0;
+	}
+	
+	/**
+	 * @return the Block at [index % arrayLen]
+	 * or Blocks.AIR if none is found.
+	 **/
+	public Block getBlock(final int index) {
+		return hasBlocks() ? this.BLOCKS[index % this.BLOCKS.length] : Blocks.AIR;
+	}
 
 	/**
-	 * @return the Block in this entry
+	 * @return the Blocks in this entry
 	 **/
-	public Block getBlock() {
-		return this.BLOCK;
+	public Block[] getBlocks() {
+		return this.BLOCKS;
 	}
 	
 	/**
 	 * @return the Block in this entry
 	 **/
-	public String getBlockName() {
-		return trans(this.BLOCK.getTranslationKey());
+	public String getBlockName(final Block b) {
+		return trans(b.getTranslationKey());
 	}
 	
 	/**
@@ -155,11 +168,5 @@ public class GolemBookEntry {
 	/** Helper method for translating text into local language using {@code I18n} **/
 	protected static String trans(final String s, final Object... strings) {
 		return I18n.format(s, strings);
-	}
-
-	@Override
-	public String toString() {
-		return "[Block=" + this.BLOCK.getTranslationKey() + "; Golem=" + trans(this.GOLEM_NAME)
-			+ "; Desc=" + this.getDescriptionPage().replaceAll("\n", "; ");
 	}
 }

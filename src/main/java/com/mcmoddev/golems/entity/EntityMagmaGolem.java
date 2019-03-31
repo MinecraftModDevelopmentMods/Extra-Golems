@@ -1,8 +1,11 @@
 package com.mcmoddev.golems.entity;
 
+import java.util.List;
+
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -19,8 +22,6 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import java.util.List;
 
 public final class EntityMagmaGolem extends GolemBase {
 
@@ -66,7 +67,6 @@ public final class EntityMagmaGolem extends GolemBase {
 		this.ticksStandingStill = 0;
 		this.setImmuneToFire(true);
 		this.setCanSwim(!this.isHurtByWater);
-		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
 		this.setLootTableLoc(GolemNames.MAGMA_GOLEM);
 	}
 	
@@ -78,13 +78,13 @@ public final class EntityMagmaGolem extends GolemBase {
 			if (this.isChild()) {
 				this.setSize(0.7F, 1.45F);
 				this.allowMelting = false;
-				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.attack * 0.6F);
-				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.health / 3);
+				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.getAttack() * 0.6F);
+				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.getHealth() / 3);
 			} else {
 				this.setSize(1.4F, 2.9F);
 				this.allowMelting = this.getConfigBool(ALLOW_LAVA_SPECIAL);
-				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.attack);
-				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.health);
+				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.getAttack());
+				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.getHealth());
 			}
 		}
 	}

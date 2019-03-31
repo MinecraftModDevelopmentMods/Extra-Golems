@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "item",
-          "name": "minecraft:big_oak_planks",
+          "name": "minecraft:dark_oak_planks",
           "weight": 1,
           "functions": [
             {
@@ -22,10 +22,6 @@
                 "min": 2,
                 "max": 4
               }
-            },
-            {
-              "function": "set_data",
-              "data": 5
             }
           ]
         }
@@ -37,7 +33,7 @@
       "entries": [
         {
           "type": "item",
-          "name": "minecraft:big_oak_sapling",
+          "name": "minecraft:dark_oak_sapling",
           "weight": 1,
           "quality": 10
         },

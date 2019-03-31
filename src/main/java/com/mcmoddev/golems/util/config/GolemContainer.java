@@ -1,10 +1,13 @@
 package com.mcmoddev.golems.util.config;
 
+import com.google.common.collect.Lists;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
@@ -12,48 +15,91 @@ import net.minecraft.world.storage.loot.LootTableList;
 import java.util.*;
 import java.util.function.Function;
 
+import javax.annotation.Nullable;
+
 /**
  * Adapted from BetterAnimalsPlus by its_meow. Used with permission.
  */
 public class GolemContainer {
 
 	private final List<Block> validBuildingBlocks;
+	private final List<Tag<Block>> validBuildingBlockTags;
 	//Avoid making setters/getters for non-final fields for now
 	public final EntityType<GolemBase> entityType;
-	public String name;
-	public double health;
-	public double attack;
-	public boolean enabled = true;
+	private String name;
+	private double health;
+	private double attack;
+	private double speed;
+	private boolean enabled = true;
 
 	public Map<String, GolemSpecialContainer> specialContainers;
 
 	private GolemContainer(final EntityType<GolemBase> lEntityType, final String lPath, 
-			final List<Block> lValidBuildingBlocks, final double lHealth, 
-			final double lAttack, final HashMap<String, GolemSpecialContainer> lSpecialContainers) {
+			final List<Block> lValidBuildingBlocks, final List<Tag<Block>> lValidBuildingBlockTags,
+			final double lHealth, final double lAttack, final double lSpeed,
+			final HashMap<String, GolemSpecialContainer> lSpecialContainers) {
 		this.entityType = lEntityType;
 		this.validBuildingBlocks = lValidBuildingBlocks;
+		this.validBuildingBlockTags = lValidBuildingBlockTags;
 		this.name = lPath;
 		this.health = lHealth;
 		this.attack = lAttack;
+		this.speed = lSpeed;
 		this.specialContainers = lSpecialContainers;
 	}
 
 
 	public boolean hasBuildingBlock() {
-		return !this.validBuildingBlocks.isEmpty();
+		return !(this.validBuildingBlocks.isEmpty() && this.validBuildingBlocks.isEmpty());
 	}
 
 	public Block[] getBuildingBlocks() {
-		return this.validBuildingBlocks.toArray(new Block[0]);
+		// make set of all blocks including tags (run-time only)
+		Set<Block> blocks = new HashSet<>();
+		blocks.addAll(validBuildingBlocks);
+		for(Tag<Block> tag : this.validBuildingBlockTags) {
+			blocks.addAll(tag.getAllElements());
+		}
+		return blocks.toArray(new Block[0]);
 	}
 	
 	public boolean isBuildingBlock(final Block b) {
-		// TODO:  check Block Tags either here or when the blocks are added in Builder
-		return this.validBuildingBlocks.contains(b);
+		if(null == b) return false;
+		// make set of all blocks including tags (run-time only)
+		Set<Block> blocks = new HashSet<>();
+		blocks.addAll(validBuildingBlocks);
+		for(Tag<Block> tag : this.validBuildingBlockTags) {
+			blocks.addAll(tag.getAllElements());
+		}
+ 		return this.validBuildingBlocks.contains(b);
 	}
+	
+	public boolean areBuildingBlocks(final Block b1, final Block b2, final Block b3, final Block b4) {
+		return isBuildingBlock(b1) && isBuildingBlock(b2) && isBuildingBlock(b3) && isBuildingBlock(b4);
+	}
+	
+	@Nullable
 	public Block getPrimaryBuildingBlock() {
-		return this.validBuildingBlocks.isEmpty() ? null : this.validBuildingBlocks.get(0);
+		if(hasBuildingBlock()) {
+			Block[] allBlocks = getBuildingBlocks();
+			return allBlocks != null && allBlocks.length > 0 ? allBlocks[0] : null;
+		}
+		return null;
 	}
+	
+	////////// SETTERS //////////
+	public void setHealth(final double pHealth) { this.health = pHealth; }
+	public void setAttack(final double pAttack) { this.attack = pAttack; }
+	public void setSpeed(final double pSpeed) { this.speed = pSpeed; }
+	public void setEnabled(final boolean pEnabled) { this.enabled = pEnabled; }
+	
+	////////// GETTERS //////////
+	public EntityType<GolemBase> getEntityType() { return this.entityType; }
+	public String getName() { return this.name; }
+	public double getHealth() { return this.health; }
+	public double getAttack() { return this.attack; }
+	public double getSpeed() { return this.speed; }
+	public boolean isEnabled() { return this.enabled; }
 
 	/**
 	 * This class is my own work
@@ -65,9 +111,11 @@ public class GolemContainer {
 		private String modid = ExtraGolems.MODID;
 		private double health = 100.0D;
 		private double attack = 14.0D; //Average iron golem attack in Normal mode
+		private double speed = 0.25D;
 		//This is a list to allow determining the "priority" of golem blocks. This could be used to our
 		//advantage in golem building logic for conflicts in the future.
 		private List<Block> validBuildingBlocks = new ArrayList<>();
+		private List<Tag<Block>> validBuildingBlockTags = new ArrayList<>();
 		private List<GolemSpecialContainer> containers = new ArrayList<>();
 
 		/**
@@ -112,6 +160,16 @@ public class GolemContainer {
 			attack = lAttack;
 			return this;
 		}
+		
+		/**
+		 * Sets the movement speed of a golem
+		 * @param lMoveSpeed The move speed of the golem. <b>Defaults to 0.25D</b>
+		 * @return instance to allow chaining of methods
+		 */
+		public Builder setSpeed(final double lMoveSpeed) {
+			speed = lMoveSpeed;
+			return this;
+		}
 
 		/**
 		 * Adds building blocks that may be used for creating the golem
@@ -122,6 +180,17 @@ public class GolemContainer {
 			if(additionalBlocks != null && additionalBlocks.length > 0) {
 				this.validBuildingBlocks.addAll(Arrays.asList(additionalBlocks));
 			}
+			return this;
+		}
+		
+		/**
+		 * Adds building blocks that may be used for creating the golem
+		 * in the form of a Block Tag
+		 * @param blockTag the {@code Tag<Block>} to use
+		 * @return instance to allow chaining of methods
+		 */
+		public Builder addBlocks(final Tag<Block> blockTag) {
+			this.validBuildingBlockTags.add(blockTag);
 			return this;
 		}
 
@@ -156,7 +225,8 @@ public class GolemContainer {
 			for(GolemSpecialContainer c : containers) {
 				containerMap.put(c.name, c);
 			}
-			return new GolemContainer(entityType, golemName, validBuildingBlocks, health, attack, containerMap);
+			return new GolemContainer(entityType, golemName, validBuildingBlocks, 
+					validBuildingBlockTags, health, attack, speed, containerMap);
 		}
 	}
 

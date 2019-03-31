@@ -9,25 +9,19 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public final class EntityGlassGolem extends GolemBase {
+public final class EntityTerracottaGolem extends GolemBase {
 
-	public EntityGlassGolem(final World world) {
-		super(EntityGlassGolem.class, world);
-		this.setCanTakeFallDamage(true);
-		this.setLootTableLoc(GolemNames.GLASS_GOLEM);
+	public EntityTerracottaGolem(final World world) {
+		super(EntityTerracottaGolem.class, world);
+		this.setLootTableLoc(GolemNames.TERRACOTTA_GOLEM);
 	}
 
 	protected ResourceLocation applyTexture() {
-		return makeTexture(ExtraGolems.MODID, GolemNames.GLASS_GOLEM);
+		return makeTexture(ExtraGolems.MODID, GolemNames.TERRACOTTA_GOLEM);
 	}
 
 	@Override
 	public SoundEvent getGolemSound() {
-		return SoundEvents.BLOCK_GLASS_STEP;
-	}
-
-	@Override
-	protected SoundEvent getDeathSound() {
-		return SoundEvents.BLOCK_GLASS_BREAK;
+		return SoundEvents.BLOCK_STONE_STEP;
 	}
 }

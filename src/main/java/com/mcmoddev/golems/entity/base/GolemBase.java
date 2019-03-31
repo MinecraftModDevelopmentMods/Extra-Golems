@@ -96,8 +96,6 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 		this.setCanTakeFallDamage(false);
 		Block pickBlock = container.getPrimaryBuildingBlock();
 		this.setCreativeReturn(pickBlock != null ? pickBlock : GolemItems.golemHead);
-		//this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.attack);
-		//this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.health);
 		this.setCanSwim(false);
 		this.experienceValue = 4 + rand.nextInt(8);
 	}
@@ -135,12 +133,12 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 	//NOTE: This is called before the constructor gets to adding the container
 	@Override
 	protected void registerAttributes() {
-		GolemContainer container = GolemRegistrar.getContainer(getClass());
+		GolemContainer golemContainer = GolemRegistrar.getContainer(getClass());
 		super.registerAttributes();
 		this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE)
-			.setBaseValue(container.attack);
-		this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.health);
-		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.22D);
+			.setBaseValue(golemContainer.getAttack());
+		this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(golemContainer.getHealth());
+		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(golemContainer.getSpeed());
 	}
 
 	/**
@@ -255,7 +253,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 			.getValue();
 		// calculate damage based on current attack damage, variance, and luck/unluck/critical
 		float damage = multiplier * (currentAttack
-			+ (float) (rand.nextDouble() - 0.5D) * VARIANCE * currentAttack);
+			+ (float) rand.nextInt((int)currentAttack + 1) * VARIANCE);
 		
 		this.attackTimer = 10;
 		this.world.setEntityState(this, (byte) 4);

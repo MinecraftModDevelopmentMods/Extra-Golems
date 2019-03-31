@@ -1,8 +1,11 @@
 package com.mcmoddev.golems.entity;
 
+import java.util.List;
+
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntitySlime;
@@ -13,8 +16,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-
-import java.util.List;
 
 public final class EntitySlimeGolem extends GolemBase {
 
@@ -31,7 +32,6 @@ public final class EntitySlimeGolem extends GolemBase {
 		this.setChild(isBaby);
 		this.setCanSwim(true);
 		this.setLootTableLoc(GolemNames.SLIME_GOLEM);
-		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.29D);
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public final class EntitySlimeGolem extends GolemBase {
 		if (super.attackEntityAsMob(entity)) {
 			// knocks back the entity it's attacking (if it's adult and not attacking a slime)
 			if (this.getConfigBool(ALLOW_SPECIAL) && !(entity instanceof EntitySlime) && !this.isChild()) {
-				knockbackTarget(entity, 1.9412); //TODO: reimpl config
+				knockbackTarget(entity, this.getConfigDouble(KNOCKBACK));
 			}
 			return true;
 		}
@@ -74,7 +74,6 @@ public final class EntitySlimeGolem extends GolemBase {
 	
 	@Override
 	public void remove() {
-		// spawn baby golems here if possible TODO: reimpl config
 		if(!this.world.isRemote && !this.isChild() && this.getConfigBool(ALLOW_SPLITTING)) {
 			GolemBase slime1 = new EntitySlimeGolem(this.world, true);
 			GolemBase slime2 = new EntitySlimeGolem(this.world, true);
@@ -102,12 +101,12 @@ public final class EntitySlimeGolem extends GolemBase {
 		if(BABY.equals(key)) {
 			if(this.isChild()) {
 				this.setSize(0.7F, 1.45F);
-				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.health / 3);
-				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.attack * 0.6F);
+				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.getHealth() / 3);
+				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.getAttack() * 0.6F);
 				this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.0D);
 			} else {
-				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.health);
-				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.attack);
+				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.getHealth());
+				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.getAttack());
 				this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.35D);
 			}
 		}
@@ -123,7 +122,6 @@ public final class EntitySlimeGolem extends GolemBase {
 		if (this.getConfigBool(ALLOW_SPECIAL)) {
 			list.add(TextFormatting.GREEN + trans("entitytip.has_knockback"));
 		}
-		//TODO reimpl config
 		if(!this.isChild() && this.getConfigBool(ALLOW_SPLITTING)) {
 			list.add(TextFormatting.GREEN + trans("entitytip.splits_upon_death"));
 		}

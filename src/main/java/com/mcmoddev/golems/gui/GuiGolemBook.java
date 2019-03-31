@@ -130,6 +130,8 @@ public class GuiGolemBook extends GuiScreen {
     private float currentScroll;
     /** True if the scrollbar is being dragged */
     private boolean isScrolling;
+    /** in-game tick counter for when GUI is paused **/
+    protected long ticksOpen;
     
     // for use in drawing golem spell recipe
     private static final ItemStack[] ingredientsSpell = new ItemStack[] 
@@ -153,6 +155,7 @@ public class GuiGolemBook extends GuiScreen {
 		this.currentScroll = 0;
 		this.isScrolling = false;
     	this.tableOfContents = new GuiGolemBook.GolemEntryButton[NUM_CONTENTS_ENTRIES];
+    	this.ticksOpen = 0L;
 	}
 
 	/**
@@ -161,7 +164,7 @@ public class GuiGolemBook extends GuiScreen {
 	private static final void initGolemBookEntries() {
 		GOLEMS.clear();
 		for (GolemBase golem : ExtraGolems.PROXY.DUMMY_GOLEMS) {
-			if(GolemRegistrar.getContainer(golem.getClass()).enabled) {
+			if(GolemRegistrar.getContainer(golem.getClass()).isEnabled()) {
 				GOLEMS.add(new GolemBookEntry(golem));
 			}
 		}
@@ -197,9 +200,9 @@ public class GuiGolemBook extends GuiScreen {
     	// calculate location and size of blocks icons, if present
 		int blockX = ((this.width - BOOK_WIDTH ) / 2) + MARGIN + 4;
     	int blockY = SCR_OFFSET_Y + MARGIN;
-		this.buttonBlockLeft = this.addButton(new GuiGolemBook.BlockButton(idBlockLeft, blockX, blockY, GOLEM_BLOCK_SCALE));
+		this.buttonBlockLeft = this.addButton(new GuiGolemBook.BlockButton(idBlockLeft, this, new Block[] {}, blockX, blockY, GOLEM_BLOCK_SCALE));
 		blockX = (this.width / 2) + MARGIN;
-    	this.buttonBlockRight = this.addButton(new GuiGolemBook.BlockButton(idBlockRight, blockX, blockY, GOLEM_BLOCK_SCALE));
+    	this.buttonBlockRight = this.addButton(new GuiGolemBook.BlockButton(idBlockRight, this, new Block[] {}, blockX, blockY, GOLEM_BLOCK_SCALE));
 		// create table of contents
     	for(int i = 0; i < NUM_CONTENTS_ENTRIES; i++) {
     		this.tableOfContents[i] = this.addButton(new GuiGolemBook.GolemEntryButton(idTableContents + i, this, 
@@ -208,8 +211,16 @@ public class GuiGolemBook extends GuiScreen {
     	this.updateButtons();
 	}
 
+	/**
+	 * Called from the main game loop to update the screen.
+	 */
 	@Override
-	public void render(int mouseX, int mouseY, float partialTicks) {
+	public void tick() { 
+		++ticksOpen; 
+	}
+
+	@Override
+	public void render(final int mouseX, final int mouseY, final float partialTicks) {
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 		// draw background (book)
@@ -219,27 +230,28 @@ public class GuiGolemBook extends GuiScreen {
 		this.drawTexturedModalRect(bookX, bookY, 0, 0, BOOK_WIDTH, BOOK_HEIGHT);
 
 		// draw pages: left and right
-		this.drawPageAt(bookX + 1, bookY, this.curPage);
-		this.drawPageAt(bookX + (BOOK_WIDTH / 2) - 2, bookY, this.curPage + 1);
+		this.drawPageAt(bookX + 1, bookY, this.curPage, partialTicks);
+		this.drawPageAt(bookX + (BOOK_WIDTH / 2) - 2, bookY, this.curPage + 1, partialTicks);
 
 		// draw buttons, etc.
 		super.render(mouseX, mouseY, partialTicks);
 
-		// hovering text has to be the last thing you do
-		if (isPageGolemEntry(this.curPage, this.totalPages) && this.buttonBlockLeft.isMouseOver()) {
-			// check for hover-over on left side
-			GolemBookEntry entry = getGolemEntryForPage(this.curPage);
-			if (entry.getBlock() != Blocks.AIR) {
-				this.drawHoveringText(entry.getBlockName(), mouseX, mouseY);
-			}
-		}
-		if (isPageGolemEntry(this.curPage + 1, this.totalPages) && this.buttonBlockRight.isMouseOver()) {
-			// check for hover-over on right side
-			GolemBookEntry entry = getGolemEntryForPage(this.curPage + 1);
-			if (entry.getBlock() != Blocks.AIR) {
-				this.drawHoveringText(entry.getBlockName(), mouseX, mouseY);
-			}
-		}
+//		// hovering text has to be the last thing you do
+//		int index = (int)(partialTicks * GOLEM_BLOCK_TIMER);
+//		if (isPageGolemEntry(this.curPage, this.totalPages) && this.buttonBlockLeft.isMouseOver()) {
+//			// check for hover-over on left side
+//			final Block b = getGolemEntryForPage(this.curPage).getBlock(index);
+//			if (b != Blocks.AIR) {
+//				this.drawHoveringText(trans(b.getTranslationKey()), mouseX, mouseY);
+//			}
+//		}
+//		if (isPageGolemEntry(this.curPage + 1, this.totalPages) && this.buttonBlockRight.isMouseOver()) {
+//			// check for hover-over on right side
+//			final Block b = getGolemEntryForPage(this.curPage + 1).getBlock(index);
+//			if (b != Blocks.AIR) {
+//				this.drawHoveringText(trans(b.getTranslationKey()), mouseX, mouseY);
+//			}
+//		}
 	}
 
 	/**
@@ -250,7 +262,7 @@ public class GuiGolemBook extends GuiScreen {
 	 * @param cornerY the upper corner of the page
 	 * @param pageNum the page to draw
 	 **/
-	private void drawPageAt(final int cornerX, final int cornerY, final int pageNum) {
+	private void drawPageAt(final int cornerX, final int cornerY, final int pageNum, final float partialTicks) {
 		// draw the page number
 		this.drawPageNum(cornerX, cornerY, pageNum + 1);
 		// declare these for the following switch statement
@@ -347,7 +359,7 @@ public class GuiGolemBook extends GuiScreen {
 				// draw golem entry
 				if (isPageGolemEntry(pageNum, this.totalPages)) {
 					GolemBookEntry entry = getGolemEntryForPage(pageNum);
-					this.drawGolemEntry(cornerX, cornerY, entry);
+					this.drawGolemEntry(cornerX, cornerY, entry, partialTicks);
 				}
 				return;
 		}
@@ -370,26 +382,21 @@ public class GuiGolemBook extends GuiScreen {
     protected void drawBlock(final Block blockIn, final int cornerX, final int cornerY, final float scale) {
     	// 'Blocks.AIR' is the flag for 'no block'
     	Block block = blockIn != Blocks.AIR ? blockIn : Blocks.BARRIER;
-    	// draw 'golem block'
 		float blockX = (float)(cornerX + MARGIN + 4);
     	float blockY = (float)(cornerY + MARGIN);
-    	//float unScale = (float)Math.pow(scale,-1);
     	// Render the Block with given scale
     	GlStateManager.pushMatrix();
     	GlStateManager.enableRescaleNormal();
     	RenderHelper.enableGUIStandardItemLighting();
     	GlStateManager.scalef(scale, scale, scale);
     	this.itemRender.renderItemIntoGUI(new ItemStack(block), (int)(blockX / scale), (int)(blockY / scale));
-    	//GlStateManager.scale(unScale, unScale, unScale);
-    	//RenderHelper.disableStandardItemLighting();
-    	//GlStateManager.disableRescaleNormal();
     	GlStateManager.popMatrix();
     }
     
     /** 
 	 * Draws the GolemEntry name and description at the given location 
 	 **/
-    private void drawGolemEntry(int cornerX, int cornerY, final GolemBookEntry entry) {
+    private void drawGolemEntry(int cornerX, int cornerY, final GolemBookEntry entry, final float partialTicks) {
  		// 'golem name' text box
     	int nameX = cornerX + MARGIN * 4;
  		int nameY = cornerY + MARGIN;
@@ -403,7 +410,7 @@ public class GuiGolemBook extends GuiScreen {
  		this.fontRenderer.drawSplitString(stats, statsX, statsY, (BOOK_WIDTH / 2) - (MARGIN * 2), 0);  
  		
  		// 'golem block'
- 		this.drawBlock(entry.getBlock(), cornerX, cornerY, GOLEM_BLOCK_SCALE);
+ 		// this.drawBlock(entry.getBlock((int)(partialTicks * GOLEM_BLOCK_TIMER)), cornerX, cornerY, GOLEM_BLOCK_SCALE);
  		
  		// 'screenshot' (supplemental image)
  		if(entry.hasImage()) {
@@ -524,14 +531,23 @@ public class GuiGolemBook extends GuiScreen {
 	
 	/** Used to determine whether to show buttons **/
 	private void updateButtons() {
-		this.buttonBlockLeft.visible = isPageGolemEntry(this.curPage, this.totalPages);
-		this.buttonBlockRight.visible = isPageGolemEntry(this.curPage + 1, this.totalPages);
+		// next page arrows
 		this.buttonPreviousPage.visible = this.curPage > 0;
 		this.buttonNextPage.visible = this.curPage + 2 < this.totalPages;
+		// table of contents buttons
 		boolean tableContentsVisible = isPageTableContents(this.curPage);
 		for(GuiButton b : this.tableOfContents) {
 			b.visible = tableContentsVisible;
 		}
+		// golem-entry block buttons
+		if(isPageGolemEntry(this.curPage, this.totalPages)) {
+			this.buttonBlockLeft.visible = true;
+			this.buttonBlockLeft.updateBlocks(getGolemEntryForPage(this.curPage).getBlocks());
+		} else this.buttonBlockLeft.visible = false;
+		if(isPageGolemEntry(this.curPage + 1, this.totalPages)) {
+			this.buttonBlockRight.visible = true;
+			this.buttonBlockRight.updateBlocks(getGolemEntryForPage(this.curPage + 1).getBlocks());
+		} else this.buttonBlockRight.visible = false;
 	}
 	
 	private static boolean isMouseOverScroll(final int mouseX, final int mouseY, final int width) {
@@ -584,14 +600,44 @@ public class GuiGolemBook extends GuiScreen {
 	}
 
 	protected static class BlockButton extends GuiButton {
+		
+		private float scale;
+		private Block[] blocks;
+		private Block currentBlock;
+		private final GuiGolemBook gui;
 
-		public BlockButton(int buttonId, int x, int y, float scaleIn) {
+		public BlockButton(int buttonId, GuiGolemBook guiIn, Block[] blockValues, int x, int y, float scaleIn) {
 			super(buttonId, x, y, (int) (scaleIn * 16.0F), (int) (scaleIn * 16.0F), "");
+			this.gui = guiIn;
+			this.blocks = blockValues;
+			this.scale = scaleIn;
 		}
 
 		@Override
 		public void render(int mouseX, int mouseY, float partialTicks) {
-			this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
+			if(this.visible) {
+				// this is to render the button BELOW any hovering text
+				this.zLevel = 100.0F;
+				// update hovered flag
+				this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
+				// update the block to draw
+				if(blocks != null && blocks.length > 0) {
+					int index = (int)(gui.ticksOpen / 30) % blocks.length;
+					this.currentBlock = this.blocks[index];
+				} else {
+					this.currentBlock = Blocks.AIR;
+				}
+				// draw the block
+				gui.drawBlock(this.currentBlock, this.x - MARGIN - 4, this.y - MARGIN, this.scale);
+				// draw the name of the block if this button is being hovered over
+				if(this.hovered && this.currentBlock != Blocks.AIR) {
+					this.gui.drawHoveringText(trans(this.currentBlock.getTranslationKey()), mouseX, mouseY);
+				}
+			}
+		}
+		
+		public void updateBlocks(final Block[] blocksToDraw) {
+			this.blocks = blocksToDraw;
 		}
 	}
 	
@@ -631,7 +677,8 @@ public class GuiGolemBook extends GuiScreen {
 				this.drawTexturedModalRect(this.x, this.y, CONTENTS_W + DEF_SEP, 
 						this.hovered ? ENTRY_H + DEF_SEP : 0, ENTRY_W, ENTRY_H);
 				// draw the block and name of the golem
-				gui.drawBlock(this.entry.getBlock(), this.x - MARGIN - 2, this.y - 9, 1.0F);
+				int index = (int)(gui.ticksOpen / 30);
+				gui.drawBlock(this.entry.getBlock(index), this.x - MARGIN - 2, this.y - 9, 1.0F);
 				
 				// prepare to draw the golem's name
 				GlStateManager.pushMatrix();
