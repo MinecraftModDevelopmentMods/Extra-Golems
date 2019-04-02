@@ -1,7 +1,7 @@
 {
     "_comment": "Credit to vigcrafter for the Russian translation",
     "_comment": "Предметы и блоки, используемые в этом моде:",
-    "item.golem_paper": "§cЧасть голема§r",
+    "item.golem_paper": "Часть голема",
     "item.spawn_bedrock_golem": "Призвать бедрокового голема",
     "block.golem_head": "Голова голема",
 

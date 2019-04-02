@@ -1,6 +1,7 @@
 package com.mcmoddev.golems.main;
 
 import com.mcmoddev.golems.entity.*;
+import com.mcmoddev.golems.events.GolemRegistrarEvent;
 import com.mcmoddev.golems.util.GolemNames;
 import com.mcmoddev.golems.util.config.GolemContainer;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
@@ -10,8 +11,16 @@ import net.minecraft.init.Blocks;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 
 public class ExtraGolemsEntities {
+	
+	/* 
+	 * The following tags are not added by regular minecraft.
+	 * Technically they should be registered and built the vanilla way,
+	 * but since we know they're not going to change, we can just
+	 * make and use them like this.
+	 */
 	
 	public static final Tag<Block> TAG_CONCRETE = new Tag.Builder<Block>()
 			.add(Blocks.BLACK_CONCRETE, Blocks.BLUE_CONCRETE, Blocks.BROWN_CONCRETE,
@@ -53,13 +62,6 @@ public class ExtraGolemsEntities {
 	
 	
 	private ExtraGolemsEntities() {	}
-
-
-	//public static final EntityType<GolemBase> HARDENED_CLAY = build(EntityHardenedClayGolem.class, GolemNames.TERRACOTTA_GOLEM, Blocks.HARDENED_CLAY);
-
-
-	//public static final EntityType<GolemBase> STAINED_CLAY = build(EntityStainedClayGolem.class, GolemNames.STAINEDTERRACOTTA_GOLEM, Blocks.STAINED_HARDENED_CLAY);
-	
 
 	public static void initEntityTypes() {
 		// BEDROCK GOLEM
@@ -265,5 +267,8 @@ public class ExtraGolemsEntities {
 		GolemRegistrar.registerGolem(EntityWoolGolem.class,
 				new GolemContainer.Builder(GolemNames.WOOL_GOLEM, EntityWoolGolem.class, EntityWoolGolem::new)
 				.setHealth(10.0D).setAttack(1.0D).setSpeed(0.295D).addBlocks(BlockTags.WOOL).build());
+		
+		// fire GolemRegistrar event for any listening child mods (addons)
+		MinecraftForge.EVENT_BUS.post(new GolemRegistrarEvent());
 	}
 }

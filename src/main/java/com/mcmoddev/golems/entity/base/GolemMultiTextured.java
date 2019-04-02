@@ -22,7 +22,7 @@ public abstract class GolemMultiTextured extends GolemBase {
 
 	/**
 	 * ResourceLocation array of textures to loop through when the player interacts with this golem.
-	 * Max size is 128
+	 * Max size is Byte.MAX_VALUE
 	 **/
 	public final ResourceLocation[] textures;
 	
@@ -31,16 +31,18 @@ public abstract class GolemMultiTextured extends GolemBase {
 
 	/**
 	 * This is a base class for golems that change texture when player interacts. Pass Strings that
-	 * will be used to construct a ResourceLocation array of textures as well as loot tables<br/>
-	 * <b>Example call to this constructor:</b><br/>
-	 * <br/>
-	 * <code>
-	 * public EntityExampleGolem(World world) {<br/>
-	 *	super(world, 1.0F, Blocks.AIR, "example", new String[] {"one","two","three"});<br/>
-	 * }</code><br/>
-	 * This will initialize textures for <code>golem_example_one.png</code>,
-	 * <code>golem_example_two.png</code> and <code>golem_example_three.png</code>,
-	 * as well as loot tables for the same names with the JSON suffix
+	 * will be used to construct a ResourceLocation array of textures as well as loot tables
+	 * <p><b>Example call to this constructor:</b>
+	 * <p><code>
+	 * String[] NAMES = new String[] {"one","two","three"};
+	 * <br><br>public EntityExampleGolem(World world) {
+	 * <br>super(EntityExampleGolem.class, world, "example", NAMES);
+	 * <br>}</code>
+	 * <p>This will initialize textures at:
+	 * <br><code>[getModId()]/textures/entity/golem_example/one.png</code>
+	 * <br><code>[getModId()]/textures/entity/golem_example/two.png</code> 
+	 * <br><code>[getModId()]/textures/entity/golem_example/three.png</code>
+	 * <br> as well as loot tables for the same names with the JSON suffix
 	 **/
 	public GolemMultiTextured(Class<? extends GolemMultiTextured> type, final World world, final String prefix,
 				  final String[] textureNames) {
@@ -50,7 +52,7 @@ public abstract class GolemMultiTextured extends GolemBase {
 		for (int n = 0, len = textureNames.length; n < len; n++) {
 			// initialize textures
 			final String s = textureNames[n];
-			this.textures[n] = makeTexture(getModId(), "golem_" + prefix + "_" + s);
+			this.textures[n] = makeTexture(getModId(), "golem_" + prefix + "/" + s);
 			// initialize loot tables
 			this.lootTables[n] = new ResourceLocation(getModId(), "entities/golem_" + prefix + "/" + s);
 		}

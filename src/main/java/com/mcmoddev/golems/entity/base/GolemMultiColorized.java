@@ -27,7 +27,7 @@ public abstract class GolemMultiColorized extends GolemColorized {
 	protected final int[] colors;
 	protected final ResourceLocation[] lootTables;
 	
-	// just here for convenience, not actually used except by child classes
+	// here for convenience, used only by child classes
 	public static final int[] dyeColorArray = {
 			16383998, 16351261, 13061821, 3847130,
 			16701501, 8439583,  15961002, 4673362,

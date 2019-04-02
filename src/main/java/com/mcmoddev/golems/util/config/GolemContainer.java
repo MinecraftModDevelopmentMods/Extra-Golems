@@ -1,20 +1,17 @@
 package com.mcmoddev.golems.util.config;
 
-import com.google.common.collect.Lists;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.loot.LootTableList;
 
 import java.util.*;
 import java.util.function.Function;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -24,7 +21,6 @@ public class GolemContainer {
 
 	private final List<Block> validBuildingBlocks;
 	private final List<Tag<Block>> validBuildingBlockTags;
-	//Avoid making setters/getters for non-final fields for now
 	public final EntityType<GolemBase> entityType;
 	private String name;
 	private double health;
@@ -48,7 +44,6 @@ public class GolemContainer {
 		this.specialContainers = lSpecialContainers;
 	}
 
-
 	public boolean hasBuildingBlock() {
 		return !(this.validBuildingBlocks.isEmpty() && this.validBuildingBlocks.isEmpty());
 	}
@@ -65,13 +60,18 @@ public class GolemContainer {
 	
 	public boolean isBuildingBlock(final Block b) {
 		if(null == b) return false;
-		// make set of all blocks including tags (run-time only)
-		Set<Block> blocks = new HashSet<>();
-		blocks.addAll(validBuildingBlocks);
-		for(Tag<Block> tag : this.validBuildingBlockTags) {
-			blocks.addAll(tag.getAllElements());
+		// if the block has been manually added to block array
+		if(this.validBuildingBlocks.contains(b)) {
+			return true;
 		}
- 		return this.validBuildingBlocks.contains(b);
+		// if the block is present in any of the tags
+		for(Tag<Block> tag : this.validBuildingBlockTags) {
+			if(b.isIn(tag)) {
+				return true;
+			}
+		}
+		// nothing found, result is false
+ 		return false;
 	}
 	
 	public boolean areBuildingBlocks(final Block b1, final Block b2, final Block b3, final Block b4) {
@@ -85,6 +85,28 @@ public class GolemContainer {
 			return allBlocks != null && allBlocks.length > 0 ? allBlocks[0] : null;
 		}
 		return null;
+	}
+	
+	/**
+	 * Allows additional blocks to be registered as "valid"
+	 * in order to build this golem. Useful especially for
+	 * add-ons.
+	 * @param additional Block objects to register as "valid"
+	 * @return if the blocks were added successfully
+	 **/
+	public boolean addBlocks(@Nonnull final Block... additional) {
+		return additional.length > 0 && this.validBuildingBlocks.addAll(Arrays.asList(additional));
+	}
+	
+	/**
+	 * Allows additional Block Tags to be registered as "valid"
+	 * in order to build this golem. Useful especially for
+	 * add-ons.
+	 * @param additional Block Tag to register as "valid"
+	 * @return if the Block Tag was added successfully
+	 **/
+	public boolean addBlocks(@Nonnull final Tag<Block> additional) {
+		return this.validBuildingBlockTags.add(additional);
 	}
 	
 	////////// SETTERS //////////
@@ -172,9 +194,12 @@ public class GolemContainer {
 		}
 
 		/**
-		 * Adds building blocks that may be used for creating the golem
+		 * Adds building blocks that may be used for creating the golem.
+		 * If no blocks are added via this method or the Block Tag version, 
+		 * this golem cannot be built in-world.
 		 * @param additionalBlocks blocks that may be used for building
 		 * @return instance to allow chaining of methods
+		 * @see #addBlocks(Tag)
 		 */
 		public Builder addBlocks(final Block... additionalBlocks) {
 			if(additionalBlocks != null && additionalBlocks.length > 0) {
@@ -185,9 +210,12 @@ public class GolemContainer {
 		
 		/**
 		 * Adds building blocks that may be used for creating the golem
-		 * in the form of a Block Tag
+		 * in the form of a Block Tag. If no blocks are added via
+		 * this method or the Block[] version, this golem cannot
+		 * be built in-world.
 		 * @param blockTag the {@code Tag<Block>} to use
 		 * @return instance to allow chaining of methods
+		 * @see #addBlocks(Block[])
 		 */
 		public Builder addBlocks(final Tag<Block> blockTag) {
 			this.validBuildingBlockTags.add(blockTag);
@@ -198,6 +226,7 @@ public class GolemContainer {
 		 * Adds any GolemSpecialContainers to be used by the golem
 		 * @param specialContainers specials to be added
 		 * @return instance to allow chaining of methods
+		 * @see #addSpecial(String, Object, String)
 		 */
 		public Builder addSpecials(final GolemSpecialContainer... specialContainers) {
 			containers.addAll(Arrays.asList(specialContainers));
@@ -208,6 +237,7 @@ public class GolemContainer {
 		 * Adds any GolemSpecialContainers to be used by the golem
 		 * @param specialContainers specials to be added
 		 * @return instance to allow chaining of methods
+		 * @see #addSpecials(GolemSpecialContainer...)
 		 */
 		public Builder addSpecial(final String name, final Object value, final String comment) {
 			containers.add(new GolemSpecialContainer.Builder(name, value, comment).build());
@@ -215,7 +245,8 @@ public class GolemContainer {
 		}
 		
 		/**
-		 * Builds the container
+		 * Builds the container according to values that have
+		 * been set inside this Builder
 		 * @return a copy of the newly constructed GolemContainer
 		 */
 		public GolemContainer build() {

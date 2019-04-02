@@ -1,9 +1,14 @@
 package com.mcmoddev.golems.entity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
@@ -15,6 +20,26 @@ public final class EntityWoolGolem extends GolemMultiTextured {
 	public static final String[] coloredWoolTypes = { "black", "orange", "magenta", "light_blue",
 			"yellow", "lime", "pink", "gray", "silver", "cyan", "purple", "blue", "brown", "green",
 			"red", "white" };
+	private static final Map<Block, Byte> blockToTexture = new HashMap<>();
+	static {
+		blockToTexture.put(Blocks.BLACK_WOOL, (byte) 0);
+		blockToTexture.put(Blocks.ORANGE_WOOL, (byte) 1);
+		blockToTexture.put(Blocks.MAGENTA_WOOL, (byte) 2);
+		blockToTexture.put(Blocks.LIGHT_BLUE_WOOL, (byte) 3);
+		blockToTexture.put(Blocks.YELLOW_WOOL, (byte) 4);
+		blockToTexture.put(Blocks.LIME_WOOL, (byte) 5);
+		blockToTexture.put(Blocks.PINK_WOOL, (byte) 6);
+		blockToTexture.put(Blocks.GRAY_WOOL, (byte) 7);
+		blockToTexture.put(Blocks.LIGHT_GRAY_WOOL, (byte) 8);
+		blockToTexture.put(Blocks.CYAN_WOOL, (byte) 9);
+		blockToTexture.put(Blocks.PURPLE_WOOL, (byte) 10);
+		blockToTexture.put(Blocks.BLUE_WOOL, (byte) 11);
+		blockToTexture.put(Blocks.BROWN_WOOL, (byte) 12);
+		blockToTexture.put(Blocks.GREEN_WOOL, (byte) 13);
+		blockToTexture.put(Blocks.RED_WOOL, (byte) 14);
+		blockToTexture.put(Blocks.WHITE_WOOL, (byte) 15);
+	}
+	
 	private boolean secret = false;
 	private byte[] iSecret = { 14, 1, 4, 5, 3, 11, 10, 2 };
 
@@ -34,13 +59,6 @@ public final class EntityWoolGolem extends GolemMultiTextured {
 //				this.setTextureNum(iSecret[index]);
 //			}
 //		}
-//	}
-//
-//	@Override
-//	public ItemStack getCreativeReturn() {
-//		ItemStack woolStack = super.getCreativeReturn();
-//		woolStack.setItemDamage(this.getTextureNum() % (coloredWoolTypes.length + 1));
-//		return woolStack;
 //	}
 
 	@Override
@@ -63,11 +81,12 @@ public final class EntityWoolGolem extends GolemMultiTextured {
 
 	@Override
 	public void onBuilt(IBlockState body, IBlockState legs, IBlockState arm1, IBlockState arm2) {
-		/* TODO */
-		// use block metadata to give this golem the right texture (defaults to 0)
-//		final int meta = body.getBlock().getMetaFromState(body)
-//				% this.getTextureArray().length;
-//		this.setTextureNum((byte) meta);
+		// uses HashMap to determine which texture this golem should apply
+		// based on the top-middle building block. Defaults to a random texture.
+		byte textureNum = blockToTexture.containsKey(body.getBlock()) 
+				? blockToTexture.get(body.getBlock()) 
+				: (byte)this.rand.nextInt(coloredWoolTypes.length);
+		this.setTextureNum(textureNum);
 	}
 
 //	@Override

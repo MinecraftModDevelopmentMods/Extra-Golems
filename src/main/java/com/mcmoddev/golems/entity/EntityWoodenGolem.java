@@ -3,10 +3,12 @@ package com.mcmoddev.golems.entity;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
@@ -35,15 +37,28 @@ public final class EntityWoodenGolem extends GolemMultiTextured {
 
 	@Override
 	public void onBuilt(IBlockState body, IBlockState legs, IBlockState arm1, IBlockState arm2) {
-		/* TODO use block metadata to give this golem the right texture */
-//		if(body.getBlock() instanceof BlockNewLog || body.getBlock() instanceof BlockOldLog) {
-//			final int meta = body.getBlock().getMetaFromState(
-//			body.with(BlockLog.AXIS, EnumFacing.Axis.));
-//			byte textureNum = body.getBlock() == Blocks.LOG2 ? (byte) (meta + 4) : (byte) meta;
-//			textureNum %= this.getNumTextures();
-//			this.setTextureNum(textureNum);
-//		}
-
+		// uses the top-middle building block of this golem to set texture.
+		// defaults to a random texture.
+		final Block b = body.getBlock();
+		byte textureNum;
+		// check the following block tags for matches
+		if(b.isIn(BlockTags.OAK_LOGS)) {
+			textureNum = 0;
+		} else if(b.isIn(BlockTags.SPRUCE_LOGS)) {
+			textureNum = 1;
+		} else if(b.isIn(BlockTags.BIRCH_LOGS)) {
+			textureNum = 2;
+		} else if(b.isIn(BlockTags.JUNGLE_LOGS)) {
+			textureNum = 3;
+		} else if(b.isIn(BlockTags.ACACIA_LOGS)) {
+			textureNum = 4;
+		} else if(b.isIn(BlockTags.DARK_OAK_LOGS)) {
+			textureNum = 5;
+		} else {
+			textureNum = (byte)this.rand.nextInt(woodTypes.length);
+		}
+		// set the texture num based on above
+		this.setTextureNum(textureNum);
 	}
 
 	@Override

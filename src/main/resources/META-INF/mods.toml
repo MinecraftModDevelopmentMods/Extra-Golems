@@ -8,21 +8,21 @@ loaderVersion="[2.0,)"
 #updateJSONURL="http://myurl.me/"
 # A URL to refer people to when problems occur with this mod
 issueTrackerURL="https://github.com/MinecraftModDevelopmentMods/Extra-Golems/issues"
+logoFile="golem_logo.png"
 
 [[mods]]
     modId="golems"
-    version="8.00"
+    version="8.0.0-beta01"
     displayName="Extra Golems"
-    # multi line!
+    credits="TheGlitch76, jriwanek, and translators - Thanks!"
+    authors="skyjay1 and the MMD Team"
     description='''
-    This is my mod. There may be
-    others, but this one adds
-    a lot of golems!
+    Adds 35+ golems to the minecraft universe, each with unique textures and abilities!
     '''
     [[dependencies.golems]]
         modId="forge"
         mandatory=true
-        versionRange="[25.0.76,)"
+        versionRange="[25.0.100,)"
         ordering="NONE"
         side="BOTH"
     [[dependencies.examplemod]]
