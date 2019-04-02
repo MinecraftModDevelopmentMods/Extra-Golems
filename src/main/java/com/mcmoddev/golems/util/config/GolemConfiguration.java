@@ -16,6 +16,7 @@ public class GolemConfiguration {
 	
 	public ForgeConfigSpec.BooleanValue bedrockGolemCreativeOnly;
 	public ForgeConfigSpec.BooleanValue pumpkinBuildsGolem;
+	public ForgeConfigSpec.BooleanValue enableFriendlyFire;
 
 // TODO implement the following config values
 //		villageGolemSpawnsDesert = config.getStringList("Desert Village Golem Spawns", CATEGORY_OTHER, villageGolemSpawnsDesert,
@@ -33,6 +34,8 @@ public class GolemConfiguration {
 				.define("bedrock_golem_creative_only", true);
 		this.pumpkinBuildsGolem = builder.comment("(Experimental) When true, pumpkins can be used to build this mod's golems")
 				.define("pumpkin_builds_golems", false);
+		this.enableFriendlyFire = builder.comment("When enabled, attacking player-built golems will make them attack you")
+				.define("friendly_fire", true);
 		
 		builder.pop();
 		

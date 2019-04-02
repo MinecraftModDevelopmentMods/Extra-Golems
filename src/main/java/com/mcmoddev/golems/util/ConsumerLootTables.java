@@ -2,6 +2,8 @@ package com.mcmoddev.golems.util;
 
 import com.mcmoddev.golems.entity.EntityConcreteGolem;
 import com.mcmoddev.golems.entity.EntityMushroomGolem;
+import com.mcmoddev.golems.entity.EntityStainedClayGolem;
+import com.mcmoddev.golems.entity.EntityStainedGlassGolem;
 import com.mcmoddev.golems.entity.EntityWoodenGolem;
 import com.mcmoddev.golems.entity.EntityWoolGolem;
 import com.mcmoddev.golems.main.ExtraGolems;
@@ -29,17 +31,16 @@ public class ConsumerLootTables implements Consumer<String> {
 			registerLootTables(ExtraGolems.MODID, NAME, EntityMushroomGolem.SHROOM_TYPES);
 			return;			
 		case GolemNames.STAINEDGLASS_GOLEM:
-			//registerLootTables(ExtraGolems.MODID, NAME, EntityStainedGlassGolem.COLOR_ARRAY.length);
+			registerLootTables(ExtraGolems.MODID, NAME, EntityStainedGlassGolem.dyeColorArray.length);
 			return;
 		case GolemNames.STAINEDTERRACOTTA_GOLEM:
-			//registerLootTables(ExtraGolems.MODID, NAME, EntityStainedClayGolem.COLOR_ARRAY.length);
+			registerLootTables(ExtraGolems.MODID, NAME, EntityStainedClayGolem.dyeColorArray.length);
 			return;
 		case GolemNames.CONCRETE_GOLEM:
 			registerLootTables(ExtraGolems.MODID, NAME, EntityConcreteGolem.dyeColorArray.length);
 			return;
 		default:
-			ResourceLocation rl = LootTableList.register(new ResourceLocation(ExtraGolems.MODID, "entities/" + NAME));
-			System.out.println("Loot table for '" + NAME + "' has been registered at '" + (rl != null ? rl.toString() : "null") + "'");
+			LootTableList.register(new ResourceLocation(ExtraGolems.MODID, "entities/" + NAME));
 			return;
 		}
 	}

@@ -2,7 +2,6 @@ package com.mcmoddev.golems.proxies;
 
 import com.mcmoddev.golems.blocks.BlockGolemHead;
 import com.mcmoddev.golems.blocks.BlockUtilityGlow;
-import com.mcmoddev.golems.blocks.BlockUtilityGlowWater;
 import com.mcmoddev.golems.blocks.BlockUtilityPower;
 import com.mcmoddev.golems.entity.EntityRedstoneGolem;
 import com.mcmoddev.golems.entity.base.GolemBase;
@@ -73,16 +72,13 @@ public class ProxyCommon {
 	}
 
 	public void registerBlocks(final RegistryEvent.Register<Block> event) {
-		// TODO use config once it's working
-		final int GLOWSTONE_FREQ = 4;//GolemLookup.getConfig(EntityGlowstoneGolem.class).getInt(EntityGlowstoneGolem.FREQUENCY);
-		final int SEALANTERN_FREQ = 4;//GolemLookup.getConfig(EntitySeaLanternGolem.class).getInt(EntitySeaLanternGolem.FREQUENCY);
 		event.getRegistry().registerAll(
 			new BlockGolemHead().setRegistryName(ExtraGolems.MODID, "golem_head"),
-			new BlockUtilityGlow(Material.GLASS, 1.0F, GLOWSTONE_FREQ, Blocks.AIR.getDefaultState())
+			new BlockUtilityGlow(Material.GLASS, 1.0F, BlockUtilityGlow.UPDATE_TICKS, Blocks.AIR.getDefaultState())
 				.setRegistryName(ExtraGolems.MODID, "light_provider_full"),
-			new BlockUtilityGlowWater(Material.WATER, 1.0F, SEALANTERN_FREQ, Blocks.WATER.getDefaultState().with(BlockFlowingFluid.LEVEL, 0))
+			new BlockUtilityGlow(Material.GLASS, 1.0F, BlockUtilityGlow.UPDATE_TICKS, Blocks.WATER.getDefaultState().with(BlockFlowingFluid.LEVEL, 0))
 				.setRegistryName(ExtraGolems.MODID, "water_light_provider_full"),
-			new BlockUtilityPower(15, EntityRedstoneGolem.DEF_FREQ).setRegistryName(ExtraGolems.MODID, "power_provider_all"));
+			new BlockUtilityPower(15, BlockUtilityPower.UPDATE_TICKS).setRegistryName(ExtraGolems.MODID, "power_provider_all"));
 	}
 	
 

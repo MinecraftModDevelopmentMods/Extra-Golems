@@ -3,6 +3,7 @@ package com.mcmoddev.golems.entity;
 import java.util.List;
 import java.util.function.Predicate;
 
+import com.mcmoddev.golems.blocks.BlockUtility;
 import com.mcmoddev.golems.blocks.BlockUtilityGlow;
 import com.mcmoddev.golems.entity.ai.EntityAIPlaceSingleBlock;
 import com.mcmoddev.golems.entity.base.GolemBase;
@@ -14,6 +15,7 @@ import net.minecraft.block.BlockFlowingFluid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
@@ -24,9 +26,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public final class EntitySeaLanternGolem extends GolemBase {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Emit Light";
-	public static final String FREQUENCY = "Light Frequency";
+//	public static final String FREQUENCY = "Light Frequency";
 	public static final Predicate<IBlockState> WATER_PRED = toReplace -> 
-		toReplace.getBlock() != GolemItems.blockLightSourceWater && toReplace.getMaterial() == Material.WATER
+		!(toReplace.getBlock() instanceof BlockUtility) && toReplace.getMaterial() == Material.WATER
 		&& toReplace.get(BlockFlowingFluid.LEVEL) == 0;
 
 	private static final float BRIGHTNESS = 1.0F;
@@ -43,16 +45,17 @@ public final class EntitySeaLanternGolem extends GolemBase {
 		super.initEntityAI();
 		// lights above and below water... need to add to different lists to run concurrently
 		final boolean allow = this.getConfigBool(ALLOW_SPECIAL);
-		final int freq = this.getConfigInt(FREQUENCY);
+		final int freq = BlockUtilityGlow.UPDATE_TICKS;
 		this.tasks.addTask(8, new EntityAIPlaceSingleBlock(this, GolemItems.blockLightSourceWater.getDefaultState()
-			.with(BlockUtilityGlow.LIGHT_LEVEL, BRIGHTNESS_INT), freq, allow, WATER_PRED));
+			.with(BlockUtilityGlow.LIGHT_LEVEL, BRIGHTNESS_INT).with(BlockStateProperties.WATERLOGGED, true), 
+			freq, allow, WATER_PRED));
 		this.targetTasks.addTask(8, new EntityAIPlaceSingleBlock(this, GolemItems.blockLightSource.getDefaultState()
 			.with(BlockUtilityGlow.LIGHT_LEVEL, BRIGHTNESS_INT), freq, allow));
 	}
 
 	@Override
 	protected float getWaterSlowDown() {
-		return 1.1F;
+		return 1.05F;
 	}
 
 	@Override

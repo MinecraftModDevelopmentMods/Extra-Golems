@@ -21,7 +21,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public final class EntityGlowstoneGolem extends GolemBase {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Emit Light";
-	public static final String FREQUENCY = "Light Frequency";
+//	public static final String FREQUENCY = "Light Frequency";
 
 	/**
 	 * Float value between 0.0F and 1.0F that determines light level
@@ -33,7 +33,7 @@ public final class EntityGlowstoneGolem extends GolemBase {
 		int lightInt = 15;
 		this.brightness = 1.0F;
 		final IBlockState state = GolemItems.blockLightSource.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, lightInt);
-		this.tasks.addTask(9, new EntityAIPlaceSingleBlock(this, state, this.getConfigInt(FREQUENCY), this.getConfigBool(ALLOW_SPECIAL)));
+		this.tasks.addTask(9, new EntityAIPlaceSingleBlock(this, state, BlockUtilityGlow.UPDATE_TICKS, this.getConfigBool(ALLOW_SPECIAL)));
 		this.isImmuneToFire = true;
 		this.setCanTakeFallDamage(true);
 		this.setCanSwim(true);

@@ -215,7 +215,10 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 	 */
 	@Override
 	public boolean canAttackClass(final Class<? extends EntityLivingBase> cls) {
-		return (!this.isPlayerCreated() || !EntityPlayer.class.isAssignableFrom(cls)) && (cls != EntityCreeper.class && super.canAttackClass(cls));
+		final boolean isAttackablePlayer = EntityPlayer.class.isAssignableFrom(cls) 
+				&& (!this.isPlayerCreated() || ExtraGolemsConfig.enableFriendlyFire());
+		final boolean isCreeper = cls == EntityCreeper.class;
+		return !isCreeper && (isAttackablePlayer || super.canAttackClass(cls));
 	}
 	
 	@Override
@@ -491,7 +494,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 	}
 
 	public GolemContainer getGolemContainer() {
-		return container;
+		return container != null ? container : GolemRegistrar.getContainer(this.getClass());
 	}
 	
 	public ForgeConfigSpec.ConfigValue getConfigValue(String name) {

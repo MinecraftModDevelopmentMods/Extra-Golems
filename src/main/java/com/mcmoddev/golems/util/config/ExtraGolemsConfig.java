@@ -31,10 +31,14 @@ public class ExtraGolemsConfig {
 	}
 	
 	public static boolean bedrockGolemCreativeOnly() {
-		return GOLEM_CONFIG != null ? GOLEM_CONFIG.bedrockGolemCreativeOnly.get() : false;
+		return GOLEM_CONFIG != null && GOLEM_CONFIG.bedrockGolemCreativeOnly.get();
 	}
 	
 	public static boolean pumpkinBuildsGolems() {
-		return GOLEM_CONFIG != null ? GOLEM_CONFIG.pumpkinBuildsGolem.get() : false;
+		return GOLEM_CONFIG != null && GOLEM_CONFIG.pumpkinBuildsGolem.get();
+	}
+	
+	public static boolean enableFriendlyFire() {
+		return GOLEM_CONFIG != null && GOLEM_CONFIG.enableFriendlyFire.get();
 	}
 }

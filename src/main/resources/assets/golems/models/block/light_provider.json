@@ -1,6 +1,6 @@
 {
   "textures": {
-    "pole": "blocks/log_big_oak"
+    "pole": "block/oak_log"
   },
   "elements": [
     {

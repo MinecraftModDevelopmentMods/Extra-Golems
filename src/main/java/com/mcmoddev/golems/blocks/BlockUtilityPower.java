@@ -22,56 +22,36 @@ import java.util.Random;
 public class BlockUtilityPower extends BlockUtility {
 	public static final IntegerProperty POWER_LEVEL = IntegerProperty.create("power", 0, 15);
 	private static final IBlockState REPLACE_WITH = Blocks.AIR.getDefaultState();
-	private final int TICK_RATE;
+	/* Default value for TICK_RATE. Not necessary to define through config. */
+	public static final int UPDATE_TICKS = 4;
 
 	public BlockUtilityPower(final int powerLevel, final int tickRate) {
-		super(Properties.create(Material.GLASS).hardnessAndResistance(-1F).doesNotBlockMovement()
-			.needsRandomTick());
-		this.setDefaultState(this.stateContainer.getBaseState().with(POWER_LEVEL, powerLevel));
-		TICK_RATE = tickRate;
+		super(Properties.create(Material.GLASS).needsRandomTick(), tickRate);
+		this.setDefaultState(this.getDefaultState().with(POWER_LEVEL, powerLevel));
 	}
 
 	@Override
-	public void randomTick(IBlockState state, World worldIn, BlockPos pos, Random random) {
+	public void tick(IBlockState state, World worldIn, BlockPos pos, Random random) {
 		// make a slightly expanded AABB to check for the golem
 		AxisAlignedBB toCheck = new AxisAlignedBB(pos).grow(0.5D);
 		List<GolemBase> list = worldIn.getEntitiesWithinAABB(GolemBase.class, toCheck);
-		boolean hasPowerGolem = !list.isEmpty();
+		boolean hasPowerGolem = list != null && !list.isEmpty();
 		for (GolemBase g : list) {
-			//TODO: Simplify
 			hasPowerGolem |= isPowerGolem(g);
 		}
+
 		if (!hasPowerGolem) {
 			// remove this block
 			worldIn.setBlockState(pos, REPLACE_WITH, 3);
 		} else {
 			// schedule another update
-			//TODO: Ensure this works properly
-			worldIn.notifyNeighbors(pos, this);
-			//worldIn.scheduleUpdate(pos, this, TICK_RATE);
-		}
-	}
-
-	@Override
-	public void onBlockAdded(IBlockState state, World worldIn, BlockPos pos, IBlockState oldState) {
-		worldIn.notifyNeighbors(pos, this);
-	}
-
-//	/**
-//	 * Called after the block is set in the Chunk data, but before the Tile Entity is set
-//	 */
-//	@Override
-//	public void onBlockAdded(final World worldIn, final BlockPos pos, final IBlockState state) {
-//		worldIn.scheduleUpdate(pos, this, this.tickRate(worldIn));
-//	}
-
-	@Override
-	public int tickRate(IWorldReaderBase worldIn) {
-		return TICK_RATE;
+			worldIn.getPendingBlockTicks().scheduleTick(pos, this, this.tickRate(worldIn));
+		}	
 	}
 
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, IBlockState> builder) {
+		super.fillStateContainer(builder);
 		builder.add(POWER_LEVEL);
 	}
 
@@ -88,9 +68,8 @@ public class BlockUtilityPower extends BlockUtility {
 		return blockState.get(POWER_LEVEL);
 	}
 
-
 	/**
-	 * Search the golem's AI to determine if it is a light-providing golem
+	 * Search the golem's AI to determine if it is a power-providing golem
 	 **/
 	protected boolean isPowerGolem(GolemBase golem) {
 		for (EntityAITaskEntry entry : golem.tasks.taskEntries) {

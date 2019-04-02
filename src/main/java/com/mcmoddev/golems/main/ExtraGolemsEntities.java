@@ -115,7 +115,7 @@ public class ExtraGolemsEntities {
 				new GolemContainer.Builder(GolemNames.GLOWSTONE_GOLEM, EntityGlowstoneGolem.class, EntityGlowstoneGolem::new)
 				.setHealth(8.0D).setAttack(12.0D).setSpeed(0.26D).addBlocks(Blocks.GLOWSTONE)
 				.addSpecial(EntityGlowstoneGolem.ALLOW_SPECIAL, true, "Whether this golem can glow")
-				.addSpecial(EntityGlowstoneGolem.FREQUENCY, Integer.valueOf(2), "Number of ticks between updating light")
+// Removed		.addSpecial(EntityGlowstoneGolem.FREQUENCY, Integer.valueOf(2), "Number of ticks between updating light")
 				.build());
 		// GOLD GOLEM
 		GolemRegistrar.registerGolem(EntityGoldGolem.class,
@@ -211,7 +211,7 @@ public class ExtraGolemsEntities {
 				new GolemContainer.Builder(GolemNames.SEALANTERN_GOLEM, EntitySeaLanternGolem.class, EntitySeaLanternGolem::new)
 				.setHealth(24.0D).setAttack(6.0D).setSpeed(0.26D).addBlocks(Blocks.SEA_LANTERN)
 				.addSpecial(EntitySeaLanternGolem.ALLOW_SPECIAL, true, "Whether this golem lights up the area")
-				.addSpecial(EntitySeaLanternGolem.FREQUENCY, Integer.valueOf(5), "Number of ticks between updating light")
+// Removed		.addSpecial(EntitySeaLanternGolem.FREQUENCY, Integer.valueOf(5), "Number of ticks between updating light")
 				.build());
 		// SLIME GOLEM
 		GolemRegistrar.registerGolem(EntitySlimeGolem.class,

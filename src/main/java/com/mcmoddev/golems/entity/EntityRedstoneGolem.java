@@ -21,12 +21,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public final class EntityRedstoneGolem extends GolemBase {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Redstone Power";
-	public static final int DEF_FREQ = 2;
 
 	public EntityRedstoneGolem(final World world) {
 		super(EntityRedstoneGolem.class, world);
 		final IBlockState state = GolemItems.blockPowerSource.getDefaultState().with(BlockUtilityPower.POWER_LEVEL, 15);
-		final int freq = DEF_FREQ;
+		final int freq = BlockUtilityPower.UPDATE_TICKS;
 		final boolean allow = this.getConfigBool(ALLOW_SPECIAL);
 		this.tasks.addTask(9, new EntityAIPlaceSingleBlock(this, state, freq, allow));
 		this.setLootTableLoc(GolemNames.REDSTONE_GOLEM);
