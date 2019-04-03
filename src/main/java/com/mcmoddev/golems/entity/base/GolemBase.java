@@ -7,6 +7,7 @@ import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mcmoddev.golems.util.config.GolemContainer;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.*;
@@ -195,11 +196,11 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 		if (this.motionX * this.motionX + this.motionZ * this.motionZ > (double) 2.5000003E-7F
 			&& this.rand.nextInt(5) == 0) {
 			int i = MathHelper.floor(this.posX);
-			int j = MathHelper.floor(this.posY - (double) 0.2F);
+			int j = MathHelper.floor(this.posY - 0.200D);
 			int k = MathHelper.floor(this.posZ);
 			BlockPos pos = new BlockPos(i, j, k);
-			if (!world.isAirBlock(pos)) {
-				IBlockState iblockstate = this.world.getBlockState(pos);
+			IBlockState iblockstate = this.world.getBlockState(pos);
+			if (!this.world.isAirBlock(pos) && !iblockstate.getMaterial().isLiquid()) {
 				this.world.spawnParticle(new BlockParticleData(Particles.BLOCK, iblockstate),
 					this.posX + ((double) this.rand.nextFloat() - 0.5D) * (double) this.width,
 					this.getBoundingBox().minY + 0.1D, this.posZ +
@@ -320,12 +321,17 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 		return 24000;
 	}
 
+	@Override
+	public boolean canBreatheUnderwater() {
+		return !this.canDrown;
+	}
+
 	/**
 	 * Called when a user uses the creative pick block button on this entity.
 	 *
-	 * @param target
-	 *            The full target the player is looking at
-	 * @return A ItemStack to add to the player's inventory, Null if nothing should be added.
+	 * @param target The full target the player is looking at
+	 * @return A ItemStack to add to the player's inventory, Null if nothing should
+	 *         be added.
 	 */
 	@Override
 	public ItemStack getPickedResult(final RayTraceResult target) {
@@ -360,7 +366,6 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 
 	@Override
 	protected ResourceLocation getLootTable() {
-		System.out.println("Getting Loot Table at " + this.lootTableLoc + "...");
 		return this.lootTableLoc;
     }
 	
@@ -404,7 +409,6 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 
 	public void setLootTableLoc(final ResourceLocation lootTable) {
 		this.lootTableLoc = lootTable;
-		//System.out.println("Loot Table for '" + this.getName().getUnformattedComponentText() + "' should be at " + lootTable.toString());
 	}
 
 	public void setLootTableLoc(String modid, final String name) {

@@ -60,7 +60,7 @@ public class GolemContainer {
 	
 	public boolean isBuildingBlock(final Block b) {
 		if(null == b) return false;
-		// if the block has been manually added to block array
+		// if the block has been manually added to block list
 		if(this.validBuildingBlocks.contains(b)) {
 			return true;
 		}
@@ -81,8 +81,14 @@ public class GolemContainer {
 	@Nullable
 	public Block getPrimaryBuildingBlock() {
 		if(hasBuildingBlock()) {
-			Block[] allBlocks = getBuildingBlocks();
-			return allBlocks != null && allBlocks.length > 0 ? allBlocks[0] : null;
+			if(this.validBuildingBlocks.size() > 0 && this.validBuildingBlocks.get(0) != null) {
+				// get first block in list
+				return this.validBuildingBlocks.get(0);
+			} else if(this.validBuildingBlockTags.size() > 0 && this.validBuildingBlockTags.get(0) != null) {
+				// get first tag in list and first block mapping in that tag
+				Block[] blocks = this.validBuildingBlockTags.get(0).getAllElements().toArray(new Block[0]);
+				return blocks.length > 0 ? blocks[0] : null;
+			}
 		}
 		return null;
 	}

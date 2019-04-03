@@ -14,6 +14,7 @@ import com.mcmoddev.golems.util.GolemNames;
 import net.minecraft.block.BlockFlowingFluid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.ResourceLocation;
@@ -38,6 +39,7 @@ public final class EntitySeaLanternGolem extends GolemBase {
 		super(EntitySeaLanternGolem.class, world);
 		this.canDrown = false;
 		this.setLootTableLoc(GolemNames.SEALANTERN_GOLEM);
+		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.2D);
 	}
 
 	@Override
@@ -46,7 +48,7 @@ public final class EntitySeaLanternGolem extends GolemBase {
 		// lights above and below water... need to add to different lists to run concurrently
 		final boolean allow = this.getConfigBool(ALLOW_SPECIAL);
 		final int freq = BlockUtilityGlow.UPDATE_TICKS;
-		this.tasks.addTask(8, new EntityAIPlaceSingleBlock(this, GolemItems.blockLightSourceWater.getDefaultState()
+		this.tasks.addTask(8, new EntityAIPlaceSingleBlock(this, GolemItems.blockLightSource.getDefaultState()
 			.with(BlockUtilityGlow.LIGHT_LEVEL, BRIGHTNESS_INT).with(BlockStateProperties.WATERLOGGED, true), 
 			freq, allow, WATER_PRED));
 		this.targetTasks.addTask(8, new EntityAIPlaceSingleBlock(this, GolemItems.blockLightSource.getDefaultState()
@@ -55,7 +57,7 @@ public final class EntitySeaLanternGolem extends GolemBase {
 
 	@Override
 	protected float getWaterSlowDown() {
-		return 1.05F;
+		return 0.95F;
 	}
 
 	@Override

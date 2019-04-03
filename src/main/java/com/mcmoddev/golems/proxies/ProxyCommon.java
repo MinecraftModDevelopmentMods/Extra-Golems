@@ -74,10 +74,10 @@ public class ProxyCommon {
 	public void registerBlocks(final RegistryEvent.Register<Block> event) {
 		event.getRegistry().registerAll(
 			new BlockGolemHead().setRegistryName(ExtraGolems.MODID, "golem_head"),
-			new BlockUtilityGlow(Material.GLASS, 1.0F, BlockUtilityGlow.UPDATE_TICKS, Blocks.AIR.getDefaultState())
+			new BlockUtilityGlow(Material.GLASS, 1.0F, BlockUtilityGlow.UPDATE_TICKS)
 				.setRegistryName(ExtraGolems.MODID, "light_provider_full"),
-			new BlockUtilityGlow(Material.GLASS, 1.0F, BlockUtilityGlow.UPDATE_TICKS, Blocks.WATER.getDefaultState().with(BlockFlowingFluid.LEVEL, 0))
-				.setRegistryName(ExtraGolems.MODID, "water_light_provider_full"),
+//			new BlockUtilityGlow(Material.GLASS, 1.0F, BlockUtilityGlow.UPDATE_TICKS)
+//				.setRegistryName(ExtraGolems.MODID, "water_light_provider_full"),
 			new BlockUtilityPower(15, BlockUtilityPower.UPDATE_TICKS).setRegistryName(ExtraGolems.MODID, "power_provider_all"));
 	}
 	

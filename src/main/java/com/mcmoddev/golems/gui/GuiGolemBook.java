@@ -109,13 +109,6 @@ public class GuiGolemBook extends GuiScreen {
 	private final EntityPlayer player;
 	private final ItemStack book;
     
-    private static final int idDone = 0;
-	private static final int idNextPage = 1;
-    private static final int idPrevPage = 2;
-    private static final int idBlockLeft = 3;
-    private static final int idBlockRight = 4;
-    private static final int idTableContents = 5;
-    
     private static final float GOLEM_BLOCK_SCALE = 1.60F;
     private static final int MARGIN = 12;
     private static final int NUM_PAGES_INTRO = 6;
@@ -181,6 +174,13 @@ public class GuiGolemBook extends GuiScreen {
 	public void initGui() {
 		// initialize buttons
     	this.buttons.clear();
+    	// button ids
+    	final int idDone = 0;
+    	final int idNextPage = 1;
+    	final int idPrevPage = 2;
+    	final int idBlockLeft = 3;
+    	final int idBlockRight = 4;
+    	final int idTableContents = 5;
     	// add the "close gui" button
     	int doneW = 98, doneH = 20;
     	int doneX = (this.width - doneW) / 2;
@@ -236,22 +236,15 @@ public class GuiGolemBook extends GuiScreen {
 		// draw buttons, etc.
 		super.render(mouseX, mouseY, partialTicks);
 
-//		// hovering text has to be the last thing you do
-//		int index = (int)(partialTicks * GOLEM_BLOCK_TIMER);
-//		if (isPageGolemEntry(this.curPage, this.totalPages) && this.buttonBlockLeft.isMouseOver()) {
-//			// check for hover-over on left side
-//			final Block b = getGolemEntryForPage(this.curPage).getBlock(index);
-//			if (b != Blocks.AIR) {
-//				this.drawHoveringText(trans(b.getTranslationKey()), mouseX, mouseY);
-//			}
-//		}
-//		if (isPageGolemEntry(this.curPage + 1, this.totalPages) && this.buttonBlockRight.isMouseOver()) {
-//			// check for hover-over on right side
-//			final Block b = getGolemEntryForPage(this.curPage + 1).getBlock(index);
-//			if (b != Blocks.AIR) {
-//				this.drawHoveringText(trans(b.getTranslationKey()), mouseX, mouseY);
-//			}
-//		}
+		// hovering text has to be the last thing you do
+		if (isPageGolemEntry(this.curPage, this.totalPages) && this.buttonBlockLeft.isMouseOver()) {
+			// hover-over on left side
+			this.buttonBlockLeft.drawHoveringText(mouseX, mouseY);
+		}
+		if (isPageGolemEntry(this.curPage + 1, this.totalPages) && this.buttonBlockRight.isMouseOver()) {
+			// hover-over on right side
+			this.buttonBlockRight.drawHoveringText(mouseX, mouseY);
+		}
 	}
 
 	/**
@@ -377,7 +370,8 @@ public class GuiGolemBook extends GuiScreen {
     }
     
     /** 
-	 * Draws the given Block in the upper-left corner of the passed page coordinates 
+	 * Draws the given Block in the upper-left corner of the passed page coordinates.
+	 * @param blockIn the block to draw. If this is Blocks.AIR, a barrier will be drawn instead.
 	 **/
     protected void drawBlock(final Block blockIn, final int cornerX, final int cornerY, final float scale) {
     	// 'Blocks.AIR' is the flag for 'no block'
@@ -616,8 +610,6 @@ public class GuiGolemBook extends GuiScreen {
 		@Override
 		public void render(int mouseX, int mouseY, float partialTicks) {
 			if(this.visible) {
-				// this is to render the button BELOW any hovering text
-				this.zLevel = 100.0F;
 				// update hovered flag
 				this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
 				// update the block to draw
@@ -629,15 +621,25 @@ public class GuiGolemBook extends GuiScreen {
 				}
 				// draw the block
 				gui.drawBlock(this.currentBlock, this.x - MARGIN - 4, this.y - MARGIN, this.scale);
-				// draw the name of the block if this button is being hovered over
-				if(this.hovered && this.currentBlock != Blocks.AIR) {
-					this.gui.drawHoveringText(trans(this.currentBlock.getTranslationKey()), mouseX, mouseY);
-				}
 			}
 		}
 		
 		public void updateBlocks(final Block[] blocksToDraw) {
 			this.blocks = blocksToDraw;
+		}
+		
+		/** 
+		 * Draws the name of the current block as a hovering text.
+		 * Exception: draws nothing if current block is Blocks.AIR
+		 * @return if the text was successfully drawn 
+		 **/
+		public boolean drawHoveringText(final int mouseX, final int mouseY) {
+			// draw the name of the block if this button is being hovered over
+			if(this.currentBlock != Blocks.AIR) {
+				this.gui.drawHoveringText(trans(this.currentBlock.getTranslationKey()), mouseX, mouseY);
+				return true;
+			}
+			return false;
 		}
 	}
 	

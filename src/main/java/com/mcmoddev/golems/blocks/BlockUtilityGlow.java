@@ -26,32 +26,32 @@ public class BlockUtilityGlow extends BlockUtility {
 	/* Default value for TICK_RATE. Not necessary to define through config. */
 	public static final int UPDATE_TICKS = 6;
 	
-	protected final IBlockState REPLACE_WITH;
-	protected final boolean REMOVE_IF_NOT_WATERLOGGED;
-
-	public BlockUtilityGlow(Material m, final float defaultLight, final int tickRate, final IBlockState replaceWith) {
+	public BlockUtilityGlow(Material m, final float defaultLight, final int tickRate) {
 		super(Properties.create(m).needsRandomTick().lightValue((int)(defaultLight * 15.0F)), tickRate);
 		int light = (int) (defaultLight * 15.0F);
 		this.setDefaultState(this.getDefaultState().with(LIGHT_LEVEL, light));
-		this.REPLACE_WITH = replaceWith;
-		this.REMOVE_IF_NOT_WATERLOGGED = replaceWith.getBlock() == Blocks.WATER || replaceWith.getMaterial() == Material.WATER;
 	}
 
 	@Override
 	public void tick(IBlockState state, World worldIn, BlockPos pos, Random random) {
 		// make a slightly expanded AABB to check for the golem
-		AxisAlignedBB toCheck = new AxisAlignedBB(pos).grow(0.5D);
-		List<GolemBase> list = worldIn.getEntitiesWithinAABB(GolemBase.class, toCheck);
+		final AxisAlignedBB toCheck = new AxisAlignedBB(pos).grow(0.5D);
+		// we'll probably only ever get one golem, but it doesn't hurt to be safe and check them all
+		final List<GolemBase> list = worldIn.getEntitiesWithinAABB(GolemBase.class, toCheck);
 		boolean hasLightGolem = list != null && !list.isEmpty();
 		for (GolemBase g : list) {
 			hasLightGolem |= isLightGolem(g);
 		}
 
 		if (!hasLightGolem) {
-			// remove this block
-			worldIn.setBlockState(pos, REPLACE_WITH, 3);
+			// remove this block if we didn't find a light golem
+			final IBlockState replaceWith = state.get(BlockStateProperties.WATERLOGGED)
+					? Fluids.WATER.getStillFluid().getDefaultState().getBlockState()
+					: Blocks.AIR.getDefaultState();
+			// replace with air OR water depending on waterlogged state
+			worldIn.setBlockState(pos, replaceWith, 3);
 		} else {
-			// schedule another update
+			// all conditions were met, schedule another update
 			worldIn.getPendingBlockTicks().scheduleTick(pos, this, this.tickRate(worldIn));
 		}	
 	}
@@ -65,18 +65,6 @@ public class BlockUtilityGlow extends BlockUtility {
 	@Override
 	public int getLightValue(IBlockState state) {
 		return state.get(LIGHT_LEVEL);
-	}
-	
-	@Override
-	public Fluid pickupFluid(IWorld worldIn, BlockPos pos, IBlockState state) {
-		super.pickupFluid(worldIn, pos, state);
-		if (REMOVE_IF_NOT_WATERLOGGED && !state.get(BlockStateProperties.WATERLOGGED)) {
-			// remove this block
-			worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
-			return Fluids.WATER;
-		} else {
-			return Fluids.EMPTY;
-		}
 	}
 
 	/**

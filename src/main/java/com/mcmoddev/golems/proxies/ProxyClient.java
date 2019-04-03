@@ -27,8 +27,8 @@ public final class ProxyClient extends ProxyCommon {
 	@Override
 	public void registerModels() {
 		// itemblocks
-		registerRender(Item.getItemFromBlock(GolemItems.golemHead),
-			Blocks.CARVED_PUMPKIN.getRegistryName().toString());
+//		registerRender(Item.getItemFromBlock(GolemItems.golemHead),
+//			Blocks.CARVED_PUMPKIN.getRegistryName().toString());
 		// items
 //		registerRender(GolemItems.golemPaper);
 //		registerRender(GolemItems.spawnBedrockGolem);
@@ -63,17 +63,17 @@ public final class ProxyClient extends ProxyCommon {
 		RenderingRegistry.registerEntityRenderingHandler(golem, FACTORY_COLORED_GOLEM);
 	}
 
-	private static void registerRender(final Item i, final String name, int... meta) {
-		if (meta.length < 1) {
-			meta = new int[]{0};
-		}
-		final ModelResourceLocation mrl = new ModelResourceLocation(name, "inventory");
-		for (final int m : meta) {
-			//ModelLoader.setCustomModelResourceLocation(i, m, mrl);
-		}
-	}
-
-	private static void registerRender(final Item i, final int... meta) {
-		registerRender(i, i.getRegistryName().toString(), meta);
-	}
+//	private static void registerRender(final Item i, final String name, int... meta) {
+//		if (meta.length < 1) {
+//			meta = new int[]{0};
+//		}
+//		final ModelResourceLocation mrl = new ModelResourceLocation(name, "inventory");
+//		for (final int m : meta) {
+//			//ModelLoader.setCustomModelResourceLocation(i, m, mrl);
+//		}
+//	}
+//
+//	private static void registerRender(final Item i, final int... meta) {
+//		registerRender(i, i.getRegistryName().toString(), meta);
+//	}
 }
