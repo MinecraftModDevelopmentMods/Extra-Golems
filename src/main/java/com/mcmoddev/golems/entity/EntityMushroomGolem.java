@@ -24,21 +24,25 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 
 	public static final String SHROOM_PREFIX = "shroom";
 	public static final String[] SHROOM_TYPES = {"red", "brown"};
-	public final IBlockState[] mushrooms = {Blocks.BROWN_MUSHROOM.getDefaultState(),
-		Blocks.RED_MUSHROOM.getDefaultState()};
-	protected static final Block[] soils = 
-		{ Blocks.DIRT, Blocks.GRASS, Blocks.MYCELIUM, Blocks.PODZOL, Blocks.NETHERRACK, Blocks.SOUL_SAND };
 
 	public EntityMushroomGolem(final World world) {
 		super(EntityMushroomGolem.class, world, SHROOM_PREFIX, SHROOM_TYPES);
 		this.setCanSwim(true);
+	}
+
+	@Override
+	protected void initEntityAI() {
+		super.initEntityAI();
 		final boolean allowed = this.getConfigBool(ALLOW_SPECIAL);
 		int freq = allowed ? this.getConfigInt(FREQUENCY) : -100;
 		freq += this.rand.nextInt(Math.max(10, freq / 2));
+		final IBlockState[] mushrooms = {Blocks.BROWN_MUSHROOM.getDefaultState(),
+				Blocks.RED_MUSHROOM.getDefaultState()};
+		final Block[] soils = 
+			{ Blocks.DIRT, Blocks.GRASS, Blocks.MYCELIUM, Blocks.PODZOL, Blocks.NETHERRACK, Blocks.SOUL_SAND };
 		this.tasks.addTask(2,
 			new EntityAIPlaceRandomBlocksStrictly(this, freq, mushrooms, soils, allowed));
 	}
-
 
 	@Override
 	public String getModId() {

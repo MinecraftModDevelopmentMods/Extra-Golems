@@ -7,8 +7,10 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.ai.EntityAITasks.EntityAITaskEntry;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Fluids;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -35,17 +37,13 @@ public class BlockUtilityPower extends BlockUtility {
 		// make a slightly expanded AABB to check for the golem
 		AxisAlignedBB toCheck = new AxisAlignedBB(pos).grow(0.5D);
 		List<GolemBase> list = worldIn.getEntitiesWithinAABB(GolemBase.class, toCheck);
-		boolean hasPowerGolem = list != null && !list.isEmpty();
-		for (GolemBase g : list) {
-			hasPowerGolem |= isPowerGolem(g);
-		}
+		boolean hasPowerGolem = list != null && !list.isEmpty() && hasPowerGolem(list);
 
-		if (!hasPowerGolem) {
-			// remove this block
-			worldIn.setBlockState(pos, REPLACE_WITH, 3);
-		} else {
-			// schedule another update
+		if (hasPowerGolem) {
+			// light golem is nearby, schedule another update
 			worldIn.getPendingBlockTicks().scheduleTick(pos, this, this.tickRate(worldIn));
+		} else {
+			this.remove(worldIn, state, pos, 3);
 		}	
 	}
 
@@ -67,14 +65,14 @@ public class BlockUtilityPower extends BlockUtility {
 	public int getStrongPower(IBlockState blockState, IBlockReader blockAccess, BlockPos pos, EnumFacing side) {
 		return blockState.get(POWER_LEVEL);
 	}
-
+	
 	/**
-	 * Search the golem's AI to determine if it is a power-providing golem
+	 * @return if the given list contains any golems for whom 
+	 * {@link GolemBase#doesProvidePower()} returns true
 	 **/
-	protected boolean isPowerGolem(GolemBase golem) {
-		for (EntityAITaskEntry entry : golem.tasks.taskEntries) {
-			if (entry.action instanceof EntityAIPlaceSingleBlock && ((EntityAIPlaceSingleBlock) entry.action
-			).stateToPlace.getBlock() instanceof BlockUtilityPower) {
+	protected boolean hasPowerGolem(final List<GolemBase> golems) {
+		for(GolemBase g : golems) {
+			if(g.doesProvidePower()) {
 				return true;
 			}
 		}

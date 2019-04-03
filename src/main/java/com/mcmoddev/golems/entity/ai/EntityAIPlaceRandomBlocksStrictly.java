@@ -21,7 +21,7 @@ public class EntityAIPlaceRandomBlocksStrictly extends EntityAIPlaceRandomBlocks
 
 	@Override
 	public boolean shouldExecute() {
-		return canExecute.test(this) && golem.world.rand.nextInt(tickDelay) == 0;
+		return tickDelay > 0 && canExecute.test(this) && golem.world.rand.nextInt(tickDelay) == 0;
 	}
 
 	public static Predicate<EntityAIPlaceRandomBlocks> getGriefingPredicate() {

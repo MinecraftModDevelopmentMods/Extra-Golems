@@ -38,21 +38,13 @@ public class BlockUtilityGlow extends BlockUtility {
 		final AxisAlignedBB toCheck = new AxisAlignedBB(pos).grow(0.5D);
 		// we'll probably only ever get one golem, but it doesn't hurt to be safe and check them all
 		final List<GolemBase> list = worldIn.getEntitiesWithinAABB(GolemBase.class, toCheck);
-		boolean hasLightGolem = list != null && !list.isEmpty();
-		for (GolemBase g : list) {
-			hasLightGolem |= isLightGolem(g);
-		}
+		boolean hasLightGolem = list != null && !list.isEmpty() && hasLightGolem(list);
 
-		if (!hasLightGolem) {
-			// remove this block if we didn't find a light golem
-			final IBlockState replaceWith = state.get(BlockStateProperties.WATERLOGGED)
-					? Fluids.WATER.getStillFluid().getDefaultState().getBlockState()
-					: Blocks.AIR.getDefaultState();
-			// replace with air OR water depending on waterlogged state
-			worldIn.setBlockState(pos, replaceWith, 3);
-		} else {
-			// all conditions were met, schedule another update
+		if (hasLightGolem) {
+			// light golem is nearby, schedule another update
 			worldIn.getPendingBlockTicks().scheduleTick(pos, this, this.tickRate(worldIn));
+		} else {
+			this.remove(worldIn, state, pos, 3);
 		}	
 	}
 
@@ -68,13 +60,12 @@ public class BlockUtilityGlow extends BlockUtility {
 	}
 
 	/**
-	 * Search the golem's AI to determine if it is a light-providing golem
+	 * @return if the given list contains any golems for whom 
+	 * {@link GolemBase#doesProvideLight()} returns true
 	 **/
-	protected boolean isLightGolem(GolemBase golem) {
-		for (EntityAITaskEntry entry : golem.tasks.taskEntries) {
-			if (entry.action instanceof EntityAIPlaceSingleBlock &&
-				((EntityAIPlaceSingleBlock) entry.action).stateToPlace.getBlock()
-					instanceof BlockUtilityGlow /*TODO: CLEANUP!*/) {
+	protected boolean hasLightGolem(final List<GolemBase> golems) {
+		for(GolemBase g : golems) {
+			if(g.doesProvideLight()) {
 				return true;
 			}
 		}

@@ -30,7 +30,7 @@ public class EntityAIPlaceRandomBlocks extends EntityAIBase {
 		this.plantables = plants;
 		this.plantSupports = soils;
 		this.canExecute = pred;
-		this.checkSupports = (soils != null);
+		this.checkSupports = (soils != null && soils.length > 0);
 	}
 
 	public EntityAIPlaceRandomBlocks(final GolemBase golemBase, final int ticksBetweenPlanting,
@@ -40,7 +40,7 @@ public class EntityAIPlaceRandomBlocks extends EntityAIBase {
 
 	@Override
 	public boolean shouldExecute() {
-		return golem.world.rand.nextInt(tickDelay) == 0 && this.canExecute.test(this);
+		return tickDelay > 0 && golem.getEntityWorld().rand.nextInt(tickDelay) == 0 && this.canExecute.test(this);
 	}
 
 	@Override

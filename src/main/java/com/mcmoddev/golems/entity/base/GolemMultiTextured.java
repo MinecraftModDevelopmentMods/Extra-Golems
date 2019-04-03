@@ -115,7 +115,7 @@ public abstract class GolemMultiTextured extends GolemBase {
 	}
 
 	@Override
-	public boolean doesInteractChangeTexture() {
+	public boolean canInteractChangeTexture() {
 		return true;
 	}
 

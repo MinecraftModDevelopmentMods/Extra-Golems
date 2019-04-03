@@ -75,6 +75,11 @@ public final class EntitySeaLanternGolem extends GolemBase {
 	public float getBrightness() {
 		return EntitySeaLanternGolem.BRIGHTNESS;
 	}
+	
+	@Override
+	public boolean doesProvideLight() {
+		return true;
+	}
 
 	@Override
 	public SoundEvent getGolemSound() {

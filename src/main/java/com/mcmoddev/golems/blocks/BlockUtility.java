@@ -10,6 +10,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.IFluidState;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Fluids;
 import net.minecraft.init.Items;
 import net.minecraft.item.BlockItemUseContext;
@@ -38,6 +39,15 @@ public abstract class BlockUtility extends Block implements IBucketPickupHandler
 		super(prop.hardnessAndResistance(-1F).doesNotBlockMovement());
 		this.setDefaultState(this.stateContainer.getBaseState().with(BlockStateProperties.WATERLOGGED, false));
 		this.TICK_RATE = tickrate;
+	}
+	
+	protected boolean remove(final World worldIn, final IBlockState state, final BlockPos pos, final int flag) {
+		// remove this block and replace with air or water
+		final IBlockState replaceWith = state.get(BlockStateProperties.WATERLOGGED)
+				? Fluids.WATER.getStillFluid().getDefaultState().getBlockState()
+				: Blocks.AIR.getDefaultState();
+		// replace with air OR water depending on waterlogged state
+		return worldIn.setBlockState(pos, replaceWith, flag);
 	}
 	
 	@Override

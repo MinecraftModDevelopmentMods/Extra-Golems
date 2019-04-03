@@ -104,7 +104,7 @@ public abstract class GolemMultiColorized extends GolemColorized {
 	}
 
 	@Override
-	public boolean doesInteractChangeTexture() {
+	public boolean canInteractChangeTexture() {
 		return false;
 	}
 	

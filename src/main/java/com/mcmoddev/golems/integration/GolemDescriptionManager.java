@@ -47,7 +47,7 @@ public abstract class GolemDescriptionManager {
 
 		// add right-click-texture to tip if possible
 		if (this.showMultiTexture
-			&& (golem instanceof GolemMultiTextured || golem.doesInteractChangeTexture())) {
+			&& (golem instanceof GolemMultiTextured || golem.canInteractChangeTexture())) {
 			list.add(TextFormatting.BLUE + trans("entitytip.click_change_texture"));
 		}
 

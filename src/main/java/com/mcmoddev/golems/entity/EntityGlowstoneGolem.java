@@ -44,6 +44,11 @@ public final class EntityGlowstoneGolem extends GolemBase {
 	protected ResourceLocation applyTexture() {
 		return makeTexture(ExtraGolems.MODID, GolemNames.GLOWSTONE_GOLEM);
 	}
+	
+	@Override
+	public boolean doesProvideLight() {
+		return true;
+	}
 
 	@Override
 	public SoundEvent getGolemSound() {

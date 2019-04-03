@@ -35,6 +35,12 @@ public final class EntityRedstoneGolem extends GolemBase {
 	protected ResourceLocation applyTexture() {
 		return makeTexture(ExtraGolems.MODID, GolemNames.REDSTONE_GOLEM);
 	}
+	
+
+	@Override
+	public boolean doesProvidePower() {
+		return true;
+	}
 
 	@Override
 	public SoundEvent getGolemSound() {

@@ -492,8 +492,31 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 		this.isImmuneToFire = toSet;
 	}
 
-	/** Whether right-clicking on this entity triggers a texture change **/
-	public boolean doesInteractChangeTexture() {
+	/** 
+	 * Whether right-clicking on this entity triggers a texture change.
+	 * Does not change any behavior, but is used for in-game info.
+	 **/
+	public boolean canInteractChangeTexture() {
+		return false;
+	}
+	
+	/**
+	 * Whether this golem provides light (by placing light source blocks).
+	 * Does not change any behavior, but is used in the Light Block code
+	 * to determine if it can stay (called AFTER light is placed).
+	 * @see com.mcmoddev.golems.blocks.BlockUtilityGlow
+	 **/
+	public boolean doesProvideLight() {
+		return false;
+	}
+	
+	/**
+	 * Whether this golem provides power (by placing power source blocks).
+	 * Does not change any behavior, but is used in the Power Block code
+	 * to determine if it can stay.
+	 * @see com.mcmoddev.golems.blocks.BlockUtilityPower
+	 **/
+	public boolean doesProvidePower() {
 		return false;
 	}
 

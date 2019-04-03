@@ -24,11 +24,10 @@ public final class EntityMelonGolem extends GolemBase {
 	public static final String ALLOW_SPECIAL = "Allow Special: Plant Flowers";
 	public static final String FREQUENCY = "Flower Frequency";
 	public static final String ALLOW_HEALING = "Allow Special: Random Healing";
-
+	
 	public EntityMelonGolem(final World world) {
 		super(EntityMelonGolem.class, world);
 		this.setCanSwim(true);
-		this.tasks.addTask(2, this.makeFlowerAI());
 		this.setLootTableLoc(GolemNames.MELON_GOLEM);
 	}
 
@@ -56,18 +55,27 @@ public final class EntityMelonGolem extends GolemBase {
 		}
 	}
 
-	/**
-	 * Create an EntityAIPlaceRandomBlocks.
-	 **/
-	protected EntityAIBase makeFlowerAI() {
-
-		final Block[] soils = {Blocks.DIRT, Blocks.GRASS, Blocks.MYCELIUM};
+	/* Create an EntityAIPlaceRandomBlocks */
+	@Override
+	protected void initEntityAI() {
+		super.initEntityAI();
+		final Block[] soils = {Blocks.DIRT, Blocks.GRASS, Blocks.MYCELIUM, Blocks.PODZOL};
 		// init list and AI for planting flowers
-		final IBlockState[] flowers = {Blocks.POPPY.getDefaultState()};
+		final IBlockState[] flowers = {
+				Blocks.POPPY.getDefaultState(),
+				Blocks.DANDELION.getDefaultState(),
+				Blocks.BLUE_ORCHID.getDefaultState(),
+				Blocks.ALLIUM.getDefaultState(),
+				Blocks.AZURE_BLUET.getDefaultState(),
+				Blocks.RED_TULIP.getDefaultState(),
+				Blocks.ORANGE_TULIP.getDefaultState(),
+				Blocks.WHITE_TULIP.getDefaultState(),
+				Blocks.PINK_TULIP.getDefaultState(),
+				Blocks.OXEYE_DAISY.getDefaultState()};
 		// get other parameters for the AI
 		final int freq = this.getConfigInt(FREQUENCY);
 		final boolean allowed = this.getConfigBool(ALLOW_SPECIAL);
-		return new EntityAIPlaceRandomBlocksStrictly(this, freq, flowers, soils, allowed);
+		this.tasks.addTask(2, new EntityAIPlaceRandomBlocksStrictly(this, freq, flowers, soils, allowed));
 	}
 
 	@Override
