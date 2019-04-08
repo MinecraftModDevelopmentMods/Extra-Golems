@@ -1,6 +1,7 @@
 package com.mcmoddev.golems.entity;
 
 import java.util.List;
+import java.util.function.Function;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.events.SpongeGolemSoakEvent;
@@ -54,7 +55,7 @@ public final class EntitySpongeGolem extends GolemBase {
 			final SpongeGolemSoakEvent event = new SpongeGolemSoakEvent(this, center,
 				this.getConfigInt(RANGE));
 			if (!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Event.Result.DENY) {
-				this.replaceWater(event.getPositionList(), event.getReplacementState(),
+				this.replaceWater(event.getPositionList(), event.getAbsorbFunction(),
 					event.updateFlag);
 			}
 		}
@@ -82,11 +83,11 @@ public final class EntitySpongeGolem extends GolemBase {
 	 *
 	 * @return whether all setBlockState calls were successful.
 	 **/
-	public boolean replaceWater(final List<BlockPos> positions, final IBlockState replaceWater,
-				    final int updateFlag) {
+	public boolean replaceWater(final List<BlockPos> positions, 
+			final Function<IBlockState, IBlockState> replaceWater, final int updateFlag) {
 		boolean flag = true;
 		for (final BlockPos p : positions) {
-			flag &= this.world.setBlockState(p, replaceWater, updateFlag);
+			flag &= this.world.setBlockState(p, replaceWater.apply(world.getBlockState(p)), updateFlag);
 		}
 		return flag;
 	}

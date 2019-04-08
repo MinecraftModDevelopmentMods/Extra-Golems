@@ -27,6 +27,7 @@ public final class IceGolemFreezeEvent extends Event {
 
 	public final GolemBase iceGolem;
 	public final BlockPos iceGolemPos;
+	public final int range;
 
 	/**
 	 * This percentage of Packed Ice placed will become regular ice instead.
@@ -41,15 +42,20 @@ public final class IceGolemFreezeEvent extends Event {
 	 * This should be passed in World#setBlockState when using this event.
 	 **/
 	public int updateFlag;
-
+	
 	public IceGolemFreezeEvent(final GolemBase golem, final BlockPos center, final int radius) {
+		this(golem, center, radius, new DefaultFreezeFunction(
+				golem.getRNG(), golem.getConfigBool(EntityIceGolem.FROST), ICE_CHANCE, COBBLE_CHANCE));
+	}
+
+	public IceGolemFreezeEvent(final GolemBase golem, final BlockPos center, 
+			final int radius, final Function<IBlockState, IBlockState> function) {
 		this.setResult(Result.ALLOW);
 		this.iceGolem = golem;
 		this.iceGolemPos = center;
+		this.range = radius;
 		this.updateFlag = 3;
-		this.initAffectedBlockList(radius);
-		boolean useFrost = golem.getConfigBool(EntityIceGolem.FROST);
-		this.setFunction(new DefaultFreezeFunction(golem.getRNG(), useFrost, ICE_CHANCE, COBBLE_CHANCE));
+		this.setFunction(function, true);
 	}
 
 	public void initAffectedBlockList(final int range) {
@@ -61,7 +67,11 @@ public final class IceGolemFreezeEvent extends Event {
 				for (int k = -range; k <= range; k++) {
 					final BlockPos currentPos = this.iceGolemPos.add(i, j, k);
 					if (iceGolemPos.distanceSq(currentPos) <= maxDis) {
-						this.affectedBlocks.add(currentPos);
+						final IBlockState state = this.iceGolem.world.getBlockState(currentPos);
+						final IBlockState replace = this.freezeFunction.apply(state);
+						if (replace != state) {
+							this.affectedBlocks.add(currentPos);
+						}
 					}
 				}
 			}
@@ -72,8 +82,19 @@ public final class IceGolemFreezeEvent extends Event {
 		return this.freezeFunction;
 	}
 
-	public void setFunction(final Function<IBlockState, IBlockState> toSet) {
+	/**
+	 * Call this method to use a different function than the default one
+	 * to determine which state should replace which blocks. 
+	 * @param toSet the new {@code Function<IBlockState, IBlockState>}
+	 * @param refresh when true, the event will call {@link #initAffectedBlockList(int)}
+	 * to refresh the list of affected blocks.
+	 * @see DefaultFreezeFunction
+	 **/
+	public void setFunction(final Function<IBlockState, IBlockState> toSet, final boolean refresh) {
 		this.freezeFunction = toSet;
+		if(refresh) {
+			this.initAffectedBlockList(this.range);
+		}
 	}
 
 	public List<BlockPos> getAffectedPositions() {

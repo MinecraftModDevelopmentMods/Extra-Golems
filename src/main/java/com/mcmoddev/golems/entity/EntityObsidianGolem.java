@@ -4,6 +4,7 @@ import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
 
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -15,6 +16,7 @@ public final class EntityObsidianGolem extends GolemBase {
 		super(EntityObsidianGolem.class, world);
 		this.setLootTableLoc(GolemNames.OBSIDIAN_GOLEM);
 		this.setImmuneToFire(true);
+		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.5D);
 	}
 
 	@Override

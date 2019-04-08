@@ -13,13 +13,13 @@ import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 
-public class ExtraGolemsEntities {
+public final class ExtraGolemsEntities {
 	
 	/* 
 	 * The following tags are not added by regular minecraft.
 	 * Technically they should be registered and built the vanilla way,
 	 * but since we know they're not going to change, we can just
-	 * make and use them like this.
+	 * make and use them like this (for now)
 	 */
 	
 	public static final Tag<Block> TAG_CONCRETE = new Tag.Builder<Block>()
@@ -28,19 +28,19 @@ public class ExtraGolemsEntities {
 				Blocks.LIGHT_BLUE_CONCRETE, Blocks.LIGHT_GRAY_CONCRETE, Blocks.LIME_CONCRETE,
 				Blocks.MAGENTA_CONCRETE, Blocks.ORANGE_CONCRETE, Blocks.PINK_CONCRETE,
 				Blocks.PURPLE_CONCRETE, Blocks.RED_CONCRETE, Blocks.WHITE_CONCRETE,
-				Blocks.YELLOW_CONCRETE).build(new ResourceLocation("concrete"));
+				Blocks.YELLOW_CONCRETE).build(new ResourceLocation(ExtraGolems.MODID, "concrete"));
 	
 	public static final Tag<Block> TAG_SANDSTONE = new Tag.Builder<Block>()
 			.add(Blocks.SANDSTONE, Blocks.CHISELED_SANDSTONE, Blocks.CUT_SANDSTONE, Blocks.SMOOTH_SANDSTONE)
-			.build(new ResourceLocation("sandstone"));
+			.build(new ResourceLocation(ExtraGolems.MODID, "sandstone"));
 	
 	public static final Tag<Block> TAG_RED_SANDSTONE = new Tag.Builder<Block>()
 			.add(Blocks.RED_SANDSTONE, Blocks.CHISELED_RED_SANDSTONE, Blocks.CUT_RED_SANDSTONE, Blocks.SMOOTH_RED_SANDSTONE)
-			.build(new ResourceLocation("red_sandstone"));
+			.build(new ResourceLocation(ExtraGolems.MODID, "red_sandstone"));
 	
 	public static final Tag<Block> TAG_PRISMARINE = new Tag.Builder<Block>()
 			.add(Blocks.PRISMARINE, Blocks.DARK_PRISMARINE, Blocks.PRISMARINE_BRICKS)
-			.build(new ResourceLocation("prismarine"));
+			.build(new ResourceLocation(ExtraGolems.MODID, "prismarine"));
 	
 	public static final Tag<Block> TAG_STAINED_GLASS = new Tag.Builder<Block>()
 			.add(Blocks.BLACK_STAINED_GLASS, Blocks.BLUE_STAINED_GLASS, Blocks.BROWN_STAINED_GLASS,
@@ -49,7 +49,7 @@ public class ExtraGolemsEntities {
 					Blocks.MAGENTA_STAINED_GLASS, Blocks.ORANGE_STAINED_GLASS, Blocks.PINK_STAINED_GLASS,
 					Blocks.PURPLE_STAINED_GLASS, Blocks.RED_STAINED_GLASS, Blocks.WHITE_STAINED_GLASS,
 					Blocks.YELLOW_STAINED_GLASS)
-			.build(new ResourceLocation("stained_glass"));
+			.build(new ResourceLocation(ExtraGolems.MODID, "stained_glass"));
 	
 	public static final Tag<Block> TAG_TERRACOTTA = new Tag.Builder<Block>()
 			.add(Blocks.BLACK_TERRACOTTA, Blocks.BLUE_TERRACOTTA, Blocks.BROWN_TERRACOTTA,
@@ -58,8 +58,11 @@ public class ExtraGolemsEntities {
 					Blocks.MAGENTA_TERRACOTTA, Blocks.ORANGE_TERRACOTTA, Blocks.PINK_TERRACOTTA,
 					Blocks.PURPLE_TERRACOTTA, Blocks.RED_TERRACOTTA, Blocks.WHITE_TERRACOTTA,
 					Blocks.YELLOW_TERRACOTTA)
-			.build(new ResourceLocation("terracotta"));
+			.build(new ResourceLocation(ExtraGolems.MODID, "terracotta"));
 	
+	public static final Tag<Block> TAG_QUARTZ = new Tag.Builder<Block>()
+			.add(Blocks.QUARTZ_BLOCK, Blocks.QUARTZ_PILLAR, Blocks.CHISELED_QUARTZ_BLOCK, Blocks.SMOOTH_QUARTZ)
+			.build(new ResourceLocation(ExtraGolems.MODID, "quartz"));
 	
 	private ExtraGolemsEntities() {	}
 
@@ -69,7 +72,7 @@ public class ExtraGolemsEntities {
 				.setHealth(999.0D).setAttack(32.0D).build());
 		// BONE GOLEM
 		GolemRegistrar.registerGolem(EntityBoneGolem.class, new GolemContainer.Builder(GolemNames.BONE_GOLEM, EntityBoneGolem.class, EntityBoneGolem::new)
-				.setHealth(54.0D).setAttack(9.5D).setSpeed(0.30D).addBlocks(Blocks.BONE_BLOCK).build());
+				.setHealth(40.0D).setAttack(9.5D).setSpeed(0.30D).addBlocks(Blocks.BONE_BLOCK).build());
 		// BOOKSHELF GOLEM
 		GolemRegistrar.registerGolem(EntityBookshelfGolem.class, new GolemContainer.Builder(GolemNames.BOOKSHELF_GOLEM, EntityBookshelfGolem.class, EntityBookshelfGolem::new)
 				.setHealth(28.0D).setAttack(1.5D).setSpeed(0.29D).addBlocks(Blocks.BOOKSHELF)
@@ -80,7 +83,7 @@ public class ExtraGolemsEntities {
 				.setHealth(20.0D).setAttack(2.0D).addBlocks(Blocks.CLAY).build());
 		// COAL GOLEM
 		GolemRegistrar.registerGolem(EntityCoalGolem.class,	new GolemContainer.Builder(GolemNames.COAL_GOLEM, EntityCoalGolem.class, EntityCoalGolem::new)
-				.setHealth(14.0D).setAttack(2.5D).setSpeed(0.28D).addBlocks(Blocks.COAL_BLOCK)
+				.setHealth(24.0D).setAttack(2.5D).setSpeed(0.28D).addBlocks(Blocks.COAL_BLOCK)
 				.addSpecial(EntityCoalGolem.ALLOW_SPECIAL, false, "Whether this golem can inflict blindness")
 				.build());
 		// CONCRETE GOLEM
@@ -189,15 +192,15 @@ public class ExtraGolemsEntities {
 		// PRISMARINE GOLEM
 		GolemRegistrar.registerGolem(EntityPrismarineGolem.class,
 				new GolemContainer.Builder(GolemNames.PRISMARINE_GOLEM, EntityPrismarineGolem.class, EntityPrismarineGolem::new)
-				.setHealth(24.0D).setAttack(8.0D).addBlocks(TAG_PRISMARINE).build());
+				.setHealth(34.0D).setAttack(8.0D).addBlocks(TAG_PRISMARINE).build());
 		// QUARTZ GOLEM
 		GolemRegistrar.registerGolem(EntityQuartzGolem.class,
 				new GolemContainer.Builder(GolemNames.QUARTZ_GOLEM, EntityQuartzGolem.class, EntityQuartzGolem::new)
-				.setHealth(85.0D).setAttack(8.5D).setSpeed(0.28D).addBlocks(Blocks.QUARTZ_BLOCK).build());
+				.setHealth(85.0D).setAttack(8.5D).setSpeed(0.28D).addBlocks(TAG_QUARTZ).build());
 		// RED SANDSTONE GOLEM
 		GolemRegistrar.registerGolem(EntityRedSandstoneGolem.class,
 				new GolemContainer.Builder(GolemNames.REDSANDSTONE_GOLEM, EntityRedSandstoneGolem.class, EntityRedSandstoneGolem::new)
-				.setHealth(15.0D).setAttack(4.0D).setSpeed(0.28D).addBlocks(TAG_RED_SANDSTONE).build());
+				.setHealth(22.0D).setAttack(4.0D).setSpeed(0.28D).addBlocks(TAG_RED_SANDSTONE).build());
 		// REDSTONE GOLEM
 		GolemRegistrar.registerGolem(EntityRedstoneGolem.class,
 				new GolemContainer.Builder(GolemNames.REDSTONE_GOLEM, EntityRedstoneGolem.class, EntityRedstoneGolem::new)
@@ -207,11 +210,11 @@ public class ExtraGolemsEntities {
 		// SANDSTONE GOLEM
 		GolemRegistrar.registerGolem(EntitySandstoneGolem.class,
 				new GolemContainer.Builder(GolemNames.SANDSTONE_GOLEM, EntitySandstoneGolem.class, EntitySandstoneGolem::new)
-				.setHealth(15.0D).setAttack(4.0D).setSpeed(0.28D).addBlocks(TAG_SANDSTONE).build());
+				.setHealth(22.0D).setAttack(4.0D).setSpeed(0.28D).addBlocks(TAG_SANDSTONE).build());
 		// SEA LANTERN GOLEM
 		GolemRegistrar.registerGolem(EntitySeaLanternGolem.class,
 				new GolemContainer.Builder(GolemNames.SEALANTERN_GOLEM, EntitySeaLanternGolem.class, EntitySeaLanternGolem::new)
-				.setHealth(24.0D).setAttack(6.0D).setSpeed(0.26D).addBlocks(Blocks.SEA_LANTERN)
+				.setHealth(34.0D).setAttack(6.0D).setSpeed(0.26D).addBlocks(Blocks.SEA_LANTERN)
 				.addSpecial(EntitySeaLanternGolem.ALLOW_SPECIAL, true, "Whether this golem lights up the area")
 // Removed		.addSpecial(EntitySeaLanternGolem.FREQUENCY, Integer.valueOf(5), "Number of ticks between updating light")
 				.build());
@@ -228,7 +231,7 @@ public class ExtraGolemsEntities {
 				new GolemContainer.Builder(GolemNames.SPONGE_GOLEM, EntitySpongeGolem.class, EntitySpongeGolem::new)
 				.setHealth(20.0D).setAttack(1.5D).addBlocks(Blocks.SPONGE, Blocks.WET_SPONGE)
 				.addSpecial(EntitySpongeGolem.ALLOW_SPECIAL, true, "Whether this golem can absorb water")
-				.addSpecial(EntitySpongeGolem.RANGE, Integer.valueOf(4), "Radial distance at which this golem can absorb water (Warning: larger values cause lag)")
+				.addSpecial(EntitySpongeGolem.RANGE, Integer.valueOf(5), "Radial distance at which this golem can absorb water (Warning: larger values cause lag)")
 				.addSpecial(EntitySpongeGolem.INTERVAL, Integer.valueOf(10), "Number of ticks between each water-check; increase to reduce lag")
 				.build());
 		// STAINED GLASS GOLEM
@@ -239,7 +242,7 @@ public class ExtraGolemsEntities {
 		// STAINED TERRACOTTA GOLEM
 		GolemRegistrar.registerGolem(EntityStainedClayGolem.class, 
 				new GolemContainer.Builder(GolemNames.STAINEDTERRACOTTA_GOLEM, EntityStainedClayGolem.class, EntityStainedClayGolem::new)
-				.setHealth(9.0D).setAttack(12.0D).setSpeed(0.22D).addBlocks(TAG_TERRACOTTA)
+				.setHealth(42.0D).setAttack(4.0D).setSpeed(0.22D).addBlocks(TAG_TERRACOTTA)
 				.build());
 		// STRAW GOLEM
 		GolemRegistrar.registerGolem(EntityStrawGolem.class,
@@ -251,7 +254,7 @@ public class ExtraGolemsEntities {
 		// TERRACOTTA GOLEM
 		GolemRegistrar.registerGolem(EntityTerracottaGolem.class, 
 				new GolemContainer.Builder(GolemNames.TERRACOTTA_GOLEM, EntityTerracottaGolem.class, EntityTerracottaGolem::new)
-				.setHealth(22.0D).setAttack(4.0D).setSpeed(0.208D).addBlocks(Blocks.TERRACOTTA)
+				.setHealth(42.0D).setAttack(4.0D).setSpeed(0.208D).addBlocks(Blocks.TERRACOTTA)
 				.build());
 		// TNT GOLEM
 		GolemRegistrar.registerGolem(EntityTNTGolem.class, 

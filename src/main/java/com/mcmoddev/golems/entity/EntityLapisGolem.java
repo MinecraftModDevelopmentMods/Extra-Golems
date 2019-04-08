@@ -8,6 +8,7 @@ import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.potion.Potion;
@@ -27,6 +28,7 @@ public final class EntityLapisGolem extends GolemBase {
 	public EntityLapisGolem(final World world) {
 		super(EntityLapisGolem.class, world);
 		this.setLootTableLoc(GolemNames.LAPIS_GOLEM);
+		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.4D);
 	}
 
 	@Override

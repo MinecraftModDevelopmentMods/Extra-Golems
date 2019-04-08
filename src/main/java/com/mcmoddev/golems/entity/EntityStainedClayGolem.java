@@ -7,6 +7,7 @@ import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
@@ -24,6 +25,7 @@ public final class EntityStainedClayGolem extends GolemMultiColorized {
 
 	public EntityStainedClayGolem(final World world) {
 		super(EntityStainedClayGolem.class, world, TEXTURE_BASE, TEXTURE_OVERLAY, dyeColorArray);
+		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.2D);
 	}
 
 	@Override

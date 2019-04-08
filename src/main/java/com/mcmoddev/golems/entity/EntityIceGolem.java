@@ -94,14 +94,9 @@ public final class EntityIceGolem extends GolemBase {
 	 **/
 	public boolean freezeBlocks(final List<BlockPos> positions,
 				    final Function<IBlockState, IBlockState> function, final int updateFlag) {
-		boolean flag = false;
-		for (int i = 0, len = positions.size(); i < len; i++) {
-			final BlockPos pos = positions.get(i);
-			final IBlockState currentState = this.world.getBlockState(pos);
-			final IBlockState toSet = function.apply(currentState);
-			if (toSet != null && toSet != currentState) {
-				flag &= this.world.setBlockState(pos, toSet, updateFlag);
-			}
+		boolean flag = true;
+		for (BlockPos pos : positions) {
+			flag &= this.world.setBlockState(pos, function.apply(this.world.getBlockState(pos)), updateFlag);
 		}
 		return flag;
 	}

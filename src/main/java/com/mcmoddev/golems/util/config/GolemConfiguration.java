@@ -34,7 +34,7 @@ public class GolemConfiguration {
 				.define("bedrock_golem_creative_only", true);
 		this.pumpkinBuildsGolem = builder.comment("(Experimental) When true, pumpkins can be used to build this mod's golems")
 				.define("pumpkin_builds_golems", false);
-		this.enableFriendlyFire = builder.comment("When enabled, attacking player-built golems will make them attack you")
+		this.enableFriendlyFire = builder.comment("When enabled, attacking a player-built golem will make it attack you")
 				.define("friendly_fire", true);
 		
 		builder.pop();

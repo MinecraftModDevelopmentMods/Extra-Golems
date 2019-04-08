@@ -7,7 +7,6 @@
         {
           "type": "item",
           "name": "minecraft:oak_planks",
-          "weight": 7,
           "functions": [
             {
               "function": "set_count",
@@ -17,10 +16,6 @@
               }
             }
           ]
-        },
-        {
-          "type": "empty",
-          "weight": 3
         }
       ]
     },

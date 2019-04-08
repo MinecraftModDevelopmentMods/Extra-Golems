@@ -8,6 +8,7 @@ import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.util.GolemNames;
 
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -25,7 +26,9 @@ public final class EntityBedrockGolem extends GolemBase {
 
 	public EntityBedrockGolem(final World world) {
 		super(EntityBedrockGolem.class, world);
+		this.setInvulnerable(true);
 		this.setCreativeReturn(new ItemStack(GolemItems.spawnBedrockGolem));
+		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(1.0D);
 	}
 
 	@Override
@@ -33,12 +36,11 @@ public final class EntityBedrockGolem extends GolemBase {
 		return makeTexture(ExtraGolems.MODID, GolemNames.BEDROCK_GOLEM);
 	}
 
-
 	@Override
-	public boolean isInvulnerable() {
+	public boolean isInvulnerableTo(DamageSource source) {
 		return true;
 	}
-
+	
 	@Override
 	public boolean isImmuneToExplosions() {
 		return true;
