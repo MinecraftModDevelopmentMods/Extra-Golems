@@ -68,7 +68,7 @@ public final class EntityConcreteGolem extends GolemMultiColorized {
 		else if(b == Blocks.GREEN_CONCRETE) textureNum = 13;
 		else if(b == Blocks.RED_CONCRETE) textureNum = 14;
 		else if(b == Blocks.BLACK_CONCRETE) textureNum = 15;
-		else textureNum = (byte)this.rand.nextInt(this.dyeColorArray.length);
+		else textureNum = (byte)this.rand.nextInt(dyeColorArray.length);
 		// actually set the texture
 		this.setTextureNum(textureNum);
 	}

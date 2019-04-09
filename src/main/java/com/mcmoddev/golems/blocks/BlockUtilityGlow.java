@@ -1,20 +1,13 @@
 package com.mcmoddev.golems.blocks;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
-import com.mcmoddev.golems.entity.ai.EntityAIPlaceSingleBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.ai.EntityAITasks.EntityAITaskEntry;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Fluids;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -38,7 +31,7 @@ public class BlockUtilityGlow extends BlockUtility {
 		final AxisAlignedBB toCheck = new AxisAlignedBB(pos).grow(0.5D);
 		// we'll probably only ever get one golem, but it doesn't hurt to be safe and check them all
 		final List<GolemBase> list = worldIn.getEntitiesWithinAABB(GolemBase.class, toCheck);
-		boolean hasLightGolem = list != null && !list.isEmpty() && hasLightGolem(list);
+		boolean hasLightGolem = !list.isEmpty() && hasLightGolem(list);
 
 		if (hasLightGolem) {
 			// light golem is nearby, schedule another update

@@ -110,6 +110,7 @@ public abstract class BlockUtility extends Block implements IBucketPickupHandler
 		return VoxelShapes.empty();
 	}
 
+	@Override
 	public boolean isCollidable(IBlockState state) {
 		return false;
 	}

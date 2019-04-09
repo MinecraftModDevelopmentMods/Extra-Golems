@@ -30,10 +30,10 @@ public class GolemContainer {
 
 	public Map<String, GolemSpecialContainer> specialContainers;
 
-	private GolemContainer(final EntityType<GolemBase> lEntityType, final String lPath, 
-			final List<Block> lValidBuildingBlocks, final List<Tag<Block>> lValidBuildingBlockTags,
-			final double lHealth, final double lAttack, final double lSpeed,
-			final HashMap<String, GolemSpecialContainer> lSpecialContainers) {
+	private GolemContainer(final EntityType<GolemBase> lEntityType, final String lPath,
+						   final List<Block> lValidBuildingBlocks, final List<Tag<Block>> lValidBuildingBlockTags,
+						   final double lHealth, final double lAttack, final double lSpeed,
+						   final HashMap<String, GolemSpecialContainer> lSpecialContainers) {
 		this.entityType = lEntityType;
 		this.validBuildingBlocks = lValidBuildingBlocks;
 		this.validBuildingBlockTags = lValidBuildingBlockTags;
@@ -45,7 +45,7 @@ public class GolemContainer {
 	}
 
 	public boolean hasBuildingBlock() {
-		return !(this.validBuildingBlocks.isEmpty() && this.validBuildingBlocks.isEmpty());
+		return !(this.validBuildingBlocks.isEmpty());
 	}
 
 	public Block[] getBuildingBlocks() {
@@ -81,10 +81,10 @@ public class GolemContainer {
 	@Nullable
 	public Block getPrimaryBuildingBlock() {
 		if(hasBuildingBlock()) {
-			if(this.validBuildingBlocks.size() > 0 && this.validBuildingBlocks.get(0) != null) {
+			if(!this.validBuildingBlocks.isEmpty() && this.validBuildingBlocks.get(0) != null) {
 				// get first block in list
 				return this.validBuildingBlocks.get(0);
-			} else if(this.validBuildingBlockTags.size() > 0 && this.validBuildingBlockTags.get(0) != null) {
+			} else if(!this.validBuildingBlockTags.isEmpty() && this.validBuildingBlockTags.get(0) != null) {
 				// get first tag in list and first block mapping in that tag
 				Block[] blocks = this.validBuildingBlockTags.get(0).getAllElements().toArray(new Block[0]);
 				return blocks.length > 0 ? blocks[0] : null;
@@ -96,7 +96,8 @@ public class GolemContainer {
 	/**
 	 * Allows additional blocks to be registered as "valid"
 	 * in order to build this golem. Useful especially for
-	 * add-ons.
+	 * add-ons. If you're using this in your mod to change your
+     * own golems, please use {@link GolemContainer.Builder#addBlocks(Block...)}
 	 * @param additional Block objects to register as "valid"
 	 * @return if the blocks were added successfully
 	 **/
@@ -107,7 +108,8 @@ public class GolemContainer {
 	/**
 	 * Allows additional Block Tags to be registered as "valid"
 	 * in order to build this golem. Useful especially for
-	 * add-ons.
+	 * add-ons. If you're using this in your mod to change your
+	 * own golems, please use {@link GolemContainer.Builder#addBlocks(Tag)} instead
 	 * @param additional Block Tag to register as "valid"
 	 * @return if the Block Tag was added successfully
 	 **/
@@ -262,7 +264,7 @@ public class GolemContainer {
 			for(GolemSpecialContainer c : containers) {
 				containerMap.put(c.name, c);
 			}
-			return new GolemContainer(entityType, golemName, validBuildingBlocks, 
+			return new GolemContainer(entityType, golemName, validBuildingBlocks,
 					validBuildingBlockTags, health, attack, speed, containerMap);
 		}
 	}

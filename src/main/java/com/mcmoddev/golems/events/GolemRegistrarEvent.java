@@ -1,5 +1,6 @@
 package com.mcmoddev.golems.events;
 
+import com.mcmoddev.golems.util.config.GolemContainer;
 import net.minecraftforge.eventbus.api.Event;
 
 /**
@@ -13,7 +14,7 @@ import net.minecraftforge.eventbus.api.Event;
  * golems and their render classes automatically, rather than
  * forcing the child mod to keep track of the golems it has added.
  * @see com.mcmoddev.golems.util.config.GolemRegistrar#registerGolem(Class, 
- * com.mcmoddev.golems.util.config.GolemContainer)
- * @see com.mcmoddev.golems.util.config.GolemContainer.Builder
+ * GolemContainer)
+ * @see GolemContainer.Builder
  **/
 public class GolemRegistrarEvent extends Event { }

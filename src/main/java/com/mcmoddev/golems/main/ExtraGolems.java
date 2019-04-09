@@ -28,6 +28,7 @@ import org.apache.logging.log4j.Logger;
 public class ExtraGolems {
 
 	public static final String MODID = "golems";
+
 	@SuppressWarnings("Convert2MethodRef")
 	//DO NOT USE METHOD REFERENCES. THESE ARE BAD! (according to gigaherz)
 	public static final ProxyCommon PROXY = DistExecutor.runForDist(() -> () -> new ProxyClient(),
@@ -48,6 +49,7 @@ public class ExtraGolems {
 	}
 
 	private void setup(final FMLCommonSetupEvent event) {
+		// Unused
 	}
 
 	private void enqueueIMC(final InterModEnqueueEvent event) {

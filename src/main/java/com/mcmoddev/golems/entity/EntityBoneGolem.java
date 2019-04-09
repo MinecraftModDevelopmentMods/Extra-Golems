@@ -18,7 +18,6 @@ public final class EntityBoneGolem extends GolemBase {
 	}
 
 	protected ResourceLocation applyTexture() {
-		//return makeGolemTexture("bone");
 		return makeTexture(ExtraGolems.MODID, GolemNames.BONE_GOLEM + "_skeleton");
 	}
 
