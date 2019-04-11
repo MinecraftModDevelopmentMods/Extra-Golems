@@ -1,9 +1,26 @@
 package com.mcmoddev.golems.events.handlers;
 
 
-import com.mcmoddev.golems.blocks.BlockGolemHead;
-import com.mcmoddev.golems.entity.base.GolemBase;
-import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
+import javax.annotation.Nullable;
+
+import com.golems.blocks.BlockGolemHead;
+import com.golems.entity.EntityBookshelfGolem;
+import com.golems.entity.EntityClayGolem;
+import com.golems.entity.EntityCraftingGolem;
+import com.golems.entity.EntityGlowstoneGolem;
+import com.golems.entity.EntityHardenedClayGolem;
+import com.golems.entity.EntityIceGolem;
+import com.golems.entity.EntityLeafGolem;
+import com.golems.entity.EntityObsidianGolem;
+import com.golems.entity.EntityQuartzGolem;
+import com.golems.entity.EntitySlimeGolem;
+import com.golems.entity.EntityStainedClayGolem;
+import com.golems.entity.EntityWoodenGolem;
+import com.golems.entity.EntityWoolGolem;
+import com.golems.entity.GolemBase;
+import com.golems.entity.GolemColorizedMultiTextured;
+import com.golems.entity.GolemMultiTextured;
+import com.golems.main.Config;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCarvedPumpkin;
@@ -25,6 +42,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.math.BlockPos;
+
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -41,7 +59,10 @@ public class GolemCommonEventHandler {
 		////// Spawn some basic golems in villages //////
 		// percent chance that each chunk will contain a golem
 		final int GOLEM_CHANCE = Config.getVillageGolemSpawnChance();
-		if(GOLEM_CHANCE > 0 && event.isHasVillageGenerated() && event.getRand().nextInt(100) < GOLEM_CHANCE) {
+		final int DIMID = event.getWorld().provider.getDimension();
+		if(DIMID == 0 && GOLEM_CHANCE > 0 && event.isHasVillageGenerated() 
+				&& event.getRand().nextInt(100) < GOLEM_CHANCE) {
+			// Make sure this is near a village and try to spawn a Golem
 			BlockPos pos = new BlockPos(event.getChunkX() * 16, 100, event.getChunkZ() * 16);
 			Village village = event.getWorld().villageCollection.getNearestVillage(pos, 32);
 			if(village != null) {
@@ -153,7 +174,67 @@ public class GolemCommonEventHandler {
 
 
 	/**
-	 * Basically, this handler allows pumpkins to be placed anywhere
+	 * This method makes a list of golems to pick from based on the biome passed,
+	 * then returns a random member of that list.
+	 * @param biome The biome that this golem is in.
+	 * @param rand the random number generator.
+	 * @return a Golem Class based on the biome and random chance. May be null.
+	 */
+	@Nullable
+	private static Class<? extends GolemBase> getGolemForBiome(final Biome biome, final Random rand) {
+		List<Class<? extends GolemBase>> options = new ArrayList();
+		
+		// the following will be added to the options in certain biomes:
+		if(biome instanceof BiomeDesert) {
+			// use the config to get desert-type golems
+			options.addAll(Config.getDesertGolems());
+		} else if(biome instanceof BiomePlains || biome instanceof BiomeSavanna
+				|| biome instanceof BiomeTaiga) {
+			// use the config to get plains-type golems
+			options.addAll(Config.getPlainsGolems());
+		} else if(biome instanceof BiomeMesa) {
+			// mesa-type golems
+			options.add(EntityHardenedClayGolem.class);
+			options.add(EntityStainedClayGolem.class);
+		} else if(biome instanceof BiomeJungle) {
+			// jungle-type golems
+			options.add(EntityWoodenGolem.class);
+			options.add(EntityLeafGolem.class);
+		} else if(biome instanceof BiomeSnow) {
+			// snow-type golems
+			options.add(EntityIceGolem.class);
+			options.add(EntityWoolGolem.class);
+			options.add(EntityQuartzGolem.class);
+		} else if(biome instanceof BiomeSwamp) {
+			// swamp-type golems
+			options.add(EntityWoodenGolem.class);
+			options.add(EntitySlimeGolem.class);
+			options.add(EntityLeafGolem.class);
+			options.add(EntityClayGolem.class);
+		}
+		// add some rare and semi-rare golems
+		final int clay = 3, crafting = 3, obsidian = 6, glowstone = 5, books = 4;
+		if(rand.nextInt(clay) == 0) {
+			options.add(EntityClayGolem.class);
+		}
+		if(rand.nextInt(crafting) == 0) {
+			options.add(EntityCraftingGolem.class);
+		}
+		if(rand.nextInt(obsidian) == 0) {
+			options.add(EntityObsidianGolem.class);
+		}
+		if(rand.nextInt(glowstone) == 0) {
+			options.add(EntityGlowstoneGolem.class);
+		}
+		if(rand.nextInt(books) == 0) {
+			options.add(EntityBookshelfGolem.class);
+		}
+		// choose a random golem from the list, or null
+		return options.isEmpty() ? null : options.get(rand.nextInt(options.size()));
+	}
+	
+	/**
+	 * Basically, this handler allows pumpkins to be placed anywhere 
 	 * (as long as it's done by a player). Then upon placement, we try
 	 * to spawn a golem based on the blocks the pumpkin is on.
 	 *
@@ -224,7 +305,7 @@ public class GolemCommonEventHandler {
 			}
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void onLivingSpawned(final EntityJoinWorldEvent event) {
 		// add custom 'attack golem' AI to hostile mobs. They already have this for regular iron golems
