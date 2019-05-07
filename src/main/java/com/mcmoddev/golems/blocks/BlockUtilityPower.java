@@ -1,29 +1,23 @@
 package com.mcmoddev.golems.blocks;
 
+import java.util.List;
+import java.util.Random;
+
 import com.mcmoddev.golems.entity.base.GolemBase;
-import com.mcmoddev.golems.entity.ai.EntityAIPlaceSingleBlock;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.ai.EntityAITasks.EntityAITaskEntry;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Fluids;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReaderBase;
 import net.minecraft.world.World;
-
-import java.util.List;
-import java.util.Random;
 
 public class BlockUtilityPower extends BlockUtility {
 	public static final IntegerProperty POWER_LEVEL = IntegerProperty.create("power", 0, 15);
-	private static final IBlockState REPLACE_WITH = Blocks.AIR.getDefaultState();
 	/* Default value for TICK_RATE. Not necessary to define through config. */
 	public static final int UPDATE_TICKS = 4;
 

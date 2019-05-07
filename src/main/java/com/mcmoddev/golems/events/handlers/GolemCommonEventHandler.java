@@ -1,30 +1,11 @@
 package com.mcmoddev.golems.events.handlers;
 
-
-import javax.annotation.Nullable;
-
-import com.golems.blocks.BlockGolemHead;
-import com.golems.entity.EntityBookshelfGolem;
-import com.golems.entity.EntityClayGolem;
-import com.golems.entity.EntityCraftingGolem;
-import com.golems.entity.EntityGlowstoneGolem;
-import com.golems.entity.EntityHardenedClayGolem;
-import com.golems.entity.EntityIceGolem;
-import com.golems.entity.EntityLeafGolem;
-import com.golems.entity.EntityObsidianGolem;
-import com.golems.entity.EntityQuartzGolem;
-import com.golems.entity.EntitySlimeGolem;
-import com.golems.entity.EntityStainedClayGolem;
-import com.golems.entity.EntityWoodenGolem;
-import com.golems.entity.EntityWoolGolem;
-import com.golems.entity.GolemBase;
-import com.golems.entity.GolemColorizedMultiTextured;
-import com.golems.entity.GolemMultiTextured;
-import com.golems.main.Config;
+import com.mcmoddev.golems.blocks.BlockGolemHead;
+import com.mcmoddev.golems.entity.base.*;
+import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCarvedPumpkin;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -42,7 +23,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.math.BlockPos;
-
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -90,29 +70,29 @@ public class GolemCommonEventHandler {
 		}
 	}
 	*/
-	private static BlockPos getSafeSpawnPos(final EntityLivingBase entity, final BlockPos near) {
-		final int radius = 6;
-		final int maxTries = 24;
-		BlockPos testing;
-		for(int i = 0; i < maxTries; i++) {
-			// get a random position near the passed BlockPos
-			int x = near.getX() + entity.getEntityWorld().rand.nextInt(radius * 2) - radius;
-			int z = near.getZ() + entity.getEntityWorld().rand.nextInt(radius * 2) - radius;
-			int y = 128;
-			testing = new BlockPos(x, y, z);
-			// make sure to end up with a solid block
-			while(entity.getEntityWorld().isAirBlock(testing) && testing.getY() > 0) {
-				testing = testing.down(1);
-			}
-			// check if golem can spawn there
-			IBlockState iblockstate = entity.getEntityWorld().getBlockState(testing);
-			if(iblockstate.canEntitySpawn(entity)) {
-				return testing.up(1);
-			}
-		}
-		
-		return null;
-	}
+//	private static BlockPos getSafeSpawnPos(final EntityLivingBase entity, final BlockPos near) {
+//		final int radius = 6;
+//		final int maxTries = 24;
+//		BlockPos testing;
+//		for(int i = 0; i < maxTries; i++) {
+//			// get a random position near the passed BlockPos
+//			int x = near.getX() + entity.getEntityWorld().rand.nextInt(radius * 2) - radius;
+//			int z = near.getZ() + entity.getEntityWorld().rand.nextInt(radius * 2) - radius;
+//			int y = 128;
+//			testing = new BlockPos(x, y, z);
+//			// make sure to end up with a solid block
+//			while(entity.getEntityWorld().isAirBlock(testing) && testing.getY() > 0) {
+//				testing = testing.down(1);
+//			}
+//			// check if golem can spawn there
+//			IBlockState iblockstate = entity.getEntityWorld().getBlockState(testing);
+//			if(iblockstate.canEntitySpawn(entity)) {
+//				return testing.up(1);
+//			}
+//		}
+//		
+//		return null;
+//	}
 	
 //	/**
 //	 * This method makes a list of golems to pick from based on the biome passed,
@@ -180,58 +160,58 @@ public class GolemCommonEventHandler {
 	 * @param rand the random number generator.
 	 * @return a Golem Class based on the biome and random chance. May be null.
 	 */
-	@Nullable
-	private static Class<? extends GolemBase> getGolemForBiome(final Biome biome, final Random rand) {
-		List<Class<? extends GolemBase>> options = new ArrayList();
-		
-		// the following will be added to the options in certain biomes:
-		if(biome instanceof BiomeDesert) {
-			// use the config to get desert-type golems
-			options.addAll(Config.getDesertGolems());
-		} else if(biome instanceof BiomePlains || biome instanceof BiomeSavanna
-				|| biome instanceof BiomeTaiga) {
-			// use the config to get plains-type golems
-			options.addAll(Config.getPlainsGolems());
-		} else if(biome instanceof BiomeMesa) {
-			// mesa-type golems
-			options.add(EntityHardenedClayGolem.class);
-			options.add(EntityStainedClayGolem.class);
-		} else if(biome instanceof BiomeJungle) {
-			// jungle-type golems
-			options.add(EntityWoodenGolem.class);
-			options.add(EntityLeafGolem.class);
-		} else if(biome instanceof BiomeSnow) {
-			// snow-type golems
-			options.add(EntityIceGolem.class);
-			options.add(EntityWoolGolem.class);
-			options.add(EntityQuartzGolem.class);
-		} else if(biome instanceof BiomeSwamp) {
-			// swamp-type golems
-			options.add(EntityWoodenGolem.class);
-			options.add(EntitySlimeGolem.class);
-			options.add(EntityLeafGolem.class);
-			options.add(EntityClayGolem.class);
-		}
-		// add some rare and semi-rare golems
-		final int clay = 3, crafting = 3, obsidian = 6, glowstone = 5, books = 4;
-		if(rand.nextInt(clay) == 0) {
-			options.add(EntityClayGolem.class);
-		}
-		if(rand.nextInt(crafting) == 0) {
-			options.add(EntityCraftingGolem.class);
-		}
-		if(rand.nextInt(obsidian) == 0) {
-			options.add(EntityObsidianGolem.class);
-		}
-		if(rand.nextInt(glowstone) == 0) {
-			options.add(EntityGlowstoneGolem.class);
-		}
-		if(rand.nextInt(books) == 0) {
-			options.add(EntityBookshelfGolem.class);
-		}
-		// choose a random golem from the list, or null
-		return options.isEmpty() ? null : options.get(rand.nextInt(options.size()));
-	}
+//	@Nullable
+//	private static Class<? extends GolemBase> getGolemForBiome(final Biome biome, final Random rand) {
+//		List<Class<? extends GolemBase>> options = new ArrayList();
+//		
+//		// the following will be added to the options in certain biomes:
+//		if(biome instanceof BiomeDesert) {
+//			// use the config to get desert-type golems
+//			options.addAll(Config.getDesertGolems());
+//		} else if(biome instanceof BiomePlains || biome instanceof BiomeSavanna
+//				|| biome instanceof BiomeTaiga) {
+//			// use the config to get plains-type golems
+//			options.addAll(Config.getPlainsGolems());
+//		} else if(biome instanceof BiomeMesa) {
+//			// mesa-type golems
+//			options.add(EntityHardenedClayGolem.class);
+//			options.add(EntityStainedClayGolem.class);
+//		} else if(biome instanceof BiomeJungle) {
+//			// jungle-type golems
+//			options.add(EntityWoodenGolem.class);
+//			options.add(EntityLeafGolem.class);
+//		} else if(biome instanceof BiomeSnow) {
+//			// snow-type golems
+//			options.add(EntityIceGolem.class);
+//			options.add(EntityWoolGolem.class);
+//			options.add(EntityQuartzGolem.class);
+//		} else if(biome instanceof BiomeSwamp) {
+//			// swamp-type golems
+//			options.add(EntityWoodenGolem.class);
+//			options.add(EntitySlimeGolem.class);
+//			options.add(EntityLeafGolem.class);
+//			options.add(EntityClayGolem.class);
+//		}
+//		// add some rare and semi-rare golems
+//		final int clay = 3, crafting = 3, obsidian = 6, glowstone = 5, books = 4;
+//		if(rand.nextInt(clay) == 0) {
+//			options.add(EntityClayGolem.class);
+//		}
+//		if(rand.nextInt(crafting) == 0) {
+//			options.add(EntityCraftingGolem.class);
+//		}
+//		if(rand.nextInt(obsidian) == 0) {
+//			options.add(EntityObsidianGolem.class);
+//		}
+//		if(rand.nextInt(glowstone) == 0) {
+//			options.add(EntityGlowstoneGolem.class);
+//		}
+//		if(rand.nextInt(books) == 0) {
+//			options.add(EntityBookshelfGolem.class);
+//		}
+//		// choose a random golem from the list, or null
+//		return options.isEmpty() ? null : options.get(rand.nextInt(options.size()));
+//	}
 	
 	/**
 	 * Basically, this handler allows pumpkins to be placed anywhere 
@@ -253,9 +233,8 @@ public class GolemCommonEventHandler {
 			if(heldBlock instanceof BlockCarvedPumpkin) {
 				//event.setCanceled(true);
 				// try to manually place the block
-				EnumActionResult result = EnumActionResult.PASS;
 				if (event.getUseItem() != net.minecraftforge.eventbus.api.Event.Result.DENY) {
-					result = stack.onItemUse(new ItemUseContext(event.getEntityPlayer(), stack, event.getPos(),
+					EnumActionResult result = stack.onItemUse(new ItemUseContext(event.getEntityPlayer(), stack, event.getPos(),
 							event.getFace(), (float) event.getHitVec().x, (float) event.getHitVec().y,
 							(float) event.getHitVec().z));
 					if (result == EnumActionResult.SUCCESS) {
@@ -278,30 +257,6 @@ public class GolemCommonEventHandler {
 						}
 					}
 				}
-				
-//				float hitX = (float) event.getHitVec().x;
-//				float hitY = (float) event.getHitVec().y;
-//				float hitZ = (float) event.getHitVec().z;
-//				BlockPos pumpkinPos = event.getPos();
-//				IBlockState clicked = event.getWorld().getBlockState(pumpkinPos);
-//				if (!clicked.isReplaceable(
-//						new BlockItemUseContext(event.getWorld(), event.getEntityPlayer(), stack, pumpkinPos, event.getFace(), hitX, hitY, hitZ))) {
-//		            pumpkinPos = pumpkinPos.offset(event.getFace());
-//				}
-//				// now we're ready to place the block
-//				if(event.getEntityPlayer().canPlayerEdit(pumpkinPos, event.getFace(), stack)) {
-//					IBlockState pumpkin = heldBlock.getDefaultState().with(BlockHorizontal.HORIZONTAL_FACING,
-//							event.getEntityPlayer().getHorizontalFacing().getOpposite());
-//					// set block and trigger golem-checking
-//					if(event.getWorld().setBlockState(pumpkinPos, pumpkin)) {
-//						event.setCanceled(true);
-//						BlockGolemHead.trySpawnGolem(event.getWorld(), pumpkinPos);
-//						// reduce itemstack
-//						if(!event.getEntityPlayer().isCreative()) {
-//							event.getItemStack().shrink(1);
-//						}
-//					}
-//				}
 			}
 		}
 	}

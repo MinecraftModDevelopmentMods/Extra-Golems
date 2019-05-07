@@ -141,7 +141,7 @@ public class EntityTNTGolem extends GolemBase {
 	public boolean attackEntityAsMob(final Entity entity) {
 		boolean flag = super.attackEntityAsMob(entity);
 
-		if (flag && !entity.removed && rand.nextInt(100) < this.chanceToExplodeWhenAttacking
+		if (flag && entity.isAlive() && rand.nextInt(100) < this.chanceToExplodeWhenAttacking
 			&& this.getDistanceSq(entity) <= this.minExplosionRad * this.minExplosionRad) {
 			this.ignite();
 		}

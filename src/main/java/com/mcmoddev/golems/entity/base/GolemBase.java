@@ -227,8 +227,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 			float adjusted = amount;
 			if (this.isPotionActive(MobEffects.LUCK)) {
 				adjusted *= 0.89F;
-			}
-			else if (this.isPotionActive(MobEffects.UNLUCK)) {
+			} else if (this.isPotionActive(MobEffects.UNLUCK)) {
 				adjusted *= 1.25F;
 			}
 			super.damageEntity(source, adjusted);
@@ -244,11 +243,9 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 		// try to increase damage if random critical chance succeeds
 		if (this.isPotionActive(MobEffects.LUCK)) {
 			multiplier += 0.5F * this.criticalModifier;
-		}
-		else if (this.isPotionActive(MobEffects.UNLUCK)) {
+		} else if (this.isPotionActive(MobEffects.UNLUCK)) {
 			multiplier -= 0.65F;
-		}
-		else if (rand.nextInt(100) < this.criticalChance) {
+		} else if (rand.nextInt(100) < this.criticalChance) {
 			multiplier = this.criticalModifier;
 		}
 		

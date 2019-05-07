@@ -1,18 +1,21 @@
 package com.mcmoddev.golems.util.config;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
 import com.mcmoddev.golems.util.config.special.GolemSpecialSection;
-import net.minecraftforge.common.ForgeConfigSpec;
 
-import java.util.HashMap;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 /**
  * Adapted from BetterAnimalsPlus by its_meow. Used with permission.
  */
 public class GolemConfiguration {
 
-	public HashMap<GolemContainer, GolemConfigurationSection> sections = new HashMap<>();
-	public HashMap<GolemSpecialContainer, GolemSpecialSection> specials = new HashMap<>();
+	public Map<GolemContainer, GolemConfigurationSection> sections = new HashMap<>();
+	public Map<GolemSpecialContainer, GolemSpecialSection> specials = new HashMap<>();
 	
 	public ForgeConfigSpec.BooleanValue bedrockGolemCreativeOnly;
 	public ForgeConfigSpec.BooleanValue pumpkinBuildsGolem;
@@ -55,8 +58,9 @@ public class GolemConfiguration {
 	 * Call on world load. Refills all containers with config values
 	 */
 	public void loadData() {
-		for(GolemContainer c : this.sections.keySet()) {
-			GolemConfigurationSection section = this.sections.get(c);
+		for(Entry<GolemContainer, GolemConfigurationSection> e : this.sections.entrySet()) {
+			GolemContainer c = e.getKey();
+			GolemConfigurationSection section = e.getValue();
 			c.setAttack(section.attack.get());
 			c.setHealth(section.health.get());
 

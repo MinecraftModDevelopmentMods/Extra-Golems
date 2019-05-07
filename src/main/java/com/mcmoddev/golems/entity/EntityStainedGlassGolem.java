@@ -26,8 +26,7 @@ public final class EntityStainedGlassGolem extends GolemMultiColorized {
 	public EntityStainedGlassGolem(final World world) {
 		super(EntityStainedGlassGolem.class, world, TEXTURE_BASE, TEXTURE_OVERLAY, dyeColorArray);
 		this.setCanTakeFallDamage(true);
-	this.setLootTableLoc(GolemNames.STAINEDGLASS_GOLEM);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
+		this.setLootTableLoc(GolemNames.STAINEDGLASS_GOLEM);
 	}
 
 	/**

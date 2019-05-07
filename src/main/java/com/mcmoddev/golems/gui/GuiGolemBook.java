@@ -74,19 +74,22 @@ public class GuiGolemBook extends GuiScreen {
 	protected static final ResourceLocation CONTENTS = new ResourceLocation(ExtraGolems.MODID, "textures/gui/info_book_contents.png");
 
 	// book texture has these dimensions
-	protected static final int BOOK_HEIGHT = 164, BOOK_WIDTH = 256;
+	protected static final int BOOK_HEIGHT = 164;
+	protected static final int BOOK_WIDTH = 256;
 	// icons are this many pixels apart in the textures
 	protected static final int DEF_SEP = 5;
 
 	// how far down the Minecraft screen the book starts
 	protected static final int SCR_OFFSET_Y = 16;
 	// width of the arrow button and its texture
-	protected static final int ARROW_WIDTH = 13 + DEF_SEP, ARROW_HEIGHT = 10 + DEF_SEP;
+	protected static final int ARROW_WIDTH = 13 + DEF_SEP;
+	protected static final int ARROW_HEIGHT = 10 + DEF_SEP;
 	/** 
 	 * size of the supplemental (optional) image for each golem. 
 	 * As long as it's a 2:1 ratio, it'll work 
 	 **/
-	protected static final int SUPP_WIDTH = 100, SUPP_HEIGHT = 50;
+	protected static final int SUPP_WIDTH = 100;
+	protected static final int SUPP_HEIGHT = 50;
 
 	// Button to exit GUI
 	private GuiButton buttonDone;
@@ -182,7 +185,8 @@ public class GuiGolemBook extends GuiScreen {
     	final int idBlockRight = 4;
     	final int idTableContents = 5;
     	// add the "close gui" button
-    	int doneW = 98, doneH = 20;
+    	int doneW = 98;
+    	int doneH = 20;
     	int doneX = (this.width - doneW) / 2;
     	int doneY = BOOK_HEIGHT + SCR_OFFSET_Y + 8;
     	this.buttonDone = this.addButton(new GuiButton(idDone, doneX, doneY, doneW, doneH, I18n.format("gui.done") ) {
@@ -259,9 +263,11 @@ public class GuiGolemBook extends GuiScreen {
 		// draw the page number
 		this.drawPageNum(cornerX, cornerY, pageNum + 1);
 		// declare these for the following switch statement
-		String title, body;
+		String title;
+		String body;
 		float scale;
-		int startX, startY;
+		int startX;
+		int startY;
 		// using the page number, decides which page to draw and how to draw it
 		switch (pageNum) {
 			case 0:
@@ -442,7 +448,8 @@ public class GuiGolemBook extends GuiScreen {
     	final int frameWidth = 3;
     	final float scale = 1.0F;
     	/** texture location and size of 2x2 crafting **/
-    	final int gridW = 84, gridH = 46;
+    	final int gridW = 84;
+    	final int gridH = 46;
     	GlStateManager.pushMatrix();
     	GlStateManager.scalef(scale, scale, scale);
     	GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -453,7 +460,8 @@ public class GuiGolemBook extends GuiScreen {
     	// draw itemstacks
     	GlStateManager.enableRescaleNormal();
     	RenderHelper.enableGUIStandardItemLighting();
-    	float posX, posY;
+    	float posX;
+    	float posY;
     	int iconW = 15;
     	switch(ingredients.length) {
     	// intentional omission of break statements
@@ -537,11 +545,15 @@ public class GuiGolemBook extends GuiScreen {
 		if(isPageGolemEntry(this.curPage, this.totalPages)) {
 			this.buttonBlockLeft.visible = true;
 			this.buttonBlockLeft.updateBlocks(getGolemEntryForPage(this.curPage).getBlocks());
-		} else this.buttonBlockLeft.visible = false;
+		} else {
+			this.buttonBlockLeft.visible = false;
+		}
 		if(isPageGolemEntry(this.curPage + 1, this.totalPages)) {
 			this.buttonBlockRight.visible = true;
 			this.buttonBlockRight.updateBlocks(getGolemEntryForPage(this.curPage + 1).getBlocks());
-		} else this.buttonBlockRight.visible = false;
+		} else {
+			this.buttonBlockRight.visible = false;
+		}
 	}
 	
 	private static boolean isMouseOverScroll(final int mouseX, final int mouseY, final int width) {
@@ -658,6 +670,7 @@ public class GuiGolemBook extends GuiScreen {
 			this.entry = toSet;
 		}
 		
+		@Override
 		public void onClick(double mouseX, double mouseY) {
 			int index = GOLEMS.indexOf(this.entry);
 			if(index >= 0 && index <= GOLEMS.size()) {
