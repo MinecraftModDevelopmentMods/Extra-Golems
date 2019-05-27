@@ -3,6 +3,7 @@ package com.mcmoddev.golems.gui;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
+import com.mcmoddev.golems.util.BlockTagUtil;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -158,7 +159,7 @@ public class GuiGolemBook extends GuiScreen {
 	 * Populates the GolemEntry list to use in book gui
 	 **/
 	private static final void initGolemBookEntries() {
-		GOLEMS.clear();
+		GOLEMS.clear();	
 		for (GolemBase golem : ExtraGolems.PROXY.DUMMY_GOLEMS) {
 			if(GolemRegistrar.getContainer(golem.getClass()).isEnabled()) {
 				GOLEMS.add(new GolemBookEntry(golem));

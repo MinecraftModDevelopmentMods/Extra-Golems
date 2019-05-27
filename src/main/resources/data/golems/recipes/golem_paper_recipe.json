@@ -1,8 +1,5 @@
 {
-  "result": {
-    "item": "golems:golem_paper"
-  },
-  "type": "forge:ore_shapeless",
+  "type": "crafting_shapeless",
   "ingredients": [
     {
       "item": "minecraft:feather"
@@ -14,8 +11,10 @@
       "item": "minecraft:paper"
     },
     {
-      "type": "forge:ore_dict",
-      "ore": "dyeBlack"
+      "item": "minecraft:ink_sac"
     }
-  ]
+  ],
+  "result": {
+    "item": "golems:golem_paper"
+  }
 }

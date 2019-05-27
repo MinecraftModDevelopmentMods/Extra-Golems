@@ -1,6 +1,7 @@
 package com.mcmoddev.golems.entity.base;
 
 import com.mcmoddev.golems.main.ExtraGolems;
+import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.entity.player.EntityPlayer;
@@ -63,13 +64,13 @@ public abstract class GolemMultiColorized extends GolemColorized {
 	public boolean processInteract(final EntityPlayer player, final EnumHand hand) {
 		final ItemStack stack = player.getHeldItem(hand);
 		// only change texture when player has empty hand
-		if (!stack.isEmpty()) {
-			return super.processInteract(player, hand);
-		} else {
+		if (stack.isEmpty() && this.canInteractChangeTexture()) {
 			final int incremented = (this.getTextureNum() + 1) % this.getColorArray().length;
 			this.setTextureNum((byte) incremented);
 			player.swingArm(hand);
 			return true;
+		} else {
+			return super.processInteract(player, hand);
 		}
 	}
 	
@@ -105,7 +106,7 @@ public abstract class GolemMultiColorized extends GolemColorized {
 
 	@Override
 	public boolean canInteractChangeTexture() {
-		return false;
+		return ExtraGolemsConfig.enableTextureInteract();
 	}
 	
 	@Override

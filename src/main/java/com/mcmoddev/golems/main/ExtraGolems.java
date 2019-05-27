@@ -1,9 +1,13 @@
 package com.mcmoddev.golems.main;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.mcmoddev.golems.events.handlers.GolemCommonEventHandler;
 import com.mcmoddev.golems.proxies.ProxyClient;
 import com.mcmoddev.golems.proxies.ProxyCommon;
 import com.mcmoddev.golems.proxies.ProxyServer;
+import com.mcmoddev.golems.util.BlockTagUtil;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 
 import net.minecraft.block.Block;
@@ -20,8 +24,6 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 @Mod(ExtraGolems.MODID)
 @Mod.EventBusSubscriber(modid = ExtraGolems.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -42,7 +44,7 @@ public class ExtraGolems {
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
 		MinecraftForge.EVENT_BUS.register(new GolemCommonEventHandler());
 
-
+		BlockTagUtil.loadTags();
 		ExtraGolemsEntities.initEntityTypes();
 		ExtraGolemsConfig.setupConfig();
 		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER /*world*/, ExtraGolemsConfig.SERVER_CONFIG);
@@ -50,6 +52,8 @@ public class ExtraGolems {
 
 	private void setup(final FMLCommonSetupEvent event) {
 		// Unused
+		System.out.println("THIS IS A TEST");
+		ExtraGolems.PROXY.registerListeners();
 	}
 
 	private void enqueueIMC(final InterModEnqueueEvent event) {
@@ -74,13 +78,6 @@ public class ExtraGolems {
 		ExtraGolems.LOGGER.info("registerBlocks");
 		ExtraGolems.PROXY.registerBlocks(event);
 	}
-
-	@SubscribeEvent
-	public static void registerModels(final ModelRegistryEvent event) {
-		ExtraGolems.LOGGER.info("registerModels");
-		ExtraGolems.PROXY.registerModels();
-	}
-
 	
 //	@Mod.EventHandler
 //	public static void init(final FMLInitializationEvent event) {

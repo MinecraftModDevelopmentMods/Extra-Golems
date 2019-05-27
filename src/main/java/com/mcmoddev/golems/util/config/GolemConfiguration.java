@@ -20,6 +20,7 @@ public class GolemConfiguration {
 	public ForgeConfigSpec.BooleanValue bedrockGolemCreativeOnly;
 	public ForgeConfigSpec.BooleanValue pumpkinBuildsGolem;
 	public ForgeConfigSpec.BooleanValue enableFriendlyFire;
+	public ForgeConfigSpec.BooleanValue enableTextureInteract;
 
 // TODO implement the following config values
 //		villageGolemSpawnsDesert = config.getStringList("Desert Village Golem Spawns", CATEGORY_OTHER, villageGolemSpawnsDesert,
@@ -39,6 +40,8 @@ public class GolemConfiguration {
 				.define("pumpkin_builds_golems", false);
 		this.enableFriendlyFire = builder.comment("When enabled, attacking a player-built golem will make it attack you")
 				.define("friendly_fire", true);
+		this.enableTextureInteract = builder.comment("When enabled, some golems will change their texture when clicked")
+				.define("texture_interact", false);
 		
 		builder.pop();
 		

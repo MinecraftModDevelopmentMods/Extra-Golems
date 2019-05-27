@@ -1,15 +1,19 @@
 package com.mcmoddev.golems.util.config;
 
+import com.google.common.base.Predicates;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -20,7 +24,7 @@ import javax.annotation.Nullable;
 public class GolemContainer {
 
 	private final List<Block> validBuildingBlocks;
-	private final List<Tag<Block>> validBuildingBlockTags;
+	private final List<ResourceLocation> validBuildingBlockTags;
 	public final EntityType<GolemBase> entityType;
 	private String name;
 	private double health;
@@ -31,7 +35,7 @@ public class GolemContainer {
 	public Map<String, GolemSpecialContainer> specialContainers;
 
 	private GolemContainer(final EntityType<GolemBase> lEntityType, final String lPath,
-						   final List<Block> lValidBuildingBlocks, final List<Tag<Block>> lValidBuildingBlockTags,
+						   final List<Block> lValidBuildingBlocks, final List<ResourceLocation> lValidBuildingBlockTags,
 						   final double lHealth, final double lAttack, final double lSpeed,
 						   final HashMap<String, GolemSpecialContainer> lSpecialContainers) {
 		this.entityType = lEntityType;
@@ -45,14 +49,14 @@ public class GolemContainer {
 	}
 
 	public boolean hasBuildingBlock() {
-		return !(this.validBuildingBlocks.isEmpty());
+		return !this.validBuildingBlocks.isEmpty() || !this.validBuildingBlockTags.isEmpty();
 	}
 
 	public Block[] getBuildingBlocks() {
 		// make set of all blocks including tags (run-time only)
 		Set<Block> blocks = new HashSet<>();
 		blocks.addAll(validBuildingBlocks);
-		for(Tag<Block> tag : this.validBuildingBlockTags) {
+		for(final Tag<Block> tag : loadTags(validBuildingBlockTags)) {
 			blocks.addAll(tag.getAllElements());
 		}
 		return blocks.toArray(new Block[0]);
@@ -65,7 +69,7 @@ public class GolemContainer {
 			return true;
 		}
 		// if the block is present in any of the tags
-		for(Tag<Block> tag : this.validBuildingBlockTags) {
+		for(final Tag<Block> tag : loadTags(validBuildingBlockTags)) {
 			if(b.isIn(tag)) {
 				return true;
 			}
@@ -86,7 +90,7 @@ public class GolemContainer {
 				return this.validBuildingBlocks.get(0);
 			} else if(!this.validBuildingBlockTags.isEmpty() && this.validBuildingBlockTags.get(0) != null) {
 				// get first tag in list and first block mapping in that tag
-				Block[] blocks = this.validBuildingBlockTags.get(0).getAllElements().toArray(new Block[0]);
+				Block[] blocks = BlockTags.getCollection().get(this.validBuildingBlockTags.get(0)).getAllElements().toArray(new Block[0]);
 				return blocks.length > 0 ? blocks[0] : null;
 			}
 		}
@@ -114,7 +118,13 @@ public class GolemContainer {
 	 * @return if the Block Tag was added successfully
 	 **/
 	public boolean addBlocks(@Nonnull final Tag<Block> additional) {
-		return this.validBuildingBlockTags.add(additional);
+		return this.validBuildingBlockTags.add(additional.getId());
+	}
+	
+	private static Collection<Tag<Block>> loadTags(final Collection<ResourceLocation> rls) {
+		final Collection<Tag<Block>> tags = new HashSet<>();
+		rls.forEach(rl -> tags.add(BlockTags.getCollection().get(rl)));
+		return tags;
 	}
 	
 	////////// SETTERS //////////
@@ -145,7 +155,7 @@ public class GolemContainer {
 		//This is a list to allow determining the "priority" of golem blocks. This could be used to our
 		//advantage in golem building logic for conflicts in the future.
 		private List<Block> validBuildingBlocks = new ArrayList<>();
-		private List<Tag<Block>> validBuildingBlockTags = new ArrayList<>();
+		private List<ResourceLocation> validBuildingBlockTags = new ArrayList<>();
 		private List<GolemSpecialContainer> containers = new ArrayList<>();
 
 		/**
@@ -226,7 +236,7 @@ public class GolemContainer {
 		 * @see #addBlocks(Block[])
 		 */
 		public Builder addBlocks(final Tag<Block> blockTag) {
-			this.validBuildingBlockTags.add(blockTag);
+			this.validBuildingBlockTags.add(blockTag.getId());
 			return this;
 		}
 

@@ -41,4 +41,8 @@ public class ExtraGolemsConfig {
 	public static boolean enableFriendlyFire() {
 		return GOLEM_CONFIG != null && GOLEM_CONFIG.enableFriendlyFire.get();
 	}
+	
+	public static boolean enableTextureInteract() {
+		return GOLEM_CONFIG != null && GOLEM_CONFIG.enableTextureInteract.get();
+	}
 }

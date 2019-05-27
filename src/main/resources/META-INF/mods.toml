@@ -22,7 +22,7 @@ logoFile="golem_logo.png"
     [[dependencies.golems]]
         modId="forge"
         mandatory=true
-        versionRange="[25.0.110,)"
+        versionRange="[25.0.215,)"
         ordering="NONE"
         side="BOTH"
     [[dependencies.examplemod]]

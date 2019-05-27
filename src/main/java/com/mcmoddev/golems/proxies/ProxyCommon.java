@@ -42,9 +42,9 @@ public class ProxyCommon {
 	 **/
 	public final List<GolemBase> DUMMY_GOLEMS = new LinkedList<>();
 	
+	public void registerListeners() { }
+	
 	public void registerEntityRenders() { }
-
-	public void registerModels() { }
 	
 	public void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
 		// Register Golem EntityEntries as well as building blocks

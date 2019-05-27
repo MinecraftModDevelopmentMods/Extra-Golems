@@ -2,14 +2,15 @@ package com.mcmoddev.golems.proxies;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemColorized;
-import com.mcmoddev.golems.main.GolemItems;
+import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.renders.RenderColoredGolem;
 import com.mcmoddev.golems.renders.RenderGolem;
+import com.mcmoddev.golems.util.BlockTagUtil;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
 
-import net.minecraft.client.renderer.model.ModelResourceLocation;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.IReloadableResourceManager;
+import net.minecraft.resources.IResourceManager;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
@@ -20,21 +21,19 @@ public final class ProxyClient extends ProxyCommon {
 	public static final IRenderFactory<GolemColorized> FACTORY_COLORED_GOLEM = RenderColoredGolem::new;
 	
 	@Override
+	public void registerListeners() {
+		final IResourceManager irr = Minecraft.getInstance().getResourceManager();
+		if(irr instanceof IReloadableResourceManager) {
+			((IReloadableResourceManager) irr).addReloadListener(l -> {
+				BlockTagUtil.loadTags();
+				ExtraGolems.LOGGER.info("Reloaded Listener activated! Loading block tags...");
+			});
+		}
+	}
+	
+	@Override
 	public void registerEntityRenders() {
 		GolemRegistrar.getContainers().forEach(container -> registerEntityRender(container.entityType.getEntityClass()));
-	}
-
-	@Override
-	public void registerModels() {
-		// itemblocks
-//		registerRender(Item.getItemFromBlock(GolemItems.golemHead),
-//			Blocks.CARVED_PUMPKIN.getRegistryName().toString());
-		// items
-//		registerRender(GolemItems.golemPaper);
-//		registerRender(GolemItems.spawnBedrockGolem);
-//		registerRender(GolemItems.infoBook);
-
-		
 	}
 
 	/** 
@@ -62,18 +61,4 @@ public final class ProxyClient extends ProxyCommon {
 	public static void registerColorized(final Class<? extends GolemColorized> golem) {
 		RenderingRegistry.registerEntityRenderingHandler(golem, FACTORY_COLORED_GOLEM);
 	}
-
-//	private static void registerRender(final Item i, final String name, int... meta) {
-//		if (meta.length < 1) {
-//			meta = new int[]{0};
-//		}
-//		final ModelResourceLocation mrl = new ModelResourceLocation(name, "inventory");
-//		for (final int m : meta) {
-//			//ModelLoader.setCustomModelResourceLocation(i, m, mrl);
-//		}
-//	}
-//
-//	private static void registerRender(final Item i, final int... meta) {
-//		registerRender(i, i.getRegistryName().toString(), meta);
-//	}
 }
