@@ -16,7 +16,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
@@ -99,13 +98,5 @@ public final class EntityIceGolem extends GolemBase {
 			flag &= this.world.setBlockState(pos, function.apply(this.world.getBlockState(pos)), updateFlag);
 		}
 		return flag;
-	}
-
-	@Override
-	public List<String> addSpecialDesc(final List<String> list) {
-		if (this.getConfigInt(AOE) > 0) {
-			list.add(TextFormatting.AQUA + trans("entitytip.freezes_blocks"));
-		}
-		return list;
 	}
 }

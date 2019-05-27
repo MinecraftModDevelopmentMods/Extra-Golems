@@ -1,3 +1,4 @@
+package com.mcmoddev.golems.integration;
 //package com.golems.integration.theoneprobe;
 //
 //import GolemBase;

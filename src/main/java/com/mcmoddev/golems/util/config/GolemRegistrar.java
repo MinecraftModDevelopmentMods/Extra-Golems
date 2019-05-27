@@ -21,8 +21,8 @@ public final class GolemRegistrar {
 		//
 	}
 
-	public static void registerGolem(Class<? extends GolemBase> clazz, GolemContainer container) {
-		golemList.put(clazz, container);
+	public static void registerGolem(GolemContainer container) {
+		golemList.put(container.getEntityType().getEntityClass(), container);
 	}
 
 	public static GolemContainer getContainer(Class<? extends GolemBase> clazz) {

@@ -1,7 +1,5 @@
 package com.mcmoddev.golems.entity;
 
-import java.util.List;
-
 import com.mcmoddev.golems.blocks.BlockUtilityGlow;
 import com.mcmoddev.golems.entity.ai.EntityAIPlaceSingleBlock;
 import com.mcmoddev.golems.entity.base.GolemBase;
@@ -13,7 +11,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -34,7 +31,7 @@ public final class EntityGlowstoneGolem extends GolemBase {
 		this.brightness = 1.0F;
 		final IBlockState state = GolemItems.blockLightSource.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, lightInt);
 		this.tasks.addTask(9, new EntityAIPlaceSingleBlock(this, state, BlockUtilityGlow.UPDATE_TICKS, this.getConfigBool(ALLOW_SPECIAL)));
-		this.isImmuneToFire = true;
+		this.setImmuneToFire(true);
 		this.setCanTakeFallDamage(true);
 		this.setCanSwim(true);
 		this.setLootTableLoc(GolemNames.GLOWSTONE_GOLEM);
@@ -69,14 +66,5 @@ public final class EntityGlowstoneGolem extends GolemBase {
 	@Override
 	public float getBrightness() {
 		return this.brightness;
-	}
-
-	@Override
-	public List<String> addSpecialDesc(final List<String> list) {
-		// does not fire for child classes
-		if (this.getClass() == EntityGlowstoneGolem.class && this.getConfigBool(ALLOW_SPECIAL)) {
-			list.add(TextFormatting.RED + trans("entitytip.lights_area"));
-		}
-		return list;
 	}
 }

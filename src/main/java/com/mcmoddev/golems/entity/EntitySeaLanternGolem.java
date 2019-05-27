@@ -1,6 +1,5 @@
 package com.mcmoddev.golems.entity;
 
-import java.util.List;
 import java.util.function.Predicate;
 
 import com.mcmoddev.golems.blocks.BlockUtility;
@@ -19,7 +18,6 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -84,14 +82,5 @@ public final class EntitySeaLanternGolem extends GolemBase {
 	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_GLASS_STEP;
-	}
-
-	@Override
-	public List<String> addSpecialDesc(final List<String> list) {
-		if (this.getConfigBool(ALLOW_SPECIAL)) {
-			list.add(TextFormatting.GOLD + trans("entitytip.lights_area"));
-		}
-		list.add(TextFormatting.AQUA + trans("entitytip.breathes_underwater"));
-		return list;
 	}
 }

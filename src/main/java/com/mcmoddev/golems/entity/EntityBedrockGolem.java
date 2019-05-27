@@ -1,7 +1,5 @@
 package com.mcmoddev.golems.entity;
 
-import java.util.List;
-
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.items.ItemBedrockGolem;
 import com.mcmoddev.golems.main.ExtraGolems;
@@ -17,7 +15,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -77,13 +74,6 @@ public final class EntityBedrockGolem extends GolemBase {
 	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_STONE_STEP;
-	}
-	
-	@Override
-	public List<String> addSpecialDesc(final List<String> list) {
-		list.add(TextFormatting.WHITE + "" + TextFormatting.BOLD + trans("entitytip.indestructible"));
-		list.add(TextFormatting.DARK_RED + trans("tooltip.creative_only_item"));
-		return list;
 	}
 	
 	@Override

@@ -43,7 +43,7 @@ public class ExtraGolems {
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
 		MinecraftForge.EVENT_BUS.register(new GolemCommonEventHandler());
-
+		ExtraGolems.PROXY.registerListeners();
 		BlockTagUtil.loadTags();
 		ExtraGolemsEntities.initEntityTypes();
 		ExtraGolemsConfig.setupConfig();
@@ -51,9 +51,7 @@ public class ExtraGolems {
 	}
 
 	private void setup(final FMLCommonSetupEvent event) {
-		// Unused
-		System.out.println("THIS IS A TEST");
-		ExtraGolems.PROXY.registerListeners();
+		
 	}
 
 	private void enqueueIMC(final InterModEnqueueEvent event) {

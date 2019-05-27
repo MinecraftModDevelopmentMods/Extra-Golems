@@ -1,9 +1,8 @@
 package com.mcmoddev.golems.gui;
 
-import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
-import com.mcmoddev.golems.util.BlockTagUtil;
+import com.mcmoddev.golems.util.config.GolemContainer;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -110,8 +109,6 @@ public class GuiGolemBook extends GuiScreen {
     
     public static final List<GolemBookEntry> GOLEMS = new ArrayList<>();
     private static final List<GolemBookEntry> ALPHABETICAL = new ArrayList<>();
-	private final EntityPlayer player;
-	private final ItemStack book;
     
     private static final float GOLEM_BLOCK_SCALE = 1.60F;
     private static final int MARGIN = 12;
@@ -145,8 +142,6 @@ public class GuiGolemBook extends GuiScreen {
 		if (GOLEMS.isEmpty()) {
 			initGolemBookEntries();
 		}
-		this.player = playerIn;
-		this.book = itemIn;
 		this.curPage = 0;
 		this.totalPages = NUM_PAGES_INTRO + GOLEMS.size();
 		this.currentScroll = 0;
@@ -160,18 +155,18 @@ public class GuiGolemBook extends GuiScreen {
 	 **/
 	private static final void initGolemBookEntries() {
 		GOLEMS.clear();	
-		for (GolemBase golem : ExtraGolems.PROXY.DUMMY_GOLEMS) {
-			if(GolemRegistrar.getContainer(golem.getClass()).isEnabled()) {
-				GOLEMS.add(new GolemBookEntry(golem));
+		for (GolemContainer container : GolemRegistrar.getContainers()) {
+			if(container.isEnabled()) {
+				GOLEMS.add(new GolemBookEntry(container));
 			}
 		}
 		// sort golems by attack power
-		Collections.sort(GOLEMS, (GolemBookEntry g1, GolemBookEntry g2) -> Float.compare(g1.getAttack(), g2.getAttack()));
+		Collections.sort(GOLEMS, (g1, g2) -> Float.compare(g1.getAttack(), g2.getAttack()));
 
 		// make and sort alphabetical list
 		ALPHABETICAL.clear();
 		ALPHABETICAL.addAll(GOLEMS);
-		Collections.sort(ALPHABETICAL, (GolemBookEntry g1, GolemBookEntry g2) -> g1.getGolemName().compareTo(g2.getGolemName()));
+		Collections.sort(ALPHABETICAL, (g1, g2) -> g1.getGolemName().compareTo(g2.getGolemName()));
 	}
 
 	@Override

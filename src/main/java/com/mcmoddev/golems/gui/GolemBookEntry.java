@@ -1,16 +1,18 @@
 package com.mcmoddev.golems.gui;
 
 import com.mcmoddev.golems.entity.EntityBedrockGolem;
-import com.mcmoddev.golems.entity.base.GolemBase;
+import com.mcmoddev.golems.entity.base.GolemMultiColorized;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.util.config.GolemRegistrar;
+import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
+import com.mcmoddev.golems.util.config.GolemContainer;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityType;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nonnull;
@@ -29,23 +31,25 @@ public class GolemBookEntry {
 	private final String GOLEM_NAME;
 	private ResourceLocation IMAGE = null;
 	private final boolean MULTI_TEXTURE;
-	private final boolean FIREPROOF;
+	private final boolean FIREPROOF = false; // TODO
 	private final int HEALTH;
 	private final float ATTACK;
-	private final List<String> SPECIALS;
+	private final List<ITextComponent> SPECIALS = new ArrayList<>();
 
-	public GolemBookEntry(@Nonnull GolemBase golem) {
+	public GolemBookEntry(@Nonnull GolemContainer container) {
 		// initialize fields based on golem attributes
-		EntityType<?> golemType = GolemRegistrar.getContainer(golem.getClass()).entityType;
+		final EntityType<?> golemType = container.entityType;
 		this.GOLEM_NAME = golemType.getTranslationKey();
-		this.MULTI_TEXTURE = (golem instanceof GolemMultiTextured || golem.canInteractChangeTexture());
-		this.FIREPROOF = (golem.isImmuneToFire() && !(golem instanceof EntityBedrockGolem));
-		this.HEALTH = (int) golem.getMaxHealth();
-		this.ATTACK = golem.getBaseAttackDamage();
-		this.SPECIALS = golem.addSpecialDesc(new ArrayList<String>());
+		this.MULTI_TEXTURE = ExtraGolemsConfig.enableTextureInteract()
+				&& (GolemMultiTextured.class.isAssignableFrom(golemType.getEntityClass()) 
+					|| GolemMultiColorized.class.isAssignableFrom(golemType.getEntityClass()));
+		//this.FIREPROOF = (container.isImmuneToFire() && !(golem instanceof EntityBedrockGolem));
+		this.HEALTH = (int) container.getHealth();
+		this.ATTACK = (float) container.getAttack();
+		container.addDescription(SPECIALS);
 
 		// set the block and block name if it exists
-		this.BLOCKS = GolemRegistrar.getContainer(golem.getClass()).getBuildingBlocks();
+		this.BLOCKS = container.getBuildingBlocks();
 		
 		// find the image to add to the book
 		String img = (ExtraGolems.MODID + ":textures/gui/screenshots/").concat(golemType.getRegistryName().getPath()).concat(".png");
@@ -158,8 +162,8 @@ public class GolemBookEntry {
 			page.append("\n" + TextFormatting.BLUE + trans("entitytip.click_change_texture"));
 		}
 		// ADD SPECIALS
-		for (String s : this.SPECIALS) {
-			page.append("\n" + s.replaceAll(TextFormatting.WHITE.toString(), TextFormatting.BLACK.toString()));
+		for (ITextComponent s : this.SPECIALS) {
+			page.append("\n" + s.getFormattedText().replaceAll(TextFormatting.WHITE.toString(), TextFormatting.BLACK.toString()));
 		}
 		
 		return page.toString();

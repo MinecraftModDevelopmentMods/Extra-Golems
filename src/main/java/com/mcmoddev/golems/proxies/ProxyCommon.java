@@ -3,8 +3,6 @@ package com.mcmoddev.golems.proxies;
 import com.mcmoddev.golems.blocks.BlockGolemHead;
 import com.mcmoddev.golems.blocks.BlockUtilityGlow;
 import com.mcmoddev.golems.blocks.BlockUtilityPower;
-import com.mcmoddev.golems.entity.EntityRedstoneGolem;
-import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.items.ItemBedrockGolem;
 import com.mcmoddev.golems.items.ItemGolemSpell;
 import com.mcmoddev.golems.items.ItemInfoBook;
@@ -14,10 +12,8 @@ import com.mcmoddev.golems.util.ConsumerLootTables;
 import com.mcmoddev.golems.util.GolemNames;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockFlowingFluid;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityType;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemGroup;
@@ -28,19 +24,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.RegistryEvent;
 
-import java.util.LinkedList;
-import java.util.List;
-
 public class ProxyCommon {
 	
 	static { registerLootTables(); }
-
-	/**
-	 * A List containing default instances of each Golem.
-	 * They do not exist in the world, the list is simply a 
-	 * reference for things like Golem Info Book
-	 **/
-	public final List<GolemBase> DUMMY_GOLEMS = new LinkedList<>();
 	
 	public void registerListeners() { }
 	
@@ -76,9 +62,8 @@ public class ProxyCommon {
 			new BlockGolemHead().setRegistryName(ExtraGolems.MODID, "golem_head"),
 			new BlockUtilityGlow(Material.GLASS, 1.0F, BlockUtilityGlow.UPDATE_TICKS)
 				.setRegistryName(ExtraGolems.MODID, "light_provider_full"),
-//			new BlockUtilityGlow(Material.GLASS, 1.0F, BlockUtilityGlow.UPDATE_TICKS)
-//				.setRegistryName(ExtraGolems.MODID, "water_light_provider_full"),
-			new BlockUtilityPower(15, BlockUtilityPower.UPDATE_TICKS).setRegistryName(ExtraGolems.MODID, "power_provider_all"));
+			new BlockUtilityPower(15, BlockUtilityPower.UPDATE_TICKS)
+				.setRegistryName(ExtraGolems.MODID, "power_provider_all"));
 	}
 	
 

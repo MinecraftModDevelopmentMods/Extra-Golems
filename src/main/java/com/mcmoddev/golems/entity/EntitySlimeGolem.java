@@ -1,7 +1,5 @@
 package com.mcmoddev.golems.entity;
 
-import java.util.List;
-
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
@@ -14,7 +12,6 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 public final class EntitySlimeGolem extends GolemBase {
@@ -115,16 +112,5 @@ public final class EntitySlimeGolem extends GolemBase {
 	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_SLIME_BLOCK_STEP;
-	}
-
-	@Override
-	public List<String> addSpecialDesc(final List<String> list) {
-		if (this.getConfigBool(ALLOW_SPECIAL)) {
-			list.add(TextFormatting.GREEN + trans("entitytip.has_knockback"));
-		}
-		if(!this.isChild() && this.getConfigBool(ALLOW_SPLITTING)) {
-			list.add(TextFormatting.GREEN + trans("entitytip.splits_upon_death"));
-		}
-		return list;
 	}
 }

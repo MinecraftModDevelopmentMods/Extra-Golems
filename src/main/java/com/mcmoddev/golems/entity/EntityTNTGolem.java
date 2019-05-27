@@ -1,7 +1,5 @@
 package com.mcmoddev.golems.entity;
 
-import java.util.List;
-
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
@@ -19,7 +17,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 public class EntityTNTGolem extends GolemBase {
@@ -216,13 +213,5 @@ public class EntityTNTGolem extends GolemBase {
 	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_GRAVEL_STEP;
-	}
-	
-	@Override
-	public List<String> addSpecialDesc(final List<String> list) {
-		if (this.getConfigBool(ALLOW_SPECIAL)) {
-			list.add(TextFormatting.RED + trans("entitytip.explodes"));
-		}
-		return list;
 	}
 }

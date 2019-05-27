@@ -16,15 +16,10 @@ public class BlockTagUtil {
 	public static Tag<Block> TAG_RED_SANDSTONE;
 	public static Tag<Block> TAG_PRISMARINE;
 	public static Tag<Block> TAG_STAINED_GLASS;
-
 	public static Tag<Block> TAG_TERRACOTTA;
-
-	public static Tag<Block> TAG_QUARTZ = new Tag.Builder<Block>()
-			.add(Blocks.QUARTZ_BLOCK, Blocks.QUARTZ_PILLAR, Blocks.CHISELED_QUARTZ_BLOCK, Blocks.SMOOTH_QUARTZ)
-			.build(new ResourceLocation(ExtraGolems.MODID, "quartz"));
+	public static Tag<Block> TAG_QUARTZ;
 	
 	public static void loadTags() {
-		// TODO
 		TAG_CONCRETE = getTag(new ResourceLocation(ExtraGolems.MODID, "concrete"));
 		TAG_SANDSTONE = getTag(new ResourceLocation(ExtraGolems.MODID, "sandstone"));
 		TAG_RED_SANDSTONE = getTag(new ResourceLocation(ExtraGolems.MODID, "red_sandstone"));

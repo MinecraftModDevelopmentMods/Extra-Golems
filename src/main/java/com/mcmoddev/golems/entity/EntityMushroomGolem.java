@@ -1,7 +1,5 @@
 package com.mcmoddev.golems.entity;
 
-import java.util.List;
-
 import com.mcmoddev.golems.entity.ai.EntityAIPlaceRandomBlocksStrictly;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
@@ -13,7 +11,6 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 public final class EntityMushroomGolem extends GolemMultiTextured {
@@ -75,17 +72,5 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 			: (byte) 1;
 		textureNum %= this.getNumTextures();
 		this.setTextureNum(textureNum);
-	}
-
-	@Override
-	public List<String> addSpecialDesc(final List<String> list) {
-		if (this.getConfigBool(ALLOW_SPECIAL)) {
-			list.add(TextFormatting.DARK_GREEN + trans("entitytip.plants_shrooms"));
-		}
-		if(this.getConfigBool(ALLOW_HEALING)) {
-			String sHeals = TextFormatting.LIGHT_PURPLE + trans("entitytip.heals");
-			list.add(sHeals);
-		}
-		return list;
 	}
 }

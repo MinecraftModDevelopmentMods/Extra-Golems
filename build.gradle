@@ -13,9 +13,9 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '8.0.0'
-group = 'com.mcmoddev.golems' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'golems'
+//version = '8.0.0'
+//group = 'com.mcmoddev.golems' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+//archivesBaseName = 'golems'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
@@ -26,6 +26,8 @@ minecraft {
     // Use non-default mappings at your own risk. they may not always work.
     // Simply re-run your setup task after changing the mappings to update your workspace.
     mappings channel: 'snapshot', version: '20180921-1.13'
+   
+    
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
     
     // accessTransformer = file('build/resources/main/META-INF/accesstransformer.cfg')
@@ -67,11 +69,38 @@ minecraft {
     }
 }
 
+repositories {
+    maven { // JEI
+        name 'DVS1 Maven FS'
+        url 'http://dvs1.progwml6.com/files/maven/'
+    }
+    maven { // The One Probe
+        name 'tterrag'
+        url 'http://maven.tterrag.com/'
+    }
+    maven {
+        name 'MMD'
+        url 'https://maven.mcmoddev.com/'
+    }
+    maven { // HWYLA
+        name 'tehnut'
+        url 'http://tehnut.info/maven/'
+    }
+    maven { // CoFH
+        name 'Covers Maven'
+        url 'http://maven.covers1624.net/'
+    }
+}
+
 dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft 'net.minecraftforge:forge:1.13.2-25.0.215'
+    minecraft 'net.minecraftforge:forge:1.13.2-25.0.216'
+    
+    compile 'mcp.mobius.waila:Hwyla:1.10.2-B58_1.13.2'
+    
+    compile 'mcjty.theoneprobe:workspace:1.13-1.4.30-1'
 
     // You may put jars on which you depend on in ./libs or you may define them like so..
     // compile "some.group:artifact:version:classifier"

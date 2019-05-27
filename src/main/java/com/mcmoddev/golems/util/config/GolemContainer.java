@@ -9,6 +9,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 
 import java.util.*;
@@ -26,18 +27,20 @@ public class GolemContainer {
 	private final List<Block> validBuildingBlocks;
 	private final List<ResourceLocation> validBuildingBlockTags;
 	public final EntityType<GolemBase> entityType;
-	private String name;
+	private final String name;
 	private double health;
 	private double attack;
 	private double speed;
 	private boolean enabled = true;
 
-	public Map<String, GolemSpecialContainer> specialContainers;
+	public final Map<String, GolemSpecialContainer> specialContainers;
+	public final List<GolemDescription> descContainers;
 
 	private GolemContainer(final EntityType<GolemBase> lEntityType, final String lPath,
 						   final List<Block> lValidBuildingBlocks, final List<ResourceLocation> lValidBuildingBlockTags,
 						   final double lHealth, final double lAttack, final double lSpeed,
-						   final HashMap<String, GolemSpecialContainer> lSpecialContainers) {
+						   final HashMap<String, GolemSpecialContainer> lSpecialContainers,
+						   final List<GolemDescription> lDescContainers) {
 		this.entityType = lEntityType;
 		this.validBuildingBlocks = lValidBuildingBlocks;
 		this.validBuildingBlockTags = lValidBuildingBlockTags;
@@ -46,6 +49,13 @@ public class GolemContainer {
 		this.attack = lAttack;
 		this.speed = lSpeed;
 		this.specialContainers = lSpecialContainers;
+		this.descContainers = lDescContainers;
+	}
+	
+	public void addDescription(final List<ITextComponent> list) {
+		for(final GolemDescription cont : descContainers) {
+			cont.addDescription(list, this);
+		}
 	}
 
 	public boolean hasBuildingBlock() {
@@ -156,7 +166,8 @@ public class GolemContainer {
 		//advantage in golem building logic for conflicts in the future.
 		private List<Block> validBuildingBlocks = new ArrayList<>();
 		private List<ResourceLocation> validBuildingBlockTags = new ArrayList<>();
-		private List<GolemSpecialContainer> containers = new ArrayList<>();
+		private List<GolemSpecialContainer> specials = new ArrayList<>();
+		private List<GolemDescription> descriptions = new ArrayList<>();
 
 		/**
 		 * Creates the builder
@@ -241,24 +252,58 @@ public class GolemContainer {
 		}
 
 		/**
-		 * Adds any GolemSpecialContainers to be used by the golem
+		 * Adds any {@link GolemSpecialContainer}s to be used by the golem
 		 * @param specialContainers specials to be added
 		 * @return instance to allow chaining of methods
 		 * @see #addSpecial(String, Object, String)
 		 */
 		public Builder addSpecials(final GolemSpecialContainer... specialContainers) {
-			containers.addAll(Arrays.asList(specialContainers));
+			specials.addAll(Arrays.asList(specialContainers));
 			return this;
 		}
 		
 		/**
-		 * Adds any GolemSpecialContainers to be used by the golem
-		 * @param specialContainers specials to be added
+		 * Adds any GolemSpecialContainers to be used by the golem.
+		 * If this option should be toggled (ie, a {@code Boolean}) and
+		 * you want an in-game description, use
+		 * {@link #addSpecial(String, Object, String, ITextComponent)}
+		 * @param name a name unique to this golem's set of config options
+		 * @param value the initial (default) value for this config option
+		 * @param comment a short description for the config file
 		 * @return instance to allow chaining of methods
 		 * @see #addSpecials(GolemSpecialContainer...)
 		 */
 		public Builder addSpecial(final String name, final Object value, final String comment) {
-			containers.add(new GolemSpecialContainer.Builder(name, value, comment).build());
+			specials.add(new GolemSpecialContainer.Builder(name, value, comment).build());
+			return this;
+		}
+		/**
+		 * Adds a {@link GolemSpecialContainer} with the given values along with
+		 * a {@link GolemDescription} associated with the Special. Assumes the
+		 * Special you are adding is a {@code Boolean} value. If this is not the case,
+		 * use {@link #addSpecial(String, Object, String)} to add the config
+		 * and use {@link #addDesc(GolemDescription...)} to add a custom description.
+		 * @param name a name unique to this golem's set of config options
+		 * @param value the initial (default) value for this config option
+		 * @param comment a short description for the config file
+		 * @param desc a fancier description to be used in-game
+		 * @return instance to allow chaining of methods
+		 **/
+		public Builder addSpecial(final String name, final Boolean value, final String comment, final ITextComponent desc) {
+			addSpecial(name, value, comment);
+			addDesc(new GolemDescription(desc, name));
+			return this;
+		}
+		
+		/**
+		 * Adds any {@link GolemDescription}s to be used by the golem
+		 * @param desc description to be added
+		 * @return instance to allow chaining of methods
+		 */
+		public Builder addDesc(final GolemDescription... desc) {
+			for(final GolemDescription cont : desc) {
+				descriptions.add(cont);
+			}
 			return this;
 		}
 		
@@ -271,11 +316,11 @@ public class GolemContainer {
 			EntityType<GolemBase> entityType = entityTypeBuilder.build(golemName);
 			entityType.setRegistryName(modid, golemName);
 			HashMap<String, GolemSpecialContainer> containerMap = new HashMap<>();
-			for(GolemSpecialContainer c : containers) {
+			for(GolemSpecialContainer c : specials) {
 				containerMap.put(c.name, c);
 			}
 			return new GolemContainer(entityType, golemName, validBuildingBlocks,
-					validBuildingBlockTags, health, attack, speed, containerMap);
+					validBuildingBlockTags, health, attack, speed, containerMap, descriptions);
 		}
 	}
 

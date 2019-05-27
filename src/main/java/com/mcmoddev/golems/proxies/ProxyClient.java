@@ -25,8 +25,17 @@ public final class ProxyClient extends ProxyCommon {
 		final IResourceManager irr = Minecraft.getInstance().getResourceManager();
 		if(irr instanceof IReloadableResourceManager) {
 			((IReloadableResourceManager) irr).addReloadListener(l -> {
-				BlockTagUtil.loadTags();
 				ExtraGolems.LOGGER.info("Reloaded Listener activated! Loading block tags...");
+				BlockTagUtil.loadTags();
+				// debug
+				if(BlockTagUtil.TAG_CONCRETE != null) {
+					ExtraGolems.LOGGER.info("From the listener: Loaded tag for Concrete:\n{ ");
+					BlockTagUtil.TAG_CONCRETE.getAllElements().stream()
+						.map(e -> e.getRegistryName().toString()).forEach(e -> System.out.print(e + "\n"));
+					System.out.print(" }\n");
+				} else {
+					ExtraGolems.LOGGER.info("From the listener: TAG_CONCRETE is null!");
+				}
 			});
 		}
 	}

@@ -1,7 +1,5 @@
 package com.mcmoddev.golems.entity;
 
-import java.util.List;
-
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemMultiColorized;
 import com.mcmoddev.golems.main.ExtraGolems;
@@ -15,7 +13,6 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 public final class EntityConcreteGolem extends GolemMultiColorized {
@@ -40,7 +37,11 @@ public final class EntityConcreteGolem extends GolemMultiColorized {
 	@Override
 	protected void damageEntity(DamageSource source, float amount) {
 		if(this.getConfigBool(ALLOW_RESIST)) {
-			amount *= 3.0F / 5.0F;
+			amount *= 0.6F;
+			if(source.isFireDamage()) {
+				// additional fire resistance
+				amount *= 0.85F;
+			}
 		}
 		super.damageEntity(source, amount);
 	}
@@ -71,14 +72,5 @@ public final class EntityConcreteGolem extends GolemMultiColorized {
 		else textureNum = (byte)this.rand.nextInt(dyeColorArray.length);
 		// actually set the texture
 		this.setTextureNum(textureNum);
-	}
-
-	@Override
-	public List<String> addSpecialDesc(final List<String> list) {
-		if(this.getConfigBool(ALLOW_RESIST)) {
-			String sResist = TextFormatting.DARK_GRAY + trans("effect.minecraft.resistance");
-			list.add(sResist);
-		}
-		return list;
 	}
 }

@@ -1,7 +1,5 @@
 package com.mcmoddev.golems.entity;
 
-import java.util.List;
-
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemColorized;
 import com.mcmoddev.golems.main.ExtraGolems;
@@ -12,7 +10,6 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 
@@ -59,13 +56,5 @@ public final class EntityLeafGolem extends GolemColorized {
 	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_GRASS_STEP;
-	}
-
-	@Override
-	public List<String> addSpecialDesc(final List<String> list) {
-		if (this.getConfigBool(ALLOW_SPECIAL)) {
-			list.add(TextFormatting.DARK_GREEN + trans("effect.minecraft.regeneration") + " " + trans("enchantment.level.1"));
-		}
-		return list;
 	}
 }

@@ -2,7 +2,6 @@ package com.mcmoddev.golems.entity.base;
 
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
-import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -113,11 +112,6 @@ public abstract class GolemMultiTextured extends GolemBase {
 	public void readAdditional(final NBTTagCompound nbt) {
 		super.readAdditional(nbt);
 		this.setTextureNum(nbt.getByte(NBT_TEXTURE));
-	}
-
-	@Override
-	public boolean canInteractChangeTexture() {
-		return ExtraGolemsConfig.enableTextureInteract();
 	}
 
 	/**

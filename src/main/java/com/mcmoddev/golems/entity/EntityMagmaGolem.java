@@ -1,7 +1,5 @@
 package com.mcmoddev.golems.entity;
 
-import java.util.List;
-
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
@@ -18,7 +16,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -188,22 +185,5 @@ public final class EntityMagmaGolem extends GolemBase {
 	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_STONE_STEP;
-	}
-
-	@Override
-	public List<String> addSpecialDesc(final List<String> list) {
-		// 'melts lava'
-		if(!this.isChild() && this.getConfigBool(ALLOW_LAVA_SPECIAL)) {
-			list.add(TextFormatting.RED + trans("entitytip.slowly_melts", trans("block.minecraft.cobblestone")));
-		}
-		// 'ignites mobs'
-		if (this.getConfigBool(ALLOW_FIRE_SPECIAL)) {
-			list.add(TextFormatting.GOLD + trans("entitytip.lights_mobs_on_fire"));
-		}
-		// 'splits upon death'
-		if(!this.isChild() && this.getConfigBool(ALLOW_SPLITTING)) {
-			list.add(TextFormatting.RED + trans("entitytip.splits_upon_death"));
-		}
-		return list;
 	}
 }

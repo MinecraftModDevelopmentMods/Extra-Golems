@@ -1,16 +1,37 @@
 package com.mcmoddev.golems.entity.base;
 
+import java.util.List;
+
+import javax.annotation.Nullable;
+
 import com.mcmoddev.golems.entity.ai.EntityAIDefendAgainstMonsters;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mcmoddev.golems.util.config.GolemContainer;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIAttackMelee;
+import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.ai.EntityAIHurtByTarget;
+import net.minecraft.entity.ai.EntityAILookIdle;
+import net.minecraft.entity.ai.EntityAIMoveThroughVillage;
+import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
+import net.minecraft.entity.ai.EntityAIMoveTowardsTarget;
+import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWander;
+import net.minecraft.entity.ai.EntityAIWanderAvoidWater;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.IAnimal;
@@ -29,14 +50,12 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeConfigSpec;
-
-import javax.annotation.Nullable;
-import java.util.List;
 
 /**
  * Base class for all golems in this mod.
@@ -490,10 +509,13 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 
 	/** 
 	 * Whether right-clicking on this entity triggers a texture change.
-	 * Does not change any behavior, but is used for in-game info.
+	 * @return True if this is a {@link GolemMultiTextured} or a 
+	 * {@link GolemMultiColorized} AND the config option is enabled.
 	 **/
 	public boolean canInteractChangeTexture() {
-		return false;
+		return ExtraGolemsConfig.enableTextureInteract()
+				&& (GolemMultiTextured.class.isAssignableFrom(this.getClass()) 
+					|| GolemMultiColorized.class.isAssignableFrom(this.getClass()));
 	}
 	
 	/**
@@ -603,16 +625,6 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 	////////////////////////////////////////////////////////////
 	// Override ALL OF THE FOLLOWING FUNCTIONS FOR EACH GOLEM //
 	////////////////////////////////////////////////////////////
-
-	/**
-	 * Allows each golem to add special information to in-game info (eg, Waila, Hwyla, TOP, etc.).
-	 * Typically checks if the Config allows this golem's special ability (if it has one) and adds a
-	 * formatted String to the passed list.
-	 *
-	 * @param list The list to which the golem adds description strings (separate entries are separate lines)
-	 * @return the passed list with or without this golem's added description
-	 **/
-	public List<String> addSpecialDesc(final List<String> list) { return list; }
 	
 	/**
 	 * Called from {@link #registerData()} and used to set the texture type <b>before</b> the entity is

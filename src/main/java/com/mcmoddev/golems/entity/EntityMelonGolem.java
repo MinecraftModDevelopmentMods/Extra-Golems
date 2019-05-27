@@ -1,7 +1,5 @@
 package com.mcmoddev.golems.entity;
 
-import java.util.List;
-
 import com.mcmoddev.golems.entity.ai.EntityAIPlaceRandomBlocksStrictly;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
@@ -9,14 +7,12 @@ import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 public final class EntityMelonGolem extends GolemBase {
@@ -76,17 +72,5 @@ public final class EntityMelonGolem extends GolemBase {
 		final int freq = this.getConfigInt(FREQUENCY);
 		final boolean allowed = this.getConfigBool(ALLOW_SPECIAL);
 		this.tasks.addTask(2, new EntityAIPlaceRandomBlocksStrictly(this, freq, flowers, soils, allowed));
-	}
-
-	@Override
-	public List<String> addSpecialDesc(final List<String> list) {
-		if (this.getConfigBool(ALLOW_SPECIAL)) {
-			list.add(TextFormatting.GREEN + trans("entitytip.plants_flowers", trans("tile.flower1.name")));
-		}
-		if(this.getConfigBool(ALLOW_HEALING)) {
-			String sHeals = TextFormatting.RED + trans("entitytip.heals");
-			list.add(sHeals);
-		}
-		return list;
 	}
 }

@@ -1,11 +1,10 @@
 package com.mcmoddev.golems.entity.base;
 
-import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
+import javax.annotation.Nullable;
 
-import net.minecraft.block.material.MaterialColor;
+import com.mcmoddev.golems.main.ExtraGolems;
+
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -14,10 +13,6 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-
-import java.util.Arrays;
-
-import javax.annotation.Nullable;
 
 @SuppressWarnings("EntityConstructor")
 public abstract class GolemMultiColorized extends GolemColorized {
@@ -102,11 +97,6 @@ public abstract class GolemMultiColorized extends GolemColorized {
 	public void readAdditional(final NBTTagCompound nbt) {
 		super.readAdditional(nbt);
 		this.setTextureNum(nbt.getByte(NBT_TEXTURE));
-	}
-
-	@Override
-	public boolean canInteractChangeTexture() {
-		return ExtraGolemsConfig.enableTextureInteract();
 	}
 	
 	@Override

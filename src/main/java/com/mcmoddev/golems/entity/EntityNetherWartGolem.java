@@ -1,7 +1,5 @@
 package com.mcmoddev.golems.entity;
 
-import java.util.List;
-
 import com.mcmoddev.golems.entity.ai.EntityAIPlaceRandomBlocksStrictly;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
@@ -16,7 +14,6 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 public final class EntityNetherWartGolem extends GolemBase {
@@ -27,6 +24,7 @@ public final class EntityNetherWartGolem extends GolemBase {
 
 	public EntityNetherWartGolem(final World world) {
 		super(EntityNetherWartGolem.class, world);
+		this.setImmuneToFire(true);
 		this.setCanSwim(true);
 		this.setLootTableLoc(GolemNames.NETHERWART_GOLEM);
 	}
@@ -67,17 +65,5 @@ public final class EntityNetherWartGolem extends GolemBase {
 	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_WOOD_STEP;
-	}
-
-	@Override
-	public List<String> addSpecialDesc(final List<String> list) {
-		if (this.getConfigBool(ALLOW_SPECIAL)) {
-			list.add(TextFormatting.RED + trans("entitytip.plants_warts"));
-		}
-		if(this.getConfigBool(ALLOW_HEALING)) {
-			String sHeals = TextFormatting.RED + trans("entitytip.heals");
-			list.add(sHeals);
-		}
-		return list;
 	}
 }
