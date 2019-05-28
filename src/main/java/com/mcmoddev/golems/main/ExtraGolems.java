@@ -4,6 +4,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.mcmoddev.golems.events.handlers.GolemCommonEventHandler;
+import com.mcmoddev.golems.integration.ModIds;
+import com.mcmoddev.golems.integration.TOPExtraGolems;
 import com.mcmoddev.golems.proxies.ProxyClient;
 import com.mcmoddev.golems.proxies.ProxyCommon;
 import com.mcmoddev.golems.proxies.ProxyServer;
@@ -13,11 +15,12 @@ import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
-import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.InterModComms;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -55,7 +58,9 @@ public class ExtraGolems {
 	}
 
 	private void enqueueIMC(final InterModEnqueueEvent event) {
-		//TODO: Wait for WAILA and TheOneProbe
+		if (ModList.get().isLoaded(ModIds.TOP)) {
+			InterModComms.sendTo(ModIds.TOP, "getTheOneProbe", TOPExtraGolems.GetTheOneProbe::new);
+		}
 	}
 	
 	@SubscribeEvent

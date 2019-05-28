@@ -98,9 +98,9 @@ dependencies {
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft 'net.minecraftforge:forge:1.13.2-25.0.216'
     
-    compile 'mcp.mobius.waila:Hwyla:1.10.2-B58_1.13.2'
+    compile "mcp.mobius.waila:Hwyla:${hwyla_version}"
     
-    compile 'mcjty.theoneprobe:workspace:1.13-1.4.30-1'
+    compile "mcjty.theoneprobe:workspace:${top_version}"
 
     // You may put jars on which you depend on in ./libs or you may define them like so..
     // compile "some.group:artifact:version:classifier"
