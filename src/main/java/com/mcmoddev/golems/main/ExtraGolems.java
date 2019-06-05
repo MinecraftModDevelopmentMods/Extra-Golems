@@ -5,7 +5,6 @@ import org.apache.logging.log4j.Logger;
 
 import com.mcmoddev.golems.events.handlers.GolemCommonEventHandler;
 import com.mcmoddev.golems.integration.ModIds;
-import com.mcmoddev.golems.integration.TOPExtraGolems;
 import com.mcmoddev.golems.proxies.ProxyClient;
 import com.mcmoddev.golems.proxies.ProxyCommon;
 import com.mcmoddev.golems.proxies.ProxyServer;
@@ -59,7 +58,7 @@ public class ExtraGolems {
 
 	private void enqueueIMC(final InterModEnqueueEvent event) {
 		if (ModList.get().isLoaded(ModIds.TOP)) {
-			InterModComms.sendTo(ModIds.TOP, "getTheOneProbe", TOPExtraGolems.GetTheOneProbe::new);
+			// InterModComms.sendTo(ModIds.TOP, "getTheOneProbe", TOPExtraGolems.GetTheOneProbe::new);
 		}
 	}
 	

@@ -13,7 +13,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '8.0.0'
+version = '8.0.1'
 group = 'com.mcmoddev.golems'
 archivesBaseName = 'golems'
 
@@ -92,9 +92,20 @@ dependencies {
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft 'net.minecraftforge:forge:1.13.2-25.0.219'
     
-    deobf "mcp.mobius.waila:Hwyla:${hwyla_version}"
     
-    deobf "mcjty.theoneprobe:workspace:${top_version}"
+    compile fg.deobf(project.dependencies.create("mcp.mobius.waila:Hwyla:${hwyla_version}") {
+        transitive = false
+    })
+    
+    //compile fg.deobf(project.dependencies.create("mcjty.theoneprobe:workspace:${top_version}") {
+    //    transitive = false
+    //})
+    
+    
+    
+   // deobf "mcp.mobius.waila:Hwyla:${hwyla_version}"
+    
+   // deobf "mcjty.theoneprobe:workspace:${top_version}"
 
     // You may put jars on which you depend on in ./libs or you may define them like so..
     // compile "some.group:artifact:version:classifier"

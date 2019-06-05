@@ -12,7 +12,7 @@ logoFile="golem_logo.png"
 
 [[mods]]
     modId="golems"
-    version="8.0.0-beta01"
+    version="8.0.1"
     displayName="Extra Golems"
     credits="TheGlitch76, jriwanek, and translators - Thanks!"
     authors="skyjay1 and the MMD Team"

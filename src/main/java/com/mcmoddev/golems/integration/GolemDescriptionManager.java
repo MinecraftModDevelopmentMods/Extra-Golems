@@ -6,6 +6,7 @@ import java.util.List;
 import com.mcmoddev.golems.entity.EntityBedrockGolem;
 import com.mcmoddev.golems.entity.base.GolemBase;
 
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.text.ITextComponent;
@@ -17,7 +18,7 @@ import net.minecraft.util.text.TextFormatting;
  * Base class to get in-game information about types of golems. Currently used for Waila and The One
  * Probe integration.
  *
- * @author sky01
+ * @author skyjay1
  **/
 public abstract class GolemDescriptionManager {
 
@@ -41,9 +42,11 @@ public abstract class GolemDescriptionManager {
 	public List<ITextComponent> getEntityDescription(final GolemBase golem) {
 		List<ITextComponent> list = new LinkedList<>();
 		if (showAttack) {
+			float attack = (((int)(golem.getBaseAttackDamage() * 10)) / 10.0F);
 			list.add(new TextComponentTranslation("entitytip.attack")
 					.applyTextStyle(TextFormatting.GRAY)
-					.appendSibling(new TextComponentString(Float.toString(golem.getBaseAttackDamage()))
+					.appendSibling(new TextComponentString(": "))
+					.appendSibling(new TextComponentString(Float.toString(attack))
 							.applyTextStyle(TextFormatting.WHITE)));
 		}
 
@@ -69,16 +72,15 @@ public abstract class GolemDescriptionManager {
 		}
 
 		// add special information
-		if (showSpecial || (golem.isChild() && showSpecialChild)) {
+		if ((!golem.isChild() && showSpecial) || (golem.isChild() && showSpecialChild)) {
 			golem.getGolemContainer().addDescription(list);
 		}
 		return list;
 	}
-
-	/**
-	 * Helper method for translation.
-	 **/
-	protected static String trans(final String s, final Object... strings) {
-		return I18n.format(s, strings);
+	
+	/** @return whether the user is currently holding the SHIFT key **/
+	protected static boolean isShiftDown() {
+		return GuiScreen.isShiftKeyDown();
 	}
+
 }

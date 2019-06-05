@@ -10,6 +10,7 @@ import com.mcmoddev.golems.util.config.GolemRegistrar;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
@@ -22,7 +23,8 @@ public final class ExtraGolemsEntities {
 		// Repeated GolemDescription objects
 		final GolemDescription FIREPROOF = new GolemDescription(new TextComponentTranslation("entitytip.is_fireproof").applyTextStyle(TextFormatting.GOLD));
 		final GolemDescription BREATHE_WATER = new GolemDescription(new TextComponentTranslation("entitytip.breathes_underwater").applyTextStyle(TextFormatting.AQUA));
-;
+		final ITextComponent HEALS = new TextComponentTranslation("entitytip.heals").applyTextStyle(TextFormatting.LIGHT_PURPLE);
+		
 		// BEDROCK GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(
 				GolemNames.BEDROCK_GOLEM, EntityBedrockGolem.class, EntityBedrockGolem::new)
@@ -106,9 +108,8 @@ public final class ExtraGolemsEntities {
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.LEAF_GOLEM, EntityLeafGolem.class, EntityLeafGolem::new)
 				.setHealth(6.0D).setAttack(0.5D).setSpeed(0.31D).addBlocks(BlockTags.LEAVES)
 				.addSpecial(EntityLeafGolem.ALLOW_SPECIAL, true, "Whether this golem can heal itself",
-						new TextComponentTranslation("effect.minecraft.regeneration").appendText(" ")
-						.appendSibling(new TextComponentTranslation("enchantment.level.1")
-								.applyTextStyle(TextFormatting.DARK_GREEN)))
+						new TextComponentTranslation("effect.minecraft.regeneration").applyTextStyle(TextFormatting.DARK_GREEN)
+						.appendText(" ").appendSibling(new TextComponentTranslation("enchantment.level.1")))
 				.build());
 		// MAGMA GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.MAGMA_GOLEM, EntityMagmaGolem.class, EntityMagmaGolem::new)
@@ -126,8 +127,7 @@ public final class ExtraGolemsEntities {
 		// MELON GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.MELON_GOLEM, EntityMelonGolem.class, EntityMelonGolem::new)
 				.setHealth(18.0D).setAttack(1.5D).setSpeed(0.265D).addBlocks(Blocks.MELON)
-				.addSpecial(EntityMelonGolem.ALLOW_HEALING, true, "Whether this golem can occasionally heal",
-						new TextComponentTranslation("entitytip.heals").applyTextStyle(TextFormatting.RED))
+				.addSpecial(EntityMelonGolem.ALLOW_HEALING, true, "Whether this golem can occasionally heal", HEALS)
 				.addSpecial(EntityMelonGolem.ALLOW_SPECIAL, true, "Whether this golem can plant flowers randomly",
 						new TextComponentTranslation("entitytip.plants_flowers", 
 								new TextComponentTranslation("tile.flower1.name")).applyTextStyle(TextFormatting.GREEN))
@@ -137,8 +137,7 @@ public final class ExtraGolemsEntities {
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.MUSHROOM_GOLEM, EntityMushroomGolem.class, EntityMushroomGolem::new)
 				.setHealth(30.0D).setAttack(3.0D).setSpeed(0.30D).addBlocks(Blocks.RED_MUSHROOM_BLOCK, Blocks.BROWN_MUSHROOM_BLOCK)
 				.addSpecial(EntityMushroomGolem.FREQUENCY, Integer.valueOf(420), "Average number of ticks between planting mushrooms")
-				.addSpecial(EntityMushroomGolem.ALLOW_HEALING, true, "Whether this golem can randomly heal (at night)",
-						new TextComponentTranslation("entitytip.heals").applyTextStyle(TextFormatting.LIGHT_PURPLE))
+				.addSpecial(EntityMushroomGolem.ALLOW_HEALING, true, "Whether this golem can randomly heal (at night)", HEALS)
 				.addSpecial(EntityMushroomGolem.ALLOW_SPECIAL, true, "Whether this golem can plant mushrooms randomly",
 						new TextComponentTranslation("entitytip.plants_shrooms").applyTextStyle(TextFormatting.DARK_GREEN))
 				.build());
@@ -152,8 +151,7 @@ public final class ExtraGolemsEntities {
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.NETHERWART_GOLEM, EntityNetherWartGolem.class, EntityNetherWartGolem::new)
 				.setHealth(22.0D).setAttack(1.5D).setSpeed(0.26D).addBlocks(Blocks.NETHER_WART_BLOCK)
 				.addSpecial(EntityNetherWartGolem.FREQUENCY, Integer.valueOf(880), "Average number of ticks between planting nether wart (if enabled)")
-				.addSpecial(EntityNetherWartGolem.ALLOW_HEALING, true, "Whether this golem can randomly heal (at night)",
-						new TextComponentTranslation("entitytip.heals").applyTextStyle(TextFormatting.RED))
+				.addSpecial(EntityNetherWartGolem.ALLOW_HEALING, true, "Whether this golem can randomly heal (at night)", HEALS)
 				.addSpecial(EntityNetherWartGolem.ALLOW_SPECIAL, true, "Whether this golem can plant netherwart randomly",
 						new TextComponentTranslation("entitytip.plants_warts").applyTextStyle(TextFormatting.RED))
 				.addDesc(FIREPROOF).build());
