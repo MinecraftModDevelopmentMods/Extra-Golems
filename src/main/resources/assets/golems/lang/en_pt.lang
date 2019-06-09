@@ -26,6 +26,7 @@ entity.golems.golem_obsidian.name=Golem o' Tears
 entity.golems.golem_prismarine.name=Golem o' Pirate Gold
 entity.golems.golem_quartz.name=Golem o' Shinin' White Rock
 entity.golems.golem_redstone.name=Golem o' Redstone
+entity.golems.golem_redstone_lamp.name=Lanterrrn Golem
 entity.golems.golem_red_sandstone.name=Golem o' Scarlet Sands
 entity.golems.golem_sandstone.name=Golem o' Sands
 entity.golems.golem_sea_lantern.name=Lanterrrn o' Sea Golem

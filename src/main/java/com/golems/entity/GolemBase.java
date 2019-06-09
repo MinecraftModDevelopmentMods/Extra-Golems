@@ -1,5 +1,6 @@
 package com.golems.entity;
 
+import com.golems.blocks.BlockUtility;
 import com.golems.entity.ai.EntityAIDefendAgainstMonsters;
 import com.golems.main.ExtraGolems;
 import com.golems.main.GolemItems;
@@ -93,7 +94,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 		this.setCanTakeFallDamage(false);
 		this.setCanSwim(false);
 		Block pickBlock = GolemLookup.hasBuildingBlock(this.getClass())
-			? GolemLookup.getBuildingBlock(this.getClass()) : GolemItems.golemHead;
+			? GolemLookup.getFirstBuildingBlock(this.getClass()) : GolemItems.golemHead;
 		this.setCreativeReturn(pickBlock);
 		GolemConfigSet cfg = getConfig(this);
 		this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(cfg.getBaseAttack());
@@ -203,14 +204,15 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 			final int k = MathHelper.floor(this.posZ);
 			final IBlockState iblockstate = this.world.getBlockState(new BlockPos(i, j, k));
 
-			if (iblockstate.getMaterial() != Material.AIR) {
+			if (iblockstate.getMaterial() != Material.AIR 
+					&& !(iblockstate.getBlock() instanceof BlockUtility)) {
 				this.world.spawnParticle(EnumParticleTypes.BLOCK_CRACK,
 					this.posX + ((double) this.rand.nextFloat() - 0.5D) * (double) this.width,
 					this.getEntityBoundingBox().minY + 0.1D,
 					this.posZ + ((double) this.rand.nextFloat() - 0.5D) * (double) this.width,
 					4.0D * ((double) this.rand.nextFloat() - 0.5D), 0.5D,
 					((double) this.rand.nextFloat() - 0.5D) * 4.0D,
-					new int[]{Block.getStateId(iblockstate) });
+					Block.getStateId(iblockstate) );
 			}
 		}
 	}
@@ -463,11 +465,27 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	public boolean doesInteractChangeTexture() {
 		return false;
 	}
+	
+	/**
+	 * Does not change behavior, but is required when the
+	 * utility block checks for valid golems
+	 **/
+	public boolean isProvidingLight() {
+		return false;
+	}
+	
+	/**
+	 * Does not change behavior, but is required when the
+	 * utility block checks for valid golems
+	 **/
+	public boolean isProvidingPower() {
+		return false;
+	}
 
-	/** @return The Block used to build this golem, or null if there is none **/
+	/** @return The Blocks used to build this golem, or null if there is none **/
 	@Nullable
-	public static Block getBuildingBlock(GolemBase golem) {
-		return GolemLookup.getBuildingBlock(golem.getClass());
+	public static Block[] getBuildingBlocks(GolemBase golem) {
+		return GolemLookup.getBuildingBlocks(golem.getClass());
 	}
 
 	/** The GolemConfigSet associated with this golem, or the empty GCS if there is none **/

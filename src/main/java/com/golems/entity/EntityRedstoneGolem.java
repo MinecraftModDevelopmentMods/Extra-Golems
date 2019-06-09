@@ -1,7 +1,9 @@
 package com.golems.entity;
 
+import java.util.List;
+
 import com.golems.blocks.BlockUtilityPower;
-import com.golems.entity.ai.EntityAIPlaceSingleBlock;
+import com.golems.entity.ai.EntityAIUtilityBlock;
 import com.golems.main.ExtraGolems;
 import com.golems.main.GolemItems;
 import com.golems.util.GolemLookup;
@@ -16,8 +18,6 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.List;
 
 public final class EntityRedstoneGolem extends GolemBase {
 
@@ -39,7 +39,7 @@ public final class EntityRedstoneGolem extends GolemBase {
 	public EntityRedstoneGolem(final World world, boolean allowSpecial, int power, int frequency) {
 		super(world);
 		final IBlockState state = GolemItems.blockPowerSource.getDefaultState().withProperty(BlockUtilityPower.POWER_LEVEL, power);
-		this.tasks.addTask(9, new EntityAIPlaceSingleBlock(this, state, frequency, allowSpecial));
+		this.tasks.addTask(9, new EntityAIUtilityBlock(this, state, frequency, allowSpecial));
 	}
 
 	@Override
@@ -56,6 +56,11 @@ public final class EntityRedstoneGolem extends GolemBase {
 	@SideOnly(Side.CLIENT)
 	public int getBrightnessForRender() {
 		return super.getBrightnessForRender() + 64;
+	}
+	
+	@Override
+	public boolean isProvidingPower() {
+		return true;
 	}
 
 	@Override

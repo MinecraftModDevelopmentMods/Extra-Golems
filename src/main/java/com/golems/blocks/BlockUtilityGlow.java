@@ -35,10 +35,7 @@ public class BlockUtilityGlow extends BlockUtility {
 		// make a slightly expanded AABB to check for the golem
 		AxisAlignedBB toCheck = new AxisAlignedBB(pos).grow(0.5D);
 		List<GolemBase> list = worldIn.getEntitiesWithinAABB(GolemBase.class, toCheck);
-		boolean hasLightGolem = list != null && !list.isEmpty();
-		for (GolemBase g : list) {
-			hasLightGolem |= isLightGolem(g);
-		}
+		boolean hasLightGolem = list != null && !list.isEmpty() && hasLightGolem(list);
 
 		if (!hasLightGolem) {
 			// remove this block
@@ -93,12 +90,9 @@ public class BlockUtilityGlow extends BlockUtility {
 		return state.getValue(LIGHT_LEVEL).intValue();
 	}
 
-	/**
-	 * Search the golem's AI to determine if it is a light-providing golem
-	 **/
-	protected boolean isLightGolem(GolemBase golem) {
-		for (EntityAITaskEntry entry : golem.tasks.taskEntries) {
-			if (entry.action instanceof com.golems.entity.ai.EntityAIPlaceSingleBlock && ((EntityAIPlaceSingleBlock) entry.action).stateToPlace.getBlock() instanceof BlockUtilityGlow /*TODO: CLEANUP!*/) {
+	protected boolean hasLightGolem(List<GolemBase> list) {
+		for(final GolemBase golem : list) {
+			if(golem.isProvidingLight()) {
 				return true;
 			}
 		}

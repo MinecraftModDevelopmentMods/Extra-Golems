@@ -8,6 +8,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.golems.entity.EntityBedrockGolem;
+import com.golems.entity.EntityRedstoneLampGolem;
 import com.golems.entity.GolemBase;
 import com.golems.entity.GolemMultiTextured;
 import com.golems.main.ExtraGolems;
@@ -27,7 +28,7 @@ import net.minecraft.util.text.TextFormatting;
  **/
 public class GolemBookEntry {
 
-	private final Block BLOCK;
+	private final Block[] BLOCKS;
 	private final String GOLEM_NAME;
 	private ResourceLocation IMAGE = null;
 	private final boolean MULTI_TEXTURE;
@@ -39,24 +40,22 @@ public class GolemBookEntry {
 	public GolemBookEntry(@Nonnull GolemBase golem) {
 		// initialize fields based on golem attributes
 		this.GOLEM_NAME = "entity." + EntityList.getEntityString(golem) + ".name";
-		this.MULTI_TEXTURE = (golem instanceof GolemMultiTextured || golem.doesInteractChangeTexture());
+		this.MULTI_TEXTURE = golem.doesInteractChangeTexture() && !(golem instanceof EntityRedstoneLampGolem);
 		this.FIREPROOF = (golem.isImmuneToFire() && !(golem instanceof EntityBedrockGolem));
 		this.HEALTH = (int) golem.getMaxHealth();
 		this.ATTACK = golem.getBaseAttackDamage();
 		this.SPECIALS = golem.addSpecialDesc(new ArrayList<String>());
-
-		// set the block and block name if it exists
-		Block b = GolemLookup.getBuildingBlock(golem.getClass());
-		// Blocks.AIR means there is no building block
-		this.BLOCK = b != null ? b : Blocks.AIR;
+		this.BLOCKS = GolemLookup.getBuildingBlocks(golem.getClass());
 		
-		// find the image to add to the book
-		String img = (ExtraGolems.MODID + ":textures/gui/screenshots/").concat(EntityList.getEntityString(golem)).concat(".png");
+		// find the image to add to the book (if it exists)
+		final String img = (ExtraGolems.MODID + ":textures/gui/screenshots/")
+				.concat(EntityList.getEntityString(golem).replaceFirst(ExtraGolems.MODID + ".", "")).concat(".png");
 		try {
+			System.out.println("LOADING IMAGE:  " + img);
 			this.IMAGE = Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(img)).getResourceLocation();
-			//System.out.println("Image found, yay! Loading " + img.toString() + " for " + this.GOLEM_NAME);
 		} catch (IOException e) {
-			//System.out.println("No image found, skipping " + img.toString() + " for " + this.GOLEM_NAME);
+			System.out.println("NO IMAGE FOUND FOR " + EntityList.getEntityString(golem));
+			// skip loading this texture
 		}
 	}
 
@@ -75,10 +74,25 @@ public class GolemBookEntry {
 	}
 
 	/**
-	 * @return the Block in this entry
+	 * @return true if building blocks were found for this golem
 	 **/
-	public Block getBlock() {
-		return this.BLOCK;
+	public boolean hasBlocks() {
+		return this.BLOCKS != null && this.BLOCKS.length > 0;
+	}
+	
+	/**
+	 * @return the Block at [index % arrayLen]
+	 * or Blocks.AIR if none is found.
+	 **/
+	public Block getBlock(final int index) {
+		return hasBlocks() ? this.BLOCKS[index % this.BLOCKS.length] : Blocks.AIR;
+	}
+	
+	/**
+	 * @return an array of all the Blocks to display
+	 **/
+	public Block[] getBlocks() {
+		return BLOCKS;
 	}
 	
 	/**
@@ -149,11 +163,5 @@ public class GolemBookEntry {
 	/** Helper method for translating text into local language using {@code I18n} **/
 	protected static String trans(final String s, final Object... strings) {
 		return I18n.format(s, strings);
-	}
-
-	@Override
-	public String toString() {
-		return "[Block=" + this.BLOCK.getLocalizedName() + "; Golem=" + trans(this.GOLEM_NAME)
-			+ "; Desc=" + this.getDescriptionPage().replaceAll("\n", "; ");
 	}
 }

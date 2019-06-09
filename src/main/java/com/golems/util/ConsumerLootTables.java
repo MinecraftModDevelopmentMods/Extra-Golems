@@ -4,6 +4,7 @@ import java.util.function.Consumer;
 
 import com.golems.entity.EntityConcreteGolem;
 import com.golems.entity.EntityMushroomGolem;
+import com.golems.entity.EntityRedstoneLampGolem;
 import com.golems.entity.EntityStainedClayGolem;
 import com.golems.entity.EntityStainedGlassGolem;
 import com.golems.entity.EntityWoodenGolem;
@@ -28,7 +29,10 @@ public class ConsumerLootTables implements Consumer<String> {
 				return;
 			case GolemNames.MUSHROOM_GOLEM:
 				registerLootTables(ExtraGolems.MODID, NAME, EntityMushroomGolem.SHROOM_TYPES);
-				return;			
+				return;
+			case GolemNames.REDSTONELAMP_GOLEM:
+				registerLootTables(ExtraGolems.MODID, NAME, EntityRedstoneLampGolem.VARIANTS);
+				return;
 			case GolemNames.STAINEDGLASS_GOLEM:
 				registerLootTables(ExtraGolems.MODID, NAME, EntityStainedGlassGolem.COLOR_ARRAY.length);
 				return;

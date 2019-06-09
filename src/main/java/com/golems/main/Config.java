@@ -28,8 +28,8 @@ public final class Config {
 
 	private static boolean pumpkinBuildsGolem;
 	private static boolean bedrockGolemCreativeOnly;
-	private static boolean itemGolemHeadHasGlint;
 	private static boolean useOreDictName;
+	private static boolean enableInteractTexture;
 	private static int villageGolemSpawnChance;
 	private static String[] villageGolemSpawnsDesert = new String[] {
 		GolemNames.STRAW_GOLEM, GolemNames.SANDSTONE_GOLEM, GolemNames.SANDSTONE_GOLEM,
@@ -80,8 +80,8 @@ public final class Config {
 			.addKey(EntityEndstoneGolem.ALLOW_WATER_HURT, true, "Whether the Endstone Golem takes damage from water"));
 		GolemLookup.addConfig(EntityGlassGolem.class, new GolemConfigSet(config, "Glass Golem", 8.0D, 13.0F));
 		GolemLookup.addConfig(EntityGlowstoneGolem.class, new GolemConfigSet(config, "Glowstone Golem", 8.0D, 12.0F)
-			.addKey(EntityGlowstoneGolem.ALLOW_SPECIAL, true, "Whether this golem can place light sources randomly")
-			.addKey(EntityGlowstoneGolem.FREQUENCY, 2, 1, 24000, "Number of ticks between placing light sources"));
+			.addKey(EntityGlowstoneGolem.ALLOW_SPECIAL, true, "Whether this golem can light the area")
+			.addKey(EntityGlowstoneGolem.FREQUENCY, 2, 1, 24000, "Number of ticks between updating light"));
 		GolemLookup.addConfig(EntityGoldGolem.class, new GolemConfigSet(config, "Gold Golem", 80.0D, 8.0F));
 		GolemLookup.addConfig(EntityHardenedClayGolem.class, new GolemConfigSet(config, "Hardened Clay Golem", 22.0D, 4.0F));
 		GolemLookup.addConfig(EntityIceGolem.class, new GolemConfigSet(config, "Ice Golem", 18.0D, 6.0F)
@@ -118,6 +118,9 @@ public final class Config {
 		GolemLookup.addConfig(EntityRedSandstoneGolem.class, new GolemConfigSet(config, "Red Sandstone Golem", 15.0D, 4.0F));
 		GolemLookup.addConfig(EntityRedstoneGolem.class, new GolemConfigSet(config, "Redstone Golem", 18.0D, 2.0F)
 			.addKey(EntityRedstoneGolem.ALLOW_SPECIAL, true, "Whether this golem can emit redstone power"));
+		GolemLookup.addConfig(EntityRedstoneLampGolem.class, new GolemConfigSet(config, "Redstone Lamp Golem", 28.0F, 6.0F)
+			.addKey(EntityRedstoneLampGolem.ALLOW_SPECIAL, true, "Whether this golem can light up the area")
+			.addKey(EntityRedstoneLampGolem.FREQUENCY, 2, 1, 24000, "Number of ticks between updating light"));
 		GolemLookup.addConfig(EntitySandstoneGolem.class, new GolemConfigSet(config, "Sandstone Golem", 15.0D, 4.0F));
 		GolemLookup.addConfig(EntitySeaLanternGolem.class, new GolemConfigSet(config, "Sea Lantern Golem", 24.0D, 6.0F)
 			.addKey(EntitySeaLanternGolem.ALLOW_SPECIAL, true, "Whether this golem lights up the area")
@@ -145,12 +148,12 @@ public final class Config {
 	private static void loadOther(final Configuration config) {
 		bedrockGolemCreativeOnly = config.getBoolean("Bedrock Golem Creative Only", CATEGORY_OTHER,
 			true, "When true, only players in creative mode can use a Bedrock Golem spawn item");
-		itemGolemHeadHasGlint = config.getBoolean("Golem Head Has Glint", CATEGORY_OTHER, true,
-			"Whether the Golem Head item always has 'enchanted' effect");
 		pumpkinBuildsGolem = config.getBoolean("Pumpkin Builds Golems", CATEGORY_OTHER, false, 
 				"(Experimental) When true, pumpkins can be used to build this mod's golems");
 		useOreDictName = config.getBoolean("Use OreDict Blocks", CATEGORY_OTHER, true, 
 				"When true, building a golem will work with any OreDictionary-registered blocks");
+		enableInteractTexture = config.getBoolean("Interact Changes Texture", CATEGORY_OTHER, false, 
+				"When true, some golems will change their texture when right clicked");
 		villageGolemSpawnsDesert = config.getStringList("Desert Village Golem Spawns", CATEGORY_OTHER, villageGolemSpawnsDesert, 
 				"The following golems will appear in villages in Desert biomes. (Duplicate entries increase chances)");
 		villageGolemSpawnsPlains = config.getStringList("Plains Village Golem Spawns", CATEGORY_OTHER, villageGolemSpawnsPlains, 
@@ -166,10 +169,6 @@ public final class Config {
 	public static boolean isBedrockGolemCreativeOnly() {
 		return bedrockGolemCreativeOnly;
 	}
-
-	public static boolean golemHeadHasGlint() {
-		return itemGolemHeadHasGlint;
-	}
 	
 	public static int getVillageGolemSpawnChance() {
 		return villageGolemSpawnChance;
@@ -177,6 +176,10 @@ public final class Config {
 	
 	public static boolean getUseOreDictBlocks() {
 		return useOreDictName;
+	}
+	
+	public static boolean interactChangesTexture() {
+		return enableInteractTexture;
 	}
 	
 	public static List<Class<? extends GolemBase>> getDesertGolems() {
@@ -197,12 +200,12 @@ public final class Config {
 	public static List<Class<? extends GolemBase>> getPlainsGolems() {
 		if(plainsGolems.isEmpty()) {
 			for(String s : villageGolemSpawnsPlains) {
-			final ResourceLocation name = new ResourceLocation(ExtraGolems.MODID, s);
-			EntityEntry entityEntry = ForgeRegistries.ENTITIES.getValue(name);
-			if(entityEntry != null && (GolemBase.class).isAssignableFrom(entityEntry.getEntityClass())) {
-				plainsGolems.add((Class<? extends GolemBase>)entityEntry.getEntityClass());
-			} else ExtraGolems.LOGGER.error("Tried to parse an unknown entity from the config! Skipping '" + s + "' in \"Plains Village Golem Spawns\"");
-		}
+				final ResourceLocation name = new ResourceLocation(ExtraGolems.MODID, s);
+				EntityEntry entityEntry = ForgeRegistries.ENTITIES.getValue(name);
+				if(entityEntry != null && (GolemBase.class).isAssignableFrom(entityEntry.getEntityClass())) {
+					plainsGolems.add((Class<? extends GolemBase>)entityEntry.getEntityClass());
+				} else ExtraGolems.LOGGER.error("Tried to parse an unknown entity from the config! Skipping '" + s + "' in \"Plains Village Golem Spawns\"");
+			}
 		}
 		
 		return plainsGolems;

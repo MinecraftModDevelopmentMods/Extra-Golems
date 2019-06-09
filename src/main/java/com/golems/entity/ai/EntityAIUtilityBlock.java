@@ -1,33 +1,37 @@
 package com.golems.entity.ai;
 
+import java.util.function.BiPredicate;
+
 import com.golems.entity.GolemBase;
-import net.minecraft.block.material.Material;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-
-import java.util.function.Predicate;
 
 /**
  * Places a single IBlockState every {@code tickDelay} ticks with certain conditions
  **/
-@Deprecated
-public class EntityAIPlaceSingleBlock extends EntityAIBase {
+public class EntityAIUtilityBlock extends EntityAIBase {
 
 	public final GolemBase golem;
 	public final IBlockState stateToPlace;
 	public final int tickDelay;
 	public final boolean configAllows;
-	public final Predicate<IBlockState> predicate;
+	public final BiPredicate<GolemBase, IBlockState> predicate;
 
 	/**
 	 * @param golemIn        the GolemBase to use
 	 * @param stateIn        the IBlockState that will be placed every {@code interval} ticks
 	 * @param interval       ticks between placing block
-	 * @param canReplacePred a Predicate to determine if {@code stateIn} should replace a certain IBlockState
+	 * @param cfgAllows		 whether this AI is enabled by the config
+	 * @param canReplacePred an optional BiPredicate to use when determining whether to place a Block.
+	 * Defaults to replacing air only.
+	 * @see #getDefaultBiPred(GolemBase, IBlockState)
 	 **/
-	public EntityAIPlaceSingleBlock(final GolemBase golemIn, final IBlockState stateIn, final int interval, final boolean cfgAllows, final Predicate<IBlockState> canReplacePred) {
+	public EntityAIUtilityBlock(final GolemBase golemIn, final IBlockState stateIn, final int interval, 
+			final boolean cfgAllows, final BiPredicate<GolemBase, IBlockState> canReplacePred) {
 		this.setMutexBits(8);
 		this.golem = golemIn;
 		this.stateToPlace = stateIn;
@@ -43,9 +47,10 @@ public class EntityAIPlaceSingleBlock extends EntityAIBase {
 	 * @param golemIn  the GolemBase to use
 	 * @param stateIn  the IBlockState that will be placed every {@code interval} ticks
 	 * @param interval ticks between placing block
+	 * @param configAllows whether this AI is enabled by the config
 	 **/
-	public EntityAIPlaceSingleBlock(final GolemBase golemIn, final IBlockState stateIn, final int interval, boolean configAllows) {
-		this(golemIn, stateIn, interval, configAllows, toReplace -> toReplace.getMaterial().equals(Material.AIR) && !toReplace.getBlock().equals(stateIn.getBlock()));
+	public EntityAIUtilityBlock(final GolemBase golemIn, final IBlockState stateIn, final int interval, boolean configAllows) {
+		this(golemIn, stateIn, interval, configAllows, getDefaultBiPred(stateIn));
 	}
 
 	@Override
@@ -58,7 +63,7 @@ public class EntityAIPlaceSingleBlock extends EntityAIBase {
 	 */
 	@Override
 	public void updateTask() {
-		long tickMod = this.golem.getEntityWorld().getWorldTime() % this.tickDelay;
+		long tickMod = this.golem.ticksExisted % this.tickDelay;
 		if (this.configAllows && tickMod == (long) 0) {
 			final int x = MathHelper.floor(golem.posX);
 			final int y = MathHelper.floor(golem.posY - 0.20000000298023224D - golem.getYOffset());
@@ -68,8 +73,13 @@ public class EntityAIPlaceSingleBlock extends EntityAIBase {
 			// when it passes, place the block and return
 			for (int i = 0; i < 3; i++) {
 				BlockPos temp = blockPosIn.up(i);
-				if (this.predicate.test(golem.getEntityWorld().getBlockState(temp))) {
-					this.golem.getEntityWorld().setBlockState(temp, this.stateToPlace, 2);
+				final IBlockState cur = golem.getEntityWorld().getBlockState(temp);
+				// if there's already a matching block, stop here
+				if(cur.getBlock() == stateToPlace.getBlock()) {
+					return;
+				}
+				if (this.predicate.test(golem, cur)) {
+					this.golem.getEntityWorld().setBlockState(temp, getStateToPlace(cur), 2 | 4);
 					return;
 				}
 			}
@@ -79,5 +89,17 @@ public class EntityAIPlaceSingleBlock extends EntityAIBase {
 	@Override
 	public void startExecuting() {
 		this.updateTask();
+	}
+	
+	/**
+	 * Builds a BiPredicate that returns True only if the Block to replace is AIR
+	 * @param stateIn the state that will replace the given one if possible
+	 **/
+	public static BiPredicate<GolemBase, IBlockState> getDefaultBiPred(final IBlockState stateIn) {
+		return (golem, toReplace) -> toReplace.getBlock() == Blocks.AIR;
+	}
+	
+	protected  IBlockState getStateToPlace(final IBlockState toReplace) {
+		return stateToPlace;
 	}
 }

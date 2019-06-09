@@ -27,6 +27,7 @@ entity.golems.golem_obsidian.name=Golem d'Obsidienne
 entity.golems.golem_prismarine.name=Golem de Prismarin
 entity.golems.golem_quartz.name=Golem de Quartz
 entity.golems.golem_redstone.name=Golem de Redstone-Block
+entity.golems.golem_redstone_lamp.name=Golem de Lampe à redstone
 entity.golems.golem_red_sandstone.name=Golem de Grès Rouge
 entity.golems.golem_sandstone.name=Golem de Grès
 entity.golems.golem_sea_lantern.name=Golem de Lanterne des Mers

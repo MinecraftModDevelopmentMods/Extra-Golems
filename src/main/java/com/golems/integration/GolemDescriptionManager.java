@@ -1,6 +1,7 @@
 package com.golems.integration;
 
 import com.golems.entity.EntityBedrockGolem;
+import com.golems.entity.EntityRedstoneLampGolem;
 import com.golems.entity.GolemBase;
 import com.golems.entity.GolemMultiTextured;
 import net.minecraft.client.resources.I18n;
@@ -46,8 +47,8 @@ public abstract class GolemDescriptionManager {
 		}
 
 		// add right-click-texture to tip if possible
-		if (this.showMultiTexture
-			&& (golem instanceof GolemMultiTextured || golem.doesInteractChangeTexture())) {
+		if (this.showMultiTexture && golem.doesInteractChangeTexture()
+				&& !(golem instanceof EntityRedstoneLampGolem)) {
 			list.add(TextFormatting.BLUE + trans("entitytip.click_change_texture"));
 		}
 
@@ -77,10 +78,5 @@ public abstract class GolemDescriptionManager {
 	 **/
 	protected static String trans(final String s, final Object... strings) {
 		return I18n.format(s, strings);
-	}
-
-	@Deprecated
-	protected List<String> addSpecial(List<String> list, GolemBase golem) {
-		return list;
 	}
 }

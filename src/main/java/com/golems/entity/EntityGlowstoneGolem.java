@@ -1,7 +1,9 @@
 package com.golems.entity;
 
+import java.util.List;
+
 import com.golems.blocks.BlockUtilityGlow;
-import com.golems.entity.ai.EntityAIPlaceSingleBlock;
+import com.golems.entity.ai.EntityAIUtilityBlock;
 import com.golems.main.ExtraGolems;
 import com.golems.main.GolemItems;
 import com.golems.util.GolemLookup;
@@ -16,8 +18,6 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.List;
 
 public final class EntityGlowstoneGolem extends GolemBase {
 
@@ -52,7 +52,7 @@ public final class EntityGlowstoneGolem extends GolemBase {
 		int lightInt = (int) (lightLevel * 15.0F);
 		this.brightness = lightLevel;
 		final IBlockState state = GolemItems.blockLightSource.getDefaultState().withProperty(BlockUtilityGlow.LIGHT_LEVEL, lightInt);
-		this.tasks.addTask(9, new EntityAIPlaceSingleBlock(this, state, freq, allowed));
+		this.tasks.addTask(9, new EntityAIUtilityBlock(this, state, freq, allowed));
 	}
 
 	@Override
@@ -79,6 +79,11 @@ public final class EntityGlowstoneGolem extends GolemBase {
 	@Override
 	public float getBrightness() {
 		return this.brightness;
+	}
+	
+	@Override
+	public boolean isProvidingLight() {
+		return true;
 	}
 
 	@Override

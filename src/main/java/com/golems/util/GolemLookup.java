@@ -2,6 +2,7 @@ package com.golems.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -37,8 +38,8 @@ public final class GolemLookup {
 	 * Map to retrieve the Golem that is built from the given Block. This is used most.
 	 **/
 	private static final Map<IRegistryDelegate<Block>, Class<? extends GolemBase>> BLOCK_TO_GOLEM = new HashMap();
-	/** Map to retrieve the preferred Block this Golem uses. Used for Golem Book. **/
-	private static final Map<Class<? extends GolemBase>, IRegistryDelegate<Block>> GOLEM_TO_BLOCK = new HashMap();
+	/** Map to retrieve all Blocks this Golem uses. Used for Golem Book. **/
+	private static final Map<Class<? extends GolemBase>, Set<IRegistryDelegate<Block>>> GOLEM_TO_BLOCK = new HashMap();
 	/** Map to retrieve the GolemConfigSet for this golem **/
 	private static final Map<Class<? extends GolemBase>, GolemConfigSet> GOLEM_TO_CONFIG = new HashMap();
 		
@@ -81,20 +82,29 @@ public final class GolemLookup {
 	}
 
 	/**
-	 * Adds an entry to the Map to return a specific block based on the golem. 
-	 * Only returns one block per golem.
+	 * Adds an entry to the Map to return a specific block set based on the golem.
+	 * If NULL is passed, no blocks will be added.
 	 * @return if the mapping was added successfully
 	 **/
 	private static boolean addGolemToBlockMapping(@Nonnull final Class<? extends GolemBase> golemClazz,
-						      @Nullable final Block buildingBlock) {
-		// error check
-		if (GOLEM_TO_BLOCK.containsKey(golemClazz)) {
-			ExtraGolems.LOGGER.warn("Tried to associate Golem " + golemClazz.getName()
-				+ " with a Block but Golem has already been added! Skipping.");
-			return false;					
+						      @Nullable final Block... buildingBlocks) {
+		if(buildingBlocks != null && buildingBlocks.length > 0) {	
+			// populate the set
+			Set<IRegistryDelegate<Block>> blocks = new HashSet();
+			for(final Block b : buildingBlocks) {
+				if(b != null) {
+					blocks.add(b.delegate);
+				}
+			}
+			// add the set to the map
+			if (GOLEM_TO_BLOCK.containsKey(golemClazz)) {
+				GOLEM_TO_BLOCK.get(golemClazz).addAll(blocks);
+			} else {
+				GOLEM_TO_BLOCK.put(golemClazz, blocks);
+			}
+			return true;
 		}
-		GOLEM_TO_BLOCK.put(golemClazz, buildingBlock != null ? buildingBlock.delegate : null);
-		return true;
+		return false;
 	}
 
 	/**
@@ -109,33 +119,12 @@ public final class GolemLookup {
 	 * @return if the Golem and Blocks were successfully added
 	 **/
 	public static boolean addGolem(@Nonnull final Class<? extends GolemBase> golemClazz,
-				       @Nullable final Block buildingBlock) {
-		boolean success = buildingBlock != null && addBlockToGolemMapping(buildingBlock, golemClazz);
-		success &= addGolemToBlockMapping(golemClazz, buildingBlock);
-
-		return success;
-	}
-	
-	/** 
-	 * Adds Golem-Block mappings where multiple blocks can be used to make the golem.
-	 * <b>This or {@link #addGolem(Class, Block)} must be called for every Golem at some
-	 * point during preInit, init, or postInit.</b>
-	 * @param golemClazz the class to register
-	 * @param buildingBlocks an array of possible building blocks. Individual elements may be null,
-	 * but the array cannot be null. The first element will be used as the golem's "preferred" block.
-	 * @return if the Golem and Blocks were successfully added
-	 **/
-	public static boolean addGolem(@Nonnull final Class<? extends GolemBase> golemClazz, @Nonnull final Block[] buildingBlocks) {
-		
-		boolean success = false;
-		if (buildingBlocks.length > 0) {
-			// use the first block listed as the default building block
-			success = addGolemToBlockMapping(golemClazz, buildingBlocks[0]);
-			for (final Block b : buildingBlocks) {
-				// add all other blocks as possible golem blocks
-				success &= b != null && addBlockToGolemMapping(b, golemClazz);
-			}
+				       @Nullable final Block... buildingBlock) {
+		boolean success = true;
+		if(buildingBlock != null && buildingBlock.length > 0 && buildingBlock[0] != null) {
+			success = addBlockToGolemMapping(buildingBlock[0], golemClazz);
 		}
+		success &= addGolemToBlockMapping(golemClazz, buildingBlock);
 
 		return success;
 	}
@@ -203,17 +192,41 @@ public final class GolemLookup {
 	}
 	
 	/**
+	 * Used to retrieve the building blocks for the given Golem.
+	 * @param golemClazz The golem
+	 * @return the Block used to make this golem, or null if there is none.
+	 **/
+	@Nonnull
+	public static Block[] getBuildingBlocks(final Class<? extends GolemBase> golemClazz) {
+		if (golemClazz == null) {
+			ExtraGolems.LOGGER.error("Can't get a block from a null golem!");
+			return new Block[0];
+		} else if (GOLEM_TO_BLOCK.containsKey(golemClazz)) {
+			final IRegistryDelegate<Block>[] blockSet = GOLEM_TO_BLOCK.get(golemClazz).toArray(new IRegistryDelegate[0]);
+			final Block[] blocks = new Block[blockSet.length];
+			for(int i = 0, l = blockSet.length; i < l; i++) {
+				blocks[i] = blockSet[i].get();
+			}
+			return blocks;
+		} else {
+			ExtraGolems.LOGGER.error("Tried to get blocks for an unknown golem: " + golemClazz.getName());
+			return new Block[0];
+		}
+	}
+	
+	/**
 	 * Used to retrieve the building block for the given Golem.
 	 * @param golemClazz The golem
 	 * @return the Block used to make this golem, or null if there is none.
 	 **/
 	@Nullable
-	public static Block getBuildingBlock(final Class<? extends GolemBase> golemClazz) {
+	public static Block getFirstBuildingBlock(final Class<? extends GolemBase> golemClazz) {
 		if (golemClazz == null) {
 			ExtraGolems.LOGGER.error("Can't get a block from a null golem!");
 			return null;
 		} else if (GOLEM_TO_BLOCK.containsKey(golemClazz)) {
-			return GOLEM_TO_BLOCK.get(golemClazz) != null ? GOLEM_TO_BLOCK.get(golemClazz).get() : null;
+			final Block[] blocks = getBuildingBlocks(golemClazz);
+			return blocks != null && blocks.length > 0 ? blocks[0] : null;
 		} else {
 			ExtraGolems.LOGGER.error("Tried to get a block for an unknown golem: " + golemClazz.getName());
 			return null;

@@ -33,6 +33,7 @@ entity.golems.golem_obsidian.name=Obsidiangolem
 entity.golems.golem_prismarine.name=Prismaringolem
 entity.golems.golem_quartz.name=Quarzgolem
 entity.golems.golem_redstone.name=Redstone-Golem
+entity.golems.golem_redstone_lamp.name=Redstone-Lampe-Golem
 entity.golems.golem_red_sandstone.name=Roter Sandsteingolem
 entity.golems.golem_sandstone.name=Sandsteingolem
 entity.golems.golem_sea_lantern.name=Seelaternengolem

@@ -24,6 +24,7 @@ entity.golems.golem_obsidian.name=Obsidian Golem
 entity.golems.golem_prismarine.name=Prismarine Golem
 entity.golems.golem_quartz.name=Kvarts Golem
 entity.golems.golem_redstone.name=Rødsten Golem
+entity.golems.golem_redstone_lamp.name=Rødstenslampe Golem
 entity.golems.golem_red_sandstone.name=Rød Sandstens Golem
 entity.golems.golem_sandstone.name=Sandstens Golem
 entity.golems.golem_sea_lantern.name=Sø Lanterne Golem

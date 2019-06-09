@@ -35,10 +35,7 @@ public class BlockUtilityPower extends BlockUtility {
 		// make a slightly expanded AABB to check for the golem
 		AxisAlignedBB toCheck = new AxisAlignedBB(pos).grow(0.5D);
 		List<GolemBase> list = worldIn.getEntitiesWithinAABB(GolemBase.class, toCheck);
-		boolean hasPowerGolem = list != null && !list.isEmpty();
-		for (GolemBase g : list) {
-			hasPowerGolem |= isPowerGolem(g);
-		}
+		boolean hasPowerGolem = list != null && !list.isEmpty() && hasPowerGolem(list);
 
 		if (!hasPowerGolem) {
 			// remove this block
@@ -101,12 +98,9 @@ public class BlockUtilityPower extends BlockUtility {
 		return blockState.getValue(POWER_LEVEL);
 	}
 
-	/**
-	 * Search the golem's AI to determine if it is a light-providing golem
-	 **/
-	protected boolean isPowerGolem(GolemBase golem) {
-		for (EntityAITaskEntry entry : golem.tasks.taskEntries) {
-			if (entry.action instanceof com.golems.entity.ai.EntityAIPlaceSingleBlock && ((EntityAIPlaceSingleBlock) entry.action).stateToPlace.getBlock() instanceof BlockUtilityPower) {
+	protected boolean hasPowerGolem(List<GolemBase> list) {
+		for(final GolemBase golem : list) {
+			if(golem.isProvidingPower()) {
 				return true;
 			}
 		}

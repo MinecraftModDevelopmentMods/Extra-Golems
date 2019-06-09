@@ -2,6 +2,7 @@ package com.golems.entity;
 
 import javax.annotation.Nullable;
 
+import com.golems.main.Config;
 import com.golems.main.ExtraGolems;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -38,6 +39,15 @@ public abstract class GolemColorizedMultiTextured extends GolemColorized {
 			// initialize loot tables
 			this.lootTables[n] = new ResourceLocation(getModId(), "entities/" 
 					+ this.getEntityString().replaceAll(getModId() + ":", "") + "/" + n);
+		}
+	}
+	
+	@Override
+	public void notifyDataManagerChange(DataParameter<?> key) {
+		super.notifyDataManagerChange(key);
+		// attempt to sync texture from client -> server -> other clients
+		if(DATA_TEXTURE.equals(key)) {
+			this.updateTextureByData(this.getTextureNum());
 		}
 	}
 
@@ -87,7 +97,7 @@ public abstract class GolemColorizedMultiTextured extends GolemColorized {
 
 	@Override
 	public boolean doesInteractChangeTexture() {
-		return true;
+		return Config.interactChangesTexture();
 	}
 	
 	@Override

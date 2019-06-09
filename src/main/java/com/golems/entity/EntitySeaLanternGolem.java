@@ -1,7 +1,11 @@
 package com.golems.entity;
 
+import java.util.List;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
+
 import com.golems.blocks.BlockUtilityGlow;
-import com.golems.entity.ai.EntityAIPlaceSingleBlock;
+import com.golems.entity.ai.EntityAIUtilityBlock;
 import com.golems.main.ExtraGolems;
 import com.golems.main.GolemItems;
 import com.golems.util.GolemConfigSet;
@@ -21,14 +25,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.List;
-import java.util.function.Predicate;
-
 public final class EntitySeaLanternGolem extends GolemBase {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Emit Light";
 	public static final String FREQUENCY = "Light Frequency";
-	public static final Predicate<IBlockState> WATER_PRED = toReplace -> toReplace.getBlock() != GolemItems.blockLightSourceWater && toReplace.getMaterial() == Material.WATER
+	public static final BiPredicate<GolemBase, IBlockState> WATER_PRED = (golem, toReplace) -> 
+		toReplace.getBlock() != GolemItems.blockLightSourceWater && toReplace.getMaterial() == Material.WATER
 		&& toReplace.getValue(BlockLiquid.LEVEL).intValue() == 0;
 	private static final float BRIGHTNESS = 1.0F;
 	private static final int BRIGHTNESS_INT = (int) (BRIGHTNESS * 15.0F);
@@ -46,10 +48,10 @@ public final class EntitySeaLanternGolem extends GolemBase {
 		super.initEntityAI();
 		// lights above and below water... need to add to different lists to run concurrently
 		GolemConfigSet cfg = getConfig(this);
-		this.tasks.addTask(8, new EntityAIPlaceSingleBlock(this, GolemItems.blockLightSourceWater.getDefaultState()
+		this.tasks.addTask(8, new EntityAIUtilityBlock(this, GolemItems.blockLightSourceWater.getDefaultState()
 			.withProperty(BlockUtilityGlow.LIGHT_LEVEL, BRIGHTNESS_INT), cfg.getInt(FREQUENCY),
 			cfg.getBoolean(ALLOW_SPECIAL), WATER_PRED));
-		this.targetTasks.addTask(8, new EntityAIPlaceSingleBlock(this, GolemItems.blockLightSource.getDefaultState()
+		this.targetTasks.addTask(8, new EntityAIUtilityBlock(this, GolemItems.blockLightSource.getDefaultState()
 			.withProperty(BlockUtilityGlow.LIGHT_LEVEL, BRIGHTNESS_INT), cfg.getInt(FREQUENCY),
 			cfg.getBoolean(ALLOW_SPECIAL)));
 	}
@@ -82,6 +84,11 @@ public final class EntitySeaLanternGolem extends GolemBase {
 	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_GLASS_STEP;
+	}
+	
+	@Override
+	public boolean isProvidingLight() {
+		return true;
 	}
 
 	@Override

@@ -2,6 +2,8 @@ package com.golems.renders;
 
 import com.golems.entity.GolemBase;
 import com.golems.entity.GolemColorized;
+import com.golems.main.ExtraGolems;
+
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -13,7 +15,7 @@ import net.minecraft.util.ResourceLocation;
  */
 public class RenderColoredGolem extends RenderLiving<GolemColorized> {
 
-	private static final ResourceLocation fallbackTexture = GolemBase.makeGolemTexture("clay");
+	private static final ResourceLocation fallbackTexture = GolemBase.makeTexture(ExtraGolems.MODID, "clay");
 	private ResourceLocation texture;
 
 	public RenderColoredGolem(final RenderManager renderManagerIn) {

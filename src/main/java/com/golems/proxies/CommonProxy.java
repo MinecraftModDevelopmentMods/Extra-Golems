@@ -8,7 +8,6 @@ import com.golems.entity.*;
 import com.golems.events.handlers.GolemCommonEventHandler;
 import com.golems.items.ItemBedrockGolem;
 import com.golems.items.ItemInfoBook;
-import com.golems.main.Config;
 import com.golems.main.ExtraGolems;
 import com.golems.main.GolemItems;
 import com.golems.util.ConsumerLootTables;
@@ -111,6 +110,7 @@ public class CommonProxy {
 				build(EntityQuartzGolem.class, GolemNames.QUARTZ_GOLEM, Blocks.QUARTZ_BLOCK),
 				build(EntityRedSandstoneGolem.class, GolemNames.REDSANDSTONE_GOLEM, Blocks.RED_SANDSTONE),
 				build(EntityRedstoneGolem.class, GolemNames.REDSTONE_GOLEM, Blocks.REDSTONE_BLOCK),
+				build(EntityRedstoneLampGolem.class, GolemNames.REDSTONELAMP_GOLEM, Blocks.REDSTONE_LAMP, Blocks.LIT_REDSTONE_LAMP),
 				build(EntitySandstoneGolem.class, GolemNames.SANDSTONE_GOLEM, Blocks.SANDSTONE),
 				build(EntitySeaLanternGolem.class, GolemNames.SEALANTERN_GOLEM, Blocks.SEA_LANTERN),
 				build(EntitySlimeGolem.class, GolemNames.SLIME_GOLEM, Blocks.SLIME_BLOCK),
@@ -135,7 +135,7 @@ public class CommonProxy {
 			@Override
 			@SideOnly(Side.CLIENT)
 			public boolean hasEffect(final ItemStack stack) {
-				return Config.golemHeadHasGlint();
+				return true;
 			}
 		}.setRegistryName(GolemItems.golemHead.getRegistryName()));
 

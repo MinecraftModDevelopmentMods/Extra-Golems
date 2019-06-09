@@ -33,6 +33,7 @@ entity.golems.golem_obsidian.name=Обсидиановый голем
 entity.golems.golem_prismarine.name=Призмариновый голем
 entity.golems.golem_quartz.name=Кварцевый голем
 entity.golems.golem_redstone.name=Редстоуновый голем
+entity.golems.golem_redstone_lamp.name=Редстоуновый фонарь голем
 entity.golems.golem_red_sandstone.name=Краснопесчаниковый голем
 entity.golems.golem_sandstone.name=Песчаниковый голем
 entity.golems.golem_sea_lantern.name=Морской голем-осветитель

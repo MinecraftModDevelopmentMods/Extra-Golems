@@ -1,5 +1,6 @@
 package com.golems.entity;
 
+import com.golems.main.Config;
 import com.golems.main.ExtraGolems;
 import com.golems.util.GolemNames;
 
@@ -15,35 +16,41 @@ import net.minecraft.world.World;
 
 public abstract class GolemMultiTextured extends GolemBase {
 
-	/** The DataParameter that stores which texture this golem is using. Max value is 128 **/
+	/**
+	 * The DataParameter that stores which texture this golem is using. Max value is
+	 * 128
+	 **/
 	protected static final DataParameter<Byte> DATA_TEXTURE = EntityDataManager
 			.<Byte>createKey(GolemMultiTextured.class, DataSerializers.BYTE);
 	protected static final String NBT_TEXTURE = "GolemTextureData";
 
 	/**
-	 * ResourceLocation array of textures to loop through when the player interacts with this golem.
-	 * Max size is 128
+	 * ResourceLocation array of textures to loop through when the player interacts
+	 * with this golem. Max size is 128
 	 **/
 	public final ResourceLocation[] textures;
-	
-	/** Loot Table array to match texture array. If you don't want this, override {@link getLootTable} **/
+
+	/**
+	 * Loot Table array to match texture array. If you don't want this, override
+	 * {@link getLootTable}
+	 **/
 	public final ResourceLocation[] lootTables;
 
 	/**
-	 * This is a base class for golems that change texture when player interacts. Pass Strings that
-	 * will be used to construct a ResourceLocation array of textures as well as loot tables<br/>
+	 * This is a base class for golems that change texture when player interacts.
+	 * Pass Strings that will be used to construct a ResourceLocation array of
+	 * textures as well as loot tables<br/>
 	 * <b>Example call to this constructor:</b><br/>
 	 * <br/>
 	 * <code>
 	 * public EntityExampleGolem(World world) {<br/>
-	 *	super(world, 1.0F, Blocks.AIR, "example", new String[] {"one","two","three"});<br/>
+	 *	super(world, Blocks.AIR, "example", new String[] {"one","two","three"});<br/>
 	 * }</code><br/>
 	 * This will initialize textures for <code>golem_example_one.png</code>,
 	 * <code>golem_example_two.png</code> and <code>golem_example_three.png</code>,
 	 * as well as loot tables for the same names with the JSON suffix
 	 **/
-	public GolemMultiTextured(final World world, final String prefix,
-			final String[] textureNames) {
+	public GolemMultiTextured(final World world, final String prefix, final String[] textureNames) {
 		super(world);
 		this.textures = new ResourceLocation[textureNames.length];
 		this.lootTables = new ResourceLocation[textureNames.length];
@@ -58,7 +65,8 @@ public abstract class GolemMultiTextured extends GolemBase {
 
 	@Override
 	protected ResourceLocation applyTexture() {
-		// apply TEMPORARY texture to avoid NPE. Actual texture is first applied in onLivingUpdate
+		// apply TEMPORARY texture to avoid NPE. Actual texture is first applied in
+		// onLivingUpdate
 		return makeTexture(ExtraGolems.MODID, GolemNames.CLAY_GOLEM);
 	}
 
@@ -80,6 +88,15 @@ public abstract class GolemMultiTextured extends GolemBase {
 			// this.writeEntityToNBT(this.getEntityData());
 			player.swingArm(hand);
 			return true;
+		}
+	}
+	
+	@Override
+	public void notifyDataManagerChange(DataParameter<?> key) {
+		super.notifyDataManagerChange(key);
+		// attempt to sync texture from client -> server -> other clients
+		if(DATA_TEXTURE.equals(key)) {
+			this.setTextureType(this.getTextureFromArray(this.getTextureNum()));
 		}
 	}
 
@@ -106,11 +123,12 @@ public abstract class GolemMultiTextured extends GolemBase {
 
 	@Override
 	public boolean doesInteractChangeTexture() {
-		return true;
+		return Config.interactChangesTexture();
 	}
 
 	/**
-	 * Calls {@link #setTextureNum(byte, boolean)} with <b>toSet</b> and <b>true</b>.
+	 * Calls {@link #setTextureNum(byte, boolean)} with <b>toSet</b> and
+	 * <b>true</b>.
 	 **/
 	public void setTextureNum(final byte toSet) {
 		setTextureNum(toSet, true);
@@ -118,8 +136,8 @@ public abstract class GolemMultiTextured extends GolemBase {
 
 	/**
 	 * Update the texture data. If <b>updateInstantly</b> is true, call
-	 * {@link #setTextureType(ResourceLocation)} based on {@link #getTextureFromArray(int)} and
-	 * {@link #getTextureNum()}
+	 * {@link #setTextureType(ResourceLocation)} based on
+	 * {@link #getTextureFromArray(int)} and {@link #getTextureNum()}
 	 **/
 	public void setTextureNum(final byte toSet, final boolean updateInstantly) {
 		this.getDataManager().set(DATA_TEXTURE, Byte.valueOf(toSet));
@@ -147,12 +165,11 @@ public abstract class GolemMultiTextured extends GolemBase {
 	public ResourceLocation getTextureFromArray(final int index) {
 		return this.textures[index % this.textures.length];
 	}
-	
+
 	@Override
-    protected ResourceLocation getLootTable()
-    {
-        return this.lootTables[this.getTextureNum() % this.lootTables.length];
-    }
+	protected ResourceLocation getLootTable() {
+		return this.lootTables[this.getTextureNum() % this.lootTables.length];
+	}
 
 	public abstract String getModId();
 }

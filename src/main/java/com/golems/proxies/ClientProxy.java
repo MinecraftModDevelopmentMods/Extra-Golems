@@ -63,6 +63,7 @@ public final class ClientProxy extends CommonProxy {
 		registerEntityRender(EntityQuartzGolem.class);
 		registerEntityRender(EntityRedSandstoneGolem.class);
 		registerEntityRender(EntityRedstoneGolem.class);
+		registerEntityRender(EntityRedstoneLampGolem.class);
 		registerEntityRender(EntitySandstoneGolem.class);
 		registerEntityRender(EntitySeaLanternGolem.class);
 		registerEntityRender(EntitySlimeGolem.class);
