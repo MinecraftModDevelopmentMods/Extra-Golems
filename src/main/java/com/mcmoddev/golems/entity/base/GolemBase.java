@@ -1,9 +1,8 @@
 package com.mcmoddev.golems.entity.base;
 
-import java.util.List;
-
 import javax.annotation.Nullable;
 
+import com.mcmoddev.golems.blocks.BlockUtility;
 import com.mcmoddev.golems.entity.ai.EntityAIDefendAgainstMonsters;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
@@ -12,6 +11,7 @@ import com.mcmoddev.golems.util.config.GolemContainer;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
@@ -50,7 +50,6 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -218,7 +217,8 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 			int k = MathHelper.floor(this.posZ);
 			BlockPos pos = new BlockPos(i, j, k);
 			IBlockState iblockstate = this.world.getBlockState(pos);
-			if (!this.world.isAirBlock(pos) && !iblockstate.getMaterial().isLiquid()) {
+			if (iblockstate.getMaterial() != Material.AIR && !iblockstate.getMaterial().isLiquid()
+					&& !(iblockstate.getBlock() instanceof BlockUtility)) {
 				this.world.spawnParticle(new BlockParticleData(Particles.BLOCK, iblockstate),
 					this.posX + ((double) this.rand.nextFloat() - 0.5D) * (double) this.width,
 					this.getBoundingBox().minY + 0.1D, this.posZ +
@@ -524,7 +524,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 	 * to determine if it can stay (called AFTER light is placed).
 	 * @see com.mcmoddev.golems.blocks.BlockUtilityGlow
 	 **/
-	public boolean doesProvideLight() {
+	public boolean isProvidingLight() {
 		return false;
 	}
 	
@@ -534,7 +534,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 	 * to determine if it can stay.
 	 * @see com.mcmoddev.golems.blocks.BlockUtilityPower
 	 **/
-	public boolean doesProvidePower() {
+	public boolean isProvidingPower() {
 		return false;
 	}
 

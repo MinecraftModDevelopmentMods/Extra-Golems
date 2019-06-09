@@ -18,13 +18,16 @@ import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.monster.EntitySpider;
 import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /**
@@ -213,14 +216,14 @@ public class GolemCommonEventHandler {
 //		return options.isEmpty() ? null : options.get(rand.nextInt(options.size()));
 //	}
 	
-	/**
+	/*
 	 * Basically, this handler allows pumpkins to be placed anywhere 
 	 * (as long as it's done by a player). Then upon placement, we try
 	 * to spawn a golem based on the blocks the pumpkin is on.
 	 *
 	 * Note:  This seems to be called twice on client and twice on server.
 	 * May have problems with dedicated server, or it might be fine.
-	 */
+	 *
 	@SubscribeEvent
 	public void onPlayerInteract(PlayerInteractEvent.RightClickBlock event) {
 		ItemStack stack = event.getItemStack();
@@ -260,7 +263,23 @@ public class GolemCommonEventHandler {
 			}
 		}
 	}
-
+	*/
+	
+	/**
+	 * Checks if a Carved Pumpkin was placed and, if so, attempts to
+	 * spawn a golem at that location IF enabled by the config.
+	 **/
+	@SubscribeEvent
+	public void onPlacePumpkin(final BlockEvent.EntityPlaceEvent event) {
+		// if the config allows it, and the block is a CARVED pumpkin...
+		if(!event.isCanceled() && ExtraGolemsConfig.pumpkinBuildsGolems()
+				&& event.getPlacedBlock().getBlock() == Blocks.CARVED_PUMPKIN
+				&& event.getWorld() instanceof World) {
+			// try to spawn a golem!
+			BlockGolemHead.trySpawnGolem((World)event.getWorld(), event.getPos());
+		}
+	}
+	
 	@SubscribeEvent
 	public void onLivingSpawned(final EntityJoinWorldEvent event) {
 		// add custom 'attack golem' AI to hostile mobs. They already have this for regular iron golems

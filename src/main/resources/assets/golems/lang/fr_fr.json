@@ -28,6 +28,7 @@
     "entity.golems.golem_prismarine": "Golem de Prismarin",
     "entity.golems.golem_quartz": "Golem de Quartz",
     "entity.golems.golem_redstone": "Golem de Redstone-Block",
+	"entity.golems.golem_redstone_lamp": "Golem de Lampe à redstone",
     "entity.golems.golem_red_sandstone": "Golem de Grès Rouge",
     "entity.golems.golem_sandstone": "Golem de Grès",
     "entity.golems.golem_sea_lantern": "Golem de Lanterne des Mers",

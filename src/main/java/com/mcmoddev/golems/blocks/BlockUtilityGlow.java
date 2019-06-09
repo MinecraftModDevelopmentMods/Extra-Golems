@@ -54,11 +54,11 @@ public class BlockUtilityGlow extends BlockUtility {
 
 	/**
 	 * @return if the given list contains any golems for whom 
-	 * {@link GolemBase#doesProvideLight()} returns true
+	 * {@link GolemBase#isProvidingLight()} returns true
 	 **/
-	protected boolean hasLightGolem(final List<GolemBase> golems) {
+	public static boolean hasLightGolem(final List<GolemBase> golems) {
 		for(GolemBase g : golems) {
-			if(g.doesProvideLight()) {
+			if(g.isProvidingLight()) {
 				return true;
 			}
 		}

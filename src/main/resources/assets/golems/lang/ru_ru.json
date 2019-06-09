@@ -35,6 +35,7 @@
     "entity.golems.golem_quartz": "Кварцевый голем",
     "entity.golems.golem_redstone": "Редстоуновый голем",
     "entity.golems.golem_red_sandstone": "Краснопесчаниковый голем",
+	"entity.golems.golem_redstone_lamp": "Редстоуновый фонарь голем",
     "entity.golems.golem_sandstone": "Песчаниковый голем",
     "entity.golems.golem_sea_lantern": "Морской голем-осветитель",
     "entity.golems.golem_shroom": "Голем-грибник",

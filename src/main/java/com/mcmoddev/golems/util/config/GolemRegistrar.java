@@ -40,30 +40,30 @@ public final class GolemRegistrar {
 			}
 		}
 		if(container == null) return null;
-		else return container.entityType.create(world);
+		return container.entityType.create(world);
 	}
 	
 	/**
 	 * Checks all registered GolemContainers until one is
 	 * found that is constructed out of the passed Blocks.
 	 * Parameters are the current World and the 4 blocks that will
-	 * be used to calculate this Golem (order does not matter).
+	 * be used to calculate this Golem.
 	 * It is okay to pass {@code null} or Air.
 	 * @return the constructed GolemBase instance if there is one
 	 * for the passed blocks, otherwise null
 	 * @see GolemContainer#areBuildingBlocks(Block, Block, Block, Block)
 	 **/
 	@Nullable
-	public static GolemBase getGolem(World world, Block b1, Block b2, Block b3, Block b4) {
+	public static GolemBase getGolem(World world, Block below1, Block below2, Block arm1, Block arm2) {
 		GolemContainer container = null;
 		for(GolemContainer c : golemList.values()) {
-			if(c.areBuildingBlocks(b1, b2, b3, b4)) {
+			if(c.areBuildingBlocks(below1, below2, arm1, arm2)) {
 				container = c;
 				break;
 			}
 		}
 		if(container == null) return null;
-		else return container.entityType.create(world);
+		return container.entityType.create(world);
 	}
 
 	public static Collection<GolemContainer> getContainers() {

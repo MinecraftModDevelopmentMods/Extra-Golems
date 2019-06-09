@@ -3,13 +3,11 @@ package com.mcmoddev.golems.util;
 import com.mcmoddev.golems.main.ExtraGolems;
 
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
 
 public class BlockTagUtil {
-	
 	
 	public static Tag<Block> TAG_CONCRETE;
 	public static Tag<Block> TAG_SANDSTONE ;
@@ -27,16 +25,6 @@ public class BlockTagUtil {
 		TAG_STAINED_GLASS = getTag(new ResourceLocation(ExtraGolems.MODID, "stained_glass"));
 		TAG_TERRACOTTA = getTag(new ResourceLocation(ExtraGolems.MODID, "colored_terracotta"));
 		TAG_QUARTZ = getTag(new ResourceLocation(ExtraGolems.MODID, "quartz"));
-		
-		// debug
-		if(TAG_CONCRETE != null) {
-			ExtraGolems.LOGGER.info("Loaded tag for Concrete:\n{ ");
-			TAG_CONCRETE.getAllElements().stream()
-				.map(e -> e.getRegistryName().toString()).forEach(e -> System.out.print(e + "\n"));
-			System.out.print(" }\n");
-		} else {
-			ExtraGolems.LOGGER.info("TAG_CONCRETE is null!");
-		}
 	}
 	
 	public static Tag<Block> getTag(ResourceLocation path) {

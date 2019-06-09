@@ -22,6 +22,7 @@ public final class ExtraGolemsEntities {
 	public static void initEntityTypes() {
 		// Repeated GolemDescription objects
 		final GolemDescription FIREPROOF = new GolemDescription(new TextComponentTranslation("entitytip.is_fireproof").applyTextStyle(TextFormatting.GOLD));
+		// technically they all breathe underwater, but we add this to a couple especially sea-worthy golems anyway.
 		final GolemDescription BREATHE_WATER = new GolemDescription(new TextComponentTranslation("entitytip.breathes_underwater").applyTextStyle(TextFormatting.AQUA));
 		final ITextComponent HEALS = new TextComponentTranslation("entitytip.heals").applyTextStyle(TextFormatting.LIGHT_PURPLE);
 		
@@ -72,7 +73,7 @@ public final class ExtraGolemsEntities {
 				.setHealth(190.0D).setAttack(18.0D).addBlocks(Blocks.EMERALD_BLOCK).build());
 		// ENDSTONE GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.ENDSTONE_GOLEM, EntityEndstoneGolem.class, EntityEndstoneGolem::new)
-				.setHealth(50.0D).setAttack(8.0D).setSpeed(0.26D).addBlocks(Blocks.END_STONE)
+				.setHealth(50.0D).setAttack(8.0D).setSpeed(0.26D).addBlocks(Blocks.END_STONE, Blocks.END_STONE_BRICKS)
 				.addSpecial(EntityEndstoneGolem.ALLOW_WATER_HURT, true, "Whether the Endstone Golem takes damage from water")
 				.addSpecial(EntityEndstoneGolem.ALLOW_SPECIAL, true, "Whether this golem can teleport",
 						new TextComponentTranslation("entitytip.can_teleport").applyTextStyle(TextFormatting.DARK_AQUA))
@@ -173,6 +174,12 @@ public final class ExtraGolemsEntities {
 				.setHealth(18.0D).setAttack(2.0D).setSpeed(0.26D).addBlocks(Blocks.REDSTONE_BLOCK)
 				.addSpecial(EntityRedstoneGolem.ALLOW_SPECIAL, true, "Whether this golem can emit redstone power",
 						new TextComponentTranslation("entitytip.emits_redstone_signal").applyTextStyle(TextFormatting.RED))
+				.build());
+		// REDSTONE LAMP GOLEM
+		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.REDSTONELAMP_GOLEM, EntityRedstoneLampGolem.class, EntityRedstoneLampGolem::new)
+				.setHealth(28.0D).setAttack(6.0D).setSpeed(0.26D).addBlocks(Blocks.REDSTONE_LAMP)
+				.addSpecial(EntityRedstoneLampGolem.ALLOW_SPECIAL, true, "Whether this golem can light up the area", 
+						new TextComponentTranslation("entitytip.lights_area_toggle").applyTextStyle(TextFormatting.GOLD))
 				.build());
 		// SANDSTONE GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.SANDSTONE_GOLEM, EntitySandstoneGolem.class, EntitySandstoneGolem::new)

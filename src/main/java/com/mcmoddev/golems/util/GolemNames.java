@@ -34,6 +34,7 @@ public final class GolemNames {
 	public static final String QUARTZ_GOLEM = "golem_quartz";
 	public static final String REDSANDSTONE_GOLEM = "golem_red_sandstone";
 	public static final String REDSTONE_GOLEM = "golem_redstone";
+	public static final String REDSTONELAMP_GOLEM = "golem_redstone_lamp";
 	public static final String SANDSTONE_GOLEM = "golem_sandstone";
 	public static final String SEALANTERN_GOLEM = "golem_sea_lantern";
 	public static final String SLIME_GOLEM = "golem_slime";
@@ -66,6 +67,7 @@ public final class GolemNames {
 	}
 	
 	/**
+	 * Currently unused.
 	 * @param nameIn a value from GolemNames
 	 * @return the given name without the "golem_" prefix
 	 */

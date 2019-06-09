@@ -1,6 +1,5 @@
 package com.mcmoddev.golems.gui;
 
-import com.mcmoddev.golems.entity.EntityBedrockGolem;
 import com.mcmoddev.golems.entity.base.GolemMultiColorized;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
@@ -49,7 +48,7 @@ public class GolemBookEntry {
 		container.addDescription(SPECIALS);
 
 		// set the block and block name if it exists
-		this.BLOCKS = container.getBuildingBlocks();
+		this.BLOCKS = container.getBuildingBlocks().toArray(new Block[0]);
 		
 		// find the image to add to the book
 		String img = (ExtraGolems.MODID + ":textures/gui/screenshots/").concat(golemType.getRegistryName().getPath()).concat(".png");

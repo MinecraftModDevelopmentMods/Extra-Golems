@@ -1,10 +1,11 @@
 package com.mcmoddev.golems.util.config;
 
-import com.google.common.base.Predicates;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockAir;
+import net.minecraft.block.BlockFlowingFluid;
 import net.minecraft.entity.EntityType;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
@@ -14,7 +15,6 @@ import net.minecraft.world.World;
 
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -22,6 +22,7 @@ import javax.annotation.Nullable;
 /**
  * Adapted from BetterAnimalsPlus by its_meow. Used with permission.
  */
+@SuppressWarnings("rawtypes")
 public class GolemContainer {
 
 	private final List<Block> validBuildingBlocks;
@@ -36,11 +37,23 @@ public class GolemContainer {
 	public final Map<String, GolemSpecialContainer> specialContainers;
 	public final List<GolemDescription> descContainers;
 
+	/**
+	 * Constructor for GolemContainer (use the Builder!)
+	 * @param lEntityType a constructed EntityType for the golem
+	 * @param lPath the golem name
+	 * @param lValidBuildingBlocks a List of blocks to build the golem
+	 * @param lValidBuildingBlockTags a List of Block Tags to build the golem
+	 * @param lHealth base health value
+	 * @param lAttack base attack value
+	 * @param lSpeed base speed value
+	 * @param lSpecialContainers any golem specials as a Map
+	 * @param lDescContainers any special descriptions for the golem
+	 **/
 	private GolemContainer(final EntityType<GolemBase> lEntityType, final String lPath,
 						   final List<Block> lValidBuildingBlocks, final List<ResourceLocation> lValidBuildingBlockTags,
 						   final double lHealth, final double lAttack, final double lSpeed,
 						   final HashMap<String, GolemSpecialContainer> lSpecialContainers,
-						   final List<GolemDescription> lDescContainers) {
+						   final List<GolemDescription> lDesc) {
 		this.entityType = lEntityType;
 		this.validBuildingBlocks = lValidBuildingBlocks;
 		this.validBuildingBlockTags = lValidBuildingBlockTags;
@@ -49,31 +62,52 @@ public class GolemContainer {
 		this.attack = lAttack;
 		this.speed = lSpeed;
 		this.specialContainers = lSpecialContainers;
-		this.descContainers = lDescContainers;
+		this.descContainers = lDesc;
 	}
 	
+	/**
+	 * Called by various in-game info tools, such as the Golem Book
+	 * and WAILA / HWYLA. Adds this golem's description(s) to the given
+	 * List as specified by 
+	 * {@link GolemDescription#addDescription(List, GolemContainer)}.
+	 * @param list a List that may or may not contain other descriptions already.
+	 **/
 	public void addDescription(final List<ITextComponent> list) {
 		for(final GolemDescription cont : descContainers) {
 			cont.addDescription(list, this);
 		}
 	}
 
+	/**
+	 * @return True if there is at least one valid 
+	 * Block or Block Tag which can be used to build this golem
+	 **/
 	public boolean hasBuildingBlock() {
 		return !this.validBuildingBlocks.isEmpty() || !this.validBuildingBlockTags.isEmpty();
 	}
 
-	public Block[] getBuildingBlocks() {
+	/**
+	 * @return a Set of all possible Blocks that can be used
+	 * to build the golem. Does not contain duplicates. May be empty. 
+	 * @see #hasBuildingBlock()
+	 **/
+	public Set<Block> getBuildingBlocks() {
 		// make set of all blocks including tags (run-time only)
 		Set<Block> blocks = new HashSet<>();
 		blocks.addAll(validBuildingBlocks);
 		for(final Tag<Block> tag : loadTags(validBuildingBlockTags)) {
 			blocks.addAll(tag.getAllElements());
 		}
-		return blocks.toArray(new Block[0]);
+		return blocks;
 	}
 	
+	/**
+	 * @deprecated use {@link #areBuildingBlocks(Block, Block, Block, Block)}
+	 **/
 	public boolean isBuildingBlock(final Block b) {
-		if(null == b) return false;
+		if(null == b || b instanceof BlockAir || b instanceof BlockFlowingFluid) {
+			return false;
+		}
 		// if the block has been manually added to block list
 		if(this.validBuildingBlocks.contains(b)) {
 			return true;
@@ -88,20 +122,34 @@ public class GolemContainer {
  		return false;
 	}
 	
-	public boolean areBuildingBlocks(final Block b1, final Block b2, final Block b3, final Block b4) {
-		return isBuildingBlock(b1) && isBuildingBlock(b2) && isBuildingBlock(b3) && isBuildingBlock(b4);
+	/**
+	 * Checks if this golem's building block set includes all of the given blocks.
+	 * @param body the Block immediately below the head
+	 * @param legs the Block immediately below the body Block
+	 * @param arm1 first arm Block (could be North-South or East-West)
+	 * @param arm2 second arm Block (could be North-South or East-West)
+	 * @return true if all blocks are valid building blocks
+	 * @see #getBuildingBlocks()
+	 **/
+	public boolean areBuildingBlocks(final Block body, final Block legs, final Block arm1, final Block arm2) {
+		final Set<Block> blocks = getBuildingBlocks();		
+		return blocks.contains(body) && blocks.contains(legs) && blocks.contains(arm1) && blocks.contains(arm2);
 	}
 	
+	/**
+	 * Returns a single Block that can be used for this golem.
+	 * It is not guaranteed that there is a Block or that it is the
+	 * most easily obtainable by the player, it's simply the first
+	 * element in the set of building blocks.
+	 * @return a Block to build this golem, or null if none are found
+	 * @see #getBuildingBlocks()
+	 **/
 	@Nullable
 	public Block getPrimaryBuildingBlock() {
 		if(hasBuildingBlock()) {
-			if(!this.validBuildingBlocks.isEmpty() && this.validBuildingBlocks.get(0) != null) {
-				// get first block in list
-				return this.validBuildingBlocks.get(0);
-			} else if(!this.validBuildingBlockTags.isEmpty() && this.validBuildingBlockTags.get(0) != null) {
-				// get first tag in list and first block mapping in that tag
-				Block[] blocks = BlockTags.getCollection().get(this.validBuildingBlockTags.get(0)).getAllElements().toArray(new Block[0]);
-				return blocks.length > 0 ? blocks[0] : null;
+			final Block[] blocks = this.getBuildingBlocks().toArray(new Block[0]);
+			if(blocks != null && blocks.length > 0) {
+				return blocks[0];
 			}
 		}
 		return null;
@@ -131,9 +179,19 @@ public class GolemContainer {
 		return this.validBuildingBlockTags.add(additional.getId());
 	}
 	
+	/**
+	 * Required for correctly loading tags - they must be called as needed and
+	 * can not be stored or queried before they are properly loaded and reloaded.
+	 * @param rls a Collection of ResourceLocation IDs that represent Block Tags.
+	 * @return
+	 **/
 	private static Collection<Tag<Block>> loadTags(final Collection<ResourceLocation> rls) {
 		final Collection<Tag<Block>> tags = new HashSet<>();
-		rls.forEach(rl -> tags.add(BlockTags.getCollection().get(rl)));
+		for(final ResourceLocation rl : rls) {
+			if(BlockTags.getCollection().get(rl) != null) {
+				tags.add(BlockTags.getCollection().get(rl));
+			}
+		}
 		return tags;
 	}
 	
@@ -160,7 +218,7 @@ public class GolemContainer {
 		private final EntityType.Builder<GolemBase> entityTypeBuilder;
 		private String modid = ExtraGolems.MODID;
 		private double health = 100.0D;
-		private double attack = 14.0D; //Average iron golem attack in Normal mode
+		private double attack = 7.0D;
 		private double speed = 0.25D;
 		//This is a list to allow determining the "priority" of golem blocks. This could be used to our
 		//advantage in golem building logic for conflicts in the future.
@@ -204,7 +262,7 @@ public class GolemContainer {
 
 		/**
 		 * Sets the attack strength of a golem
-		 * @param lAttack The attack strength (in half hearts) of the golem. <b>Defaults to 14</b>
+		 * @param lAttack The attack strength (in half hearts) of the golem. <b>Defaults to 7</b>
 		 * @return instance to allow chaining of methods
 		 */
 		public Builder setAttack(final double lAttack) {

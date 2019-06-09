@@ -45,7 +45,6 @@ public class ProxyCommon {
 				return true;
 			}
 		}.setRegistryName(GolemItems.golemHead.getRegistryName()));
-		ExtraGolems.LOGGER.info("RegistryEvents registering items");
 		event.getRegistry()
 			.register(new ItemBedrockGolem()
 				.setRegistryName(ExtraGolems.MODID, "spawn_bedrock_golem"));
@@ -66,7 +65,6 @@ public class ProxyCommon {
 				.setRegistryName(ExtraGolems.MODID, "power_provider_all"));
 	}
 	
-
 	public static void registerLootTables() {
 		// register Golem Loot Tables
 		LootTableList.register(new ResourceLocation(ExtraGolems.MODID, "entities/_golem_base"));

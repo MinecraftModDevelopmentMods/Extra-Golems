@@ -62,11 +62,11 @@ public class BlockUtilityPower extends BlockUtility {
 	
 	/**
 	 * @return if the given list contains any golems for whom 
-	 * {@link GolemBase#doesProvidePower()} returns true
+	 * {@link GolemBase#isProvidingPower()} returns true
 	 **/
-	protected boolean hasPowerGolem(final List<GolemBase> golems) {
+	public static boolean hasPowerGolem(final List<GolemBase> golems) {
 		for(GolemBase g : golems) {
-			if(g.doesProvidePower()) {
+			if(g.isProvidingPower()) {
 				return true;
 			}
 		}

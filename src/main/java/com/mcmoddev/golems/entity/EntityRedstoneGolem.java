@@ -1,7 +1,7 @@
 package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.blocks.BlockUtilityPower;
-import com.mcmoddev.golems.entity.ai.EntityAIPlaceSingleBlock;
+import com.mcmoddev.golems.entity.ai.EntityAIUtilityBlock;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
@@ -24,7 +24,7 @@ public final class EntityRedstoneGolem extends GolemBase {
 		final IBlockState state = GolemItems.blockPowerSource.getDefaultState().with(BlockUtilityPower.POWER_LEVEL, 15);
 		final int freq = BlockUtilityPower.UPDATE_TICKS;
 		final boolean allow = this.getConfigBool(ALLOW_SPECIAL);
-		this.tasks.addTask(9, new EntityAIPlaceSingleBlock(this, state, freq, allow));
+		this.tasks.addTask(9, new EntityAIUtilityBlock(this, state, freq, allow));
 		this.setLootTableLoc(GolemNames.REDSTONE_GOLEM);
 	}
 
@@ -35,7 +35,7 @@ public final class EntityRedstoneGolem extends GolemBase {
 	
 
 	@Override
-	public boolean doesProvidePower() {
+	public boolean isProvidingPower() {
 		return true;
 	}
 

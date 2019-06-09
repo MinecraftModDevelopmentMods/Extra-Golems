@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.mcmoddev.golems.entity.EntityBedrockGolem;
+import com.mcmoddev.golems.entity.EntityRedstoneLampGolem;
 import com.mcmoddev.golems.entity.base.GolemBase;
 
 import net.minecraft.client.gui.GuiScreen;
@@ -51,7 +52,8 @@ public abstract class GolemDescriptionManager {
 		}
 
 		// add right-click-texture to tip if possible
-		if (this.showMultiTexture && (golem.canInteractChangeTexture())) {
+		if (this.showMultiTexture && golem.canInteractChangeTexture()
+				&& !(golem instanceof EntityRedstoneLampGolem)) {
 			list.add(new TextComponentTranslation("entitytip.click_change_texture")
 					.applyTextStyle(TextFormatting.BLUE));
 		}

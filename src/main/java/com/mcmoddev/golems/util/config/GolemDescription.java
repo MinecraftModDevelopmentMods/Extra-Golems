@@ -75,7 +75,7 @@ public class GolemDescription {
 	/**
 	 * 
 	 * @param list a list to which text will be added if possible
-	 * @param specialContainers the GolemContainer to query for config permissions
+	 * @param container the GolemContainer to query for config permissions
 	 * @return true if the description was added.
 	 * @see #addDescription(List)
 	 **/

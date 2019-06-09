@@ -34,6 +34,7 @@
     "entity.golems.golem_prismarine": "Prismaringolem",
     "entity.golems.golem_quartz": "Quarzgolem",
     "entity.golems.golem_redstone": "Redstone-Golem",
+	"entity.golems.golem_redstone_lamp": "Redstone-Lampe-Golem",
     "entity.golems.golem_red_sandstone": "Roter Sandsteingolem",
     "entity.golems.golem_sandstone": "Sandsteingolem",
     "entity.golems.golem_sea_lantern": "Seelaternengolem",

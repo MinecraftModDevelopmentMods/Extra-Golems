@@ -19,11 +19,6 @@ public class EntityAIPlaceRandomBlocksStrictly extends EntityAIPlaceRandomBlocks
 		this(golemBase, ticksBetweenPlanting, plants, null, configAllows);
 	}
 
-	@Override
-	public boolean shouldExecute() {
-		return tickDelay > 0 && canExecute.test(this) && golem.world.rand.nextInt(tickDelay) == 0;
-	}
-
 	public static Predicate<EntityAIPlaceRandomBlocks> getGriefingPredicate() {
 		return t -> t.golem.world.getGameRules().getBoolean("mobGriefing");
 	}
