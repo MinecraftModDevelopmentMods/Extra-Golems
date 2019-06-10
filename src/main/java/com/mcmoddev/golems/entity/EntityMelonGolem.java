@@ -24,7 +24,6 @@ public final class EntityMelonGolem extends GolemBase {
 	public EntityMelonGolem(final World world) {
 		super(EntityMelonGolem.class, world);
 		this.setCanSwim(true);
-		this.setLootTableLoc(GolemNames.MELON_GOLEM);
 	}
 
 	@Override

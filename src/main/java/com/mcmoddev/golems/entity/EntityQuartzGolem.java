@@ -14,7 +14,6 @@ public final class EntityQuartzGolem extends GolemBase {
 
 	public EntityQuartzGolem(final World world) {
 		super(EntityQuartzGolem.class, world);
-		this.setLootTableLoc(GolemNames.QUARTZ_GOLEM);
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.3D);
 	}
 

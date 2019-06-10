@@ -24,7 +24,7 @@ public final class EntityStainedClayGolem extends GolemMultiColorized {
 		.makeTexture(ExtraGolems.MODID, GolemNames.STAINEDTERRACOTTA_GOLEM + "_grayscale");
 
 	public EntityStainedClayGolem(final World world) {
-		super(EntityStainedClayGolem.class, world, TEXTURE_BASE, TEXTURE_OVERLAY, dyeColorArray);
+		super(EntityStainedClayGolem.class, world, TEXTURE_BASE, TEXTURE_OVERLAY, DYE_COLORS);
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.2D);
 	}
 
@@ -56,7 +56,7 @@ public final class EntityStainedClayGolem extends GolemMultiColorized {
 		else if(b == Blocks.GREEN_TERRACOTTA) textureNum = 13;
 		else if(b == Blocks.RED_TERRACOTTA) textureNum = 14;
 		else if(b == Blocks.BLACK_TERRACOTTA) textureNum = 15;
-		else textureNum = (byte)this.rand.nextInt(dyeColorArray.length);
+		else textureNum = (byte)this.rand.nextInt(DYE_COLORS.length);
 		// actually set the texture
 		this.setTextureNum(textureNum);
 	}

@@ -68,7 +68,6 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 	public static final int WANDER_DISTANCE = 64;
 	protected int attackTimer;
 	protected ResourceLocation textureLoc;
-	protected ResourceLocation lootTableLoc;
 	protected ItemStack creativeReturn;
 	protected Village villageObj;
 	protected boolean hasHome = false;
@@ -380,8 +379,9 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 	}
 
 	@Override
+	@Nullable
 	protected ResourceLocation getLootTable() {
-		return this.lootTableLoc;
+		return this.container.getLootTable();
     }
 	
 	/** 
@@ -421,18 +421,6 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 	 * make this golem (especially used with multi-textured golems)
 	 **/
 	public void onBuilt(IBlockState body, IBlockState legs, IBlockState arm1, IBlockState arm2) { }
-
-	public void setLootTableLoc(final ResourceLocation lootTable) {
-		this.lootTableLoc = lootTable;
-	}
-
-	public void setLootTableLoc(String modid, final String name) {
-		this.setLootTableLoc(new ResourceLocation(modid, "entities/" + name));
-	}
-	
-	public void setLootTableLoc(final String name) {
-		this.setLootTableLoc(ExtraGolems.MODID, name);
-	}
 
 	public void setCreativeReturn(final Block blockToReturn) {
 		this.setCreativeReturn(new ItemStack(blockToReturn, 1));

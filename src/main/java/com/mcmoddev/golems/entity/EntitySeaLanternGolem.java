@@ -25,7 +25,6 @@ public final class EntitySeaLanternGolem extends GolemBase {
 	public EntitySeaLanternGolem(final World world) {
 		super(EntitySeaLanternGolem.class, world);
 		this.canDrown = false;
-		this.setLootTableLoc(GolemNames.SEALANTERN_GOLEM);
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.2D);
 	}
 

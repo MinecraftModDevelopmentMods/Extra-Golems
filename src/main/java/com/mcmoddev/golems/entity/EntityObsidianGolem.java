@@ -14,7 +14,6 @@ public final class EntityObsidianGolem extends GolemBase {
 
 	public EntityObsidianGolem(final World world) {
 		super(EntityObsidianGolem.class, world);
-		this.setLootTableLoc(GolemNames.OBSIDIAN_GOLEM);
 		this.setImmuneToFire(true);
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.5D);
 	}

@@ -38,22 +38,17 @@ public class ProxyCommon {
 	}
 
 	public void registerItems(final RegistryEvent.Register<Item> event) {
-		event.getRegistry().register(new ItemBlock(GolemItems.golemHead, new Item.Properties().group(ItemGroup.MISC)) {
-			@Override
-			@OnlyIn(Dist.CLIENT)
-			public boolean hasEffect(final ItemStack stack) {
-				return true;
-			}
-		}.setRegistryName(GolemItems.golemHead.getRegistryName()));
-		event.getRegistry()
-			.register(new ItemBedrockGolem()
-				.setRegistryName(ExtraGolems.MODID, "spawn_bedrock_golem"));
-
-		event.getRegistry().register(new ItemGolemSpell()
-			.setRegistryName(ExtraGolems.MODID, "golem_paper"));
-
-		event.getRegistry().register(new ItemInfoBook()
-			.setRegistryName(ExtraGolems.MODID, "info_book"));
+		event.getRegistry().registerAll(
+			new ItemBlock(GolemItems.golemHead, new Item.Properties().group(ItemGroup.MISC)) {
+				@Override
+				@OnlyIn(Dist.CLIENT)
+				public boolean hasEffect(final ItemStack stack) {
+					return true;
+				}
+			}.setRegistryName(GolemItems.golemHead.getRegistryName()),
+			new ItemBedrockGolem().setRegistryName(ExtraGolems.MODID, "spawn_bedrock_golem"),
+			new ItemGolemSpell().setRegistryName(ExtraGolems.MODID, "golem_paper"),
+			new ItemInfoBook().setRegistryName(ExtraGolems.MODID, "info_book"));
 	}
 
 	public void registerBlocks(final RegistryEvent.Register<Block> event) {
@@ -68,6 +63,5 @@ public class ProxyCommon {
 	public static void registerLootTables() {
 		// register Golem Loot Tables
 		LootTableList.register(new ResourceLocation(ExtraGolems.MODID, "entities/_golem_base"));
-		GolemNames.forEach(ConsumerLootTables.CONSUMER);
 	}
 }

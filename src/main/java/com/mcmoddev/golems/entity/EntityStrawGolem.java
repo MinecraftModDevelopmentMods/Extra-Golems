@@ -27,7 +27,6 @@ public final class EntityStrawGolem extends GolemBase {
 	public EntityStrawGolem(final World world) {
 		super(EntityStrawGolem.class, world);
 		this.setCanSwim(true);
-		this.setLootTableLoc(GolemNames.STRAW_GOLEM);
 		this.boostFreq = this.getConfigInt(SPECIAL_FREQ);
 		this.boostFreq += this.rand.nextInt(Math.max(10, this.boostFreq / 2));
 		this.range = 4;

@@ -14,7 +14,6 @@ public final class EntityBoneGolem extends GolemBase {
 	public EntityBoneGolem(final World world) {
 		super(EntityBoneGolem.class, world);
 		this.setCanTakeFallDamage(true);
-		this.setLootTableLoc(GolemNames.BONE_GOLEM);
 	}
 
 	protected ResourceLocation applyTexture() {

@@ -21,6 +21,7 @@ public class GolemConfiguration {
 	public ForgeConfigSpec.BooleanValue pumpkinBuildsGolem;
 	public ForgeConfigSpec.BooleanValue enableFriendlyFire;
 	public ForgeConfigSpec.BooleanValue enableTextureInteract;
+	public ForgeConfigSpec.BooleanValue enableUseItemSpell;
 
 // TODO implement the following config values
 //		villageGolemSpawnsDesert = config.getStringList("Desert Village Golem Spawns", CATEGORY_OTHER, villageGolemSpawnsDesert,
@@ -42,6 +43,8 @@ public class GolemConfiguration {
 				.define("friendly_fire", true);
 		this.enableTextureInteract = builder.comment("When enabled, some golems will change their texture when clicked")
 				.define("texture_interact", false);
+		this.enableUseItemSpell = builder.comment("When enabled, players can 'use' the spell item on a pumpkin to convert it to a golem head in-world")
+				.define("use_spell", true);
 		
 		builder.pop();
 		

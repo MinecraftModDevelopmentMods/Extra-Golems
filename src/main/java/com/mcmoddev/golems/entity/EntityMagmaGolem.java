@@ -64,7 +64,6 @@ public final class EntityMagmaGolem extends GolemBase {
 		this.ticksStandingStill = 0;
 		this.setImmuneToFire(true);
 		this.setCanSwim(!this.isHurtByWater);
-		this.setLootTableLoc(GolemNames.MAGMA_GOLEM);
 	}
 	
 	@Override

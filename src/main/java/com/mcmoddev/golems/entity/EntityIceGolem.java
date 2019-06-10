@@ -27,8 +27,7 @@ public final class EntityIceGolem extends GolemBase {
 
 	public EntityIceGolem(final World world) {
 		super(EntityIceGolem.class, world);
-		this.setCanSwim(true); // just in case
-		this.setLootTableLoc(GolemNames.ICE_GOLEM);
+		this.setCanSwim(true);
 	}
 
 	protected ResourceLocation applyTexture() {

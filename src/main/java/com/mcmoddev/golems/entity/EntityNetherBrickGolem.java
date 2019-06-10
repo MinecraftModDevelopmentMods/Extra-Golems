@@ -18,7 +18,6 @@ public final class EntityNetherBrickGolem extends GolemBase {
 	public EntityNetherBrickGolem(final World world) {
 		super(EntityNetherBrickGolem.class, world);
 		this.setImmuneToFire(true);
-		this.setLootTableLoc(GolemNames.NETHERBRICK_GOLEM);
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.2D);
 	}
 

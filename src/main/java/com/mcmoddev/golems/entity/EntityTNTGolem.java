@@ -40,7 +40,6 @@ public class EntityTNTGolem extends GolemBase {
 	/** Default constructor for TNT golem. **/
 	public EntityTNTGolem(final World world) {
 		this(EntityTNTGolem.class, world, 4, 8, 50, 10);
-		this.setLootTableLoc(GolemNames.TNT_GOLEM);
 		this.allowedToExplode = this.getConfigBool(ALLOW_SPECIAL);
 	}
 

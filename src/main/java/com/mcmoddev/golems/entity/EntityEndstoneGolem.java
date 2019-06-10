@@ -37,7 +37,6 @@ public class EntityEndstoneGolem extends GolemBase {
 	/** Default constructor. **/
 	public EntityEndstoneGolem(final World world) {
 		this(EntityEndstoneGolem.class, world, 32.0D, true);
-		this.setLootTableLoc(GolemNames.ENDSTONE_GOLEM);
 		this.isHurtByWater = this.getConfigBool(ALLOW_WATER_HURT);
 		this.allowTeleport = this.getConfigBool(ALLOW_SPECIAL);
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.3D);

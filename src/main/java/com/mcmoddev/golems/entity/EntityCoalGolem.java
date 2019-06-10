@@ -20,7 +20,6 @@ public final class EntityCoalGolem extends GolemBase {
 
 	public EntityCoalGolem(final World world) {
 		super(EntityCoalGolem.class, world);
-		this.setLootTableLoc(GolemNames.COAL_GOLEM);
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.2D);
 	}
 

@@ -14,7 +14,6 @@ public final class EntityTerracottaGolem extends GolemBase {
 
 	public EntityTerracottaGolem(final World world) {
 		super(EntityTerracottaGolem.class, world);
-		this.setLootTableLoc(GolemNames.TERRACOTTA_GOLEM);
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.2D);
 	}
 

@@ -2,6 +2,7 @@ package com.mcmoddev.golems.util;
 
 import com.mcmoddev.golems.entity.EntityConcreteGolem;
 import com.mcmoddev.golems.entity.EntityMushroomGolem;
+import com.mcmoddev.golems.entity.EntityRedstoneLampGolem;
 import com.mcmoddev.golems.entity.EntityStainedClayGolem;
 import com.mcmoddev.golems.entity.EntityStainedGlassGolem;
 import com.mcmoddev.golems.entity.EntityWoodenGolem;
@@ -12,6 +13,7 @@ import net.minecraft.world.storage.loot.LootTableList;
 
 import java.util.function.Consumer;
 
+@Deprecated
 public class ConsumerLootTables implements Consumer<String> {
 	
 	public static final ConsumerLootTables CONSUMER = new ConsumerLootTables();
@@ -25,19 +27,22 @@ public class ConsumerLootTables implements Consumer<String> {
 			registerLootTables(ExtraGolems.MODID, NAME, EntityWoolGolem.coloredWoolTypes);
 			return;
 		case GolemNames.WOODEN_GOLEM:
-			registerLootTables(ExtraGolems.MODID, NAME, EntityWoodenGolem.woodTypes);
+			registerLootTables(ExtraGolems.MODID, NAME, EntityWoodenGolem.WOOD_TYPES);
 			return;
 		case GolemNames.MUSHROOM_GOLEM:
 			registerLootTables(ExtraGolems.MODID, NAME, EntityMushroomGolem.SHROOM_TYPES);
 			return;			
 		case GolemNames.STAINEDGLASS_GOLEM:
-			registerLootTables(ExtraGolems.MODID, NAME, EntityStainedGlassGolem.dyeColorArray.length);
+			registerLootTables(ExtraGolems.MODID, NAME, EntityStainedGlassGolem.DYE_COLORS.length);
 			return;
 		case GolemNames.STAINEDTERRACOTTA_GOLEM:
-			registerLootTables(ExtraGolems.MODID, NAME, EntityStainedClayGolem.dyeColorArray.length);
+			registerLootTables(ExtraGolems.MODID, NAME, EntityStainedClayGolem.DYE_COLORS.length);
+			return;
+		case GolemNames.REDSTONELAMP_GOLEM:
+			registerLootTables(ExtraGolems.MODID, NAME, EntityRedstoneLampGolem.VARIANTS);
 			return;
 		case GolemNames.CONCRETE_GOLEM:
-			registerLootTables(ExtraGolems.MODID, NAME, EntityConcreteGolem.dyeColorArray.length);
+			registerLootTables(ExtraGolems.MODID, NAME, EntityConcreteGolem.DYE_COLORS.length);
 			return;
 		default:
 			LootTableList.register(new ResourceLocation(ExtraGolems.MODID, "entities/" + NAME));

@@ -15,7 +15,6 @@ public final class EntityEmeraldGolem extends GolemBase {
 
 	public EntityEmeraldGolem(final World world) {
 		super(EntityEmeraldGolem.class, world);
-		this.setLootTableLoc(GolemNames.EMERALD_GOLEM);
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.6D);
 	}
 

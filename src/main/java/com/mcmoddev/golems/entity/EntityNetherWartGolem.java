@@ -26,7 +26,6 @@ public final class EntityNetherWartGolem extends GolemBase {
 		super(EntityNetherWartGolem.class, world);
 		this.setImmuneToFire(true);
 		this.setCanSwim(true);
-		this.setLootTableLoc(GolemNames.NETHERWART_GOLEM);
 	}
 	
 	/**

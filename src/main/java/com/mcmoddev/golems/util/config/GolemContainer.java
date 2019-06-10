@@ -12,6 +12,7 @@ import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.loot.LootTableList;
 
 import java.util.*;
 import java.util.function.Function;
@@ -29,6 +30,7 @@ public class GolemContainer {
 	private final List<ResourceLocation> validBuildingBlockTags;
 	public final EntityType<GolemBase> entityType;
 	private final String name;
+	private final ResourceLocation lootTable;
 	private double health;
 	private double attack;
 	private double speed;
@@ -47,13 +49,14 @@ public class GolemContainer {
 	 * @param lAttack base attack value
 	 * @param lSpeed base speed value
 	 * @param lSpecialContainers any golem specials as a Map
-	 * @param lDescContainers any special descriptions for the golem
+	 * @param lDesc any special descriptions for the golem
+	 * @param lLootTable a ResourceLocation for the on-death loot table, may be null
 	 **/
 	private GolemContainer(final EntityType<GolemBase> lEntityType, final String lPath,
 						   final List<Block> lValidBuildingBlocks, final List<ResourceLocation> lValidBuildingBlockTags,
 						   final double lHealth, final double lAttack, final double lSpeed,
 						   final HashMap<String, GolemSpecialContainer> lSpecialContainers,
-						   final List<GolemDescription> lDesc) {
+						   final List<GolemDescription> lDesc, final ResourceLocation lLootTable) {
 		this.entityType = lEntityType;
 		this.validBuildingBlocks = lValidBuildingBlocks;
 		this.validBuildingBlockTags = lValidBuildingBlockTags;
@@ -63,6 +66,7 @@ public class GolemContainer {
 		this.speed = lSpeed;
 		this.specialContainers = lSpecialContainers;
 		this.descContainers = lDesc;
+		this.lootTable = lLootTable;
 	}
 	
 	/**
@@ -88,7 +92,7 @@ public class GolemContainer {
 
 	/**
 	 * @return a Set of all possible Blocks that can be used
-	 * to build the golem. Does not contain duplicates. May be empty. 
+	 * to build the golem. Does not contain duplicates but may be empty. 
 	 * @see #hasBuildingBlock()
 	 **/
 	public Set<Block> getBuildingBlocks() {
@@ -105,21 +109,7 @@ public class GolemContainer {
 	 * @deprecated use {@link #areBuildingBlocks(Block, Block, Block, Block)}
 	 **/
 	public boolean isBuildingBlock(final Block b) {
-		if(null == b || b instanceof BlockAir || b instanceof BlockFlowingFluid) {
-			return false;
-		}
-		// if the block has been manually added to block list
-		if(this.validBuildingBlocks.contains(b)) {
-			return true;
-		}
-		// if the block is present in any of the tags
-		for(final Tag<Block> tag : loadTags(validBuildingBlockTags)) {
-			if(b.isIn(tag)) {
-				return true;
-			}
-		}
-		// nothing found, result is false
- 		return false;
+		return areBuildingBlocks(b, b, b, b);
 	}
 	
 	/**
@@ -208,7 +198,13 @@ public class GolemContainer {
 	public double getAttack() { return this.attack; }
 	public double getSpeed() { return this.speed; }
 	public boolean isEnabled() { return this.enabled; }
+	public boolean hasLootTable() { return this.lootTable != null; }
+	@Nullable public ResourceLocation getLootTable() { return this.lootTable; }
 
+	//////////////////////////////////////////////////////////////
+	/////////////////// END OF GOLEM CONTAINER ///////////////////
+	//////////////////////////////////////////////////////////////
+	
 	/**
 	 * This class is my own work
 	 * @author Glitch
@@ -216,6 +212,7 @@ public class GolemContainer {
 	public static final class Builder {
 		private final String golemName;
 		private final EntityType.Builder<GolemBase> entityTypeBuilder;
+		private ResourceLocation lootTable = null;
 		private String modid = ExtraGolems.MODID;
 		private double health = 100.0D;
 		private double attack = 7.0D;
@@ -366,6 +363,42 @@ public class GolemContainer {
 		}
 		
 		/**
+		 * Registers a single loot table for entity drops upon death.
+		 * This loot table will be automatically added to the golem.
+		 * If the golem should have different loot tables based on
+		 * state (such as multi-textured golems), use
+		 * {@link #addLootTables(String, String, String[])} instead.
+		 * <br><br><i>Note: {@link #setModId(String)} must be called
+		 * <b>before</b> using this method</i>
+		 * @param modid the loot table parent MOD ID
+		 * @param location the loot table name, including sub-folders
+		 * @return instance to allow chaining of methods
+		 **/
+		public Builder addLootTable(final String location) {
+			this.lootTable = new ResourceLocation(this.modid, "entities/".concat(location));
+			LootTableList.register(this.lootTable);
+			return this;
+		}
+		
+		/**
+		 * Registers a set of loot tables. It is up to the golem
+		 * class to handle and return the correct loot table
+		 * upon entity death.
+		 * <br><br><i>Note: {@link #setModId(String)} must be called
+		 * <b>before</b> using this method</i>
+		 * @param modid the loot table parent MOD ID
+		 * @param path a path to prefix the loot table name
+		 * @param locations the loot table names
+		 * @return instance to allow chaining of methods
+		 **/
+		public Builder addLootTables(final String path, final String[] locations) {
+			for(final String s : locations) {
+				LootTableList.register(new ResourceLocation(this.modid, "entities/".concat(path.concat("/".concat(s)))));
+			}			
+			return this;
+		}
+		
+		/**
 		 * Builds the container according to values that have
 		 * been set inside this Builder
 		 * @return a copy of the newly constructed GolemContainer
@@ -378,7 +411,8 @@ public class GolemContainer {
 				containerMap.put(c.name, c);
 			}
 			return new GolemContainer(entityType, golemName, validBuildingBlocks,
-					validBuildingBlockTags, health, attack, speed, containerMap, descriptions);
+					validBuildingBlockTags, health, attack, speed, containerMap, 
+					descriptions, lootTable);
 		}
 	}
 

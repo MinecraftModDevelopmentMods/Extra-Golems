@@ -15,11 +15,11 @@ import net.minecraft.world.World;
 public final class EntityWoodenGolem extends GolemMultiTextured {
 
 	public static final String WOOD_PREFIX = "wooden";
-	public static final String[] woodTypes = {"oak", "spruce", "birch", "jungle", "acacia",
+	public static final String[] WOOD_TYPES = {"oak", "spruce", "birch", "jungle", "acacia",
 		"big_oak"};
 
 	public EntityWoodenGolem(final World world) {
-		super(EntityWoodenGolem.class, world, WOOD_PREFIX, woodTypes);
+		super(EntityWoodenGolem.class, world, WOOD_PREFIX, WOOD_TYPES);
 		this.setCanSwim(true);
 	}
 
@@ -55,7 +55,7 @@ public final class EntityWoodenGolem extends GolemMultiTextured {
 		} else if(b.isIn(BlockTags.DARK_OAK_LOGS)) {
 			textureNum = 5;
 		} else {
-			textureNum = (byte)this.rand.nextInt(woodTypes.length);
+			textureNum = (byte)this.rand.nextInt(WOOD_TYPES.length);
 		}
 		// set the texture num based on above
 		this.setTextureNum(textureNum);

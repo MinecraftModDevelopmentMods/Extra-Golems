@@ -24,7 +24,6 @@ public final class EntityLapisGolem extends GolemBase {
 
 	public EntityLapisGolem(final World world) {
 		super(EntityLapisGolem.class, world);
-		this.setLootTableLoc(GolemNames.LAPIS_GOLEM);
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.4D);
 	}
 

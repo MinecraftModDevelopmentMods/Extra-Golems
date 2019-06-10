@@ -24,9 +24,8 @@ public final class EntityStainedGlassGolem extends GolemMultiColorized {
 		.makeTexture(ExtraGolems.MODID, GolemNames.STAINEDGLASS_GOLEM + "_grayscale");
 
 	public EntityStainedGlassGolem(final World world) {
-		super(EntityStainedGlassGolem.class, world, TEXTURE_BASE, TEXTURE_OVERLAY, dyeColorArray);
+		super(EntityStainedGlassGolem.class, world, TEXTURE_BASE, TEXTURE_OVERLAY, DYE_COLORS);
 		this.setCanTakeFallDamage(true);
-		this.setLootTableLoc(GolemNames.STAINEDGLASS_GOLEM);
 	}
 
 	/**
@@ -59,7 +58,7 @@ public final class EntityStainedGlassGolem extends GolemMultiColorized {
 			final EnumDyeColor color = ((BlockStainedGlass)b).getColor();
 			textureNum = (byte)color.getId();
 		} else {
-			textureNum = (byte)this.rand.nextInt(dyeColorArray.length);
+			textureNum = (byte)this.rand.nextInt(DYE_COLORS.length);
 		}
 		// actually set the texture
 		this.setTextureNum(textureNum);

@@ -14,7 +14,6 @@ public final class EntityGoldGolem extends GolemBase {
 
 	public EntityGoldGolem(final World world) {
 		super(EntityGoldGolem.class, world);
-		this.setLootTableLoc(GolemNames.GOLD_GOLEM);
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.9D);
 	}
 

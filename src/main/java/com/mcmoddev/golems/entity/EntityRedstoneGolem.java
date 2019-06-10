@@ -25,7 +25,6 @@ public final class EntityRedstoneGolem extends GolemBase {
 		final int freq = BlockUtilityPower.UPDATE_TICKS;
 		final boolean allow = this.getConfigBool(ALLOW_SPECIAL);
 		this.tasks.addTask(9, new EntityAIUtilityBlock(this, state, freq, allow));
-		this.setLootTableLoc(GolemNames.REDSTONE_GOLEM);
 	}
 
 	@Override

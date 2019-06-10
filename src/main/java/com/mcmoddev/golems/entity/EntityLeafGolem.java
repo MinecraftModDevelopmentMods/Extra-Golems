@@ -25,7 +25,6 @@ public final class EntityLeafGolem extends GolemColorized {
 	public EntityLeafGolem(final World world) {
 		super(EntityLeafGolem.class, world, 0x5F904A, TEXTURE_BASE, TEXTURE_OVERLAY);
 		this.setCanSwim(true);
-		this.setLootTableLoc(GolemNames.LEAF_GOLEM);
 	}
 
 	/**

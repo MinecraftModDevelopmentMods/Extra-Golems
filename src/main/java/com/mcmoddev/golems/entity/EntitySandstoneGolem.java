@@ -14,7 +14,6 @@ public final class EntitySandstoneGolem extends GolemBase {
 
 	public EntitySandstoneGolem(final World world) {
 		super(EntitySandstoneGolem.class, world);
-		this.setLootTableLoc(GolemNames.SANDSTONE_GOLEM);
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.1D);
 	}
 

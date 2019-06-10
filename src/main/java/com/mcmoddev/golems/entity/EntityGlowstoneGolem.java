@@ -33,7 +33,6 @@ public final class EntityGlowstoneGolem extends GolemBase {
 		this.setImmuneToFire(true);
 		this.setCanTakeFallDamage(true);
 		this.setCanSwim(true);
-		this.setLootTableLoc(GolemNames.GLOWSTONE_GOLEM);
 	}
 
 	@Override
