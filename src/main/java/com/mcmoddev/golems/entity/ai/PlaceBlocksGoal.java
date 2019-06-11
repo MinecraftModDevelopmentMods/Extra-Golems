@@ -1,12 +1,15 @@
 package com.mcmoddev.golems.entity.ai;
 
+import java.util.EnumSet;
 import java.util.function.Predicate;
+
+import javax.annotation.Nullable;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -14,31 +17,41 @@ import net.minecraft.world.World;
 /**
  * @see EntityAIPlaceRandomBlocksStrictly
  **/
-public class EntityAIPlaceRandomBlocks extends EntityAIBase {
+public class PlaceBlocksGoal extends Goal {
 
 	public final GolemBase golem;
 	public final int tickDelay;
 	public final BlockState[] plantables;
 	public final Block[] plantSupports;
 	public final boolean checkSupports;
-	public final Predicate<EntityAIPlaceRandomBlocks> canExecute;
+	public final Predicate<PlaceBlocksGoal> canExecute;
 
-	public EntityAIPlaceRandomBlocks(final GolemBase golemBase, final int ticksBetweenPlanting,
-					 final BlockState[] plants, final Block[] soils, final Predicate<EntityAIPlaceRandomBlocks> pred) {
-		this.setMutexBits(8);
+	public PlaceBlocksGoal(final GolemBase golemBase, final int ticksBetweenPlanting,
+					 final BlockState[] plants, final Block[] soils, final Predicate<PlaceBlocksGoal> pred) {
+		//this.setMutexFlags(EnumSet.of(Flag.MOVE));
 		this.golem = golemBase;
-		this.tickDelay = ticksBetweenPlanting;
+		this.tickDelay = Math.max(1, ticksBetweenPlanting);
 		this.plantables = plants;
 		this.plantSupports = soils;
 		this.canExecute = pred;
 		this.checkSupports = (soils != null && soils.length > 0);
 	}
 
-	public EntityAIPlaceRandomBlocks(final GolemBase golemBase, final int ticksBetweenPlanting,
-					 final BlockState[] plants, final Predicate<EntityAIPlaceRandomBlocks> p) {
+	public PlaceBlocksGoal(final GolemBase golemBase, final int ticksBetweenPlanting,
+					 final BlockState[] plants, final Predicate<PlaceBlocksGoal> p) {
 		this(golemBase, ticksBetweenPlanting, plants, null, p);
 	}
 
+	public PlaceBlocksGoal(final GolemBase golemBase, final int ticksBetweenPlanting,
+			 final BlockState[] plants, @Nullable final Block[] soils, final boolean configAllows) {
+		this(golemBase, ticksBetweenPlanting, plants, soils, (t -> configAllows));
+	}	
+
+	public PlaceBlocksGoal(final GolemBase golemBase, final int ticksBetweenPlanting,
+				 final BlockState[] plants, final boolean configAllows) {
+		this(golemBase, ticksBetweenPlanting, plants, null, configAllows);
+	}
+	
 	@Override
 	public boolean shouldExecute() {
 		return tickDelay > 0 && golem.getEntityWorld().rand.nextInt(tickDelay) == 0 && this.canExecute.test(this);
@@ -62,12 +75,12 @@ public class EntityAIPlaceRandomBlocks extends EntityAIBase {
 		return false;
 	}
 
-	public boolean setToPlant(final World world, final BlockPos pos) {
+	protected boolean setToPlant(final World world, final BlockPos pos) {
 		final BlockState state = this.plantables[world.rand.nextInt(this.plantables.length)];
 		return world.setBlockState(pos, state, 2);
 	}
 
-	public boolean isPlantSupport(final World world, final BlockPos pos) {
+	protected boolean isPlantSupport(final World world, final BlockPos pos) {
 		if (!this.checkSupports) {
 			return true;
 		}
@@ -82,5 +95,9 @@ public class EntityAIPlaceRandomBlocks extends EntityAIBase {
 		}
 
 		return false;
+	}
+	
+	public static Predicate<PlaceBlocksGoal> getGriefingPredicate() {
+		return t -> t.golem.world.getGameRules().getBoolean("mobGriefing");
 	}
 }

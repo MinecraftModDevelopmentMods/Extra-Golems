@@ -197,6 +197,7 @@ public class GolemContainer {
 	
 	////////// GETTERS //////////
 	public EntityType<? extends GolemBase> getEntityType() { return this.entityType; }
+	public ResourceLocation getRegistryName() { return this.entityType.getRegistryName(); }
 	public String getName() { return this.name; }
 	public double getHealth() { return this.health; }
 	public double getAttack() { return this.attack; }
@@ -234,10 +235,10 @@ public class GolemContainer {
 		 * @param entityClazz the class of the golem (e.g. EntityFooGolem.class)
 		 * @param entityFunction the constructor function of the class (e.g. EntityFooGolem::new)
 		 */
-		public Builder(final String golemName, final EntityType.IFactory<? extends GolemBase> entityClazz) {//,
-				//final Function<? super World, ? extends GolemBase> entityFunction) {
+		public Builder(final String golemName, final Class<? extends GolemBase> entityClazz,
+						final EntityType.IFactory<? extends GolemBase> entityFactory) {
 			this.golemName = golemName;
-			this.entityTypeBuilder = EntityType.Builder.create(entityClazz, EntityClassification.MISC)
+			this.entityTypeBuilder = EntityType.Builder.create(entityFactory, EntityClassification.MISC)
 					.setTrackingRange(48).setUpdateInterval(3).setShouldReceiveVelocityUpdates(true)
 					.size(1.4F, 2.9F);
 		}

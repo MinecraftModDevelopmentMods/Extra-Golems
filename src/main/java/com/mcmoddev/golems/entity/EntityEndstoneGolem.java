@@ -36,7 +36,7 @@ public class EntityEndstoneGolem extends GolemBase {
 
 	/** Default constructor. **/
 	public EntityEndstoneGolem(final World world) {
-		this(EntityEndstoneGolem.class, world, 32.0D, true);
+		this(ExtraGolems.MODID, GolemNames.ENDSTONE_GOLEM, world, 32.0D, true);
 		this.isHurtByWater = this.getConfigBool(ALLOW_WATER_HURT);
 		this.allowTeleport = this.getConfigBool(ALLOW_SPECIAL);
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.3D);
@@ -58,9 +58,9 @@ public class EntityEndstoneGolem extends GolemBase {
 	 * @param ambientParticles
 	 *            whether always to display "portal" particles
 	 **/
-	public EntityEndstoneGolem(final Class<? extends EntityEndstoneGolem> clazz, final World world, 
+	public EntityEndstoneGolem(final String modid, final String name, final World world, 
 			final double teleportRange, final boolean ambientParticles) {
-		super(clazz, world);
+		super(modid, name, world);
 		this.range = teleportRange;
 		this.hasAmbientParticles = ambientParticles;
 	}

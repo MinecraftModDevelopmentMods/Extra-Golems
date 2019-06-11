@@ -1,7 +1,7 @@
 package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.blocks.BlockUtilityGlow;
-import com.mcmoddev.golems.entity.ai.EntityAIUtilityBlock;
+import com.mcmoddev.golems.entity.ai.PlaceUtilityBlockGoal;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
@@ -25,12 +25,11 @@ public final class EntityGlowstoneGolem extends GolemBase {
 	private final float brightness;
 
 	public EntityGlowstoneGolem(final World world) {
-		super(EntityGlowstoneGolem.class, world);
+		super(GolemNames.GLOWSTONE_GOLEM, world);
 		int lightInt = 15;
 		this.brightness = 1.0F;
 		final BlockState state = GolemItems.UTILITY_LIGHT.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, lightInt);
-		this.tasks.addTask(9, new EntityAIUtilityBlock(this, state, BlockUtilityGlow.UPDATE_TICKS, this.getConfigBool(ALLOW_SPECIAL)));
-		this.setImmuneToFire(true);
+		this.tasks.addTask(9, new PlaceUtilityBlockGoal(this, state, BlockUtilityGlow.UPDATE_TICKS, this.getConfigBool(ALLOW_SPECIAL)));
 		this.setCanTakeFallDamage(true);
 		this.setCanSwim(true);
 	}

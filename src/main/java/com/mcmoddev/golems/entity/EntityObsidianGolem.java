@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 public final class EntityObsidianGolem extends GolemBase {
 
 	public EntityObsidianGolem(final World world) {
-		super(EntityObsidianGolem.class, world);
+		super(GolemNames.OBSIDIAN_GOLEM, world);
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.5D);
 	}
 

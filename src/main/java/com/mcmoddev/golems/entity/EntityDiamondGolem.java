@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 public final class EntityDiamondGolem extends GolemBase {
 
 	public EntityDiamondGolem(final World world) {
-		super(EntityDiamondGolem.class, world);
+		super(GolemNames.DIAMOND_GOLEM, world);
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.6D);
 	}
 

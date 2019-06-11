@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 public final class EntityTerracottaGolem extends GolemBase {
 
 	public EntityTerracottaGolem(final World world) {
-		super(EntityTerracottaGolem.class, world);
+		super(GolemNames.TERRACOTTA_GOLEM, world);
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.2D);
 	}
 

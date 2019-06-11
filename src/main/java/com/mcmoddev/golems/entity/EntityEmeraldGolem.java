@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 public final class EntityEmeraldGolem extends GolemBase {
 
 	public EntityEmeraldGolem(final World world) {
-		super(EntityEmeraldGolem.class, world);
+		super(GolemNames.EMERALD_GOLEM, world);
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.6D);
 	}
 

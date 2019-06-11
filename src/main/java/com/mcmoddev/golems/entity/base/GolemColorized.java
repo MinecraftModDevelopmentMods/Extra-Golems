@@ -37,9 +37,9 @@ public abstract class GolemColorized extends GolemBase {
 	 *                 before {@link OVERLAY}
 	 * @param rOverlay a texture that will be recolored and optionally rendered as transparent.
 	 **/
-	public GolemColorized(Class<? extends GolemColorized> type, final World world, final long initial,
+	public GolemColorized(final String modid, final String name, final World world, final long initial,
 			      @Nullable final ResourceLocation rBase, @Nullable final ResourceLocation rOverlay) {
-		super(type, world);
+		super(modid, name, world);
 		this.setColor(initial);
 		this.base = rBase;
 		this.overlay = rOverlay;

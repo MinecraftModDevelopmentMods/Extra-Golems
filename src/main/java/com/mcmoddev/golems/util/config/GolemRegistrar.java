@@ -8,6 +8,8 @@ import javax.annotation.Nullable;
 import com.mcmoddev.golems.entity.base.GolemBase;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.EntityType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 /**
@@ -17,18 +19,18 @@ import net.minecraft.world.World;
  */
 public final class GolemRegistrar {
 
-	protected static HashMap<Class<? extends GolemBase>, GolemContainer> golemList = new HashMap<>();
+	protected static HashMap<ResourceLocation, GolemContainer> golemList = new HashMap<>();
 
 	private GolemRegistrar() {
 		//
 	}
 
-	public static void registerGolem(GolemContainer container) {
-		golemList.put(container.getEntityType().getEntityClass(), container);
+	public static void registerGolem(final GolemContainer container) {
+		golemList.put(container.getEntityType().getRegistryName(), container);
 	}
 
-	public static GolemContainer getContainer(Class<? extends GolemBase> clazz) {
-		return golemList.get(clazz);
+	public static GolemContainer getContainer(final ResourceLocation name) {
+		return golemList.get(name);
 	}
 	
 	/**

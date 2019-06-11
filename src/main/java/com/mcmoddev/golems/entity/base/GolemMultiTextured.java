@@ -5,7 +5,7 @@ import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -17,7 +17,7 @@ public abstract class GolemMultiTextured extends GolemBase {
 
 	/** The DataParameter that stores which texture this golem is using. Max value is 128 **/
 	protected static final DataParameter<Byte> DATA_TEXTURE = EntityDataManager
-			.<Byte>createKey(GolemMultiTextured.class, DataSerializers.BYTE);
+			.<Byte>createKey(GolemMultiTextured.class, DataSerializers.field_187191_a);
 	protected static final String NBT_TEXTURE = "GolemTextureData";
 
 	/**
@@ -44,17 +44,17 @@ public abstract class GolemMultiTextured extends GolemBase {
 	 * <br><code>[getModId()]/textures/entity/golem_example/three.png</code>
 	 * <br> as well as loot tables for the same names with the JSON suffix
 	 **/
-	public GolemMultiTextured(Class<? extends GolemMultiTextured> type, final World world, final String prefix,
+	public GolemMultiTextured(final String modid, final String name, final World world, final String prefix,
 				  final String[] textureNames) {
-		super(type, world);
+		super(modid, name, world);
 		this.textures = new ResourceLocation[textureNames.length];
 		this.lootTables = new ResourceLocation[textureNames.length];
 		for (int n = 0, len = textureNames.length; n < len; n++) {
 			// initialize textures
 			final String s = textureNames[n];
-			this.textures[n] = makeTexture(getModId(), "golem_" + prefix + "/" + s);
+			this.textures[n] = makeTexture(modid, "golem_" + prefix + "/" + s);
 			// initialize loot tables
-			this.lootTables[n] = new ResourceLocation(getModId(), "entities/golem_" + prefix + "/" + s);
+			this.lootTables[n] = new ResourceLocation(modid, "entities/golem_" + prefix + "/" + s);
 		}
 	}
 
@@ -103,13 +103,13 @@ public abstract class GolemMultiTextured extends GolemBase {
 	}
 
 	@Override
-	public void writeAdditional(final NBTTagCompound nbt) {
+	public void writeAdditional(final CompoundNBT nbt) {
 		super.writeAdditional(nbt);
-		nbt.setByte(NBT_TEXTURE, (byte) this.getTextureNum());
+		nbt.putByte(NBT_TEXTURE, (byte) this.getTextureNum());
 	}
 
 	@Override
-	public void readAdditional(final NBTTagCompound nbt) {
+	public void readAdditional(final CompoundNBT nbt) {
 		super.readAdditional(nbt);
 		this.setTextureNum(nbt.getByte(NBT_TEXTURE));
 	}
@@ -154,10 +154,7 @@ public abstract class GolemMultiTextured extends GolemBase {
 	}
 	
 	@Override
-    protected ResourceLocation getLootTable()
-    {
-        return this.lootTables[this.getTextureNum() % this.lootTables.length];
-    }
-
-	public abstract String getModId();
+	protected ResourceLocation getLootTable() {
+		return this.lootTables[this.getTextureNum() % this.lootTables.length];
+	}
 }

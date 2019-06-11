@@ -3,11 +3,12 @@ package com.mcmoddev.golems.entity;
 import java.util.function.BiPredicate;
 
 import com.mcmoddev.golems.blocks.BlockUtilityGlow;
-import com.mcmoddev.golems.entity.ai.EntityAIUtilityBlock;
+import com.mcmoddev.golems.entity.ai.PlaceUtilityBlockGoal;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
+import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.SoundEvent;
@@ -27,11 +28,11 @@ public final class EntityRedstoneLampGolem extends GolemMultiTextured {
 			(golem, toReplace) -> golem.isProvidingLight();
 
 	public EntityRedstoneLampGolem(final World world) {
-		super(EntityRedstoneLampGolem.class, world, LAMP_PREFIX, VARIANTS);
+		super(ExtraGolems.MODID, GolemNames.REDSTONELAMP_GOLEM, world, LAMP_PREFIX, VARIANTS);
 		this.setCanTakeFallDamage(true);
 		final BlockState state = GolemItems.UTILITY_LIGHT.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, 15);
-		this.tasks.addTask(9, new EntityAIUtilityBlock(this, state, BlockUtilityGlow.UPDATE_TICKS, 
-				this.getConfigBool(ALLOW_SPECIAL), EntityAIUtilityBlock.getDefaultBiPred(state).and(LIT_PRED)));
+		this.tasks.addTask(9, new PlaceUtilityBlockGoal(this, state, BlockUtilityGlow.UPDATE_TICKS, 
+				this.getConfigBool(ALLOW_SPECIAL), PlaceUtilityBlockGoal.getDefaultBiPred(state).and(LIT_PRED)));
 	}
 	
 	@Override
@@ -44,11 +45,6 @@ public final class EntityRedstoneLampGolem extends GolemMultiTextured {
 	public boolean isProvidingLight() {
 		// only allow light if correct texture data
 		return this.getTextureNum() == 0;
-	}
-
-	@Override
-	public String getModId() {
-		return ExtraGolems.MODID;
 	}
 
 	@Override

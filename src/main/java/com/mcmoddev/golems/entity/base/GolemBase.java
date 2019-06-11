@@ -16,29 +16,25 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIAttackMelee;
-import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
-import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAIMoveThroughVillage;
-import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
-import net.minecraft.entity.ai.EntityAIMoveTowardsTarget;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWanderAvoidWater;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.entity.ai.goal.LookAtGoal;
+import net.minecraft.entity.ai.goal.LookRandomlyGoal;
+import net.minecraft.entity.ai.goal.MoveThroughVillageGoal;
+import net.minecraft.entity.ai.goal.MoveTowardsRestrictionGoal;
+import net.minecraft.entity.ai.goal.MoveTowardsTargetGoal;
+import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
+import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.monster.CreeperEntity;
-import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.init.MobEffects;
-import net.minecraft.init.Particles;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
@@ -64,8 +60,10 @@ import net.minecraftforge.common.ForgeConfigSpec;
  **/
 public abstract class GolemBase extends CreatureEntity {
 
-	protected static final DataParameter<Boolean> BABY = EntityDataManager.<Boolean>createKey(GolemBase.class, DataSerializers.BOOLEAN);
-	protected static final DataParameter<Boolean> PLAYER_CREATED = EntityDataManager.<Boolean>createKey(GolemBase.class, DataSerializers.BOOLEAN);
+	protected static final DataParameter<Boolean> BABY = EntityDataManager.<Boolean>createKey(
+			GolemBase.class, DataSerializers.field_187198_h);
+	protected static final DataParameter<Boolean> PLAYER_CREATED = EntityDataManager.<Boolean>createKey(
+			GolemBase.class, DataSerializers.field_187198_h);
 	private static final String KEY_BABY = "isChild";
 	private static final String KEY_PLAYER_CREATED = "isPlayerCreated";
 	public static final int WANDER_DISTANCE = 64;
@@ -91,13 +89,11 @@ public abstract class GolemBase extends CreatureEntity {
 	protected final GolemContainer container;
 	
 	// swimming AI
-	protected EntityAIBase swimmingAI = new EntityAISwimming(this);
-	protected EntityAIBase wanderAvoidWater = null;
-	protected EntityAIBase wander = null;
+	protected Goal swimmingAI = new SwimGoal(this);
 
 	/////////////// CONSTRUCTORS /////////////////
 
-	/**
+	/*
 	 * Initializes this golem with the given World. 
 	 * Also sets the following:
 	 * <br>{@code setBaseAttackDamage} using the config
@@ -107,15 +103,22 @@ public abstract class GolemBase extends CreatureEntity {
 	 * Defaults to the Golem Head if no block is found. Call {@link #setCreativeReturn(ItemStack)}
 	 * if you want to return something different.
 	 * @param world the entity world
-	 **/
-
-	public GolemBase(Class<? extends GolemBase> clazz, final World world) {
-		super(GolemBase.getGolemType(clazz), world);
-		this.container = GolemRegistrar.getContainer(clazz);
-		this.setSize(1.4F, 2.9F);
-		this.setCanTakeFallDamage(false);
+	 */
+	
+	public GolemBase(final String name, final World world) {
+		this(ExtraGolems.MODID, name, world);
+	}
+	
+	public GolemBase(final String modid, final String name, final World world) {
+		this(GolemRegistrar.getContainer(new ResourceLocation(modid, name)).entityType, world);
+	}
+	
+	public GolemBase(final EntityType<? extends GolemBase> type, final World world) {
+		super(type, world);
+		this.container = GolemRegistrar.getContainer(type.getRegistryName());
 		Block pickBlock = container.getPrimaryBuildingBlock();
-		this.setCreativeReturn(pickBlock != null ? pickBlock : GolemItems.GOLEM_HEAD);
+		this.setCreativeReturn(pickBlock != null ? pickBlock : GolemItems.GOLEM_HEAD);	
+		this.setCanTakeFallDamage(false);
 		this.setCanSwim(false);
 		this.experienceValue = 4 + rand.nextInt(8);
 	}
@@ -125,22 +128,33 @@ public abstract class GolemBase extends CreatureEntity {
 
 	@Override
 	protected void initEntityAI() {
+		
+		
+		this.field_70714_bg.addTask(3, new LookAtGoal(this, PlayerEntity.class, 6.0F));
+		this.field_70714_bg.addTask(4, new LookRandomlyGoal(this));
+		this.field_70715_bh.addTask(1,
+				new NearestAttackableTargetGoal<>(this, MobEntity.class, 10, true, false, (e) -> {
+					return e instanceof IMob;
+				}));
+		
+		
+
 		// all of these tasks are copied from the Iron Golem and adjusted for movement speed
-		this.tasks.addTask(1, new EntityAIAttackMelee(this, this.getBaseMoveSpeed() * 4.0D, true));
-		this.tasks.addTask(2,
-			new EntityAIMoveTowardsTarget(this, this.getBaseMoveSpeed() * 3.75D, 32.0F));
-		this.tasks.addTask(3,
-			new EntityAIMoveThroughVillage(this, this.getBaseMoveSpeed() * 2.25D, true));
-		this.tasks.addTask(4,
-			new EntityAIMoveTowardsRestriction(this, this.getBaseMoveSpeed() * 4.0D));
+		//this.field_70714_bg.addTask(1, new AttackGoal(this, this.getBaseMoveSpeed() * 4.0D, true));
+		this.field_70714_bg.addTask(2,
+			new MoveTowardsTargetGoal(this, this.getBaseMoveSpeed() * 3.75D, 32.0F));
+		this.field_70714_bg.addTask(3,
+			new MoveThroughVillageGoal(this, this.getBaseMoveSpeed() * 2.25D, true, 2, () -> Boolean.valueOf(true)));
+		this.field_70714_bg.addTask(4,
+			new MoveTowardsRestrictionGoal(this, this.getBaseMoveSpeed() * 4.0D));
+		
+		
 		//// Wander AI has been moved to setCanSwim(boolean)
-		this.tasks.addTask(6, new EntityAIWatchClosest(this, PlayerEntity.class, 6.0F));
-		this.tasks.addTask(7, new EntityAILookIdle(this));
-		this.targetTasks.addTask(1, new EntityAIDefendAgainstMonsters(this));
-		this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, false, (Class[]) new Class[0]));
-		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<>(this,
-			EntityLiving.class, 10, false, true,
-			e -> e != null && IMob.VISIBLE_MOB_SELECTOR.test(e) && !(e instanceof EntityCreeper)));
+		this.field_70715_bh.addTask(1, new EntityAIDefendAgainstMonsters(this));
+//		this.field_70715_bh.addTask(2, new EntityAIHurtByTarget(this, false, (Class[]) new Class[0]));
+//		this.field_70715_bh.addTask(3, new EntityAINearestAttackableTarget<>(this,
+//			EntityLiving.class, 10, false, true,
+//			e -> e != null && IMob.VISIBLE_MOB_SELECTOR.test(e) && !(e instanceof EntityCreeper)));
 	}
 
 	@Override
@@ -281,7 +295,7 @@ public abstract class GolemBase extends CreatureEntity {
 		final boolean flag = entity.attackEntityFrom(DamageSource.causeMobDamage(this), damage);
 
 		if (flag) {
-			entity.motionY += knockbackY;
+			entity.addVelocity(0, knockbackY, 0);
 			this.applyEnchantments(this, entity);
 		}
 
@@ -325,10 +339,10 @@ public abstract class GolemBase extends CreatureEntity {
 	}
 
 	/** Determines if an entity can be despawned, used on idle far away entities. **/
-	@Override
-	public boolean canDespawn() {
-		return false;
-	}
+//	@Override
+//	public boolean canDespawn() {
+//		return false;
+//	}
 
 	/**
 	 * Get number of ticks, at least during which the living entity will be silent.
@@ -468,21 +482,17 @@ public abstract class GolemBase extends CreatureEntity {
 
 	public void setCanSwim(final boolean canSwim) {
 		this.getNavigator().setCanSwim(canSwim);
-		if(null == wander) {
-			wander = new EntityAIWander(this, this.getBaseMoveSpeed() * 2.25D);
-		}
-		if(null == wanderAvoidWater) {
-			wanderAvoidWater = new EntityAIWanderAvoidWater(this, this.getBaseMoveSpeed() * 2.25D);
-		}
+//		if(null == wander) {
+//			wander = new EntityAIWander(this, this.getBaseMoveSpeed() * 2.25D);
+//		}
+//		if(null == wanderAvoidWater) {
+//			wanderAvoidWater = new EntityAIWanderAvoidWater(this, this.getBaseMoveSpeed() * 2.25D);
+//		}
 		
 		if (canSwim) {
-			this.tasks.removeTask(wanderAvoidWater);
-			this.tasks.addTask(0, swimmingAI);
-			this.tasks.addTask(5, wander);
+			this.field_70714_bg.addTask(0, swimmingAI);
 		} else {
-			this.tasks.removeTask(swimmingAI);
-			this.tasks.removeTask(wander);
-			this.tasks.addTask(5, wanderAvoidWater);
+			this.field_70714_bg.removeTask(swimmingAI);
 		}
 	}
 

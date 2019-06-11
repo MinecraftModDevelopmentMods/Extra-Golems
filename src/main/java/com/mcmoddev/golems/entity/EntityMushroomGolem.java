@@ -1,8 +1,10 @@
 package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.entity.ai.EntityAIPlaceRandomBlocksStrictly;
+import com.mcmoddev.golems.entity.ai.PlaceBlocksGoal;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
+import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -23,7 +25,7 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 	public static final String[] SHROOM_TYPES = {"red", "brown"};
 
 	public EntityMushroomGolem(final World world) {
-		super(EntityMushroomGolem.class, world, SHROOM_PREFIX, SHROOM_TYPES);
+		super(ExtraGolems.MODID, GolemNames.MUSHROOM_GOLEM, world, SHROOM_PREFIX, SHROOM_TYPES);
 		this.setCanSwim(true);
 	}
 
@@ -38,12 +40,7 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 		final Block[] soils = 
 			{ Blocks.DIRT, Blocks.GRASS, Blocks.MYCELIUM, Blocks.PODZOL, Blocks.NETHERRACK, Blocks.SOUL_SAND };
 		this.tasks.addTask(2,
-			new EntityAIPlaceRandomBlocksStrictly(this, freq, mushrooms, soils, allowed));
-	}
-
-	@Override
-	public String getModId() {
-		return ExtraGolems.MODID;
+			new PlaceBlocksGoal(this, freq, mushrooms, soils, allowed));
 	}
 
 	@Override

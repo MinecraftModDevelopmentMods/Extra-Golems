@@ -14,7 +14,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 
-public final class EntityStainedClayGolem extends GolemMultiColorized {
+public final class EntityStainedTerracottaGolem extends GolemMultiColorized {
 
 	public static final String PREFIX = "stained_clay";
 
@@ -23,8 +23,8 @@ public final class EntityStainedClayGolem extends GolemMultiColorized {
 	private static final ResourceLocation TEXTURE_OVERLAY = GolemBase
 		.makeTexture(ExtraGolems.MODID, GolemNames.STAINEDTERRACOTTA_GOLEM + "_grayscale");
 
-	public EntityStainedClayGolem(final World world) {
-		super(EntityStainedClayGolem.class, world, TEXTURE_BASE, TEXTURE_OVERLAY, DYE_COLORS);
+	public EntityStainedTerracottaGolem(final World world) {
+		super(ExtraGolems.MODID, GolemNames.STAINEDTERRACOTTA_GOLEM, world, TEXTURE_BASE, TEXTURE_OVERLAY, DYE_COLORS);
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.2D);
 	}
 

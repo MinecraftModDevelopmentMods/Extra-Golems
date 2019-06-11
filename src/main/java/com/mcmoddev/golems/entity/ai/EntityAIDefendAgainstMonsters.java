@@ -1,24 +1,26 @@
 package com.mcmoddev.golems.entity.ai;
 
+import java.util.EnumSet;
+
 import com.mcmoddev.golems.entity.base.GolemBase;
 
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.ai.EntityAITarget;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.goal.TargetGoal;
 import net.minecraft.world.gen.feature.structure.VillagePieces.Village;
 
-public class EntityAIDefendAgainstMonsters extends EntityAITarget {
+public class EntityAIDefendAgainstMonsters extends TargetGoal {
 
 	final GolemBase entityGolem;
 	/**
 	 * The aggressor of the iron golem's village which is now the golem's attack target.
 	 */
-	EntityLivingBase villageAgressorTarget;
+	LivingEntity villageAgressorTarget;
 	// private List villageAgressors = new ArrayList();
 
 	public EntityAIDefendAgainstMonsters(final GolemBase golem) {
 		super(golem, false, true);
 		this.entityGolem = golem;
-		this.setMutexBits(1);
+		this.setMutexFlags(EnumSet.of(Flag.TARGET));
 	}
 
 	public boolean shouldExecute() {

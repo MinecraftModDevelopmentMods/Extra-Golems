@@ -1,7 +1,7 @@
 package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.blocks.BlockUtilityPower;
-import com.mcmoddev.golems.entity.ai.EntityAIUtilityBlock;
+import com.mcmoddev.golems.entity.ai.PlaceUtilityBlockGoal;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
@@ -20,11 +20,11 @@ public final class EntityRedstoneGolem extends GolemBase {
 	public static final String ALLOW_SPECIAL = "Allow Special: Redstone Power";
 
 	public EntityRedstoneGolem(final World world) {
-		super(EntityRedstoneGolem.class, world);
+		super(GolemNames.REDSTONE_GOLEM, world);
 		final BlockState state = GolemItems.UTILITY_POWER.getDefaultState().with(BlockUtilityPower.POWER_LEVEL, 15);
 		final int freq = BlockUtilityPower.UPDATE_TICKS;
 		final boolean allow = this.getConfigBool(ALLOW_SPECIAL);
-		this.tasks.addTask(9, new EntityAIUtilityBlock(this, state, freq, allow));
+		this.tasks.addTask(9, new PlaceUtilityBlockGoal(this, state, freq, allow));
 	}
 
 	@Override

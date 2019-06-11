@@ -25,7 +25,7 @@ public final class EntityConcreteGolem extends GolemMultiColorized {
 			.makeTexture(ExtraGolems.MODID, GolemNames.CONCRETE_GOLEM + "_grayscale");
 
 	public EntityConcreteGolem(final World world) {
-		super(EntityConcreteGolem.class, world, TEXTURE_BASE, TEXTURE_OVERLAY, DYE_COLORS);
+		super(ExtraGolems.MODID, GolemNames.CONCRETE_GOLEM, world, TEXTURE_BASE, TEXTURE_OVERLAY, DYE_COLORS);
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.2D);
 	}
 

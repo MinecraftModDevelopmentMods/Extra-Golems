@@ -22,7 +22,7 @@ public final class EntityMelonGolem extends GolemBase {
 	public static final String ALLOW_HEALING = "Allow Special: Random Healing";
 	
 	public EntityMelonGolem(final World world) {
-		super(EntityMelonGolem.class, world);
+		super(GolemNames.MELON_GOLEM, world);
 		this.setCanSwim(true);
 	}
 

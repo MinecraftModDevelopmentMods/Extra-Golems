@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 public final class EntityClayGolem extends GolemBase {
 
 	public EntityClayGolem(final World world) {
-		super(EntityClayGolem.class, world);
+		super(GolemNames.CLAY_GOLEM, world);
 	}
 
 	@Override

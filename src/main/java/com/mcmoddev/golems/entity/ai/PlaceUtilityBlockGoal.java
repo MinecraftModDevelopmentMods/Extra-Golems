@@ -1,12 +1,14 @@
 package com.mcmoddev.golems.entity.ai;
 
+import java.util.EnumSet;
 import java.util.function.BiPredicate;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 
-import net.minecraft.block.BlockFlowingFluid;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.FlowingFluidBlock;
+import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -14,7 +16,7 @@ import net.minecraft.util.math.MathHelper;
 /**
  * Places a single BlockState every {@code tickDelay} ticks with certain conditions
  **/
-public class EntityAIUtilityBlock extends EntityAIBase {
+public class PlaceUtilityBlockGoal extends Goal {
 
 	public final GolemBase golem;
 	public final BlockState stateToPlace;
@@ -31,9 +33,9 @@ public class EntityAIUtilityBlock extends EntityAIBase {
 	 * Defaults to replacing air only.
 	 * @see #getDefaultBiPred(GolemBase, BlockState)
 	 **/
-	public EntityAIUtilityBlock(final GolemBase golemIn, final BlockState stateIn, final int interval, 
+	public PlaceUtilityBlockGoal(final GolemBase golemIn, final BlockState stateIn, final int interval, 
 			final boolean cfgAllows, final BiPredicate<GolemBase, BlockState> canReplacePred) {
-		this.setMutexBits(8);
+		//this.setMutexFlags(EnumSet.of(Flag.MOVE));
 		this.golem = golemIn;
 		this.stateToPlace = stateIn;
 		this.tickDelay = interval;
@@ -50,7 +52,7 @@ public class EntityAIUtilityBlock extends EntityAIBase {
 	 * @param interval ticks between placing block
 	 * @param configAllows whether this AI is enabled by the config
 	 **/
-	public EntityAIUtilityBlock(final GolemBase golemIn, final BlockState stateIn, final int interval, boolean configAllows) {
+	public PlaceUtilityBlockGoal(final GolemBase golemIn, final BlockState stateIn, final int interval, boolean configAllows) {
 		this(golemIn, stateIn, interval, configAllows, getDefaultBiPred(stateIn));
 	}
 
@@ -114,10 +116,10 @@ public class EntityAIUtilityBlock extends EntityAIBase {
 		final boolean canBeWaterlogged = canBeWaterlogged(stateIn);
 		return (golem, toReplace) -> toReplace.getBlock() == Blocks.AIR 
 				|| (toReplace.getBlock() == Blocks.WATER && canBeWaterlogged
-					&& toReplace.get(BlockFlowingFluid.LEVEL) == 0);
+					&& toReplace.get(FlowingFluidBlock.LEVEL) == 0);
 	}
 	
 	protected  BlockState getStateToPlace(final BlockState toReplace) {
-		return toReplace == Blocks.WATER ? getStateWaterlogged(stateToPlace) : stateToPlace;
+		return toReplace.getBlock() == Blocks.WATER ? getStateWaterlogged(stateToPlace) : stateToPlace;
 	}
 }

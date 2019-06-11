@@ -24,7 +24,7 @@ public final class EntityStainedGlassGolem extends GolemMultiColorized {
 		.makeTexture(ExtraGolems.MODID, GolemNames.STAINEDGLASS_GOLEM + "_grayscale");
 
 	public EntityStainedGlassGolem(final World world) {
-		super(EntityStainedGlassGolem.class, world, TEXTURE_BASE, TEXTURE_OVERLAY, DYE_COLORS);
+		super(ExtraGolems.MODID, GolemNames.STAINEDGLASS_GOLEM, world, TEXTURE_BASE, TEXTURE_OVERLAY, DYE_COLORS);
 		this.setCanTakeFallDamage(true);
 	}
 

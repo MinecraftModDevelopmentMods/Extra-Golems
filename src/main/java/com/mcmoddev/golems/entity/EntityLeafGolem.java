@@ -23,7 +23,7 @@ public final class EntityLeafGolem extends GolemColorized {
 		.makeTexture(ExtraGolems.MODID, GolemNames.LEAF_GOLEM + "_grayscale");
 
 	public EntityLeafGolem(final World world) {
-		super(EntityLeafGolem.class, world, 0x5F904A, TEXTURE_BASE, TEXTURE_OVERLAY);
+		super(ExtraGolems.MODID, GolemNames.LEAF_GOLEM, world, 0x5F904A, TEXTURE_BASE, TEXTURE_OVERLAY);
 		this.setCanSwim(true);
 	}
 

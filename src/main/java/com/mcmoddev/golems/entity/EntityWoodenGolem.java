@@ -2,6 +2,7 @@ package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
+import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -19,7 +20,7 @@ public final class EntityWoodenGolem extends GolemMultiTextured {
 		"big_oak"};
 
 	public EntityWoodenGolem(final World world) {
-		super(EntityWoodenGolem.class, world, WOOD_PREFIX, WOOD_TYPES);
+		super(ExtraGolems.MODID, GolemNames.WOODEN_GOLEM, world, WOOD_PREFIX, WOOD_TYPES);
 		this.setCanSwim(true);
 	}
 
@@ -28,11 +29,6 @@ public final class EntityWoodenGolem extends GolemMultiTextured {
 		// try to return the same block of this golem's texture
 		// TODO but low priority
 		return new ItemStack(Blocks.OAK_LOG);
-	}
-
-	@Override
-	public String getModId() {
-		return ExtraGolems.MODID;
 	}
 
 	@Override

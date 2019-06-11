@@ -25,7 +25,7 @@ public final class EntitySlimeGolem extends GolemBase {
 	}
 	
 	public EntitySlimeGolem(final World world, final boolean isBaby) {
-		super(EntitySlimeGolem.class, world);
+		super(GolemNames.SLIME_GOLEM, world);
 		this.setChild(isBaby);
 		this.setCanSwim(true);
 	}

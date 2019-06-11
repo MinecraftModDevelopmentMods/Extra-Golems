@@ -57,7 +57,7 @@ public final class EntityMagmaGolem extends GolemBase {
 	}
 	
 	public EntityMagmaGolem(final World world) {
-		super(EntityMagmaGolem.class, world);
+		super(GolemNames.MAGMA_GOLEM, world);
 		this.isHurtByWater = this.getConfigBool(ALLOW_WATER_DAMAGE);
 		this.allowMelting = this.getConfigBool(ALLOW_LAVA_SPECIAL);
 		this.meltDelay = this.getConfigInt(MELT_DELAY);

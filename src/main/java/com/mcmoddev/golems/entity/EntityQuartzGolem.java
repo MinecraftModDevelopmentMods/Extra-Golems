@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 public final class EntityQuartzGolem extends GolemBase {
 
 	public EntityQuartzGolem(final World world) {
-		super(EntityQuartzGolem.class, world);
+		super(GolemNames.QUARTZ_GOLEM, world);
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.3D);
 	}
 

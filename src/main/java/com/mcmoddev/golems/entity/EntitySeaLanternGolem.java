@@ -1,7 +1,7 @@
 package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.blocks.BlockUtilityGlow;
-import com.mcmoddev.golems.entity.ai.EntityAIUtilityBlock;
+import com.mcmoddev.golems.entity.ai.PlaceUtilityBlockGoal;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
@@ -23,7 +23,7 @@ public final class EntitySeaLanternGolem extends GolemBase {
 	private static final int BRIGHTNESS_INT = (int) (BRIGHTNESS * 15.0F);
 
 	public EntitySeaLanternGolem(final World world) {
-		super(EntitySeaLanternGolem.class, world);
+		super(GolemNames.SEALANTERN_GOLEM, world);
 		this.canDrown = false;
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.2D);
 	}
@@ -33,7 +33,7 @@ public final class EntitySeaLanternGolem extends GolemBase {
 		super.initEntityAI();
 		final boolean allow = this.getConfigBool(ALLOW_SPECIAL);
 		final int freq = BlockUtilityGlow.UPDATE_TICKS;
-		this.tasks.addTask(8, new EntityAIUtilityBlock(this, GolemItems.UTILITY_LIGHT.getDefaultState()
+		this.tasks.addTask(8, new PlaceUtilityBlockGoal(this, GolemItems.UTILITY_LIGHT.getDefaultState()
 			.with(BlockUtilityGlow.LIGHT_LEVEL, BRIGHTNESS_INT), freq, allow));
 	}
 

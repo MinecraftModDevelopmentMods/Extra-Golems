@@ -25,7 +25,7 @@ public final class EntityStrawGolem extends GolemBase {
 	private boolean allowed;
 
 	public EntityStrawGolem(final World world) {
-		super(EntityStrawGolem.class, world);
+		super(GolemNames.STRAW_GOLEM, world);
 		this.setCanSwim(true);
 		this.boostFreq = this.getConfigInt(SPECIAL_FREQ);
 		this.boostFreq += this.rand.nextInt(Math.max(10, this.boostFreq / 2));

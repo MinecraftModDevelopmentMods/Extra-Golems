@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 public final class EntityGlassGolem extends GolemBase {
 
 	public EntityGlassGolem(final World world) {
-		super(EntityGlassGolem.class, world);
+		super(GolemNames.GLASS_GOLEM, world);
 		this.setCanTakeFallDamage(true);
 	}
 

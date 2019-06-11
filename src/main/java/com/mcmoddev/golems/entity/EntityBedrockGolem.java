@@ -22,7 +22,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public final class EntityBedrockGolem extends GolemBase {
 
 	public EntityBedrockGolem(final World world) {
-		super(EntityBedrockGolem.class, world);
+		super(GolemNames.BEDROCK_GOLEM, world);
 		this.setInvulnerable(true);
 		this.setCreativeReturn(new ItemStack(GolemItems.SPAWN_BEDROCK_GOLEM));
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(1.0D);

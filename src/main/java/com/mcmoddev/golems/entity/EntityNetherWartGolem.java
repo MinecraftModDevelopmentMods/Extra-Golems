@@ -1,12 +1,11 @@
 package com.mcmoddev.golems.entity;
 
-import com.mcmoddev.golems.entity.ai.EntityAIPlaceRandomBlocksStrictly;
+import com.mcmoddev.golems.entity.ai.PlaceBlocksGoal;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockNetherWart;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.NetherWartBlock;
@@ -24,7 +23,7 @@ public final class EntityNetherWartGolem extends GolemBase {
 	public static final String ALLOW_HEALING = "Allow Special: Random Healing";
 
 	public EntityNetherWartGolem(final World world) {
-		super(EntityNetherWartGolem.class, world);
+		super(GolemNames.NETHERWART_GOLEM, world);
 		this.setCanSwim(true);
 	}
 	
@@ -53,7 +52,7 @@ public final class EntityNetherWartGolem extends GolemBase {
 		final boolean allow = this.getConfigBool(ALLOW_SPECIAL);
 		final int freq = this.getConfigInt(FREQUENCY);
 		this.tasks.addTask(2,
-			new EntityAIPlaceRandomBlocksStrictly(this, freq, flowers, soils, allow));
+			new PlaceBlocksGoal(this, freq, flowers, soils, allow));
 	}
 
 	@Override

@@ -2,11 +2,9 @@ package com.mcmoddev.golems.entity.base;
 
 import javax.annotation.Nullable;
 
-import com.mcmoddev.golems.main.ExtraGolems;
-
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -18,7 +16,7 @@ import net.minecraft.world.World;
 public abstract class GolemMultiColorized extends GolemColorized {
 
 	protected static final DataParameter<Byte> DATA_TEXTURE = EntityDataManager
-			.<Byte>createKey(GolemMultiColorized.class, DataSerializers.BYTE);
+			.<Byte>createKey(GolemMultiColorized.class, DataSerializers.field_187191_a);
 	protected static final String NBT_TEXTURE = "GolemTextureData";
 	protected final int[] colors;
 	protected final ResourceLocation[] lootTables;
@@ -37,15 +35,15 @@ public abstract class GolemMultiColorized extends GolemColorized {
 	 * @param overlay a texture that will be recolored and optionally rendered as transparent.
 	 * @param lColors an int[] of color values to use for rendering -- interacting with this golem  will go to the next color
 	 **/
-	public GolemMultiColorized(Class<? extends GolemMultiColorized> type, final World world,
+	public GolemMultiColorized(final String modid, final String name, final World world,
 					   @Nullable final ResourceLocation base, @Nullable final ResourceLocation overlay, final int[] lColors) {
-		super(type, world, 0L, base, overlay);
+		super(modid, name, world, 0L, base, overlay);
 		colors = lColors;
 		lootTables = new ResourceLocation[colors.length];
 		for (int n = 0, len = colors.length; n < len; n++) {
 			// initialize loot tables
-			this.lootTables[n] = new ResourceLocation(getModId(), "entities/"
-					+ this.getEntityString().replaceAll(getModId() + ":", "") + "/" + n);
+			this.lootTables[n] = new ResourceLocation(modid, "entities/"
+					+ this.getEntityString().replaceAll(modid + ":", "") + "/" + n);
 		}
 	}
 
@@ -88,13 +86,13 @@ public abstract class GolemMultiColorized extends GolemColorized {
 	}
 
 	@Override
-	public void writeAdditional(final NBTTagCompound nbt) {
+	public void writeAdditional(final CompoundNBT nbt) {
 		super.writeAdditional(nbt);
-		nbt.setByte(NBT_TEXTURE, (byte) this.getTextureNum());
+		nbt.putByte(NBT_TEXTURE, (byte) this.getTextureNum());
 	}
 
 	@Override
-	public void readAdditional(final NBTTagCompound nbt) {
+	public void readAdditional(final CompoundNBT nbt) {
 		super.readAdditional(nbt);
 		this.setTextureNum(nbt.getByte(NBT_TEXTURE));
 	}
@@ -119,9 +117,5 @@ public abstract class GolemMultiColorized extends GolemColorized {
 
 	protected void updateTextureByData(final int data) {
 		this.setColor(this.colors[data]);
-	}
-
-	public String getModId() {
-		return ExtraGolems.MODID;
 	}
 }

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
+import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -44,7 +45,7 @@ public final class EntityWoolGolem extends GolemMultiTextured {
 	private byte[] iSecret = { 14, 1, 4, 5, 3, 11, 10, 2 };
 
 	public EntityWoolGolem(final World world) {
-		super(EntityWoolGolem.class, world, WOOL_PREFIX, coloredWoolTypes);
+		super(ExtraGolems.MODID, GolemNames.WOOL_GOLEM, world, WOOL_PREFIX, coloredWoolTypes);
 		this.setCanSwim(true);
 	}
 
@@ -60,11 +61,6 @@ public final class EntityWoolGolem extends GolemMultiTextured {
 //			}
 //		}
 //	}
-
-	@Override
-	public String getModId() {
-		return ExtraGolems.MODID;
-	}
 
 	@Override
 	public SoundEvent getGolemSound() {

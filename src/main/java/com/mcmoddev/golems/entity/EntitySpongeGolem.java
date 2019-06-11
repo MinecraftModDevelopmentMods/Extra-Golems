@@ -28,7 +28,7 @@ public final class EntitySpongeGolem extends GolemBase {
 	public static final String RANGE = "Water Soaking Range";
 
 	public EntitySpongeGolem(final World world) {
-		super(EntitySpongeGolem.class, world);
+		super(GolemNames.SPONGE_GOLEM, world);
 		this.setCanSwim(true);
 	}
 

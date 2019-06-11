@@ -25,7 +25,7 @@ public final class EntityCraftingGolem extends GolemBase {
 	public static final String ALLOW_SPECIAL = "Allow Special: Crafting";
 	
 	public EntityCraftingGolem(final World world) {
-		super(EntityCraftingGolem.class, world);
+		super(GolemNames.CRAFTING_GOLEM, world);
 	}
 
 	@Override

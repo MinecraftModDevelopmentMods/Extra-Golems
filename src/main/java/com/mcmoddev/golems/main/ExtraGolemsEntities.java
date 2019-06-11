@@ -31,7 +31,7 @@ import com.mcmoddev.golems.entity.EntitySandstoneGolem;
 import com.mcmoddev.golems.entity.EntitySeaLanternGolem;
 import com.mcmoddev.golems.entity.EntitySlimeGolem;
 import com.mcmoddev.golems.entity.EntitySpongeGolem;
-import com.mcmoddev.golems.entity.EntityStainedClayGolem;
+import com.mcmoddev.golems.entity.EntityStainedTerracottaGolem;
 import com.mcmoddev.golems.entity.EntityStainedGlassGolem;
 import com.mcmoddev.golems.entity.EntityStrawGolem;
 import com.mcmoddev.golems.entity.EntityTNTGolem;
@@ -260,7 +260,7 @@ public final class ExtraGolemsEntities {
 				.setHealth(9.0D).setAttack(12.0D).setSpeed(0.29D).addBlocks(BlockTagUtil.TAG_STAINED_GLASS)
 				.addLootTables(GolemNames.STAINEDGLASS_GOLEM, RANGE).build());
 		// STAINED TERRACOTTA GOLEM
-		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.STAINEDTERRACOTTA_GOLEM, EntityStainedClayGolem.class, EntityStainedClayGolem::new)
+		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.STAINEDTERRACOTTA_GOLEM, EntityStainedTerracottaGolem.class, EntityStainedTerracottaGolem::new)
 				.setHealth(42.0D).setAttack(4.0D).setSpeed(0.22D).addBlocks(BlockTagUtil.TAG_TERRACOTTA)
 				.addLootTables(GolemNames.STAINEDTERRACOTTA_GOLEM, RANGE).build());
 		// STRAW GOLEM

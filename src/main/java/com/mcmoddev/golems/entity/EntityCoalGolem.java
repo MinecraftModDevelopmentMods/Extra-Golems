@@ -19,7 +19,7 @@ public final class EntityCoalGolem extends GolemBase {
 	public static final String ALLOW_SPECIAL = "Allow Special: Blindness";
 
 	public EntityCoalGolem(final World world) {
-		super(EntityCoalGolem.class, world);
+		super(GolemNames.COAL_GOLEM, world);
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.2D);
 	}
 

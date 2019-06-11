@@ -22,7 +22,7 @@ public final class EntityBookshelfGolem extends GolemBase {
 	*/ // TODO Effects.<SRG name>
 
 	public EntityBookshelfGolem(final World world) {
-		super(EntityBookshelfGolem.class, world);
+		super(GolemNames.BOOKSHELF_GOLEM, world);
 	}
 
 	protected ResourceLocation applyTexture() {

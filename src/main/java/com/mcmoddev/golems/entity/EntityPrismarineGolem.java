@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 public final class EntityPrismarineGolem extends GolemBase {
 
 	public EntityPrismarineGolem(final World world) {
-		super(EntityPrismarineGolem.class, world);
+		super(GolemNames.PRISMARINE_GOLEM, world);
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.2D);
 	}
 

@@ -26,7 +26,7 @@ public final class EntityIceGolem extends GolemBase {
 	public static final String FROST = "Use Frosted Ice";
 
 	public EntityIceGolem(final World world) {
-		super(EntityIceGolem.class, world);
+		super(GolemNames.ICE_GOLEM, world);
 		this.setCanSwim(true);
 	}
 
