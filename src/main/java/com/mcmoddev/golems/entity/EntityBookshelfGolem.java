@@ -5,20 +5,21 @@ import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.init.MobEffects;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 
 public final class EntityBookshelfGolem extends GolemBase {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Potion Effects";
-	private static final Potion[] goodEffects = {MobEffects.FIRE_RESISTANCE, MobEffects.REGENERATION,
+	/*private static final Potion[] goodEffects = {MobEffects.FIRE_RESISTANCE, MobEffects.REGENERATION,
 		MobEffects.STRENGTH, MobEffects.ABSORPTION, MobEffects.LUCK, MobEffects.INSTANT_HEALTH,
 		MobEffects.RESISTANCE, MobEffects.INVISIBILITY, MobEffects.SPEED,
 		MobEffects.JUMP_BOOST};
+	*/ // TODO Effects.<SRG name>
 
 	public EntityBookshelfGolem(final World world) {
 		super(EntityBookshelfGolem.class, world);

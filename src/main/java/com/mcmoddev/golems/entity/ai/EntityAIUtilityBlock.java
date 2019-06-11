@@ -5,36 +5,34 @@ import java.util.function.BiPredicate;
 import com.mcmoddev.golems.entity.base.GolemBase;
 
 import net.minecraft.block.BlockFlowingFluid;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.init.Blocks;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
 /**
- * Places a single IBlockState every {@code tickDelay} ticks with certain conditions
+ * Places a single BlockState every {@code tickDelay} ticks with certain conditions
  **/
 public class EntityAIUtilityBlock extends EntityAIBase {
 
 	public final GolemBase golem;
-	public final IBlockState stateToPlace;
+	public final BlockState stateToPlace;
 	public final int tickDelay;
 	public final boolean configAllows;
-	public final BiPredicate<GolemBase, IBlockState> predicate;
+	public final BiPredicate<GolemBase, BlockState> predicate;
 
 	/**
 	 * @param golemIn        the GolemBase to use
-	 * @param stateIn        the IBlockState that will be placed every {@code interval} ticks
+	 * @param stateIn        the BlockState that will be placed every {@code interval} ticks
 	 * @param interval       ticks between placing block
 	 * @param cfgAllows		 whether this AI is enabled by the config
 	 * @param canReplacePred an optional BiPredicate to use when determining whether to place a Block.
 	 * Defaults to replacing air only.
-	 * @see #getDefaultBiPred(GolemBase, IBlockState)
+	 * @see #getDefaultBiPred(GolemBase, BlockState)
 	 **/
-	public EntityAIUtilityBlock(final GolemBase golemIn, final IBlockState stateIn, final int interval, 
-			final boolean cfgAllows, final BiPredicate<GolemBase, IBlockState> canReplacePred) {
+	public EntityAIUtilityBlock(final GolemBase golemIn, final BlockState stateIn, final int interval, 
+			final boolean cfgAllows, final BiPredicate<GolemBase, BlockState> canReplacePred) {
 		this.setMutexBits(8);
 		this.golem = golemIn;
 		this.stateToPlace = stateIn;
@@ -48,11 +46,11 @@ public class EntityAIUtilityBlock extends EntityAIBase {
 	 * for replacing a block with this one is that the other block is air
 	 *
 	 * @param golemIn  the GolemBase to use
-	 * @param stateIn  the IBlockState that will be placed every {@code interval} ticks
+	 * @param stateIn  the BlockState that will be placed every {@code interval} ticks
 	 * @param interval ticks between placing block
 	 * @param configAllows whether this AI is enabled by the config
 	 **/
-	public EntityAIUtilityBlock(final GolemBase golemIn, final IBlockState stateIn, final int interval, boolean configAllows) {
+	public EntityAIUtilityBlock(final GolemBase golemIn, final BlockState stateIn, final int interval, boolean configAllows) {
 		this(golemIn, stateIn, interval, configAllows, getDefaultBiPred(stateIn));
 	}
 
@@ -76,7 +74,7 @@ public class EntityAIUtilityBlock extends EntityAIBase {
 			// when it passes, place the block and return
 			for (int i = 0; i < 3; i++) {
 				BlockPos temp = blockPosIn.up(i);
-				final IBlockState cur = golem.getEntityWorld().getBlockState(temp);
+				final BlockState cur = golem.getEntityWorld().getBlockState(temp);
 				// if there's already a matching block, stop here
 				if(cur.getBlock() == stateToPlace.getBlock()) {
 					return;
@@ -94,32 +92,32 @@ public class EntityAIUtilityBlock extends EntityAIBase {
 		this.tick();
 	}
 	
-	public static boolean canBeWaterlogged(final IBlockState stateIn) {
+	public static boolean canBeWaterlogged(final BlockState stateIn) {
 		return stateIn.getProperties().contains(BlockStateProperties.WATERLOGGED);
 	}
 	
 	/**
 	 * @return a state with Waterlogged set to True if applicable, otherwise returns the given state
 	 **/
-	public static IBlockState getStateWaterlogged(final IBlockState stateIn) {
+	public static BlockState getStateWaterlogged(final BlockState stateIn) {
 		return canBeWaterlogged(stateIn) ? stateIn.with(BlockStateProperties.WATERLOGGED, true) : stateIn;
 	}
 	
 	/**
 	 * Builds a BiPredicate that returns True for either of two conditions:
-	 * <br>1. If the current IBlockState is Air
-	 * <br>2. If the current IBlockState is Water AND the replacement state
+	 * <br>1. If the current BlockState is Air
+	 * <br>2. If the current BlockState is Water AND the replacement state
 	 * can be Waterlogged
 	 * @param stateIn the state that will replace the given one if possible
 	 **/
-	public static BiPredicate<GolemBase, IBlockState> getDefaultBiPred(final IBlockState stateIn) {
+	public static BiPredicate<GolemBase, BlockState> getDefaultBiPred(final BlockState stateIn) {
 		final boolean canBeWaterlogged = canBeWaterlogged(stateIn);
 		return (golem, toReplace) -> toReplace.getBlock() == Blocks.AIR 
 				|| (toReplace.getBlock() == Blocks.WATER && canBeWaterlogged
 					&& toReplace.get(BlockFlowingFluid.LEVEL) == 0);
 	}
 	
-	protected  IBlockState getStateToPlace(final IBlockState toReplace) {
+	protected  BlockState getStateToPlace(final BlockState toReplace) {
 		return toReplace == Blocks.WATER ? getStateWaterlogged(stateToPlace) : stateToPlace;
 	}
 }

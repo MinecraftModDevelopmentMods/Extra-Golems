@@ -1,31 +1,27 @@
 package com.mcmoddev.golems.blocks;
 
+import javax.annotation.Nullable;
+
 import com.mcmoddev.golems.entity.base.GolemBase;
-import com.mcmoddev.golems.items.ItemGolemSpell;
 import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockDispenser;
-import net.minecraft.block.BlockHorizontal;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
-import net.minecraft.dispenser.IBehaviorDispenseItem;
-import net.minecraft.dispenser.IBlockSource;
-import net.minecraft.entity.monster.EntityIronGolem;
-import net.minecraft.entity.monster.EntitySnowman;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.HorizontalBlock;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.passive.IronGolemEntity;
+import net.minecraft.entity.passive.SnowGolemEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
-public final class BlockGolemHead extends BlockHorizontal {
+public final class BlockGolemHead extends HorizontalBlock {
 
 	/*
 	 * This behavior is modified from that of CARVED_PUMPKIN, where the block is placed
@@ -54,32 +50,34 @@ public final class BlockGolemHead extends BlockHorizontal {
 	};
 	*/
 	public BlockGolemHead() {
-		super(Properties.from(Blocks.CARVED_PUMPKIN));
-		this.setDefaultState(this.getStateContainer().getBaseState().with(HORIZONTAL_FACING, EnumFacing.NORTH));
+		super(Block.Properties.from(Blocks.CARVED_PUMPKIN));
+		this.setDefaultState(this.getStateContainer().getBaseState().with(HORIZONTAL_FACING, Direction.NORTH));
 		// dispenser behavior TODO: NOT WORKING
 		// BlockDispenser.registerDispenseBehavior(this.asItem(), BlockGolemHead.DISPENSER_BEHAVIOR);
 	}
 
 	@Override
-	public IBlockState getStateForPlacement(BlockItemUseContext context) {
+	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite());
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, IBlockState> builder) {
+	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
 		builder.add(HORIZONTAL_FACING);
 	}
 
 	@Override
-	public IBlockState getStateForPlacement(IBlockState state, EnumFacing facing, IBlockState state2, IWorld world, BlockPos pos1, BlockPos pos2, EnumHand hand) {
-		return this.getDefaultState().with(HORIZONTAL_FACING, facing.getOpposite());
-	}
-
-	@Override
-	public void onBlockAdded(IBlockState state, World worldIn, BlockPos pos, IBlockState oldState) {
-		super.onBlockAdded(state, worldIn, pos, state);
+	public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer,
+			ItemStack stack) {
+		super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
 		trySpawnGolem(worldIn, pos);
 	}
+
+//	@Override
+//	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState) {
+//		super.onBlockAdded(state, worldIn, pos, state);
+//		trySpawnGolem(worldIn, pos);
+//	}
 	
 	/**
 	 * Attempts to build a golem with the given head position.
@@ -93,12 +91,12 @@ public final class BlockGolemHead extends BlockHorizontal {
 		if(world.isRemote) return false;
 		
 		// get all the block and state values that we will be using in the following code
-		final IBlockState stateBelow1 = world.getBlockState(headPos.down(1));
-		final IBlockState stateBelow2 = world.getBlockState(headPos.down(2));
-		final IBlockState stateArmNorth = world.getBlockState(headPos.down(1).north(1));
-		final IBlockState stateArmSouth = world.getBlockState(headPos.down(1).south(1));
-		final IBlockState stateArmEast = world.getBlockState(headPos.down(1).east(1));
-		final IBlockState stateArmWest = world.getBlockState(headPos.down(1).west(1));
+		final BlockState stateBelow1 = world.getBlockState(headPos.down(1));
+		final BlockState stateBelow2 = world.getBlockState(headPos.down(2));
+		final BlockState stateArmNorth = world.getBlockState(headPos.down(1).north(1));
+		final BlockState stateArmSouth = world.getBlockState(headPos.down(1).south(1));
+		final BlockState stateArmEast = world.getBlockState(headPos.down(1).east(1));
+		final BlockState stateArmWest = world.getBlockState(headPos.down(1).west(1));
 		final Block blockBelow1 = stateBelow1.getBlock();
 		final Block blockBelow2 = stateBelow2.getBlock();
 		final Block blockArmNorth = stateArmNorth.getBlock();
@@ -117,10 +115,10 @@ public final class BlockGolemHead extends BlockHorizontal {
 		////// Hard-coded support for Snow Golem //////
 		if (doBlocksMatch(Blocks.SNOW_BLOCK, blockBelow1, blockBelow2)) {
 			removeGolemBody(world, headPos);
-			final EntitySnowman entitysnowman = new EntitySnowman(world);
+			final SnowGolemEntity entitysnowman = EntityType.SNOW_GOLEM.create(world);
 			ExtraGolems.LOGGER.info("[Extra Golems]: Building regular boring Snow Golem");
 			entitysnowman.setLocationAndAngles(spawnX, spawnY, spawnZ, 0.0F, 0.0F);
-			world.spawnEntity(entitysnowman);
+			world.func_217376_c(entitysnowman);
 			return true;
 		}
 		
@@ -136,11 +134,11 @@ public final class BlockGolemHead extends BlockHorizontal {
 		if (isIron) {
 			removeAllGolemBlocks(world, headPos, flagX);
 			// build Iron Golem
-			final EntityIronGolem ironGolem = new EntityIronGolem(world);
+			final IronGolemEntity ironGolem = EntityType.IRON_GOLEM.create(world);
 			ExtraGolems.LOGGER.info("[Extra Golems]: Building regular boring Iron Golem");
 			ironGolem.setPlayerCreated(true);
 			ironGolem.setLocationAndAngles(spawnX, spawnY, spawnZ, 0.0F, 0.0F);
-			world.spawnEntity(ironGolem);
+			world.func_217376_c(ironGolem);
 			return true;
 		}
 		
@@ -159,7 +157,7 @@ public final class BlockGolemHead extends BlockHorizontal {
 			golem.setPlayerCreated(true);
 			golem.setLocationAndAngles(spawnX, spawnY, spawnZ, 0.0F, 0.0F);
 			ExtraGolems.LOGGER.info("[Extra Golems]: Building golem " + golem.toString());
-			world.spawnEntity(golem);
+			world.func_217376_c(golem);
 			golem.onBuilt(stateBelow1, stateBelow2, flagX ? stateArmEast : stateArmWest, flagX ? stateArmNorth : stateArmSouth);
 			if(!golem.updateHomeVillage()) {
 				golem.setHomePosAndDistance(golem.getPosition(), GolemBase.WANDER_DISTANCE);

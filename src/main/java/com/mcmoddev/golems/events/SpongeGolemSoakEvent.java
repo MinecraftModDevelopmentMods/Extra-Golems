@@ -3,13 +3,12 @@ package com.mcmoddev.golems.events;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.eventbus.api.Cancelable;
@@ -24,7 +23,7 @@ import net.minecraftforge.eventbus.api.Event;
 public final class SpongeGolemSoakEvent extends Event {
 
 	protected List<BlockPos> affectedBlocks;
-	protected Function<IBlockState, IBlockState> absorbFunction;
+	protected Function<BlockState, BlockState> absorbFunction;
 
 	public final GolemBase spongeGolem;
 	public final BlockPos spongeGolemPos;
@@ -48,7 +47,7 @@ public final class SpongeGolemSoakEvent extends Event {
 	}
 
 	public SpongeGolemSoakEvent(final GolemBase golem, final BlockPos center, final int radius,
-			final Function<IBlockState, IBlockState> function) {
+			final Function<BlockState, BlockState> function) {
 		this.setResult(Event.Result.ALLOW);
 		this.spongeGolem = golem;
 		this.spongeGolemPos = center;
@@ -65,8 +64,8 @@ public final class SpongeGolemSoakEvent extends Event {
 				for (int k = -range; k <= range; k++) {
 					final BlockPos current = this.spongeGolemPos.add(i, j, k);
 					if (spongeGolemPos.distanceSq(current) <= MAX_DIS) {
-						final IBlockState state = this.spongeGolem.world.getBlockState(current);
-						final IBlockState replace = this.absorbFunction.apply(state);
+						final BlockState state = this.spongeGolem.world.getBlockState(current);
+						final BlockState replace = this.absorbFunction.apply(state);
 						if (replace != null && replace != state) {
 							this.affectedBlocks.add(current);
 						}
@@ -80,18 +79,18 @@ public final class SpongeGolemSoakEvent extends Event {
 		return this.affectedBlocks;
 	}
 
-	public Function<IBlockState, IBlockState> getAbsorbFunction() {
+	public Function<BlockState, BlockState> getAbsorbFunction() {
 		return this.absorbFunction;
 	}
 
 	/**
 	 * Call this method to use a different function than the default one
 	 * to determine which state should replace which blocks. 
-	 * @param function the new {@code Function<IBlockState, IBlockState>}
+	 * @param function the new {@code Function<BlockState, BlockState>}
 	 * @param refresh when true, the event will call {@link #initAffectedBlockList(int)}
 	 * to refresh the list of affected blocks.
 	 **/
-	public void setAbsorbFunction(final Function<IBlockState, IBlockState> function, final boolean refresh) {
+	public void setAbsorbFunction(final Function<BlockState, BlockState> function, final boolean refresh) {
 		this.absorbFunction = function;
 		if(refresh) {
 			this.initAffectedBlockList(this.range);

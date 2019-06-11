@@ -6,13 +6,13 @@ import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.MobEffects;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 
 public final class EntityMelonGolem extends GolemBase {
@@ -46,7 +46,7 @@ public final class EntityMelonGolem extends GolemBase {
 		if(!this.getConfigBool(ALLOW_HEALING)) return;
 		// heals randomly (about every 20 sec)
 		if(rand.nextInt(450) == 0) {
-			this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 50, 1));
+			this.addPotionEffect(new EffectInstance(Effects.field_76428_l, 50, 1)); // REGENERATION
 		}
 	}
 
@@ -56,7 +56,7 @@ public final class EntityMelonGolem extends GolemBase {
 		super.initEntityAI();
 		final Block[] soils = {Blocks.DIRT, Blocks.GRASS, Blocks.MYCELIUM, Blocks.PODZOL};
 		// init list and AI for planting flowers
-		final IBlockState[] flowers = {
+		final BlockState[] flowers = {
 				Blocks.POPPY.getDefaultState(),
 				Blocks.DANDELION.getDefaultState(),
 				Blocks.BLUE_ORCHID.getDefaultState(),

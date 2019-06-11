@@ -1,11 +1,9 @@
 package com.mcmoddev.golems.events.handlers;
 
 import com.mcmoddev.golems.blocks.BlockGolemHead;
-import com.mcmoddev.golems.entity.base.*;
+import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockCarvedPumpkin;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -18,15 +16,8 @@ import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.monster.EntitySpider;
 import net.minecraft.entity.monster.EntityZombie;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -88,8 +79,8 @@ public class GolemCommonEventHandler {
 //				testing = testing.down(1);
 //			}
 //			// check if golem can spawn there
-//			IBlockState iblockstate = entity.getEntityWorld().getBlockState(testing);
-//			if(iblockstate.canEntitySpawn(entity)) {
+//			BlockState BlockState = entity.getEntityWorld().getBlockState(testing);
+//			if(BlockState.canEntitySpawn(entity)) {
 //				return testing.up(1);
 //			}
 //		}

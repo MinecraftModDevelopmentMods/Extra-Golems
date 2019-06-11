@@ -1,17 +1,18 @@
 package com.mcmoddev.golems.blocks;
 
+import java.util.List;
+import java.util.Random;
+
 import com.mcmoddev.golems.entity.base.GolemBase;
+
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import java.util.List;
-import java.util.Random;
 
 public class BlockUtilityGlow extends BlockUtility {
 	
@@ -20,13 +21,13 @@ public class BlockUtilityGlow extends BlockUtility {
 	public static final int UPDATE_TICKS = 6;
 	
 	public BlockUtilityGlow(Material m, final float defaultLight, final int tickRate) {
-		super(Properties.create(m).needsRandomTick().lightValue((int)(defaultLight * 15.0F)), tickRate);
+		super(Properties.create(m).tickRandomly().lightValue((int)(defaultLight * 15.0F)), tickRate);
 		int light = (int) (defaultLight * 15.0F);
 		this.setDefaultState(this.getDefaultState().with(LIGHT_LEVEL, light));
 	}
 
 	@Override
-	public void tick(IBlockState state, World worldIn, BlockPos pos, Random random) {
+	public void tick(BlockState state, World worldIn, BlockPos pos, Random random) {
 		// make a slightly expanded AABB to check for the golem
 		final AxisAlignedBB toCheck = new AxisAlignedBB(pos).grow(0.5D);
 		// we'll probably only ever get one golem, but it doesn't hurt to be safe and check them all
@@ -42,13 +43,13 @@ public class BlockUtilityGlow extends BlockUtility {
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, IBlockState> builder) {
+	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
 		super.fillStateContainer(builder);
 		builder.add(LIGHT_LEVEL);
 	}
 
 	@Override
-	public int getLightValue(IBlockState state) {
+	public int getLightValue(BlockState state) {
 		return state.get(LIGHT_LEVEL);
 	}
 

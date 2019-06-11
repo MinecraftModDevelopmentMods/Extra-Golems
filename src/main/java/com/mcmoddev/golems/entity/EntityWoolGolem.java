@@ -7,10 +7,10 @@ import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
@@ -80,7 +80,7 @@ public final class EntityWoolGolem extends GolemMultiTextured {
 
 
 	@Override
-	public void onBuilt(IBlockState body, IBlockState legs, IBlockState arm1, IBlockState arm2) {
+	public void onBuilt(BlockState body, BlockState legs, BlockState arm1, BlockState arm2) {
 		// uses HashMap to determine which texture this golem should apply
 		// based on the top-middle building block. Defaults to a random texture.
 		byte textureNum = blockToTexture.containsKey(body.getBlock()) 

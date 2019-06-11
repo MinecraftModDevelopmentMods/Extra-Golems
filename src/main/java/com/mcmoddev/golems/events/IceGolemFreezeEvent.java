@@ -1,19 +1,20 @@
 package com.mcmoddev.golems.events;
 
-import com.mcmoddev.golems.entity.EntityIceGolem;
-import com.mcmoddev.golems.entity.base.GolemBase;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.eventbus.api.Cancelable;
-import net.minecraftforge.eventbus.api.Event;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Function;
+
+import com.mcmoddev.golems.entity.EntityIceGolem;
+import com.mcmoddev.golems.entity.base.GolemBase;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.material.Material;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.eventbus.api.Cancelable;
+import net.minecraftforge.eventbus.api.Event;
 
 /**
  * This event exists for other mods or addons to handle and modify the Ice Golem's behavior. It
@@ -23,7 +24,7 @@ import java.util.function.Function;
 public final class IceGolemFreezeEvent extends Event {
 
 	protected List<BlockPos> affectedBlocks;
-	protected Function<IBlockState, IBlockState> freezeFunction;
+	protected Function<BlockState, BlockState> freezeFunction;
 
 	public final GolemBase iceGolem;
 	public final BlockPos iceGolemPos;
@@ -49,7 +50,7 @@ public final class IceGolemFreezeEvent extends Event {
 	}
 
 	public IceGolemFreezeEvent(final GolemBase golem, final BlockPos center, 
-			final int radius, final Function<IBlockState, IBlockState> function) {
+			final int radius, final Function<BlockState, BlockState> function) {
 		this.setResult(Result.ALLOW);
 		this.iceGolem = golem;
 		this.iceGolemPos = center;
@@ -67,8 +68,8 @@ public final class IceGolemFreezeEvent extends Event {
 				for (int k = -range; k <= range; k++) {
 					final BlockPos currentPos = this.iceGolemPos.add(i, j, k);
 					if (iceGolemPos.distanceSq(currentPos) <= maxDis) {
-						final IBlockState state = this.iceGolem.world.getBlockState(currentPos);
-						final IBlockState replace = this.freezeFunction.apply(state);
+						final BlockState state = this.iceGolem.world.getBlockState(currentPos);
+						final BlockState replace = this.freezeFunction.apply(state);
 						if (replace != state) {
 							this.affectedBlocks.add(currentPos);
 						}
@@ -78,19 +79,19 @@ public final class IceGolemFreezeEvent extends Event {
 		}
 	}
 
-	public Function<IBlockState, IBlockState> getFunction() {
+	public Function<BlockState, BlockState> getFunction() {
 		return this.freezeFunction;
 	}
 
 	/**
 	 * Call this method to use a different function than the default one
 	 * to determine which state should replace which blocks. 
-	 * @param toSet the new {@code Function<IBlockState, IBlockState>}
+	 * @param toSet the new {@code Function<BlockState, BlockState>}
 	 * @param refresh when true, the event will call {@link #initAffectedBlockList(int)}
 	 * to refresh the list of affected blocks.
 	 * @see DefaultFreezeFunction
 	 **/
-	public void setFunction(final Function<IBlockState, IBlockState> toSet, final boolean refresh) {
+	public void setFunction(final Function<BlockState, BlockState> toSet, final boolean refresh) {
 		this.freezeFunction = toSet;
 		if(refresh) {
 			this.initAffectedBlockList(this.range);
@@ -109,7 +110,7 @@ public final class IceGolemFreezeEvent extends Event {
 		return this.affectedBlocks.remove(toRemove);
 	}
 
-	public static class DefaultFreezeFunction implements Function<IBlockState, IBlockState> {
+	public static class DefaultFreezeFunction implements Function<BlockState, BlockState> {
 
 		/**
 		 * Random instance.
@@ -138,9 +139,9 @@ public final class IceGolemFreezeEvent extends Event {
 		}
 
 		@Override
-		public IBlockState apply(final IBlockState input) {
-			final IBlockState cobbleState = Blocks.COBBLESTONE.getDefaultState();
-			final IBlockState iceState = this.frostedIce ? Blocks.FROSTED_ICE.getDefaultState() 
+		public BlockState apply(final BlockState input) {
+			final BlockState cobbleState = Blocks.COBBLESTONE.getDefaultState();
+			final BlockState iceState = this.frostedIce ? Blocks.FROSTED_ICE.getDefaultState() 
 					: Blocks.ICE.getDefaultState();
 			final Material material = input.getMaterial();
 			if (material.isLiquid()) {

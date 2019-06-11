@@ -1,21 +1,27 @@
 package com.mcmoddev.golems.items;
 
+import java.util.List;
+import java.util.Objects;
+
+import javax.annotation.Nullable;
+
 import com.mcmoddev.golems.entity.EntityBedrockGolem;
-import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
 
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.init.Particles;
-import net.minecraft.item.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -23,10 +29,6 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Objects;
 
 public final class ItemBedrockGolem extends Item {
 
@@ -37,7 +39,7 @@ public final class ItemBedrockGolem extends Item {
 	@Override
 	public EnumActionResult onItemUse(ItemUseContext context) {
 		final World worldIn = context.getWorld();
-		final EntityPlayer player = context.getPlayer();
+		final PlayerEntity player = context.getPlayer();
 		final EnumFacing facing = context.getFace();
 		final BlockPos pos = context.getPos();
 		final ItemStack stack = context.getItem();
@@ -50,7 +52,7 @@ public final class ItemBedrockGolem extends Item {
 		// check if the golem is enabled
 		if (GolemRegistrar.getContainer(EntityBedrockGolem.class).isEnabled()) {
 			// make sure the golem can be spawned here (empty block)
-			IBlockState state = worldIn.getBlockState(pos);
+			BlockState state = worldIn.getBlockState(pos);
 			BlockPos spawnPos;
 			if (state.getCollisionShape(context.getWorld(), context.getPos()).isEmpty()) {
 				spawnPos = pos;

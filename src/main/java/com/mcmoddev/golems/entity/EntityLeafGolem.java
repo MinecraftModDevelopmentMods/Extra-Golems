@@ -5,11 +5,11 @@ import com.mcmoddev.golems.entity.base.GolemColorized;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
 
-import net.minecraft.init.MobEffects;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 
@@ -34,10 +34,11 @@ public final class EntityLeafGolem extends GolemColorized {
 	@Override
 	public void livingTick() {
 		super.livingTick();
-		if (this.getConfigBool(ALLOW_SPECIAL) && this.getActivePotionEffect(MobEffects.REGENERATION) == null
+		if (this.getConfigBool(ALLOW_SPECIAL) && this.getActivePotionEffect(Effects.field_76428_l) == null // REGENERATION
 			&& rand.nextInt(40) == 0) {
 			this.addPotionEffect(
-				new PotionEffect(MobEffects.REGENERATION, 200 + 20 * (1 + rand.nextInt(8)), rand.nextInt(2)));
+					// REGENERATION
+				new EffectInstance(Effects.field_76428_l, 200 + 20 * (1 + rand.nextInt(8)), rand.nextInt(2)));
 		}
 
 		if (this.ticksExisted % 10 == 2 && this.world.isRemote) {
@@ -47,8 +48,8 @@ public final class EntityLeafGolem extends GolemColorized {
 		}
 
 		// slow falling for this entity
-		if (this.motionY < -0.05D) {
-			this.motionY *= 4.0D / 5.0D;
+		if (this.getMotion().y < -0.05D) {
+			// TODO this.motionY *= 4.0D / 5.0D;
 		}
 	}
 

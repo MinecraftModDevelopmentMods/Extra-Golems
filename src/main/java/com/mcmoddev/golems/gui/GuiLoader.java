@@ -1,7 +1,7 @@
 package com.mcmoddev.golems.gui;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 
 public final class GuiLoader {
@@ -10,7 +10,7 @@ public final class GuiLoader {
 		//
 	}
 
-    public static void loadBookGui(EntityPlayer playerIn, ItemStack itemstack) {
+    public static void loadBookGui(PlayerEntity playerIn, ItemStack itemstack) {
     	// only load client-side, of course
     	if(!playerIn.getEntityWorld().isRemote)
     		return;

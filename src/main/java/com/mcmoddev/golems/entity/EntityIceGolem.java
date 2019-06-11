@@ -8,12 +8,12 @@ import com.mcmoddev.golems.events.IceGolemFreezeEvent;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
 
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -85,13 +85,13 @@ public final class EntityIceGolem extends GolemBase {
 
 	/**
 	 * Usually called after creating and firing a {@link IceGolemFreezeEvent}. Iterates through the
-	 * list of positions and calls {@code apply(IBlockState input)} on the passed
-	 * {@code Function<IBlockState, IBlockState>} .
+	 * list of positions and calls {@code apply(BlockState input)} on the passed
+	 * {@code Function<BlockState, BlockState>} .
 	 *
 	 * @return whether all setBlockState calls were successful.
 	 **/
 	public boolean freezeBlocks(final List<BlockPos> positions,
-				    final Function<IBlockState, IBlockState> function, final int updateFlag) {
+				    final Function<BlockState, BlockState> function, final int updateFlag) {
 		boolean flag = true;
 		for (BlockPos pos : positions) {
 			flag &= this.world.setBlockState(pos, function.apply(this.world.getBlockState(pos)), updateFlag);

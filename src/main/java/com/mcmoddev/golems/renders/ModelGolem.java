@@ -1,7 +1,8 @@
 package com.mcmoddev.golems.renders;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
-import net.minecraft.client.renderer.GlStateManager;
+import com.mojang.blaze3d.platform.GlStateManager;
+
 import net.minecraft.client.renderer.entity.model.ModelBase;
 import net.minecraft.client.renderer.entity.model.ModelRenderer;
 import net.minecraft.entity.Entity;

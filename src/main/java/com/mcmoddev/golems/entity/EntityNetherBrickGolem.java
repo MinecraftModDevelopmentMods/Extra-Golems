@@ -6,9 +6,9 @@ import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 
 public final class EntityNetherBrickGolem extends GolemBase {
@@ -17,7 +17,6 @@ public final class EntityNetherBrickGolem extends GolemBase {
 
 	public EntityNetherBrickGolem(final World world) {
 		super(EntityNetherBrickGolem.class, world);
-		this.setImmuneToFire(true);
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.2D);
 	}
 

@@ -6,15 +6,15 @@ import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Particles;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntityDamageSourceIndirect;
+import net.minecraft.util.IndirectEntityDamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -91,10 +91,10 @@ public class EntityEndstoneGolem extends GolemBase {
 	public void livingTick() {
 		if (this.world.isRemote && this.hasAmbientParticles) {
 			for (int i = 0; i < 2; ++i) {
-				this.world.spawnParticle(Particles.PORTAL,
-					this.posX + (this.rand.nextDouble() - 0.5D) * (double) this.width,
-					this.posY + this.rand.nextDouble() * (double) this.height - 0.25D,
-					this.posZ + (this.rand.nextDouble() - 0.5D) * (double) this.width,
+				this.world.addParticle(ParticleTypes.PORTAL,
+					this.posX + (this.rand.nextDouble() - 0.5D) * (double) this.getWidth(),
+					this.posY + this.rand.nextDouble() * (double) this.getHeight() - 0.25D,
+					this.posZ + (this.rand.nextDouble() - 0.5D) * (double) this.getWidth(),
 					(this.rand.nextDouble() - 0.5D) * 2.0D, -this.rand.nextDouble(),
 					(this.rand.nextDouble() - 0.5D) * 2.0D);
 			}
@@ -111,10 +111,10 @@ public class EntityEndstoneGolem extends GolemBase {
 		}
 		
 		// if it's an arrow or something...
-		if (src instanceof EntityDamageSourceIndirect) {
+		if (src instanceof IndirectEntityDamageSource) {
 			// try to teleport to the attacker
-			if(src.getTrueSource() instanceof EntityLivingBase && this.teleportToEntity(src.getTrueSource())) {
-				this.setRevengeTarget((EntityLivingBase) src.getTrueSource());
+			if(src.getTrueSource() instanceof LivingEntity && this.teleportToEntity(src.getTrueSource())) {
+				this.setRevengeTarget((LivingEntity) src.getTrueSource());
 				return super.attackEntityFrom(src, amnt);
 			}
 			// if teleporting to the attacker didn't work, golem teleports AWAY
@@ -152,7 +152,7 @@ public class EntityEndstoneGolem extends GolemBase {
 	 **/
 	protected boolean teleportToEntity(final Entity entity) {
 		Vec3d vec3d = new Vec3d(this.posX - entity.posX,
-			this.getBoundingBox().minY + (double) (this.height / 2.0F) - entity.posY
+			this.getBoundingBox().minY + (double) (this.getHeight() / 2.0F) - entity.posY
 				+ (double) entity.getEyeHeight(),
 			this.posZ - entity.posZ);
 		vec3d = vec3d.normalize();
@@ -175,7 +175,7 @@ public class EntityEndstoneGolem extends GolemBase {
 			event.getTargetZ());
 
 		if (flag) {
-			this.world.playSound((EntityPlayer) null, this.prevPosX, this.prevPosY, this.prevPosZ,
+			this.world.playSound((PlayerEntity) null, this.prevPosX, this.prevPosY, this.prevPosZ,
 				SoundEvents.ENTITY_ENDERMAN_TELEPORT, this.getSoundCategory(), 1.0F, 1.0F);
 			this.playSound(SoundEvents.ENTITY_ENDERMAN_TELEPORT, 1.0F, 1.0F);
 		}

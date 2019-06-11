@@ -8,13 +8,12 @@ import com.mcmoddev.golems.items.ItemGolemSpell;
 import com.mcmoddev.golems.items.ItemInfoBook;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
-import com.mcmoddev.golems.util.ConsumerLootTables;
-import com.mcmoddev.golems.util.GolemNames;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
+
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockDispenser;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityType;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemGroup;
@@ -40,7 +39,7 @@ public class ProxyCommon {
 
 	public void registerItems(final RegistryEvent.Register<Item> event) {
 		event.getRegistry().registerAll(
-			new ItemBlock(GolemItems.GOLEM_HEAD, new Item.Properties().group(ItemGroup.MISC)) {
+			new BlockItem(GolemItems.GOLEM_HEAD, new Item.Properties().group(ItemGroup.MISC)) {
 				@Override
 				@OnlyIn(Dist.CLIENT)
 				public boolean hasEffect(final ItemStack stack) {
@@ -63,6 +62,6 @@ public class ProxyCommon {
 	
 	public static void registerLootTables() {
 		// register Golem Loot Tables
-		LootTableList.register(new ResourceLocation(ExtraGolems.MODID, "entities/_golem_base"));
+		// TODO LootTableList.register(new ResourceLocation(ExtraGolems.MODID, "entities/_golem_base"));
 	}
 }

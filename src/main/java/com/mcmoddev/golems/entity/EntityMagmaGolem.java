@@ -5,15 +5,15 @@ import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -62,7 +62,6 @@ public final class EntityMagmaGolem extends GolemBase {
 		this.allowMelting = this.getConfigBool(ALLOW_LAVA_SPECIAL);
 		this.meltDelay = this.getConfigInt(MELT_DELAY);
 		this.ticksStandingStill = 0;
-		this.setImmuneToFire(true);
 		this.setCanSwim(!this.isHurtByWater);
 	}
 	
@@ -72,12 +71,14 @@ public final class EntityMagmaGolem extends GolemBase {
 		super.notifyDataManagerChange(key);
 		if(BABY.equals(key)) {
 			if (this.isChild()) {
-				this.setSize(0.7F, 1.45F);
+				// TODO this.setSize(0.7F, 1.45F);
+				this.recalculateSize();
 				this.allowMelting = false;
 				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.getAttack() * 0.6F);
 				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.getHealth() / 3);
 			} else {
-				this.setSize(1.4F, 2.9F);
+				// TODO this.setSize(1.4F, 2.9F);
+				this.recalculateSize();
 				this.allowMelting = this.getConfigBool(ALLOW_LAVA_SPECIAL);
 				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.getAttack());
 				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.getHealth());
@@ -134,7 +135,7 @@ public final class EntityMagmaGolem extends GolemBase {
 				// check if it's been holding still long enough AND on top of cobblestone
 				if (++this.ticksStandingStill >= this.meltDelay
 					&& b1 == Blocks.COBBLESTONE && rand.nextInt(16) == 0) {
-					IBlockState replace = Blocks.MAGMA_BLOCK.getDefaultState();
+					BlockState replace = Blocks.MAGMA_BLOCK.getDefaultState();
 					this.world.setBlockState(below, replace, 3);
 					this.ticksStandingStill = 0;
 				}
@@ -168,8 +169,8 @@ public final class EntityMagmaGolem extends GolemBase {
 			slime2.setLocationAndAngles(this.posX + rand.nextDouble() - 0.5D, this.posY, 
 					 this.posZ + rand.nextDouble() - 0.5D, this.rotationYaw + rand.nextInt(20) - 10, 0);
 			// spawn the entities
-			this.getEntityWorld().spawnEntity(slime1);
-			this.getEntityWorld().spawnEntity(slime2);
+			this.getEntityWorld().func_217376_c(slime1);
+			this.getEntityWorld().func_217376_c(slime2);
 		}
 
 		super.remove();

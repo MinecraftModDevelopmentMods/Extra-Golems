@@ -8,12 +8,13 @@ import com.mcmoddev.golems.events.SpongeGolemSoakEvent;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
 
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.init.Particles;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.particles.BasicParticleType;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -59,12 +60,12 @@ public final class EntitySpongeGolem extends GolemBase {
 		}
 		if (Math.abs(this.motionX) < 0.05D
 			&& Math.abs(this.motionZ) < 0.05D && world.isRemote) {
-			final BasicParticleType particle = this.isBurning() ? Particles.SMOKE
-				: Particles.SPLASH;
-			final double x = this.rand.nextDouble() - 0.5D * (double) this.width * 0.6D;
-			final double y = this.rand.nextDouble() * (this.height - 0.75D);
-			final double z = this.rand.nextDouble() - 0.5D * (double) this.width;
-			this.world.spawnParticle(particle, this.posX + x, this.posY + y, this.posZ + z,
+			final BasicParticleType particle = this.isBurning() ? ParticleTypes.SMOKE
+				: ParticleTypes.field_218422_X; // SPLASH
+			final double x = this.rand.nextDouble() - 0.5D * (double) this.getWidth() * 0.6D;
+			final double y = this.rand.nextDouble() * (this.getHeight() - 0.75D);
+			final double z = this.rand.nextDouble() - 0.5D * (double) this.getWidth();
+			this.world.addParticle(particle, this.posX + x, this.posY + y, this.posZ + z,
 				(this.rand.nextDouble() - 0.5D) * 0.5D, this.rand.nextDouble() - 0.5D,
 				(this.rand.nextDouble() - 0.5D) * 0.5D);
 		}
@@ -77,12 +78,12 @@ public final class EntitySpongeGolem extends GolemBase {
 
 	/**
 	 * Usually called after creating and firing a {@link SpongeGolemSoakEvent}. Iterates through the
-	 * list of positions and replaces each one with the passed IBlockState.
+	 * list of positions and replaces each one with the passed BlockState.
 	 *
 	 * @return whether all setBlockState calls were successful.
 	 **/
 	public boolean replaceWater(final List<BlockPos> positions, 
-			final Function<IBlockState, IBlockState> replaceWater, final int updateFlag) {
+			final Function<BlockState, BlockState> replaceWater, final int updateFlag) {
 		boolean flag = true;
 		for (final BlockPos p : positions) {
 			flag &= this.world.setBlockState(p, replaceWater.apply(world.getBlockState(p)), updateFlag);

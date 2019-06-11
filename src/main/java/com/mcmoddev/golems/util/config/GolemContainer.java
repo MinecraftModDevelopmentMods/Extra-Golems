@@ -1,24 +1,28 @@
 package com.mcmoddev.golems.util.config;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
+
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockAir;
-import net.minecraft.block.BlockFlowingFluid;
+import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.storage.loot.LootTableList;
-
-import java.util.*;
-import java.util.function.Function;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Adapted from BetterAnimalsPlus by its_meow. Used with permission.
@@ -28,7 +32,7 @@ public class GolemContainer {
 
 	private final List<Block> validBuildingBlocks;
 	private final List<ResourceLocation> validBuildingBlockTags;
-	public final EntityType<GolemBase> entityType;
+	public final EntityType<? extends GolemBase> entityType;
 	private final String name;
 	private final ResourceLocation lootTable;
 	private double health;
@@ -52,7 +56,7 @@ public class GolemContainer {
 	 * @param lDesc any special descriptions for the golem
 	 * @param lLootTable a ResourceLocation for the on-death loot table, may be null
 	 **/
-	private GolemContainer(final EntityType<GolemBase> lEntityType, final String lPath,
+	private GolemContainer(final EntityType<? extends GolemBase> lEntityType, final String lPath,
 						   final List<Block> lValidBuildingBlocks, final List<ResourceLocation> lValidBuildingBlockTags,
 						   final double lHealth, final double lAttack, final double lSpeed,
 						   final HashMap<String, GolemSpecialContainer> lSpecialContainers,
@@ -192,7 +196,7 @@ public class GolemContainer {
 	public void setEnabled(final boolean pEnabled) { this.enabled = pEnabled; }
 	
 	////////// GETTERS //////////
-	public EntityType<GolemBase> getEntityType() { return this.entityType; }
+	public EntityType<? extends GolemBase> getEntityType() { return this.entityType; }
 	public String getName() { return this.name; }
 	public double getHealth() { return this.health; }
 	public double getAttack() { return this.attack; }
@@ -211,7 +215,7 @@ public class GolemContainer {
 	 */
 	public static final class Builder {
 		private final String golemName;
-		private final EntityType.Builder<GolemBase> entityTypeBuilder;
+		private EntityType.Builder<? extends GolemBase> entityTypeBuilder;
 		private ResourceLocation lootTable = null;
 		private String modid = ExtraGolems.MODID;
 		private double health = 100.0D;
@@ -230,11 +234,12 @@ public class GolemContainer {
 		 * @param entityClazz the class of the golem (e.g. EntityFooGolem.class)
 		 * @param entityFunction the constructor function of the class (e.g. EntityFooGolem::new)
 		 */
-		public Builder(final String golemName, final Class<? extends GolemBase> entityClazz,
-				final Function<? super World, ? extends GolemBase> entityFunction) {
+		public Builder(final String golemName, final EntityType.IFactory<? extends GolemBase> entityClazz) {//,
+				//final Function<? super World, ? extends GolemBase> entityFunction) {
 			this.golemName = golemName;
-			this.entityTypeBuilder = EntityType.Builder.<GolemBase>create(entityClazz, entityFunction)
-				.tracker(48, 3, true);
+			this.entityTypeBuilder = EntityType.Builder.create(entityClazz, EntityClassification.MISC)
+					.setTrackingRange(48).setUpdateInterval(3).setShouldReceiveVelocityUpdates(true)
+					.size(1.4F, 2.9F);
 		}
 		
 		/**
@@ -376,7 +381,7 @@ public class GolemContainer {
 		 **/
 		public Builder addLootTable(final String location) {
 			this.lootTable = new ResourceLocation(this.modid, "entities/".concat(location));
-			LootTableList.register(this.lootTable);
+			//LootTableList.register(this.lootTable);
 			return this;
 		}
 		
@@ -393,8 +398,17 @@ public class GolemContainer {
 		 **/
 		public Builder addLootTables(final String path, final String[] locations) {
 			for(final String s : locations) {
-				LootTableList.register(new ResourceLocation(this.modid, "entities/".concat(path.concat("/".concat(s)))));
+				//LootTableList.register(new ResourceLocation(this.modid, "entities/".concat(path.concat("/".concat(s)))));
 			}			
+			return this;
+		}
+		
+		/**
+		 * Makes this golem immune to fire damage.
+		 * @return instance to allow chaining of methods
+		 **/
+		public Builder immuneToFire() {
+			this.entityTypeBuilder = this.entityTypeBuilder.immuneToFire();
 			return this;
 		}
 		
@@ -404,7 +418,7 @@ public class GolemContainer {
 		 * @return a copy of the newly constructed GolemContainer
 		 */
 		public GolemContainer build() {
-			EntityType<GolemBase> entityType = entityTypeBuilder.build(golemName);
+			EntityType<? extends GolemBase> entityType = entityTypeBuilder.build(golemName);
 			entityType.setRegistryName(modid, golemName);
 			HashMap<String, GolemSpecialContainer> containerMap = new HashMap<>();
 			for(GolemSpecialContainer c : specials) {

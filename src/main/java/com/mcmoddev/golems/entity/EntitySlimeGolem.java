@@ -6,12 +6,12 @@ import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.monster.EntitySlime;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.entity.monster.SlimeEntity;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 
 public final class EntitySlimeGolem extends GolemBase {
@@ -39,7 +39,7 @@ public final class EntitySlimeGolem extends GolemBase {
 	public boolean attackEntityAsMob(final Entity entity) {
 		if (super.attackEntityAsMob(entity)) {
 			// knocks back the entity it's attacking (if it's adult and not attacking a slime)
-			if (this.getConfigBool(ALLOW_SPECIAL) && !(entity instanceof EntitySlime) && !this.isChild()) {
+			if (this.getConfigBool(ALLOW_SPECIAL) && !(entity instanceof SlimeEntity) && !this.isChild()) {
 				knockbackTarget(entity, this.getConfigDouble(KNOCKBACK));
 			}
 			return true;
@@ -84,8 +84,8 @@ public final class EntitySlimeGolem extends GolemBase {
 			slime2.setLocationAndAngles(this.posX + rand.nextDouble() - 0.5D, this.posY, 
 					 this.posZ + rand.nextDouble() - 0.5D, this.rotationYaw + rand.nextInt(20) - 10, 0);
 			// spawn the entities
-			this.getEntityWorld().spawnEntity(slime1);
-			this.getEntityWorld().spawnEntity(slime2);
+			this.getEntityWorld().func_217376_c(slime1);
+			this.getEntityWorld().func_217376_c(slime2);
 		}
 
 		super.remove();
@@ -96,7 +96,8 @@ public final class EntitySlimeGolem extends GolemBase {
 		super.notifyDataManagerChange(key);
 		if(BABY.equals(key)) {
 			if(this.isChild()) {
-				this.setSize(0.7F, 1.45F);
+				// TODO this.setSize(0.7F, 1.45F);
+				this.recalculateSize();
 				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.getHealth() / 3);
 				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.getAttack() * 0.6F);
 				this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.0D);

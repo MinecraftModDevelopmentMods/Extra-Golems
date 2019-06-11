@@ -8,12 +8,13 @@ import com.mcmoddev.golems.entity.EntityRedstoneLampGolem;
 import com.mcmoddev.golems.entity.base.GolemBase;
 
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 
 /**
  * Base class to get in-game information about types of golems. Currently used for Waila and The One
@@ -44,24 +45,24 @@ public abstract class GolemDescriptionManager {
 		List<ITextComponent> list = new LinkedList<>();
 		if (showAttack) {
 			float attack = (((int)(golem.getBaseAttackDamage() * 10)) / 10.0F);
-			list.add(new TextComponentTranslation("entitytip.attack")
+			list.add(new TranslationTextComponent("entitytip.attack")
 					.applyTextStyle(TextFormatting.GRAY)
-					.appendSibling(new TextComponentString(": "))
-					.appendSibling(new TextComponentString(Float.toString(attack))
+					.appendSibling(new StringTextComponent(": "))
+					.appendSibling(new StringTextComponent(Float.toString(attack))
 							.applyTextStyle(TextFormatting.WHITE)));
 		}
 
 		// add right-click-texture to tip if possible
 		if (this.showMultiTexture && golem.canInteractChangeTexture()
 				&& !(golem instanceof EntityRedstoneLampGolem)) {
-			list.add(new TextComponentTranslation("entitytip.click_change_texture")
+			list.add(new TranslationTextComponent("entitytip.click_change_texture")
 					.applyTextStyle(TextFormatting.BLUE));
 		}
 
 		// add fire immunity to tip if possible
 		if (this.showFireproof && golem.isImmuneToFire()
 			&& !(golem instanceof EntityBedrockGolem)) {
-			list.add(new TextComponentTranslation("entitytip.is_fireproof")
+			list.add(new TranslationTextComponent("entitytip.is_fireproof")
 					.applyTextStyle(TextFormatting.GOLD));
 		}
 
@@ -69,7 +70,7 @@ public abstract class GolemDescriptionManager {
 		if (this.showKnockbackResist
 			&& golem.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE)
 			.getBaseValue() > 0.8999D) {
-			list.add(new TextComponentTranslation("attribute.name.generic.knockbackResistance")
+			list.add(new TranslationTextComponent("attribute.name.generic.knockbackResistance")
 					.applyTextStyle(TextFormatting.GRAY));
 		}
 
@@ -82,7 +83,7 @@ public abstract class GolemDescriptionManager {
 	
 	/** @return whether the user is currently holding the SHIFT key **/
 	protected static boolean isShiftDown() {
-		return GuiScreen.isShiftKeyDown();
+		return GuiScreen.isShiftKeyDown(); // TODO
 	}
 
 }

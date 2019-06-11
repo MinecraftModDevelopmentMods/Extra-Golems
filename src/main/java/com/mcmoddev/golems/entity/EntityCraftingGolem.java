@@ -4,16 +4,19 @@ import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.Container;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ContainerWorkbench;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.container.WorkbenchContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatList;
-import net.minecraft.util.EnumHand;
+import net.minecraft.stats.Stats;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -31,13 +34,13 @@ public final class EntityCraftingGolem extends GolemBase {
 	}
 
 	@Override
-	protected boolean processInteract(final EntityPlayer player, final EnumHand hand) {
+	protected boolean processInteract(final PlayerEntity player, final Hand hand) {
 		final ItemStack itemstack = player.getHeldItem(hand);
 		if (!player.world.isRemote && itemstack.isEmpty()) {
 			// display crafting grid for player
 			player.displayGui(new EntityCraftingGolem.InterfaceCraftingGrid(player.world,
-					player.bedLocation));
-			player.addStat(StatList.INTERACT_WITH_CRAFTING_TABLE);
+					new BlockPos(player)));
+			player.addStat(Stats.INTERACT_WITH_CRAFTING_TABLE);
 			player.swingArm(hand);
 		}
 
@@ -49,21 +52,21 @@ public final class EntityCraftingGolem extends GolemBase {
 		return SoundEvents.BLOCK_WOOD_STEP;
 	}
 	
-	public static class ContainerPortableWorkbench extends ContainerWorkbench {
+	public static class ContainerPortableWorkbench extends WorkbenchContainer {
 
-		public ContainerPortableWorkbench(final InventoryPlayer playerInventory, final World worldIn,
+		public ContainerPortableWorkbench(final PlayerInventory playerInventory, final World worldIn,
 						  final BlockPos posIn) {
 			super(playerInventory, worldIn, posIn);
 		}
 
 		@Override
-		public boolean canInteractWith(final EntityPlayer playerIn) {
+		public boolean canInteractWith(final PlayerEntity playerIn) {
 			return true;
 		}
 	}
 
 	public static class InterfaceCraftingGrid
-			extends net.minecraft.block.BlockWorkbench.InterfaceCraftingTable {
+			extends net.minecraft.block.CraftingTableBlock.InterfaceCraftingTable {
 
 		private final World world2;
 		private final BlockPos position2;
@@ -75,7 +78,7 @@ public final class EntityCraftingGolem extends GolemBase {
 		}
 
 		@Override
-		public Container createContainer(final InventoryPlayer playerInventory, final EntityPlayer playerIn) {
+		public Container createContainer(final InventoryPlayer playerInventory, final PlayerEntity playerIn) {
 			return new ContainerPortableWorkbench(playerInventory, this.world2, this.position2);
 		}
 	}

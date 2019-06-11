@@ -1,27 +1,26 @@
 package com.mcmoddev.golems.gui;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.util.config.GolemContainer;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
+import com.mojang.blaze3d.platform.GlStateManager;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class GuiGolemBook extends GuiScreen {
 	
@@ -137,7 +136,7 @@ public class GuiGolemBook extends GuiScreen {
 		{new ItemStack(Blocks.CARVED_PUMPKIN), new ItemStack(GolemItems.GOLEM_SPELL)};
 	private static final ItemStack outputHead = new ItemStack(GolemItems.GOLEM_HEAD);
 	
-	public GuiGolemBook(EntityPlayer playerIn, ItemStack itemIn) {
+	public GuiGolemBook(PlayerEntity playerIn, ItemStack itemIn) {
 		super();
 		if (GOLEMS.isEmpty()) {
 			initGolemBookEntries();

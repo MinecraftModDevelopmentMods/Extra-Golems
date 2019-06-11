@@ -6,12 +6,12 @@ import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 
 public final class EntityStainedClayGolem extends GolemMultiColorized {
@@ -34,7 +34,7 @@ public final class EntityStainedClayGolem extends GolemMultiColorized {
 	}
 
 	@Override
-	public void onBuilt(IBlockState body, IBlockState legs, IBlockState arm1, IBlockState arm2) {
+	public void onBuilt(BlockState body, BlockState legs, BlockState arm1, BlockState arm2) {
 		// use block type to give this golem the right texture
 		// defaults to random color.
 		final Block b = body.getBlock();

@@ -9,10 +9,9 @@ import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.block.BlockState;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -24,13 +23,13 @@ public final class EntityRedstoneLampGolem extends GolemMultiTextured {
 	public static final String LAMP_PREFIX = "redstone_lamp";
 	public static final String[] VARIANTS = { "lit", "unlit" };
 	
-	public static final BiPredicate<GolemBase, IBlockState> LIT_PRED = 
+	public static final BiPredicate<GolemBase, BlockState> LIT_PRED = 
 			(golem, toReplace) -> golem.isProvidingLight();
 
 	public EntityRedstoneLampGolem(final World world) {
 		super(EntityRedstoneLampGolem.class, world, LAMP_PREFIX, VARIANTS);
 		this.setCanTakeFallDamage(true);
-		final IBlockState state = GolemItems.UTILITY_LIGHT.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, 15);
+		final BlockState state = GolemItems.UTILITY_LIGHT.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, 15);
 		this.tasks.addTask(9, new EntityAIUtilityBlock(this, state, BlockUtilityGlow.UPDATE_TICKS, 
 				this.getConfigBool(ALLOW_SPECIAL), EntityAIUtilityBlock.getDefaultBiPred(state).and(LIT_PRED)));
 	}

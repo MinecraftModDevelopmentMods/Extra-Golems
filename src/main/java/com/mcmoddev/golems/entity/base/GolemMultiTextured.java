@@ -3,13 +3,13 @@ package com.mcmoddev.golems.entity.base;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
@@ -71,7 +71,7 @@ public abstract class GolemMultiTextured extends GolemBase {
 	}
 
 	@Override
-	public boolean processInteract(final EntityPlayer player, final EnumHand hand) {
+	public boolean processInteract(final PlayerEntity player, final Hand hand) {
 		final ItemStack stack = player.getHeldItem(hand);
 		// only change texture when player has empty hand
 		if (stack.isEmpty() && this.canInteractChangeTexture()) {

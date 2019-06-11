@@ -4,12 +4,12 @@ import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 
 public final class EntityWoodenGolem extends GolemMultiTextured {
@@ -36,7 +36,7 @@ public final class EntityWoodenGolem extends GolemMultiTextured {
 	}
 
 	@Override
-	public void onBuilt(IBlockState body, IBlockState legs, IBlockState arm1, IBlockState arm2) {
+	public void onBuilt(BlockState body, BlockState legs, BlockState arm1, BlockState arm2) {
 		// uses the top-middle building block of this golem to set texture.
 		// defaults to a random texture.
 		final Block b = body.getBlock();

@@ -5,12 +5,12 @@ import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.MobEffects;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 
 public final class EntityMushroomGolem extends GolemMultiTextured {
@@ -33,7 +33,7 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 		final boolean allowed = this.getConfigBool(ALLOW_SPECIAL);
 		int freq = allowed ? this.getConfigInt(FREQUENCY) : -100;
 		freq += this.rand.nextInt(Math.max(10, freq / 2));
-		final IBlockState[] mushrooms = {Blocks.BROWN_MUSHROOM.getDefaultState(),
+		final BlockState[] mushrooms = {Blocks.BROWN_MUSHROOM.getDefaultState(),
 				Blocks.RED_MUSHROOM.getDefaultState()};
 		final Block[] soils = 
 			{ Blocks.DIRT, Blocks.GRASS, Blocks.MYCELIUM, Blocks.PODZOL, Blocks.NETHERRACK, Blocks.SOUL_SAND };
@@ -61,12 +61,12 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 		// heals randomly, but only at night
 		//Note how it goes from least expensive to most expensive
 		if(!this.getEntityWorld().isDaytime() && this.getConfigBool(ALLOW_HEALING) && rand.nextInt(450) == 0) {
-			this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 50, 1));
+			this.addPotionEffect(new EffectInstance(Effects.field_76428_l, 50, 1)); // REGENERATION
 		}
 	}
 
 	@Override
-	public void onBuilt(IBlockState body, IBlockState legs, IBlockState arm1, IBlockState arm2) {
+	public void onBuilt(BlockState body, BlockState legs, BlockState arm1, BlockState arm2) {
 		// use block type to give this golem the right texture (defaults to brown mushroom)
 		byte textureNum = body.getBlock() == Blocks.RED_MUSHROOM_BLOCK ? (byte) 0
 			: (byte) 1;

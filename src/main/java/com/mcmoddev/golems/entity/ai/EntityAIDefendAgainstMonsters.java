@@ -1,9 +1,10 @@
 package com.mcmoddev.golems.entity.ai;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
+
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAITarget;
-import net.minecraft.village.Village;
+import net.minecraft.world.gen.feature.structure.VillagePieces.Village;
 
 public class EntityAIDefendAgainstMonsters extends EntityAITarget {
 

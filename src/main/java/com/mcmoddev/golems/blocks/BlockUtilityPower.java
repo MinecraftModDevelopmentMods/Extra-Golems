@@ -6,11 +6,11 @@ import java.util.Random;
 import com.mcmoddev.golems.entity.base.GolemBase;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
@@ -22,12 +22,12 @@ public class BlockUtilityPower extends BlockUtility {
 	public static final int UPDATE_TICKS = 4;
 
 	public BlockUtilityPower(final int powerLevel, final int tickRate) {
-		super(Properties.create(Material.GLASS).needsRandomTick(), tickRate);
+		super(Properties.create(Material.GLASS).tickRandomly(), tickRate);
 		this.setDefaultState(this.getDefaultState().with(POWER_LEVEL, powerLevel));
 	}
 
 	@Override
-	public void tick(IBlockState state, World worldIn, BlockPos pos, Random random) {
+	public void tick(BlockState state, World worldIn, BlockPos pos, Random random) {
 		// make a slightly expanded AABB to check for the golem
 		AxisAlignedBB toCheck = new AxisAlignedBB(pos).grow(0.5D);
 		List<GolemBase> list = worldIn.getEntitiesWithinAABB(GolemBase.class, toCheck);
@@ -42,7 +42,7 @@ public class BlockUtilityPower extends BlockUtility {
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, IBlockState> builder) {
+	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
 		super.fillStateContainer(builder);
 		builder.add(POWER_LEVEL);
 	}
@@ -51,12 +51,12 @@ public class BlockUtilityPower extends BlockUtility {
 	 * "Implementing/overriding is fine."
 	 */
 	@Override
-	public int getWeakPower(IBlockState blockState, IBlockReader blockAccess, BlockPos pos, EnumFacing side) {
+	public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
 		return blockState.get(POWER_LEVEL);
 	}
 
 	@Override
-	public int getStrongPower(IBlockState blockState, IBlockReader blockAccess, BlockPos pos, EnumFacing side) {
+	public int getStrongPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
 		return blockState.get(POWER_LEVEL);
 	}
 	

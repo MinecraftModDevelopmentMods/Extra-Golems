@@ -4,14 +4,14 @@ import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
 
-import net.minecraft.block.BlockCrops;
-import net.minecraft.block.BlockStem;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.CropsBlock;
 import net.minecraft.block.IGrowable;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemBoneMeal;
+import net.minecraft.block.StemBlock;
+import net.minecraft.item.BoneMealItem;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -68,16 +68,16 @@ public final class EntityStrawGolem extends GolemBase {
 			final int y1 = this.rand.nextInt(variationY * 2) - variationY;
 			final int z1 = this.rand.nextInt(this.range * 2) - this.range;
 			final BlockPos blockpos = new BlockPos(x + x1, y + y1, z + z1);
-			final IBlockState state = this.getEntityWorld().getBlockState(blockpos);
+			final BlockState state = this.getEntityWorld().getBlockState(blockpos);
 			// if the block can be grown, grow it and return
-			if(state.getBlock() instanceof BlockCrops || state.getBlock() instanceof BlockStem) {
+			if(state.getBlock() instanceof CropsBlock || state.getBlock() instanceof StemBlock) {
 				IGrowable crop = (IGrowable)state.getBlock();
 				if(crop.canGrow(this.world, blockpos, state, this.world.isRemote)) {
 					// grow the crop!
 					crop.grow(this.world, rand, blockpos, state);
 					// spawn particles
 					if(this.world.isRemote) {
-						ItemBoneMeal.spawnBonemealParticles(this.world, blockpos, 0);
+						BoneMealItem.spawnBonemealParticles(this.world, blockpos, 0);
 					}
 					return true;
 				}

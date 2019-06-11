@@ -1,12 +1,14 @@
 package com.mcmoddev.golems.util.config;
 
-import com.mcmoddev.golems.entity.base.GolemBase;
-import net.minecraft.block.Block;
-import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.HashMap;
+
+import javax.annotation.Nullable;
+
+import com.mcmoddev.golems.entity.base.GolemBase;
+
+import net.minecraft.block.Block;
+import net.minecraft.world.World;
 
 /**
  * This class, unlike most of the others in this package, is my own work.
@@ -27,20 +29,6 @@ public final class GolemRegistrar {
 
 	public static GolemContainer getContainer(Class<? extends GolemBase> clazz) {
 		return golemList.get(clazz);
-	}
-
-	@Nullable
-	@Deprecated
-	public static GolemBase getGolem(World world, Block buildingBlock) {
-		GolemContainer container = null;
-		for(GolemContainer c : golemList.values()) {
-			if(c.isBuildingBlock(buildingBlock)) {
-				container = c;
-				break;
-			}
-		}
-		if(container == null) return null;
-		return container.entityType.create(world);
 	}
 	
 	/**

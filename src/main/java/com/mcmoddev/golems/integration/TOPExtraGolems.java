@@ -12,7 +12,7 @@
 //import mcjty.theoneprobe.api.ITheOneProbe;
 //import mcjty.theoneprobe.api.ProbeMode;
 //import net.minecraft.entity.Entity;
-//import net.minecraft.entity.player.EntityPlayer;
+//import net.minecraft.entity.player.PlayerEntity;
 //import net.minecraft.util.text.ITextComponent;
 //import net.minecraft.world.World;
 //
@@ -28,7 +28,7 @@
 //	}
 //
 //	@Override
-//	public void addProbeEntityInfo(final ProbeMode mode, final IProbeInfo iprobeInfo, final EntityPlayer player,
+//	public void addProbeEntityInfo(final ProbeMode mode, final IProbeInfo iprobeInfo, final PlayerEntity player,
 //				       final World world, final Entity entity, final IProbeHitEntityData data) {
 //		if (entity instanceof GolemBase) {
 //			final GolemBase golem = (GolemBase) entity;

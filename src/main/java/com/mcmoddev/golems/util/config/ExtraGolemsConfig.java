@@ -1,11 +1,13 @@
 package com.mcmoddev.golems.util.config;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.mcmoddev.golems.main.ExtraGolems;
+
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
-import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * Taken in part from betteranimalsplus (who probably took it in part from gigaherz) by its_meow.

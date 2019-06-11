@@ -7,13 +7,14 @@ import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockNetherWart;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.MobEffects;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.NetherWartBlock;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 
 public final class EntityNetherWartGolem extends GolemBase {
@@ -24,7 +25,6 @@ public final class EntityNetherWartGolem extends GolemBase {
 
 	public EntityNetherWartGolem(final World world) {
 		super(EntityNetherWartGolem.class, world);
-		this.setImmuneToFire(true);
 		this.setCanSwim(true);
 	}
 	
@@ -38,17 +38,17 @@ public final class EntityNetherWartGolem extends GolemBase {
 		// heals randomly, but only at night or in the nether (least to most expensive)
 		if ((!this.getEntityWorld().isDaytime() || this.getEntityWorld().dimension.isNether())
 				&& this.getConfigBool(ALLOW_HEALING) && rand.nextInt(450) == 0 ) {
-			this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 50, 1));
+			this.addPotionEffect(new EffectInstance(Effects.field_76428_l, 50, 1)); // REGENERATION
 		}
 	}
 
 	@Override
 	protected void initEntityAI() {
 		super.initEntityAI();
-		final IBlockState[] flowers = {
-			Blocks.NETHER_WART.getDefaultState().with(BlockNetherWart.AGE, 0),
-			Blocks.NETHER_WART.getDefaultState().with(BlockNetherWart.AGE, 1),
-			Blocks.NETHER_WART.getDefaultState().with(BlockNetherWart.AGE, 2)};
+		final BlockState[] flowers = {
+			Blocks.NETHER_WART.getDefaultState().with(NetherWartBlock.AGE, 0),
+			Blocks.NETHER_WART.getDefaultState().with(NetherWartBlock.AGE, 1),
+			Blocks.NETHER_WART.getDefaultState().with(NetherWartBlock.AGE, 2)};
 		final Block[] soils = {Blocks.SOUL_SAND};
 		final boolean allow = this.getConfigBool(ALLOW_SPECIAL);
 		final int freq = this.getConfigInt(FREQUENCY);

@@ -2,15 +2,10 @@ package com.mcmoddev.golems.proxies;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemColorized;
-import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.renders.RenderColoredGolem;
 import com.mcmoddev.golems.renders.RenderGolem;
-import com.mcmoddev.golems.util.BlockTagUtil;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.resources.IReloadableResourceManager;
-import net.minecraft.resources.IResourceManager;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
@@ -22,10 +17,11 @@ public final class ProxyClient extends ProxyCommon {
 	
 	@Override
 	public void registerListeners() {
-		final IResourceManager irr = Minecraft.getInstance().getResourceManager();
-		if(irr instanceof IReloadableResourceManager) {
-			((IReloadableResourceManager) irr).addReloadListener(l -> BlockTagUtil.loadTags());
-		}
+		// TODO this was supposed to help with block tags...
+//		final IResourceManager irr = Minecraft.getInstance().getResourceManager();
+//		if(irr instanceof IReloadableResourceManager) {
+//			((IReloadableResourceManager) irr).addReloadListener(l -> BlockTagUtil.loadTags());
+//		}
 	}
 	
 	@Override

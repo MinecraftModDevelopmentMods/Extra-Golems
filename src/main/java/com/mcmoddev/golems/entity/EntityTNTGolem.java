@@ -5,24 +5,25 @@ import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.init.Particles;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 
 public class EntityTNTGolem extends GolemBase {
 
 	protected static final DataParameter<Boolean> DATA_IGNITED = EntityDataManager
-		.<Boolean>createKey(EntityTNTGolem.class, DataSerializers.BOOLEAN);
+		.<Boolean>createKey(EntityTNTGolem.class, DataSerializers.field_187198_h); // BOOLEAN
 	public static final String ALLOW_SPECIAL = "Allow Special: Explode";
 
 	protected final int minExplosionRad;
@@ -97,21 +98,21 @@ public class EntityTNTGolem extends GolemBase {
 			this.fuseTimer--;
 			if (!this.world.isRemote) {
 				for (int i = 0; i < 2; i++) {
-					this.world.spawnParticle(Particles.LARGE_SMOKE, this.posX,
+					this.world.addParticle(ParticleTypes.LARGE_SMOKE, this.posX,
 						this.posY + 2.0D, this.posZ, 0.0D, 0.0D, 0.0D);
-					this.world.spawnParticle(Particles.LARGE_SMOKE, this.posX + 0.75D,
+					this.world.addParticle(ParticleTypes.LARGE_SMOKE, this.posX + 0.75D,
 						this.posY + 1.0D + rand.nextDouble() * 2, this.posZ + 0.75D,
 						0.5 * (0.5D - rand.nextDouble()), 0.0D,
 						0.5 * (0.5D - rand.nextDouble()));
-					this.world.spawnParticle(Particles.LARGE_SMOKE, this.posX + 0.75D,
+					this.world.addParticle(ParticleTypes.LARGE_SMOKE, this.posX + 0.75D,
 						this.posY + 1.0D + rand.nextDouble() * 2, this.posZ - 0.75D,
 						0.5 * (0.5D - rand.nextDouble()), 0.0D,
 						0.5 * (0.5D - rand.nextDouble()));
-					this.world.spawnParticle(Particles.LARGE_SMOKE, this.posX - 0.75D,
+					this.world.addParticle(ParticleTypes.LARGE_SMOKE, this.posX - 0.75D,
 						this.posY + 1.0D + rand.nextDouble() * 2, this.posZ + 0.75D,
 						0.5 * (0.5D - rand.nextDouble()), 0.0D,
 						0.5 * (0.5D - rand.nextDouble()));
-					this.world.spawnParticle(Particles.LARGE_SMOKE, this.posX - 0.75D,
+					this.world.addParticle(ParticleTypes.LARGE_SMOKE, this.posX - 0.75D,
 						this.posY + 1.0D + rand.nextDouble() * 2, this.posZ - 0.75D,
 						0.5 * (0.5D - rand.nextDouble()), 0.0D,
 						0.5 * (0.5D - rand.nextDouble()));
@@ -146,7 +147,7 @@ public class EntityTNTGolem extends GolemBase {
 	}
 
 	@Override
-	protected boolean processInteract(final EntityPlayer player, final EnumHand hand) {
+	protected boolean processInteract(final PlayerEntity player, final Hand hand) {
 		final ItemStack itemstack = player.getHeldItem(hand);
 		if (!itemstack.isEmpty() && itemstack.getItem() == Items.FLINT_AND_STEEL) {
 			this.world.playSound(player, this.posX, this.posY, this.posZ,
