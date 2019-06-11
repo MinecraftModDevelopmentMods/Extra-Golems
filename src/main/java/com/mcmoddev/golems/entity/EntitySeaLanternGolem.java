@@ -33,7 +33,7 @@ public final class EntitySeaLanternGolem extends GolemBase {
 		super.initEntityAI();
 		final boolean allow = this.getConfigBool(ALLOW_SPECIAL);
 		final int freq = BlockUtilityGlow.UPDATE_TICKS;
-		this.tasks.addTask(8, new EntityAIUtilityBlock(this, GolemItems.blockLightSource.getDefaultState()
+		this.tasks.addTask(8, new EntityAIUtilityBlock(this, GolemItems.UTILITY_LIGHT.getDefaultState()
 			.with(BlockUtilityGlow.LIGHT_LEVEL, BRIGHTNESS_INT), freq, allow));
 	}
 

@@ -12,6 +12,7 @@ import com.mcmoddev.golems.util.ConsumerLootTables;
 import com.mcmoddev.golems.util.GolemNames;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockDispenser;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
@@ -39,13 +40,13 @@ public class ProxyCommon {
 
 	public void registerItems(final RegistryEvent.Register<Item> event) {
 		event.getRegistry().registerAll(
-			new ItemBlock(GolemItems.golemHead, new Item.Properties().group(ItemGroup.MISC)) {
+			new ItemBlock(GolemItems.GOLEM_HEAD, new Item.Properties().group(ItemGroup.MISC)) {
 				@Override
 				@OnlyIn(Dist.CLIENT)
 				public boolean hasEffect(final ItemStack stack) {
 					return true;
 				}
-			}.setRegistryName(GolemItems.golemHead.getRegistryName()),
+			}.setRegistryName(GolemItems.GOLEM_HEAD.getRegistryName()),
 			new ItemBedrockGolem().setRegistryName(ExtraGolems.MODID, "spawn_bedrock_golem"),
 			new ItemGolemSpell().setRegistryName(ExtraGolems.MODID, "golem_paper"),
 			new ItemInfoBook().setRegistryName(ExtraGolems.MODID, "info_book"));

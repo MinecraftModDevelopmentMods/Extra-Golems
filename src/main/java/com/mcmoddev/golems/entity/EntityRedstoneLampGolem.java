@@ -30,7 +30,7 @@ public final class EntityRedstoneLampGolem extends GolemMultiTextured {
 	public EntityRedstoneLampGolem(final World world) {
 		super(EntityRedstoneLampGolem.class, world, LAMP_PREFIX, VARIANTS);
 		this.setCanTakeFallDamage(true);
-		final IBlockState state = GolemItems.blockLightSource.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, 15);
+		final IBlockState state = GolemItems.UTILITY_LIGHT.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, 15);
 		this.tasks.addTask(9, new EntityAIUtilityBlock(this, state, BlockUtilityGlow.UPDATE_TICKS, 
 				this.getConfigBool(ALLOW_SPECIAL), EntityAIUtilityBlock.getDefaultBiPred(state).and(LIT_PRED)));
 	}

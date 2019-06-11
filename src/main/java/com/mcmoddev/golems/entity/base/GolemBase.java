@@ -112,7 +112,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimal {
 		this.setSize(1.4F, 2.9F);
 		this.setCanTakeFallDamage(false);
 		Block pickBlock = container.getPrimaryBuildingBlock();
-		this.setCreativeReturn(pickBlock != null ? pickBlock : GolemItems.golemHead);
+		this.setCreativeReturn(pickBlock != null ? pickBlock : GolemItems.GOLEM_HEAD);
 		this.setCanSwim(false);
 		this.experienceValue = 4 + rand.nextInt(8);
 	}

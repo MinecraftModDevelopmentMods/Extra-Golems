@@ -1,15 +1,23 @@
 package com.mcmoddev.golems.blocks;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
+import com.mcmoddev.golems.items.ItemGolemSpell;
 import com.mcmoddev.golems.main.ExtraGolems;
+import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
+
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockDispenser;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
+import net.minecraft.dispenser.IBehaviorDispenseItem;
+import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.EntitySnowman;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -19,9 +27,37 @@ import net.minecraft.world.World;
 
 public final class BlockGolemHead extends BlockHorizontal {
 
+	/*
+	 * This behavior is modified from that of CARVED_PUMPKIN, where the block is placed
+	 * if a Golem pattern is found. Here we immediately spawn the golem and shrink the
+	 * itemstack, without placing the block, meaning that if there is no golem to spawn then
+	 * the block will be 'tossed' instead of placed.
+	 *
+	public static final IBehaviorDispenseItem DISPENSER_BEHAVIOR = new BehaviorDefaultDispenseItem() {
+		@Override
+		protected ItemStack dispenseStack(final IBlockSource source, final ItemStack stack) {
+			final World world = source.getWorld();
+			final EnumFacing facing = source.getBlockState().get(BlockDispenser.FACING);
+			final BlockPos blockpos = source.getBlockPos().offset(facing);
+			if (world.isAirBlock(blockpos)) {
+				System.out.println(blockpos.toString() + " IS AIR BLOCK");
+				if(!world.isRemote) {
+					world.setBlockState(blockpos, GolemItems.GOLEM_HEAD.getDefaultState().with(HORIZONTAL_FACING, facing), 3);
+				}
+				stack.shrink(1);
+			} else {
+				return super.dispenseStack(source, stack);
+			}
+
+			return stack;
+		}
+	};
+	*/
 	public BlockGolemHead() {
 		super(Properties.from(Blocks.CARVED_PUMPKIN));
 		this.setDefaultState(this.getStateContainer().getBaseState().with(HORIZONTAL_FACING, EnumFacing.NORTH));
+		// dispenser behavior TODO: NOT WORKING
+		// BlockDispenser.registerDispenseBehavior(this.asItem(), BlockGolemHead.DISPENSER_BEHAVIOR);
 	}
 
 	@Override

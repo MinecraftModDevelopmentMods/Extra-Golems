@@ -21,7 +21,7 @@ public final class EntityRedstoneGolem extends GolemBase {
 
 	public EntityRedstoneGolem(final World world) {
 		super(EntityRedstoneGolem.class, world);
-		final IBlockState state = GolemItems.blockPowerSource.getDefaultState().with(BlockUtilityPower.POWER_LEVEL, 15);
+		final IBlockState state = GolemItems.UTILITY_POWER.getDefaultState().with(BlockUtilityPower.POWER_LEVEL, 15);
 		final int freq = BlockUtilityPower.UPDATE_TICKS;
 		final boolean allow = this.getConfigBool(ALLOW_SPECIAL);
 		this.tasks.addTask(9, new EntityAIUtilityBlock(this, state, freq, allow));

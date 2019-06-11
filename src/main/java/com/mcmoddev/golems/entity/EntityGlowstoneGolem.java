@@ -28,7 +28,7 @@ public final class EntityGlowstoneGolem extends GolemBase {
 		super(EntityGlowstoneGolem.class, world);
 		int lightInt = 15;
 		this.brightness = 1.0F;
-		final IBlockState state = GolemItems.blockLightSource.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, lightInt);
+		final IBlockState state = GolemItems.UTILITY_LIGHT.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, lightInt);
 		this.tasks.addTask(9, new EntityAIUtilityBlock(this, state, BlockUtilityGlow.UPDATE_TICKS, this.getConfigBool(ALLOW_SPECIAL)));
 		this.setImmuneToFire(true);
 		this.setCanTakeFallDamage(true);

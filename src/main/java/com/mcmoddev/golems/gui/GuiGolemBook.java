@@ -131,11 +131,11 @@ public class GuiGolemBook extends GuiScreen {
     private static final ItemStack[] ingredientsSpell = new ItemStack[] 
 			{ new ItemStack(Items.PAPER), new ItemStack(Items.FEATHER), 
 			  new ItemStack(Items.REDSTONE), new ItemStack(Items.INK_SAC) };
-	private static final ItemStack outputSpell = new ItemStack(GolemItems.golemPaper);
+	private static final ItemStack outputSpell = new ItemStack(GolemItems.GOLEM_SPELL);
 	// for use in drawing golem head recipe
 	private static final ItemStack[] ingredientsHead = new ItemStack[]
-		{new ItemStack(Blocks.CARVED_PUMPKIN), new ItemStack(GolemItems.golemPaper)};
-	private static final ItemStack outputHead = new ItemStack(GolemItems.golemHead);
+		{new ItemStack(Blocks.CARVED_PUMPKIN), new ItemStack(GolemItems.GOLEM_SPELL)};
+	private static final ItemStack outputHead = new ItemStack(GolemItems.GOLEM_HEAD);
 	
 	public GuiGolemBook(EntityPlayer playerIn, ItemStack itemIn) {
 		super();
@@ -326,7 +326,7 @@ public class GuiGolemBook extends GuiScreen {
 			case 5:
 				// draw Golem diagram
 				Block golemBody = Blocks.IRON_BLOCK;
-				Block golemHead = GolemItems.golemHead;
+				Block golemHead = GolemItems.GOLEM_HEAD;
 				scale = 2.0F;
 				final int blockW = (int) (8.0F * scale);
 				startX = cornerX + (BOOK_WIDTH / 8);

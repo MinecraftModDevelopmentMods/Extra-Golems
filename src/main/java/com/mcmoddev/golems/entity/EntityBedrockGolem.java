@@ -24,7 +24,7 @@ public final class EntityBedrockGolem extends GolemBase {
 	public EntityBedrockGolem(final World world) {
 		super(EntityBedrockGolem.class, world);
 		this.setInvulnerable(true);
-		this.setCreativeReturn(new ItemStack(GolemItems.spawnBedrockGolem));
+		this.setCreativeReturn(new ItemStack(GolemItems.SPAWN_BEDROCK_GOLEM));
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(1.0D);
 	}
 
@@ -53,7 +53,7 @@ public final class EntityBedrockGolem extends GolemBase {
 	protected boolean processInteract(final EntityPlayer player, final EnumHand hand) {
 		// creative players can "despawn" by using spawnBedrockGolem on this entity
 		final ItemStack itemstack = player.getHeldItem(hand);
-		if (player.abilities.isCreativeMode && !itemstack.isEmpty() && itemstack.getItem() == GolemItems.spawnBedrockGolem) {
+		if (player.abilities.isCreativeMode && !itemstack.isEmpty() && itemstack.getItem() == GolemItems.SPAWN_BEDROCK_GOLEM) {
 			player.swingArm(hand);
 			if (!this.world.isRemote) {
 				this.remove();
@@ -78,6 +78,6 @@ public final class EntityBedrockGolem extends GolemBase {
 	
 	@Override
 	public ItemStack getPickedResult(final RayTraceResult target) {
-		return new ItemStack(GolemItems.spawnBedrockGolem);
+		return new ItemStack(GolemItems.SPAWN_BEDROCK_GOLEM);
 	}
 }
