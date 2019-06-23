@@ -120,6 +120,6 @@ public class EntityAIUtilityBlock extends EntityAIBase {
 	}
 	
 	protected  IBlockState getStateToPlace(final IBlockState toReplace) {
-		return toReplace == Blocks.WATER ? getStateWaterlogged(stateToPlace) : stateToPlace;
+		return toReplace.getBlock() == Blocks.WATER ? getStateWaterlogged(stateToPlace) : stateToPlace;
 	}
 }
