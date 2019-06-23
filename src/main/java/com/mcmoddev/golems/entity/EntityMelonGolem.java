@@ -1,6 +1,6 @@
 package com.mcmoddev.golems.entity;
 
-import com.mcmoddev.golems.entity.ai.EntityAIPlaceRandomBlocksStrictly;
+import com.mcmoddev.golems.entity.ai.PlaceBlocksGoal;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
@@ -71,6 +71,6 @@ public final class EntityMelonGolem extends GolemBase {
 		// get other parameters for the AI
 		final int freq = this.getConfigInt(FREQUENCY);
 		final boolean allowed = this.getConfigBool(ALLOW_SPECIAL);
-		this.goalSelector.addGoal(2, new EntityAIPlaceRandomBlocksStrictly(this, freq, flowers, soils, allowed));
+		this.goalSelector.addGoal(2, new PlaceBlocksGoal(this, freq, flowers, soils, allowed));
 	}
 }

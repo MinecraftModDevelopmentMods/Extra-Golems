@@ -11,36 +11,37 @@ import com.mcmoddev.golems.util.config.GolemContainer;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.particle.Particle;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.init.Particles;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public final class ItemBedrockGolem extends Item {
 
+	@OnlyIn(Dist.CLIENT)
+	private static final ITextComponent loreCreativeOnly = trans("tooltip.creative_only_item").applyTextStyle(TextFormatting.RED);
+	@OnlyIn(Dist.CLIENT)
+	private static final ITextComponent lorePressShift = trans("tooltip.press").applyTextStyle(TextFormatting.GRAY)
+			.appendSibling(wrap(" ")).appendSibling(trans("tooltip.shift").applyTextStyle(TextFormatting.YELLOW))
+			.appendSibling(wrap(" ")).appendSibling(trans("tooltip.for_more_details").applyTextStyle(TextFormatting.GRAY));	
+	
 	public ItemBedrockGolem() {
 		super(new Properties().group(ItemGroup.MISC));
 	}
@@ -59,7 +60,7 @@ public final class ItemBedrockGolem extends Item {
 		}
 
 		// check if the golem is enabled
-		final GolemContainer container; // TODO initialize with what information?
+		final GolemContainer container = GolemRegistrar.getContainer(EntityBedrockGolem.class);
 		if (container.isEnabled()) {
 			// make sure the golem can be spawned here (empty block)
 			BlockState state = worldIn.getBlockState(pos);
@@ -98,29 +99,28 @@ public final class ItemBedrockGolem extends Item {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-		final String loreCreativeOnly = TextFormatting.RED + trans("tooltip.creative_only_item");
-		if (/*Config.isBedrockGolemCreativeOnly()*/ true) {
-			tooltip.add(wrap(loreCreativeOnly));
+		// "Creative-Mode Only"
+		if (ExtraGolemsConfig.bedrockGolemCreativeOnly()) {
+			tooltip.add(loreCreativeOnly);
 		}
-
+		// "Use to spawn Bedrock Golem. Use on existing Bedrock Golem to remove it"
 		if (Screen.hasShiftDown()) {
 			tooltip.add(wrap(I18n.format("tooltip.use_to_spawn", trans("entity.golems.golem_bedrock"))));
 			tooltip.add(wrap(I18n.format("tooltip.use_on_existing",
 				trans("entity.golems.golem_bedrock"))));
 			tooltip.add(wrap(trans("tooltip.to_remove_it") + "."));
 		} else {
-			final String lorePressShift = TextFormatting.GRAY + trans("tooltip.press") + " "
-				+ TextFormatting.YELLOW + trans("tooltip.shift").toUpperCase() + " "
-				+ TextFormatting.GRAY + trans("tooltip.for_more_details");
-			tooltip.add(wrap(lorePressShift));
+			// "Press SHIFT for more details"
+			tooltip.add(lorePressShift);
 		}
 	}
 
 
 	@OnlyIn(Dist.CLIENT)
-	private static String trans(final String s) {
-		return I18n.format(s);
+	private static TranslationTextComponent trans(final String s) {
+		return new TranslationTextComponent(s);
 	}
+	
 	@OnlyIn(Dist.CLIENT)
 	private static StringTextComponent wrap(String s) {
 		return new StringTextComponent(s);

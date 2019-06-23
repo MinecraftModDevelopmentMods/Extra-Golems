@@ -58,10 +58,10 @@ public final class EntitySpongeGolem extends GolemBase {
 					event.updateFlag);
 			}
 		}
-		if (Math.abs(this.motionX) < 0.05D
-			&& Math.abs(this.motionZ) < 0.05D && world.isRemote) {
+		if (Math.abs(this.getMotion().getX()) < 0.03D
+			&& Math.abs(this.getMotion().getZ()) < 0.03D && world.isRemote) {
 			final BasicParticleType particle = this.isBurning() ? ParticleTypes.SMOKE
-				: ParticleTypes.field_218422_X; // SPLASH
+				: ParticleTypes.SPLASH;
 			final double x = this.rand.nextDouble() - 0.5D * (double) this.getWidth() * 0.6D;
 			final double y = this.rand.nextDouble() * (this.getHeight() - 0.75D);
 			final double z = this.rand.nextDouble() - 0.5D * (double) this.getWidth();

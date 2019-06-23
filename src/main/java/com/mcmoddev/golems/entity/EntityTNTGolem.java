@@ -95,10 +95,10 @@ public class EntityTNTGolem extends GolemBase {
 		}
 
 		if (this.isIgnited()) {
-			this.motionX = this.motionZ = 0;
+			this.setMotion(0.0D, this.getMotion().getY(), 0.0D);
 			this.fuseTimer--;
 			if (!this.world.isRemote) {
-				for (int i = 0; i < 2; i++) {
+				for (int i = 0; i < 3; i++) {
 					this.world.addParticle(ParticleTypes.LARGE_SMOKE, this.posX,
 						this.posY + 2.0D, this.posZ, 0.0D, 0.0D, 0.0D);
 					this.world.addParticle(ParticleTypes.LARGE_SMOKE, this.posX + 0.75D,

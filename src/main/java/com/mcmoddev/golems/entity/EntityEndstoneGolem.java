@@ -9,6 +9,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
@@ -41,6 +42,7 @@ public class EntityEndstoneGolem extends GolemBase {
 		this.isHurtByWater = this.getConfigBool(ALLOW_WATER_HURT);
 		this.allowTeleport = this.getConfigBool(ALLOW_SPECIAL);
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.3D);
+		this.goalSelector.addGoal(7, new WaterAvoidingRandomWalkingGoal(this, 1.0D, 0.0F));
 	}
 
 	/**
@@ -172,8 +174,9 @@ public class EntityEndstoneGolem extends GolemBase {
 		if (!this.allowTeleport || MinecraftForge.EVENT_BUS.post(event)) {
 			return false;
 		}
-		final boolean flag = this.attemptTeleport(event.getTargetX(), event.getTargetY(),
-			event.getTargetZ());
+		// "Attempt to Teleport" method:  x, y, z, playSound
+		final boolean flag = this.func_213373_a(event.getTargetX(), event.getTargetY(),
+			event.getTargetZ(), true);
 
 		if (flag) {
 			this.world.playSound((PlayerEntity) null, this.prevPosX, this.prevPosY, this.prevPosZ,

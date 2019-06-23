@@ -221,7 +221,9 @@ public abstract class GolemBase extends CreatureEntity {
 			--this.attackTimer;
 		}
 		//Ripped straight from EntityIronGolem
-		if (this.motionX * this.motionX + this.motionZ * this.motionZ > (double) 2.5000003E-7F
+		final double motionX = this.getMotion().getX();
+		final double motionZ = this.getMotion().getZ();
+		if (motionX * motionX + motionZ * motionZ > (double) 2.5000003E-7F
 			&& this.rand.nextInt(5) == 0) {
 			int i = MathHelper.floor(this.posX);
 			int j = MathHelper.floor(this.posY - 0.200D);
@@ -244,11 +246,10 @@ public abstract class GolemBase extends CreatureEntity {
 	 * Returns true if this entity can attack entities of the specified class.
 	 */
 	@Override
-	public boolean canAttackClass(final Class<? extends EntityLivingBase> cls) {
-		final boolean isAttackablePlayer = PlayerEntity.class.isAssignableFrom(cls) 
+	public boolean canAttack(final EntityType<?> type) {
+		final boolean isAttackablePlayer = EntityType.PLAYER == type 
 				&& (!this.isPlayerCreated() || ExtraGolemsConfig.enableFriendlyFire());
-		final boolean isCreeper = cls == CreeperEntity.class;
-		return !isCreeper && (isAttackablePlayer || super.canAttackClass(cls));
+		return type != EntityType.CREEPER && (isAttackablePlayer || super.canAttack(type));
 	}
 	
 	@Override
@@ -531,7 +532,7 @@ public abstract class GolemBase extends CreatureEntity {
 	}
 
 	public GolemContainer getGolemContainer() {
-		return container != null ? container : GolemRegistrar.getContainer(this.getClass());
+		return container != null ? container : GolemRegistrar.getContainer(this.getType().getRegistryName());
 	}
 	
 	public ForgeConfigSpec.ConfigValue getConfigValue(String name) {

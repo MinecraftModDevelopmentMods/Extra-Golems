@@ -4,18 +4,15 @@ import com.mcmoddev.golems.blocks.BlockGolemHead;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.ai.EntityAIFindEntityNearest;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.EntityAITasks;
-import net.minecraft.entity.monster.AbstractIllager;
-import net.minecraft.entity.monster.AbstractSkeleton;
-import net.minecraft.entity.monster.EntityPigZombie;
-import net.minecraft.entity.monster.EntitySlime;
-import net.minecraft.entity.monster.EntitySpider;
-import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
+import net.minecraft.entity.monster.AbstractIllagerEntity;
+import net.minecraft.entity.monster.AbstractSkeletonEntity;
+import net.minecraft.entity.monster.SlimeEntity;
+import net.minecraft.entity.monster.SpiderEntity;
+import net.minecraft.entity.monster.ZombieEntity;
+import net.minecraft.entity.monster.ZombiePigmanEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.world.BlockEvent;
@@ -207,58 +204,9 @@ public class GolemCommonEventHandler {
 //		return options.isEmpty() ? null : options.get(rand.nextInt(options.size()));
 //	}
 	
-	/*
-	 * Basically, this handler allows pumpkins to be placed anywhere 
-	 * (as long as it's done by a player). Then upon placement, we try
-	 * to spawn a golem based on the blocks the pumpkin is on.
-	 *
-	 * Note:  This seems to be called twice on client and twice on server.
-	 * May have problems with dedicated server, or it might be fine.
-	 *
-	@SubscribeEvent
-	public void onPlayerInteract(PlayerInteractEvent.RightClickBlock event) {
-		ItemStack stack = event.getItemStack();
-		final int prevCount = stack.getCount();
-		// check qualifications for running this event...
-		if(ExtraGolemsConfig.pumpkinBuildsGolems() && !event.isCanceled()
-				&& !stack.isEmpty() && stack.getItem() instanceof ItemBlock) {
-			Block heldBlock = ((ItemBlock)stack.getItem()).getBlock();
-			// if player is holding pumpkin or lit pumpkin, try to place the block
-			if(heldBlock instanceof BlockCarvedPumpkin) {
-				//event.setCanceled(true);
-				// try to manually place the block
-				if (event.getUseItem() != net.minecraftforge.eventbus.api.Event.Result.DENY) {
-					EnumActionResult result = stack.onItemUse(new ItemUseContext(event.getEntityPlayer(), stack, event.getPos(),
-							event.getFace(), (float) event.getHitVec().x, (float) event.getHitVec().y,
-							(float) event.getHitVec().z));
-					if (result == EnumActionResult.SUCCESS) {
-						// this means a pumpkin was placed, let's check where it was placed
-						// first, update count if creative-player
-						if(event.getEntityPlayer().isCreative()) {
-							stack.setCount(prevCount);
-						}
-						// assume the clicked block was NOT replaced
-						BlockPos pumpkinPos = event.getPos().offset(event.getFace());
-						if (!(event.getWorld().getBlockState(pumpkinPos).getBlock() instanceof BlockCarvedPumpkin)) {
-							// the offset position didn't work out, try the clicked position
-							pumpkinPos = event.getPos();
-						}
-						if (event.getWorld().getBlockState(pumpkinPos).getBlock() instanceof BlockCarvedPumpkin) {
-							// alright, there's a pumpkin in-world at this position
-							// let's spawn a golem
-							BlockGolemHead.trySpawnGolem(event.getWorld(), pumpkinPos);
-							
-						}
-					}
-				}
-			}
-		}
-	}
-	*/
-	
 	/**
 	 * Checks if a Carved Pumpkin was placed and, if so, attempts to
-	 * spawn a golem at that location IF enabled by the config.
+	 * spawn a golem at that location where enabled by the config.
 	 **/
 	@SubscribeEvent
 	public void onPlacePumpkin(final BlockEvent.EntityPlaceEvent event) {
@@ -274,40 +222,23 @@ public class GolemCommonEventHandler {
 	@SubscribeEvent
 	public void onLivingSpawned(final EntityJoinWorldEvent event) {
 		// add custom 'attack golem' AI to hostile mobs. They already have this for regular iron golems
-		if(event.getEntity() instanceof EntityCreature) {
-			final EntityCreature creature = (EntityCreature) event.getEntity();
-			if (creatureAttacksGolems(creature)) {
-				for (final EntityAITasks.EntityAITaskEntry entry : creature.targetTasks.taskEntries) {
-					if (entry.action instanceof EntityAIAttackGolem) {
-						return;
-					}
-				}
-				creature.targetTasks.addTask(3, new EntityAIAttackGolem(creature));
-			}
-		// add custom 'chase golem' AI to hostile entities that do not inherit from EntityCreature
-		// (currently just EntitySlime)
-		} else if(event.getEntity() instanceof EntityLiving) {
-			final EntityLiving living = (EntityLiving) event.getEntity();
-			if (livingAttacksGolems(living)) {
-				living.targetTasks.addTask(3, new EntityAIFindEntityNearest(living, GolemBase.class));
+		if(event.getEntity() instanceof MobEntity) {
+			final MobEntity creature = (MobEntity) event.getEntity();
+			if (mobAttacksGolems(creature)) {
+				creature.targetSelector.addGoal(3, new EntityAIAttackGolem(creature));
 			}
 		}
 	}
 	
 	/** Returns true if this entity is an EntityCreature AND normally attacks Iron Golems **/
-	private static boolean creatureAttacksGolems(EntityCreature e) {
-		return e instanceof AbstractSkeleton || e instanceof EntitySpider 
-				|| e instanceof AbstractIllager
-				|| (e instanceof EntityZombie && !(e instanceof EntityPigZombie));
-	}
-	
-	/** Returns true if this entity is any EntityLivingBase AND chases after Iron Golems **/
-	private static boolean livingAttacksGolems(EntityLivingBase e) {
-		return e instanceof EntitySlime;
+	private static boolean mobAttacksGolems(MobEntity e) {
+		return e instanceof AbstractSkeletonEntity || e instanceof SpiderEntity 
+				|| e instanceof AbstractIllagerEntity || e instanceof SlimeEntity
+				|| (e instanceof ZombieEntity && !(e instanceof ZombiePigmanEntity));
 	}
 
-	private static final class EntityAIAttackGolem extends EntityAINearestAttackableTarget<GolemBase> {
-		private EntityAIAttackGolem(final EntityCreature creature) {
+	private static final class EntityAIAttackGolem extends NearestAttackableTargetGoal<GolemBase> {
+		private EntityAIAttackGolem(final MobEntity creature) {
 			super(creature, GolemBase.class, true);
 		}
 	}
