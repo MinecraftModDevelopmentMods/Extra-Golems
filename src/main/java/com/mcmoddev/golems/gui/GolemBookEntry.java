@@ -14,6 +14,7 @@ import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mcmoddev.golems.util.config.GolemContainer;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityType;
@@ -38,11 +39,11 @@ public class GolemBookEntry {
 
 	public GolemBookEntry(@Nonnull GolemContainer container) {
 		// initialize fields based on golem attributes
-		final EntityType<?> golemType = container.entityType;
+		final EntityType<?> golemType = container.getEntityType();
 		this.GOLEM_NAME = golemType.getTranslationKey();
 		this.MULTI_TEXTURE = ExtraGolemsConfig.enableTextureInteract()
-				&& (GolemMultiTextured.class.isAssignableFrom(golemType.getEntityClass()) 
-					|| GolemMultiColorized.class.isAssignableFrom(golemType.getEntityClass()));
+				&& (GolemMultiTextured.class.isAssignableFrom(container.getEntityClass()) 
+					|| GolemMultiColorized.class.isAssignableFrom(container.getEntityClass()));
 		//this.FIREPROOF = (container.isImmuneToFire() && !(golem instanceof EntityBedrockGolem));
 		this.HEALTH = (int) container.getHealth();
 		this.ATTACK = (float) container.getAttack();

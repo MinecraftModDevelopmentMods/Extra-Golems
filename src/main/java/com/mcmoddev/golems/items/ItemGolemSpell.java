@@ -4,13 +4,14 @@ import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockHorizontal;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.HorizontalBlock;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
@@ -44,19 +45,19 @@ public class ItemGolemSpell extends Item {
 	}
 
 	@Override
-	public EnumActionResult onItemUse(ItemUseContext cxt) {
+	public ActionResultType onItemUse(ItemUseContext cxt) {
 		if(ExtraGolemsConfig.enableUseSpellItem() && cxt.getPos() != null && cxt.getItem() != null && !cxt.getItem().isEmpty()) {
 			final Block b = cxt.getWorld().getBlockState(cxt.getPos()).getBlock();
 			if(b == Blocks.CARVED_PUMPKIN || (b == Blocks.PUMPKIN && ExtraGolemsConfig.pumpkinBuildsGolems())) {
 				if(!cxt.getWorld().isRemote) {
-					final EnumFacing facing = cxt.getWorld().getBlockState(cxt.getPos()).get(BlockHorizontal.HORIZONTAL_FACING); 
-					cxt.getWorld().setBlockState(cxt.getPos(), GolemItems.GOLEM_HEAD.getDefaultState().with(BlockHorizontal.HORIZONTAL_FACING, facing), 3);
+					final Direction facing = cxt.getWorld().getBlockState(cxt.getPos()).get(HorizontalBlock.HORIZONTAL_FACING); 
+					cxt.getWorld().setBlockState(cxt.getPos(), GolemItems.GOLEM_HEAD.getDefaultState().with(HorizontalBlock.HORIZONTAL_FACING, facing), 3);
 				}
 				cxt.getItem().shrink(1);
-				return EnumActionResult.SUCCESS;
+				return ActionResultType.SUCCESS;
 			}
 		}
-		return EnumActionResult.PASS;
+		return ActionResultType.PASS;
 	}
 
 	@Override

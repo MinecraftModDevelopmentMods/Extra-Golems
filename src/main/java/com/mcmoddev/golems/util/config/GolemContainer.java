@@ -30,9 +30,10 @@ import net.minecraft.util.text.ITextComponent;
 @SuppressWarnings("rawtypes")
 public class GolemContainer {
 
+	private final Class<? extends GolemBase> entityClass;
 	private final List<Block> validBuildingBlocks;
 	private final List<ResourceLocation> validBuildingBlockTags;
-	public final EntityType<? extends GolemBase> entityType;
+	private final EntityType<? extends GolemBase> entityType;
 	private final String name;
 	private final ResourceLocation lootTable;
 	private double health;
@@ -56,12 +57,14 @@ public class GolemContainer {
 	 * @param lDesc any special descriptions for the golem
 	 * @param lLootTable a ResourceLocation for the on-death loot table, may be null
 	 **/
-	private GolemContainer(final EntityType<? extends GolemBase> lEntityType, final String lPath,
-						   final List<Block> lValidBuildingBlocks, final List<ResourceLocation> lValidBuildingBlockTags,
-						   final double lHealth, final double lAttack, final double lSpeed,
-						   final HashMap<String, GolemSpecialContainer> lSpecialContainers,
-						   final List<GolemDescription> lDesc, final ResourceLocation lLootTable) {
+	private GolemContainer(final EntityType<? extends GolemBase> lEntityType, 
+			final Class<? extends GolemBase> lEntityClass, final String lPath,
+			final List<Block> lValidBuildingBlocks, final List<ResourceLocation> lValidBuildingBlockTags,
+			final double lHealth, final double lAttack, final double lSpeed,
+			final HashMap<String, GolemSpecialContainer> lSpecialContainers,
+			final List<GolemDescription> lDesc, final ResourceLocation lLootTable) {
 		this.entityType = lEntityType;
+		this.entityClass = lEntityClass;
 		this.validBuildingBlocks = lValidBuildingBlocks;
 		this.validBuildingBlockTags = lValidBuildingBlockTags;
 		this.name = lPath;
@@ -196,6 +199,7 @@ public class GolemContainer {
 	public void setEnabled(final boolean pEnabled) { this.enabled = pEnabled; }
 	
 	////////// GETTERS //////////
+	public Class<? extends GolemBase> getEntityClass() { return this.entityClass; }
 	public EntityType<? extends GolemBase> getEntityType() { return this.entityType; }
 	public ResourceLocation getRegistryName() { return this.entityType.getRegistryName(); }
 	public String getName() { return this.name; }
@@ -216,6 +220,7 @@ public class GolemContainer {
 	 */
 	public static final class Builder {
 		private final String golemName;
+		private final Class<? extends GolemBase> entityClass;
 		private EntityType.Builder<? extends GolemBase> entityTypeBuilder;
 		private ResourceLocation lootTable = null;
 		private String modid = ExtraGolems.MODID;
@@ -233,11 +238,12 @@ public class GolemContainer {
 		 * Creates the builder
 		 * @param golemName the name of the golem
 		 * @param entityClazz the class of the golem (e.g. EntityFooGolem.class)
-		 * @param entityFunction the constructor function of the class (e.g. EntityFooGolem::new)
+		 * @param entityFactory the constructor function of the class (e.g. EntityFooGolem::new)
 		 */
 		public Builder(final String golemName, final Class<? extends GolemBase> entityClazz,
 						final EntityType.IFactory<? extends GolemBase> entityFactory) {
 			this.golemName = golemName;
+			this.entityClass = entityClazz;
 			this.entityTypeBuilder = EntityType.Builder.create(entityFactory, EntityClassification.MISC)
 					.setTrackingRange(48).setUpdateInterval(3).setShouldReceiveVelocityUpdates(true)
 					.size(1.4F, 2.9F);
@@ -425,9 +431,9 @@ public class GolemContainer {
 			for(GolemSpecialContainer c : specials) {
 				containerMap.put(c.name, c);
 			}
-			return new GolemContainer(entityType, golemName, validBuildingBlocks,
-					validBuildingBlockTags, health, attack, speed, containerMap, 
-					descriptions, lootTable);
+			return new GolemContainer(entityType, entityClass, golemName, 
+					validBuildingBlocks, validBuildingBlockTags, 
+					health, attack, speed, containerMap, descriptions, lootTable);
 		}
 	}
 

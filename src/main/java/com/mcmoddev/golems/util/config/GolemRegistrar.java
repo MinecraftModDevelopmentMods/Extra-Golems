@@ -20,6 +20,7 @@ import net.minecraft.world.World;
 public final class GolemRegistrar {
 
 	protected static HashMap<ResourceLocation, GolemContainer> golemList = new HashMap<>();
+	protected static HashMap<Class<? extends GolemBase>, ResourceLocation> nameList = new HashMap<>();
 
 	private GolemRegistrar() {
 		//
@@ -27,6 +28,15 @@ public final class GolemRegistrar {
 
 	public static void registerGolem(final GolemContainer container) {
 		golemList.put(container.getEntityType().getRegistryName(), container);
+		nameList.put(container.getEntityClass(), container.getRegistryName());
+	}
+	
+	public static GolemContainer getContainer(final Class<? extends GolemBase> entityClass) {
+		return getContainer(nameList.get(entityClass));
+	}
+	
+	public static GolemContainer getContainer(final EntityType<?> entityType) {
+		return getContainer(entityType.getRegistryName());
 	}
 
 	public static GolemContainer getContainer(final ResourceLocation name) {
@@ -53,7 +63,7 @@ public final class GolemRegistrar {
 			}
 		}
 		if(container == null) return null;
-		return container.entityType.create(world);
+		return container.getEntityType().create(world);
 	}
 
 	public static Collection<GolemContainer> getContainers() {

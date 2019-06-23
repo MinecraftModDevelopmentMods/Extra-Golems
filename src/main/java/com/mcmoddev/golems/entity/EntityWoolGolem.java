@@ -3,13 +3,14 @@ package com.mcmoddev.golems.entity;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.EntityType;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.TextFormatting;
@@ -44,8 +45,8 @@ public final class EntityWoolGolem extends GolemMultiTextured {
 	private boolean secret = false;
 	private byte[] iSecret = { 14, 1, 4, 5, 3, 11, 10, 2 };
 
-	public EntityWoolGolem(final World world) {
-		super(ExtraGolems.MODID, GolemNames.WOOL_GOLEM, world, WOOL_PREFIX, coloredWoolTypes);
+	public EntityWoolGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+		super(entityType, world, ExtraGolems.MODID, WOOL_PREFIX, coloredWoolTypes);
 		this.setCanSwim(true);
 	}
 

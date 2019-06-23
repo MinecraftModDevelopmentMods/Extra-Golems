@@ -8,6 +8,7 @@ import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
@@ -24,12 +25,12 @@ public final class EntityGlowstoneGolem extends GolemBase {
 	 **/
 	private final float brightness;
 
-	public EntityGlowstoneGolem(final World world) {
-		super(GolemNames.GLOWSTONE_GOLEM, world);
+	public EntityGlowstoneGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+		super(entityType, world);
 		int lightInt = 15;
 		this.brightness = 1.0F;
 		final BlockState state = GolemItems.UTILITY_LIGHT.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, lightInt);
-		this.tasks.addTask(9, new PlaceUtilityBlockGoal(this, state, BlockUtilityGlow.UPDATE_TICKS, this.getConfigBool(ALLOW_SPECIAL)));
+		this.goalSelector.addGoal(9, new PlaceUtilityBlockGoal(this, state, BlockUtilityGlow.UPDATE_TICKS, this.getConfigBool(ALLOW_SPECIAL)));
 		this.setCanTakeFallDamage(true);
 		this.setCanSwim(true);
 	}

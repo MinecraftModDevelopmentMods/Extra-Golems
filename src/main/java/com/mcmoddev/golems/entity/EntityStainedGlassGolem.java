@@ -8,6 +8,7 @@ import com.mcmoddev.golems.util.GolemNames;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.StainedGlassBlock;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.DyeColor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -23,8 +24,8 @@ public final class EntityStainedGlassGolem extends GolemMultiColorized {
 	private static final ResourceLocation TEXTURE_OVERLAY = GolemBase
 		.makeTexture(ExtraGolems.MODID, GolemNames.STAINEDGLASS_GOLEM + "_grayscale");
 
-	public EntityStainedGlassGolem(final World world) {
-		super(ExtraGolems.MODID, GolemNames.STAINEDGLASS_GOLEM, world, TEXTURE_BASE, TEXTURE_OVERLAY, DYE_COLORS);
+	public EntityStainedGlassGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+		super(entityType, world, ExtraGolems.MODID, TEXTURE_BASE, TEXTURE_OVERLAY, DYE_COLORS);
 		this.setCanTakeFallDamage(true);
 	}
 

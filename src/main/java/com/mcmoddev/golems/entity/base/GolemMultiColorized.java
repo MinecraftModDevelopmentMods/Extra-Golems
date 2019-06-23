@@ -2,6 +2,7 @@ package com.mcmoddev.golems.entity.base;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -16,7 +17,7 @@ import net.minecraft.world.World;
 public abstract class GolemMultiColorized extends GolemColorized {
 
 	protected static final DataParameter<Byte> DATA_TEXTURE = EntityDataManager
-			.<Byte>createKey(GolemMultiColorized.class, DataSerializers.field_187191_a);
+			.<Byte>createKey(GolemMultiColorized.class, DataSerializers.BYTE);
 	protected static final String NBT_TEXTURE = "GolemTextureData";
 	protected final int[] colors;
 	protected final ResourceLocation[] lootTables;
@@ -35,9 +36,9 @@ public abstract class GolemMultiColorized extends GolemColorized {
 	 * @param overlay a texture that will be recolored and optionally rendered as transparent.
 	 * @param lColors an int[] of color values to use for rendering -- interacting with this golem  will go to the next color
 	 **/
-	public GolemMultiColorized(final String modid, final String name, final World world,
+	public GolemMultiColorized(final EntityType<? extends GolemBase> entityType, final World world, final String modid,
 					   @Nullable final ResourceLocation base, @Nullable final ResourceLocation overlay, final int[] lColors) {
-		super(modid, name, world, 0L, base, overlay);
+		super(entityType, world, 0L, base, overlay);
 		colors = lColors;
 		lootTables = new ResourceLocation[colors.length];
 		for (int n = 0, len = colors.length; n < len; n++) {
@@ -96,12 +97,11 @@ public abstract class GolemMultiColorized extends GolemColorized {
 		super.readAdditional(nbt);
 		this.setTextureNum(nbt.getByte(NBT_TEXTURE));
 	}
-	
+
 	@Override
-    	protected ResourceLocation getLootTable()
-    	{
-    	    return this.lootTables[this.getTextureNum() % this.lootTables.length];
-    	}
+	protected ResourceLocation getLootTable() {
+		return this.lootTables[this.getTextureNum() % this.lootTables.length];
+	}
 
 	public void setTextureNum(final byte toSet) {
 		this.getDataManager().set(DATA_TEXTURE, toSet);

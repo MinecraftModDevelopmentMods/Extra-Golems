@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
 
+import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
@@ -37,9 +38,9 @@ public abstract class GolemColorized extends GolemBase {
 	 *                 before {@link OVERLAY}
 	 * @param rOverlay a texture that will be recolored and optionally rendered as transparent.
 	 **/
-	public GolemColorized(final String modid, final String name, final World world, final long initial,
+	public GolemColorized(final EntityType<? extends GolemBase> entityType, final World world, final long initial,
 			      @Nullable final ResourceLocation rBase, @Nullable final ResourceLocation rOverlay) {
-		super(modid, name, world);
+		super(entityType, world);
 		this.setColor(initial);
 		this.base = rBase;
 		this.overlay = rOverlay;

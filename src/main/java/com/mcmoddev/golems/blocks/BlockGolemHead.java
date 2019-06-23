@@ -118,7 +118,7 @@ public final class BlockGolemHead extends HorizontalBlock {
 			final SnowGolemEntity entitysnowman = EntityType.SNOW_GOLEM.create(world);
 			ExtraGolems.LOGGER.info("[Extra Golems]: Building regular boring Snow Golem");
 			entitysnowman.setLocationAndAngles(spawnX, spawnY, spawnZ, 0.0F, 0.0F);
-			world.func_217376_c(entitysnowman);
+			world.addEntity(entitysnowman);
 			return true;
 		}
 		
@@ -138,7 +138,7 @@ public final class BlockGolemHead extends HorizontalBlock {
 			ExtraGolems.LOGGER.info("[Extra Golems]: Building regular boring Iron Golem");
 			ironGolem.setPlayerCreated(true);
 			ironGolem.setLocationAndAngles(spawnX, spawnY, spawnZ, 0.0F, 0.0F);
-			world.func_217376_c(ironGolem);
+			world.addEntity(ironGolem);
 			return true;
 		}
 		
@@ -157,7 +157,7 @@ public final class BlockGolemHead extends HorizontalBlock {
 			golem.setPlayerCreated(true);
 			golem.setLocationAndAngles(spawnX, spawnY, spawnZ, 0.0F, 0.0F);
 			ExtraGolems.LOGGER.info("[Extra Golems]: Building golem " + golem.toString());
-			world.func_217376_c(golem);
+			world.addEntity(golem);
 			golem.onBuilt(stateBelow1, stateBelow2, flagX ? stateArmEast : stateArmWest, flagX ? stateArmNorth : stateArmSouth);
 			if(!golem.updateHomeVillage()) {
 				golem.setHomePosAndDistance(golem.getPosition(), GolemBase.WANDER_DISTANCE);

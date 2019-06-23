@@ -4,14 +4,13 @@ import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
 
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.ContainerWorkbench;
-import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.WorkbenchContainer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.stats.StatList;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
@@ -24,8 +23,8 @@ public final class EntityCraftingGolem extends GolemBase {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Crafting";
 	
-	public EntityCraftingGolem(final World world) {
-		super(GolemNames.CRAFTING_GOLEM, world);
+	public EntityCraftingGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+		super(entityType, world);
 	}
 
 	@Override

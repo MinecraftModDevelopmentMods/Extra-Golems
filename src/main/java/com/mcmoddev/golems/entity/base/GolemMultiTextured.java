@@ -3,6 +3,7 @@ package com.mcmoddev.golems.entity.base;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
 
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -17,7 +18,7 @@ public abstract class GolemMultiTextured extends GolemBase {
 
 	/** The DataParameter that stores which texture this golem is using. Max value is 128 **/
 	protected static final DataParameter<Byte> DATA_TEXTURE = EntityDataManager
-			.<Byte>createKey(GolemMultiTextured.class, DataSerializers.field_187191_a);
+			.<Byte>createKey(GolemMultiTextured.class, DataSerializers.BYTE);
 	protected static final String NBT_TEXTURE = "GolemTextureData";
 
 	/**
@@ -44,9 +45,9 @@ public abstract class GolemMultiTextured extends GolemBase {
 	 * <br><code>[getModId()]/textures/entity/golem_example/three.png</code>
 	 * <br> as well as loot tables for the same names with the JSON suffix
 	 **/
-	public GolemMultiTextured(final String modid, final String name, final World world, final String prefix,
-				  final String[] textureNames) {
-		super(modid, name, world);
+	public GolemMultiTextured(final EntityType<? extends GolemBase> entityType, 
+			final World world, final String modid, final String prefix, final String[] textureNames) {
+		super(entityType, world);
 		this.textures = new ResourceLocation[textureNames.length];
 		this.lootTables = new ResourceLocation[textureNames.length];
 		for (int n = 0, len = textureNames.length; n < len; n++) {

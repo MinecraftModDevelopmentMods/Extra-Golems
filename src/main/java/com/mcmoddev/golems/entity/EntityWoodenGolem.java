@@ -1,12 +1,13 @@
 package com.mcmoddev.golems.entity;
 
+import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.SoundEvent;
@@ -19,8 +20,8 @@ public final class EntityWoodenGolem extends GolemMultiTextured {
 	public static final String[] WOOD_TYPES = {"oak", "spruce", "birch", "jungle", "acacia",
 		"big_oak"};
 
-	public EntityWoodenGolem(final World world) {
-		super(ExtraGolems.MODID, GolemNames.WOODEN_GOLEM, world, WOOD_PREFIX, WOOD_TYPES);
+	public EntityWoodenGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+		super(entityType, world, ExtraGolems.MODID, WOOD_PREFIX, WOOD_TYPES);
 		this.setCanSwim(true);
 	}
 

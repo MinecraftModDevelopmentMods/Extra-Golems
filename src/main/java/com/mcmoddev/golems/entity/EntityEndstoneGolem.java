@@ -6,6 +6,7 @@ import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.PlayerEntity;
@@ -35,8 +36,8 @@ public class EntityEndstoneGolem extends GolemBase {
 	protected int chanceToTeleportWhenHurt = 15;
 
 	/** Default constructor. **/
-	public EntityEndstoneGolem(final World world) {
-		this(ExtraGolems.MODID, GolemNames.ENDSTONE_GOLEM, world, 32.0D, true);
+	public EntityEndstoneGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+		this(entityType, world, 32.0D, true);
 		this.isHurtByWater = this.getConfigBool(ALLOW_WATER_HURT);
 		this.allowTeleport = this.getConfigBool(ALLOW_SPECIAL);
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.3D);
@@ -58,9 +59,9 @@ public class EntityEndstoneGolem extends GolemBase {
 	 * @param ambientParticles
 	 *            whether always to display "portal" particles
 	 **/
-	public EntityEndstoneGolem(final String modid, final String name, final World world, 
+	public EntityEndstoneGolem(final EntityType<? extends GolemBase> entityType, final World world, 
 			final double teleportRange, final boolean ambientParticles) {
-		super(modid, name, world);
+		super(entityType, world);
 		this.range = teleportRange;
 		this.hasAmbientParticles = ambientParticles;
 	}

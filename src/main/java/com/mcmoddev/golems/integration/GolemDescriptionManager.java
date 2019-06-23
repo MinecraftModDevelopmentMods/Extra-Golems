@@ -7,12 +7,10 @@ import com.mcmoddev.golems.entity.EntityBedrockGolem;
 import com.mcmoddev.golems.entity.EntityRedstoneLampGolem;
 import com.mcmoddev.golems.entity.base.GolemBase;
 
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 
@@ -83,7 +81,7 @@ public abstract class GolemDescriptionManager {
 	
 	/** @return whether the user is currently holding the SHIFT key **/
 	protected static boolean isShiftDown() {
-		return GuiScreen.isShiftKeyDown(); // TODO
+		return Screen.hasShiftDown();
 	}
 
 }

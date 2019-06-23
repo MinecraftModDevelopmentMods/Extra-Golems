@@ -8,6 +8,7 @@ import com.mcmoddev.golems.util.GolemNames;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.EntityType;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.ResourceLocation;
@@ -21,8 +22,8 @@ public final class EntityMelonGolem extends GolemBase {
 	public static final String FREQUENCY = "Flower Frequency";
 	public static final String ALLOW_HEALING = "Allow Special: Random Healing";
 	
-	public EntityMelonGolem(final World world) {
-		super(GolemNames.MELON_GOLEM, world);
+	public EntityMelonGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+		super(entityType, world);
 		this.setCanSwim(true);
 	}
 
@@ -46,14 +47,14 @@ public final class EntityMelonGolem extends GolemBase {
 		if(!this.getConfigBool(ALLOW_HEALING)) return;
 		// heals randomly (about every 20 sec)
 		if(rand.nextInt(450) == 0) {
-			this.addPotionEffect(new EffectInstance(Effects.field_76428_l, 50, 1)); // REGENERATION
+			this.addPotionEffect(new EffectInstance(Effects.REGENERATION, 50, 1));
 		}
 	}
 
 	/* Create an EntityAIPlaceRandomBlocks */
 	@Override
-	protected void initEntityAI() {
-		super.initEntityAI();
+	protected void registerGoals() {
+		super.registerGoals();
 		final Block[] soils = {Blocks.DIRT, Blocks.GRASS, Blocks.MYCELIUM, Blocks.PODZOL};
 		// init list and AI for planting flowers
 		final BlockState[] flowers = {
@@ -70,6 +71,6 @@ public final class EntityMelonGolem extends GolemBase {
 		// get other parameters for the AI
 		final int freq = this.getConfigInt(FREQUENCY);
 		final boolean allowed = this.getConfigBool(ALLOW_SPECIAL);
-		this.tasks.addTask(2, new EntityAIPlaceRandomBlocksStrictly(this, freq, flowers, soils, allowed));
+		this.goalSelector.addGoal(2, new EntityAIPlaceRandomBlocksStrictly(this, freq, flowers, soils, allowed));
 	}
 }

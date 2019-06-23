@@ -5,8 +5,8 @@ import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.init.Particles;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.datasync.DataParameter;
@@ -18,12 +18,13 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.world.Explosion.Mode;
 import net.minecraft.world.World;
 
 public class EntityTNTGolem extends GolemBase {
 
 	protected static final DataParameter<Boolean> DATA_IGNITED = EntityDataManager
-		.<Boolean>createKey(EntityTNTGolem.class, DataSerializers.field_187198_h); // BOOLEAN
+		.<Boolean>createKey(EntityTNTGolem.class, DataSerializers.BOOLEAN);
 	public static final String ALLOW_SPECIAL = "Allow Special: Explode";
 
 	protected final int minExplosionRad;
@@ -39,8 +40,8 @@ public class EntityTNTGolem extends GolemBase {
 	protected int fuseTimer;
 
 	/** Default constructor for TNT golem. **/
-	public EntityTNTGolem(final World world) {
-		this(ExtraGolems.MODID, GolemNames.TNT_GOLEM, world, 4, 8, 50, 10);
+	public EntityTNTGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+		this(entityType, world, 4, 8, 50, 10);
 		this.allowedToExplode = this.getConfigBool(ALLOW_SPECIAL);
 	}
 
@@ -54,9 +55,9 @@ public class EntityTNTGolem extends GolemBase {
 	 * @param minFuseLength
 	 * @param randomExplosionChance
 	 */
-	public EntityTNTGolem(final String modid, final String name, final World world, final int minExplosionRange,
+	public EntityTNTGolem(final EntityType<? extends GolemBase> entityType, final World world, final int minExplosionRange,
 			      final int maxExplosionRange, final int minFuseLength, final int randomExplosionChance) {
-		super(modid, name, world);
+		super(entityType, world);
 		this.minExplosionRad = minExplosionRange;
 		this.maxExplosionRad = maxExplosionRange;
 		this.fuseLen = minFuseLength;
@@ -158,7 +159,7 @@ public class EntityTNTGolem extends GolemBase {
 			if (!this.world.isRemote) {
 				this.setFire(Math.floorDiv(this.fuseLen, 20));
 				this.ignite();
-				itemstack.damageItem(1, player);
+				itemstack.damageItem(1, player, c -> c.sendBreakAnimation(hand));
 			}
 		}
 
@@ -202,7 +203,7 @@ public class EntityTNTGolem extends GolemBase {
 				final float range = this.maxExplosionRad > this.minExplosionRad
 					? rand.nextInt(maxExplosionRad - minExplosionRad)
 					: this.minExplosionRad;
-				this.world.createExplosion(this, this.posX, this.posY, this.posZ, range, flag);
+				this.world.createExplosion(this, this.posX, this.posY, this.posZ, range, flag ? Mode.BREAK : Mode.NONE);
 				this.remove();
 			}
 		} else {

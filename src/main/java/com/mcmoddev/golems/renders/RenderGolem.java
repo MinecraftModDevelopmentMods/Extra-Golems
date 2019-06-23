@@ -3,24 +3,24 @@ package com.mcmoddev.golems.renders;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mojang.blaze3d.platform.GlStateManager;
 
-import net.minecraft.client.renderer.entity.RenderLiving;
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.util.ResourceLocation;
 
 /**
  * RenderGolem is the same as RenderIronGolem but with casting to GolemBase instead of
  * EntityIronGolem.
  */
-public class RenderGolem extends RenderLiving<GolemBase> {
+public class RenderGolem extends LivingRenderer<GolemBase, ModelGolem> {
 
-	public RenderGolem(final RenderManager renderManagerIn) {
+	public RenderGolem(final EntityRendererManager renderManagerIn) {
 		super(renderManagerIn, new ModelGolem(), 0.5F);
 	}
 
 	@Override
-	protected void applyRotations(final GolemBase golem, final float p_77043_2_, final float rotationYaw,
+	protected void applyRotations(final GolemBase golem, final float ageInTicks, final float rotationYaw,
 				      final float partialTicks) {
-		super.applyRotations(golem, p_77043_2_, rotationYaw, partialTicks);
+		super.applyRotations(golem, ageInTicks, rotationYaw, partialTicks);
 
 		if ((double) golem.limbSwingAmount >= 0.01D) {
 			final float f = 13.0F;

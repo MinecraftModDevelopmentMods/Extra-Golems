@@ -5,6 +5,7 @@ import com.mcmoddev.golems.entity.base.GolemColorized;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
 
+import net.minecraft.entity.EntityType;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.ResourceLocation;
@@ -22,8 +23,8 @@ public final class EntityLeafGolem extends GolemColorized {
 	private static final ResourceLocation TEXTURE_OVERLAY = GolemBase
 		.makeTexture(ExtraGolems.MODID, GolemNames.LEAF_GOLEM + "_grayscale");
 
-	public EntityLeafGolem(final World world) {
-		super(ExtraGolems.MODID, GolemNames.LEAF_GOLEM, world, 0x5F904A, TEXTURE_BASE, TEXTURE_OVERLAY);
+	public EntityLeafGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+		super(entityType, world, 0x5F904A, TEXTURE_BASE, TEXTURE_OVERLAY);
 		this.setCanSwim(true);
 	}
 
@@ -34,11 +35,10 @@ public final class EntityLeafGolem extends GolemColorized {
 	@Override
 	public void livingTick() {
 		super.livingTick();
-		if (this.getConfigBool(ALLOW_SPECIAL) && this.getActivePotionEffect(Effects.field_76428_l) == null // REGENERATION
+		if (this.getConfigBool(ALLOW_SPECIAL) && this.getActivePotionEffect(Effects.REGENERATION) == null
 			&& rand.nextInt(40) == 0) {
 			this.addPotionEffect(
-					// REGENERATION
-				new EffectInstance(Effects.field_76428_l, 200 + 20 * (1 + rand.nextInt(8)), rand.nextInt(2)));
+				new EffectInstance(Effects.REGENERATION, 200 + 20 * (1 + rand.nextInt(8)), rand.nextInt(2)));
 		}
 
 		if (this.ticksExisted % 10 == 2 && this.world.isRemote) {

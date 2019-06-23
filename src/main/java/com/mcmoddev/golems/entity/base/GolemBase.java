@@ -13,17 +13,12 @@ import com.mcmoddev.golems.util.config.GolemRegistrar;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIHurtByTarget;
-import net.minecraft.entity.ai.EntityAIWander;
-import net.minecraft.entity.ai.EntityAIWanderAvoidWater;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.LookAtGoal;
 import net.minecraft.entity.ai.goal.LookRandomlyGoal;
@@ -61,9 +56,9 @@ import net.minecraftforge.common.ForgeConfigSpec;
 public abstract class GolemBase extends CreatureEntity {
 
 	protected static final DataParameter<Boolean> BABY = EntityDataManager.<Boolean>createKey(
-			GolemBase.class, DataSerializers.field_187198_h);
+			GolemBase.class, DataSerializers.BOOLEAN);
 	protected static final DataParameter<Boolean> PLAYER_CREATED = EntityDataManager.<Boolean>createKey(
-			GolemBase.class, DataSerializers.field_187198_h);
+			GolemBase.class, DataSerializers.BOOLEAN);
 	private static final String KEY_BABY = "isChild";
 	private static final String KEY_PLAYER_CREATED = "isPlayerCreated";
 	public static final int WANDER_DISTANCE = 64;
@@ -105,13 +100,13 @@ public abstract class GolemBase extends CreatureEntity {
 	 * @param world the entity world
 	 */
 	
-	public GolemBase(final String name, final World world) {
-		this(ExtraGolems.MODID, name, world);
-	}
-	
-	public GolemBase(final String modid, final String name, final World world) {
-		this(GolemRegistrar.getContainer(new ResourceLocation(modid, name)).entityType, world);
-	}
+//	public GolemBase(final String name, final World world) {
+//		this(ExtraGolems.MODID, name, world);
+//	}
+//	
+//	public GolemBase(final String modid, final String name, final World world) {
+//		this(GolemRegistrar.getContainer(new ResourceLocation(modid, name)).entityType, world);
+//	}
 	
 	public GolemBase(final EntityType<? extends GolemBase> type, final World world) {
 		super(type, world);
@@ -127,12 +122,12 @@ public abstract class GolemBase extends CreatureEntity {
 	////////////// BEHAVIOR OVERRIDES //////////////////
 
 	@Override
-	protected void initEntityAI() {
+	protected void registerGoals() {
 		
 		
-		this.field_70714_bg.addTask(3, new LookAtGoal(this, PlayerEntity.class, 6.0F));
-		this.field_70714_bg.addTask(4, new LookRandomlyGoal(this));
-		this.field_70715_bh.addTask(1,
+		this.goalSelector.addGoal(3, new LookAtGoal(this, PlayerEntity.class, 6.0F));
+		this.goalSelector.addGoal(4, new LookRandomlyGoal(this));
+		this.targetSelector.addGoal(1,
 				new NearestAttackableTargetGoal<>(this, MobEntity.class, 10, true, false, (e) -> {
 					return e instanceof IMob;
 				}));
@@ -141,16 +136,16 @@ public abstract class GolemBase extends CreatureEntity {
 
 		// all of these tasks are copied from the Iron Golem and adjusted for movement speed
 		//this.field_70714_bg.addTask(1, new AttackGoal(this, this.getBaseMoveSpeed() * 4.0D, true));
-		this.field_70714_bg.addTask(2,
+		this.targetSelector.addGoal(2,
 			new MoveTowardsTargetGoal(this, this.getBaseMoveSpeed() * 3.75D, 32.0F));
-		this.field_70714_bg.addTask(3,
+		this.targetSelector.addGoal(3,
 			new MoveThroughVillageGoal(this, this.getBaseMoveSpeed() * 2.25D, true, 2, () -> Boolean.valueOf(true)));
-		this.field_70714_bg.addTask(4,
+		this.targetSelector.addGoal(4,
 			new MoveTowardsRestrictionGoal(this, this.getBaseMoveSpeed() * 4.0D));
 		
 		
 		//// Wander AI has been moved to setCanSwim(boolean)
-		this.field_70715_bh.addTask(1, new EntityAIDefendAgainstMonsters(this));
+		this.goalSelector.addGoal(1, new EntityAIDefendAgainstMonsters(this));
 //		this.field_70715_bh.addTask(2, new EntityAIHurtByTarget(this, false, (Class[]) new Class[0]));
 //		this.field_70715_bh.addTask(3, new EntityAINearestAttackableTarget<>(this,
 //			EntityLiving.class, 10, false, true,
@@ -167,9 +162,9 @@ public abstract class GolemBase extends CreatureEntity {
 	//NOTE: This is called before the constructor gets to adding the container
 	@Override
 	protected void registerAttributes() {
-		GolemContainer golemContainer = GolemRegistrar.getContainer(getClass());
+		GolemContainer golemContainer = GolemRegistrar.getContainer(this.getType());
 		super.registerAttributes();
-		this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE)
+		this.getAttributes().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE)
 			.setBaseValue(golemContainer.getAttack());
 		this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(golemContainer.getHealth());
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(golemContainer.getSpeed());
@@ -260,9 +255,9 @@ public abstract class GolemBase extends CreatureEntity {
 	protected void damageEntity(final DamageSource source, final float amount) {
 		if (!this.isInvulnerableTo(source)) {
 			float adjusted = amount;
-			if (this.isPotionActive(Effects.field_188425_z)) { // LUCK
+			if (this.isPotionActive(Effects.LUCK)) {
 				adjusted *= 0.89F;
-			} else if (this.isPotionActive(Effects.field_189112_A)) { // UNLUCK
+			} else if (this.isPotionActive(Effects.UNLUCK)) {
 				adjusted *= 1.25F;
 			}
 			super.damageEntity(source, adjusted);
@@ -276,9 +271,9 @@ public abstract class GolemBase extends CreatureEntity {
 		// (0.0 ~ 1.0] based on luck / unluck and critical chance
 		float multiplier = 1.0F;
 		// try to increase damage if random critical chance succeeds
-		if (this.isPotionActive(Effects.field_188425_z)) { // LUCK
+		if (this.isPotionActive(Effects.LUCK)) {
 			multiplier += 0.5F * this.criticalModifier;
-		} else if (this.isPotionActive(Effects.field_189112_A)) { // UNLUCK
+		} else if (this.isPotionActive(Effects.UNLUCK)) {
 			multiplier -= 0.65F;
 		} else if (rand.nextInt(100) < this.criticalChance) {
 			multiplier = this.criticalModifier;
@@ -490,9 +485,9 @@ public abstract class GolemBase extends CreatureEntity {
 //		}
 		
 		if (canSwim) {
-			this.field_70714_bg.addTask(0, swimmingAI);
+			this.goalSelector.addGoal(0, swimmingAI);
 		} else {
-			this.field_70714_bg.removeTask(swimmingAI);
+			this.goalSelector.removeGoal(swimmingAI);
 		}
 	}
 
@@ -553,19 +548,6 @@ public abstract class GolemBase extends CreatureEntity {
 	
 	public double getConfigDouble(final String name) {
 		return ((Double)getConfigValue(name).get()).doubleValue();
-	}
-	
-	/** The EntityType associated with this golem, or null if there is none **/
-	@Nullable
-	public static EntityType<? extends GolemBase> getGolemType(Class<? extends GolemBase> golem) {
-		return GolemRegistrar.getContainer(golem).entityType;
-	}
-
-	/** 
-	 * Helper method for translating text into local language using {@code I18n}
-	 **/
-	protected static String trans(final String s, final Object... strings) {
-		return I18n.format(s, strings);
 	}
 
 	/////////////// TEXTURE HELPERS //////////////////

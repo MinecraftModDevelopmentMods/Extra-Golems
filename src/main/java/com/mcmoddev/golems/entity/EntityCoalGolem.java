@@ -5,6 +5,7 @@ import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.potion.EffectInstance;
@@ -18,8 +19,8 @@ public final class EntityCoalGolem extends GolemBase {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Blindness";
 
-	public EntityCoalGolem(final World world) {
-		super(GolemNames.COAL_GOLEM, world);
+	public EntityCoalGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+		super(entityType, world);
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.2D);
 	}
 
@@ -37,7 +38,7 @@ public final class EntityCoalGolem extends GolemBase {
 			final int BLIND_CHANCE = 2;
 			if (entity instanceof LivingEntity && this.getConfigBool(ALLOW_SPECIAL) && this.rand.nextInt(BLIND_CHANCE) == 0) {
 				((LivingEntity) entity).addPotionEffect(
-					new EffectInstance(Effects.field_76440_q, 20 * (3 + rand.nextInt(5)), 0));
+					new EffectInstance(Effects.BLINDNESS, 20 * (3 + rand.nextInt(5)), 0));
 			}
 			return true;
 		}

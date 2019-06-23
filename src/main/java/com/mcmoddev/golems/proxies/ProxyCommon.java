@@ -15,11 +15,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.RegistryEvent;
@@ -34,7 +31,7 @@ public class ProxyCommon {
 	
 	public void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
 		// Register Golem EntityEntries as well as building blocks
-		GolemRegistrar.getContainers().forEach(container -> event.getRegistry().register(container.entityType));
+		GolemRegistrar.getContainers().forEach(container -> event.getRegistry().register(container.getEntityType()));
 	}
 
 	public void registerItems(final RegistryEvent.Register<Item> event) {

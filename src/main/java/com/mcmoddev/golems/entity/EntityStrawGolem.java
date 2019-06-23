@@ -8,6 +8,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.CropsBlock;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.StemBlock;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.BoneMealItem;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -24,8 +25,8 @@ public final class EntityStrawGolem extends GolemBase {
 	private int boostFreq;
 	private boolean allowed;
 
-	public EntityStrawGolem(final World world) {
-		super(GolemNames.STRAW_GOLEM, world);
+	public EntityStrawGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+		super(entityType, world);
 		this.setCanSwim(true);
 		this.boostFreq = this.getConfigInt(SPECIAL_FREQ);
 		this.boostFreq += this.rand.nextInt(Math.max(10, this.boostFreq / 2));

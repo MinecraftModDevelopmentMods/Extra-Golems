@@ -6,25 +6,25 @@ import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
 import com.mojang.blaze3d.platform.GlStateManager;
 
-import net.minecraft.client.renderer.entity.RenderLiving;
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;
 
 /**
  * RenderColoredGolem is the same as RenderGolem but with casting to GolemColorized instead of
  * GolemBase.
  */
-public class RenderColoredGolem extends RenderLiving<GolemColorized> {
+public class RenderColoredGolem extends RenderGolem {
 
 	private static final ResourceLocation fallbackTexture = GolemBase.makeTexture(ExtraGolems.MODID, GolemNames.CLAY_GOLEM);
 	private ResourceLocation texture;
 
-	public RenderColoredGolem(final RenderManager renderManagerIn) {
-		super(renderManagerIn, new ModelGolem(), 0.5F);
+	public RenderColoredGolem(final EntityRendererManager renderManagerIn) {
+		super(renderManagerIn);
 	}
 
 	@Override
-	public void doRender(final GolemColorized golem, final double x, final double y, final double z, final float f0, final float f1) {
+	public void doRender(final GolemBase entity, final double x, final double y, final double z, final float f0, final float f1) {
+		final GolemColorized golem = (GolemColorized) entity;
 		final float colorRed = golem.getColorRed();
 		final float colorGreen = golem.getColorGreen();
 		final float colorBlue = golem.getColorBlue();
@@ -61,16 +61,16 @@ public class RenderColoredGolem extends RenderLiving<GolemColorized> {
 		}
 		GlStateManager.popMatrix();
 	}
-
+	
 	@Override
-	protected void applyRotations(final GolemColorized golem, final float p_77043_2_, final float rotationYaw,
+	protected void applyRotations(final GolemBase golem, final float ageInTicks, final float rotationYaw,
 				      final float partialTicks) {
-		super.applyRotations(golem, p_77043_2_, rotationYaw, partialTicks);
+		super.applyRotations(golem, ageInTicks, rotationYaw, partialTicks);
 
 		if ((double) golem.limbSwingAmount >= 0.01D) {
-			float f = 13.0F;
-			float f1 = golem.limbSwing - golem.limbSwingAmount * (1.0F - partialTicks) + 6.0F;
-			float f2 = (Math.abs(f1 % f - f * 0.5F) - f * 0.25F) / (f * 0.25F);
+			final float f = 13.0F;
+			final float f1 = golem.limbSwing - golem.limbSwingAmount * (1.0F - partialTicks) + 6.0F;
+			final float f2 = (Math.abs(f1 % f - f * 0.5F) - f * 0.25F) / (f * 0.25F);
 			GlStateManager.rotatef(6.5F * f2, 0.0F, 0.0F, 1.0F);
 		}
 	}

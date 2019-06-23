@@ -5,6 +5,7 @@ import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.SlimeEntity;
 import net.minecraft.network.datasync.DataParameter;
@@ -20,12 +21,12 @@ public final class EntitySlimeGolem extends GolemBase {
 	public static final String ALLOW_SPLITTING = "Allow Special: Split";
 	public static final String KNOCKBACK = "Knockback Factor";
 	
-	public EntitySlimeGolem(final World world) {
-		this(world, false);
+	public EntitySlimeGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+		this(entityType, world, false);
 	}
 	
-	public EntitySlimeGolem(final World world, final boolean isBaby) {
-		super(GolemNames.SLIME_GOLEM, world);
+	public EntitySlimeGolem(final EntityType<? extends GolemBase> entityType, final World world, final boolean isBaby) {
+		super(entityType, world);
 		this.setChild(isBaby);
 		this.setCanSwim(true);
 	}
@@ -71,8 +72,8 @@ public final class EntitySlimeGolem extends GolemBase {
 	@Override
 	public void remove() {
 		if(!this.world.isRemote && !this.isChild() && this.getConfigBool(ALLOW_SPLITTING)) {
-			GolemBase slime1 = new EntitySlimeGolem(this.world, true);
-			GolemBase slime2 = new EntitySlimeGolem(this.world, true);
+			GolemBase slime1 = new EntitySlimeGolem((EntityType<? extends GolemBase>) this.getType(), this.world, true);
+			GolemBase slime2 = new EntitySlimeGolem((EntityType<? extends GolemBase>) this.getType(), this.world, true);
 			// copy attack target info
 			if(this.getAttackTarget() != null) {
 				slime1.setAttackTarget(this.getAttackTarget());
@@ -84,8 +85,8 @@ public final class EntitySlimeGolem extends GolemBase {
 			slime2.setLocationAndAngles(this.posX + rand.nextDouble() - 0.5D, this.posY, 
 					 this.posZ + rand.nextDouble() - 0.5D, this.rotationYaw + rand.nextInt(20) - 10, 0);
 			// spawn the entities
-			this.getEntityWorld().func_217376_c(slime1);
-			this.getEntityWorld().func_217376_c(slime2);
+			this.getEntityWorld().addEntity(slime1);
+			this.getEntityWorld().addEntity(slime2);
 		}
 
 		super.remove();

@@ -4,9 +4,10 @@ import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
 
-import net.minecraft.init.MobEffects;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.entity.EntityType;
+import net.minecraft.potion.Effect;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
@@ -15,14 +16,13 @@ import net.minecraft.world.World;
 public final class EntityBookshelfGolem extends GolemBase {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Potion Effects";
-	/*private static final Potion[] goodEffects = {MobEffects.FIRE_RESISTANCE, MobEffects.REGENERATION,
-		MobEffects.STRENGTH, MobEffects.ABSORPTION, MobEffects.LUCK, MobEffects.INSTANT_HEALTH,
-		MobEffects.RESISTANCE, MobEffects.INVISIBILITY, MobEffects.SPEED,
-		MobEffects.JUMP_BOOST};
-	*/ // TODO Effects.<SRG name>
+	private static final Effect[] goodEffects = { Effects.FIRE_RESISTANCE, Effects.REGENERATION,
+		Effects.STRENGTH, Effects.ABSORPTION, Effects.LUCK, Effects.INSTANT_HEALTH,
+		Effects.RESISTANCE, Effects.INVISIBILITY, Effects.SPEED,
+		Effects.JUMP_BOOST};
 
-	public EntityBookshelfGolem(final World world) {
-		super(GolemNames.BOOKSHELF_GOLEM, world);
+	public EntityBookshelfGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+		super(entityType, world);
 	}
 
 	protected ResourceLocation applyTexture() {
@@ -39,9 +39,9 @@ public final class EntityBookshelfGolem extends GolemBase {
 		super.livingTick();
 		if (getConfigBool(ALLOW_SPECIAL) && this.getActivePotionEffects().isEmpty()
 			&& rand.nextInt(40) == 0) {
-			final Potion potion = goodEffects[rand.nextInt(goodEffects.length)];
+			final Effect potion = goodEffects[rand.nextInt(goodEffects.length)];
 			final int len = potion.isInstant() ? 1 : 200 + 100 * (1 + rand.nextInt(5));
-			this.addPotionEffect(new PotionEffect(potion, len, rand.nextInt(2)));
+			this.addPotionEffect(new EffectInstance(potion, len, rand.nextInt(2)));
 		}
 	}
 

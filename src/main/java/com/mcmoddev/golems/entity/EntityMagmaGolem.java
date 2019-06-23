@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.util.DamageSource;
@@ -51,13 +52,13 @@ public final class EntityMagmaGolem extends GolemBase {
 	private boolean allowMelting;
 	private int meltDelay;
 
-	public EntityMagmaGolem(final World world, final boolean isChild) {
-		this(world);
+	public EntityMagmaGolem(final EntityType<? extends GolemBase> entityType, final World world, final boolean isChild) {
+		this(entityType, world);
 		this.setChild(isChild);
 	}
 	
-	public EntityMagmaGolem(final World world) {
-		super(GolemNames.MAGMA_GOLEM, world);
+	public EntityMagmaGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+		super(entityType, world);
 		this.isHurtByWater = this.getConfigBool(ALLOW_WATER_DAMAGE);
 		this.allowMelting = this.getConfigBool(ALLOW_LAVA_SPECIAL);
 		this.meltDelay = this.getConfigInt(MELT_DELAY);
@@ -156,8 +157,8 @@ public final class EntityMagmaGolem extends GolemBase {
 	public void remove() {
 		// spawn baby golems here if possible 
 		if(!this.world.isRemote && !this.isChild() && this.getConfigBool(ALLOW_SPLITTING)) {
-			GolemBase slime1 = new EntityMagmaGolem(this.world, true);
-			GolemBase slime2 = new EntityMagmaGolem(this.world, true);
+			GolemBase slime1 = new EntityMagmaGolem((EntityType<? extends GolemBase>) this.getType(), this.world, true);
+			GolemBase slime2 = new EntityMagmaGolem((EntityType<? extends GolemBase>) this.getType(), this.world, true);
 			// copy attack target info
 			if(this.getAttackTarget() != null) {
 				slime1.setAttackTarget(this.getAttackTarget());
@@ -169,8 +170,8 @@ public final class EntityMagmaGolem extends GolemBase {
 			slime2.setLocationAndAngles(this.posX + rand.nextDouble() - 0.5D, this.posY, 
 					 this.posZ + rand.nextDouble() - 0.5D, this.rotationYaw + rand.nextInt(20) - 10, 0);
 			// spawn the entities
-			this.getEntityWorld().func_217376_c(slime1);
-			this.getEntityWorld().func_217376_c(slime2);
+			this.getEntityWorld().addEntity(slime1);
+			this.getEntityWorld().addEntity(slime2);
 		}
 
 		super.remove();

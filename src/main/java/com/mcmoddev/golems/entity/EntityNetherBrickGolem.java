@@ -5,6 +5,7 @@ import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -15,8 +16,8 @@ public final class EntityNetherBrickGolem extends GolemBase {
 
 	public static final String ALLOW_FIRE_SPECIAL = "Allow Special: Burn Enemies";
 
-	public EntityNetherBrickGolem(final World world) {
-		super(GolemNames.NETHERBRICK_GOLEM, world);
+	public EntityNetherBrickGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+		super(entityType, world);
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.2D);
 	}
 

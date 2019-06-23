@@ -6,6 +6,7 @@ import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.util.GolemNames;
 
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -21,8 +22,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public final class EntityBedrockGolem extends GolemBase {
 
-	public EntityBedrockGolem(final World world) {
-		super(GolemNames.BEDROCK_GOLEM, world);
+	public EntityBedrockGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+		super(entityType, world);
 		this.setInvulnerable(true);
 		this.setCreativeReturn(new ItemStack(GolemItems.SPAWN_BEDROCK_GOLEM));
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(1.0D);
@@ -53,7 +54,7 @@ public final class EntityBedrockGolem extends GolemBase {
 	protected boolean processInteract(final PlayerEntity player, final Hand hand) {
 		// creative players can "despawn" by using spawnBedrockGolem on this entity
 		final ItemStack itemstack = player.getHeldItem(hand);
-		if (player.playerAbilities.isCreativeMode && !itemstack.isEmpty() && itemstack.getItem() == GolemItems.SPAWN_BEDROCK_GOLEM) {
+		if (player.abilities.isCreativeMode && !itemstack.isEmpty() && itemstack.getItem() == GolemItems.SPAWN_BEDROCK_GOLEM) {
 			player.swingArm(hand);
 			if (!this.world.isRemote) {
 				this.remove();

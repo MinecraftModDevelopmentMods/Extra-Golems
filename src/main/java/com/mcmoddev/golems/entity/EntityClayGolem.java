@@ -4,6 +4,7 @@ import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
 
+import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
@@ -11,8 +12,8 @@ import net.minecraft.world.World;
 
 public final class EntityClayGolem extends GolemBase {
 
-	public EntityClayGolem(final World world) {
-		super(GolemNames.CLAY_GOLEM, world);
+	public EntityClayGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+		super(entityType, world);
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -25,8 +26,8 @@ public final class EntityIceGolem extends GolemBase {
 	public static final String AOE = "Area of Effect";
 	public static final String FROST = "Use Frosted Ice";
 
-	public EntityIceGolem(final World world) {
-		super(GolemNames.ICE_GOLEM, world);
+	public EntityIceGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+		super(entityType, world);
 		this.setCanSwim(true);
 	}
 

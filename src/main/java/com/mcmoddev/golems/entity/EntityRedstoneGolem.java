@@ -8,6 +8,7 @@ import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
@@ -19,12 +20,12 @@ public final class EntityRedstoneGolem extends GolemBase {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Redstone Power";
 
-	public EntityRedstoneGolem(final World world) {
-		super(GolemNames.REDSTONE_GOLEM, world);
+	public EntityRedstoneGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+		super(entityType, world);
 		final BlockState state = GolemItems.UTILITY_POWER.getDefaultState().with(BlockUtilityPower.POWER_LEVEL, 15);
 		final int freq = BlockUtilityPower.UPDATE_TICKS;
 		final boolean allow = this.getConfigBool(ALLOW_SPECIAL);
-		this.tasks.addTask(9, new PlaceUtilityBlockGoal(this, state, freq, allow));
+		this.goalSelector.addGoal(9, new PlaceUtilityBlockGoal(this, state, freq, allow));
 	}
 
 	@Override

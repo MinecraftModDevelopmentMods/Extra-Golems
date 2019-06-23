@@ -9,6 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.NetherWartBlock;
+import net.minecraft.entity.EntityType;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.ResourceLocation;
@@ -22,8 +23,8 @@ public final class EntityNetherWartGolem extends GolemBase {
 	public static final String FREQUENCY = "Netherwart Frequency";
 	public static final String ALLOW_HEALING = "Allow Special: Random Healing";
 
-	public EntityNetherWartGolem(final World world) {
-		super(GolemNames.NETHERWART_GOLEM, world);
+	public EntityNetherWartGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+		super(entityType, world);
 		this.setCanSwim(true);
 	}
 	
@@ -37,13 +38,13 @@ public final class EntityNetherWartGolem extends GolemBase {
 		// heals randomly, but only at night or in the nether (least to most expensive)
 		if ((!this.getEntityWorld().isDaytime() || this.getEntityWorld().dimension.isNether())
 				&& this.getConfigBool(ALLOW_HEALING) && rand.nextInt(450) == 0 ) {
-			this.addPotionEffect(new EffectInstance(Effects.field_76428_l, 50, 1)); // REGENERATION
+			this.addPotionEffect(new EffectInstance(Effects.REGENERATION, 50, 1));
 		}
 	}
 
 	@Override
-	protected void initEntityAI() {
-		super.initEntityAI();
+	protected void registerGoals() {
+		super.registerGoals();
 		final BlockState[] flowers = {
 			Blocks.NETHER_WART.getDefaultState().with(NetherWartBlock.AGE, 0),
 			Blocks.NETHER_WART.getDefaultState().with(NetherWartBlock.AGE, 1),
@@ -51,7 +52,7 @@ public final class EntityNetherWartGolem extends GolemBase {
 		final Block[] soils = {Blocks.SOUL_SAND};
 		final boolean allow = this.getConfigBool(ALLOW_SPECIAL);
 		final int freq = this.getConfigInt(FREQUENCY);
-		this.tasks.addTask(2,
+		this.goalSelector.addGoal(2,
 			new PlaceBlocksGoal(this, freq, flowers, soils, allow));
 	}
 

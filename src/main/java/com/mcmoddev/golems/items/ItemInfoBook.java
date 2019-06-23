@@ -7,7 +7,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
@@ -23,6 +23,6 @@ public class ItemInfoBook extends Item {
 		if (playerIn.getEntityWorld().isRemote) {
 			GuiLoader.loadBookGui(playerIn, itemstack);
 		}
-		return new ActionResult<>(EnumActionResult.SUCCESS, itemstack);
+		return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
 	}
 }

@@ -9,7 +9,7 @@ import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.init.Particles;
+import net.minecraft.entity.EntityType;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.ResourceLocation;
@@ -27,8 +27,8 @@ public final class EntitySpongeGolem extends GolemBase {
 	public static final String INTERVAL = "Water Soaking Frequency";
 	public static final String RANGE = "Water Soaking Range";
 
-	public EntitySpongeGolem(final World world) {
-		super(GolemNames.SPONGE_GOLEM, world);
+	public EntitySpongeGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+		super(entityType, world);
 		this.setCanSwim(true);
 	}
 

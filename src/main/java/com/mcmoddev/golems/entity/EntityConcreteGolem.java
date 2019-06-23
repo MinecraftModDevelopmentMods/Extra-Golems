@@ -8,6 +8,7 @@ import com.mcmoddev.golems.util.GolemNames;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
@@ -24,8 +25,8 @@ public final class EntityConcreteGolem extends GolemMultiColorized {
 		private static final ResourceLocation TEXTURE_OVERLAY = GolemBase
 			.makeTexture(ExtraGolems.MODID, GolemNames.CONCRETE_GOLEM + "_grayscale");
 
-	public EntityConcreteGolem(final World world) {
-		super(ExtraGolems.MODID, GolemNames.CONCRETE_GOLEM, world, TEXTURE_BASE, TEXTURE_OVERLAY, DYE_COLORS);
+	public EntityConcreteGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+		super(entityType, world, ExtraGolems.MODID, TEXTURE_BASE, TEXTURE_OVERLAY, DYE_COLORS);
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.2D);
 	}
 

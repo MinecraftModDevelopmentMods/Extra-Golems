@@ -1,14 +1,14 @@
 package com.mcmoddev.golems.entity;
 
-import com.mcmoddev.golems.entity.ai.EntityAIPlaceRandomBlocksStrictly;
 import com.mcmoddev.golems.entity.ai.PlaceBlocksGoal;
+import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.EntityType;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.SoundEvent;
@@ -24,14 +24,14 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 	public static final String SHROOM_PREFIX = "shroom";
 	public static final String[] SHROOM_TYPES = {"red", "brown"};
 
-	public EntityMushroomGolem(final World world) {
-		super(ExtraGolems.MODID, GolemNames.MUSHROOM_GOLEM, world, SHROOM_PREFIX, SHROOM_TYPES);
+	public EntityMushroomGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+		super(entityType, world, ExtraGolems.MODID, SHROOM_PREFIX, SHROOM_TYPES);
 		this.setCanSwim(true);
 	}
 
 	@Override
-	protected void initEntityAI() {
-		super.initEntityAI();
+	protected void registerGoals() {
+		super.registerGoals();
 		final boolean allowed = this.getConfigBool(ALLOW_SPECIAL);
 		int freq = allowed ? this.getConfigInt(FREQUENCY) : -100;
 		freq += this.rand.nextInt(Math.max(10, freq / 2));
@@ -39,7 +39,7 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 				Blocks.RED_MUSHROOM.getDefaultState()};
 		final Block[] soils = 
 			{ Blocks.DIRT, Blocks.GRASS, Blocks.MYCELIUM, Blocks.PODZOL, Blocks.NETHERRACK, Blocks.SOUL_SAND };
-		this.tasks.addTask(2,
+		this.goalSelector.addGoal(2,
 			new PlaceBlocksGoal(this, freq, mushrooms, soils, allowed));
 	}
 
@@ -58,7 +58,7 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 		// heals randomly, but only at night
 		//Note how it goes from least expensive to most expensive
 		if(!this.getEntityWorld().isDaytime() && this.getConfigBool(ALLOW_HEALING) && rand.nextInt(450) == 0) {
-			this.addPotionEffect(new EffectInstance(Effects.field_76428_l, 50, 1)); // REGENERATION
+			this.addPotionEffect(new EffectInstance(Effects.REGENERATION, 50, 1));
 		}
 	}
 
