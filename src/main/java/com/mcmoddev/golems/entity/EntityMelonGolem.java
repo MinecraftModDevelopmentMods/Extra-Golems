@@ -57,16 +57,16 @@ public final class EntityMelonGolem extends GolemBase {
 		final Block[] soils = { Blocks.DIRT, Blocks.GRASS, Blocks.MYCELIUM, Blocks.PODZOL };
 		// init list and AI for planting flowers
 		final BlockState[] flowers = {
-			Blocks.POPPY.getDefaultState(),
-			Blocks.DANDELION.getDefaultState(),
-			Blocks.BLUE_ORCHID.getDefaultState(),
-			Blocks.ALLIUM.getDefaultState(),
-			Blocks.AZURE_BLUET.getDefaultState(),
-			Blocks.RED_TULIP.getDefaultState(),
-			Blocks.ORANGE_TULIP.getDefaultState(),
-			Blocks.WHITE_TULIP.getDefaultState(),
-			Blocks.PINK_TULIP.getDefaultState(),
-			Blocks.OXEYE_DAISY.getDefaultState() };
+				Blocks.POPPY.getDefaultState(),
+				Blocks.DANDELION.getDefaultState(),
+				Blocks.BLUE_ORCHID.getDefaultState(),
+				Blocks.ALLIUM.getDefaultState(),
+				Blocks.AZURE_BLUET.getDefaultState(),
+				Blocks.RED_TULIP.getDefaultState(),
+				Blocks.ORANGE_TULIP.getDefaultState(),
+				Blocks.WHITE_TULIP.getDefaultState(),
+				Blocks.PINK_TULIP.getDefaultState(),
+				Blocks.OXEYE_DAISY.getDefaultState() };
 		// get other parameters for the AI
 		final int freq = this.getConfigInt(FREQUENCY);
 		final boolean allowed = this.getConfigBool(ALLOW_SPECIAL);

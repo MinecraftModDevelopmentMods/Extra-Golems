@@ -11,6 +11,8 @@ import net.minecraft.util.math.MathHelper;
 
 import java.util.function.BiPredicate;
 
+import java.util.function.BiPredicate;
+
 /**
  * Places a single BlockState every {@code tickDelay} ticks with certain conditions
  **/
@@ -32,7 +34,7 @@ public class PlaceUtilityBlockGoal extends Goal {
 	 * @see #getDefaultBiPred(GolemBase, BlockState)
 	 **/
 	public PlaceUtilityBlockGoal(final GolemBase golemIn, final BlockState stateIn, final int interval,
-								 final boolean cfgAllows, final BiPredicate<GolemBase, BlockState> canReplacePred) {
+			final boolean cfgAllows, final BiPredicate<GolemBase, BlockState> canReplacePred) {
 		//this.setMutexFlags(EnumSet.of(Flag.MOVE));
 		this.golem = golemIn;
 		this.stateToPlace = stateIn;
@@ -114,8 +116,8 @@ public class PlaceUtilityBlockGoal extends Goal {
 	public static BiPredicate<GolemBase, BlockState> getDefaultBiPred(final BlockState stateIn) {
 		final boolean canBeWaterlogged = canBeWaterlogged(stateIn);
 		return (golem, toReplace) -> toReplace.getBlock() == Blocks.AIR
-			|| (toReplace.getBlock() == Blocks.WATER && canBeWaterlogged
-			&& toReplace.get(FlowingFluidBlock.LEVEL) == 0);
+				|| (toReplace.getBlock() == Blocks.WATER && canBeWaterlogged
+				&& toReplace.get(FlowingFluidBlock.LEVEL) == 0);
 	}
 
 	protected BlockState getStateToPlace(final BlockState toReplace) {

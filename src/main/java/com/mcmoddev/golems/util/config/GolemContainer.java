@@ -15,6 +15,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.*;
+
 /**
  * Adapted from BetterAnimalsPlus by its_meow. Used with permission.
  */
@@ -50,11 +54,11 @@ public class GolemContainer {
 	 * @param lLootTable              a ResourceLocation for the on-death loot table, may be null
 	 **/
 	private GolemContainer(final EntityType<? extends GolemBase> lEntityType,
-						   final Class<? extends GolemBase> lEntityClass, final String lPath,
-						   final List<Block> lValidBuildingBlocks, final List<ResourceLocation> lValidBuildingBlockTags,
-						   final double lHealth, final double lAttack, final double lSpeed,
-						   final HashMap<String, GolemSpecialContainer> lSpecialContainers,
-						   final List<GolemDescription> lDesc, final ResourceLocation lLootTable) {
+			final Class<? extends GolemBase> lEntityClass, final String lPath,
+			final List<Block> lValidBuildingBlocks, final List<ResourceLocation> lValidBuildingBlockTags,
+			final double lHealth, final double lAttack, final double lSpeed,
+			final HashMap<String, GolemSpecialContainer> lSpecialContainers,
+			final List<GolemDescription> lDesc, final ResourceLocation lLootTable) {
 		this.entityType = lEntityType;
 		this.entityClass = lEntityClass;
 		this.validBuildingBlocks = lValidBuildingBlocks;
@@ -282,7 +286,7 @@ public class GolemContainer {
 		 * @param entityFactory the constructor function of the class (e.g. EntityFooGolem::new)
 		 */
 		public Builder(final String golemName, final Class<? extends GolemBase> entityClazz,
-					   final EntityType.IFactory<? extends GolemBase> entityFactory) {
+				final EntityType.IFactory<? extends GolemBase> entityFactory) {
 			this.golemName = golemName;
 			this.entityClass = entityClazz;
 			this.entityTypeBuilder = EntityType.Builder.create(entityFactory, EntityClassification.MISC)
@@ -488,8 +492,8 @@ public class GolemContainer {
 				containerMap.put(c.name, c);
 			}
 			return new GolemContainer(entityType, entityClass, golemName,
-				validBuildingBlocks, validBuildingBlockTags,
-				health, attack, speed, containerMap, descriptions, lootTable);
+					validBuildingBlocks, validBuildingBlockTags,
+					health, attack, speed, containerMap, descriptions, lootTable);
 		}
 	}
 

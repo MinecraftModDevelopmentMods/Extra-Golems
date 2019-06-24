@@ -17,7 +17,7 @@ public final class EntityWoodenGolem extends GolemMultiTextured {
 
 	public static final String WOOD_PREFIX = "wooden";
 	public static final String[] WOOD_TYPES = { "oak", "spruce", "birch", "jungle", "acacia",
-		"big_oak" };
+			"big_oak" };
 
 	public EntityWoodenGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world, ExtraGolems.MODID, WOOD_PREFIX, WOOD_TYPES);

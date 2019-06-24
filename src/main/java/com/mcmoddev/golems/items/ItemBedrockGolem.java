@@ -31,14 +31,18 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Objects;
 
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Objects;
+
 public final class ItemBedrockGolem extends Item {
 
 	@OnlyIn(Dist.CLIENT)
 	private static final ITextComponent loreCreativeOnly = trans("tooltip.creative_only_item").applyTextStyle(TextFormatting.RED);
 	@OnlyIn(Dist.CLIENT)
 	private static final ITextComponent lorePressShift = trans("tooltip.press").applyTextStyle(TextFormatting.GRAY)
-		.appendSibling(wrap(" ")).appendSibling(trans("tooltip.shift").applyTextStyle(TextFormatting.YELLOW))
-		.appendSibling(wrap(" ")).appendSibling(trans("tooltip.for_more_details").applyTextStyle(TextFormatting.GRAY));
+			.appendSibling(wrap(" ")).appendSibling(trans("tooltip.shift").applyTextStyle(TextFormatting.YELLOW))
+			.appendSibling(wrap(" ")).appendSibling(trans("tooltip.for_more_details").applyTextStyle(TextFormatting.GRAY));
 
 	public ItemBedrockGolem() {
 		super(new Properties().group(ItemGroup.MISC));
@@ -53,7 +57,7 @@ public final class ItemBedrockGolem extends Item {
 		final ItemStack stack = context.getItem();
 
 		if ((ExtraGolemsConfig.bedrockGolemCreativeOnly() && !player.abilities.isCreativeMode)
-			|| facing == Direction.DOWN) {
+				|| facing == Direction.DOWN) {
 			return ActionResultType.FAIL;
 		}
 
@@ -86,10 +90,10 @@ public final class ItemBedrockGolem extends Item {
 		if (world.isRemote) {
 			for (int i1 = 60 + world.rand.nextInt(30); i1 > 0; --i1) {
 				world.addParticle(ParticleTypes.LARGE_SMOKE, x + world.rand.nextDouble() - 0.5D,
-					y + world.rand.nextDouble() - 0.5D, z + world.rand.nextDouble() - 0.5D,
-					world.rand.nextDouble() * motion,
-					world.rand.nextDouble() * motion * 0.25D + 0.08D,
-					world.rand.nextDouble() * motion);
+						y + world.rand.nextDouble() - 0.5D, z + world.rand.nextDouble() - 0.5D,
+						world.rand.nextDouble() * motion,
+						world.rand.nextDouble() * motion * 0.25D + 0.08D,
+						world.rand.nextDouble() * motion);
 			}
 		}
 	}
@@ -105,7 +109,7 @@ public final class ItemBedrockGolem extends Item {
 		if (Screen.hasShiftDown()) {
 			tooltip.add(wrap(I18n.format("tooltip.use_to_spawn", trans("entity.golems.golem_bedrock"))));
 			tooltip.add(wrap(I18n.format("tooltip.use_on_existing",
-				trans("entity.golems.golem_bedrock"))));
+					trans("entity.golems.golem_bedrock"))));
 			tooltip.add(wrap(trans("tooltip.to_remove_it") + "."));
 		} else {
 			// "Press SHIFT for more details"

@@ -34,7 +34,7 @@ public final class EntitySeaLanternGolem extends GolemBase {
 		final boolean allow = this.getConfigBool(ALLOW_SPECIAL);
 		final int freq = BlockUtilityGlow.UPDATE_TICKS;
 		this.goalSelector.addGoal(8, new PlaceUtilityBlockGoal(this, GolemItems.UTILITY_LIGHT.getDefaultState()
-			.with(BlockUtilityGlow.LIGHT_LEVEL, BRIGHTNESS_INT), freq, allow));
+				.with(BlockUtilityGlow.LIGHT_LEVEL, BRIGHTNESS_INT), freq, allow));
 	}
 
 	@Override

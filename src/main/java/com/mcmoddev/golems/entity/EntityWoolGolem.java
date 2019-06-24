@@ -15,6 +15,9 @@ import net.minecraft.world.World;
 import java.util.HashMap;
 import java.util.Map;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public final class EntityWoolGolem extends GolemMultiTextured {
 
 	public static final String WOOL_PREFIX = "wool";
@@ -81,8 +84,8 @@ public final class EntityWoolGolem extends GolemMultiTextured {
 		// uses HashMap to determine which texture this golem should apply
 		// based on the top-middle building block. Defaults to a random texture.
 		byte textureNum = blockToTexture.containsKey(body.getBlock())
-			? blockToTexture.get(body.getBlock())
-			: (byte) this.rand.nextInt(coloredWoolTypes.length);
+				? blockToTexture.get(body.getBlock())
+				: (byte) this.rand.nextInt(coloredWoolTypes.length);
 		this.setTextureNum(textureNum);
 	}
 
@@ -99,16 +102,16 @@ public final class EntityWoolGolem extends GolemMultiTextured {
 		StringBuilder stringOut = new StringBuilder(stringIn.length() * 2);
 		int time = timeIn > Integer.MAX_VALUE / 2 ? Integer.MAX_VALUE / 2 : (int) timeIn;
 		TextFormatting[] colorChar =
-			{
-				TextFormatting.RED,
-				TextFormatting.GOLD,
-				TextFormatting.YELLOW,
-				TextFormatting.GREEN,
-				TextFormatting.AQUA,
-				TextFormatting.BLUE,
-				TextFormatting.LIGHT_PURPLE,
-				TextFormatting.DARK_PURPLE
-			};
+				{
+						TextFormatting.RED,
+						TextFormatting.GOLD,
+						TextFormatting.YELLOW,
+						TextFormatting.GREEN,
+						TextFormatting.AQUA,
+						TextFormatting.BLUE,
+						TextFormatting.LIGHT_PURPLE,
+						TextFormatting.DARK_PURPLE
+				};
 		for (int i = 0, l = in.length(), cl = colorChar.length; i < l; i++) {
 			int meta = i + time;
 			stringOut.append(colorChar[meta % cl] + "" + in.charAt(i));

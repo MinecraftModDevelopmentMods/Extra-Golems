@@ -13,6 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
+
 /**
  * This event exists for other mods or addons to handle and modify the Sponge Golem's behavior. It
  * is not handled in Extra Golems. To modify which blocks count as 'water' you must call
@@ -35,18 +39,18 @@ public final class SpongeGolemSoakEvent extends Event {
 
 	public SpongeGolemSoakEvent(final GolemBase golem, final BlockPos center, final int radius) {
 		this(golem, center, radius,
-			(state) -> state.has(BlockStateProperties.WATERLOGGED)
-				? state.with(BlockStateProperties.WATERLOGGED, false)
-				: (state.getMaterial() == Material.WATER
-				|| state.getBlock() == Blocks.KELP
-				|| state.getBlock() == Blocks.KELP_PLANT
-				|| state.getBlock() == Blocks.SEAGRASS
-				|| state.getBlock() == Blocks.TALL_SEAGRASS
-				? Blocks.AIR.getDefaultState() : state));
+				(state) -> state.has(BlockStateProperties.WATERLOGGED)
+						? state.with(BlockStateProperties.WATERLOGGED, false)
+						: (state.getMaterial() == Material.WATER
+						|| state.getBlock() == Blocks.KELP
+						|| state.getBlock() == Blocks.KELP_PLANT
+						|| state.getBlock() == Blocks.SEAGRASS
+						|| state.getBlock() == Blocks.TALL_SEAGRASS
+						? Blocks.AIR.getDefaultState() : state));
 	}
 
 	public SpongeGolemSoakEvent(final GolemBase golem, final BlockPos center, final int radius,
-								final Function<BlockState, BlockState> function) {
+			final Function<BlockState, BlockState> function) {
 		this.setResult(Event.Result.ALLOW);
 		this.spongeGolem = golem;
 		this.spongeGolemPos = center;

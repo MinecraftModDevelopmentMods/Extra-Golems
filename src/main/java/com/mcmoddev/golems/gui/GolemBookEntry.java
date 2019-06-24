@@ -41,8 +41,8 @@ public class GolemBookEntry {
 		final EntityType<?> golemType = container.getEntityType();
 		this.GOLEM_NAME = golemType.getTranslationKey();
 		this.MULTI_TEXTURE = ExtraGolemsConfig.enableTextureInteract()
-			&& (GolemMultiTextured.class.isAssignableFrom(container.getEntityClass())
-			|| GolemMultiColorized.class.isAssignableFrom(container.getEntityClass()));
+				&& (GolemMultiTextured.class.isAssignableFrom(container.getEntityClass())
+				|| GolemMultiColorized.class.isAssignableFrom(container.getEntityClass()));
 		//this.FIREPROOF = (container.isImmuneToFire() && !(golem instanceof EntityBedrockGolem));
 		this.HEALTH = (int) container.getHealth();
 		this.ATTACK = (float) container.getAttack();

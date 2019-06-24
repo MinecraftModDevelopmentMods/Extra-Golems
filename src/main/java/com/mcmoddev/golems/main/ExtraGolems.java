@@ -33,7 +33,7 @@ public class ExtraGolems {
 	@SuppressWarnings("Convert2MethodRef")
 	//DO NOT USE METHOD REFERENCES. THESE ARE BAD! (according to gigaherz)
 	public static final ProxyCommon PROXY = DistExecutor.runForDist(() -> () -> new ProxyClient(),
-		() -> () -> new ProxyServer());
+			() -> () -> new ProxyServer());
 
 	public static final Logger LOGGER = LogManager.getFormatterLogger(ExtraGolems.MODID);
 

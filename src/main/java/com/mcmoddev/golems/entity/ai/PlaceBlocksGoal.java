@@ -24,7 +24,7 @@ public class PlaceBlocksGoal extends Goal {
 	public final Predicate<PlaceBlocksGoal> canExecute;
 
 	public PlaceBlocksGoal(final GolemBase golemBase, final int ticksBetweenPlanting,
-						   final BlockState[] plants, final Block[] soils, final Predicate<PlaceBlocksGoal> pred) {
+			final BlockState[] plants, final Block[] soils, final Predicate<PlaceBlocksGoal> pred) {
 		//this.setMutexFlags(EnumSet.of(Flag.MOVE));
 		this.golem = golemBase;
 		this.tickDelay = Math.max(1, ticksBetweenPlanting);
@@ -35,17 +35,17 @@ public class PlaceBlocksGoal extends Goal {
 	}
 
 	public PlaceBlocksGoal(final GolemBase golemBase, final int ticksBetweenPlanting,
-						   final BlockState[] plants, final Predicate<PlaceBlocksGoal> p) {
+			final BlockState[] plants, final Predicate<PlaceBlocksGoal> p) {
 		this(golemBase, ticksBetweenPlanting, plants, null, p);
 	}
 
 	public PlaceBlocksGoal(final GolemBase golemBase, final int ticksBetweenPlanting,
-						   final BlockState[] plants, @Nullable final Block[] soils, final boolean configAllows) {
+			final BlockState[] plants, @Nullable final Block[] soils, final boolean configAllows) {
 		this(golemBase, ticksBetweenPlanting, plants, soils, (t -> configAllows));
 	}
 
 	public PlaceBlocksGoal(final GolemBase golemBase, final int ticksBetweenPlanting,
-						   final BlockState[] plants, final boolean configAllows) {
+			final BlockState[] plants, final boolean configAllows) {
 		this(golemBase, ticksBetweenPlanting, plants, null, configAllows);
 	}
 

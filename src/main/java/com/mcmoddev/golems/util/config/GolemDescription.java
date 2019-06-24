@@ -8,6 +8,10 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Predicate;
 
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.function.Predicate;
+
 /**
  * Holds an {@link ITextComponent} and an
  * optional {@link GolemSpecialContainer} key
@@ -33,7 +37,7 @@ public class GolemDescription {
 	 *                      adding this text to any description lists.
 	 **/
 	public GolemDescription(final ITextComponent textIn, final String configKeyIn,
-							@Nullable final Predicate<ForgeConfigSpec.ConfigValue> configValueIn) {
+			@Nullable final Predicate<ForgeConfigSpec.ConfigValue> configValueIn) {
 		this.text = textIn;
 		this.configKey = configKeyIn != null ? configKeyIn : "";
 		this.configValue = configValueIn != null ? configValueIn : c -> true;
@@ -98,7 +102,7 @@ public class GolemDescription {
 	 **/
 	public boolean isEnabledFor(final GolemContainer container) {
 		return this.configKey.isEmpty() || this.configValue.test(
-			ExtraGolemsConfig.GOLEM_CONFIG.specials.get(
-				container.specialContainers.get(this.configKey)).value);
+				ExtraGolemsConfig.GOLEM_CONFIG.specials.get(
+						container.specialContainers.get(this.configKey)).value);
 	}
 }

@@ -13,6 +13,9 @@ import net.minecraft.util.text.TranslationTextComponent;
 import java.util.LinkedList;
 import java.util.List;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * Base class to get in-game information about types of golems. Currently used for Waila and The One
  * Probe integration.
@@ -59,15 +62,15 @@ public abstract class GolemDescriptionManager {
 
 		// add fire immunity to tip if possible
 		if (this.showFireproof && golem.isImmuneToFire()
-			&& !(golem instanceof EntityBedrockGolem)) {
+				&& !(golem instanceof EntityBedrockGolem)) {
 			list.add(new TranslationTextComponent("entitytip.is_fireproof")
 				.applyTextStyle(TextFormatting.GOLD));
 		}
 
 		// add knockback resist to tip if possible
 		if (this.showKnockbackResist
-			&& golem.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE)
-			.getBaseValue() > 0.8999D) {
+				&& golem.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE)
+				.getBaseValue() > 0.8999D) {
 			list.add(new TranslationTextComponent("attribute.name.generic.knockbackResistance")
 				.applyTextStyle(TextFormatting.GRAY));
 		}

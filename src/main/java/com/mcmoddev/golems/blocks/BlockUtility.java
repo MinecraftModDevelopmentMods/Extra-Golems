@@ -143,7 +143,7 @@ public abstract class BlockUtility extends Block implements IBucketPickupHandler
 
 	@Override
 	public BlockState getStateForPlacement(BlockState state, Direction facing, BlockState state2, IWorld world,
-										   BlockPos pos1, BlockPos pos2, Hand hand) {
+			BlockPos pos1, BlockPos pos2, Hand hand) {
 		return getDefaultState();
 	}
 

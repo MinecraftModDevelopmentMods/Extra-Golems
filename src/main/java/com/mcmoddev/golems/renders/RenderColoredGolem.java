@@ -63,7 +63,7 @@ public class RenderColoredGolem extends RenderGolem {
 
 	@Override
 	protected void applyRotations(final GolemBase golem, final float ageInTicks, final float rotationYaw,
-								  final float partialTicks) {
+			final float partialTicks) {
 		super.applyRotations(golem, ageInTicks, rotationYaw, partialTicks);
 
 		if ((double) golem.limbSwingAmount >= 0.01D) {

@@ -24,6 +24,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class GuiGolemBook extends Screen {
 
 	//////////// GUI GOLEM BOOK LAYOUT ////////////
@@ -136,12 +140,12 @@ public class GuiGolemBook extends Screen {
 
 	// for use in drawing golem spell recipe
 	private static final ItemStack[] ingredientsSpell = new ItemStack[]
-		{ new ItemStack(Items.PAPER), new ItemStack(Items.FEATHER),
-			new ItemStack(Items.REDSTONE), new ItemStack(Items.INK_SAC) };
+			{ new ItemStack(Items.PAPER), new ItemStack(Items.FEATHER),
+					new ItemStack(Items.REDSTONE), new ItemStack(Items.INK_SAC) };
 	private static final ItemStack outputSpell = new ItemStack(GolemItems.GOLEM_SPELL);
 	// for use in drawing golem head recipe
 	private static final ItemStack[] ingredientsHead = new ItemStack[]
-		{ new ItemStack(Blocks.CARVED_PUMPKIN), new ItemStack(GolemItems.GOLEM_SPELL) };
+			{ new ItemStack(Blocks.CARVED_PUMPKIN), new ItemStack(GolemItems.GOLEM_SPELL) };
 	private static final ItemStack outputHead = new ItemStack(GolemItems.GOLEM_HEAD);
 
 	public GuiGolemBook(PlayerEntity playerIn, ItemStack itemIn) {
@@ -199,7 +203,7 @@ public class GuiGolemBook extends Screen {
 		// create table of contents
 		for (int i = 0; i < NUM_CONTENTS_ENTRIES; i++) {
 			this.tableOfContents[i] = this.addButton(new GuiGolemBook.GolemEntryButton(this,
-				ALPHABETICAL.get(i), (this.width / 2) + SCROLL_STARTX, SCR_OFFSET_Y + SCROLL_STARTY + ENTRY_H * i));
+					ALPHABETICAL.get(i), (this.width / 2) + SCROLL_STARTX, SCR_OFFSET_Y + SCROLL_STARTY + ENTRY_H * i));
 		}
 		this.updateButtons();
 	}
@@ -281,7 +285,7 @@ public class GuiGolemBook extends Screen {
 				startX = getScrollX(this.width) - 2;
 				startY = getScrollY(this.currentScroll);
 				this.drawTexturedModalRect(startX, startY, this.isScrolling ? SCROLL_W + DEF_SEP : 0,
-					CONTENTS_H + DEF_SEP, SCROLL_W, SCROLL_H);
+						CONTENTS_H + DEF_SEP, SCROLL_W, SCROLL_H);
 
 				// update button contents
 				if (this.isScrolling) {
@@ -295,8 +299,8 @@ public class GuiGolemBook extends Screen {
 				// draw Golem Spell instructions
 				title = TextFormatting.getTextWithoutFormattingCodes(trans("item.golems.golem_paper"));
 				body = "\n\n\n\n" + I18n.format("golembook.recipe_spell.recipe", title,
-					trans("item.minecraft.paper"), trans("item.minecraft.feather"),
-					trans("item.minecraft.ink_sac"), trans("item.minecraft.redstone"));
+						trans("item.minecraft.paper"), trans("item.minecraft.feather"),
+						trans("item.minecraft.ink_sac"), trans("item.minecraft.redstone"));
 				drawBasicPage(cornerX, cornerY, title, body);
 				draw2x2GridAt(cornerX + MARGIN * 2, cornerY + MARGIN * 2, ingredientsSpell, outputSpell);
 				return;
@@ -304,7 +308,7 @@ public class GuiGolemBook extends Screen {
 				// draw Golem Head instructions
 				title = trans("block.golems.golem_head");
 				body = "\n\n\n\n" + TextFormatting.getTextWithoutFormattingCodes(trans("golembook.recipe_head.recipe", title,
-					trans("item.golems.golem_paper"), trans("block.minecraft.pumpkin")));
+						trans("item.golems.golem_paper"), trans("block.minecraft.pumpkin")));
 				drawBasicPage(cornerX, cornerY, title, body);
 				draw2x2GridAt(cornerX + MARGIN * 2, cornerY + MARGIN * 2, ingredientsHead, outputHead);
 				return;
@@ -312,8 +316,8 @@ public class GuiGolemBook extends Screen {
 				// draw Make Golem instructions
 				title = trans("golembook.build_golem.title");
 				body = trans("golembook.build_golem.howto1") + " "
-					+ trans("golembook.build_golem.howto2") + "\n\n"
-					+ I18n.format("golembook.build_golem.howto3", trans("block.golems.golem_head"));
+						+ trans("golembook.build_golem.howto2") + "\n\n"
+						+ I18n.format("golembook.build_golem.howto3", trans("block.golems.golem_head"));
 				drawBasicPage(cornerX, cornerY, title, body);
 				return;
 			case 5:
@@ -499,7 +503,7 @@ public class GuiGolemBook extends Screen {
 				this.isScrolling = true;
 				// if the mouse Y is within the correct bounds...
 				if (mouseYCentered < SCR_OFFSET_Y + SCROLL_STARTY + CONTENTS_H
-					&& mouseYCentered >= SCR_OFFSET_Y + SCROLL_STARTY) {
+						&& mouseYCentered >= SCR_OFFSET_Y + SCROLL_STARTY) {
 					// update scrolling variables
 					this.currentScroll = getScrollFloat((int) (mouseY - SCROLL_H / 2.0D));
 				}
@@ -688,7 +692,7 @@ public class GuiGolemBook extends Screen {
 				GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 				// draw the background of the button
 				this.drawTexturedModalRect(this.x, this.y, CONTENTS_W + DEF_SEP,
-					this.isHovered ? ENTRY_H + DEF_SEP : 0, ENTRY_W, ENTRY_H);
+						this.isHovered ? ENTRY_H + DEF_SEP : 0, ENTRY_W, ENTRY_H);
 				// draw the block and name of the golem
 				int index = (int) (gui.ticksOpen / 30);
 				gui.drawBlock(this.entry.getBlock(index), this.x - MARGIN - 2, this.y - 9, 1.0F);

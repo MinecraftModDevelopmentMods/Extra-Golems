@@ -53,7 +53,7 @@ public final class EntityCraftingGolem extends GolemBase {
 	public static class ContainerPortableWorkbench extends WorkbenchContainer {
 
 		public ContainerPortableWorkbench(final PlayerInventory playerInventory, final World worldIn,
-										  final BlockPos posIn) {
+				final BlockPos posIn) {
 			super(playerInventory, worldIn, posIn);
 		}
 

@@ -19,9 +19,9 @@ public final class EntityStainedTerracottaGolem extends GolemMultiColorized {
 	public static final String PREFIX = "stained_clay";
 
 	private static final ResourceLocation TEXTURE_BASE = GolemBase
-		.makeTexture(ExtraGolems.MODID, GolemNames.STAINEDTERRACOTTA_GOLEM);
+			.makeTexture(ExtraGolems.MODID, GolemNames.STAINEDTERRACOTTA_GOLEM);
 	private static final ResourceLocation TEXTURE_OVERLAY = GolemBase
-		.makeTexture(ExtraGolems.MODID, GolemNames.STAINEDTERRACOTTA_GOLEM + "_grayscale");
+			.makeTexture(ExtraGolems.MODID, GolemNames.STAINEDTERRACOTTA_GOLEM + "_grayscale");
 
 	public EntityStainedTerracottaGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world, ExtraGolems.MODID, TEXTURE_BASE, TEXTURE_OVERLAY, DYE_COLORS);

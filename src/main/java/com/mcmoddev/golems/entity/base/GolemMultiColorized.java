@@ -13,6 +13,8 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
+
 @SuppressWarnings("EntityConstructor")
 public abstract class GolemMultiColorized extends GolemColorized {
 
@@ -24,10 +26,10 @@ public abstract class GolemMultiColorized extends GolemColorized {
 
 	// here for convenience, used only by child classes
 	public static final int[] DYE_COLORS = {
-		16383998, 16351261, 13061821, 3847130,
-		16701501, 8439583, 15961002, 4673362,
-		10329495, 1481884, 8991416, 3949738,
-		8606770, 6192150, 11546150, 1908001 };
+			16383998, 16351261, 13061821, 3847130,
+			16701501, 8439583, 15961002, 4673362,
+			10329495, 1481884, 8991416, 3949738,
+			8606770, 6192150, 11546150, 1908001 };
 
 	/**
 	 * Flexible constructor so child classes can "borrow" this class's behavior and customize.
@@ -38,7 +40,7 @@ public abstract class GolemMultiColorized extends GolemColorized {
 	 * @param lColors an int[] of color values to use for rendering -- interacting with this golem  will go to the next color
 	 **/
 	public GolemMultiColorized(final EntityType<? extends GolemBase> entityType, final World world, final String modid,
-							   @Nullable final ResourceLocation base, @Nullable final ResourceLocation overlay, final int[] lColors) {
+			@Nullable final ResourceLocation base, @Nullable final ResourceLocation overlay, final int[] lColors) {
 		super(entityType, world, 0L, base, overlay);
 		colors = lColors;
 		lootTables = new ResourceLocation[colors.length];

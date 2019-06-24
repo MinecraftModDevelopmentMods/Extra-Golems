@@ -74,7 +74,7 @@ public class ModelGolem extends EntityModel<GolemBase> {
 	 */
 	@Override
 	public void render(final GolemBase entityIn, final float limbSwing, final float limbSwingAmount, final float ageInTicks,
-					   final float netHeadYaw, final float headPitch, final float scale) {
+			final float netHeadYaw, final float headPitch, final float scale) {
 
 		this.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
 
@@ -103,13 +103,13 @@ public class ModelGolem extends EntityModel<GolemBase> {
 	 */
 	@Override
 	public void setRotationAngles(final GolemBase entity, final float limbSwing, final float limbSwingAmount, final float ageInTicks,
-								  final float netHeadYaw, final float headPitch, final float scaleFactor) {
+			final float netHeadYaw, final float headPitch, final float scaleFactor) {
 		this.golemHead.rotateAngleY = netHeadYaw / (180F / (float) Math.PI);
 		this.golemHead.rotateAngleX = headPitch / (180F / (float) Math.PI);
 		this.golemLeftLeg.rotateAngleX = -1.5F * triangleWave(limbSwing, 13.0F)
-			* limbSwingAmount;
+				* limbSwingAmount;
 		this.golemRightLeg.rotateAngleX = 1.5F * triangleWave(limbSwing, 13.0F)
-			* limbSwingAmount;
+				* limbSwingAmount;
 		this.golemLeftLeg.rotateAngleY = 0.0F;
 		this.golemRightLeg.rotateAngleY = 0.0F;
 	}
@@ -120,19 +120,19 @@ public class ModelGolem extends EntityModel<GolemBase> {
 	 */
 	@Override
 	public void setLivingAnimations(final GolemBase entity, final float limbSwing,
-									final float limbSwingAmount, final float partialTickTime) {
+			final float limbSwingAmount, final float partialTickTime) {
 		int i = entity.getAttackTimer();
 
 		if (i > 0) {
 			this.golemRightArm.rotateAngleX = -2.0F
-				+ 1.5F * triangleWave((float) i - partialTickTime, 10.0F);
+					+ 1.5F * triangleWave((float) i - partialTickTime, 10.0F);
 			this.golemLeftArm.rotateAngleX = -2.0F
-				+ 1.5F * triangleWave((float) i - partialTickTime, 10.0F);
+					+ 1.5F * triangleWave((float) i - partialTickTime, 10.0F);
 		} else {
 			this.golemRightArm.rotateAngleX = (-0.2F
-				+ 1.5F * triangleWave(limbSwing, 13.0F)) * limbSwingAmount;
+					+ 1.5F * triangleWave(limbSwing, 13.0F)) * limbSwingAmount;
 			this.golemLeftArm.rotateAngleX = (-0.2F
-				- 1.5F * triangleWave(limbSwing, 13.0F)) * limbSwingAmount;
+					- 1.5F * triangleWave(limbSwing, 13.0F)) * limbSwingAmount;
 		}
 	}
 

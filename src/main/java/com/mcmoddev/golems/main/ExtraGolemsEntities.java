@@ -34,13 +34,13 @@ public final class ExtraGolemsEntities {
 
 		// BEDROCK GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(
-			GolemNames.BEDROCK_GOLEM, EntityBedrockGolem.class, EntityBedrockGolem::new)
-			.setHealth(999.0D).setAttack(32.0D)
-			.addDesc(new GolemDescription(new TranslationTextComponent("entitytip.indestructible")
-					.applyTextStyles(TextFormatting.WHITE, TextFormatting.BOLD)),
-				new GolemDescription(new TranslationTextComponent("tooltip.creative_only_item")
-					.applyTextStyle(TextFormatting.DARK_RED)))
-			.build());
+				GolemNames.BEDROCK_GOLEM, EntityBedrockGolem.class, EntityBedrockGolem::new)
+				.setHealth(999.0D).setAttack(32.0D)
+				.addDesc(new GolemDescription(new TranslationTextComponent("entitytip.indestructible")
+								.applyTextStyles(TextFormatting.WHITE, TextFormatting.BOLD)),
+						new GolemDescription(new TranslationTextComponent("tooltip.creative_only_item")
+								.applyTextStyle(TextFormatting.DARK_RED)))
+				.build());
 		// BONE GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.BONE_GOLEM, EntityBoneGolem.class, EntityBoneGolem::new)
 			.setHealth(40.0D).setAttack(9.5D).setSpeed(0.30D).addBlocks(Blocks.BONE_BLOCK).addLootTable(GolemNames.BONE_GOLEM).build());
@@ -98,48 +98,48 @@ public final class ExtraGolemsEntities {
 			.setHealth(80.0D).setAttack(8.0D).setSpeed(0.21D).addBlocks(Blocks.GOLD_BLOCK).addLootTable(GolemNames.GOLD_GOLEM).build());
 		// ICE GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.ICE_GOLEM, EntityIceGolem.class, EntityIceGolem::new)
-			.setHealth(18.0D).setAttack(6.0D).setSpeed(0.27D).addBlocks(BlockTags.ICE).addLootTable(GolemNames.ICE_GOLEM)
-			.addSpecial(EntityIceGolem.AOE, Integer.valueOf(3), "Radial distance at which this golem can freeze / cool liquids (0=disable)")
-			.addSpecial(EntityIceGolem.FROST, false, "When true, this golem places frosted (temporary) ice")
-			.addDesc(new GolemDescription(new TranslationTextComponent("entitytip.freezes_blocks")
-				.applyTextStyle(TextFormatting.AQUA), EntityIceGolem.AOE, c -> (Integer) c.get() > 0))
-			.build());
+				.setHealth(18.0D).setAttack(6.0D).setSpeed(0.27D).addBlocks(BlockTags.ICE).addLootTable(GolemNames.ICE_GOLEM)
+				.addSpecial(EntityIceGolem.AOE, Integer.valueOf(3), "Radial distance at which this golem can freeze / cool liquids (0=disable)")
+				.addSpecial(EntityIceGolem.FROST, false, "When true, this golem places frosted (temporary) ice")
+				.addDesc(new GolemDescription(new TranslationTextComponent("entitytip.freezes_blocks")
+						.applyTextStyle(TextFormatting.AQUA), EntityIceGolem.AOE, c -> (Integer) c.get() > 0))
+				.build());
 		// LAPIS GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.LAPIS_GOLEM, EntityLapisGolem.class, EntityLapisGolem::new)
-			.setHealth(50.0D).setAttack(1.5D).setSpeed(0.285D).addBlocks(Blocks.LAPIS_BLOCK).addLootTable(GolemNames.LAPIS_GOLEM)
-			.addSpecial(EntityLapisGolem.ALLOW_SPECIAL, true, "Whether this golem can inflict harmful potion effects",
-				new TranslationTextComponent("entitytip.attacks_use_potion_effects")
-					.applyTextStyle(TextFormatting.LIGHT_PURPLE))
-			.build());
+				.setHealth(50.0D).setAttack(1.5D).setSpeed(0.285D).addBlocks(Blocks.LAPIS_BLOCK).addLootTable(GolemNames.LAPIS_GOLEM)
+				.addSpecial(EntityLapisGolem.ALLOW_SPECIAL, true, "Whether this golem can inflict harmful potion effects",
+						new TranslationTextComponent("entitytip.attacks_use_potion_effects")
+								.applyTextStyle(TextFormatting.LIGHT_PURPLE))
+				.build());
 		// LEAF GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.LEAF_GOLEM, EntityLeafGolem.class, EntityLeafGolem::new)
-			.setHealth(6.0D).setAttack(0.5D).setSpeed(0.31D).addBlocks(BlockTags.LEAVES).addLootTable(GolemNames.LEAF_GOLEM)
-			.addSpecial(EntityLeafGolem.ALLOW_SPECIAL, true, "Whether this golem can heal itself",
-				new TranslationTextComponent("effect.minecraft.regeneration").applyTextStyle(TextFormatting.DARK_GREEN)
-					.appendText(" ").appendSibling(new TranslationTextComponent("enchantment.level.1")))
-			.build());
+				.setHealth(6.0D).setAttack(0.5D).setSpeed(0.31D).addBlocks(BlockTags.LEAVES).addLootTable(GolemNames.LEAF_GOLEM)
+				.addSpecial(EntityLeafGolem.ALLOW_SPECIAL, true, "Whether this golem can heal itself",
+						new TranslationTextComponent("effect.minecraft.regeneration").applyTextStyle(TextFormatting.DARK_GREEN)
+								.appendText(" ").appendSibling(new TranslationTextComponent("enchantment.level.1")))
+				.build());
 		// MAGMA GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.MAGMA_GOLEM, EntityMagmaGolem.class, EntityMagmaGolem::new)
-			.setHealth(46.0D).setAttack(4.5D).setSpeed(0.28D).addBlocks(Blocks.MAGMA_BLOCK).addLootTable(GolemNames.MAGMA_GOLEM)
-			.addSpecial(EntityMagmaGolem.MELT_DELAY, Integer.valueOf(240), "Number of ticks it takes to melt cobblestone if enabled (12 sec * 20 t/sec = 240 t)")
-			.addSpecial(EntityMagmaGolem.ALLOW_WATER_DAMAGE, true, "When true, water will hurt this golem")
-			.addSpecial(EntityMagmaGolem.ALLOW_SPLITTING, true, "When true, this golem will split into 2 mini-golems upon death",
-				new TranslationTextComponent("entitytip.splits_upon_death").applyTextStyle(TextFormatting.RED))
-			.addSpecial(EntityMagmaGolem.ALLOW_LAVA_SPECIAL, false, "Whether this golem can slowly melt cobblestone",
-				new TranslationTextComponent("entitytip.slowly_melts",
-					new TranslationTextComponent("block.minecraft.cobblestone")).applyTextStyle(TextFormatting.RED))
-			.addSpecial(EntityMagmaGolem.ALLOW_FIRE_SPECIAL, true, "Whether this golem can light creatures on fire",
-				new TranslationTextComponent("entitytip.lights_mobs_on_fire").applyTextStyle(TextFormatting.GOLD))
-			.immuneToFire().addDesc(FIREPROOF).build());
+				.setHealth(46.0D).setAttack(4.5D).setSpeed(0.28D).addBlocks(Blocks.MAGMA_BLOCK).addLootTable(GolemNames.MAGMA_GOLEM)
+				.addSpecial(EntityMagmaGolem.MELT_DELAY, Integer.valueOf(240), "Number of ticks it takes to melt cobblestone if enabled (12 sec * 20 t/sec = 240 t)")
+				.addSpecial(EntityMagmaGolem.ALLOW_WATER_DAMAGE, true, "When true, water will hurt this golem")
+				.addSpecial(EntityMagmaGolem.ALLOW_SPLITTING, true, "When true, this golem will split into 2 mini-golems upon death",
+						new TranslationTextComponent("entitytip.splits_upon_death").applyTextStyle(TextFormatting.RED))
+				.addSpecial(EntityMagmaGolem.ALLOW_LAVA_SPECIAL, false, "Whether this golem can slowly melt cobblestone",
+						new TranslationTextComponent("entitytip.slowly_melts",
+								new TranslationTextComponent("block.minecraft.cobblestone")).applyTextStyle(TextFormatting.RED))
+				.addSpecial(EntityMagmaGolem.ALLOW_FIRE_SPECIAL, true, "Whether this golem can light creatures on fire",
+						new TranslationTextComponent("entitytip.lights_mobs_on_fire").applyTextStyle(TextFormatting.GOLD))
+				.immuneToFire().addDesc(FIREPROOF).build());
 		// MELON GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.MELON_GOLEM, EntityMelonGolem.class, EntityMelonGolem::new)
-			.setHealth(18.0D).setAttack(1.5D).setSpeed(0.265D).addBlocks(Blocks.MELON).addLootTable(GolemNames.MELON_GOLEM)
-			.addSpecial(EntityMelonGolem.ALLOW_HEALING, true, "Whether this golem can occasionally heal", HEALS)
-			.addSpecial(EntityMelonGolem.ALLOW_SPECIAL, true, "Whether this golem can plant flowers randomly",
-				new TranslationTextComponent("entitytip.plants_flowers",
-					new TranslationTextComponent("tile.flower1.name")).applyTextStyle(TextFormatting.GREEN))
-			.addSpecial(EntityMelonGolem.FREQUENCY, Integer.valueOf(240), "Average number of ticks between planting flowers")
-			.build());
+				.setHealth(18.0D).setAttack(1.5D).setSpeed(0.265D).addBlocks(Blocks.MELON).addLootTable(GolemNames.MELON_GOLEM)
+				.addSpecial(EntityMelonGolem.ALLOW_HEALING, true, "Whether this golem can occasionally heal", HEALS)
+				.addSpecial(EntityMelonGolem.ALLOW_SPECIAL, true, "Whether this golem can plant flowers randomly",
+						new TranslationTextComponent("entitytip.plants_flowers",
+								new TranslationTextComponent("tile.flower1.name")).applyTextStyle(TextFormatting.GREEN))
+				.addSpecial(EntityMelonGolem.FREQUENCY, Integer.valueOf(240), "Average number of ticks between planting flowers")
+				.build());
 		// MUSHROOM GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.MUSHROOM_GOLEM, EntityMushroomGolem.class, EntityMushroomGolem::new)
 			.setHealth(30.0D).setAttack(3.0D).setSpeed(0.30D).addBlocks(Blocks.RED_MUSHROOM_BLOCK, Blocks.BROWN_MUSHROOM_BLOCK)
@@ -185,10 +185,10 @@ public final class ExtraGolemsEntities {
 			.build());
 		// REDSTONE LAMP GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.REDSTONELAMP_GOLEM, EntityRedstoneLampGolem.class, EntityRedstoneLampGolem::new)
-			.setHealth(28.0D).setAttack(6.0D).setSpeed(0.26D).addBlocks(Blocks.REDSTONE_LAMP)
-			.addSpecial(EntityRedstoneLampGolem.ALLOW_SPECIAL, true, "Whether this golem can light up the area",
-				new TranslationTextComponent("entitytip.lights_area_toggle").applyTextStyle(TextFormatting.GOLD))
-			.addLootTables(GolemNames.REDSTONELAMP_GOLEM, EntityRedstoneLampGolem.VARIANTS).build());
+				.setHealth(28.0D).setAttack(6.0D).setSpeed(0.26D).addBlocks(Blocks.REDSTONE_LAMP)
+				.addSpecial(EntityRedstoneLampGolem.ALLOW_SPECIAL, true, "Whether this golem can light up the area",
+						new TranslationTextComponent("entitytip.lights_area_toggle").applyTextStyle(TextFormatting.GOLD))
+				.addLootTables(GolemNames.REDSTONELAMP_GOLEM, EntityRedstoneLampGolem.VARIANTS).build());
 		// SANDSTONE GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.SANDSTONE_GOLEM, EntitySandstoneGolem.class, EntitySandstoneGolem::new)
 			.setHealth(22.0D).setAttack(4.0D).setSpeed(0.28D).addBlocks(BlockTagUtil.TAG_SANDSTONE).addLootTable(GolemNames.SANDSTONE_GOLEM)
@@ -247,8 +247,8 @@ public final class ExtraGolemsEntities {
 			.addLootTables(GolemNames.WOODEN_GOLEM, EntityWoodenGolem.WOOD_TYPES).build());
 		// WOOL GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.WOOL_GOLEM, EntityWoolGolem.class, EntityWoolGolem::new)
-			.setHealth(10.0D).setAttack(1.0D).setSpeed(0.295D).addBlocks(BlockTags.WOOL)
-			.addLootTables(GolemNames.WOOL_GOLEM, RANGE).build());
+				.setHealth(10.0D).setAttack(1.0D).setSpeed(0.295D).addBlocks(BlockTags.WOOL)
+				.addLootTables(GolemNames.WOOL_GOLEM, RANGE).build());
 
 		// fire GolemRegistrar event for any listening child mods (addons)
 		MinecraftForge.EVENT_BUS.post(new GolemRegistrarEvent());

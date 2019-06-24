@@ -15,6 +15,11 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Function;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.function.Function;
+
 /**
  * This event exists for other mods or addons to handle and modify the Ice Golem's behavior. It
  * is not handled in Extra Golems.
@@ -49,7 +54,7 @@ public final class IceGolemFreezeEvent extends Event {
 	}
 
 	public IceGolemFreezeEvent(final GolemBase golem, final BlockPos center,
-							   final int radius, final Function<BlockState, BlockState> function) {
+			final int radius, final Function<BlockState, BlockState> function) {
 		this.setResult(Result.ALLOW);
 		this.iceGolem = golem;
 		this.iceGolemPos = center;
@@ -130,7 +135,7 @@ public final class IceGolemFreezeEvent extends Event {
 		public final boolean frostedIce;
 
 		public DefaultFreezeFunction(final Random randomIn, final boolean useFrost,
-									 final int iceChanceIn, final int cobbleChanceIn) {
+				final int iceChanceIn, final int cobbleChanceIn) {
 			super();
 			this.random = randomIn;
 			this.frostedIce = useFrost;
@@ -142,7 +147,7 @@ public final class IceGolemFreezeEvent extends Event {
 		public BlockState apply(final BlockState input) {
 			final BlockState cobbleState = Blocks.COBBLESTONE.getDefaultState();
 			final BlockState iceState = this.frostedIce ? Blocks.FROSTED_ICE.getDefaultState()
-				: Blocks.ICE.getDefaultState();
+					: Blocks.ICE.getDefaultState();
 			final Material material = input.getMaterial();
 			if (material.isLiquid()) {
 				final Block block = input.getBlock();

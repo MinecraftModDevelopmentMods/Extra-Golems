@@ -49,7 +49,7 @@ public abstract class GolemMultiTextured extends GolemBase {
 	 * <br> as well as loot tables for the same names with the JSON suffix
 	 **/
 	public GolemMultiTextured(final EntityType<? extends GolemBase> entityType,
-							  final World world, final String modid, final String prefix, final String[] textureNames) {
+			final World world, final String modid, final String prefix, final String[] textureNames) {
 		super(entityType, world);
 		this.textures = new ResourceLocation[textureNames.length];
 		this.lootTables = new ResourceLocation[textureNames.length];

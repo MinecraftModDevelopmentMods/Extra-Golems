@@ -16,6 +16,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.function.BiPredicate;
 
+import java.util.function.BiPredicate;
+
 public final class EntityRedstoneLampGolem extends GolemMultiTextured {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Emit Light";
@@ -24,14 +26,14 @@ public final class EntityRedstoneLampGolem extends GolemMultiTextured {
 	public static final String[] VARIANTS = { "lit", "unlit" };
 
 	public static final BiPredicate<GolemBase, BlockState> LIT_PRED =
-		(golem, toReplace) -> golem.isProvidingLight();
+			(golem, toReplace) -> golem.isProvidingLight();
 
 	public EntityRedstoneLampGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world, ExtraGolems.MODID, LAMP_PREFIX, VARIANTS);
 		this.setCanTakeFallDamage(true);
 		final BlockState state = GolemItems.UTILITY_LIGHT.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, 15);
 		this.goalSelector.addGoal(9, new PlaceUtilityBlockGoal(this, state, BlockUtilityGlow.UPDATE_TICKS,
-			this.getConfigBool(ALLOW_SPECIAL), PlaceUtilityBlockGoal.getDefaultBiPred(state).and(LIT_PRED)));
+				this.getConfigBool(ALLOW_SPECIAL), PlaceUtilityBlockGoal.getDefaultBiPred(state).and(LIT_PRED)));
 	}
 
 	@Override

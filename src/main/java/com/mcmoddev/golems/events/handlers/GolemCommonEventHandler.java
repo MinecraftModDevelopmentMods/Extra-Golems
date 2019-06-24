@@ -205,8 +205,8 @@ public class GolemCommonEventHandler {
 	public void onPlacePumpkin(final BlockEvent.EntityPlaceEvent event) {
 		// if the config allows it, and the block is a CARVED pumpkin...
 		if (!event.isCanceled() && ExtraGolemsConfig.pumpkinBuildsGolems()
-			&& event.getPlacedBlock().getBlock() == Blocks.CARVED_PUMPKIN
-			&& event.getWorld() instanceof World) {
+				&& event.getPlacedBlock().getBlock() == Blocks.CARVED_PUMPKIN
+				&& event.getWorld() instanceof World) {
 			// try to spawn a golem!
 			BlockGolemHead.trySpawnGolem((World) event.getWorld(), event.getPos());
 		}
@@ -228,8 +228,8 @@ public class GolemCommonEventHandler {
 	 **/
 	private static boolean mobAttacksGolems(MobEntity e) {
 		return e instanceof AbstractSkeletonEntity || e instanceof SpiderEntity
-			|| e instanceof AbstractIllagerEntity || e instanceof SlimeEntity
-			|| (e instanceof ZombieEntity && !(e instanceof ZombiePigmanEntity));
+				|| e instanceof AbstractIllagerEntity || e instanceof SlimeEntity
+				|| (e instanceof ZombieEntity && !(e instanceof ZombiePigmanEntity));
 	}
 
 	private static final class EntityAIAttackGolem extends NearestAttackableTargetGoal<GolemBase> {

@@ -1,6 +1,6 @@
 {
-	"replace": "false",
-	"values": [
-		"golems:info_book"
-	]
+  "replace": "false",
+  "values": [
+	"golems:info_book"
+  ]
 }

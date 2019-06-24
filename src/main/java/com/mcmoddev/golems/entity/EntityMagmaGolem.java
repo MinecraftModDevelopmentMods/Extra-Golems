@@ -134,7 +134,7 @@ public final class EntityMagmaGolem extends GolemBase {
 			if (x == this.stillX && z == this.stillZ) {
 				// check if it's been holding still long enough AND on top of cobblestone
 				if (++this.ticksStandingStill >= this.meltDelay
-					&& b1 == Blocks.COBBLESTONE && rand.nextInt(16) == 0) {
+						&& b1 == Blocks.COBBLESTONE && rand.nextInt(16) == 0) {
 					BlockState replace = Blocks.MAGMA_BLOCK.getDefaultState();
 					this.world.setBlockState(below, replace, 3);
 					this.ticksStandingStill = 0;
@@ -165,9 +165,9 @@ public final class EntityMagmaGolem extends GolemBase {
 			}
 			// set location
 			slime1.setLocationAndAngles(this.posX + rand.nextDouble() - 0.5D, this.posY,
-				this.posZ + rand.nextDouble() - 0.5D, this.rotationYaw + rand.nextInt(20) - 10, 0);
+					this.posZ + rand.nextDouble() - 0.5D, this.rotationYaw + rand.nextInt(20) - 10, 0);
 			slime2.setLocationAndAngles(this.posX + rand.nextDouble() - 0.5D, this.posY,
-				this.posZ + rand.nextDouble() - 0.5D, this.rotationYaw + rand.nextInt(20) - 10, 0);
+					this.posZ + rand.nextDouble() - 0.5D, this.rotationYaw + rand.nextInt(20) - 10, 0);
 			// spawn the entities
 			this.getEntityWorld().addEntity(slime1);
 			this.getEntityWorld().addEntity(slime2);

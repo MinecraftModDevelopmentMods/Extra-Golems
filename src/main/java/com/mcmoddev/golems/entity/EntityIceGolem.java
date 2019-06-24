@@ -20,6 +20,9 @@ import net.minecraftforge.eventbus.api.Event;
 import java.util.List;
 import java.util.function.Function;
 
+import java.util.List;
+import java.util.function.Function;
+
 public final class EntityIceGolem extends GolemBase {
 
 	public static final String AOE = "Area of Effect";
@@ -56,7 +59,7 @@ public final class EntityIceGolem extends GolemBase {
 				final IceGolemFreezeEvent event = new IceGolemFreezeEvent(this, below, aoe);
 				if (!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Event.Result.DENY) {
 					this.freezeBlocks(event.getAffectedPositions(), event.getFunction(),
-						event.updateFlag);
+							event.updateFlag);
 				}
 			}
 		}
@@ -91,7 +94,7 @@ public final class EntityIceGolem extends GolemBase {
 	 * @return whether all setBlockState calls were successful.
 	 **/
 	public boolean freezeBlocks(final List<BlockPos> positions,
-								final Function<BlockState, BlockState> function, final int updateFlag) {
+			final Function<BlockState, BlockState> function, final int updateFlag) {
 		boolean flag = true;
 		for (BlockPos pos : positions) {
 			flag &= this.world.setBlockState(pos, function.apply(this.world.getBlockState(pos)), updateFlag);

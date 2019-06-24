@@ -19,9 +19,9 @@ public final class EntityStainedGlassGolem extends GolemMultiColorized {
 	public static final String PREFIX = "stained_glass";
 
 	private static final ResourceLocation TEXTURE_BASE = GolemBase
-		.makeTexture(ExtraGolems.MODID, GolemNames.STAINEDGLASS_GOLEM);
+			.makeTexture(ExtraGolems.MODID, GolemNames.STAINEDGLASS_GOLEM);
 	private static final ResourceLocation TEXTURE_OVERLAY = GolemBase
-		.makeTexture(ExtraGolems.MODID, GolemNames.STAINEDGLASS_GOLEM + "_grayscale");
+			.makeTexture(ExtraGolems.MODID, GolemNames.STAINEDGLASS_GOLEM + "_grayscale");
 
 	public EntityStainedGlassGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world, ExtraGolems.MODID, TEXTURE_BASE, TEXTURE_OVERLAY, DYE_COLORS);

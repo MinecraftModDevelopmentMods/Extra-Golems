@@ -35,11 +35,11 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 		int freq = allowed ? this.getConfigInt(FREQUENCY) : -100;
 		freq += this.rand.nextInt(Math.max(10, freq / 2));
 		final BlockState[] mushrooms = { Blocks.BROWN_MUSHROOM.getDefaultState(),
-			Blocks.RED_MUSHROOM.getDefaultState() };
+				Blocks.RED_MUSHROOM.getDefaultState() };
 		final Block[] soils =
-			{ Blocks.DIRT, Blocks.GRASS, Blocks.MYCELIUM, Blocks.PODZOL, Blocks.NETHERRACK, Blocks.SOUL_SAND };
+				{ Blocks.DIRT, Blocks.GRASS, Blocks.MYCELIUM, Blocks.PODZOL, Blocks.NETHERRACK, Blocks.SOUL_SAND };
 		this.goalSelector.addGoal(2,
-			new PlaceBlocksGoal(this, freq, mushrooms, soils, allowed));
+				new PlaceBlocksGoal(this, freq, mushrooms, soils, allowed));
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 	public void onBuilt(BlockState body, BlockState legs, BlockState arm1, BlockState arm2) {
 		// use block type to give this golem the right texture (defaults to brown mushroom)
 		byte textureNum = body.getBlock() == Blocks.RED_MUSHROOM_BLOCK ? (byte) 0
-			: (byte) 1;
+				: (byte) 1;
 		textureNum %= this.getNumTextures();
 		this.setTextureNum(textureNum);
 	}

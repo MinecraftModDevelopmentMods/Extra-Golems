@@ -37,6 +37,8 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
+
 /**
  * Base class for all golems in this mod.
  **/
@@ -119,19 +121,19 @@ public abstract class GolemBase extends CreatureEntity {
 		this.goalSelector.addGoal(3, new LookAtGoal(this, PlayerEntity.class, 6.0F));
 		this.goalSelector.addGoal(4, new LookRandomlyGoal(this));
 		this.targetSelector.addGoal(1,
-			new NearestAttackableTargetGoal<>(this, MobEntity.class, 10, true, false, (e) -> {
-				return e instanceof IMob;
-			}));
+				new NearestAttackableTargetGoal<>(this, MobEntity.class, 10, true, false, (e) -> {
+					return e instanceof IMob;
+				}));
 
 
 		// all of these tasks are copied from the Iron Golem and adjusted for movement speed
 		//this.field_70714_bg.addTask(1, new AttackGoal(this, this.getBaseMoveSpeed() * 4.0D, true));
 		this.targetSelector.addGoal(2,
-			new MoveTowardsTargetGoal(this, this.getBaseMoveSpeed() * 3.75D, 32.0F));
+				new MoveTowardsTargetGoal(this, this.getBaseMoveSpeed() * 3.75D, 32.0F));
 		this.targetSelector.addGoal(3,
-			new MoveThroughVillageGoal(this, this.getBaseMoveSpeed() * 2.25D, true, 2, () -> Boolean.valueOf(true)));
+				new MoveThroughVillageGoal(this, this.getBaseMoveSpeed() * 2.25D, true, 2, () -> Boolean.valueOf(true)));
 		this.targetSelector.addGoal(4,
-			new MoveTowardsRestrictionGoal(this, this.getBaseMoveSpeed() * 4.0D));
+				new MoveTowardsRestrictionGoal(this, this.getBaseMoveSpeed() * 4.0D));
 
 
 		//// Wander AI has been moved to setCanSwim(boolean)
@@ -156,7 +158,7 @@ public abstract class GolemBase extends CreatureEntity {
 		GolemContainer golemContainer = GolemRegistrar.getContainer(this.getType());
 		super.registerAttributes();
 		this.getAttributes().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE)
-			.setBaseValue(golemContainer.getAttack());
+				.setBaseValue(golemContainer.getAttack());
 		this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(golemContainer.getHealth());
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(golemContainer.getSpeed());
 	}
@@ -193,7 +195,7 @@ public abstract class GolemBase extends CreatureEntity {
 	@Override
 	protected void collideWithEntity(final Entity entityIn) {
 		if (entityIn instanceof IMob && entityIn instanceof LivingEntity && !(entityIn instanceof CreeperEntity)
-			&& this.getRNG().nextInt(20) == 0) {
+				&& this.getRNG().nextInt(20) == 0) {
 			this.setAttackTarget((LivingEntity) entityIn);
 		}
 
@@ -215,7 +217,7 @@ public abstract class GolemBase extends CreatureEntity {
 		final double motionX = this.getMotion().getX();
 		final double motionZ = this.getMotion().getZ();
 		if (motionX * motionX + motionZ * motionZ > (double) 2.5000003E-7F
-			&& this.rand.nextInt(5) == 0) {
+				&& this.rand.nextInt(5) == 0) {
 			int i = MathHelper.floor(this.posX);
 			int j = MathHelper.floor(this.posY - 0.200D);
 			int k = MathHelper.floor(this.posZ);
@@ -224,11 +226,11 @@ public abstract class GolemBase extends CreatureEntity {
 			if (BlockState.getMaterial() != Material.AIR && !BlockState.getMaterial().isLiquid()
 				&& !(BlockState.getBlock() instanceof BlockUtility)) {
 				this.world.addParticle(new BlockParticleData(ParticleTypes.BLOCK, BlockState),
-					this.posX + ((double) this.rand.nextFloat() - 0.5D) * (double) this.getWidth(),
-					this.getBoundingBox().minY + 0.1D, this.posZ +
-						((double) this.rand.nextFloat() - 0.5D) * (double) this.getWidth(),
-					4.0D * ((double) this.rand.nextFloat() - 0.5D), 0.5D,
-					((double) this.rand.nextFloat() - 0.5D) * 4.0D);
+						this.posX + ((double) this.rand.nextFloat() - 0.5D) * (double) this.getWidth(),
+						this.getBoundingBox().minY + 0.1D, this.posZ +
+								((double) this.rand.nextFloat() - 0.5D) * (double) this.getWidth(),
+						4.0D * ((double) this.rand.nextFloat() - 0.5D), 0.5D,
+						((double) this.rand.nextFloat() - 0.5D) * 4.0D);
 			}
 		}
 	}
@@ -239,7 +241,7 @@ public abstract class GolemBase extends CreatureEntity {
 	@Override
 	public boolean canAttack(final EntityType<?> type) {
 		final boolean isAttackablePlayer = EntityType.PLAYER == type
-			&& (!this.isPlayerCreated() || ExtraGolemsConfig.enableFriendlyFire());
+				&& (!this.isPlayerCreated() || ExtraGolemsConfig.enableFriendlyFire());
 		return type != EntityType.CREEPER && (isAttackablePlayer || super.canAttack(type));
 	}
 
@@ -272,10 +274,10 @@ public abstract class GolemBase extends CreatureEntity {
 		}
 
 		final float currentAttack = (float) this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE)
-			.getValue();
+				.getValue();
 		// calculate damage based on current attack damage, variance, and luck/unluck/critical
 		float damage = multiplier * (currentAttack
-			+ (float) rand.nextInt((int) currentAttack + 1) * VARIANCE);
+				+ (float) rand.nextInt((int) currentAttack + 1) * VARIANCE);
 
 		this.attackTimer = 10;
 		this.world.setEntityState(this, (byte) 4);
@@ -506,8 +508,8 @@ public abstract class GolemBase extends CreatureEntity {
 	 **/
 	public boolean canInteractChangeTexture() {
 		return ExtraGolemsConfig.enableTextureInteract()
-			&& (GolemMultiTextured.class.isAssignableFrom(this.getClass())
-			|| GolemMultiColorized.class.isAssignableFrom(this.getClass()));
+				&& (GolemMultiTextured.class.isAssignableFrom(this.getClass())
+				|| GolemMultiColorized.class.isAssignableFrom(this.getClass()));
 	}
 
 	/**

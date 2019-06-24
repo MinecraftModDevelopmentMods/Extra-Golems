@@ -36,7 +36,7 @@ public final class EntityNetherWartGolem extends GolemBase {
 		super.livingTick();
 		// heals randomly, but only at night or in the nether (least to most expensive)
 		if ((!this.getEntityWorld().isDaytime() || this.getEntityWorld().dimension.isNether())
-			&& this.getConfigBool(ALLOW_HEALING) && rand.nextInt(450) == 0) {
+				&& this.getConfigBool(ALLOW_HEALING) && rand.nextInt(450) == 0) {
 			this.addPotionEffect(new EffectInstance(Effects.REGENERATION, 50, 1));
 		}
 	}
@@ -45,14 +45,14 @@ public final class EntityNetherWartGolem extends GolemBase {
 	protected void registerGoals() {
 		super.registerGoals();
 		final BlockState[] flowers = {
-			Blocks.NETHER_WART.getDefaultState().with(NetherWartBlock.AGE, 0),
-			Blocks.NETHER_WART.getDefaultState().with(NetherWartBlock.AGE, 1),
-			Blocks.NETHER_WART.getDefaultState().with(NetherWartBlock.AGE, 2) };
+				Blocks.NETHER_WART.getDefaultState().with(NetherWartBlock.AGE, 0),
+				Blocks.NETHER_WART.getDefaultState().with(NetherWartBlock.AGE, 1),
+				Blocks.NETHER_WART.getDefaultState().with(NetherWartBlock.AGE, 2) };
 		final Block[] soils = { Blocks.SOUL_SAND };
 		final boolean allow = this.getConfigBool(ALLOW_SPECIAL);
 		final int freq = this.getConfigInt(FREQUENCY);
 		this.goalSelector.addGoal(2,
-			new PlaceBlocksGoal(this, freq, flowers, soils, allow));
+				new PlaceBlocksGoal(this, freq, flowers, soils, allow));
 	}
 
 	@Override

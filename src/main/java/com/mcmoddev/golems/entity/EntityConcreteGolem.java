@@ -20,9 +20,9 @@ public final class EntityConcreteGolem extends GolemMultiColorized {
 	public static final String ALLOW_RESIST = "Allow Special: Resistance";
 
 	private static final ResourceLocation TEXTURE_BASE = GolemBase
-		.makeTexture(ExtraGolems.MODID, GolemNames.CONCRETE_GOLEM + "_base");
+			.makeTexture(ExtraGolems.MODID, GolemNames.CONCRETE_GOLEM + "_base");
 	private static final ResourceLocation TEXTURE_OVERLAY = GolemBase
-		.makeTexture(ExtraGolems.MODID, GolemNames.CONCRETE_GOLEM + "_grayscale");
+			.makeTexture(ExtraGolems.MODID, GolemNames.CONCRETE_GOLEM + "_grayscale");
 
 	public EntityConcreteGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world, ExtraGolems.MODID, TEXTURE_BASE, TEXTURE_OVERLAY, DYE_COLORS);

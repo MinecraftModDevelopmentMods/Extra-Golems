@@ -57,7 +57,7 @@ public class EntityEndstoneGolem extends GolemBase {
 	 * @param ambientParticles   whether always to display "portal" particles
 	 **/
 	public EntityEndstoneGolem(final EntityType<? extends GolemBase> entityType, final World world,
-							   final double teleportRange, final boolean ambientParticles) {
+			final double teleportRange, final boolean ambientParticles) {
 		super(entityType, world);
 		this.range = teleportRange;
 		this.hasAmbientParticles = ambientParticles;
@@ -75,7 +75,7 @@ public class EntityEndstoneGolem extends GolemBase {
 		if (this.getRevengeTarget() != null) {
 			this.faceEntity(this.getRevengeTarget(), 100.0F, 100.0F);
 			if (this.getRevengeTarget().getDistanceSq(this) > 25.0D
-				&& (rand.nextInt(30) == 0 || this.getRevengeTarget().getRevengeTarget() == this)) {
+					&& (rand.nextInt(30) == 0 || this.getRevengeTarget().getRevengeTarget() == this)) {
 				this.teleportToEntity(this.getRevengeTarget());
 			}
 		} else if (rand.nextInt(this.ticksBetweenIdleTeleports) == 0) {
@@ -90,11 +90,11 @@ public class EntityEndstoneGolem extends GolemBase {
 		if (this.world.isRemote && this.hasAmbientParticles) {
 			for (int i = 0; i < 2; ++i) {
 				this.world.addParticle(ParticleTypes.PORTAL,
-					this.posX + (this.rand.nextDouble() - 0.5D) * (double) this.getWidth(),
-					this.posY + this.rand.nextDouble() * (double) this.getHeight() - 0.25D,
-					this.posZ + (this.rand.nextDouble() - 0.5D) * (double) this.getWidth(),
-					(this.rand.nextDouble() - 0.5D) * 2.0D, -this.rand.nextDouble(),
-					(this.rand.nextDouble() - 0.5D) * 2.0D);
+						this.posX + (this.rand.nextDouble() - 0.5D) * (double) this.getWidth(),
+						this.posY + this.rand.nextDouble() * (double) this.getHeight() - 0.25D,
+						this.posZ + (this.rand.nextDouble() - 0.5D) * (double) this.getWidth(),
+						(this.rand.nextDouble() - 0.5D) * 2.0D, -this.rand.nextDouble(),
+						(this.rand.nextDouble() - 0.5D) * 2.0D);
 			}
 		}
 
@@ -150,9 +150,9 @@ public class EntityEndstoneGolem extends GolemBase {
 	 **/
 	protected boolean teleportToEntity(final Entity entity) {
 		Vec3d vec3d = new Vec3d(this.posX - entity.posX,
-			this.getBoundingBox().minY + (double) (this.getHeight() / 2.0F) - entity.posY
-				+ (double) entity.getEyeHeight(),
-			this.posZ - entity.posZ);
+				this.getBoundingBox().minY + (double) (this.getHeight() / 2.0F) - entity.posY
+						+ (double) entity.getEyeHeight(),
+				this.posZ - entity.posZ);
 		vec3d = vec3d.normalize();
 		final double d0 = 16.0D;
 		final double d1 = this.posX + (this.rand.nextDouble() - 0.5D) * 8.0D - vec3d.x * d0;
@@ -171,11 +171,11 @@ public class EntityEndstoneGolem extends GolemBase {
 		}
 		// "Attempt to Teleport" method:  x, y, z, playSound
 		final boolean flag = this.func_213373_a(event.getTargetX(), event.getTargetY(),
-			event.getTargetZ(), true);
+				event.getTargetZ(), true);
 
 		if (flag) {
 			this.world.playSound((PlayerEntity) null, this.prevPosX, this.prevPosY, this.prevPosZ,
-				SoundEvents.ENTITY_ENDERMAN_TELEPORT, this.getSoundCategory(), 1.0F, 1.0F);
+					SoundEvents.ENTITY_ENDERMAN_TELEPORT, this.getSoundCategory(), 1.0F, 1.0F);
 			this.playSound(SoundEvents.ENTITY_ENDERMAN_TELEPORT, 1.0F, 1.0F);
 		}
 

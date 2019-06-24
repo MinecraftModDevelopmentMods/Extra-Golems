@@ -7,6 +7,8 @@ import net.minecraft.world.gen.feature.structure.VillagePieces.Village;
 
 import java.util.EnumSet;
 
+import java.util.EnumSet;
+
 public class EntityAIDefendAgainstMonsters extends TargetGoal {
 
 	final GolemBase entityGolem;
@@ -33,7 +35,7 @@ public class EntityAIDefendAgainstMonsters extends TargetGoal {
 			if (!this.isSuitableTarget(this.villageAgressorTarget, false)) {
 				if (this.taskOwner.getRNG().nextInt(20) == 0) {
 					this.villageAgressorTarget = village
-						.findNearestVillageAggressor(this.entityGolem);
+							.findNearestVillageAggressor(this.entityGolem);
 					return this.isSuitableTarget(this.villageAgressorTarget, false);
 				} else {
 					return false;

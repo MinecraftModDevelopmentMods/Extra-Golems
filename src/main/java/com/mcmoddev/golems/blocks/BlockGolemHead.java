@@ -67,7 +67,7 @@ public final class BlockGolemHead extends HorizontalBlock {
 
 	@Override
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer,
-								ItemStack stack) {
+			ItemStack stack) {
 		super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
 		trySpawnGolem(worldIn, pos);
 	}
