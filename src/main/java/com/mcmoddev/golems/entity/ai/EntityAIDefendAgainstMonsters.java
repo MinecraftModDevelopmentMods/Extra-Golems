@@ -1,12 +1,11 @@
 package com.mcmoddev.golems.entity.ai;
 
-import java.util.EnumSet;
-
 import com.mcmoddev.golems.entity.base.GolemBase;
-
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.TargetGoal;
 import net.minecraft.world.gen.feature.structure.VillagePieces.Village;
+
+import java.util.EnumSet;
 
 public class EntityAIDefendAgainstMonsters extends TargetGoal {
 

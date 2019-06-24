@@ -4,7 +4,6 @@ import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemMultiColorized;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.StainedGlassBlock;
@@ -55,11 +54,11 @@ public final class EntityStainedGlassGolem extends GolemMultiColorized {
 		final Block b = body.getBlock();
 		byte textureNum;
 		// check each type of stained glass
-		if(b instanceof StainedGlassBlock) {
-			final DyeColor color = ((StainedGlassBlock)b).getColor();
-			textureNum = (byte)color.getId();
+		if (b instanceof StainedGlassBlock) {
+			final DyeColor color = ((StainedGlassBlock) b).getColor();
+			textureNum = (byte) color.getId();
 		} else {
-			textureNum = (byte)this.rand.nextInt(DYE_COLORS.length);
+			textureNum = (byte) this.rand.nextInt(DYE_COLORS.length);
 		}
 		// actually set the texture
 		this.setTextureNum(textureNum);

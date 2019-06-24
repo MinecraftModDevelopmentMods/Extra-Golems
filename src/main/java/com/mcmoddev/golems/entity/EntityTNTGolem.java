@@ -3,7 +3,6 @@ package com.mcmoddev.golems.entity;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,11 +12,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.world.Explosion.Mode;
 import net.minecraft.world.World;
 
@@ -39,7 +34,9 @@ public class EntityTNTGolem extends GolemBase {
 	protected boolean willExplode;
 	protected int fuseTimer;
 
-	/** Default constructor for TNT golem. **/
+	/**
+	 * Default constructor for TNT golem.
+	 **/
 	public EntityTNTGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		this(entityType, world, 4, 8, 50, 10);
 		this.allowedToExplode = this.getConfigBool(ALLOW_SPECIAL);
@@ -47,7 +44,7 @@ public class EntityTNTGolem extends GolemBase {
 
 	/**
 	 * Flexible constructor to allow child classes to customize.
-	 * 
+	 *
 	 * @param clazz
 	 * @param world
 	 * @param minExplosionRange
@@ -56,7 +53,7 @@ public class EntityTNTGolem extends GolemBase {
 	 * @param randomExplosionChance
 	 */
 	public EntityTNTGolem(final EntityType<? extends GolemBase> entityType, final World world, final int minExplosionRange,
-			      final int maxExplosionRange, final int minFuseLength, final int randomExplosionChance) {
+						  final int maxExplosionRange, final int minFuseLength, final int randomExplosionChance) {
 		super(entityType, world);
 		this.minExplosionRad = minExplosionRange;
 		this.maxExplosionRad = maxExplosionRange;

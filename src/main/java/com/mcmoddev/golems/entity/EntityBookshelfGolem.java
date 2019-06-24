@@ -3,7 +3,6 @@ package com.mcmoddev.golems.entity;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
-
 import net.minecraft.entity.EntityType;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
@@ -19,7 +18,7 @@ public final class EntityBookshelfGolem extends GolemBase {
 	private static final Effect[] goodEffects = { Effects.FIRE_RESISTANCE, Effects.REGENERATION,
 		Effects.STRENGTH, Effects.ABSORPTION, Effects.LUCK, Effects.INSTANT_HEALTH,
 		Effects.RESISTANCE, Effects.INVISIBILITY, Effects.SPEED,
-		Effects.JUMP_BOOST};
+		Effects.JUMP_BOOST };
 
 	public EntityBookshelfGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);

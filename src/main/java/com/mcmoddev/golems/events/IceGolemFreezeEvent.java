@@ -1,13 +1,7 @@
 package com.mcmoddev.golems.events;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.function.Function;
-
 import com.mcmoddev.golems.entity.EntityIceGolem;
 import com.mcmoddev.golems.entity.base.GolemBase;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -15,6 +9,11 @@ import net.minecraft.block.material.Material;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.function.Function;
 
 /**
  * This event exists for other mods or addons to handle and modify the Ice Golem's behavior. It
@@ -43,14 +42,14 @@ public final class IceGolemFreezeEvent extends Event {
 	 * This should be passed in World#setBlockState when using this event.
 	 **/
 	public int updateFlag;
-	
+
 	public IceGolemFreezeEvent(final GolemBase golem, final BlockPos center, final int radius) {
 		this(golem, center, radius, new DefaultFreezeFunction(
-				golem.getRNG(), golem.getConfigBool(EntityIceGolem.FROST), ICE_CHANCE, COBBLE_CHANCE));
+			golem.getRNG(), golem.getConfigBool(EntityIceGolem.FROST), ICE_CHANCE, COBBLE_CHANCE));
 	}
 
-	public IceGolemFreezeEvent(final GolemBase golem, final BlockPos center, 
-			final int radius, final Function<BlockState, BlockState> function) {
+	public IceGolemFreezeEvent(final GolemBase golem, final BlockPos center,
+							   final int radius, final Function<BlockState, BlockState> function) {
 		this.setResult(Result.ALLOW);
 		this.iceGolem = golem;
 		this.iceGolemPos = center;
@@ -85,15 +84,16 @@ public final class IceGolemFreezeEvent extends Event {
 
 	/**
 	 * Call this method to use a different function than the default one
-	 * to determine which state should replace which blocks. 
-	 * @param toSet the new {@code Function<BlockState, BlockState>}
+	 * to determine which state should replace which blocks.
+	 *
+	 * @param toSet   the new {@code Function<BlockState, BlockState>}
 	 * @param refresh when true, the event will call {@link #initAffectedBlockList(int)}
-	 * to refresh the list of affected blocks.
+	 *                to refresh the list of affected blocks.
 	 * @see DefaultFreezeFunction
 	 **/
 	public void setFunction(final Function<BlockState, BlockState> toSet, final boolean refresh) {
 		this.freezeFunction = toSet;
-		if(refresh) {
+		if (refresh) {
 			this.initAffectedBlockList(this.range);
 		}
 	}
@@ -129,8 +129,8 @@ public final class IceGolemFreezeEvent extends Event {
 		 **/
 		public final boolean frostedIce;
 
-		public DefaultFreezeFunction(final Random randomIn, final boolean useFrost, 
-				final int iceChanceIn, final int cobbleChanceIn) {
+		public DefaultFreezeFunction(final Random randomIn, final boolean useFrost,
+									 final int iceChanceIn, final int cobbleChanceIn) {
 			super();
 			this.random = randomIn;
 			this.frostedIce = useFrost;
@@ -141,8 +141,8 @@ public final class IceGolemFreezeEvent extends Event {
 		@Override
 		public BlockState apply(final BlockState input) {
 			final BlockState cobbleState = Blocks.COBBLESTONE.getDefaultState();
-			final BlockState iceState = this.frostedIce ? Blocks.FROSTED_ICE.getDefaultState() 
-					: Blocks.ICE.getDefaultState();
+			final BlockState iceState = this.frostedIce ? Blocks.FROSTED_ICE.getDefaultState()
+				: Blocks.ICE.getDefaultState();
 			final Material material = input.getMaterial();
 			if (material.isLiquid()) {
 				final Block block = input.getBlock();

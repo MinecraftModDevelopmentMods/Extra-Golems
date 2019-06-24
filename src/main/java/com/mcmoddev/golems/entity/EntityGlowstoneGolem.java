@@ -6,7 +6,6 @@ import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.util.GolemNames;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
@@ -39,7 +38,7 @@ public final class EntityGlowstoneGolem extends GolemBase {
 	protected ResourceLocation applyTexture() {
 		return makeTexture(ExtraGolems.MODID, GolemNames.GLOWSTONE_GOLEM);
 	}
-	
+
 	@Override
 	public boolean isProvidingLight() {
 		return true;

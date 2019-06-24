@@ -2,7 +2,6 @@ package com.mcmoddev.golems.renders;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.entity.model.RendererModel;
 import net.minecraftforge.api.distmarker.Dist;
@@ -75,12 +74,12 @@ public class ModelGolem extends EntityModel<GolemBase> {
 	 */
 	@Override
 	public void render(final GolemBase entityIn, final float limbSwing, final float limbSwingAmount, final float ageInTicks,
-			   final float netHeadYaw, final float headPitch, final float scale) {
-		
+					   final float netHeadYaw, final float headPitch, final float scale) {
+
 		this.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
 
 		float scaleChild = 0.5F;
-        GlStateManager.pushMatrix();
+		GlStateManager.pushMatrix();
 
 		if (this.isChild) {
 			GlStateManager.scalef(scaleChild, scaleChild, scaleChild);
@@ -93,7 +92,7 @@ public class ModelGolem extends EntityModel<GolemBase> {
 		this.golemRightLeg.render(scale);
 		this.golemRightArm.render(scale);
 		this.golemLeftArm.render(scale);
-		
+
 		GlStateManager.popMatrix();
 	}
 
@@ -104,7 +103,7 @@ public class ModelGolem extends EntityModel<GolemBase> {
 	 */
 	@Override
 	public void setRotationAngles(final GolemBase entity, final float limbSwing, final float limbSwingAmount, final float ageInTicks,
-				      final float netHeadYaw, final float headPitch, final float scaleFactor) {
+								  final float netHeadYaw, final float headPitch, final float scaleFactor) {
 		this.golemHead.rotateAngleY = netHeadYaw / (180F / (float) Math.PI);
 		this.golemHead.rotateAngleX = headPitch / (180F / (float) Math.PI);
 		this.golemLeftLeg.rotateAngleX = -1.5F * triangleWave(limbSwing, 13.0F)
@@ -121,7 +120,7 @@ public class ModelGolem extends EntityModel<GolemBase> {
 	 */
 	@Override
 	public void setLivingAnimations(final GolemBase entity, final float limbSwing,
-					final float limbSwingAmount, final float partialTickTime) {
+									final float limbSwingAmount, final float partialTickTime) {
 		int i = entity.getAttackTimer();
 
 		if (i > 0) {
@@ -138,6 +137,6 @@ public class ModelGolem extends EntityModel<GolemBase> {
 	}
 
 	private static float triangleWave(final float f1, final float f2) {
-		return (Math.abs(f1 % f2 - f2 * 0.5F) - f2 * 0.25F)	/ (f2 * 0.25F);
+		return (Math.abs(f1 % f2 - f2 * 0.5F) - f2 * 0.25F) / (f2 * 0.25F);
 	}
 }

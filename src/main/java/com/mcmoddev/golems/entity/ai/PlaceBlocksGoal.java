@@ -1,18 +1,15 @@
 package com.mcmoddev.golems.entity.ai;
 
-import java.util.EnumSet;
-import java.util.function.Predicate;
-
-import javax.annotation.Nullable;
-
 import com.mcmoddev.golems.entity.base.GolemBase;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
+import java.util.function.Predicate;
 
 /**
  * @see EntityAIPlaceRandomBlocksStrictly
@@ -27,7 +24,7 @@ public class PlaceBlocksGoal extends Goal {
 	public final Predicate<PlaceBlocksGoal> canExecute;
 
 	public PlaceBlocksGoal(final GolemBase golemBase, final int ticksBetweenPlanting,
-					 final BlockState[] plants, final Block[] soils, final Predicate<PlaceBlocksGoal> pred) {
+						   final BlockState[] plants, final Block[] soils, final Predicate<PlaceBlocksGoal> pred) {
 		//this.setMutexFlags(EnumSet.of(Flag.MOVE));
 		this.golem = golemBase;
 		this.tickDelay = Math.max(1, ticksBetweenPlanting);
@@ -38,20 +35,20 @@ public class PlaceBlocksGoal extends Goal {
 	}
 
 	public PlaceBlocksGoal(final GolemBase golemBase, final int ticksBetweenPlanting,
-					 final BlockState[] plants, final Predicate<PlaceBlocksGoal> p) {
+						   final BlockState[] plants, final Predicate<PlaceBlocksGoal> p) {
 		this(golemBase, ticksBetweenPlanting, plants, null, p);
 	}
 
 	public PlaceBlocksGoal(final GolemBase golemBase, final int ticksBetweenPlanting,
-			 final BlockState[] plants, @Nullable final Block[] soils, final boolean configAllows) {
+						   final BlockState[] plants, @Nullable final Block[] soils, final boolean configAllows) {
 		this(golemBase, ticksBetweenPlanting, plants, soils, (t -> configAllows));
-	}	
+	}
 
 	public PlaceBlocksGoal(final GolemBase golemBase, final int ticksBetweenPlanting,
-				 final BlockState[] plants, final boolean configAllows) {
+						   final BlockState[] plants, final boolean configAllows) {
 		this(golemBase, ticksBetweenPlanting, plants, null, configAllows);
 	}
-	
+
 	@Override
 	public boolean shouldExecute() {
 		return tickDelay > 0 && golem.getEntityWorld().rand.nextInt(tickDelay) == 0 && this.canExecute.test(this);
@@ -64,7 +61,7 @@ public class PlaceBlocksGoal extends Goal {
 		final int z = MathHelper.floor(golem.posZ);
 		final BlockPos below = new BlockPos(x, y, z);
 		final BlockPos in = below.up(1);
-		
+
 		if (golem.world.isAirBlock(in) && isPlantSupport(golem.world, below)) {
 			setToPlant(golem.world, in);
 		}
@@ -96,7 +93,7 @@ public class PlaceBlocksGoal extends Goal {
 
 		return false;
 	}
-	
+
 	public static Predicate<PlaceBlocksGoal> getGriefingPredicate() {
 		return t -> t.golem.world.getGameRules().getBoolean("mobGriefing");
 	}

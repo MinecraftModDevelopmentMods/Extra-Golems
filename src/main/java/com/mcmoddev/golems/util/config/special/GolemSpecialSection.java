@@ -9,6 +9,7 @@ public class GolemSpecialSection {
 
 	/**
 	 * Should be pushed before all constructors are called and popped after all construtctors are called
+	 *
 	 * @param specialContainer
 	 * @param builder
 	 */

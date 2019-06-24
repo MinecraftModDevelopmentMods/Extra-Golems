@@ -5,7 +5,6 @@ import com.mcmoddev.golems.entity.base.GolemColorized;
 import com.mcmoddev.golems.renders.RenderColoredGolem;
 import com.mcmoddev.golems.renders.RenderGolem;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
-
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
@@ -14,7 +13,7 @@ public final class ProxyClient extends ProxyCommon {
 	public static final IRenderFactory<GolemBase> FACTORY_TEXTURED_GOLEM = RenderGolem::new;
 
 	public static final IRenderFactory<GolemColorized> FACTORY_COLORED_GOLEM = RenderColoredGolem::new;
-	
+
 	@Override
 	public void registerListeners() {
 		// TODO this was supposed to help with block tags...
@@ -23,22 +22,22 @@ public final class ProxyClient extends ProxyCommon {
 //			((IReloadableResourceManager) irr).addReloadListener(l -> BlockTagUtil.loadTags());
 //		}
 	}
-	
+
 	@Override
 	public void registerEntityRenders() {
 		GolemRegistrar.getContainers().forEach(container -> registerEntityRender(container.getEntityClass()));
 	}
 
-	/** 
+	/**
 	 * Helper function for entity rendering registration.
-	 * If the class inherits from {@code GolemColorized.class}, 
+	 * If the class inherits from {@code GolemColorized.class},
 	 * then it will be register using  {@link #registerColorized}.
 	 * Otherwise, the class will be registered using
 	 * {@link #registerTextured(Class)} by default.
 	 */
 	public static void registerEntityRender(final Class<? extends GolemBase> clazz) {
-		if(GolemColorized.class.isAssignableFrom(clazz)) {
-			registerColorized((Class<? extends GolemColorized>)clazz);
+		if (GolemColorized.class.isAssignableFrom(clazz)) {
+			registerColorized((Class<? extends GolemColorized>) clazz);
 		} else {
 			registerTextured(clazz);
 		}

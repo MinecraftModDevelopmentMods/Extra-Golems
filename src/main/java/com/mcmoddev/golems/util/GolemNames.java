@@ -3,11 +3,11 @@ package com.mcmoddev.golems.util;
 import java.util.function.Consumer;
 
 public final class GolemNames {
-	
+
 	private GolemNames() {
 		//
 	}
-	
+
 	public static final String BEDROCK_GOLEM = "golem_bedrock";
 	public static final String BONE_GOLEM = "golem_bone";
 	public static final String BOOKSHELF_GOLEM = "golem_bookshelf";
@@ -56,24 +56,25 @@ public final class GolemNames {
 		SEALANTERN_GOLEM, SLIME_GOLEM, SPONGE_GOLEM, STAINEDGLASS_GOLEM, STAINEDTERRACOTTA_GOLEM,
 		STRAW_GOLEM, TERRACOTTA_GOLEM, TNT_GOLEM, WOODEN_GOLEM, WOOL_GOLEM
 	};
-	
+
 	/**
 	 * Apply the given Consumer for each Golem Name in this class
 	 */
 	public static void forEach(Consumer<String> consumer) {
-		for(final String s : ALL_GOLEMS) {
+		for (final String s : ALL_GOLEMS) {
 			consumer.accept(s);
 		}
 	}
-	
+
 	/**
 	 * Currently unused.
+	 *
 	 * @param nameIn a value from GolemNames
 	 * @return the given name without the "golem_" prefix
 	 */
 	public static String strip(final String nameIn) {
 		final String GOLEM = "golem_";
-		if(nameIn.contains(GOLEM)) {
+		if (nameIn.contains(GOLEM)) {
 			return nameIn.replace(GOLEM, "");
 		} else return nameIn;
 	}

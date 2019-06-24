@@ -1,13 +1,9 @@
 package com.mcmoddev.golems.entity;
 
-import java.util.List;
-import java.util.function.Function;
-
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.events.SpongeGolemSoakEvent;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.particles.BasicParticleType;
@@ -20,6 +16,9 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
+
+import java.util.List;
+import java.util.function.Function;
 
 public final class EntitySpongeGolem extends GolemBase {
 
@@ -82,8 +81,8 @@ public final class EntitySpongeGolem extends GolemBase {
 	 *
 	 * @return whether all setBlockState calls were successful.
 	 **/
-	public boolean replaceWater(final List<BlockPos> positions, 
-			final Function<BlockState, BlockState> replaceWater, final int updateFlag) {
+	public boolean replaceWater(final List<BlockPos> positions,
+								final Function<BlockState, BlockState> replaceWater, final int updateFlag) {
 		boolean flag = true;
 		for (final BlockPos p : positions) {
 			flag &= this.world.setBlockState(p, replaceWater.apply(world.getBlockState(p)), updateFlag);

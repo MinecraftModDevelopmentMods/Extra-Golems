@@ -3,7 +3,6 @@ package com.mcmoddev.golems.entity;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
-
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,7 +21,7 @@ import net.minecraft.world.World;
 public final class EntityCraftingGolem extends GolemBase {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Crafting";
-	
+
 	public EntityCraftingGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);
 	}
@@ -38,7 +37,7 @@ public final class EntityCraftingGolem extends GolemBase {
 		if (!player.world.isRemote && itemstack.isEmpty()) {
 			// display crafting grid for player
 			player.displayGui(new EntityCraftingGolem.InterfaceCraftingGrid(player.world,
-					new BlockPos(player)));
+				new BlockPos(player)));
 			player.addStat(Stats.INTERACT_WITH_CRAFTING_TABLE);
 			player.swingArm(hand);
 		}
@@ -50,11 +49,11 @@ public final class EntityCraftingGolem extends GolemBase {
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_WOOD_STEP;
 	}
-	
+
 	public static class ContainerPortableWorkbench extends WorkbenchContainer {
 
 		public ContainerPortableWorkbench(final PlayerInventory playerInventory, final World worldIn,
-						  final BlockPos posIn) {
+										  final BlockPos posIn) {
 			super(playerInventory, worldIn, posIn);
 		}
 
@@ -65,7 +64,7 @@ public final class EntityCraftingGolem extends GolemBase {
 	}
 
 	public static class InterfaceCraftingGrid
-			extends net.minecraft.block.CraftingTableBlock.InterfaceCraftingTable {
+		extends net.minecraft.block.CraftingTableBlock.InterfaceCraftingTable {
 
 		private final World world2;
 		private final BlockPos position2;

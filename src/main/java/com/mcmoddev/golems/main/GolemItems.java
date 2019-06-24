@@ -12,7 +12,7 @@ public final class GolemItems {
 
 	////// ITEMS //////
 	@ObjectHolder(ExtraGolems.MODID + ":golem_paper")
-	public static  Item GOLEM_SPELL;
+	public static Item GOLEM_SPELL;
 
 	@ObjectHolder(ExtraGolems.MODID + ":spawn_bedrock_golem")
 	public static Item SPAWN_BEDROCK_GOLEM;

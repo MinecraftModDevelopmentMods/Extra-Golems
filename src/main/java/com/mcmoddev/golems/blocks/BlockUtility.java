@@ -1,13 +1,6 @@
 package com.mcmoddev.golems.blocks;
 
-import javax.annotation.Nullable;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.IBucketPickupHandler;
-import net.minecraft.block.ILiquidContainer;
+import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
@@ -26,8 +19,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public abstract class BlockUtility extends Block implements IBucketPickupHandler, ILiquidContainer  {
-	
+import javax.annotation.Nullable;
+
+public abstract class BlockUtility extends Block implements IBucketPickupHandler, ILiquidContainer {
+
 	private final int TICK_RATE;
 
 	public BlockUtility(final Properties prop, final int tickrate) {
@@ -35,16 +30,16 @@ public abstract class BlockUtility extends Block implements IBucketPickupHandler
 		this.setDefaultState(this.stateContainer.getBaseState().with(BlockStateProperties.WATERLOGGED, false));
 		this.TICK_RATE = tickrate;
 	}
-	
+
 	protected boolean remove(final World worldIn, final BlockState state, final BlockPos pos, final int flag) {
 		// remove this block and replace with air or water
 		final BlockState replaceWith = state.get(BlockStateProperties.WATERLOGGED)
-				? Fluids.WATER.getStillFluid().getDefaultState().getBlockState()
-				: Blocks.AIR.getDefaultState();
+			? Fluids.WATER.getStillFluid().getDefaultState().getBlockState()
+			: Blocks.AIR.getDefaultState();
 		// replace with air OR water depending on waterlogged state
 		return worldIn.setBlockState(pos, replaceWith, flag);
 	}
-	
+
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
 		builder.add(BlockStateProperties.WATERLOGGED);
@@ -63,7 +58,7 @@ public abstract class BlockUtility extends Block implements IBucketPickupHandler
 	@Override
 	public IFluidState getFluidState(BlockState state) {
 		return state.get(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getStillFluidState(false)
-				: super.getFluidState(state);
+			: super.getFluidState(state);
 	}
 
 	@Override
@@ -77,7 +72,7 @@ public abstract class BlockUtility extends Block implements IBucketPickupHandler
 			if (!worldIn.isRemote()) {
 				worldIn.setBlockState(pos, state.with(BlockStateProperties.WATERLOGGED, Boolean.valueOf(true)), 3);
 				worldIn.getPendingFluidTicks().scheduleTick(pos, fluidStateIn.getFluid(),
-						fluidStateIn.getFluid().getTickRate(worldIn));
+					fluidStateIn.getFluid().getTickRate(worldIn));
 			}
 			return true;
 		} else {
@@ -93,8 +88,8 @@ public abstract class BlockUtility extends Block implements IBucketPickupHandler
 //			worldIn.notifyNeighbors(pos, this);
 //		}
 //	}
-	
-	
+
+
 	@Override
 	public int tickRate(IWorldReader worldIn) {
 		return this.ticksRandomly ? TICK_RATE : super.tickRate(worldIn);
@@ -135,7 +130,6 @@ public abstract class BlockUtility extends Block implements IBucketPickupHandler
 //		// don't drop anything
 //		return Items.AIR;
 //	}
-
 	@Override
 	public boolean isReplaceable(BlockState state, BlockItemUseContext useContext) {
 		return true;
@@ -149,7 +143,7 @@ public abstract class BlockUtility extends Block implements IBucketPickupHandler
 
 	@Override
 	public BlockState getStateForPlacement(BlockState state, Direction facing, BlockState state2, IWorld world,
-			BlockPos pos1, BlockPos pos2, Hand hand) {
+										   BlockPos pos1, BlockPos pos2, Hand hand) {
 		return getDefaultState();
 	}
 

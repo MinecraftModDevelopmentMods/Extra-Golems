@@ -6,7 +6,6 @@ import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.util.GolemNames;
-
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.ResourceLocation;
@@ -58,7 +57,7 @@ public final class EntitySeaLanternGolem extends GolemBase {
 	public float getBrightness() {
 		return EntitySeaLanternGolem.BRIGHTNESS;
 	}
-	
+
 	@Override
 	public boolean isProvidingLight() {
 		return true;

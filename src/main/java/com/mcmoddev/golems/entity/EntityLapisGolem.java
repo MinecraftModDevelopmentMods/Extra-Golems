@@ -3,7 +3,6 @@ package com.mcmoddev.golems.entity;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -21,7 +20,7 @@ public final class EntityLapisGolem extends GolemBase {
 	public static final String ALLOW_SPECIAL = "Allow Special: Potion Effects";
 
 	private static final Effect[] badEffects = { Effects.BLINDNESS, Effects.SLOWNESS, Effects.POISON,
-		Effects.INSTANT_DAMAGE, Effects.WEAKNESS, Effects.WITHER, Effects.LEVITATION, Effects.GLOWING};
+		Effects.INSTANT_DAMAGE, Effects.WEAKNESS, Effects.WITHER, Effects.LEVITATION, Effects.GLOWING };
 
 	public EntityLapisGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);

@@ -3,7 +3,6 @@ package com.mcmoddev.golems.entity;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -20,11 +19,11 @@ public final class EntitySlimeGolem extends GolemBase {
 	public static final String ALLOW_SPECIAL = "Allow Special: Extra Knockback";
 	public static final String ALLOW_SPLITTING = "Allow Special: Split";
 	public static final String KNOCKBACK = "Knockback Factor";
-	
+
 	public EntitySlimeGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		this(entityType, world, false);
 	}
-	
+
 	public EntitySlimeGolem(final EntityType<? extends GolemBase> entityType, final World world, final boolean isBaby) {
 		super(entityType, world);
 		this.setChild(isBaby);
@@ -60,7 +59,7 @@ public final class EntitySlimeGolem extends GolemBase {
 	}
 
 	/**
-	 * Adds extra velocity to the golem's knockback attack. 
+	 * Adds extra velocity to the golem's knockback attack.
 	 **/
 	protected void knockbackTarget(final Entity entity, final double knockbackFactor) {
 		final double dX = Math.signum(entity.posX - this.posX) * knockbackFactor;
@@ -68,22 +67,22 @@ public final class EntitySlimeGolem extends GolemBase {
 		entity.addVelocity(dX, knockbackFactor / 4, dZ);
 		entity.velocityChanged = true;
 	}
-	
+
 	@Override
 	public void remove() {
-		if(!this.world.isRemote && !this.isChild() && this.getConfigBool(ALLOW_SPLITTING)) {
+		if (!this.world.isRemote && !this.isChild() && this.getConfigBool(ALLOW_SPLITTING)) {
 			GolemBase slime1 = new EntitySlimeGolem((EntityType<? extends GolemBase>) this.getType(), this.world, true);
 			GolemBase slime2 = new EntitySlimeGolem((EntityType<? extends GolemBase>) this.getType(), this.world, true);
 			// copy attack target info
-			if(this.getAttackTarget() != null) {
+			if (this.getAttackTarget() != null) {
 				slime1.setAttackTarget(this.getAttackTarget());
 				slime2.setAttackTarget(this.getAttackTarget());
 			}
 			// set location
-			slime1.setLocationAndAngles(this.posX + rand.nextDouble() - 0.5D, this.posY, 
-					 this.posZ + rand.nextDouble() - 0.5D, this.rotationYaw + rand.nextInt(20) - 10, 0);
-			slime2.setLocationAndAngles(this.posX + rand.nextDouble() - 0.5D, this.posY, 
-					 this.posZ + rand.nextDouble() - 0.5D, this.rotationYaw + rand.nextInt(20) - 10, 0);
+			slime1.setLocationAndAngles(this.posX + rand.nextDouble() - 0.5D, this.posY,
+				this.posZ + rand.nextDouble() - 0.5D, this.rotationYaw + rand.nextInt(20) - 10, 0);
+			slime2.setLocationAndAngles(this.posX + rand.nextDouble() - 0.5D, this.posY,
+				this.posZ + rand.nextDouble() - 0.5D, this.rotationYaw + rand.nextInt(20) - 10, 0);
 			// spawn the entities
 			this.getEntityWorld().addEntity(slime1);
 			this.getEntityWorld().addEntity(slime2);
@@ -91,12 +90,12 @@ public final class EntitySlimeGolem extends GolemBase {
 
 		super.remove();
 	}
-	
+
 	@Override
 	public void notifyDataManagerChange(DataParameter<?> key) {
 		super.notifyDataManagerChange(key);
-		if(BABY.equals(key)) {
-			if(this.isChild()) {
+		if (BABY.equals(key)) {
+			if (this.isChild()) {
 				// TODO this.setSize(0.7F, 1.45F);
 				this.recalculateSize();
 				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.getHealth() / 3);

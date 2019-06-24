@@ -1,13 +1,12 @@
 package com.mcmoddev.golems.entity.base;
 
-import javax.annotation.Nullable;
-
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
-
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 /**
  * This class should always be registered with RenderGolemColorized. It supports a 2-texture golem
@@ -39,7 +38,7 @@ public abstract class GolemColorized extends GolemBase {
 	 * @param rOverlay a texture that will be recolored and optionally rendered as transparent.
 	 **/
 	public GolemColorized(final EntityType<? extends GolemBase> entityType, final World world, final long initial,
-			      @Nullable final ResourceLocation rBase, @Nullable final ResourceLocation rOverlay) {
+						  @Nullable final ResourceLocation rBase, @Nullable final ResourceLocation rOverlay) {
 		super(entityType, world);
 		this.setColor(initial);
 		this.base = rBase;
@@ -110,10 +109,10 @@ public abstract class GolemColorized extends GolemBase {
 	}
 
 	/**
-	* Whether {@link overlay} should be rendered as transparent.
-	* This is not called for rendering {@link base},
-	* only for rendering the colorized layer.
-	**/
+	 * Whether {@link overlay} should be rendered as transparent.
+	 * This is not called for rendering {@link base},
+	 * only for rendering the colorized layer.
+	 **/
 	public boolean hasTransparency() {
 		return false;
 	}

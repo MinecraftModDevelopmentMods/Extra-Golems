@@ -4,7 +4,6 @@ import com.mcmoddev.golems.entity.ai.PlaceBlocksGoal;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -27,7 +26,7 @@ public final class EntityNetherWartGolem extends GolemBase {
 		super(entityType, world);
 		this.setCanSwim(true);
 	}
-	
+
 	/**
 	 * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
 	 * use this to react to sunlight and start to burn.
@@ -37,7 +36,7 @@ public final class EntityNetherWartGolem extends GolemBase {
 		super.livingTick();
 		// heals randomly, but only at night or in the nether (least to most expensive)
 		if ((!this.getEntityWorld().isDaytime() || this.getEntityWorld().dimension.isNether())
-				&& this.getConfigBool(ALLOW_HEALING) && rand.nextInt(450) == 0 ) {
+			&& this.getConfigBool(ALLOW_HEALING) && rand.nextInt(450) == 0) {
 			this.addPotionEffect(new EffectInstance(Effects.REGENERATION, 50, 1));
 		}
 	}
@@ -48,8 +47,8 @@ public final class EntityNetherWartGolem extends GolemBase {
 		final BlockState[] flowers = {
 			Blocks.NETHER_WART.getDefaultState().with(NetherWartBlock.AGE, 0),
 			Blocks.NETHER_WART.getDefaultState().with(NetherWartBlock.AGE, 1),
-			Blocks.NETHER_WART.getDefaultState().with(NetherWartBlock.AGE, 2)};
-		final Block[] soils = {Blocks.SOUL_SAND};
+			Blocks.NETHER_WART.getDefaultState().with(NetherWartBlock.AGE, 2) };
+		final Block[] soils = { Blocks.SOUL_SAND };
 		final boolean allow = this.getConfigBool(ALLOW_SPECIAL);
 		final int freq = this.getConfigInt(FREQUENCY);
 		this.goalSelector.addGoal(2,

@@ -1,10 +1,6 @@
 package com.mcmoddev.golems.blocks;
 
-import java.util.List;
-import java.util.Random;
-
 import com.mcmoddev.golems.entity.base.GolemBase;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
@@ -15,6 +11,9 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+
+import java.util.List;
+import java.util.Random;
 
 public class BlockUtilityPower extends BlockUtility {
 	public static final IntegerProperty POWER_LEVEL = IntegerProperty.create("power", 0, 15);
@@ -38,7 +37,7 @@ public class BlockUtilityPower extends BlockUtility {
 			worldIn.getPendingBlockTicks().scheduleTick(pos, this, this.tickRate(worldIn));
 		} else {
 			this.remove(worldIn, state, pos, 3);
-		}	
+		}
 	}
 
 	@Override
@@ -59,14 +58,14 @@ public class BlockUtilityPower extends BlockUtility {
 	public int getStrongPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
 		return blockState.get(POWER_LEVEL);
 	}
-	
+
 	/**
-	 * @return if the given list contains any golems for whom 
+	 * @return if the given list contains any golems for whom
 	 * {@link GolemBase#isProvidingPower()} returns true
 	 **/
 	public static boolean hasPowerGolem(final List<GolemBase> golems) {
-		for(GolemBase g : golems) {
-			if(g.isProvidingPower()) {
+		for (GolemBase g : golems) {
+			if (g.isProvidingPower()) {
 				return true;
 			}
 		}

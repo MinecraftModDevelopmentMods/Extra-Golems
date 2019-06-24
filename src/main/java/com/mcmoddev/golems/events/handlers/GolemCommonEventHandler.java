@@ -3,16 +3,10 @@ package com.mcmoddev.golems.events.handlers;
 import com.mcmoddev.golems.blocks.BlockGolemHead;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
-
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
-import net.minecraft.entity.monster.AbstractIllagerEntity;
-import net.minecraft.entity.monster.AbstractSkeletonEntity;
-import net.minecraft.entity.monster.SlimeEntity;
-import net.minecraft.entity.monster.SpiderEntity;
-import net.minecraft.entity.monster.ZombieEntity;
-import net.minecraft.entity.monster.ZombiePigmanEntity;
+import net.minecraft.entity.monster.*;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.world.BlockEvent;
@@ -84,7 +78,7 @@ public class GolemCommonEventHandler {
 //		
 //		return null;
 //	}
-	
+
 //	/**
 //	 * This method makes a list of golems to pick from based on the biome passed,
 //	 * then returns a random member of that list.
@@ -141,7 +135,6 @@ public class GolemCommonEventHandler {
 //		return options.isEmpty() ? null : options.get(rand.nextInt(options.size()));
 //	}
 //
-
 
 
 	/**
@@ -203,7 +196,7 @@ public class GolemCommonEventHandler {
 //		// choose a random golem from the list, or null
 //		return options.isEmpty() ? null : options.get(rand.nextInt(options.size()));
 //	}
-	
+
 	/**
 	 * Checks if a Carved Pumpkin was placed and, if so, attempts to
 	 * spawn a golem at that location where enabled by the config.
@@ -211,30 +204,32 @@ public class GolemCommonEventHandler {
 	@SubscribeEvent
 	public void onPlacePumpkin(final BlockEvent.EntityPlaceEvent event) {
 		// if the config allows it, and the block is a CARVED pumpkin...
-		if(!event.isCanceled() && ExtraGolemsConfig.pumpkinBuildsGolems()
-				&& event.getPlacedBlock().getBlock() == Blocks.CARVED_PUMPKIN
-				&& event.getWorld() instanceof World) {
+		if (!event.isCanceled() && ExtraGolemsConfig.pumpkinBuildsGolems()
+			&& event.getPlacedBlock().getBlock() == Blocks.CARVED_PUMPKIN
+			&& event.getWorld() instanceof World) {
 			// try to spawn a golem!
-			BlockGolemHead.trySpawnGolem((World)event.getWorld(), event.getPos());
+			BlockGolemHead.trySpawnGolem((World) event.getWorld(), event.getPos());
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void onLivingSpawned(final EntityJoinWorldEvent event) {
 		// add custom 'attack golem' AI to hostile mobs. They already have this for regular iron golems
-		if(event.getEntity() instanceof MobEntity) {
+		if (event.getEntity() instanceof MobEntity) {
 			final MobEntity creature = (MobEntity) event.getEntity();
 			if (mobAttacksGolems(creature)) {
 				creature.targetSelector.addGoal(3, new EntityAIAttackGolem(creature));
 			}
 		}
 	}
-	
-	/** Returns true if this entity is an EntityCreature AND normally attacks Iron Golems **/
+
+	/**
+	 * Returns true if this entity is an EntityCreature AND normally attacks Iron Golems
+	 **/
 	private static boolean mobAttacksGolems(MobEntity e) {
-		return e instanceof AbstractSkeletonEntity || e instanceof SpiderEntity 
-				|| e instanceof AbstractIllagerEntity || e instanceof SlimeEntity
-				|| (e instanceof ZombieEntity && !(e instanceof ZombiePigmanEntity));
+		return e instanceof AbstractSkeletonEntity || e instanceof SpiderEntity
+			|| e instanceof AbstractIllagerEntity || e instanceof SlimeEntity
+			|| (e instanceof ZombieEntity && !(e instanceof ZombiePigmanEntity));
 	}
 
 	private static final class EntityAIAttackGolem extends NearestAttackableTargetGoal<GolemBase> {

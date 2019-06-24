@@ -9,7 +9,6 @@ import com.mcmoddev.golems.items.ItemInfoBook;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityType;
@@ -22,13 +21,17 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.RegistryEvent;
 
 public class ProxyCommon {
-	
-	static { registerLootTables(); }
-	
-	public void registerListeners() { }
-	
-	public void registerEntityRenders() { }
-	
+
+	static {
+		registerLootTables();
+	}
+
+	public void registerListeners() {
+	}
+
+	public void registerEntityRenders() {
+	}
+
 	public void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
 		// Register Golem EntityEntries as well as building blocks
 		GolemRegistrar.getContainers().forEach(container -> event.getRegistry().register(container.getEntityType()));
@@ -56,7 +59,7 @@ public class ProxyCommon {
 			new BlockUtilityPower(15, BlockUtilityPower.UPDATE_TICKS)
 				.setRegistryName(ExtraGolems.MODID, "power_provider_all"));
 	}
-	
+
 	public static void registerLootTables() {
 		// register Golem Loot Tables
 		// TODO LootTableList.register(new ResourceLocation(ExtraGolems.MODID, "entities/_golem_base"));
