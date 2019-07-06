@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Function;
 
-import com.mcmoddev.golems.entity.EntityIceGolem;
+import com.mcmoddev.golems.entity.IceGolem;
 import com.mcmoddev.golems.entity.base.GolemBase;
 
 import net.minecraft.block.Block;
@@ -46,7 +46,7 @@ public final class IceGolemFreezeEvent extends Event {
 	
 	public IceGolemFreezeEvent(final GolemBase golem, final BlockPos center, final int radius) {
 		this(golem, center, radius, new DefaultFreezeFunction(
-				golem.getRNG(), golem.getConfigBool(EntityIceGolem.FROST), ICE_CHANCE, COBBLE_CHANCE));
+				golem.getRNG(), golem.getConfigBool(IceGolem.FROST), ICE_CHANCE, COBBLE_CHANCE));
 	}
 
 	public IceGolemFreezeEvent(final GolemBase golem, final BlockPos center, 

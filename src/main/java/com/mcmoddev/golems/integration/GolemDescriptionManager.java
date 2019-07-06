@@ -3,8 +3,8 @@ package com.mcmoddev.golems.integration;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.mcmoddev.golems.entity.EntityBedrockGolem;
-import com.mcmoddev.golems.entity.EntityRedstoneLampGolem;
+import com.mcmoddev.golems.entity.BedrockGolem;
+import com.mcmoddev.golems.entity.RedstoneLampGolem;
 import com.mcmoddev.golems.entity.base.GolemBase;
 
 import net.minecraft.client.gui.screen.Screen;
@@ -52,14 +52,14 @@ public abstract class GolemDescriptionManager {
 
 		// add right-click-texture to tip if possible
 		if (this.showMultiTexture && golem.canInteractChangeTexture()
-				&& !(golem instanceof EntityRedstoneLampGolem)) {
+				&& !(golem instanceof RedstoneLampGolem)) {
 			list.add(new TranslationTextComponent("entitytip.click_change_texture")
 					.applyTextStyle(TextFormatting.BLUE));
 		}
 
 		// add fire immunity to tip if possible
 		if (this.showFireproof && golem.isImmuneToFire()
-			&& !(golem instanceof EntityBedrockGolem)) {
+			&& !(golem instanceof BedrockGolem)) {
 			list.add(new TranslationTextComponent("entitytip.is_fireproof")
 					.applyTextStyle(TextFormatting.GOLD));
 		}

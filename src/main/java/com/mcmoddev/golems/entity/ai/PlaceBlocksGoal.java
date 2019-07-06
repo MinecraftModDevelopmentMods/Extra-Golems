@@ -1,6 +1,5 @@
 package com.mcmoddev.golems.entity.ai;
 
-import java.util.EnumSet;
 import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
@@ -12,6 +11,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
 /**
@@ -98,6 +98,6 @@ public class PlaceBlocksGoal extends Goal {
 	}
 	
 	public static Predicate<PlaceBlocksGoal> getGriefingPredicate() {
-		return t -> t.golem.world.getGameRules().getBoolean("mobGriefing");
+		return t -> t.golem.world.getGameRules().func_223586_b(GameRules.field_223599_b); //.getBoolean("mobGriefing");
 	}
 }

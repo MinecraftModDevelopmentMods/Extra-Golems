@@ -5,7 +5,7 @@ import java.util.Objects;
 
 import javax.annotation.Nullable;
 
-import com.mcmoddev.golems.entity.EntityBedrockGolem;
+import com.mcmoddev.golems.entity.BedrockGolem;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mcmoddev.golems.util.config.GolemContainer;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
@@ -60,7 +60,7 @@ public final class ItemBedrockGolem extends Item {
 		}
 
 		// check if the golem is enabled
-		final GolemContainer container = GolemRegistrar.getContainer(EntityBedrockGolem.class);
+		final GolemContainer container = GolemRegistrar.getContainer(BedrockGolem.class);
 		if (container.isEnabled()) {
 			// make sure the golem can be spawned here (empty block)
 			BlockState state = worldIn.getBlockState(pos);
