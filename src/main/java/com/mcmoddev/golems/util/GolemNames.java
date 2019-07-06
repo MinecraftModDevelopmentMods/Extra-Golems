@@ -3,11 +3,11 @@ package com.mcmoddev.golems.util;
 import java.util.function.Consumer;
 
 public final class GolemNames {
-	
+
 	private GolemNames() {
 		//
 	}
-	
+
 	public static final String BEDROCK_GOLEM = "golem_bedrock";
 	public static final String BONE_GOLEM = "golem_bone";
 	public static final String BOOKSHELF_GOLEM = "golem_bookshelf";
@@ -48,32 +48,33 @@ public final class GolemNames {
 	public static final String WOOL_GOLEM = "golem_wool";
 
 	public static final String[] ALL_GOLEMS = new String[] {
-		BEDROCK_GOLEM, BONE_GOLEM, BOOKSHELF_GOLEM, CLAY_GOLEM, COAL_GOLEM, CONCRETE_GOLEM,
-		CRAFTING_GOLEM, DIAMOND_GOLEM, EMERALD_GOLEM, ENDSTONE_GOLEM, GLASS_GOLEM,
-		GLOWSTONE_GOLEM, GOLD_GOLEM, ICE_GOLEM, LAPIS_GOLEM, LEAF_GOLEM, MAGMA_GOLEM,
-		MELON_GOLEM, MUSHROOM_GOLEM, NETHERBRICK_GOLEM, NETHERWART_GOLEM, OBSIDIAN_GOLEM,
-		PRISMARINE_GOLEM, QUARTZ_GOLEM, REDSANDSTONE_GOLEM, REDSTONE_GOLEM, SANDSTONE_GOLEM,
-		SEALANTERN_GOLEM, SLIME_GOLEM, SPONGE_GOLEM, STAINEDGLASS_GOLEM, STAINEDTERRACOTTA_GOLEM,
-		STRAW_GOLEM, TERRACOTTA_GOLEM, TNT_GOLEM, WOODEN_GOLEM, WOOL_GOLEM
+			BEDROCK_GOLEM, BONE_GOLEM, BOOKSHELF_GOLEM, CLAY_GOLEM, COAL_GOLEM, CONCRETE_GOLEM,
+			CRAFTING_GOLEM, DIAMOND_GOLEM, EMERALD_GOLEM, ENDSTONE_GOLEM, GLASS_GOLEM,
+			GLOWSTONE_GOLEM, GOLD_GOLEM, ICE_GOLEM, LAPIS_GOLEM, LEAF_GOLEM, MAGMA_GOLEM,
+			MELON_GOLEM, MUSHROOM_GOLEM, NETHERBRICK_GOLEM, NETHERWART_GOLEM, OBSIDIAN_GOLEM,
+			PRISMARINE_GOLEM, QUARTZ_GOLEM, REDSANDSTONE_GOLEM, REDSTONE_GOLEM, SANDSTONE_GOLEM,
+			SEALANTERN_GOLEM, SLIME_GOLEM, SPONGE_GOLEM, STAINEDGLASS_GOLEM, STAINEDTERRACOTTA_GOLEM,
+			STRAW_GOLEM, TERRACOTTA_GOLEM, TNT_GOLEM, WOODEN_GOLEM, WOOL_GOLEM
 	};
-	
+
 	/**
 	 * Apply the given Consumer for each Golem Name in this class
 	 */
 	public static void forEach(Consumer<String> consumer) {
-		for(final String s : ALL_GOLEMS) {
+		for (final String s : ALL_GOLEMS) {
 			consumer.accept(s);
 		}
 	}
-	
+
 	/**
 	 * Currently unused.
+	 *
 	 * @param nameIn a value from GolemNames
 	 * @return the given name without the "golem_" prefix
 	 */
 	public static String strip(final String nameIn) {
 		final String GOLEM = "golem_";
-		if(nameIn.contains(GOLEM)) {
+		if (nameIn.contains(GOLEM)) {
 			return nameIn.replace(GOLEM, "");
 		} else return nameIn;
 	}

@@ -5,7 +5,6 @@ import com.mcmoddev.golems.entity.base.GolemColorized;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;
 
@@ -61,10 +60,10 @@ public class RenderColoredGolem extends RenderGolem {
 		}
 		GlStateManager.popMatrix();
 	}
-	
+
 	@Override
 	protected void applyRotations(final GolemBase golem, final float ageInTicks, final float rotationYaw,
-				      final float partialTicks) {
+			final float partialTicks) {
 		super.applyRotations(golem, ageInTicks, rotationYaw, partialTicks);
 
 		if ((double) golem.limbSwingAmount >= 0.01D) {

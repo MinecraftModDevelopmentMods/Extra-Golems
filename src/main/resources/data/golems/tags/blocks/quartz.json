@@ -1,9 +1,9 @@
 {
-  "replace": false,
-  "values": [
-	"minecraft:quartz_block",
-	"minecraft:chiseled_quartz_block",
-	"minecraft:quartz_pillar",
-	"minecraft:smooth_quartz"
-  ]
+	"replace": false,
+	"values": [
+		"minecraft:quartz_block",
+		"minecraft:chiseled_quartz_block",
+		"minecraft:quartz_pillar",
+		"minecraft:smooth_quartz"
+	]
 }

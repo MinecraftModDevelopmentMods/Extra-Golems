@@ -6,7 +6,6 @@ import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.util.GolemNames;
-
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.ResourceLocation;
@@ -35,7 +34,7 @@ public final class SeaLanternGolem extends GolemBase {
 		final boolean allow = this.getConfigBool(ALLOW_SPECIAL);
 		final int freq = BlockUtilityGlow.UPDATE_TICKS;
 		this.goalSelector.addGoal(8, new PlaceUtilityBlockGoal(this, GolemItems.UTILITY_LIGHT.getDefaultState()
-			.with(BlockUtilityGlow.LIGHT_LEVEL, BRIGHTNESS_INT), freq, allow));
+				.with(BlockUtilityGlow.LIGHT_LEVEL, BRIGHTNESS_INT), freq, allow));
 	}
 
 	@Override
@@ -58,7 +57,7 @@ public final class SeaLanternGolem extends GolemBase {
 	public float getBrightness() {
 		return SeaLanternGolem.BRIGHTNESS;
 	}
-	
+
 	@Override
 	public boolean isProvidingLight() {
 		return true;

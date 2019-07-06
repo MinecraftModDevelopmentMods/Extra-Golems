@@ -2,7 +2,6 @@ package com.mcmoddev.golems.entity.base;
 
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
-
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -16,9 +15,11 @@ import net.minecraft.world.World;
 
 public abstract class GolemMultiTextured extends GolemBase {
 
-	/** The DataParameter that stores which texture this golem is using. Max value is 128 **/
+	/**
+	 * The DataParameter that stores which texture this golem is using. Max value is 128
+	 **/
 	protected static final DataParameter<Byte> DATA_TEXTURE = EntityDataManager
-			.<Byte>createKey(GolemMultiTextured.class, DataSerializers.BYTE);
+		.<Byte>createKey(GolemMultiTextured.class, DataSerializers.BYTE);
 	protected static final String NBT_TEXTURE = "GolemTextureData";
 
 	/**
@@ -26,8 +27,10 @@ public abstract class GolemMultiTextured extends GolemBase {
 	 * Max size is Byte.MAX_VALUE
 	 **/
 	public final ResourceLocation[] textures;
-	
-	/** Loot Table array to match texture array. If you don't want this, override {@link getLootTable} **/
+
+	/**
+	 * Loot Table array to match texture array. If you don't want this, override {@link getLootTable}
+	 **/
 	public final ResourceLocation[] lootTables;
 
 	/**
@@ -41,11 +44,11 @@ public abstract class GolemMultiTextured extends GolemBase {
 	 * <br>}</code>
 	 * <p>This will initialize textures at:
 	 * <br><code>[getModId()]/textures/entity/golem_example/one.png</code>
-	 * <br><code>[getModId()]/textures/entity/golem_example/two.png</code> 
+	 * <br><code>[getModId()]/textures/entity/golem_example/two.png</code>
 	 * <br><code>[getModId()]/textures/entity/golem_example/three.png</code>
 	 * <br> as well as loot tables for the same names with the JSON suffix
 	 **/
-	public GolemMultiTextured(final EntityType<? extends GolemBase> entityType, 
+	public GolemMultiTextured(final EntityType<? extends GolemBase> entityType,
 			final World world, final String modid, final String prefix, final String[] textureNames) {
 		super(entityType, world);
 		this.textures = new ResourceLocation[textureNames.length];
@@ -84,12 +87,12 @@ public abstract class GolemMultiTextured extends GolemBase {
 			return super.processInteract(player, hand);
 		}
 	}
-	
+
 	@Override
 	public void notifyDataManagerChange(DataParameter<?> key) {
 		super.notifyDataManagerChange(key);
 		// attempt to sync texture from client -> server -> other clients
-		if(DATA_TEXTURE.equals(key)) {
+		if (DATA_TEXTURE.equals(key)) {
 			this.setTextureType(this.getTextureFromArray(this.getTextureNum()));
 		}
 	}
@@ -153,7 +156,7 @@ public abstract class GolemMultiTextured extends GolemBase {
 	public ResourceLocation getTextureFromArray(final int index) {
 		return this.textures[index % this.textures.length];
 	}
-	
+
 	@Override
 	protected ResourceLocation getLootTable() {
 		return this.lootTables[this.getTextureNum() % this.lootTables.length];

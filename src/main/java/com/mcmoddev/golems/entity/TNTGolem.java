@@ -3,7 +3,6 @@ package com.mcmoddev.golems.entity;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,11 +12,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.world.Explosion.Mode;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
@@ -48,7 +43,7 @@ public class TNTGolem extends GolemBase {
 
 	/**
 	 * Flexible constructor to allow child classes to customize.
-	 * 
+	 *
 	 * @param clazz
 	 * @param world
 	 * @param minExplosionRange
@@ -90,8 +85,8 @@ public class TNTGolem extends GolemBase {
 		}
 
 		if (this.isWet() || (this.getAttackTarget() != null
-			&& this.getDistanceSq(this.getAttackTarget()) > this.minExplosionRad
-			* this.maxExplosionRad)) {
+				&& this.getDistanceSq(this.getAttackTarget()) > this.minExplosionRad
+				* this.maxExplosionRad)) {
 			this.resetIgnite();
 		}
 
@@ -101,23 +96,23 @@ public class TNTGolem extends GolemBase {
 			if (!this.world.isRemote) {
 				for (int i = 0; i < 3; i++) {
 					this.world.addParticle(ParticleTypes.LARGE_SMOKE, this.posX,
-						this.posY + 2.0D, this.posZ, 0.0D, 0.0D, 0.0D);
+							this.posY + 2.0D, this.posZ, 0.0D, 0.0D, 0.0D);
 					this.world.addParticle(ParticleTypes.LARGE_SMOKE, this.posX + 0.75D,
-						this.posY + 1.0D + rand.nextDouble() * 2, this.posZ + 0.75D,
-						0.5 * (0.5D - rand.nextDouble()), 0.0D,
-						0.5 * (0.5D - rand.nextDouble()));
+							this.posY + 1.0D + rand.nextDouble() * 2, this.posZ + 0.75D,
+							0.5 * (0.5D - rand.nextDouble()), 0.0D,
+							0.5 * (0.5D - rand.nextDouble()));
 					this.world.addParticle(ParticleTypes.LARGE_SMOKE, this.posX + 0.75D,
-						this.posY + 1.0D + rand.nextDouble() * 2, this.posZ - 0.75D,
-						0.5 * (0.5D - rand.nextDouble()), 0.0D,
-						0.5 * (0.5D - rand.nextDouble()));
+							this.posY + 1.0D + rand.nextDouble() * 2, this.posZ - 0.75D,
+							0.5 * (0.5D - rand.nextDouble()), 0.0D,
+							0.5 * (0.5D - rand.nextDouble()));
 					this.world.addParticle(ParticleTypes.LARGE_SMOKE, this.posX - 0.75D,
-						this.posY + 1.0D + rand.nextDouble() * 2, this.posZ + 0.75D,
-						0.5 * (0.5D - rand.nextDouble()), 0.0D,
-						0.5 * (0.5D - rand.nextDouble()));
+							this.posY + 1.0D + rand.nextDouble() * 2, this.posZ + 0.75D,
+							0.5 * (0.5D - rand.nextDouble()), 0.0D,
+							0.5 * (0.5D - rand.nextDouble()));
 					this.world.addParticle(ParticleTypes.LARGE_SMOKE, this.posX - 0.75D,
-						this.posY + 1.0D + rand.nextDouble() * 2, this.posZ - 0.75D,
-						0.5 * (0.5D - rand.nextDouble()), 0.0D,
-						0.5 * (0.5D - rand.nextDouble()));
+							this.posY + 1.0D + rand.nextDouble() * 2, this.posZ - 0.75D,
+							0.5 * (0.5D - rand.nextDouble()), 0.0D,
+							0.5 * (0.5D - rand.nextDouble()));
 				}
 			}
 			if (this.fuseTimer <= 0) {
@@ -141,7 +136,7 @@ public class TNTGolem extends GolemBase {
 		boolean flag = super.attackEntityAsMob(entity);
 
 		if (flag && entity.isAlive() && rand.nextInt(100) < this.chanceToExplodeWhenAttacking
-			&& this.getDistanceSq(entity) <= this.minExplosionRad * this.minExplosionRad) {
+				&& this.getDistanceSq(entity) <= this.minExplosionRad * this.minExplosionRad) {
 			this.ignite();
 		}
 
@@ -153,8 +148,8 @@ public class TNTGolem extends GolemBase {
 		final ItemStack itemstack = player.getHeldItem(hand);
 		if (!itemstack.isEmpty() && itemstack.getItem() == Items.FLINT_AND_STEEL) {
 			this.world.playSound(player, this.posX, this.posY, this.posZ,
-				SoundEvents.ITEM_FLINTANDSTEEL_USE, this.getSoundCategory(), 1.0F,
-				this.rand.nextFloat() * 0.4F + 0.8F);
+					SoundEvents.ITEM_FLINTANDSTEEL_USE, this.getSoundCategory(), 1.0F,
+					this.rand.nextFloat() * 0.4F + 0.8F);
 			player.swingArm(hand);
 
 			if (!this.world.isRemote) {
@@ -202,8 +197,8 @@ public class TNTGolem extends GolemBase {
 			if (!this.world.isRemote) {
 				final boolean flag = this.world.getGameRules().func_223586_b(GameRules.field_223599_b); //.getBoolean("mobGriefing");
 				final float range = this.maxExplosionRad > this.minExplosionRad
-					? rand.nextInt(maxExplosionRad - minExplosionRad)
-					: this.minExplosionRad;
+						? rand.nextInt(maxExplosionRad - minExplosionRad)
+						: this.minExplosionRad;
 				this.world.createExplosion(this, this.posX, this.posY, this.posZ, range, flag ? Mode.BREAK : Mode.NONE);
 				this.remove();
 			}

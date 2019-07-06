@@ -3,7 +3,6 @@ package com.mcmoddev.golems.entity;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -28,14 +27,14 @@ public final class MagmaGolem extends GolemBase {
 	public static final String ALLOW_SPLITTING = "Allow Special: Split";
 	public static final String ALLOW_WATER_DAMAGE = "Enable Water Damage";
 	public static final String MELT_DELAY = "Melting Delay";
-	
+
 	private static final String TEXTURE_LOC = ExtraGolems.MODID + ":textures/entity/magma/" + GolemNames.MAGMA_GOLEM;
 	private static final ResourceLocation[] TEXTURES = new ResourceLocation[] {
-			new ResourceLocation(TEXTURE_LOC + "_0.png"), new ResourceLocation(TEXTURE_LOC + "_1.png"),
-			new ResourceLocation(TEXTURE_LOC + "_2.png"), new ResourceLocation(TEXTURE_LOC + "_3.png"),
-			new ResourceLocation(TEXTURE_LOC + "_2.png"), new ResourceLocation(TEXTURE_LOC + "_1.png")
+		new ResourceLocation(TEXTURE_LOC + "_0.png"), new ResourceLocation(TEXTURE_LOC + "_1.png"),
+		new ResourceLocation(TEXTURE_LOC + "_2.png"), new ResourceLocation(TEXTURE_LOC + "_3.png"),
+		new ResourceLocation(TEXTURE_LOC + "_2.png"), new ResourceLocation(TEXTURE_LOC + "_1.png")
 	};
-	
+
 	/**
 	 * Golem should stand in one spot for number of ticks before affecting the block below it.
 	 */
@@ -65,12 +64,12 @@ public final class MagmaGolem extends GolemBase {
 		this.ticksStandingStill = 0;
 		this.setCanSwim(!this.isHurtByWater);
 	}
-	
+
 	@Override
 	public void notifyDataManagerChange(DataParameter<?> key) {
 		// change stats if this is a child vs. an adult golem
 		super.notifyDataManagerChange(key);
-		if(BABY.equals(key)) {
+		if (BABY.equals(key)) {
 			if (this.isChild()) {
 				// TODO this.setSize(0.7F, 1.45F);
 				this.recalculateSize();
@@ -91,7 +90,7 @@ public final class MagmaGolem extends GolemBase {
 	protected ResourceLocation applyTexture() {
 		return TEXTURES[0];
 	}
-	
+
 	@Override
 	public ResourceLocation getTextureType() {
 		final int changeInterval = 5;
@@ -135,7 +134,7 @@ public final class MagmaGolem extends GolemBase {
 			if (x == this.stillX && z == this.stillZ) {
 				// check if it's been holding still long enough AND on top of cobblestone
 				if (++this.ticksStandingStill >= this.meltDelay
-					&& b1 == Blocks.COBBLESTONE && rand.nextInt(16) == 0) {
+						&& b1 == Blocks.COBBLESTONE && rand.nextInt(16) == 0) {
 					BlockState replace = Blocks.MAGMA_BLOCK.getDefaultState();
 					this.world.setBlockState(below, replace, 3);
 					this.ticksStandingStill = 0;
@@ -147,12 +146,12 @@ public final class MagmaGolem extends GolemBase {
 			}
 		}
 	}
-	
+
 	@Override
 	protected SoundEvent getHurtSound(final DamageSource ignored) {
 		return ignored == DamageSource.DROWN ? SoundEvents.BLOCK_LAVA_EXTINGUISH : this.getGolemSound();
 	}
-	
+
 	@Override
 	public void remove() {
 		// spawn baby golems here if possible 
@@ -160,15 +159,15 @@ public final class MagmaGolem extends GolemBase {
 			GolemBase slime1 = new MagmaGolem((EntityType<? extends GolemBase>) this.getType(), this.world, true);
 			GolemBase slime2 = new MagmaGolem((EntityType<? extends GolemBase>) this.getType(), this.world, true);
 			// copy attack target info
-			if(this.getAttackTarget() != null) {
+			if (this.getAttackTarget() != null) {
 				slime1.setAttackTarget(this.getAttackTarget());
 				slime2.setAttackTarget(this.getAttackTarget());
 			}
 			// set location
-			slime1.setLocationAndAngles(this.posX + rand.nextDouble() - 0.5D, this.posY, 
-					 this.posZ + rand.nextDouble() - 0.5D, this.rotationYaw + rand.nextInt(20) - 10, 0);
-			slime2.setLocationAndAngles(this.posX + rand.nextDouble() - 0.5D, this.posY, 
-					 this.posZ + rand.nextDouble() - 0.5D, this.rotationYaw + rand.nextInt(20) - 10, 0);
+			slime1.setLocationAndAngles(this.posX + rand.nextDouble() - 0.5D, this.posY,
+					this.posZ + rand.nextDouble() - 0.5D, this.rotationYaw + rand.nextInt(20) - 10, 0);
+			slime2.setLocationAndAngles(this.posX + rand.nextDouble() - 0.5D, this.posY,
+					this.posZ + rand.nextDouble() - 0.5D, this.rotationYaw + rand.nextInt(20) - 10, 0);
 			// spawn the entities
 			this.getEntityWorld().addEntity(slime1);
 			this.getEntityWorld().addEntity(slime2);
@@ -176,7 +175,7 @@ public final class MagmaGolem extends GolemBase {
 
 		super.remove();
 	}
-	
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public int getBrightnessForRender() {

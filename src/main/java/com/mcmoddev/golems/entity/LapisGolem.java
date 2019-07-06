@@ -3,7 +3,6 @@ package com.mcmoddev.golems.entity;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -21,7 +20,7 @@ public final class LapisGolem extends GolemBase {
 	public static final String ALLOW_SPECIAL = "Allow Special: Potion Effects";
 
 	private static final Effect[] badEffects = { Effects.BLINDNESS, Effects.SLOWNESS, Effects.POISON,
-		Effects.INSTANT_DAMAGE, Effects.WEAKNESS, Effects.WITHER, Effects.LEVITATION, Effects.GLOWING};
+			Effects.INSTANT_DAMAGE, Effects.WEAKNESS, Effects.WITHER, Effects.LEVITATION, Effects.GLOWING };
 
 	public LapisGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);
@@ -42,7 +41,7 @@ public final class LapisGolem extends GolemBase {
 			final LivingEntity entity = (LivingEntity) entityIn;
 			if (this.getConfigBool(ALLOW_SPECIAL)) {
 				final Effect potionID = entity.isEntityUndead() ? Effects.INSTANT_HEALTH
-					: badEffects[rand.nextInt(badEffects.length)];
+						: badEffects[rand.nextInt(badEffects.length)];
 				final int len = potionID.isInstant() ? 1 : 20 * (5 + rand.nextInt(9));
 				final int amp = potionID.isInstant() ? rand.nextInt(2) : rand.nextInt(3);
 				entity.addPotionEffect(new EffectInstance(potionID, len, amp));

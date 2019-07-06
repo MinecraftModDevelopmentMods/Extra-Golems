@@ -3,7 +3,6 @@ package com.mcmoddev.golems.entity;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
-
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.entity.player.PlayerEntity;
@@ -50,11 +49,11 @@ public final class CraftingGolem extends GolemBase {
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_WOOD_STEP;
 	}
-	
+
 	public static class ContainerPortableWorkbench extends WorkbenchContainer {
 
 		public ContainerPortableWorkbench(final PlayerInventory playerInventory, final World worldIn,
-						  final BlockPos posIn) {
+				final BlockPos posIn) {
 			super(playerInventory, worldIn, posIn);
 		}
 
@@ -65,7 +64,7 @@ public final class CraftingGolem extends GolemBase {
 	}
 
 	public static class InterfaceCraftingGrid
-			extends net.minecraft.block.CraftingTableBlock.InterfaceCraftingTable {
+		extends net.minecraft.block.CraftingTableBlock.InterfaceCraftingTable {
 
 		private final World world2;
 		private final BlockPos position2;

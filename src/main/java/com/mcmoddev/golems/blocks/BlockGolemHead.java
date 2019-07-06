@@ -1,11 +1,8 @@
 package com.mcmoddev.golems.blocks;
 
-import javax.annotation.Nullable;
-
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -20,6 +17,8 @@ import net.minecraft.state.StateContainer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 public final class BlockGolemHead extends HorizontalBlock {
 
@@ -78,18 +77,19 @@ public final class BlockGolemHead extends HorizontalBlock {
 //		super.onBlockAdded(state, worldIn, pos, state);
 //		trySpawnGolem(worldIn, pos);
 //	}
-	
+
 	/**
 	 * Attempts to build a golem with the given head position.
 	 * Checks if a golem can be built there and, if so, removes
 	 * the blocks and spawns the corresponding golem.
-	 * @param world current world
+	 *
+	 * @param world   current world
 	 * @param headPos the position of the golem head block
 	 * @return if the golem was built and spawned
 	 */
 	public static boolean trySpawnGolem(final World world, final BlockPos headPos) {
-		if(world.isRemote) return false;
-		
+		if (world.isRemote) return false;
+
 		// get all the block and state values that we will be using in the following code
 		final BlockState stateBelow1 = world.getBlockState(headPos.down(1));
 		final BlockState stateBelow2 = world.getBlockState(headPos.down(2));
@@ -111,7 +111,7 @@ public final class BlockGolemHead extends HorizontalBlock {
 		boolean flagX;
 		// true if the golem is completely Iron Blocks
 		boolean isIron;
-		
+
 		////// Hard-coded support for Snow Golem //////
 		if (doBlocksMatch(Blocks.SNOW_BLOCK, blockBelow1, blockBelow2)) {
 			removeGolemBody(world, headPos);
@@ -121,16 +121,16 @@ public final class BlockGolemHead extends HorizontalBlock {
 			world.addEntity(entitysnowman);
 			return true;
 		}
-		
+
 		////// Hard-coded support for Iron Golem //////
 		isIron = doBlocksMatch(Blocks.IRON_BLOCK, blockBelow1, blockBelow2, blockArmNorth, blockArmSouth);
 		flagX = false;
-		if(!isIron) {
+		if (!isIron) {
 			// try to find an Iron Golem east-west aligned
 			isIron = doBlocksMatch(Blocks.IRON_BLOCK, blockBelow1, blockBelow2, blockArmEast, blockArmWest);
 			flagX = true;
 		}
-		
+
 		if (isIron) {
 			removeAllGolemBlocks(world, headPos, flagX);
 			// build Iron Golem
@@ -141,17 +141,17 @@ public final class BlockGolemHead extends HorizontalBlock {
 			world.addEntity(ironGolem);
 			return true;
 		}
-		
+
 		////// Attempt to spawn a Golem from this mod //////
 		GolemBase golem = GolemRegistrar.getGolem(world, blockBelow1, blockBelow2, blockArmNorth, blockArmSouth);
 		flagX = false;
 		// if no golem found for North-South, try to find one for East-West pattern
-		if(golem == null) {
+		if (golem == null) {
 			golem = GolemRegistrar.getGolem(world, blockBelow1, blockBelow2, blockArmEast, blockArmWest);
 			flagX = true;
 		}
 
-		if(golem != null && golem.getGolemContainer().isEnabled()) {
+		if (golem != null && golem.getGolemContainer().isEnabled()) {
 			// spawn the golem!
 			removeAllGolemBlocks(world, headPos, flagX);
 			golem.setPlayerCreated(true);
@@ -159,7 +159,7 @@ public final class BlockGolemHead extends HorizontalBlock {
 			ExtraGolems.LOGGER.info("[Extra Golems]: Building golem " + golem.toString());
 			world.addEntity(golem);
 			golem.onBuilt(stateBelow1, stateBelow2, flagX ? stateArmEast : stateArmWest, flagX ? stateArmNorth : stateArmSouth);
-			if(!golem.updateHomeVillage()) {
+			if (!golem.updateHomeVillage()) {
 				golem.setHomePosAndDistance(golem.getPosition(), GolemBase.WANDER_DISTANCE);
 			}
 			return true;
@@ -169,14 +169,13 @@ public final class BlockGolemHead extends HorizontalBlock {
 	}
 
 	/**
-	 * 
-	 * @param master the Block to check against
+	 * @param master  the Block to check against
 	 * @param toCheck other Block values that you want to ensure are equal
 	 * @return true if [every Block in {@code toCheck}] == master
 	 **/
 	public static boolean doBlocksMatch(Block master, Block... toCheck) {
 		boolean success = toCheck != null && toCheck.length > 0;
-		for(Block b : toCheck) {
+		for (Block b : toCheck) {
 			success &= b == master;
 		}
 		return success;

@@ -3,7 +3,6 @@ package com.mcmoddev.golems.entity;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropsBlock;
 import net.minecraft.block.IGrowable;
@@ -33,7 +32,7 @@ public final class StrawGolem extends GolemBase {
 		this.range = 4;
 		this.allowed = this.getConfigBool(ALLOW_SPECIAL);
 	}
-	
+
 	/**
 	 * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
 	 * use this to react to sunlight and start to burn.
@@ -42,23 +41,24 @@ public final class StrawGolem extends GolemBase {
 	public void livingTick() {
 		super.livingTick();
 		// look for crops to boost
-		if(this.allowed && this.rand.nextInt(boostFreq) == 0) {
+		if (this.allowed && this.rand.nextInt(boostFreq) == 0) {
 			tryBoostCrop();
 		}
 	}
-	
+
 	/**
 	 * Checks random blocks in a radius until
 	 * either a growable crop has been found and
 	 * boosted, or no crops were found in a limited
 	 * number of attempts.
+	 *
 	 * @return
 	 **/
 	private boolean tryBoostCrop() {
 		final int maxAttempts = 25;
 		final int variationY = 2;
 		int attempts = 0;
-		while(attempts <= maxAttempts) {
+		while (attempts <= maxAttempts) {
 			// increment attempts
 			++attempts;
 			// get random block in radius
@@ -71,13 +71,13 @@ public final class StrawGolem extends GolemBase {
 			final BlockPos blockpos = new BlockPos(x + x1, y + y1, z + z1);
 			final BlockState state = this.getEntityWorld().getBlockState(blockpos);
 			// if the block can be grown, grow it and return
-			if(state.getBlock() instanceof CropsBlock || state.getBlock() instanceof StemBlock) {
-				IGrowable crop = (IGrowable)state.getBlock();
-				if(crop.canGrow(this.world, blockpos, state, this.world.isRemote)) {
+			if (state.getBlock() instanceof CropsBlock || state.getBlock() instanceof StemBlock) {
+				IGrowable crop = (IGrowable) state.getBlock();
+				if (crop.canGrow(this.world, blockpos, state, this.world.isRemote)) {
 					// grow the crop!
 					crop.grow(this.world, rand, blockpos, state);
 					// spawn particles
-					if(this.world.isRemote) {
+					if (this.world.isRemote) {
 						BoneMealItem.spawnBonemealParticles(this.world, blockpos, 0);
 					}
 					return true;
@@ -86,7 +86,7 @@ public final class StrawGolem extends GolemBase {
 		}
 		return false;
 	}
-	
+
 	@Override
 	protected ResourceLocation applyTexture() {
 		return makeTexture(ExtraGolems.MODID, GolemNames.STRAW_GOLEM);

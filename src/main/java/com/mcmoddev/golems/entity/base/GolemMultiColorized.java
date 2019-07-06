@@ -1,7 +1,5 @@
 package com.mcmoddev.golems.entity.base;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -13,38 +11,43 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+
+import javax.annotation.Nullable;
+
 @SuppressWarnings("EntityConstructor")
 public abstract class GolemMultiColorized extends GolemColorized {
 
 	protected static final DataParameter<Byte> DATA_TEXTURE = EntityDataManager
-			.<Byte>createKey(GolemMultiColorized.class, DataSerializers.BYTE);
+		.<Byte>createKey(GolemMultiColorized.class, DataSerializers.BYTE);
 	protected static final String NBT_TEXTURE = "GolemTextureData";
 	protected final int[] colors;
 	protected final ResourceLocation[] lootTables;
-	
+
 	// here for convenience, used only by child classes
 	public static final int[] DYE_COLORS = {
 			16383998, 16351261, 13061821, 3847130,
-			16701501, 8439583,  15961002, 4673362,
-			10329495, 1481884,  8991416,  3949738,
-			8606770,  6192150,  11546150, 1908001 };
+			16701501, 8439583, 15961002, 4673362,
+			10329495, 1481884, 8991416, 3949738,
+			8606770, 6192150, 11546150, 1908001 };
 
 	/**
 	 * Flexible constructor so child classes can "borrow" this class's behavior and customize.
 	 * It is fine to pass 'null' for {@link base} or {@link overlay}, and null textures will not  be rendered.
-	 * @param base an optional texture that will not be recolored or rendered transparent, to render before {@link overlay}
+	 *
+	 * @param base    an optional texture that will not be recolored or rendered transparent, to render before {@link overlay}
 	 * @param overlay a texture that will be recolored and optionally rendered as transparent.
 	 * @param lColors an int[] of color values to use for rendering -- interacting with this golem  will go to the next color
 	 **/
 	public GolemMultiColorized(final EntityType<? extends GolemBase> entityType, final World world, final String modid,
-					   @Nullable final ResourceLocation base, @Nullable final ResourceLocation overlay, final int[] lColors) {
+			@Nullable final ResourceLocation base, @Nullable final ResourceLocation overlay, final int[] lColors) {
 		super(entityType, world, 0L, base, overlay);
 		colors = lColors;
 		lootTables = new ResourceLocation[colors.length];
 		for (int n = 0, len = colors.length; n < len; n++) {
 			// initialize loot tables
 			this.lootTables[n] = new ResourceLocation(modid, "entities/"
-					+ this.getEntityString().replaceAll(modid + ":", "") + "/" + n);
+				+ this.getEntityString().replaceAll(modid + ":", "") + "/" + n);
 		}
 	}
 
@@ -67,12 +70,12 @@ public abstract class GolemMultiColorized extends GolemColorized {
 			return super.processInteract(player, hand);
 		}
 	}
-	
+
 	@Override
 	public void notifyDataManagerChange(DataParameter<?> key) {
 		super.notifyDataManagerChange(key);
 		// attempt to sync texture from client -> server -> other clients
-		if(DATA_TEXTURE.equals(key)) {
+		if (DATA_TEXTURE.equals(key)) {
 			this.updateTextureByData(this.getTextureNum());
 		}
 	}

@@ -1,13 +1,16 @@
 package com.mcmoddev.golems.util.config;
 
+import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
+import com.mcmoddev.golems.util.config.special.GolemSpecialSection;
+import net.minecraftforge.common.ForgeConfigSpec;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
-import com.mcmoddev.golems.util.config.special.GolemSpecialSection;
-
-import net.minecraftforge.common.ForgeConfigSpec;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Adapted from BetterAnimalsPlus by its_meow. Used with permission.
@@ -16,7 +19,7 @@ public class GolemConfiguration {
 
 	public Map<GolemContainer, GolemConfigurationSection> sections = new HashMap<>();
 	public Map<GolemSpecialContainer, GolemSpecialSection> specials = new HashMap<>();
-	
+
 	public ForgeConfigSpec.BooleanValue bedrockGolemCreativeOnly;
 	public ForgeConfigSpec.BooleanValue pumpkinBuildsGolem;
 	public ForgeConfigSpec.BooleanValue enableFriendlyFire;
@@ -36,41 +39,41 @@ public class GolemConfiguration {
 		// Global values
 		builder.push("general");
 		this.bedrockGolemCreativeOnly = builder.comment("When true, only players in creative mode can use a Bedrock Golem spawn item")
-				.define("bedrock_golem_creative_only", true);
+			.define("bedrock_golem_creative_only", true);
 		this.pumpkinBuildsGolem = builder.comment("(Experimental) When true, pumpkins can be used to build this mod's golems")
-				.define("pumpkin_builds_golems", false);
+			.define("pumpkin_builds_golems", false);
 		this.enableFriendlyFire = builder.comment("When enabled, attacking a player-built golem will make it attack you")
-				.define("friendly_fire", true);
+			.define("friendly_fire", true);
 		this.enableTextureInteract = builder.comment("When enabled, some golems will change their texture when clicked")
-				.define("texture_interact", false);
+			.define("texture_interact", false);
 		this.enableUseItemSpell = builder.comment("When enabled, players can 'use' the spell item on a pumpkin to convert it to a golem head in-world")
 				.define("use_spell", true);
-		
+
 		builder.pop();
-		
+
 		// Categories for each Golem and their specials
-		for(GolemContainer c : GolemRegistrar.golemList.values()) {
+		for (GolemContainer c : GolemRegistrar.golemList.values()) {
 			builder.push(c.getName());
 			sections.put(c, new GolemConfigurationSection(c, builder));
-				builder.push("specials"); //golem.specials
-				for(GolemSpecialContainer specialC : c.specialContainers.values()) {
-					specials.put(specialC, new GolemSpecialSection(specialC, builder));
-				}
-				builder.pop(2); //Pops specials and the golem
+			builder.push("specials"); //golem.specials
+			for (GolemSpecialContainer specialC : c.specialContainers.values()) {
+				specials.put(specialC, new GolemSpecialSection(specialC, builder));
+			}
+			builder.pop(2); //Pops specials and the golem
 		}
 	}
-	
+
 	/**
 	 * Call on world load. Refills all containers with config values
 	 */
 	public void loadData() {
-		for(Entry<GolemContainer, GolemConfigurationSection> e : this.sections.entrySet()) {
+		for (Entry<GolemContainer, GolemConfigurationSection> e : this.sections.entrySet()) {
 			GolemContainer c = e.getKey();
 			GolemConfigurationSection section = e.getValue();
 			c.setAttack(section.attack.get());
 			c.setHealth(section.health.get());
 
-			for(GolemSpecialContainer specialC : c.specialContainers.values()) {
+			for (GolemSpecialContainer specialC : c.specialContainers.values()) {
 				specialC.value = specials.get(specialC).value;
 			}
 		}

@@ -1,25 +1,25 @@
 {
   "pools": [
-    {
-      "name": "main",
-      "rolls": 1,
-      "entries": [
-        {
-          "type": "item",
-          "name": "golems:golem_paper",
-          "weight": 1,
-          "quality": 10
-        },
-        {
-          "type": "item",
-          "name": "minecraft:redstone",
-          "weight": 15
-        },
-        {
-          "type": "empty",
-          "weight": 35
-        }
-      ]
-    }
+	{
+	  "name": "main",
+	  "rolls": 1,
+	  "entries": [
+		{
+		  "type": "item",
+		  "name": "golems:golem_paper",
+		  "weight": 1,
+		  "quality": 10
+		},
+		{
+		  "type": "item",
+		  "name": "minecraft:redstone",
+		  "weight": 15
+		},
+		{
+		  "type": "empty",
+		  "weight": 35
+		}
+	  ]
+	}
   ]
 }

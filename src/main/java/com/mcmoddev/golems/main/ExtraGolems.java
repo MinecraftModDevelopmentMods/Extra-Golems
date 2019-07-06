@@ -1,8 +1,5 @@
 package com.mcmoddev.golems.main;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.mcmoddev.golems.events.handlers.GolemCommonEventHandler;
 import com.mcmoddev.golems.integration.ModIds;
 import com.mcmoddev.golems.proxies.ProxyClient;
@@ -10,7 +7,6 @@ import com.mcmoddev.golems.proxies.ProxyCommon;
 import com.mcmoddev.golems.proxies.ProxyServer;
 import com.mcmoddev.golems.util.BlockTagUtil;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
@@ -25,6 +21,8 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Mod(ExtraGolems.MODID)
 @Mod.EventBusSubscriber(modid = ExtraGolems.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -35,7 +33,7 @@ public class ExtraGolems {
 	@SuppressWarnings("Convert2MethodRef")
 	//DO NOT USE METHOD REFERENCES. THESE ARE BAD! (according to gigaherz)
 	public static final ProxyCommon PROXY = DistExecutor.runForDist(() -> () -> new ProxyClient(),
-		() -> () -> new ProxyServer());
+			() -> () -> new ProxyServer());
 
 	public static final Logger LOGGER = LogManager.getFormatterLogger(ExtraGolems.MODID);
 
@@ -52,7 +50,7 @@ public class ExtraGolems {
 	}
 
 	private void setup(final FMLCommonSetupEvent event) {
-		
+
 	}
 
 	private void enqueueIMC(final InterModEnqueueEvent event) {
@@ -60,7 +58,7 @@ public class ExtraGolems {
 			// InterModComms.sendTo(ModIds.TOP, "getTheOneProbe", TOPExtraGolems.GetTheOneProbe::new);
 		}
 	}
-	
+
 	@SubscribeEvent
 	public static void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
 		ExtraGolems.LOGGER.info("registerEntities");
@@ -79,7 +77,7 @@ public class ExtraGolems {
 		ExtraGolems.LOGGER.info("registerBlocks");
 		ExtraGolems.PROXY.registerBlocks(event);
 	}
-	
+
 //	@Mod.EventHandler
 //	public static void init(final FMLInitializationEvent event) {
 //

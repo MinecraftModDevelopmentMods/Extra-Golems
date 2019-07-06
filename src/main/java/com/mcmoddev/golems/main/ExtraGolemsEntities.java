@@ -1,43 +1,6 @@
 package com.mcmoddev.golems.main;
 
-import com.mcmoddev.golems.entity.BedrockGolem;
-import com.mcmoddev.golems.entity.BoneGolem;
-import com.mcmoddev.golems.entity.BookshelfGolem;
-import com.mcmoddev.golems.entity.ClayGolem;
-import com.mcmoddev.golems.entity.CoalGolem;
-import com.mcmoddev.golems.entity.ConcreteGolem;
-import com.mcmoddev.golems.entity.CraftingGolem;
-import com.mcmoddev.golems.entity.DiamondGolem;
-import com.mcmoddev.golems.entity.EmeraldGolem;
-import com.mcmoddev.golems.entity.EndstoneGolem;
-import com.mcmoddev.golems.entity.GlassGolem;
-import com.mcmoddev.golems.entity.GlowstoneGolem;
-import com.mcmoddev.golems.entity.GoldGolem;
-import com.mcmoddev.golems.entity.IceGolem;
-import com.mcmoddev.golems.entity.LapisGolem;
-import com.mcmoddev.golems.entity.LeafGolem;
-import com.mcmoddev.golems.entity.MagmaGolem;
-import com.mcmoddev.golems.entity.MelonGolem;
-import com.mcmoddev.golems.entity.MushroomGolem;
-import com.mcmoddev.golems.entity.NetherBrickGolem;
-import com.mcmoddev.golems.entity.NetherWartGolem;
-import com.mcmoddev.golems.entity.ObsidianGolem;
-import com.mcmoddev.golems.entity.PrismarineGolem;
-import com.mcmoddev.golems.entity.QuartzGolem;
-import com.mcmoddev.golems.entity.RedSandstoneGolem;
-import com.mcmoddev.golems.entity.RedstoneGolem;
-import com.mcmoddev.golems.entity.RedstoneLampGolem;
-import com.mcmoddev.golems.entity.SandstoneGolem;
-import com.mcmoddev.golems.entity.SeaLanternGolem;
-import com.mcmoddev.golems.entity.SlimeGolem;
-import com.mcmoddev.golems.entity.SpongeGolem;
-import com.mcmoddev.golems.entity.StainedTerracottaGolem;
-import com.mcmoddev.golems.entity.StainedGlassGolem;
-import com.mcmoddev.golems.entity.StrawGolem;
-import com.mcmoddev.golems.entity.TNTGolem;
-import com.mcmoddev.golems.entity.TerracottaGolem;
-import com.mcmoddev.golems.entity.WoodenGolem;
-import com.mcmoddev.golems.entity.WoolGolem;
+import com.mcmoddev.golems.entity.*;
 import com.mcmoddev.golems.entity.base.GolemMultiColorized;
 import com.mcmoddev.golems.events.GolemRegistrarEvent;
 import com.mcmoddev.golems.util.BlockTagUtil;
@@ -45,19 +8,17 @@ import com.mcmoddev.golems.util.GolemNames;
 import com.mcmoddev.golems.util.config.GolemContainer;
 import com.mcmoddev.golems.util.config.GolemDescription;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
-
 import net.minecraft.block.Blocks;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.MinecraftForge;
 
 public final class ExtraGolemsEntities {
 
-	private ExtraGolemsEntities() {	}
+	private ExtraGolemsEntities() {
+	}
 
 	public static void initEntityTypes() {
 		// Repeated GolemDescription components
@@ -67,18 +28,18 @@ public final class ExtraGolemsEntities {
 		final ITextComponent HEALS = new TranslationTextComponent("entitytip.heals").applyTextStyle(TextFormatting.LIGHT_PURPLE);
 		// used for loot tables in multi-colored golems
 		final String[] RANGE = new String[GolemMultiColorized.DYE_COLORS.length];
-		for(int i = 0, l = RANGE.length; i < l; i++) {
+		for (int i = 0, l = RANGE.length; i < l; i++) {
 			RANGE[i] = String.valueOf(i);
 		}
-		
+
 		// BEDROCK GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(
 				GolemNames.BEDROCK_GOLEM, BedrockGolem.class, BedrockGolem::new)
 				.setHealth(999.0D).setAttack(32.0D)
 				.addDesc(new GolemDescription(new TranslationTextComponent("entitytip.indestructible")
-							.applyTextStyles(TextFormatting.WHITE, TextFormatting.BOLD)),
+								.applyTextStyles(TextFormatting.WHITE, TextFormatting.BOLD)),
 						new GolemDescription(new TranslationTextComponent("tooltip.creative_only_item")
-							.applyTextStyle(TextFormatting.DARK_RED)))
+								.applyTextStyle(TextFormatting.DARK_RED)))
 				.build());
 		// BONE GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.BONE_GOLEM, BoneGolem.class, BoneGolem::new)
@@ -148,14 +109,14 @@ public final class ExtraGolemsEntities {
 				.setHealth(50.0D).setAttack(1.5D).setSpeed(0.285D).addBlocks(Blocks.LAPIS_BLOCK).addLootTable(GolemNames.LAPIS_GOLEM)
 				.addSpecial(LapisGolem.ALLOW_SPECIAL, true, "Whether this golem can inflict harmful potion effects",
 						new TranslationTextComponent("entitytip.attacks_use_potion_effects")
-						.applyTextStyle(TextFormatting.LIGHT_PURPLE))
+								.applyTextStyle(TextFormatting.LIGHT_PURPLE))
 				.build());
 		// LEAF GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.LEAF_GOLEM, LeafGolem.class, LeafGolem::new)
 				.setHealth(6.0D).setAttack(0.5D).setSpeed(0.31D).addBlocks(BlockTags.LEAVES).addLootTable(GolemNames.LEAF_GOLEM)
 				.addSpecial(LeafGolem.ALLOW_SPECIAL, true, "Whether this golem can heal itself",
 						new TranslationTextComponent("effect.minecraft.regeneration").applyTextStyle(TextFormatting.DARK_GREEN)
-						.appendText(" ").appendSibling(new TranslationTextComponent("enchantment.level.1")))
+								.appendText(" ").appendSibling(new TranslationTextComponent("enchantment.level.1")))
 				.build());
 		// MAGMA GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.MAGMA_GOLEM, MagmaGolem.class, MagmaGolem::new)
@@ -288,7 +249,7 @@ public final class ExtraGolemsEntities {
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.WOOL_GOLEM, WoolGolem.class, WoolGolem::new)
 				.setHealth(10.0D).setAttack(1.0D).setSpeed(0.295D).addBlocks(BlockTags.WOOL)
 				.addLootTables(GolemNames.WOOL_GOLEM, RANGE).build());
-		
+
 		// fire GolemRegistrar event for any listening child mods (addons)
 		MinecraftForge.EVENT_BUS.post(new GolemRegistrarEvent());
 	}

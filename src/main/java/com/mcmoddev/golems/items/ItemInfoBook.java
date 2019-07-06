@@ -1,7 +1,6 @@
 package com.mcmoddev.golems.items;
 
 import com.mcmoddev.golems.gui.GuiLoader;
-
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;

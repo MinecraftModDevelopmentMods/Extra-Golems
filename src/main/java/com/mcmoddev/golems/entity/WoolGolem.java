@@ -1,12 +1,8 @@
 package com.mcmoddev.golems.entity;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -20,9 +16,10 @@ public final class WoolGolem extends GolemMultiTextured {
 
 	public static final String WOOL_PREFIX = "wool";
 	public static final String[] coloredWoolTypes = { "black", "orange", "magenta", "light_blue",
-			"yellow", "lime", "pink", "gray", "silver", "cyan", "purple", "blue", "brown", "green",
-			"red", "white" };
+		"yellow", "lime", "pink", "gray", "silver", "cyan", "purple", "blue", "brown", "green",
+		"red", "white" };
 	private static final Map<Block, Byte> blockToTexture = new HashMap<>();
+
 	static {
 		blockToTexture.put(Blocks.BLACK_WOOL, (byte) 0);
 		blockToTexture.put(Blocks.ORANGE_WOOL, (byte) 1);
@@ -41,7 +38,7 @@ public final class WoolGolem extends GolemMultiTextured {
 		blockToTexture.put(Blocks.RED_WOOL, (byte) 14);
 		blockToTexture.put(Blocks.WHITE_WOOL, (byte) 15);
 	}
-	
+
 	private boolean secret = false;
 	private byte[] iSecret = { 14, 1, 4, 5, 3, 11, 10, 2 };
 
@@ -80,9 +77,9 @@ public final class WoolGolem extends GolemMultiTextured {
 	public void onBuilt(BlockState body, BlockState legs, BlockState arm1, BlockState arm2) {
 		// uses HashMap to determine which texture this golem should apply
 		// based on the top-middle building block. Defaults to a random texture.
-		byte textureNum = blockToTexture.containsKey(body.getBlock()) 
-				? blockToTexture.get(body.getBlock()) 
-				: (byte)this.rand.nextInt(coloredWoolTypes.length);
+		byte textureNum = blockToTexture.containsKey(body.getBlock())
+				? blockToTexture.get(body.getBlock())
+				: (byte) this.rand.nextInt(coloredWoolTypes.length);
 		this.setTextureNum(textureNum);
 	}
 
@@ -97,22 +94,22 @@ public final class WoolGolem extends GolemMultiTextured {
 	private static String getRainbowString(final String stringIn, final long timeIn) {
 		String in = TextFormatting.getTextWithoutFormattingCodes(stringIn);
 		StringBuilder stringOut = new StringBuilder(stringIn.length() * 2);
-		int time = timeIn > Integer.MAX_VALUE / 2 ? Integer.MAX_VALUE / 2 : (int)timeIn;
-		   TextFormatting[] colorChar =
-		      {
-		         TextFormatting.RED,
-		         TextFormatting.GOLD,
-		         TextFormatting.YELLOW,
-		         TextFormatting.GREEN,
-		         TextFormatting.AQUA,
-		         TextFormatting.BLUE,
-		         TextFormatting.LIGHT_PURPLE,
-		         TextFormatting.DARK_PURPLE
-		      };
-		   for(int i = 0, l = in.length(), cl = colorChar.length; i < l; i++) {
-			   int meta = i + time ;
-			   stringOut.append(colorChar[meta % cl] + "" + in.charAt(i));
-		   }
-		   return stringOut.toString();
+		int time = timeIn > Integer.MAX_VALUE / 2 ? Integer.MAX_VALUE / 2 : (int) timeIn;
+		TextFormatting[] colorChar =
+				{
+						TextFormatting.RED,
+						TextFormatting.GOLD,
+						TextFormatting.YELLOW,
+						TextFormatting.GREEN,
+						TextFormatting.AQUA,
+						TextFormatting.BLUE,
+						TextFormatting.LIGHT_PURPLE,
+						TextFormatting.DARK_PURPLE
+				};
+		for (int i = 0, l = in.length(), cl = colorChar.length; i < l; i++) {
+			int meta = i + time;
+			stringOut.append(colorChar[meta % cl] + "" + in.charAt(i));
+		}
+		return stringOut.toString();
 	}
 }

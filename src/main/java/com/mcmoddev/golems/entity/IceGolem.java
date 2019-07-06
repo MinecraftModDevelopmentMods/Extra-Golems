@@ -1,13 +1,9 @@
 package com.mcmoddev.golems.entity;
 
-import java.util.List;
-import java.util.function.Function;
-
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.events.IceGolemFreezeEvent;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -57,7 +53,7 @@ public final class IceGolem extends GolemBase {
 				final IceGolemFreezeEvent event = new IceGolemFreezeEvent(this, below, aoe);
 				if (!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Event.Result.DENY) {
 					this.freezeBlocks(event.getAffectedPositions(), event.getFunction(),
-						event.updateFlag);
+							event.updateFlag);
 				}
 			}
 		}
@@ -92,7 +88,7 @@ public final class IceGolem extends GolemBase {
 	 * @return whether all setBlockState calls were successful.
 	 **/
 	public boolean freezeBlocks(final List<BlockPos> positions,
-				    final Function<BlockState, BlockState> function, final int updateFlag) {
+			final Function<BlockState, BlockState> function, final int updateFlag) {
 		boolean flag = true;
 		for (BlockPos pos : positions) {
 			flag &= this.world.setBlockState(pos, function.apply(this.world.getBlockState(pos)), updateFlag);

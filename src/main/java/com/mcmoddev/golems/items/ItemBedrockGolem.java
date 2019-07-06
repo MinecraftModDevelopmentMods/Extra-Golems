@@ -6,10 +6,10 @@ import java.util.Objects;
 import javax.annotation.Nullable;
 
 import com.mcmoddev.golems.entity.BedrockGolem;
+
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mcmoddev.golems.util.config.GolemContainer;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
@@ -33,6 +33,14 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Objects;
+
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Objects;
+
 public final class ItemBedrockGolem extends Item {
 
 	@OnlyIn(Dist.CLIENT)
@@ -40,8 +48,8 @@ public final class ItemBedrockGolem extends Item {
 	@OnlyIn(Dist.CLIENT)
 	private static final ITextComponent lorePressShift = trans("tooltip.press").applyTextStyle(TextFormatting.GRAY)
 			.appendSibling(wrap(" ")).appendSibling(trans("tooltip.shift").applyTextStyle(TextFormatting.YELLOW))
-			.appendSibling(wrap(" ")).appendSibling(trans("tooltip.for_more_details").applyTextStyle(TextFormatting.GRAY));	
-	
+			.appendSibling(wrap(" ")).appendSibling(trans("tooltip.for_more_details").applyTextStyle(TextFormatting.GRAY));
+
 	public ItemBedrockGolem() {
 		super(new Properties().group(ItemGroup.MISC));
 	}
@@ -54,7 +62,7 @@ public final class ItemBedrockGolem extends Item {
 		final BlockPos pos = context.getPos();
 		final ItemStack stack = context.getItem();
 
-		if((ExtraGolemsConfig.bedrockGolemCreativeOnly() && !player.abilities.isCreativeMode) 
+		if ((ExtraGolemsConfig.bedrockGolemCreativeOnly() && !player.abilities.isCreativeMode)
 				|| facing == Direction.DOWN) {
 			return ActionResultType.FAIL;
 		}
@@ -75,7 +83,7 @@ public final class ItemBedrockGolem extends Item {
 			if (!worldIn.isRemote && entitytype != null) {
 				// spawn the golem!
 				entitytype.spawn(worldIn, stack, player, spawnPos, SpawnReason.SPAWN_EGG, true,
-						!Objects.equals(pos, spawnPos) && facing == Direction.UP);
+					!Objects.equals(pos, spawnPos) && facing == Direction.UP);
 				stack.shrink(1);
 			}
 			spawnParticles(worldIn, spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), 0.12D);
@@ -88,10 +96,10 @@ public final class ItemBedrockGolem extends Item {
 		if (world.isRemote) {
 			for (int i1 = 60 + world.rand.nextInt(30); i1 > 0; --i1) {
 				world.addParticle(ParticleTypes.LARGE_SMOKE, x + world.rand.nextDouble() - 0.5D,
-					y + world.rand.nextDouble() - 0.5D, z + world.rand.nextDouble() - 0.5D,
-					world.rand.nextDouble() * motion,
-					world.rand.nextDouble() * motion * 0.25D + 0.08D,
-					world.rand.nextDouble() * motion);
+						y + world.rand.nextDouble() - 0.5D, z + world.rand.nextDouble() - 0.5D,
+						world.rand.nextDouble() * motion,
+						world.rand.nextDouble() * motion * 0.25D + 0.08D,
+						world.rand.nextDouble() * motion);
 			}
 		}
 	}
@@ -107,7 +115,7 @@ public final class ItemBedrockGolem extends Item {
 		if (Screen.hasShiftDown()) {
 			tooltip.add(wrap(I18n.format("tooltip.use_to_spawn", trans("entity.golems.golem_bedrock"))));
 			tooltip.add(wrap(I18n.format("tooltip.use_on_existing",
-				trans("entity.golems.golem_bedrock"))));
+					trans("entity.golems.golem_bedrock"))));
 			tooltip.add(wrap(trans("tooltip.to_remove_it") + "."));
 		} else {
 			// "Press SHIFT for more details"
@@ -120,7 +128,7 @@ public final class ItemBedrockGolem extends Item {
 	private static TranslationTextComponent trans(final String s) {
 		return new TranslationTextComponent(s);
 	}
-	
+
 	@OnlyIn(Dist.CLIENT)
 	private static StringTextComponent wrap(String s) {
 		return new StringTextComponent(s);

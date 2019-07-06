@@ -3,7 +3,6 @@ package com.mcmoddev.golems.entity;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -38,7 +37,7 @@ public final class CoalGolem extends GolemBase {
 			final int BLIND_CHANCE = 2;
 			if (entity instanceof LivingEntity && this.getConfigBool(ALLOW_SPECIAL) && this.rand.nextInt(BLIND_CHANCE) == 0) {
 				((LivingEntity) entity).addPotionEffect(
-					new EffectInstance(Effects.BLINDNESS, 20 * (3 + rand.nextInt(5)), 0));
+						new EffectInstance(Effects.BLINDNESS, 20 * (3 + rand.nextInt(5)), 0));
 			}
 			return true;
 		}

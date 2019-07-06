@@ -2,7 +2,6 @@ package com.mcmoddev.golems.items;
 
 import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalBlock;
@@ -16,7 +15,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 public class ItemGolemSpell extends Item {
-	
+
 	/*
 	 * This behavior enables a Dispenser to convert a Carved Pumpkin into a Golem Head. That's all.
 	 *
@@ -46,11 +45,11 @@ public class ItemGolemSpell extends Item {
 
 	@Override
 	public ActionResultType onItemUse(ItemUseContext cxt) {
-		if(ExtraGolemsConfig.enableUseSpellItem() && cxt.getPos() != null && cxt.getItem() != null && !cxt.getItem().isEmpty()) {
+		if (ExtraGolemsConfig.enableUseSpellItem() && cxt.getPos() != null && cxt.getItem() != null && !cxt.getItem().isEmpty()) {
 			final Block b = cxt.getWorld().getBlockState(cxt.getPos()).getBlock();
-			if(b == Blocks.CARVED_PUMPKIN || (b == Blocks.PUMPKIN && ExtraGolemsConfig.pumpkinBuildsGolems())) {
-				if(!cxt.getWorld().isRemote) {
-					final Direction facing = cxt.getWorld().getBlockState(cxt.getPos()).get(HorizontalBlock.HORIZONTAL_FACING); 
+			if (b == Blocks.CARVED_PUMPKIN || (b == Blocks.PUMPKIN && ExtraGolemsConfig.pumpkinBuildsGolems())) {
+				if (!cxt.getWorld().isRemote) {
+					final Direction facing = cxt.getWorld().getBlockState(cxt.getPos()).get(HorizontalBlock.HORIZONTAL_FACING);
 					cxt.getWorld().setBlockState(cxt.getPos(), GolemItems.GOLEM_HEAD.getDefaultState().with(HorizontalBlock.HORIZONTAL_FACING, facing), 3);
 				}
 				cxt.getItem().shrink(1);

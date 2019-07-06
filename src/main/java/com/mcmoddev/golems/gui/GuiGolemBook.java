@@ -1,15 +1,10 @@
 package com.mcmoddev.golems.gui;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.util.config.GolemContainer;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
@@ -25,8 +20,16 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class GuiGolemBook extends Screen {
-	
+
 	//////////// GUI GOLEM BOOK LAYOUT ////////////
 	//[X] 2-Page Layout:
 	////// [X] Each screen will have a double-version of the
@@ -68,7 +71,7 @@ public class GuiGolemBook extends Screen {
 	//////     "Fireproof" if the Golem is fireproof
 	//////     All Golem Specials as defined in GolemBase#addSpecialDesc(List<String>)
 	//////     (each entry as a separate line)
-	
+
 	///////////////////////////////////////////////
 
 	// The texture used by the majority of this gui
@@ -86,16 +89,16 @@ public class GuiGolemBook extends Screen {
 	// width of the arrow button and its texture
 	protected static final int ARROW_WIDTH = 13 + DEF_SEP;
 	protected static final int ARROW_HEIGHT = 10 + DEF_SEP;
-	/** 
-	 * size of the supplemental (optional) image for each golem. 
-	 * As long as it's a 2:1 ratio, it'll work 
+	/**
+	 * size of the supplemental (optional) image for each golem.
+	 * As long as it's a 2:1 ratio, it'll work
 	 **/
 	protected static final int SUPP_WIDTH = 100;
 	protected static final int SUPP_HEIGHT = 50;
 
 	// Button to exit GUI
 	private Button buttonDone;
-	 // If a Block is displayed on the LEFT side, this helps with the tooltip
+	// If a Block is displayed on the LEFT side, this helps with the tooltip
 	private GuiGolemBook.BlockButton buttonBlockLeft;
 	// If a Block is displayed on the RIGHT side, this helps with the tooltip
 	private GuiGolemBook.BlockButton buttonBlockRight;
@@ -105,40 +108,46 @@ public class GuiGolemBook extends Screen {
 	private GuiGolemBook.NextPageButton buttonPreviousPage;
 	// Clickable link to each golem, used on page 2
 	private GuiGolemBook.GolemEntryButton[] tableOfContents;
-    
-    protected int curPage;
-    protected int totalPages;
-    
-    public static final List<GolemBookEntry> GOLEMS = new ArrayList<>();
-    private static final List<GolemBookEntry> ALPHABETICAL = new ArrayList<>();
-    
-    private static final float GOLEM_BLOCK_SCALE = 1.60F;
-    private static final int MARGIN = 12;
-    private static final int NUM_PAGES_INTRO = 6;
-    // there are six entries showing at a time
-    private static final int NUM_CONTENTS_ENTRIES = 5;
-    
-    protected static final int CONTENTS_W = 106, CONTENTS_H = 110;
-    protected static final int SCROLL_STARTX = MARGIN, SCROLL_STARTY = MARGIN * 2;
-    protected static final int SCROLL_W = 12, SCROLL_H = 15;
-    protected static final int ENTRY_W = 88, ENTRY_H = 22;
-    /** Amount scrolled in Table of Contents (0 = top, 1 = bottom) */
-    private float currentScroll;
-    /** True if the scrollbar is being dragged */
-    private boolean isScrolling;
-    /** in-game tick counter for when GUI is paused **/
-    protected long ticksOpen;
-    
-    // for use in drawing golem spell recipe
-    private static final ItemStack[] ingredientsSpell = new ItemStack[] 
-			{ new ItemStack(Items.PAPER), new ItemStack(Items.FEATHER), 
-			  new ItemStack(Items.REDSTONE), new ItemStack(Items.INK_SAC) };
+
+	protected int curPage;
+	protected int totalPages;
+
+	public static final List<GolemBookEntry> GOLEMS = new ArrayList<>();
+	private static final List<GolemBookEntry> ALPHABETICAL = new ArrayList<>();
+
+	private static final float GOLEM_BLOCK_SCALE = 1.60F;
+	private static final int MARGIN = 12;
+	private static final int NUM_PAGES_INTRO = 6;
+	// there are six entries showing at a time
+	private static final int NUM_CONTENTS_ENTRIES = 5;
+
+	protected static final int CONTENTS_W = 106, CONTENTS_H = 110;
+	protected static final int SCROLL_STARTX = MARGIN, SCROLL_STARTY = MARGIN * 2;
+	protected static final int SCROLL_W = 12, SCROLL_H = 15;
+	protected static final int ENTRY_W = 88, ENTRY_H = 22;
+	/**
+	 * Amount scrolled in Table of Contents (0 = top, 1 = bottom)
+	 */
+	private float currentScroll;
+	/**
+	 * True if the scrollbar is being dragged
+	 */
+	private boolean isScrolling;
+	/**
+	 * in-game tick counter for when GUI is paused
+	 **/
+	protected long ticksOpen;
+
+	// for use in drawing golem spell recipe
+	private static final ItemStack[] ingredientsSpell = new ItemStack[]
+			{ new ItemStack(Items.PAPER), new ItemStack(Items.FEATHER),
+					new ItemStack(Items.REDSTONE), new ItemStack(Items.INK_SAC) };
 	private static final ItemStack outputSpell = new ItemStack(GolemItems.GOLEM_SPELL);
 	// for use in drawing golem head recipe
 	private static final ItemStack[] ingredientsHead = new ItemStack[]
-		{new ItemStack(Blocks.CARVED_PUMPKIN), new ItemStack(GolemItems.GOLEM_SPELL)};
+			{ new ItemStack(Blocks.CARVED_PUMPKIN), new ItemStack(GolemItems.GOLEM_SPELL) };
 	private static final ItemStack outputHead = new ItemStack(GolemItems.GOLEM_HEAD);
-	
+
 	public GuiGolemBook(PlayerEntity playerIn, ItemStack itemIn) {
 		super(new TranslationTextComponent("item.golems.info_book"));
 		if (GOLEMS.isEmpty()) {
@@ -149,17 +158,17 @@ public class GuiGolemBook extends Screen {
 		this.totalPages = NUM_PAGES_INTRO + GOLEMS.size();
 		this.currentScroll = 0;
 		this.isScrolling = false;
-    	this.tableOfContents = new GuiGolemBook.GolemEntryButton[NUM_CONTENTS_ENTRIES];
-    	this.ticksOpen = 0L;
+		this.tableOfContents = new GuiGolemBook.GolemEntryButton[NUM_CONTENTS_ENTRIES];
+		this.ticksOpen = 0L;
 	}
 
 	/**
 	 * Populates the GolemEntry list to use in book gui
 	 **/
 	private static final void initGolemBookEntries() {
-		GOLEMS.clear();	
+		GOLEMS.clear();
 		for (GolemContainer container : GolemRegistrar.getContainers()) {
-			if(container.isEnabled()) {
+			if (container.isEnabled()) {
 				GOLEMS.add(new GolemBookEntry(container));
 			}
 		}
@@ -174,37 +183,37 @@ public class GuiGolemBook extends Screen {
 
 	@Override
 	public void init() {
-    	// add the "close gui" button
-    	int doneW = 98;
-    	int doneH = 20;
-    	int doneX = (this.width - doneW) / 2;
-    	int doneY = BOOK_HEIGHT + SCR_OFFSET_Y + 8;
-    	this.buttonDone = this.addButton(new Button(doneX, doneY, doneW, doneH, I18n.format("gui.done"), c -> onClose()));
-    	// locate and activate the "page change" arrows
+		// add the "close gui" button
+		int doneW = 98;
+		int doneH = 20;
+		int doneX = (this.width - doneW) / 2;
+		int doneY = BOOK_HEIGHT + SCR_OFFSET_Y + 8;
+		this.buttonDone = this.addButton(new Button(doneX, doneY, doneW, doneH, I18n.format("gui.done"), c -> onClose()));
+		// locate and activate the "page change" arrows
 		int arrowX = (this.width - BOOK_WIDTH) / 2;
 		int arrowY = SCR_OFFSET_Y + BOOK_HEIGHT - (ARROW_HEIGHT * 3 / 2);
 		this.buttonPreviousPage = this.addButton(new GuiGolemBook.NextPageButton(this, arrowX + ARROW_WIDTH, arrowY, false));
 		this.buttonNextPage = this.addButton(new GuiGolemBook.NextPageButton(this, arrowX + BOOK_WIDTH - ARROW_WIDTH * 2, arrowY, true));
-    	// calculate location and size of blocks icons, if present
-		int blockX = ((this.width - BOOK_WIDTH ) / 2) + MARGIN + 4;
-    	int blockY = SCR_OFFSET_Y + MARGIN;
+		// calculate location and size of blocks icons, if present
+		int blockX = ((this.width - BOOK_WIDTH) / 2) + MARGIN + 4;
+		int blockY = SCR_OFFSET_Y + MARGIN;
 		this.buttonBlockLeft = this.addButton(new GuiGolemBook.BlockButton(this, new Block[] {}, blockX, blockY, GOLEM_BLOCK_SCALE));
 		blockX = (this.width / 2) + MARGIN;
-    	this.buttonBlockRight = this.addButton(new GuiGolemBook.BlockButton(this, new Block[] {}, blockX, blockY, GOLEM_BLOCK_SCALE));
+		this.buttonBlockRight = this.addButton(new GuiGolemBook.BlockButton(this, new Block[] {}, blockX, blockY, GOLEM_BLOCK_SCALE));
 		// create table of contents
-    	for(int i = 0; i < NUM_CONTENTS_ENTRIES; i++) {
-    		this.tableOfContents[i] = this.addButton(new GuiGolemBook.GolemEntryButton(this, 
-    				ALPHABETICAL.get(i), (this.width / 2) + SCROLL_STARTX, SCR_OFFSET_Y + SCROLL_STARTY + ENTRY_H * i));
-    	}	
-    	this.updateButtons();
+		for (int i = 0; i < NUM_CONTENTS_ENTRIES; i++) {
+			this.tableOfContents[i] = this.addButton(new GuiGolemBook.GolemEntryButton(this,
+					ALPHABETICAL.get(i), (this.width / 2) + SCROLL_STARTX, SCR_OFFSET_Y + SCROLL_STARTY + ENTRY_H * i));
+		}
+		this.updateButtons();
 	}
 
 	/**
 	 * Called from the main game loop to update the screen.
 	 */
 	@Override
-	public void tick() { 
-		++ticksOpen; 
+	public void tick() {
+		++ticksOpen;
 	}
 
 	@Override
@@ -264,24 +273,24 @@ public class GuiGolemBook extends Screen {
 				// draw Table of Contents
 				title = trans("golembook.contents.title");
 				drawBasicPage(cornerX, cornerY, title, "");
-				
+
 				// draw background
 				this.getMinecraft().getTextureManager().bindTexture(CONTENTS);
 				GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 				startX = cornerX + SCROLL_STARTX + 1;
 				startY = cornerY + SCROLL_STARTY - 1;
 				this.drawTexturedModalRect(startX, startY, 0, 0, CONTENTS_W, CONTENTS_H + 2);
-				
+
 				// draw scroll bar
 				startX = getScrollX(this.width) - 2;
 				startY = getScrollY(this.currentScroll);
-				this.drawTexturedModalRect(startX, startY, this.isScrolling ? SCROLL_W + DEF_SEP : 0, 
+				this.drawTexturedModalRect(startX, startY, this.isScrolling ? SCROLL_W + DEF_SEP : 0,
 						CONTENTS_H + DEF_SEP, SCROLL_W, SCROLL_H);
-				
+
 				// update button contents
-				if(this.isScrolling) {
+				if (this.isScrolling) {
 					GolemBookEntry[] visibleArray = getGolemEntriesForScroll(this.currentScroll);
-					for(int i = 0, l = this.tableOfContents.length; i < l; i++) {
+					for (int i = 0, l = this.tableOfContents.length; i < l; i++) {
 						this.tableOfContents[i].setEntry(visibleArray[i]);
 					}
 				}
@@ -290,8 +299,8 @@ public class GuiGolemBook extends Screen {
 				// draw Golem Spell instructions
 				title = TextFormatting.getTextWithoutFormattingCodes(trans("item.golems.golem_paper"));
 				body = "\n\n\n\n" + I18n.format("golembook.recipe_spell.recipe", title,
-					trans("item.minecraft.paper"), trans("item.minecraft.feather"),
-					trans("item.minecraft.ink_sac"), trans("item.minecraft.redstone"));
+						trans("item.minecraft.paper"), trans("item.minecraft.feather"),
+						trans("item.minecraft.ink_sac"), trans("item.minecraft.redstone"));
 				drawBasicPage(cornerX, cornerY, title, body);
 				draw2x2GridAt(cornerX + MARGIN * 2, cornerY + MARGIN * 2, ingredientsSpell, outputSpell);
 				return;
@@ -299,7 +308,7 @@ public class GuiGolemBook extends Screen {
 				// draw Golem Head instructions
 				title = trans("block.golems.golem_head");
 				body = "\n\n\n\n" + TextFormatting.getTextWithoutFormattingCodes(trans("golembook.recipe_head.recipe", title,
-					trans("item.golems.golem_paper"), trans("block.minecraft.pumpkin")));
+						trans("item.golems.golem_paper"), trans("block.minecraft.pumpkin")));
 				drawBasicPage(cornerX, cornerY, title, body);
 				draw2x2GridAt(cornerX + MARGIN * 2, cornerY + MARGIN * 2, ingredientsHead, outputHead);
 				return;
@@ -307,8 +316,8 @@ public class GuiGolemBook extends Screen {
 				// draw Make Golem instructions
 				title = trans("golembook.build_golem.title");
 				body = trans("golembook.build_golem.howto1") + " "
-					+ trans("golembook.build_golem.howto2") + "\n\n"
-					+ I18n.format("golembook.build_golem.howto3", trans("block.golems.golem_head"));
+						+ trans("golembook.build_golem.howto2") + "\n\n"
+						+ I18n.format("golembook.build_golem.howto3", trans("block.golems.golem_head"));
 				drawBasicPage(cornerX, cornerY, title, body);
 				return;
 			case 5:
@@ -350,148 +359,150 @@ public class GuiGolemBook extends Screen {
 
 
 	private void drawPageNum(final int cornerX, final int cornerY, final int pageNum) {
-    	boolean isLeft = pageNum % 2 == 1;
-    	// 'page x of xx'
- 		int numX = isLeft ? ((this.width / 2) - MARGIN) : ((this.width / 2) + MARGIN);
- 		int numY = cornerY + BOOK_HEIGHT - (ARROW_HEIGHT * 3 / 2);
- 		String pageNumLeft = String.valueOf(pageNum);
- 		int sWidth = isLeft ? this.font.getStringWidth(pageNumLeft) : 0;
-        this.font.drawString(pageNumLeft, numX - sWidth, numY , 0);
-    }
-    
-    /** 
+		boolean isLeft = pageNum % 2 == 1;
+		// 'page x of xx'
+		int numX = isLeft ? ((this.width / 2) - MARGIN) : ((this.width / 2) + MARGIN);
+		int numY = cornerY + BOOK_HEIGHT - (ARROW_HEIGHT * 3 / 2);
+		String pageNumLeft = String.valueOf(pageNum);
+		int sWidth = isLeft ? this.font.getStringWidth(pageNumLeft) : 0;
+		this.font.drawString(pageNumLeft, numX - sWidth, numY, 0);
+	}
+
+	/**
 	 * Draws the given Block in the upper-left corner of the passed page coordinates.
+	 *
 	 * @param blockIn the block to draw. If this is Blocks.AIR, a barrier will be drawn instead.
 	 **/
-    protected void drawBlock(final Block blockIn, final int cornerX, final int cornerY, final float scale) {
-    	// 'Blocks.AIR' is the flag for 'no block'
-    	Block block = blockIn != Blocks.AIR ? blockIn : Blocks.BARRIER;
-		float blockX = (float)(cornerX + MARGIN + 4);
-    	float blockY = (float)(cornerY + MARGIN);
-    	// Render the Block with given scale
-    	GlStateManager.pushMatrix();
-    	GlStateManager.enableRescaleNormal();
-    	RenderHelper.enableGUIStandardItemLighting();
-    	GlStateManager.scalef(scale, scale, scale);
-    	this.itemRenderer.renderItemIntoGUI(new ItemStack(block), (int)(blockX / scale), (int)(blockY / scale));
-    	GlStateManager.popMatrix();
-    }
-    
-    /** 
-	 * Draws the GolemEntry name and description at the given location 
-	 **/
-    private void drawGolemEntry(int cornerX, int cornerY, final GolemBookEntry entry, final float partialTicks) {
- 		// 'golem name' text box
-    	int nameX = cornerX + MARGIN * 4;
- 		int nameY = cornerY + MARGIN;
- 		String golemName = entry.getGolemName();
- 		this.font.drawSplitString(golemName, nameX, nameY, (BOOK_WIDTH / 2) - MARGIN * 5, 0);
+	protected void drawBlock(final Block blockIn, final int cornerX, final int cornerY, final float scale) {
+		// 'Blocks.AIR' is the flag for 'no block'
+		Block block = blockIn != Blocks.AIR ? blockIn : Blocks.BARRIER;
+		float blockX = (float) (cornerX + MARGIN + 4);
+		float blockY = (float) (cornerY + MARGIN);
+		// Render the Block with given scale
+		GlStateManager.pushMatrix();
+		GlStateManager.enableRescaleNormal();
+		RenderHelper.enableGUIStandardItemLighting();
+		GlStateManager.scalef(scale, scale, scale);
+		this.itemRenderer.renderItemIntoGUI(new ItemStack(block), (int) (blockX / scale), (int) (blockY / scale));
+		GlStateManager.popMatrix();
+	}
 
- 		// 'golem stats' text box
- 		int statsX = cornerX + MARGIN;
- 		int statsY = nameY + MARGIN * 2;
- 		String stats = entry.getDescriptionPage();
- 		this.font.drawSplitString(stats, statsX, statsY, (BOOK_WIDTH / 2) - (MARGIN * 2), 0);  
- 		
- 		// 'golem block'
- 		// this.drawBlock(entry.getBlock((int)(partialTicks * GOLEM_BLOCK_TIMER)), cornerX, cornerY, GOLEM_BLOCK_SCALE);
- 		
- 		// 'screenshot' (supplemental image)
- 		if(entry.hasImage()) {
- 			GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
- 			float scale = 0.9F;
- 			int imgX = cornerX + (BOOK_WIDTH / 4) - (int)((SUPP_WIDTH * scale) / 2.0F);
- 			int imgY = cornerY + BOOK_HEIGHT - (int)(SUPP_HEIGHT * scale) - (MARGIN * 2);
- 			this.getMinecraft().getTextureManager().bindTexture(entry.getImageResource());
- 			int w = (int)(SUPP_WIDTH * scale);
- 			int h = (int)(SUPP_HEIGHT * scale);
- 			drawModalRectWithCustomSizedTexture(imgX, imgY, 0, 0, w, h, w, h);
- 		}
-    }
-    
-    private void drawBasicPage(int cornerX, int cornerY, String title, String body) {
-    	final int maxWidth = (BOOK_WIDTH / 2) - (MARGIN * 2);
-    	
-    	int titleX = cornerX + MARGIN + 4;
-    	int titleY = cornerY + MARGIN;
-    	int sWidth = this.font.getStringWidth(title);
-    	if(sWidth > maxWidth) {
-    		// draw title wrapped
-    		this.font.drawSplitString(title, titleX, titleY, maxWidth, 0);
-    	} else {
-    		// draw title centered
-    		this.font.drawString(title, titleX + ((maxWidth - sWidth) / 2), titleY, 0);
-    	}
-    	
-    	int bodyX = titleX;
-    	int bodyY = titleY + MARGIN * 2;
-    	this.font.drawSplitString(body, bodyX, bodyY, maxWidth, 0);    	
-    }   
-    
-    private void draw2x2GridAt(final int startX, final int startY, final ItemStack[] ingredients, final ItemStack result) {
-    	final int frameWidth = 3;
-    	final float scale = 1.0F;
-    	/** texture location and size of 2x2 crafting **/
-    	final int gridW = 84;
-    	final int gridH = 46;
-    	GlStateManager.pushMatrix();
-    	GlStateManager.scalef(scale, scale, scale);
-    	GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-    	// draw 2x2 grid background
-    	this.getMinecraft().getTextureManager().bindTexture(TEXTURE);
-    	this.drawTexturedModalRect(startX, startY, BOOK_WIDTH - gridW, BOOK_HEIGHT + DEF_SEP, gridW, gridH);
-    	
-    	// draw itemstacks
-    	GlStateManager.enableRescaleNormal();
-    	RenderHelper.enableGUIStandardItemLighting();
-    	float posX;
-    	float posY;
-    	int iconW = 15;
-    	switch(ingredients.length) {
-    	// intentional omission of break statements
-    	case 4:
-    		posX = startX + iconW + frameWidth * 3.0F;
-    		posY = startY + iconW + frameWidth * 3.0F;
-    		this.itemRenderer.renderItemIntoGUI(ingredients[3], (int)(posX / scale), (int)(posY / scale));
-    	case 3:
-    		posX = startX + frameWidth * 2.0F;
-    		posY = startY + iconW + frameWidth * 3.0F;
-    		this.itemRenderer.renderItemIntoGUI(ingredients[2], (int)(posX / scale), (int)(posY / scale));
-    	case 2:
-    		posX = startX + iconW + frameWidth * 3.0F;
-    		posY = startY + frameWidth * 2.0F;
-    		this.itemRenderer.renderItemIntoGUI(ingredients[1], (int)(posX / scale), (int)(posY / scale));
-    	case 1:
-    		posX = startX + frameWidth * 2.0F;
-    		posY = startY + frameWidth * 2.0F;
-    		this.itemRenderer.renderItemIntoGUI(ingredients[0], (int)(posX / scale), (int)(posY / scale));
-    	default: break;
-    	}
-    	
-    	// draw result itemstack
-    	posX = startX + gridW - 16.0F - frameWidth * 2.0F;
-    	posY = startY + 16.0F;
-    	this.itemRenderer.renderItemIntoGUI(result, (int)(posX / scale), (int)(posY / scale));
-    	
-    	// reset scale
-    	GlStateManager.popMatrix();
-    }
-    
-    /**
-     * Called when a mouse button is pressed and the mouse is moved around. Parameters are : mouseX, mouseY,
-     * lastButtonClicked & timeSinceMouseClick.
-     */
-    @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int state, double parDouble1, double parDouble2) {
+	/**
+	 * Draws the GolemEntry name and description at the given location
+	 **/
+	private void drawGolemEntry(int cornerX, int cornerY, final GolemBookEntry entry, final float partialTicks) {
+		// 'golem name' text box
+		int nameX = cornerX + MARGIN * 4;
+		int nameY = cornerY + MARGIN;
+		String golemName = entry.getGolemName();
+		this.font.drawSplitString(golemName, nameX, nameY, (BOOK_WIDTH / 2) - MARGIN * 5, 0);
+
+		// 'golem stats' text box
+		int statsX = cornerX + MARGIN;
+		int statsY = nameY + MARGIN * 2;
+		String stats = entry.getDescriptionPage();
+		this.font.drawSplitString(stats, statsX, statsY, (BOOK_WIDTH / 2) - (MARGIN * 2), 0);
+
+		// 'golem block'
+		// this.drawBlock(entry.getBlock((int)(partialTicks * GOLEM_BLOCK_TIMER)), cornerX, cornerY, GOLEM_BLOCK_SCALE);
+
+		// 'screenshot' (supplemental image)
+		if (entry.hasImage()) {
+			GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+			float scale = 0.9F;
+			int imgX = cornerX + (BOOK_WIDTH / 4) - (int) ((SUPP_WIDTH * scale) / 2.0F);
+			int imgY = cornerY + BOOK_HEIGHT - (int) (SUPP_HEIGHT * scale) - (MARGIN * 2);
+			this.getMinecraft().getTextureManager().bindTexture(entry.getImageResource());
+			int w = (int) (SUPP_WIDTH * scale);
+			int h = (int) (SUPP_HEIGHT * scale);
+			drawModalRectWithCustomSizedTexture(imgX, imgY, 0, 0, w, h, w, h);
+		}
+	}
+
+	private void drawBasicPage(int cornerX, int cornerY, String title, String body) {
+		final int maxWidth = (BOOK_WIDTH / 2) - (MARGIN * 2);
+
+		int titleX = cornerX + MARGIN + 4;
+		int titleY = cornerY + MARGIN;
+		int sWidth = this.font.getStringWidth(title);
+		if (sWidth > maxWidth) {
+			// draw title wrapped
+			this.font.drawSplitString(title, titleX, titleY, maxWidth, 0);
+		} else {
+			// draw title centered
+			this.font.drawString(title, titleX + ((maxWidth - sWidth) / 2), titleY, 0);
+		}
+
+		int bodyX = titleX;
+		int bodyY = titleY + MARGIN * 2;
+		this.font.drawSplitString(body, bodyX, bodyY, maxWidth, 0);
+	}
+
+	private void draw2x2GridAt(final int startX, final int startY, final ItemStack[] ingredients, final ItemStack result) {
+		final int frameWidth = 3;
+		final float scale = 1.0F;
+		/** texture location and size of 2x2 crafting **/
+		final int gridW = 84;
+		final int gridH = 46;
+		GlStateManager.pushMatrix();
+		GlStateManager.scalef(scale, scale, scale);
+		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+		// draw 2x2 grid background
+		this.getMinecraft().getTextureManager().bindTexture(TEXTURE);
+		this.drawTexturedModalRect(startX, startY, BOOK_WIDTH - gridW, BOOK_HEIGHT + DEF_SEP, gridW, gridH);
+
+		// draw itemstacks
+		GlStateManager.enableRescaleNormal();
+		RenderHelper.enableGUIStandardItemLighting();
+		float posX;
+		float posY;
+		int iconW = 15;
+		switch (ingredients.length) {
+			// intentional omission of break statements
+			case 4:
+				posX = startX + iconW + frameWidth * 3.0F;
+				posY = startY + iconW + frameWidth * 3.0F;
+				this.itemRenderer.renderItemIntoGUI(ingredients[3], (int) (posX / scale), (int) (posY / scale));
+			case 3:
+				posX = startX + frameWidth * 2.0F;
+				posY = startY + iconW + frameWidth * 3.0F;
+				this.itemRenderer.renderItemIntoGUI(ingredients[2], (int) (posX / scale), (int) (posY / scale));
+			case 2:
+				posX = startX + iconW + frameWidth * 3.0F;
+				posY = startY + frameWidth * 2.0F;
+				this.itemRenderer.renderItemIntoGUI(ingredients[1], (int) (posX / scale), (int) (posY / scale));
+			case 1:
+				posX = startX + frameWidth * 2.0F;
+				posY = startY + frameWidth * 2.0F;
+				this.itemRenderer.renderItemIntoGUI(ingredients[0], (int) (posX / scale), (int) (posY / scale));
+			default:
+				break;
+		}
+
+		// draw result itemstack
+		posX = startX + gridW - 16.0F - frameWidth * 2.0F;
+		posY = startY + 16.0F;
+		this.itemRenderer.renderItemIntoGUI(result, (int) (posX / scale), (int) (posY / scale));
+
+		// reset scale
+		GlStateManager.popMatrix();
+	}
+
+	/**
+	 * Called when a mouse button is pressed and the mouse is moved around. Parameters are : mouseX, mouseY,
+	 * lastButtonClicked & timeSinceMouseClick.
+	 */
+	@Override
+	public boolean mouseDragged(double mouseX, double mouseY, int state, double parDouble1, double parDouble2) {
 		// detect if it's the table of contents and updates scroll button
-		if(isPageTableContents(this.curPage)) {
+		if (isPageTableContents(this.curPage)) {
 			// if it's scrolling, center the scroll bar around the mouse
 			//int scrollYCentered = getScrollY(this.currentScroll) - (SCROLL_H / 2);
 			int mouseYCentered = (int) (mouseY - SCROLL_H / 2.0D);
-			if(isMouseOverScroll((int)mouseX, mouseYCentered, this.width)) {
+			if (isMouseOverScroll((int) mouseX, mouseYCentered, this.width)) {
 				this.isScrolling = true;
 				// if the mouse Y is within the correct bounds...
-				if(mouseYCentered < SCR_OFFSET_Y + SCROLL_STARTY + CONTENTS_H
+				if (mouseYCentered < SCR_OFFSET_Y + SCROLL_STARTY + CONTENTS_H
 						&& mouseYCentered >= SCR_OFFSET_Y + SCROLL_STARTY) {
 					// update scrolling variables
 					this.currentScroll = getScrollFloat((int) (mouseY - SCROLL_H / 2.0D));
@@ -501,64 +512,66 @@ public class GuiGolemBook extends Screen {
 			}
 		}
 		return super.mouseDragged(mouseX, mouseY, state, parDouble1, parDouble2);
-    }
-    
-    @Override
-    public boolean mouseScrolled(double d1, double d2, double d3) {
-		this.currentScroll = getScrollFloat(getScrollY(this.currentScroll + (float)d1));
-    	return super.mouseScrolled(d1, d2, d3);
-    }
-    
-    @Override
+	}
+
+	@Override
+	public boolean mouseScrolled(double d1, double d2, double d3) {
+		this.currentScroll = getScrollFloat(getScrollY(this.currentScroll + (float) d1));
+		return super.mouseScrolled(d1, d2, d3);
+	}
+
+	@Override
 	public boolean mouseReleased(double mouseX, double mouseY, int state) {
-    	this.isScrolling = false;
-    	return super.mouseReleased(mouseX, mouseY, state);
-    }
-	
-	/** Used to determine whether to show buttons **/
+		this.isScrolling = false;
+		return super.mouseReleased(mouseX, mouseY, state);
+	}
+
+	/**
+	 * Used to determine whether to show buttons
+	 **/
 	private void updateButtons() {
 		// next page arrows
 		this.buttonPreviousPage.visible = this.curPage > 0;
 		this.buttonNextPage.visible = this.curPage + 2 < this.totalPages;
 		// table of contents buttons
 		boolean tableContentsVisible = isPageTableContents(this.curPage);
-		for(Button b : this.tableOfContents) {
+		for (Button b : this.tableOfContents) {
 			b.visible = tableContentsVisible;
 		}
 		// golem-entry block buttons
-		if(isPageGolemEntry(this.curPage, this.totalPages)) {
+		if (isPageGolemEntry(this.curPage, this.totalPages)) {
 			this.buttonBlockLeft.visible = true;
 			this.buttonBlockLeft.updateBlocks(getGolemEntryForPage(this.curPage).getBlocks());
 		} else {
 			this.buttonBlockLeft.visible = false;
 		}
-		if(isPageGolemEntry(this.curPage + 1, this.totalPages)) {
+		if (isPageGolemEntry(this.curPage + 1, this.totalPages)) {
 			this.buttonBlockRight.visible = true;
 			this.buttonBlockRight.updateBlocks(getGolemEntryForPage(this.curPage + 1).getBlocks());
 		} else {
 			this.buttonBlockRight.visible = false;
 		}
 	}
-	
+
 	private static boolean isMouseOverScroll(final int mouseX, final int mouseY, final int width) {
 		//int currentScrollY = getScrollY(this.currentScroll);
 		// check if the mouse is in the "scroll" column
 		int scrollStartX = getScrollX(width);
 		int scrollStartY = SCR_OFFSET_Y + SCROLL_STARTY;
 		return mouseX >= scrollStartX && mouseY >= scrollStartY
-				&& mouseX < scrollStartX + SCROLL_W && mouseY < scrollStartY + CONTENTS_H - SCROLL_H / 2;
+			&& mouseX < scrollStartX + SCROLL_W && mouseY < scrollStartY + CONTENTS_H - SCROLL_H / 2;
 	}
-	
+
 	private static int getScrollX(final int screenWidth) {
 		return (screenWidth / 2) + SCROLL_STARTX + CONTENTS_W - SCROLL_W;
 	}
-	
+
 	private static int getScrollY(final float scroll) {
 		// clamp scroll between 0.0 and 1.0
 		final float f = Math.max(0.0F, Math.min(1.0F, scroll));
-		return SCR_OFFSET_Y + SCROLL_STARTY + (int)(f * (CONTENTS_H - SCROLL_H));
+		return SCR_OFFSET_Y + SCROLL_STARTY + (int) (f * (CONTENTS_H - SCROLL_H));
 	}
-	
+
 	private static float getScrollFloat(final int currentY) {
 		final int minY = SCR_OFFSET_Y + SCROLL_STARTY;
 		final int maxY = minY + CONTENTS_H - SCROLL_H;
@@ -569,7 +582,7 @@ public class GuiGolemBook extends Screen {
 	private static boolean isPageGolemEntry(final int page, final int totalPages) {
 		return page >= NUM_PAGES_INTRO && page < totalPages;
 	}
-	
+
 	private static boolean isPageTableContents(final int page) {
 		return page >= 0 && page < 2;
 	}
@@ -577,27 +590,30 @@ public class GuiGolemBook extends Screen {
 	private static GolemBookEntry getGolemEntryForPage(final int page) {
 		return GOLEMS.get(page - NUM_PAGES_INTRO);
 	}
-	
+
 	private static GolemBookEntry[] getGolemEntriesForScroll(final float scrollIn) {
 		float scroll = MathHelper.clamp(scrollIn, 0.0F, 1.0F);
-		int i = (int)(scroll * (float)(ALPHABETICAL.size() - NUM_CONTENTS_ENTRIES));
+		int i = (int) (scroll * (float) (ALPHABETICAL.size() - NUM_CONTENTS_ENTRIES));
 		return ALPHABETICAL.subList(i, i + NUM_CONTENTS_ENTRIES).toArray(new GolemBookEntry[NUM_CONTENTS_ENTRIES]);
 	}
-	
-	/** Helper method for translating text into local language using {@code I18n} **/
+
+	/**
+	 * Helper method for translating text into local language using {@code I18n}
+	 **/
 	protected static String trans(final String s, final Object... strings) {
 		return I18n.format(s, strings);
 	}
 
 	protected static class BlockButton extends Button {
-		
+
 		private float scale;
 		private Block[] blocks;
 		private Block currentBlock;
 		private final GuiGolemBook gui;
 
 		public BlockButton(GuiGolemBook guiIn, Block[] blockValues, int x, int y, float scaleIn) {
-			super(x, y, (int) (scaleIn * 16.0F), (int) (scaleIn * 16.0F), "", b -> {});
+			super(x, y, (int) (scaleIn * 16.0F), (int) (scaleIn * 16.0F), "", b -> {
+			});
 			this.gui = guiIn;
 			this.blocks = blockValues;
 			this.scale = scaleIn;
@@ -605,12 +621,12 @@ public class GuiGolemBook extends Screen {
 
 		@Override
 		public void render(int mouseX, int mouseY, float partialTicks) {
-			if(this.visible) {
+			if (this.visible) {
 				// update hovered flag
 				this.isHovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
 				// update the block to draw
-				if(blocks != null && blocks.length > 0) {
-					int index = (int)(gui.ticksOpen / 30) % blocks.length;
+				if (blocks != null && blocks.length > 0) {
+					int index = (int) (gui.ticksOpen / 30) % blocks.length;
 					this.currentBlock = this.blocks[index];
 				} else {
 					this.currentBlock = Blocks.AIR;
@@ -619,45 +635,47 @@ public class GuiGolemBook extends Screen {
 				gui.drawBlock(this.currentBlock, this.x - MARGIN - 4, this.y - MARGIN, this.scale);
 			}
 		}
-		
+
 		public void updateBlocks(final Block[] blocksToDraw) {
 			this.blocks = blocksToDraw;
 		}
-		
-		/** 
+
+		/**
 		 * Draws the name of the current block as a hovering text.
 		 * Exception: draws nothing if current block is Blocks.AIR
-		 * @return if the text was successfully drawn 
+		 *
+		 * @return if the text was successfully drawn
 		 **/
 		public boolean drawHoveringText(final int mouseX, final int mouseY) {
 			// draw the name of the block if this button is being hovered over
-			if(this.currentBlock != Blocks.AIR) {
+			if (this.currentBlock != Blocks.AIR) {
 				this.gui.renderTooltip(trans(this.currentBlock.getTranslationKey()), mouseX, mouseY);
 				return true;
 			}
 			return false;
 		}
 	}
-	
+
 	protected static class GolemEntryButton extends Button {
-		
+
 		private final GuiGolemBook gui;
 		private GolemBookEntry entry;
-		
+
 		public GolemEntryButton(final GuiGolemBook guiIn, final GolemBookEntry entryIn, final int x, final int y) {
-			super(x, y, ENTRY_W, ENTRY_H, "", b -> {});
+			super(x, y, ENTRY_W, ENTRY_H, "", b -> {
+			});
 			this.gui = guiIn;
 			this.entry = entryIn;
 		}
-		
+
 		public void setEntry(GolemBookEntry toSet) {
 			this.entry = toSet;
 		}
-		
+
 		@Override
 		public void onClick(double mouseX, double mouseY) {
 			int index = GOLEMS.indexOf(this.entry);
-			if(index >= 0 && index <= GOLEMS.size()) {
+			if (index >= 0 && index <= GOLEMS.size()) {
 				int page = index + NUM_PAGES_INTRO;
 				// make sure it's an even number
 				page = Math.floorDiv(page, 2) * 2;
@@ -665,36 +683,36 @@ public class GuiGolemBook extends Screen {
 			}
 			this.gui.updateButtons();
 		}
-		
+
 		@Override
 		public void render(int mouseX, int mouseY, float partialTicks) {
-			if(this.visible) {
-	            this.isHovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
+			if (this.visible) {
+				this.isHovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
 				Minecraft.getInstance().getTextureManager().bindTexture(CONTENTS);
 				GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 				// draw the background of the button
-				this.drawTexturedModalRect(this.x, this.y, CONTENTS_W + DEF_SEP, 
+				this.drawTexturedModalRect(this.x, this.y, CONTENTS_W + DEF_SEP,
 						this.isHovered ? ENTRY_H + DEF_SEP : 0, ENTRY_W, ENTRY_H);
 				// draw the block and name of the golem
-				int index = (int)(gui.ticksOpen / 30);
+				int index = (int) (gui.ticksOpen / 30);
 				gui.drawBlock(this.entry.getBlock(index), this.x - MARGIN - 2, this.y - 9, 1.0F);
-				
+
 				// prepare to draw the golem's name
 				GlStateManager.pushMatrix();
-				
+
 				final String name = entry.getGolemName();
 				final int wrap = this.width - 20;
 				float scale = 1.0F;
 				int nameH = gui.font.getWordWrappedHeight(name, wrap);
-				if(nameH > this.height) {
+				if (nameH > this.height) {
 					scale = 0.7F;
-					nameH = (int) (scale * gui.font.getWordWrappedHeight(name, (int)(wrap / scale)));
+					nameH = (int) (scale * gui.font.getWordWrappedHeight(name, (int) (wrap / scale)));
 				}
 				int nameX = this.x + 20;
 				int nameY = this.y + ((this.height - nameH) / 2) + 1;
 				// re-scale and draw the golem name
 				GlStateManager.scalef(scale, scale, scale);
-				gui.font.drawSplitString(name, (int)((nameX) / scale), (int)(nameY / scale), (int)(wrap / scale), 0);
+				gui.font.drawSplitString(name, (int) ((nameX) / scale), (int) (nameY / scale), (int) (wrap / scale), 0);
 				GlStateManager.popMatrix();
 			}
 		}
@@ -708,25 +726,26 @@ public class GuiGolemBook extends Screen {
 		private final boolean isForward;
 
 		public NextPageButton(GuiGolemBook guiBook, int x, int y, boolean isForwardIn) {
-			super(x, y, ARROW_WIDTH, ARROW_HEIGHT, "", b -> {});
+			super(x, y, ARROW_WIDTH, ARROW_HEIGHT, "", b -> {
+			});
 			this.gui = guiBook;
 			this.isForward = isForwardIn;
 		}
-		
-		 @Override
-         public void onClick(double mouseX, double mouseY) {
-           if(this.isForward) {
-        	   this.gui.curPage += 2;
-           } else {
-        	   this.gui.curPage -= 2;
-           }
-           this.gui.updateButtons();
-         }
+
+		@Override
+		public void onClick(double mouseX, double mouseY) {
+			if (this.isForward) {
+				this.gui.curPage += 2;
+			} else {
+				this.gui.curPage -= 2;
+			}
+			this.gui.updateButtons();
+		}
 
 		/**
 		 * Draws this button to the screen.
 		 */
-		 @Override
+		@Override
 		public void render(int mouseX, int mouseY, float partialTicks) {
 
 			if (this.visible) {
