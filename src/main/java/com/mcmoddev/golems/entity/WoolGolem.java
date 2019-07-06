@@ -1,5 +1,8 @@
 package com.mcmoddev.golems.entity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;

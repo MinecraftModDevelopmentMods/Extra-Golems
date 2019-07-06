@@ -1,5 +1,7 @@
 package com.mcmoddev.golems.entity;
 
+import java.util.function.BiPredicate;
+
 import com.mcmoddev.golems.blocks.BlockUtilityGlow;
 import com.mcmoddev.golems.entity.ai.PlaceUtilityBlockGoal;
 import com.mcmoddev.golems.entity.base.GolemBase;
