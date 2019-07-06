@@ -1,5 +1,6 @@
 package com.mcmoddev.golems.main;
 
+import com.mcmoddev.golems.entity.CraftingGolem;
 import com.mcmoddev.golems.events.handlers.GolemCommonEventHandler;
 import com.mcmoddev.golems.integration.ModIds;
 import com.mcmoddev.golems.proxies.ProxyClient;
@@ -9,6 +10,7 @@ import com.mcmoddev.golems.util.BlockTagUtil;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
@@ -76,6 +78,12 @@ public class ExtraGolems {
 	public static void registerBlocks(final RegistryEvent.Register<Block> event) {
 		ExtraGolems.LOGGER.info("registerBlocks");
 		ExtraGolems.PROXY.registerBlocks(event);
+	}
+	
+	public static void registerContainers(final RegistryEvent.Register<ContainerType<?>> event) {
+		ExtraGolems.LOGGER.info("registerContainers");
+		ExtraGolems.PROXY.registerContainers(event);
+		ExtraGolems.PROXY.registerContainerRenders();
 	}
 
 //	@Mod.EventHandler

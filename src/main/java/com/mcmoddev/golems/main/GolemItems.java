@@ -1,6 +1,9 @@
 package com.mcmoddev.golems.main;
 
+import com.mcmoddev.golems.entity.CraftingGolem;
+
 import net.minecraft.block.Block;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -27,9 +30,10 @@ public final class GolemItems {
 	@ObjectHolder(ExtraGolems.MODID + ":light_provider_full")
 	public static Block UTILITY_LIGHT;
 
-//	@ObjectHolder(ExtraGolems.MODID + ":water_light_provider_full")
-//	public static Block blockLightSourceWater;
-
 	@ObjectHolder(ExtraGolems.MODID + ":power_provider_all")
 	public static Block UTILITY_POWER;
+	
+	////// OTHER //////
+	@ObjectHolder(ExtraGolems.MODID + ":crafting_portable")
+	public static ContainerType<CraftingGolem.ContainerPortableWorkbench> CRAFTING;
 }

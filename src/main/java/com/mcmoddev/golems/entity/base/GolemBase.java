@@ -1,7 +1,6 @@
 package com.mcmoddev.golems.entity.base;
 
 import com.mcmoddev.golems.blocks.BlockUtility;
-import com.mcmoddev.golems.entity.ai.EntityAIDefendAgainstMonsters;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
@@ -137,7 +136,7 @@ public abstract class GolemBase extends CreatureEntity {
 
 
 		//// Wander AI has been moved to setCanSwim(boolean)
-		this.goalSelector.addGoal(1, new EntityAIDefendAgainstMonsters(this));
+		// this.goalSelector.addGoal(1, new EntityAIDefendAgainstMonsters(this));
 //		this.field_70715_bh.addTask(2, new EntityAIHurtByTarget(this, false, (Class[]) new Class[0]));
 //		this.field_70715_bh.addTask(3, new EntityAINearestAttackableTarget<>(this,
 //			EntityLiving.class, 10, false, true,
@@ -368,7 +367,8 @@ public abstract class GolemBase extends CreatureEntity {
 	@Override
 	public void onDeath(final DamageSource src) {
 		if (!this.isPlayerCreated() && this.attackingPlayer != null && this.villageObj != null) {
-			this.villageObj.modifyPlayerReputation(this.attackingPlayer.getUniqueID(), -5);
+			// TODO
+			// this.villageObj.modifyPlayerReputation(this.attackingPlayer.getUniqueID(), -5);
 		}
 
 		super.onDeath(src);
@@ -415,14 +415,15 @@ public abstract class GolemBase extends CreatureEntity {
 	 * @see #updateHomeVillage()
 	 **/
 	protected boolean updateHomeVillageInRange(final BlockPos POS, final int RADIUS) {
+		// TODO
 		// set home position based on nearest village ONLY if one is close enough
-		this.villageObj = this.world.getVillageCollection().getNearestVillage(POS, RADIUS);
-		if (this.villageObj != null) {
-			final BlockPos home = this.villageObj.getCenter();
-			final int wanderDistance = (int) ((float) this.villageObj.getVillageRadius() * 0.8F);
-			this.setHomePosAndDistance(home, wanderDistance);
-			return true;
-		}
+		//this.villageObj = this.world.getVillageCollection().getNearestVillage(POS, RADIUS);
+		//if (this.villageObj != null) {
+		//	final BlockPos home = this.villageObj.getCenter();
+		//	final int wanderDistance = (int) ((float) this.villageObj.getVillageRadius() * 0.8F);
+		//	this.setHomePosAndDistance(home, wanderDistance);
+		//	return true;
+		//}
 		return false;
 	}
 

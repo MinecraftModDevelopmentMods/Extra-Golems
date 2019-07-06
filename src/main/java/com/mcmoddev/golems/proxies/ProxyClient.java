@@ -5,6 +5,10 @@ import com.mcmoddev.golems.entity.base.GolemColorized;
 import com.mcmoddev.golems.renders.RenderColoredGolem;
 import com.mcmoddev.golems.renders.RenderGolem;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
+
+import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.inventory.container.ContainerType;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
@@ -21,6 +25,11 @@ public final class ProxyClient extends ProxyCommon {
 //		if(irr instanceof IReloadableResourceManager) {
 //			((IReloadableResourceManager) irr).addReloadListener(l -> BlockTagUtil.loadTags());
 //		}
+	}
+	
+	@Override
+	public void registerContainerRenders() {
+		//ScreenManager.registerFactory(p_216911_0_, p_216911_1_);
 	}
 
 	@Override

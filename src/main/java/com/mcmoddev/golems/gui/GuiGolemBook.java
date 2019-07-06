@@ -121,10 +121,14 @@ public class GuiGolemBook extends Screen {
 	// there are six entries showing at a time
 	private static final int NUM_CONTENTS_ENTRIES = 5;
 
-	protected static final int CONTENTS_W = 106, CONTENTS_H = 110;
-	protected static final int SCROLL_STARTX = MARGIN, SCROLL_STARTY = MARGIN * 2;
-	protected static final int SCROLL_W = 12, SCROLL_H = 15;
-	protected static final int ENTRY_W = 88, ENTRY_H = 22;
+	protected static final int CONTENTS_W = 106;
+	protected static final int CONTENTS_H = 110;
+	protected static final int SCROLL_STARTX = MARGIN;
+	protected static final int SCROLL_STARTY = MARGIN * 2;
+	protected static final int SCROLL_W = 12;
+	protected static final int SCROLL_H = 15;
+	protected static final int ENTRY_W = 88;
+	protected static final int ENTRY_H = 22;
 	/**
 	 * Amount scrolled in Table of Contents (0 = top, 1 = bottom)
 	 */
@@ -224,7 +228,7 @@ public class GuiGolemBook extends Screen {
 		this.getMinecraft().getTextureManager().bindTexture(TEXTURE);
 		int bookX = (this.width - BOOK_WIDTH) / 2;
 		int bookY = SCR_OFFSET_Y;
-		this.drawTexturedModalRect(bookX, bookY, 0, 0, BOOK_WIDTH, BOOK_HEIGHT);
+		this.blit(bookX, bookY, 0, 0, BOOK_WIDTH, BOOK_HEIGHT); // drawTexturedModalRect
 
 		// draw pages: left and right
 		this.drawPageAt(bookX + 1, bookY, this.curPage, partialTicks);
@@ -279,13 +283,13 @@ public class GuiGolemBook extends Screen {
 				GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 				startX = cornerX + SCROLL_STARTX + 1;
 				startY = cornerY + SCROLL_STARTY - 1;
-				this.drawTexturedModalRect(startX, startY, 0, 0, CONTENTS_W, CONTENTS_H + 2);
+				this.blit(startX, startY, 0, 0, CONTENTS_W, CONTENTS_H + 2); // drawTexturedModalRect
 
 				// draw scroll bar
 				startX = getScrollX(this.width) - 2;
 				startY = getScrollY(this.currentScroll);
-				this.drawTexturedModalRect(startX, startY, this.isScrolling ? SCROLL_W + DEF_SEP : 0,
-						CONTENTS_H + DEF_SEP, SCROLL_W, SCROLL_H);
+				this.blit(startX, startY, this.isScrolling ? SCROLL_W + DEF_SEP : 0,
+						CONTENTS_H + DEF_SEP, SCROLL_W, SCROLL_H); // drawTexturedModalRect
 
 				// update button contents
 				if (this.isScrolling) {
@@ -415,7 +419,7 @@ public class GuiGolemBook extends Screen {
 			this.getMinecraft().getTextureManager().bindTexture(entry.getImageResource());
 			int w = (int) (SUPP_WIDTH * scale);
 			int h = (int) (SUPP_HEIGHT * scale);
-			drawModalRectWithCustomSizedTexture(imgX, imgY, 0, 0, w, h, w, h);
+			blit(imgX, imgY, 0, 0, w, h, w, h); // drawTexturedModalRect
 		}
 	}
 
@@ -449,7 +453,7 @@ public class GuiGolemBook extends Screen {
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		// draw 2x2 grid background
 		this.getMinecraft().getTextureManager().bindTexture(TEXTURE);
-		this.drawTexturedModalRect(startX, startY, BOOK_WIDTH - gridW, BOOK_HEIGHT + DEF_SEP, gridW, gridH);
+		this.blit(startX, startY, BOOK_WIDTH - gridW, BOOK_HEIGHT + DEF_SEP, gridW, gridH); // drawTexturedModalRect
 
 		// draw itemstacks
 		GlStateManager.enableRescaleNormal();
@@ -691,8 +695,8 @@ public class GuiGolemBook extends Screen {
 				Minecraft.getInstance().getTextureManager().bindTexture(CONTENTS);
 				GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 				// draw the background of the button
-				this.drawTexturedModalRect(this.x, this.y, CONTENTS_W + DEF_SEP,
-						this.isHovered ? ENTRY_H + DEF_SEP : 0, ENTRY_W, ENTRY_H);
+				this.blit(this.x, this.y, CONTENTS_W + DEF_SEP,
+						this.isHovered ? ENTRY_H + DEF_SEP : 0, ENTRY_W, ENTRY_H); // drawTexturedModalRect
 				// draw the block and name of the golem
 				int index = (int) (gui.ticksOpen / 30);
 				gui.drawBlock(this.entry.getBlock(index), this.x - MARGIN - 2, this.y - 9, 1.0F);
@@ -763,7 +767,7 @@ public class GuiGolemBook extends Screen {
 					ty += ARROW_HEIGHT;
 				}
 
-				this.drawTexturedModalRect(this.x, this.y, tx, ty, ARROW_WIDTH, ARROW_HEIGHT);
+				this.blit(this.x, this.y, tx, ty, ARROW_WIDTH, ARROW_HEIGHT); // drawTexturedModalRect
 			}
 		}
 	}

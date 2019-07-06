@@ -3,6 +3,7 @@ package com.mcmoddev.golems.proxies;
 import com.mcmoddev.golems.blocks.BlockGolemHead;
 import com.mcmoddev.golems.blocks.BlockUtilityGlow;
 import com.mcmoddev.golems.blocks.BlockUtilityPower;
+import com.mcmoddev.golems.entity.CraftingGolem;
 import com.mcmoddev.golems.items.ItemBedrockGolem;
 import com.mcmoddev.golems.items.ItemGolemSpell;
 import com.mcmoddev.golems.items.ItemInfoBook;
@@ -12,6 +13,7 @@ import com.mcmoddev.golems.util.config.GolemRegistrar;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityType;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -30,6 +32,9 @@ public class ProxyCommon {
 	}
 
 	public void registerEntityRenders() {
+	}
+	
+	public void registerContainerRenders() {
 	}
 
 	public void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
@@ -58,6 +63,11 @@ public class ProxyCommon {
 						.setRegistryName(ExtraGolems.MODID, "light_provider_full"),
 				new BlockUtilityPower(15, BlockUtilityPower.UPDATE_TICKS)
 						.setRegistryName(ExtraGolems.MODID, "power_provider_all"));
+	}
+	
+	public void registerContainers(final RegistryEvent.Register<ContainerType<?>> event) {
+		event.getRegistry().register(new ContainerType<CraftingGolem.ContainerPortableWorkbench>
+			((i, p) -> new CraftingGolem.ContainerPortableWorkbench(i, p)));
 	}
 
 	public static void registerLootTables() {

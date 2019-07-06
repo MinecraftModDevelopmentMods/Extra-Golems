@@ -3,19 +3,23 @@ package com.mcmoddev.golems.entity;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
+
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.inventory.container.SimpleNamedContainerProvider;
 import net.minecraft.inventory.container.WorkbenchContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Hand;
+import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 public final class CraftingGolem extends GolemBase {
@@ -36,8 +40,10 @@ public final class CraftingGolem extends GolemBase {
 		final ItemStack itemstack = player.getHeldItem(hand);
 		if (!player.world.isRemote && itemstack.isEmpty()) {
 			// display crafting grid for player
-			player.displayGui(new CraftingGolem.InterfaceCraftingGrid(player.world,
-					new BlockPos(player)));
+			ITextComponent itextcomponent = new TranslationTextComponent("");
+			INamedContainerProvider provider = new SimpleNamedContainerProvider((i, inv, call) -> 
+				new ContainerPortableWorkbench(i, inv, IWorldPosCallable.of(player.world, new BlockPos(player))), itextcomponent);
+			player.openContainer(provider);
 			player.addStat(Stats.INTERACT_WITH_CRAFTING_TABLE);
 			player.swingArm(hand);
 		}
@@ -51,33 +57,18 @@ public final class CraftingGolem extends GolemBase {
 	}
 
 	public static class ContainerPortableWorkbench extends WorkbenchContainer {
+		
+		public ContainerPortableWorkbench(final int i, final PlayerInventory inv) {
+			this(i, inv, null);
+		}
 
-		public ContainerPortableWorkbench(final PlayerInventory playerInventory, final World worldIn,
-				final BlockPos posIn) {
-			super(playerInventory, worldIn, posIn);
+		public ContainerPortableWorkbench(final int i, final PlayerInventory inv, final IWorldPosCallable call) {
+			super(i, inv, call);
 		}
 
 		@Override
 		public boolean canInteractWith(final PlayerEntity playerIn) {
 			return true;
-		}
-	}
-
-	public static class InterfaceCraftingGrid
-		extends net.minecraft.block.CraftingTableBlock.InterfaceCraftingTable {
-
-		private final World world2;
-		private final BlockPos position2;
-
-		public InterfaceCraftingGrid(final World worldIn, final BlockPos pos) {
-			super(worldIn, pos);
-			this.world2 = worldIn;
-			this.position2 = pos;
-		}
-
-		@Override
-		public Container createContainer(final InventoryPlayer playerInventory, final PlayerEntity playerIn) {
-			return new ContainerPortableWorkbench(playerInventory, this.world2, this.position2);
 		}
 	}
 }
