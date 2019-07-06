@@ -1,6 +1,5 @@
 package com.mcmoddev.golems.main;
 
-import com.mcmoddev.golems.entity.CraftingGolem;
 import com.mcmoddev.golems.events.handlers.GolemCommonEventHandler;
 import com.mcmoddev.golems.integration.ModIds;
 import com.mcmoddev.golems.proxies.ProxyClient;

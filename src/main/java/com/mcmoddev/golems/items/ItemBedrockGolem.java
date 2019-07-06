@@ -108,15 +108,14 @@ public final class ItemBedrockGolem extends Item {
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
 		// "Creative-Mode Only"
-		if (ExtraGolemsConfig.bedrockGolemCreativeOnly()) {
+		if (true /* ExtraGolemsConfig.bedrockGolemCreativeOnly() // This isn't working */ ) {
 			tooltip.add(loreCreativeOnly);
 		}
 		// "Use to spawn Bedrock Golem. Use on existing Bedrock Golem to remove it"
 		if (Screen.hasShiftDown()) {
-			tooltip.add(wrap(I18n.format("tooltip.use_to_spawn", trans("entity.golems.golem_bedrock"))));
-			tooltip.add(wrap(I18n.format("tooltip.use_on_existing",
-					trans("entity.golems.golem_bedrock"))));
-			tooltip.add(wrap(trans("tooltip.to_remove_it") + "."));
+			tooltip.add(trans("tooltip.use_to_spawn", trans("entity.golems.golem_bedrock")));
+			tooltip.add(trans("tooltip.use_on_existing", trans("entity.golems.golem_bedrock")));
+			tooltip.add(trans("tooltip.to_remove_it"));
 		} else {
 			// "Press SHIFT for more details"
 			tooltip.add(lorePressShift);
@@ -125,12 +124,13 @@ public final class ItemBedrockGolem extends Item {
 
 
 	@OnlyIn(Dist.CLIENT)
-	private static TranslationTextComponent trans(final String s) {
-		return new TranslationTextComponent(s);
+	private static TranslationTextComponent trans(final String s, final Object... param) {
+		return new TranslationTextComponent(s, param);
 	}
-
+	
 	@OnlyIn(Dist.CLIENT)
-	private static StringTextComponent wrap(String s) {
+	private static StringTextComponent wrap(final String s) {
 		return new StringTextComponent(s);
 	}
+
 }
