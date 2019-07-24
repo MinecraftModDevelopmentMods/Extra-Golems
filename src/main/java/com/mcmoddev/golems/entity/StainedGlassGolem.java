@@ -28,7 +28,7 @@ public final class StainedGlassGolem extends GolemMultiColorized {
 		canFall = true;
 	}
 
-	
+
 	@Override
 	public boolean hasTransparency() {
 		return true;

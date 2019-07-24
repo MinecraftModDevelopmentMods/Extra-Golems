@@ -167,8 +167,7 @@ public class EndstoneGolem extends GolemBase {
 		if (!this.allowTeleport || MinecraftForge.EVENT_BUS.post(event)) {
 			return false;
 		}
-		// "Attempt to Teleport" method:  x, y, z, playSound
-		final boolean flag = this.func_213373_a(event.getTargetX(), event.getTargetY(),
+		final boolean flag = this.attemptTeleport(event.getTargetX(), event.getTargetY(),
 				event.getTargetZ(), true);
 
 		if (flag) {

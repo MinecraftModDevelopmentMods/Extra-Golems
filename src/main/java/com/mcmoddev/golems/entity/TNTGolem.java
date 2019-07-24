@@ -195,7 +195,7 @@ public class TNTGolem extends GolemBase {
 	protected void explode() {
 		if (this.allowedToExplode) {
 			if (!this.world.isRemote) {
-				final boolean flag = this.world.getGameRules().func_223586_b(GameRules.field_223599_b); //.getBoolean("mobGriefing");
+				final boolean flag = this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING);
 				final float range = this.maxExplosionRad > this.minExplosionRad
 						? rand.nextInt(maxExplosionRad - minExplosionRad)
 						: this.minExplosionRad;
