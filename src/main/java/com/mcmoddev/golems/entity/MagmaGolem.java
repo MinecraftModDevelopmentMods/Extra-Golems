@@ -46,14 +46,14 @@ public final class MagmaGolem extends GolemBase {
 	/**
 	 * Whether this golem is hurt by water
 	 */
-	private boolean isHurtByWater = true;
+	private boolean isHurtByWater;
 
 	private boolean allowMelting;
 	private int meltDelay;
 
 	public MagmaGolem(final EntityType<? extends GolemBase> entityType, final World world, final boolean isChild) {
 		this(entityType, world);
-		this.setChild(isChild);
+		//this.setChild(isChild);
 	}
 	
 	public MagmaGolem(final EntityType<? extends GolemBase> entityType, final World world) {
@@ -62,28 +62,32 @@ public final class MagmaGolem extends GolemBase {
 		this.allowMelting = this.getConfigBool(ALLOW_LAVA_SPECIAL);
 		this.meltDelay = this.getConfigInt(MELT_DELAY);
 		this.ticksStandingStill = 0;
-		this.setCanSwim(!this.isHurtByWater);
+	}
+
+	@Override
+	public boolean canSwim() {
+		return isHurtByWater;
 	}
 
 	@Override
 	public void notifyDataManagerChange(DataParameter<?> key) {
 		// change stats if this is a child vs. an adult golem
 		super.notifyDataManagerChange(key);
-		if (BABY.equals(key)) {
-			if (this.isChild()) {
-				// TODO this.setSize(0.7F, 1.45F);
-				this.recalculateSize();
-				this.allowMelting = false;
-				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.getAttack() * 0.6F);
-				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.getHealth() / 3);
-			} else {
-				// TODO this.setSize(1.4F, 2.9F);
-				this.recalculateSize();
-				this.allowMelting = this.getConfigBool(ALLOW_LAVA_SPECIAL);
-				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.getAttack());
-				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.getHealth());
-			}
-		}
+//		if (BABY.equals(key)) {
+//			if (this.isChild()) {
+//				// TODO this.setSize(0.7F, 1.45F);
+//				this.recalculateSize();
+//				this.allowMelting = false;
+//				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.getAttack() * 0.6F);
+//				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.getHealth() / 3);
+//			} else {
+//				// TODO this.setSize(1.4F, 2.9F);
+//				this.recalculateSize();
+//				this.allowMelting = this.getConfigBool(ALLOW_LAVA_SPECIAL);
+//				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.getAttack());
+//				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.getHealth());
+//			}
+//		}
 	}
 
 	@Override
@@ -154,24 +158,24 @@ public final class MagmaGolem extends GolemBase {
 
 	@Override
 	public void remove() {
-		// spawn baby golems here if possible 
-		if(!this.world.isRemote && !this.isChild() && this.getConfigBool(ALLOW_SPLITTING)) {
-			GolemBase slime1 = new MagmaGolem((EntityType<? extends GolemBase>) this.getType(), this.world, true);
-			GolemBase slime2 = new MagmaGolem((EntityType<? extends GolemBase>) this.getType(), this.world, true);
-			// copy attack target info
-			if (this.getAttackTarget() != null) {
-				slime1.setAttackTarget(this.getAttackTarget());
-				slime2.setAttackTarget(this.getAttackTarget());
-			}
-			// set location
-			slime1.setLocationAndAngles(this.posX + rand.nextDouble() - 0.5D, this.posY,
-					this.posZ + rand.nextDouble() - 0.5D, this.rotationYaw + rand.nextInt(20) - 10, 0);
-			slime2.setLocationAndAngles(this.posX + rand.nextDouble() - 0.5D, this.posY,
-					this.posZ + rand.nextDouble() - 0.5D, this.rotationYaw + rand.nextInt(20) - 10, 0);
-			// spawn the entities
-			this.getEntityWorld().addEntity(slime1);
-			this.getEntityWorld().addEntity(slime2);
-		}
+//		// spawn baby golems here if possible
+//		if(!this.world.isRemote && !this.isChild() && this.getConfigBool(ALLOW_SPLITTING)) {
+//			GolemBase slime1 = new MagmaGolem((EntityType<? extends GolemBase>) this.getType(), this.world, true);
+//			GolemBase slime2 = new MagmaGolem((EntityType<? extends GolemBase>) this.getType(), this.world, true);
+//			// copy attack target info
+//			if (this.getAttackTarget() != null) {
+//				slime1.setAttackTarget(this.getAttackTarget());
+//				slime2.setAttackTarget(this.getAttackTarget());
+//			}
+//			// set location
+//			slime1.setLocationAndAngles(this.posX + rand.nextDouble() - 0.5D, this.posY,
+//					this.posZ + rand.nextDouble() - 0.5D, this.rotationYaw + rand.nextInt(20) - 10, 0);
+//			slime2.setLocationAndAngles(this.posX + rand.nextDouble() - 0.5D, this.posY,
+//					this.posZ + rand.nextDouble() - 0.5D, this.rotationYaw + rand.nextInt(20) - 10, 0);
+//			// spawn the entities
+//			this.getEntityWorld().addEntity(slime1);
+//			this.getEntityWorld().addEntity(slime2);
+//		}
 
 		super.remove();
 	}

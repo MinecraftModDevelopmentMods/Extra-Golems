@@ -13,7 +13,7 @@ public final class BoneGolem extends GolemBase {
 
 	public BoneGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);
-		this.setCanTakeFallDamage(true);
+		canFall = true;
 	}
 
 	protected ResourceLocation applyTexture() {
@@ -24,4 +24,6 @@ public final class BoneGolem extends GolemBase {
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_STONE_STEP;
 	}
+
+
 }

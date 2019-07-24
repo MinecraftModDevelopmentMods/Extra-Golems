@@ -13,7 +13,7 @@ public final class GlassGolem extends GolemBase {
 
 	public GlassGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);
-		this.setCanTakeFallDamage(true);
+		canFall = true;
 	}
 
 	protected ResourceLocation applyTexture() {

@@ -23,7 +23,7 @@ public final class MelonGolem extends GolemBase {
 	
 	public MelonGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);
-		this.setCanSwim(true);
+		//TODO impl swimming this.setCanSwim(true);
 	}
 
 	@Override

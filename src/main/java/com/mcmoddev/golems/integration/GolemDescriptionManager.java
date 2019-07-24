@@ -49,11 +49,11 @@ public abstract class GolemDescriptionManager {
 	public List<ITextComponent> getEntityDescription(final GolemBase golem) {
 		List<ITextComponent> list = new LinkedList<>();
 		if (showAttack) {
-			float attack = (((int) (golem.getBaseAttackDamage() * 10)) / 10.0F);
+			double attack = (golem.getGolemContainer().getAttack());
 			list.add(new TranslationTextComponent("entitytip.attack")
 				.applyTextStyle(TextFormatting.GRAY)
 				.appendSibling(new StringTextComponent(": "))
-				.appendSibling(new StringTextComponent(Float.toString(attack))
+				.appendSibling(new StringTextComponent(Double.toString(attack))
 					.applyTextStyle(TextFormatting.WHITE)));
 		}
 

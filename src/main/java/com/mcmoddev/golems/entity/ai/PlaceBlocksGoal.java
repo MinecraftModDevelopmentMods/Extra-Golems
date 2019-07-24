@@ -96,6 +96,6 @@ public class PlaceBlocksGoal extends Goal {
 	}
 
 	public static Predicate<PlaceBlocksGoal> getGriefingPredicate() {
-		return t -> t.golem.world.getGameRules().func_223586_b(GameRules.field_223599_b); //.getBoolean("mobGriefing");
+		return t -> t.golem.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING);
 	}
 }

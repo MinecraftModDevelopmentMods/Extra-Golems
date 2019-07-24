@@ -25,13 +25,10 @@ public final class StainedGlassGolem extends GolemMultiColorized {
 
 	public StainedGlassGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world, ExtraGolems.MODID, TEXTURE_BASE, TEXTURE_OVERLAY, DYE_COLORS);
-		this.setCanTakeFallDamage(true);
+		canFall = true;
 	}
 
-	/**
-	 * Whether {@link overlay} should be rendered as transparent. Is not called for rendering
-	 * {@link base}
-	 **/
+
 	@Override
 	public boolean hasTransparency() {
 		return true;
