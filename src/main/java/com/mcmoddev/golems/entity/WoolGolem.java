@@ -47,7 +47,7 @@ public final class WoolGolem extends GolemMultiTextured {
 
 	public WoolGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world, ExtraGolems.MODID, WOOL_PREFIX, coloredWoolTypes);
-		this.setCanSwim(true);
+		//TODO impl swimming this.setCanSwim(true);
 	}
 
 //	@Override

@@ -159,9 +159,6 @@ public final class BlockGolemHead extends HorizontalBlock {
 			ExtraGolems.LOGGER.info("[Extra Golems]: Building golem " + golem.toString());
 			world.addEntity(golem);
 			golem.onBuilt(stateBelow1, stateBelow2, flagX ? stateArmEast : stateArmWest, flagX ? stateArmNorth : stateArmSouth);
-			if (!golem.updateHomeVillage()) {
-				golem.setHomePosAndDistance(golem.getPosition(), GolemBase.WANDER_DISTANCE);
-			}
 			return true;
 		}
 		// No Golems of any kind were spawned :(

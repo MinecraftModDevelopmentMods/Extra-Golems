@@ -24,7 +24,7 @@ public final class LeafGolem extends GolemColorized {
 
 	public LeafGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world, 0x5F904A, TEXTURE_BASE, TEXTURE_OVERLAY);
-		this.setCanSwim(true);
+		//TODO impl swimming this.setCanSwim(true);
 	}
 
 	/**

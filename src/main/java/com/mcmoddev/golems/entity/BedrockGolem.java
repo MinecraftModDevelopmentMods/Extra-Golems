@@ -20,9 +20,10 @@ public final class BedrockGolem extends GolemBase {
 	public BedrockGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);
 		this.setInvulnerable(true);
-		this.setCreativeReturn(new ItemStack(GolemItems.SPAWN_BEDROCK_GOLEM));
+		//this.setCreativeReturn(new ItemStack(GolemItems.SPAWN_BEDROCK_GOLEM));
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(1.0D);
 	}
+
 
 	@Override
 	protected ResourceLocation applyTexture() {

@@ -21,16 +21,10 @@ public final class WoodenGolem extends GolemMultiTextured {
 
 	public WoodenGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world, ExtraGolems.MODID, WOOD_PREFIX, WOOD_TYPES);
-		this.setCanSwim(true);
+		//TODO impl swimming this.setCanSwim(true);
 	}
 
-	@Override
-	public ItemStack getCreativeReturn() {
-		// try to return the same block of this golem's texture
-		// TODO but low priority
-		return new ItemStack(Blocks.OAK_LOG);
-	}
-
+	//TODO on block pick select the varient used
 	@Override
 	public void onBuilt(BlockState body, BlockState legs, BlockState arm1, BlockState arm2) {
 		// uses the top-middle building block of this golem to set texture.

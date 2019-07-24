@@ -25,7 +25,7 @@ public final class MushroomGolem extends GolemMultiTextured {
 
 	public MushroomGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world, ExtraGolems.MODID, SHROOM_PREFIX, SHROOM_TYPES);
-		this.setCanSwim(true);
+		//TODO impl swimming this.setCanSwim(true);
 	}
 
 	@Override
