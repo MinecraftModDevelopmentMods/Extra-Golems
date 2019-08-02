@@ -4,12 +4,19 @@ import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mcmoddev.golems.util.config.GolemContainer;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
+
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
@@ -20,23 +27,26 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.common.extensions.IForgeEntity;
 
 /**
  * Base class for all golems in this mod.
  **/
 public abstract class GolemBase extends IronGolemEntity {
-//TODO: Impl middleclicking on golem to get construction block
+	
+	protected final DataParameter<Boolean> CHILD = EntityDataManager.createKey(GolemBase.class, DataSerializers.BOOLEAN);
+	protected final String KEY_CHILD = "isChild";
+	
 	//TODO impl swimming
 	protected final GolemContainer container;
 	protected ResourceLocation textureLoc;
 	//TODO decide if this should be private w/ accessors
-	protected boolean canFall = false;
+	private boolean canFall = false;
 	//type, world
 	public GolemBase(EntityType<? extends GolemBase> type, World world) {
 		super(type, world);
 		this.container = GolemRegistrar.getContainer(type);
 	}
-
 
 	/**
 	 * Called after construction when a golem is built by a player
@@ -63,6 +73,7 @@ public abstract class GolemBase extends IronGolemEntity {
 	@Override
 	protected void registerData() {
 		super.registerData();
+		this.getDataManager().register(CHILD, Boolean.FALSE);
 		this.setTextureType(this.applyTexture());
 	}
 
@@ -99,6 +110,21 @@ public abstract class GolemBase extends IronGolemEntity {
 	public boolean isProvidingPower() {
 		return false;
 	}
+	
+	/**
+	 * Sets whether this golem can take fall damage.
+	 * @param fall
+	 **/
+	public void setCanFall(final boolean fall) {
+		canFall = fall;
+	}
+	
+	/**
+	 * @return whether or not this golem takes fall damage.
+	 **/
+	public boolean canFall() {
+		return canFall;
+	}
 
 	public GolemContainer getGolemContainer() {
 		return container != null ? container : GolemRegistrar.getContainer(this.getType().getRegistryName());
@@ -118,6 +144,27 @@ public abstract class GolemBase extends IronGolemEntity {
 
 	public double getConfigDouble(final String name) {
 		return (Double) getConfigValue(name).get();
+	}
+	
+	public void setChild(boolean isChild) {
+		this.getDataManager().set(CHILD, isChild);
+	}
+	
+	@Override
+	public boolean isChild() {
+		return this.getDataManager().get(CHILD).booleanValue();
+	}
+	
+	@Override
+	public void writeAdditional(CompoundNBT compound) {
+		super.writeAdditional(compound);
+        compound.putBoolean(KEY_CHILD, this.isChild());
+    }
+	
+	@Override
+	public void readAdditional(CompoundNBT compound) {
+		super.readAdditional(compound);
+		this.setChild(compound.getBoolean(KEY_CHILD));
 	}
 
 	@Override
@@ -142,6 +189,32 @@ public abstract class GolemBase extends IronGolemEntity {
 				this.playSound(soundtype.getFallSound(), soundtype.getVolume() * 0.5F, soundtype.getPitch() * 0.75F);
 			}
 		}
+	}
+	
+	@Override
+	public boolean attackEntityAsMob(final Entity entity) {
+		// Copy Iron Golem behavior but allow for custom attack damage
+		double baseAttack = this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getValue();
+		
+		// Deal damage between 100% and 175% of current attack power
+		double damage = baseAttack + (this.rand.nextDouble() * 0.75D) * baseAttack;
+		final boolean flag = entity.attackEntityFrom(DamageSource.causeMobDamage(this), (float)damage);
+		if (flag) {
+			entity.setMotion(entity.getMotion().add(0.0D, 0.4D, 0.0D));
+			this.applyEnchantments(this, entity);
+		}
+		
+		// Set fields and play sound so the client knows the golem is attacking an Entity
+		this.attackTimer = 10;
+		this.world.setEntityState(this, (byte) 4);
+		this.playSound(this.getGolemSound(), 1.0F, 0.9F + rand.nextFloat() * 0.2F);
+		return flag;
+	}
+	
+	@Override
+	public ItemStack getPickedResult(final RayTraceResult ray) {
+		final Block block = this.container.getPrimaryBuildingBlock();
+		return block != null ? new ItemStack(block) : ItemStack.EMPTY;
 	}
 
 	/////////////// TEXTURE HELPERS //////////////////

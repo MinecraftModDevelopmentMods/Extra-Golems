@@ -24,7 +24,6 @@ public final class WoodenGolem extends GolemMultiTextured {
 		//TODO impl swimming this.setCanSwim(true);
 	}
 
-	//TODO on block pick select the varient used
 	@Override
 	public void onBuilt(BlockState body, BlockState legs, BlockState arm1, BlockState arm2) {
 		// uses the top-middle building block of this golem to set texture.

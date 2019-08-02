@@ -48,7 +48,7 @@ public final class LeafGolem extends GolemColorized {
 
 		// slow falling for this entity
 		if (this.getMotion().y < -0.05D) {
-			// TODO this.motionY *= 4.0D / 5.0D;
+			this.setMotion(this.getMotion().mul(1.0D, 0.8D, 1.0D));
 		}
 	}
 

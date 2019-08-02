@@ -30,7 +30,7 @@ public final class GlowstoneGolem extends GolemBase {
 		this.brightness = 1.0F;
 		final BlockState state = GolemItems.UTILITY_LIGHT.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, lightInt);
 		this.goalSelector.addGoal(9, new PlaceUtilityBlockGoal(this, state, BlockUtilityGlow.UPDATE_TICKS, this.getConfigBool(ALLOW_SPECIAL)));
-		canFall = true;
+		this.setCanFall(true);
 		//TODO impl swimming this.setCanSwim(true);
 	}
 
