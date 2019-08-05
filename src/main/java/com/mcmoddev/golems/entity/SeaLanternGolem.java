@@ -24,8 +24,8 @@ public final class SeaLanternGolem extends GolemBase {
 
 	public SeaLanternGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);
-		//TODO impl swimming this.canDrown = false;
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.2D);
+		this.enableSwim();
 	}
 
 	@Override

@@ -9,9 +9,12 @@ import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -28,7 +31,7 @@ public final class RedstoneLampGolem extends GolemMultiTextured {
 
 	public RedstoneLampGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world, ExtraGolems.MODID, LAMP_PREFIX, VARIANTS);
-		this.setCanFall(true);
+		this.enableFallDamage();
 		final BlockState state = GolemItems.UTILITY_LIGHT.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, 15);
 		this.goalSelector.addGoal(9, new PlaceUtilityBlockGoal(this, state, BlockUtilityGlow.UPDATE_TICKS,
 				this.getConfigBool(ALLOW_SPECIAL), PlaceUtilityBlockGoal.getDefaultBiPred(state).and(LIT_PRED)));
@@ -65,5 +68,10 @@ public final class RedstoneLampGolem extends GolemMultiTextured {
 	@Override
 	public float getBrightness() {
 		return isProvidingLight() ? 1.0F : super.getBrightness();
+	}
+	
+	@Override
+	public ItemStack getCreativeReturn(final RayTraceResult target) {
+		return new ItemStack(Blocks.REDSTONE_LAMP);
 	}
 }

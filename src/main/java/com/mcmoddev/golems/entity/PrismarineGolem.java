@@ -15,6 +15,7 @@ public final class PrismarineGolem extends GolemBase {
 	public PrismarineGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.2D);
+		this.enableSwim();
 	}
 
 	@Override

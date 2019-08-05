@@ -3,15 +3,11 @@ package com.mcmoddev.golems.entity;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.SlimeEntity;
-import net.minecraft.entity.monster.ZombieEntity;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -30,7 +26,7 @@ public final class SlimeGolem extends GolemBase {
 	
 	public SlimeGolem(final EntityType<? extends GolemBase> entityType, final World world, final boolean isChild) {
 		super(entityType, world);
-		//TODO impl swimming this.setCanSwim(true);
+		this.enableSwim();
 	}
 
 	@Override

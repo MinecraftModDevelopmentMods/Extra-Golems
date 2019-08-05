@@ -1,16 +1,13 @@
 package com.mcmoddev.golems.util.config;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
 import com.mcmoddev.golems.util.config.special.GolemSpecialSection;
+
 import net.minecraftforge.common.ForgeConfigSpec;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * Adapted from BetterAnimalsPlus by its_meow. Used with permission.
@@ -46,7 +43,7 @@ public class GolemConfiguration {
 			.define("friendly_fire", true);
 		this.enableTextureInteract = builder.comment("When enabled, some golems will change their texture when clicked")
 			.define("texture_interact", false);
-		this.enableUseItemSpell = builder.comment("When enabled, players can 'use' the spell item on a pumpkin to convert it to a golem head in-world")
+		this.enableUseItemSpell = builder.comment("When enabled, players can 'use' the spell item on a carved pumpkin to convert it to a golem head in-world")
 				.define("use_spell", true);
 
 		builder.pop();

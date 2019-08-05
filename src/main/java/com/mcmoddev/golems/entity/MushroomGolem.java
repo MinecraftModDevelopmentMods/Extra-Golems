@@ -8,10 +8,12 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 public final class MushroomGolem extends GolemMultiTextured {
@@ -25,7 +27,7 @@ public final class MushroomGolem extends GolemMultiTextured {
 
 	public MushroomGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world, ExtraGolems.MODID, SHROOM_PREFIX, SHROOM_TYPES);
-		//TODO impl swimming this.setCanSwim(true);
+		this.enableSwim();
 	}
 
 	@Override
@@ -68,5 +70,10 @@ public final class MushroomGolem extends GolemMultiTextured {
 				: (byte) 1;
 		textureNum %= this.getNumTextures();
 		this.setTextureNum(textureNum);
+	}
+	
+	@Override
+	public ItemStack getCreativeReturn(final RayTraceResult target) {
+		return this.getTextureNum() == 0 ? new ItemStack(Blocks.RED_MUSHROOM_BLOCK) : new ItemStack(Blocks.BROWN_MUSHROOM_BLOCK);
 	}
 }

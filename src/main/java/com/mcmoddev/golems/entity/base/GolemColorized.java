@@ -10,9 +10,9 @@ import javax.annotation.Nullable;
 
 /**
  * This class should always be registered with RenderGolemColorized. It supports a 2-texture golem
- * where {@link getTextureBase()} returns a normal texture to be rendered and
- * {@link getTextureToColor()} returns a (usually grayscale) texture to be colored according to
- * {@link getColor()}
+ * where {@link #getTextureBase()} returns a normal texture to be rendered and
+ * {@link #getTextureToColor()} returns a (usually grayscale) texture to be colored according to
+ * {@link #getColor()}
  **/
 public abstract class GolemColorized extends GolemBase {
 
@@ -23,7 +23,6 @@ public abstract class GolemColorized extends GolemBase {
 	protected float colorAlpha;
 	protected final ResourceLocation base;
 	protected final ResourceLocation overlay;
-	protected final boolean hasBase;
 
 	/**
 	 * Flexible constructor so child classes can "borrow" this class's behavior and customize. It is
@@ -43,7 +42,6 @@ public abstract class GolemColorized extends GolemBase {
 		this.setColor(initial);
 		this.base = rBase;
 		this.overlay = rOverlay;
-		this.hasBase = this.base != null;
 	}
 
 	@Override
@@ -69,11 +67,20 @@ public abstract class GolemColorized extends GolemBase {
 	 * Whether this golem has a sub-texture that should not be colored.
 	 **/
 	public boolean hasBase() {
-		return this.hasBase;
+		return this.base != null;
+	}
+	
+	/**
+	 * Whether this golem has a texture that should be colored.
+	 **/
+	public boolean hasOverlay() {
+		return this.overlay != null;
 	}
 
 	/**
 	 * Updates {@link #color} as well as calculates the RGBA components of that color.
+	 * Note: normal render class cannot handle an alpha value here, the actual texture
+	 * image must be saved with transparency instead.
 	 **/
 	public void setColor(final long toSet) {
 		this.color = toSet;
@@ -88,6 +95,13 @@ public abstract class GolemColorized extends GolemBase {
 		this.colorAlpha = (float) (tmpColor >> 24 & 255) / 255.0F;
 	}
 
+	/**
+	 * @return the full color number currently applied.
+	 * @see #getColorRed()
+	 * @see #getColorGreen()
+	 * @see #getColorBlue()
+	 * @see #getColorAlpha()
+	 **/
 	public long getColor() {
 		return this.color;
 	}

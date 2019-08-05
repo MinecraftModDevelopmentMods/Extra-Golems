@@ -22,6 +22,7 @@ public final class BookshelfGolem extends GolemBase {
 
 	public BookshelfGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);
+		this.enableSwim();
 	}
 
 	protected ResourceLocation applyTexture() {

@@ -11,12 +11,9 @@ import net.minecraft.block.SoundType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
@@ -27,25 +24,26 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.extensions.IForgeEntity;
 
 /**
  * Base class for all golems in this mod.
  **/
 public abstract class GolemBase extends IronGolemEntity {
 	
-	protected final DataParameter<Boolean> CHILD = EntityDataManager.createKey(GolemBase.class, DataSerializers.BOOLEAN);
-	protected final String KEY_CHILD = "isChild";
+	// TODO protected final DataParameter<Boolean> CHILD = EntityDataManager.createKey(GolemBase.class, DataSerializers.BOOLEAN);
+	// TODO protected final String KEY_CHILD = "isChild";
 	
 	//TODO impl swimming
 	protected final GolemContainer container;
 	protected ResourceLocation textureLoc;
 	//TODO decide if this should be private w/ accessors
 	private boolean canFall = false;
+	private boolean canSwim = false;
 	//type, world
 	public GolemBase(EntityType<? extends GolemBase> type, World world) {
 		super(type, world);
 		this.container = GolemRegistrar.getContainer(type);
+		this.navigator.setCanSwim(false);
 	}
 
 	/**
@@ -73,7 +71,7 @@ public abstract class GolemBase extends IronGolemEntity {
 	@Override
 	protected void registerData() {
 		super.registerData();
-		this.getDataManager().register(CHILD, Boolean.FALSE);
+		// TODO this.getDataManager().register(CHILD, Boolean.FALSE);
 		this.setTextureType(this.applyTexture());
 	}
 
@@ -112,11 +110,11 @@ public abstract class GolemBase extends IronGolemEntity {
 	}
 	
 	/**
-	 * Sets whether this golem can take fall damage.
-	 * @param fall
+	 * Allows the golem to take fall damage.
+	 * This is disabled by default.
 	 **/
-	public void setCanFall(final boolean fall) {
-		canFall = fall;
+	public void enableFallDamage() {
+		canFall = true;
 	}
 	
 	/**
@@ -124,6 +122,21 @@ public abstract class GolemBase extends IronGolemEntity {
 	 **/
 	public boolean canFall() {
 		return canFall;
+	}
+	
+	/**
+	 * Allows the golem to swim actively.
+	 * This is disabled by default.
+	 **/
+	public void enableSwim() {
+		this.canSwim = true;
+		this.goalSelector.addGoal(0, new SwimGoal(this));
+		this.navigator.setCanSwim(true);
+	}
+	
+	@Override
+	public boolean canSwim() {
+		return canSwim;
 	}
 
 	public GolemContainer getGolemContainer() {
@@ -144,27 +157,6 @@ public abstract class GolemBase extends IronGolemEntity {
 
 	public double getConfigDouble(final String name) {
 		return (Double) getConfigValue(name).get();
-	}
-	
-	public void setChild(boolean isChild) {
-		this.getDataManager().set(CHILD, isChild);
-	}
-	
-	@Override
-	public boolean isChild() {
-		return this.getDataManager().get(CHILD).booleanValue();
-	}
-	
-	@Override
-	public void writeAdditional(CompoundNBT compound) {
-		super.writeAdditional(compound);
-        compound.putBoolean(KEY_CHILD, this.isChild());
-    }
-	
-	@Override
-	public void readAdditional(CompoundNBT compound) {
-		super.readAdditional(compound);
-		this.setChild(compound.getBoolean(KEY_CHILD));
 	}
 
 	@Override

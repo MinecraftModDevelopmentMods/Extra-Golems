@@ -4,14 +4,15 @@ import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemMultiColorized;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
-import net.minecraft.block.Block;
+import com.mcmoddev.golems.util.GolemTextureBytes;
+
 import net.minecraft.block.BlockState;
-import net.minecraft.block.StainedGlassBlock;
 import net.minecraft.entity.EntityType;
-import net.minecraft.item.DyeColor;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 public final class StainedGlassGolem extends GolemMultiColorized {
@@ -25,9 +26,8 @@ public final class StainedGlassGolem extends GolemMultiColorized {
 
 	public StainedGlassGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world, ExtraGolems.MODID, TEXTURE_BASE, TEXTURE_OVERLAY, DYE_COLORS);
-		this.setCanFall(true);
+		this.enableFallDamage();
 	}
-
 
 	@Override
 	public boolean hasTransparency() {
@@ -46,18 +46,14 @@ public final class StainedGlassGolem extends GolemMultiColorized {
 
 	@Override
 	public void onBuilt(BlockState body, BlockState legs, BlockState arm1, BlockState arm2) {
-		// use block type to give this golem the right texture
-		// defaults to random color.
-		final Block b = body.getBlock();
-		byte textureNum;
-		// check each type of stained glass
-		if (b instanceof StainedGlassBlock) {
-			final DyeColor color = ((StainedGlassBlock) b).getColor();
-			textureNum = (byte) color.getId();
-		} else {
-			textureNum = (byte) this.rand.nextInt(DYE_COLORS.length);
-		}
-		// actually set the texture
+		// uses HashMap to determine which texture this golem should apply
+		// based on the top-middle building block. Defaults to a random texture.
+		byte textureNum = GolemTextureBytes.getByBlock(GolemTextureBytes.GLASS, body.getBlock());
 		this.setTextureNum(textureNum);
+	}
+	
+	@Override
+	public ItemStack getCreativeReturn(final RayTraceResult target) {
+		return new ItemStack(GolemTextureBytes.getByByte(GolemTextureBytes.GLASS, (byte)this.getTextureNum()));
 	}
 }

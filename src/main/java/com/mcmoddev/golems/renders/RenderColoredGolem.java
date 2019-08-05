@@ -16,7 +16,7 @@ public class RenderColoredGolem extends RenderGolem {
 
 	private static final ResourceLocation fallbackTexture = GolemBase.makeTexture(ExtraGolems.MODID, GolemNames.CLAY_GOLEM);
 	private ResourceLocation texture;
-
+	
 	public RenderColoredGolem(final EntityRendererManager renderManagerIn) {
 		super(renderManagerIn);
 	}
@@ -32,9 +32,7 @@ public class RenderColoredGolem extends RenderGolem {
 		// render first pass of golem texture (usually eyes and other opaque, pre-colored features)
 		if (golem.hasBase()) {
 			this.texture = golem.getTextureBase();
-			if (this.texture != null) {
-				super.doRender(golem, x, y, z, f0, f1);
-			}
+			super.doRender(golem, x, y, z, f0, f1);
 		}
 
 		// prepare to render the complicated layer
@@ -48,8 +46,8 @@ public class RenderColoredGolem extends RenderGolem {
 		}
 
 		// render second pass of golem texture
-		this.texture = golem.getTextureToColor();
-		if (this.texture != null) {
+		if (golem.hasOverlay()) {
+			this.texture = golem.getTextureToColor();
 			super.doRender(golem, x, y, z, f0, f1);
 		}
 
@@ -61,24 +59,21 @@ public class RenderColoredGolem extends RenderGolem {
 		GlStateManager.popMatrix();
 	}
 
+//	@Override
+//	protected void applyRotations(final GolemBase golem, final float ageInTicks, final float rotationYaw,
+//			final float partialTicks) {
+//		super.applyRotations(golem, ageInTicks, rotationYaw, partialTicks);
+//
+//		if ((double) golem.limbSwingAmount >= 0.01D) {
+//			final float f = 13.0F;
+//			final float f1 = golem.limbSwing - golem.limbSwingAmount * (1.0F - partialTicks) + 6.0F;
+//			final float f2 = (Math.abs(f1 % f - f * 0.5F) - f * 0.25F) / (f * 0.25F);
+//			GlStateManager.rotatef(6.5F * f2, 0.0F, 0.0F, 1.0F);
+//		}
+//	}
+
 	@Override
-	protected void applyRotations(final GolemBase golem, final float ageInTicks, final float rotationYaw,
-			final float partialTicks) {
-		super.applyRotations(golem, ageInTicks, rotationYaw, partialTicks);
-
-		if ((double) golem.limbSwingAmount >= 0.01D) {
-			final float f = 13.0F;
-			final float f1 = golem.limbSwing - golem.limbSwingAmount * (1.0F - partialTicks) + 6.0F;
-			final float f2 = (Math.abs(f1 % f - f * 0.5F) - f * 0.25F) / (f * 0.25F);
-			GlStateManager.rotatef(6.5F * f2, 0.0F, 0.0F, 1.0F);
-		}
-	}
-
-	/**
-	 * Returns the location of an entity's texture. Doesn't seem to be called unless you call
-	 * Render.bindEntityTexture.
-	 */
-	protected ResourceLocation getEntityTexture(final GolemColorized golem) {
+	protected ResourceLocation getEntityTexture(final GolemBase golem) {
 		return this.texture != null ? this.texture : fallbackTexture;
 	}
 }

@@ -1,5 +1,6 @@
 package com.mcmoddev.golems.items;
 
+import com.mcmoddev.golems.blocks.BlockGolemHead;
 import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import net.minecraft.block.Block;
@@ -51,8 +52,9 @@ public class ItemGolemSpell extends Item {
 				if (!cxt.getWorld().isRemote) {
 					final Direction facing = cxt.getWorld().getBlockState(cxt.getPos()).get(HorizontalBlock.HORIZONTAL_FACING);
 					cxt.getWorld().setBlockState(cxt.getPos(), GolemItems.GOLEM_HEAD.getDefaultState().with(HorizontalBlock.HORIZONTAL_FACING, facing), 3);
+					BlockGolemHead.trySpawnGolem(cxt.getWorld(), cxt.getPos());
+					cxt.getItem().shrink(1);
 				}
-				cxt.getItem().shrink(1);
 				return ActionResultType.SUCCESS;
 			}
 		}

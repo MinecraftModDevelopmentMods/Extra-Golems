@@ -11,6 +11,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 public abstract class GolemMultiTextured extends GolemBase {
@@ -118,6 +119,16 @@ public abstract class GolemMultiTextured extends GolemBase {
 		this.setTextureNum(nbt.getByte(NBT_TEXTURE));
 	}
 
+	@Override
+	protected ResourceLocation getLootTable() {
+		return this.lootTables[this.getTextureNum() % this.lootTables.length];
+	}
+	
+	@Override
+	public ItemStack getPickedResult(final RayTraceResult target) {
+		return getCreativeReturn(target);
+	}
+
 	/**
 	 * Calls {@link #setTextureNum(byte, boolean)} with <b>toSet</b> and <b>true</b>.
 	 **/
@@ -156,9 +167,14 @@ public abstract class GolemMultiTextured extends GolemBase {
 	public ResourceLocation getTextureFromArray(final int index) {
 		return this.textures[index % this.textures.length];
 	}
-
-	@Override
-	protected ResourceLocation getLootTable() {
-		return this.lootTables[this.getTextureNum() % this.lootTables.length];
-	}
+	
+	// ABSTRACT
+	
+	/**
+	 * Called when the player middle-clicks on a golem to get its "spawn egg"
+	 * or similar item
+	 * @param target
+	 * @return an ItemStack that best represents this golem, or an empty itemstack
+	 **/
+	public abstract ItemStack getCreativeReturn(final RayTraceResult target);
 }

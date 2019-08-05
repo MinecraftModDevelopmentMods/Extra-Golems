@@ -19,16 +19,18 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import java.util.Random;
+
 import javax.annotation.Nullable;
 
 public abstract class BlockUtility extends Block implements IBucketPickupHandler, ILiquidContainer {
 
-	private final int TICK_RATE;
+	private final int tickRate;
 
 	public BlockUtility(final Properties prop, final int tickrate) {
 		super(prop.hardnessAndResistance(-1F).doesNotBlockMovement());
 		this.setDefaultState(this.stateContainer.getBaseState().with(BlockStateProperties.WATERLOGGED, false));
-		this.TICK_RATE = tickrate;
+		this.tickRate = tickrate;
 	}
 
 	protected boolean remove(final World worldIn, final BlockState state, final BlockPos pos, final int flag) {
@@ -89,10 +91,14 @@ public abstract class BlockUtility extends Block implements IBucketPickupHandler
 //		}
 //	}
 
+	@Override
+	public void randomTick(final BlockState state, final World worldIn, final BlockPos pos, final Random rand) {
+		this.tick(state, worldIn, pos, rand);
+	}
 
 	@Override
 	public int tickRate(IWorldReader worldIn) {
-		return this.ticksRandomly ? TICK_RATE : super.tickRate(worldIn);
+		return this.ticksRandomly ? tickRate : super.tickRate(worldIn);
 	}
 
 //	@Override

@@ -27,7 +27,8 @@ public final class IceGolem extends GolemBase {
 
 	public IceGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);
-		//TODO impl swimming this.setCanSwim(true);
+		// just in case
+		this.enableSwim();
 	}
 
 	protected ResourceLocation applyTexture() {

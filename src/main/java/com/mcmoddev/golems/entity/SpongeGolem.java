@@ -28,7 +28,7 @@ public final class SpongeGolem extends GolemBase {
 
 	public SpongeGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);
-		//TODO impl swimming this.setCanSwim(true);
+		this.enableSwim();
 	}
 
 	@Override

@@ -35,7 +35,7 @@ public class BlockUtilityGlow extends BlockUtility {
 
 		if (hasLightGolem) {
 			// light golem is nearby, schedule another update
-			worldIn.getPendingBlockTicks().scheduleTick(pos, this, this.tickRate(worldIn));
+			worldIn.getPendingBlockTicks().scheduleTick(pos, state.getBlock(), this.tickRate(worldIn));
 		} else {
 			this.remove(worldIn, state, pos, 3);
 		}

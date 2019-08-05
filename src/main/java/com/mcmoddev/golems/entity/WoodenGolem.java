@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 public final class WoodenGolem extends GolemMultiTextured {
@@ -21,7 +22,7 @@ public final class WoodenGolem extends GolemMultiTextured {
 
 	public WoodenGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world, ExtraGolems.MODID, WOOD_PREFIX, WOOD_TYPES);
-		//TODO impl swimming this.setCanSwim(true);
+		this.enableSwim();
 	}
 
 	@Override
@@ -53,5 +54,18 @@ public final class WoodenGolem extends GolemMultiTextured {
 	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_WOOD_STEP;
+	}
+	
+	@Override
+	public ItemStack getCreativeReturn(final RayTraceResult target) {
+		switch(this.getTextureNum()) {
+		case 0: return new ItemStack(Blocks.OAK_LOG);
+		case 1: return new ItemStack(Blocks.SPRUCE_LOG);
+		case 2: return new ItemStack(Blocks.BIRCH_LOG);
+		case 3: return new ItemStack(Blocks.JUNGLE_LOG);
+		case 4: return new ItemStack(Blocks.ACACIA_LOG);
+		case 5: return new ItemStack(Blocks.DARK_OAK_LOG);
+		default: return ItemStack.EMPTY;
+		}
 	}
 }

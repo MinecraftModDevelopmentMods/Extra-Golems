@@ -39,6 +39,7 @@ public class TNTGolem extends GolemBase {
 	public TNTGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		this(entityType, world, 4, 8, 50, 10);
 		this.allowedToExplode = this.getConfigBool(ALLOW_SPECIAL);
+		this.enableSwim();
 	}
 
 	/**

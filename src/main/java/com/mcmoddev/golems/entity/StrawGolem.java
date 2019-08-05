@@ -26,7 +26,7 @@ public final class StrawGolem extends GolemBase {
 
 	public StrawGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);
-		//TODO impl swimming this.setCanSwim(true);
+		this.enableSwim();
 		this.boostFreq = this.getConfigInt(SPECIAL_FREQ);
 		this.boostFreq += this.rand.nextInt(Math.max(10, this.boostFreq / 2));
 		this.range = 4;

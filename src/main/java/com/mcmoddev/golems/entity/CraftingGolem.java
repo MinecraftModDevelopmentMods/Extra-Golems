@@ -28,6 +28,7 @@ public final class CraftingGolem extends GolemBase {
 	
 	public CraftingGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);
+		this.enableSwim();
 	}
 
 	@Override
