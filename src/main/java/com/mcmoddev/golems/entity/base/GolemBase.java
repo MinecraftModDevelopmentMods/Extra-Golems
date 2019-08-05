@@ -33,10 +33,8 @@ public abstract class GolemBase extends IronGolemEntity {
 	// TODO protected final DataParameter<Boolean> CHILD = EntityDataManager.createKey(GolemBase.class, DataSerializers.BOOLEAN);
 	// TODO protected final String KEY_CHILD = "isChild";
 	
-	//TODO impl swimming
 	protected final GolemContainer container;
 	protected ResourceLocation textureLoc;
-	//TODO decide if this should be private w/ accessors
 	private boolean canFall = false;
 	private boolean canSwim = false;
 	//type, world

@@ -15,10 +15,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.*;
-
 /**
  * Adapted from BetterAnimalsPlus by its_meow. Used with permission.
  */
@@ -426,44 +422,6 @@ public class GolemContainer {
 		public Builder addDesc(final GolemDescription... desc) {
 			for (final GolemDescription cont : desc) {
 				descriptions.add(cont);
-			}
-			return this;
-		}
-
-		/**
-		 * Registers a single loot table for entity drops upon death.
-		 * This loot table will be automatically added to the golem.
-		 * If the golem should have different loot tables based on
-		 * state (such as multi-textured golems), use
-		 * {@link #addLootTables(String, String, String[])} instead.
-		 * <br><br><i>Note: {@link #setModId(String)} must be called
-		 * <b>before</b> using this method</i>
-		 *
-		 * @param modid    the loot table parent MOD ID
-		 * @param location the loot table name, including sub-folders
-		 * @return instance to allow chaining of methods
-		 **/
-		public Builder addLootTable(final String location) {
-			this.lootTable = new ResourceLocation(this.modid, "entities/".concat(location));
-			//LootTableList.register(this.lootTable);
-			return this;
-		}
-
-		/**
-		 * Registers a set of loot tables. It is up to the golem
-		 * class to handle and return the correct loot table
-		 * upon entity death.
-		 * <br><br><i>Note: {@link #setModId(String)} must be called
-		 * <b>before</b> using this method</i>
-		 *
-		 * @param modid     the loot table parent MOD ID
-		 * @param path      a path to prefix the loot table name
-		 * @param locations the loot table names
-		 * @return instance to allow chaining of methods
-		 **/
-		public Builder addLootTables(final String path, final String[] locations) {
-			for (final String s : locations) {
-				//LootTableList.register(new ResourceLocation(this.modid, "entities/".concat(path.concat("/".concat(s)))));
 			}
 			return this;
 		}
