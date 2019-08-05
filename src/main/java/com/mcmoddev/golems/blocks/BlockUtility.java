@@ -1,27 +1,36 @@
 package com.mcmoddev.golems.blocks;
 
-import net.minecraft.block.*;
+import java.util.Random;
+
+import javax.annotation.Nullable;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.IBucketPickupHandler;
+import net.minecraft.block.ILiquidContainer;
 import net.minecraft.entity.Entity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import java.util.Random;
-
-import javax.annotation.Nullable;
 
 public abstract class BlockUtility extends Block implements IBucketPickupHandler, ILiquidContainer {
 
@@ -82,14 +91,14 @@ public abstract class BlockUtility extends Block implements IBucketPickupHandler
 		}
 	}
 
-//	@Override
-//	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState) {
-//		if(this.getTickRandomly(state)) {
-//			worldIn.getPendingBlockTicks().scheduleTick(pos, this, this.tickRate(worldIn));
-//			worldIn.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
-//			worldIn.notifyNeighbors(pos, this);
-//		}
-//	}
+	@Override
+	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+		if(this.ticksRandomly(state)) {
+			worldIn.getPendingBlockTicks().scheduleTick(pos, this, this.tickRate(worldIn));
+			worldIn.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+			worldIn.notifyNeighbors(pos, this);
+		}
+	}
 
 	@Override
 	public void randomTick(final BlockState state, final World worldIn, final BlockPos pos, final Random rand) {
@@ -100,42 +109,47 @@ public abstract class BlockUtility extends Block implements IBucketPickupHandler
 	public int tickRate(IWorldReader worldIn) {
 		return this.ticksRandomly ? tickRate : super.tickRate(worldIn);
 	}
-
-//	@Override
-//	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
-//		return VoxelShapes.empty();
-//	}
+	
+	@Override
+	public VoxelShape getShape(final BlockState state, final IBlockReader worldIn, final BlockPos pos, final ISelectionContext cxt) {
+		return VoxelShapes.empty();
+	}
+	
+	@Override
+	public VoxelShape getCollisionShape(final BlockState state, final IBlockReader worldIn, final BlockPos pos, final ISelectionContext cxt) {
+		return VoxelShapes.empty();
+	}
+	
+	@Override
+	public VoxelShape getRaytraceShape(final BlockState state, final IBlockReader worldIn, final BlockPos pos) {
+		return VoxelShapes.empty();
+	}
+	
+	@Override
+	public VoxelShape getRenderShape(final BlockState state, final IBlockReader worldIn, final BlockPos pos) {
+		return VoxelShapes.empty();
+	}
+	
+	@Override
+	public boolean isNormalCube(final BlockState state, final IBlockReader worldIn, final BlockPos pos) {
+		return false;
+	}
+	
+	@Override
+	public boolean isSolid(final BlockState state) {
+		return false;
+	}
+	
+	@Override
+	public ItemStack getItem(final IBlockReader worldIn, final BlockPos pos, final BlockState state) {
+		return ItemStack.EMPTY;
+	}
 
 //	@Override
 //	public boolean isCollidable(BlockState state) {
 //		return false;
 //	}
-//
-//	@Override
-//	public boolean isFullCube(BlockState state) {
-//		return false;
-//	}
-
-	/**
-	 * @deprecated
-	 */
-//	@Deprecated
-//	@Override
-//	public boolean isTopSolid(final BlockState state) {
-//		return false;
-//	}
-//
-//	@Override
-//	public boolean isBlockNormalCube(BlockState state) {
-//		return false;
-//	}
-
-//
-//	@Override
-//	public IItemProvider getItemDropped(BlockState state, World worldIn, BlockPos pos, int fortune) {
-//		// don't drop anything
-//		return Items.AIR;
-//	}
+	
 	@Override
 	public boolean isReplaceable(BlockState state, BlockItemUseContext useContext) {
 		return true;
@@ -170,6 +184,12 @@ public abstract class BlockUtility extends Block implements IBucketPickupHandler
 
 	@Override
 	public void onFallenUpon(final World worldIn, final BlockPos pos, final Entity entityIn, final float fallDistance) {
+		// do nothing
+	}
+	
+	@Override
+	public void onEntityCollision(final BlockState state, final World worldIn, final BlockPos pos, final Entity entity) {
+		// do nothing
 	}
 
 	@Override
@@ -181,9 +201,4 @@ public abstract class BlockUtility extends Block implements IBucketPickupHandler
 	public boolean canSpawnInBlock() {
 		return true;
 	}
-
-//	@Override
-//	public BlockFaceShape getBlockFaceShape(IBlockReader worldIn, BlockState state, BlockPos pos, EnumFacing face) {
-//		return BlockFaceShape.UNDEFINED;
-//	}
 }
