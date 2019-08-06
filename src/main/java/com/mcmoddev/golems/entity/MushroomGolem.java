@@ -39,7 +39,7 @@ public final class MushroomGolem extends GolemMultiTextured {
 		final BlockState[] mushrooms = { Blocks.BROWN_MUSHROOM.getDefaultState(),
 				Blocks.RED_MUSHROOM.getDefaultState() };
 		final Block[] soils =
-				{ Blocks.DIRT, Blocks.GRASS, Blocks.MYCELIUM, Blocks.PODZOL, Blocks.NETHERRACK, Blocks.SOUL_SAND };
+				{ Blocks.DIRT, Blocks.GRASS_BLOCK, Blocks.MYCELIUM, Blocks.PODZOL, Blocks.NETHERRACK, Blocks.SOUL_SAND };
 		this.goalSelector.addGoal(2,
 				new PlaceBlocksGoal(this, freq, mushrooms, soils, allowed));
 	}

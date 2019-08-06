@@ -54,7 +54,7 @@ public final class MelonGolem extends GolemBase {
 	@Override
 	protected void registerGoals() {
 		super.registerGoals();
-		final Block[] soils = { Blocks.DIRT, Blocks.GRASS, Blocks.MYCELIUM, Blocks.PODZOL };
+		final Block[] soils = { Blocks.DIRT, Blocks.GRASS_BLOCK, Blocks.MYCELIUM, Blocks.PODZOL };
 		// init list and AI for planting flowers
 		final BlockState[] flowers = {
 				Blocks.POPPY.getDefaultState(),

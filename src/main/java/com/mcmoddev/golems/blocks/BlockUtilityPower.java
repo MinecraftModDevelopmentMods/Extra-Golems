@@ -28,7 +28,7 @@ public class BlockUtilityPower extends BlockUtility {
 	@Override
 	public void tick(BlockState state, World worldIn, BlockPos pos, Random random) {
 		// make a slightly expanded AABB to check for the golem
-		AxisAlignedBB toCheck = new AxisAlignedBB(pos).grow(0.5D);
+		AxisAlignedBB toCheck = new AxisAlignedBB(pos).grow(0.25D);
 		List<GolemBase> list = worldIn.getEntitiesWithinAABB(GolemBase.class, toCheck);
 		boolean hasPowerGolem = list != null && !list.isEmpty() && hasPowerGolem(list);
 
