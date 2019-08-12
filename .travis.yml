@@ -1,12 +1,29 @@
+# Ripped from liach's modding skeleton, which is in the public domain.
+# This is probably a little too verbose as i've stripped the publishing features, and likely works around some issues
+# with fabric's loom, but it should work just fine.
 language: java
-cache:
-  directories:
-    - $HOME/.gradle
-notifications:
-  email: false
+dist: trusty
+sudo: required
 jdk:
-  - oraclejdk8
-install: ./gradlew setupCIWorkspace -S
-script: ./gradlew build -S
-before_install:
-  - chmod a+x gradlew
+	- oraclejdk8
+git:
+	quiet: true
+before_cache:
+	- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+	- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+	directories:
+		- "$HOME/.gradle/caches/"
+		- "$HOME/.gradle/wrapper/"
+jobs:
+	include:
+		- stage: build
+		  install: chmod +x ./gradlew
+		  script: "./gradlew build -S -i"
+stages:
+	- build
+env:
+	global:
+		- TERM=dumb
+notifications:
+	email: false
