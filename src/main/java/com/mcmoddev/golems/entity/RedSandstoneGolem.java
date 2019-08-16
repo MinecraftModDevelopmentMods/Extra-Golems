@@ -14,7 +14,7 @@ public final class RedSandstoneGolem extends GolemBase {
 
 	public RedSandstoneGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);
-		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.1D);
+		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.6D);
 	}
 
 	protected ResourceLocation applyTexture() {

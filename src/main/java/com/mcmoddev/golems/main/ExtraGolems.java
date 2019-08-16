@@ -79,6 +79,7 @@ public class ExtraGolems {
 		ExtraGolems.PROXY.registerBlocks(event);
 	}
 	
+	@SubscribeEvent
 	public static void registerContainers(final RegistryEvent.Register<ContainerType<?>> event) {
 		ExtraGolems.LOGGER.info("registerContainers");
 		ExtraGolems.PROXY.registerContainers(event);

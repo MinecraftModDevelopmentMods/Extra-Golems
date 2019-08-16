@@ -67,7 +67,7 @@ public class ProxyCommon {
 	
 	public void registerContainers(final RegistryEvent.Register<ContainerType<?>> event) {
 		event.getRegistry().register(new ContainerType<CraftingGolem.ContainerPortableWorkbench>
-			((i, p) -> new CraftingGolem.ContainerPortableWorkbench(i, p)));
+			((i, p) -> new CraftingGolem.ContainerPortableWorkbench(i, p)).setRegistryName(ExtraGolems.MODID, "crafting_portable"));
 	}
 
 	public static void registerLootTables() {

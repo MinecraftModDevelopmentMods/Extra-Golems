@@ -3,9 +3,11 @@ package com.mcmoddev.golems.entity;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
+import com.mcmoddev.golems.util.config.GolemRegistrar;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.SlimeEntity;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.util.DamageSource;
@@ -21,10 +23,6 @@ public final class SlimeGolem extends GolemBase {
 	public static final String KNOCKBACK = "Knockback Factor";
 	
 	public SlimeGolem(final EntityType<? extends GolemBase> entityType, final World world) {
-		this(entityType, world, false);
-	}
-	
-	public SlimeGolem(final EntityType<? extends GolemBase> entityType, final World world, final boolean isChild) {
 		super(entityType, world);
 		this.enableSwim();
 	}
@@ -68,45 +66,49 @@ public final class SlimeGolem extends GolemBase {
 	}
 
 	@Override
-	public void remove() {
-//		if(!this.world.isRemote && !this.isChild() && this.getConfigBool(ALLOW_SPLITTING)) {
-//			GolemBase slime1 = new SlimeGolem((EntityType<? extends GolemBase>) this.getType(), this.world, true);
-//			GolemBase slime2 = new SlimeGolem((EntityType<? extends GolemBase>) this.getType(), this.world, true);
-//			// copy attack target info
-//			if (this.getAttackTarget() != null) {
-//				slime1.setAttackTarget(this.getAttackTarget());
-//				slime2.setAttackTarget(this.getAttackTarget());
-//			}
-//			// set location
-//			slime1.setLocationAndAngles(this.posX + rand.nextDouble() - 0.5D, this.posY,
-//					this.posZ + rand.nextDouble() - 0.5D, this.rotationYaw + rand.nextInt(20) - 10, 0);
-//			slime2.setLocationAndAngles(this.posX + rand.nextDouble() - 0.5D, this.posY,
-//					this.posZ + rand.nextDouble() - 0.5D, this.rotationYaw + rand.nextInt(20) - 10, 0);
-//			// spawn the entities
-//			this.getEntityWorld().addEntity(slime1);
-//			this.getEntityWorld().addEntity(slime2);
-//		}
+	public void onDeath(final DamageSource source) {
+		if(!this.world.isRemote && !this.isChild() && this.getConfigBool(ALLOW_SPLITTING)) {
+			GolemBase slime1 = GolemRegistrar.getContainer(SlimeGolem.class).getEntityType().create(this.world);
+			GolemBase slime2 = GolemRegistrar.getContainer(SlimeGolem.class).getEntityType().create(this.world);
+			slime1.setChild(true);
+			slime2.setChild(true);
+			// copy attack target info
+			if (this.getAttackTarget() != null) {
+				slime1.setAttackTarget(this.getAttackTarget());
+				slime2.setAttackTarget(this.getAttackTarget());
+			}
+			// set location
+			slime1.setLocationAndAngles(this.posX + rand.nextDouble() - 0.5D, this.posY,
+					this.posZ + rand.nextDouble() - 0.5D, this.rotationYaw + rand.nextInt(20) - 10, 0);
+			slime2.setLocationAndAngles(this.posX + rand.nextDouble() - 0.5D, this.posY,
+					this.posZ + rand.nextDouble() - 0.5D, this.rotationYaw + rand.nextInt(20) - 10, 0);
+			// spawn the entities
+			this.getEntityWorld().addEntity(slime1);
+			this.getEntityWorld().addEntity(slime2);
+		}
 
-		super.remove();
+		super.onDeath(source);
 	}
 
 	@Override
-	public void notifyDataManagerChange(DataParameter<?> key) {
+	public void notifyDataManagerChange(final DataParameter<?> key) {
 		super.notifyDataManagerChange(key);
-//		if (IS_CHILD.equals(key)) {
-//			if (this.isChild()) {
-//				//TODO this involves making a custom model, iirc.
-//				// TODO this.setSize(0.7F, 1.45F);
-//				this.recalculateSize();
-//				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.getHealth() / 3);
-//				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.getAttack() * 0.6F);
-//				this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.0D);
-//			} else {
-//				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.getHealth());
-//				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.getAttack());
-//				this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.35D);
-//			}
-//		}
+		if (CHILD.equals(key)) {
+			if (this.isChild()) {
+				// truncate these values to one decimal place after reducing them from base values
+				double childHealth = (Math.floor(container.getHealth() * 0.3D * 10D)) / 10D;
+				double childAttack = (Math.floor(container.getAttack() * 0.6D * 10D)) / 10D;
+				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(childHealth);
+				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(childAttack);
+				this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.0D);
+			} else {
+				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.getHealth());
+				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.getAttack());
+				this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.35D);
+			}
+			// recalculate size
+			this.recalculateSize();
+		}
 	}
 
 	@Override

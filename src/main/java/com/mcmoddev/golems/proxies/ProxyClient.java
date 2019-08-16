@@ -6,9 +6,6 @@ import com.mcmoddev.golems.renders.RenderColoredGolem;
 import com.mcmoddev.golems.renders.RenderGolem;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
 
-import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 

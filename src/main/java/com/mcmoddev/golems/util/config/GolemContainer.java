@@ -280,7 +280,7 @@ public class GolemContainer {
 		 * @param golemName     the name of the golem
 		 * @param entityClazz   the class of the golem (e.g. EntityFooGolem.class)
 		 * @param entityFactory the constructor function of the class (e.g. EntityFooGolem::new)
-		 */
+		 **/
 		public Builder(final String golemName, final Class<? extends GolemBase> entityClazz,
 				final EntityType.IFactory<? extends GolemBase> entityFactory) {
 			this.golemName = golemName;
@@ -295,7 +295,7 @@ public class GolemContainer {
 		 *
 		 * @param lModId the MODID to use to register the golem. <b>Defaults to "golems"</b>
 		 * @return instance to allow chaining of methods
-		 */
+		 **/
 		public Builder setModId(final String lModId) {
 			this.modid = lModId;
 			return this;
@@ -306,7 +306,7 @@ public class GolemContainer {
 		 *
 		 * @param lHealth The max health (in half hearts) of the golem. <b>Defaults to 100</b>
 		 * @return instance to allow chaining of methods
-		 */
+		 **/
 		public Builder setHealth(final double lHealth) {
 			health = lHealth;
 			return this;
@@ -317,7 +317,7 @@ public class GolemContainer {
 		 *
 		 * @param lAttack The attack strength (in half hearts) of the golem. <b>Defaults to 7</b>
 		 * @return instance to allow chaining of methods
-		 */
+		 **/
 		public Builder setAttack(final double lAttack) {
 			attack = lAttack;
 			return this;
@@ -328,7 +328,7 @@ public class GolemContainer {
 		 *
 		 * @param lMoveSpeed The move speed of the golem. <b>Defaults to 0.25D</b>
 		 * @return instance to allow chaining of methods
-		 */
+		 **/
 		public Builder setSpeed(final double lMoveSpeed) {
 			speed = lMoveSpeed;
 			return this;
@@ -342,7 +342,7 @@ public class GolemContainer {
 		 * @param additionalBlocks blocks that may be used for building
 		 * @return instance to allow chaining of methods
 		 * @see #addBlocks(Tag)
-		 */
+		 **/
 		public Builder addBlocks(final Block... additionalBlocks) {
 			if (additionalBlocks != null && additionalBlocks.length > 0) {
 				this.validBuildingBlocks.addAll(Arrays.asList(additionalBlocks));
@@ -359,7 +359,7 @@ public class GolemContainer {
 		 * @param blockTag the {@code Tag<Block>} to use
 		 * @return instance to allow chaining of methods
 		 * @see #addBlocks(Block[])
-		 */
+		 **/
 		public Builder addBlocks(final Tag<Block> blockTag) {
 			this.validBuildingBlockTags.add(blockTag.getId());
 			return this;
@@ -371,7 +371,7 @@ public class GolemContainer {
 		 * @param specialContainers specials to be added
 		 * @return instance to allow chaining of methods
 		 * @see #addSpecial(String, Object, String)
-		 */
+		 **/
 		public Builder addSpecials(final GolemSpecialContainer... specialContainers) {
 			specials.addAll(Arrays.asList(specialContainers));
 			return this;
@@ -381,14 +381,14 @@ public class GolemContainer {
 		 * Adds any GolemSpecialContainers to be used by the golem.
 		 * If this option should be toggled (ie, a {@code Boolean}) and
 		 * you want an in-game description, use
-		 * {@link #addSpecial(String, Object, String, ITextComponent)}
+		 * {@link #addSpecial(String, Boolean, String, ITextComponent)}
 		 *
 		 * @param name    a name unique to this golem's set of config options
 		 * @param value   the initial (default) value for this config option
 		 * @param comment a short description for the config file
 		 * @return instance to allow chaining of methods
 		 * @see #addSpecials(GolemSpecialContainer...)
-		 */
+		 **/
 		public Builder addSpecial(final String name, final Object value, final String comment) {
 			specials.add(new GolemSpecialContainer.Builder(name, value, comment).build());
 			return this;
@@ -418,7 +418,7 @@ public class GolemContainer {
 		 *
 		 * @param desc description to be added
 		 * @return instance to allow chaining of methods
-		 */
+		 **/
 		public Builder addDesc(final GolemDescription... desc) {
 			for (final GolemDescription cont : desc) {
 				descriptions.add(cont);
@@ -441,7 +441,7 @@ public class GolemContainer {
 		 * been set inside this Builder
 		 *
 		 * @return a copy of the newly constructed GolemContainer
-		 */
+		 **/
 		public GolemContainer build() {
 			EntityType<? extends GolemBase> entityType = entityTypeBuilder.build(golemName);
 			entityType.setRegistryName(modid, golemName);

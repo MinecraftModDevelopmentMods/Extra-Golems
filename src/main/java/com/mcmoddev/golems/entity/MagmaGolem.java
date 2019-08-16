@@ -3,6 +3,8 @@ package com.mcmoddev.golems.entity;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
+import com.mcmoddev.golems.util.config.GolemRegistrar;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -42,7 +44,8 @@ public final class MagmaGolem extends GolemBase {
 	/**
 	 * Helpers for "Standing Still" code
 	 */
-	private int stillX, stillZ;
+	private int stillX;
+	private int stillZ;
 	/**
 	 * Whether this golem is hurt by water
 	 */
@@ -50,11 +53,6 @@ public final class MagmaGolem extends GolemBase {
 
 	private boolean allowMelting;
 	private int meltDelay;
-
-	public MagmaGolem(final EntityType<? extends GolemBase> entityType, final World world, final boolean isChild) {
-		this(entityType, world);
-		//this.setChild(isChild);
-	}
 	
 	public MagmaGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);
@@ -73,21 +71,23 @@ public final class MagmaGolem extends GolemBase {
 	public void notifyDataManagerChange(DataParameter<?> key) {
 		// change stats if this is a child vs. an adult golem
 		super.notifyDataManagerChange(key);
-//		if (BABY.equals(key)) {
-//			if (this.isChild()) {
-//				// TODO this.setSize(0.7F, 1.45F);
-//				this.recalculateSize();
-//				this.allowMelting = false;
-//				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.getAttack() * 0.6F);
-//				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.getHealth() / 3);
-//			} else {
-//				// TODO this.setSize(1.4F, 2.9F);
-//				this.recalculateSize();
-//				this.allowMelting = this.getConfigBool(ALLOW_LAVA_SPECIAL);
-//				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.getAttack());
-//				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.getHealth());
-//			}
-//		}
+		if (CHILD.equals(key)) {
+			if (this.isChild()) {
+				// child golem can't use special abilities
+				this.allowMelting = false;
+				// truncate these values to one decimal place after reducing them from base values
+				double childHealth = (Math.floor(container.getHealth() * 0.3D * 10D)) / 10D;
+				double childAttack = (Math.floor(container.getAttack() * 0.6D * 10D)) / 10D;
+				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(childHealth);
+				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(childAttack);
+			} else {
+				this.allowMelting = this.getConfigBool(ALLOW_LAVA_SPECIAL);
+				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.getAttack());
+				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.getHealth());
+			}
+			// recalculate size just in case
+			this.recalculateSize();
+		}
 	}
 
 	@Override
@@ -157,27 +157,28 @@ public final class MagmaGolem extends GolemBase {
 	}
 
 	@Override
-	public void remove() {
-//		// spawn baby golems here if possible
-//		if(!this.world.isRemote && !this.isChild() && this.getConfigBool(ALLOW_SPLITTING)) {
-//			GolemBase slime1 = new MagmaGolem((EntityType<? extends GolemBase>) this.getType(), this.world, true);
-//			GolemBase slime2 = new MagmaGolem((EntityType<? extends GolemBase>) this.getType(), this.world, true);
-//			// copy attack target info
-//			if (this.getAttackTarget() != null) {
-//				slime1.setAttackTarget(this.getAttackTarget());
-//				slime2.setAttackTarget(this.getAttackTarget());
-//			}
-//			// set location
-//			slime1.setLocationAndAngles(this.posX + rand.nextDouble() - 0.5D, this.posY,
-//					this.posZ + rand.nextDouble() - 0.5D, this.rotationYaw + rand.nextInt(20) - 10, 0);
-//			slime2.setLocationAndAngles(this.posX + rand.nextDouble() - 0.5D, this.posY,
-//					this.posZ + rand.nextDouble() - 0.5D, this.rotationYaw + rand.nextInt(20) - 10, 0);
-//			// spawn the entities
-//			this.getEntityWorld().addEntity(slime1);
-//			this.getEntityWorld().addEntity(slime2);
-//		}
+	public void onDeath(final DamageSource source) {
+		if(!this.world.isRemote && !this.isChild() && this.getConfigBool(ALLOW_SPLITTING)) {
+			GolemBase child1 = GolemRegistrar.getContainer(MagmaGolem.class).getEntityType().create(this.world);
+			GolemBase child2 = GolemRegistrar.getContainer(MagmaGolem.class).getEntityType().create(this.world);
+			child1.setChild(true);
+			child2.setChild(true);
+			// copy attack target info
+			if (this.getAttackTarget() != null) {
+				child1.setAttackTarget(this.getAttackTarget());
+				child2.setAttackTarget(this.getAttackTarget());
+			}
+			// set location
+			child1.setLocationAndAngles(this.posX + rand.nextDouble() - 0.5D, this.posY,
+					this.posZ + rand.nextDouble() - 0.5D, this.rotationYaw + rand.nextInt(20) - 10, 0);
+			child2.setLocationAndAngles(this.posX + rand.nextDouble() - 0.5D, this.posY,
+					this.posZ + rand.nextDouble() - 0.5D, this.rotationYaw + rand.nextInt(20) - 10, 0);
+			// spawn the entities
+			this.getEntityWorld().addEntity(child1);
+			this.getEntityWorld().addEntity(child2);
+		}
 
-		super.remove();
+		super.onDeath(source);
 	}
 
 	@Override
