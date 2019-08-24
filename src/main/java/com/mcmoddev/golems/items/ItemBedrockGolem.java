@@ -36,9 +36,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public final class ItemBedrockGolem extends Item {
 
-	@OnlyIn(Dist.CLIENT)
+
 	private static final ITextComponent loreCreativeOnly = trans("tooltip.creative_only_item").applyTextStyle(TextFormatting.RED);
-	@OnlyIn(Dist.CLIENT)
+
 	private static final ITextComponent lorePressShift = trans("tooltip.press").applyTextStyle(TextFormatting.GRAY)
 			.appendSibling(wrap(" ")).appendSibling(trans("tooltip.shift").applyTextStyle(TextFormatting.YELLOW))
 			.appendSibling(wrap(" ")).appendSibling(trans("tooltip.for_more_details").applyTextStyle(TextFormatting.GRAY));
@@ -101,7 +101,7 @@ public final class ItemBedrockGolem extends Item {
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
 		// "Creative-Mode Only"
-		if (true /* ExtraGolemsConfig.bedrockGolemCreativeOnly() // This isn't working */ ) {
+		if (true /* ExtraGolemsConfig.bedrockGolemCreativeOnly() //todo This isn't working */ ) {
 			tooltip.add(loreCreativeOnly);
 		}
 		// "Use to spawn Bedrock Golem. Use on existing Bedrock Golem to remove it"
@@ -116,12 +116,10 @@ public final class ItemBedrockGolem extends Item {
 	}
 
 
-	@OnlyIn(Dist.CLIENT)
 	private static TranslationTextComponent trans(final String s, final Object... param) {
 		return new TranslationTextComponent(s, param);
 	}
-	
-	@OnlyIn(Dist.CLIENT)
+
 	private static StringTextComponent wrap(final String s) {
 		return new StringTextComponent(s);
 	}
