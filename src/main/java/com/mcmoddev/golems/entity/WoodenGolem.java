@@ -3,15 +3,13 @@ package com.mcmoddev.golems.entity;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
@@ -23,8 +21,6 @@ public final class WoodenGolem extends GolemMultiTextured {
 
 	public WoodenGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world, ExtraGolems.MODID, WOOD_PREFIX, WOOD_TYPES);
-		this.enableSwim();
-		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.2D);
 	}
 
 	@Override
@@ -53,11 +49,6 @@ public final class WoodenGolem extends GolemMultiTextured {
 		this.setTextureNum(textureNum);
 	}
 
-	@Override
-	public SoundEvent getGolemSound() {
-		return SoundEvents.BLOCK_WOOD_STEP;
-	}
-	
 	@Override
 	public ItemStack getCreativeReturn(final RayTraceResult target) {
 		switch(this.getTextureNum()) {

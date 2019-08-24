@@ -1,7 +1,5 @@
 package com.mcmoddev.golems.entity.base;
 
-import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.util.GolemNames;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -61,12 +59,6 @@ public abstract class GolemMultiTextured extends GolemBase {
 			// initialize loot tables
 			this.lootTables[n] = new ResourceLocation(modid, "entities/golem_" + prefix + "/" + s);
 		}
-	}
-
-	@Override
-	protected ResourceLocation applyTexture() {
-		// apply TEMPORARY texture to avoid NPE. Actual texture is first applied in livingTick
-		return makeTexture(ExtraGolems.MODID, GolemNames.CLAY_GOLEM);
 	}
 
 	@Override

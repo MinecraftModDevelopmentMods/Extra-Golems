@@ -5,13 +5,11 @@ import java.util.function.Function;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.events.IceGolemFreezeEvent;
-import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.util.GolemNames;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -27,12 +25,6 @@ public final class IceGolem extends GolemBase {
 
 	public IceGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);
-		// just in case
-		this.enableSwim();
-	}
-
-	protected ResourceLocation applyTexture() {
-		return makeTexture(ExtraGolems.MODID, GolemNames.ICE_GOLEM);
 	}
 
 	/**
@@ -72,16 +64,6 @@ public final class IceGolem extends GolemBase {
 			return true;
 		}
 		return false;
-	}
-
-	@Override
-	protected SoundEvent getDeathSound() {
-		return SoundEvents.BLOCK_GLASS_BREAK;
-	}
-
-	@Override
-	public SoundEvent getGolemSound() {
-		return SoundEvents.BLOCK_GLASS_STEP;
 	}
 
 	/**

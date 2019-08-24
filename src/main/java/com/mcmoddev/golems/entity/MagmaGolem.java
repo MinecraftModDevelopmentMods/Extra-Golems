@@ -3,7 +3,6 @@ package com.mcmoddev.golems.entity;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
-import com.mcmoddev.golems.util.config.GolemRegistrar;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -91,11 +90,6 @@ public final class MagmaGolem extends GolemBase {
 	}
 
 	@Override
-	protected ResourceLocation applyTexture() {
-		return TEXTURES[0];
-	}
-
-	@Override
 	public ResourceLocation getTextureType() {
 		final int changeInterval = 5;
 		int textureNum = ((this.ticksExisted + this.getEntityId()) / changeInterval) % TEXTURES.length;
@@ -159,8 +153,8 @@ public final class MagmaGolem extends GolemBase {
 	@Override
 	public void onDeath(final DamageSource source) {
 		if(!this.world.isRemote && !this.isChild() && this.getConfigBool(ALLOW_SPLITTING)) {
-			GolemBase child1 = GolemRegistrar.getContainer(MagmaGolem.class).getEntityType().create(this.world);
-			GolemBase child2 = GolemRegistrar.getContainer(MagmaGolem.class).getEntityType().create(this.world);
+			GolemBase child1 = this.container.getEntityType().create(this.world);
+			GolemBase child2 = this.container.getEntityType().create(this.world);
 			child1.setChild(true);
 			child2.setChild(true);
 			// copy attack target info
@@ -185,10 +179,5 @@ public final class MagmaGolem extends GolemBase {
 	@OnlyIn(Dist.CLIENT)
 	public int getBrightnessForRender() {
 		return 15728880;
-	}
-
-	@Override
-	public SoundEvent getGolemSound() {
-		return SoundEvents.BLOCK_STONE_STEP;
 	}
 }

@@ -4,6 +4,7 @@ import com.mcmoddev.golems.entity.ai.PlaceBlocksGoal;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -11,8 +12,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
@@ -27,7 +26,6 @@ public final class MushroomGolem extends GolemMultiTextured {
 
 	public MushroomGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world, ExtraGolems.MODID, SHROOM_PREFIX, SHROOM_TYPES);
-		this.enableSwim();
 	}
 
 	@Override
@@ -42,11 +40,6 @@ public final class MushroomGolem extends GolemMultiTextured {
 				{ Blocks.DIRT, Blocks.GRASS_BLOCK, Blocks.MYCELIUM, Blocks.PODZOL, Blocks.NETHERRACK, Blocks.SOUL_SAND };
 		this.goalSelector.addGoal(2,
 				new PlaceBlocksGoal(this, freq, mushrooms, soils, allowed));
-	}
-
-	@Override
-	public SoundEvent getGolemSound() {
-		return SoundEvents.BLOCK_GRASS_STEP;
 	}
 
 	/**

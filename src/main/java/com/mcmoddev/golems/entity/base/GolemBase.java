@@ -1,6 +1,6 @@
 package com.mcmoddev.golems.entity.base;
 
-import com.mcmoddev.golems.main.ExtraGolems;
+import com.mcmoddev.golems.main.ExtraGolemsEntities;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mcmoddev.golems.util.config.GolemContainer;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
@@ -23,6 +23,7 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
@@ -45,7 +46,10 @@ public abstract class GolemBase extends IronGolemEntity {
 	public GolemBase(EntityType<? extends GolemBase> type, World world) {
 		super(type, world);
 		this.container = GolemRegistrar.getContainer(type);
-		this.navigator.setCanSwim(false);
+		canFall = container.takesFallDamage();
+		if(container.canSwim()) {
+			this.enableSwim();
+		}
 	}
 
 	/**
@@ -68,15 +72,16 @@ public abstract class GolemBase extends IronGolemEntity {
 			.setBaseValue(golemContainer.getAttack());
 		this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(golemContainer.getHealth());
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(golemContainer.getSpeed());
-		// by default, golems do NOT have full knockback resistance
-		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.4D);
+		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(golemContainer.getKnockbackResist());
 	}
 
 	@Override
 	protected void registerData() {
 		super.registerData();
+		//Called in super constructor; this.container == null
+		GolemContainer golemContainer = GolemRegistrar.getContainer(this.getType());
 		this.getDataManager().register(CHILD, Boolean.valueOf(false));
-		this.setTextureType(this.applyTexture());
+		this.setTextureType(golemContainer.getTexture());
 	}
 
 	/**
@@ -114,25 +119,10 @@ public abstract class GolemBase extends IronGolemEntity {
 	}
 	
 	/**
-	 * Allows the golem to take fall damage.
-	 * This is disabled by default.
-	 **/
-	protected void enableFallDamage() {
-		canFall = true;
-	}
-	
-	/**
-	 * @return whether or not this golem takes fall damage.
-	 **/
-	public boolean canFall() {
-		return canFall;
-	}
-	
-	/**
 	 * Allows the golem to swim actively.
 	 * This is disabled by default.
 	 **/
-	protected void enableSwim() {
+	private void enableSwim() {
 		this.canSwim = true;
 		this.goalSelector.addGoal(0, new SwimGoal(this));
 		this.navigator.setCanSwim(true);
@@ -251,24 +241,30 @@ public abstract class GolemBase extends IronGolemEntity {
 	}
 
 	public ResourceLocation getTextureType() {
-		return this.textureLoc;
+		return this.container.getTexture();
 	}
 
 	/**
 	 * Calls {@link #makeTexture(String, String)} on the assumption that MODID is 'golems'.
 	 * Texture should be at 'assets/golems/textures/entity/[TEXTURE].png'
+	 * <br>For most golems, set the texture when building the GolemContainer using
+	 * {@link GolemContainer.Builder#setTexture(ResourceLocation)} or
+	 * {@link GolemContainer.Builder#basicTexture()}
 	 **/
-	public static ResourceLocation makeTexture(final String TEXTURE) {
-		return makeTexture(ExtraGolems.MODID, TEXTURE);
+	protected static ResourceLocation makeTexture(final String TEXTURE) {
+		return ExtraGolemsEntities.makeTexture(TEXTURE);
 	}
 
 	/**
 	 * Makes a ResourceLocation using the passed mod id and part of the texture name. Texture should
 	 * be at 'assets/[MODID]/textures/entity/[TEXTURE].png'
+	 * <br>For most golems, set the texture when building the GolemContainer using
+	 * {@link GolemContainer.Builder#setTexture(ResourceLocation)} or
+	 * {@link GolemContainer.Builder#basicTexture()}
 	 * @see #makeTexture(String)
 	 **/
-	public static ResourceLocation makeTexture(final String MODID, final String TEXTURE) {
-		return new ResourceLocation(MODID + ":textures/entity/" + TEXTURE + ".png");
+	protected static ResourceLocation makeTexture(final String MODID, final String TEXTURE) {
+		return ExtraGolemsEntities.makeTexture(MODID, TEXTURE);
 	}
 
 	///////////////////// SOUND OVERRIDES ////////////////////
@@ -280,12 +276,19 @@ public abstract class GolemBase extends IronGolemEntity {
 
 	@Override
 	protected SoundEvent getHurtSound(final DamageSource ignored) {
-		return getGolemSound();
+		return getGolemSound() == SoundEvents.BLOCK_GLASS_STEP ? SoundEvents.BLOCK_GLASS_HIT : getGolemSound();
 	}
 
 	@Override
 	protected SoundEvent getDeathSound() {
-		return getGolemSound();
+		return getGolemSound() == SoundEvents.BLOCK_GLASS_STEP ? SoundEvents.BLOCK_GLASS_BREAK : getGolemSound();
+	}
+	
+	/**
+	 * @return A SoundEvent to play when the golem is attacking, walking, hurt, and on death
+	 **/
+	public final SoundEvent getGolemSound() {
+		return this.container.getSound();
 	}
 
 	/**
@@ -302,11 +305,5 @@ public abstract class GolemBase extends IronGolemEntity {
 	 * @see #makeTexture(String)
 	 * @see #makeTexture(String, String)
 	 **/
-	protected abstract ResourceLocation applyTexture();
-
-	/**
-	 * @return A SoundEvent to play when the golem is attacking, walking, hurt, and on death
-	 **/
-	public abstract SoundEvent getGolemSound();
-
+	// protected abstract ResourceLocation applyTexture();
 }

@@ -24,10 +24,6 @@ import net.minecraftforge.event.RegistryEvent;
 
 public class ProxyCommon {
 
-	static {
-		registerLootTables();
-	}
-
 	public void registerListeners() {
 	}
 
@@ -68,10 +64,5 @@ public class ProxyCommon {
 	public void registerContainers(final RegistryEvent.Register<ContainerType<?>> event) {
 		event.getRegistry().register(new ContainerType<CraftingGolem.ContainerPortableWorkbench>
 			((i, p) -> new CraftingGolem.ContainerPortableWorkbench(i, p)).setRegistryName(ExtraGolems.MODID, "crafting_portable"));
-	}
-
-	public static void registerLootTables() {
-		// register Golem Loot Tables
-		// TODO LootTableList.register(new ResourceLocation(ExtraGolems.MODID, "entities/_golem_base"));
 	}
 }

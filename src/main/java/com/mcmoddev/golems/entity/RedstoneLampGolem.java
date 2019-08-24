@@ -8,6 +8,7 @@ import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
@@ -31,7 +32,6 @@ public final class RedstoneLampGolem extends GolemMultiTextured {
 
 	public RedstoneLampGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world, ExtraGolems.MODID, LAMP_PREFIX, VARIANTS);
-		this.enableFallDamage();
 		final BlockState state = GolemItems.UTILITY_LIGHT.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, 15);
 		this.goalSelector.addGoal(9, new PlaceUtilityBlockGoal(this, state, BlockUtilityGlow.UPDATE_TICKS,
 				this.getConfigBool(ALLOW_SPECIAL), PlaceUtilityBlockGoal.getDefaultBiPred(state).and(LIT_PRED)));
@@ -47,16 +47,6 @@ public final class RedstoneLampGolem extends GolemMultiTextured {
 	public boolean isProvidingLight() {
 		// only allow light if correct texture data
 		return this.getTextureNum() == 0;
-	}
-
-	@Override
-	public SoundEvent getGolemSound() {
-		return SoundEvents.BLOCK_GLASS_STEP;
-	}
-
-	@Override
-	protected SoundEvent getDeathSound() {
-		return SoundEvents.BLOCK_GLASS_BREAK;
 	}
 
 	@Override

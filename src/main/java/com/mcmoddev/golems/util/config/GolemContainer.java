@@ -1,19 +1,30 @@
 package com.mcmoddev.golems.util.config;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.*;
 
 /**
  * Adapted from BetterAnimalsPlus by its_meow. Used with permission.
@@ -26,10 +37,17 @@ public class GolemContainer {
 	private final List<ResourceLocation> validBuildingBlockTags;
 	private final EntityType<? extends GolemBase> entityType;
 	private final String name;
-	private final ResourceLocation lootTable;
+	private final ResourceLocation id;
+//	private final ResourceLocation lootTable;
+	private final ResourceLocation basicTexture;
+	private final SoundEvent basicSound;
+	private final boolean fallDamage;
+	private final boolean canSwim;
+
 	private double health;
 	private double attack;
-	private double speed;
+	private final double speed;
+	private final double knockbackResist;
 	private boolean enabled = true;
 
 	public final Map<String, GolemSpecialContainer> specialContainers;
@@ -45,27 +63,35 @@ public class GolemContainer {
 	 * @param lHealth                 base health value
 	 * @param lAttack                 base attack value
 	 * @param lSpeed                  base speed value
+	 * @param lCanSwim 
+	 * @param lFallDamage 
 	 * @param lSpecialContainers      any golem specials as a Map
 	 * @param lDesc                   any special descriptions for the golem
 	 * @param lLootTable              a ResourceLocation for the on-death loot table, may be null
+	 * @param basicSound 
 	 **/
 	private GolemContainer(final EntityType<? extends GolemBase> lEntityType,
 			final Class<? extends GolemBase> lEntityClass, final String lPath,
 			final List<Block> lValidBuildingBlocks, final List<ResourceLocation> lValidBuildingBlockTags,
-			final double lHealth, final double lAttack, final double lSpeed,
-			final HashMap<String, GolemSpecialContainer> lSpecialContainers,
-			final List<GolemDescription> lDesc, final ResourceLocation lLootTable) {
+			final double lHealth, final double lAttack, final double lSpeed, final double lKnockbackResist,
+			final boolean lFallDamage, final boolean lCanSwim, final HashMap<String, GolemSpecialContainer> lSpecialContainers,
+			final List<GolemDescription> lDesc, final ResourceLocation lTexture, final SoundEvent lBasicSound) {
 		this.entityType = lEntityType;
 		this.entityClass = lEntityClass;
 		this.validBuildingBlocks = lValidBuildingBlocks;
 		this.validBuildingBlockTags = lValidBuildingBlockTags;
 		this.name = lPath;
+		this.id = lEntityType.getRegistryName();
 		this.health = lHealth;
 		this.attack = lAttack;
 		this.speed = lSpeed;
+		this.knockbackResist = lKnockbackResist;
+		this.fallDamage = lFallDamage;
+		this.canSwim = lCanSwim;
 		this.specialContainers = lSpecialContainers;
 		this.descContainers = lDesc;
-		this.lootTable = lLootTable;
+		this.basicTexture = lTexture;
+		this.basicSound = lBasicSound;
 	}
 
 	/**
@@ -199,10 +225,6 @@ public class GolemContainer {
 		this.attack = pAttack;
 	}
 
-	public void setSpeed(final double pSpeed) {
-		this.speed = pSpeed;
-	}
-
 	public void setEnabled(final boolean pEnabled) {
 		this.enabled = pEnabled;
 	}
@@ -219,9 +241,21 @@ public class GolemContainer {
 	public ResourceLocation getRegistryName() {
 		return this.entityType.getRegistryName();
 	}
+	
+	public ResourceLocation getTexture() {
+		return this.basicTexture;
+	}
+	
+	public SoundEvent getSound() {
+		return this.basicSound;
+	}
 
 	public String getName() {
 		return this.name;
+	}
+	
+	public ResourceLocation getID() {
+		return this.id;
 	}
 
 	public double getHealth() {
@@ -235,19 +269,31 @@ public class GolemContainer {
 	public double getSpeed() {
 		return this.speed;
 	}
+	
+	public double getKnockbackResist() {
+		return this.knockbackResist;
+	}
 
 	public boolean isEnabled() {
 		return this.enabled;
 	}
-
-	public boolean hasLootTable() {
-		return this.lootTable != null;
+	
+	public boolean takesFallDamage() {
+		return this.fallDamage;
+	}
+	
+	public boolean canSwim() {
+		return this.canSwim;
 	}
 
-	@Nullable
-	public ResourceLocation getLootTable() {
-		return this.lootTable;
-	}
+//	public boolean hasLootTable() {
+//		return this.lootTable != null;
+//	}
+//
+//	@Nullable
+//	public ResourceLocation getLootTable() {
+//		return this.lootTable;
+//	}
 
 	//////////////////////////////////////////////////////////////
 	/////////////////// END OF GOLEM CONTAINER ///////////////////
@@ -262,11 +308,18 @@ public class GolemContainer {
 		private final String golemName;
 		private final Class<? extends GolemBase> entityClass;
 		private EntityType.Builder<? extends GolemBase> entityTypeBuilder;
-		private ResourceLocation lootTable = null;
+		
+//		private ResourceLocation lootTable = null;
+		private ResourceLocation basicTexture;
+		private SoundEvent basicSound = SoundEvents.BLOCK_STONE_STEP;
+		
 		private String modid = ExtraGolems.MODID;
 		private double health = 100.0D;
 		private double attack = 7.0D;
 		private double speed = 0.25D;
+		private double knockBackResist = 0.4D;
+		private boolean fallDamage = false;
+		private boolean canSwim = false;
 		//This is a list to allow determining the "priority" of golem blocks. This could be used to our
 		//advantage in golem building logic for conflicts in the future.
 		private List<Block> validBuildingBlocks = new ArrayList<>();
@@ -279,7 +332,8 @@ public class GolemContainer {
 		 *
 		 * @param golemName     the name of the golem
 		 * @param entityClazz   the class of the golem (e.g. EntityFooGolem.class)
-		 * @param entityFactory the constructor function of the class (e.g. EntityFooGolem::new)
+		 * @param entityFactory the constructor function of the class (e.g. EntityFooGolem::new).
+		 * For golems with no special abilities, use {@code GenericGolem.class}
 		 **/
 		public Builder(final String golemName, final Class<? extends GolemBase> entityClazz,
 				final EntityType.IFactory<? extends GolemBase> entityFactory) {
@@ -331,6 +385,57 @@ public class GolemContainer {
 		 **/
 		public Builder setSpeed(final double lMoveSpeed) {
 			speed = lMoveSpeed;
+			return this;
+		}
+		
+		/**
+		 * Sets the knockback resistance (heaviness) of a golem
+		 *
+		 * @param lKnockbackResist The knockback resistance of the golem. <b>Defaults to 0.4D</b>
+		 * @return instance to allow chaining of methods
+		 **/
+		public Builder setKnockback(final double lKnockbackResist) {
+			knockBackResist = lKnockbackResist;
+			return this;
+		}
+		
+		/**
+		 * Sets a basic texture location of a golem. If this golem
+		 * inherits from one of the multi-texture golem classes, then
+		 * this method of setting textures is ignored. Instead, pass
+		 * the correct textures in the constructor of that golem class.
+		 *
+		 * @param lTexture The texture to apply to the golem
+		 * @return instance to allow chaining of methods
+		 * @see #basicTexture()
+		 **/
+		public Builder setTexture(final ResourceLocation lTexture) {
+			basicTexture = lTexture;
+			return this;
+		}
+		
+		/**
+		 * Calls {@link #setTexture(ResourceLocation)} to set a single texture for the golem
+		 * based on current values of {@code modid} and {@code golemName}. For example, if
+		 * the modid is {@code "golems"} and the golemName is {@code "golem_clay"} then the 
+		 * texture location is assumed to be {@code assets/golems/textures/entity/golem_clay.png}
+		 *
+		 * @return instance to allow chaining of methods
+		 * @see #setModId(String)
+		 **/
+		public Builder basicTexture() {
+			return setTexture(new ResourceLocation(modid + ":textures/entity/" + golemName + ".png"));
+		}
+		
+		/**
+		 * Sets an all-purpose SoundEvent of a golem
+		 *
+		 * @param lTexture The sound this golem makes when walking, attacked, or killed.
+		 * Defaults to {@code SoundEvents.BLOCK_STONE_STEP}
+		 * @return instance to allow chaining of methods
+		 **/
+		public Builder setSound(final SoundEvent lSound) {
+			basicSound = lSound;
 			return this;
 		}
 
@@ -427,12 +532,32 @@ public class GolemContainer {
 		}
 
 		/**
-		 * Makes this golem immune to fire damage.
+		 * Makes the golem immune to fire damage.
 		 *
 		 * @return instance to allow chaining of methods
 		 **/
 		public Builder immuneToFire() {
 			this.entityTypeBuilder = this.entityTypeBuilder.immuneToFire();
+			return this;
+		}
+		
+		/**
+		 * Makes the golem swim instead of sink.
+		 *
+		 * @return instance to allow chaining of methods
+		 **/
+		public Builder enableSwim() {
+			this.canSwim = true;
+			return this;
+		}
+		
+		/**
+		 * Makes the golem vulnerable to fall damage.
+		 *
+		 * @return instance to allow chaining of methods
+		 **/
+		public Builder enableFallDamage() {
+			this.fallDamage = true;
 			return this;
 		}
 
@@ -451,7 +576,8 @@ public class GolemContainer {
 			}
 			return new GolemContainer(entityType, entityClass, golemName,
 					validBuildingBlocks, validBuildingBlockTags,
-					health, attack, speed, containerMap, descriptions, lootTable);
+					health, attack, speed, knockBackResist, fallDamage, canSwim, 
+					containerMap, descriptions, basicTexture, basicSound);
 		}
 	}
 

@@ -4,13 +4,11 @@ import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemColorized;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
+
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 
@@ -25,8 +23,6 @@ public final class LeafGolem extends GolemColorized {
 
 	public LeafGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world, 0x5F904A, TEXTURE_BASE, TEXTURE_OVERLAY);
-		this.enableSwim();
-		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.0D);
 	}
 
 	/**
@@ -52,10 +48,5 @@ public final class LeafGolem extends GolemColorized {
 		if (this.getMotion().y < -0.05D) {
 			this.setMotion(this.getMotion().mul(1.0D, 0.75D, 1.0D));
 		}
-	}
-
-	@Override
-	public SoundEvent getGolemSound() {
-		return SoundEvents.BLOCK_GRASS_STEP;
 	}
 }

@@ -2,9 +2,10 @@ package com.mcmoddev.golems.renders;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemColorized;
-import com.mcmoddev.golems.main.ExtraGolems;
+import com.mcmoddev.golems.main.ExtraGolemsEntities;
 import com.mcmoddev.golems.util.GolemNames;
 import com.mojang.blaze3d.platform.GlStateManager;
+
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;
 
@@ -14,7 +15,7 @@ import net.minecraft.util.ResourceLocation;
  */
 public class RenderColoredGolem extends RenderGolem {
 
-	private static final ResourceLocation fallbackTexture = GolemBase.makeTexture(ExtraGolems.MODID, GolemNames.CLAY_GOLEM);
+	private static final ResourceLocation fallbackTexture = ExtraGolemsEntities.makeTexture(GolemNames.CLAY_GOLEM);
 	private ResourceLocation texture;
 	
 	public RenderColoredGolem(final EntityRendererManager renderManagerIn) {

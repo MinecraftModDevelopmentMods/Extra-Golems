@@ -2,16 +2,16 @@ package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.events.EndGolemTeleportEvent;
-import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.util.GolemNames;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.*;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.IndirectEntityDamageSource;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -40,7 +40,6 @@ public class EndstoneGolem extends GolemBase {
 		this(entityType, world, 32.0D, true);
 		this.isHurtByWater = this.getConfigBool(ALLOW_WATER_HURT);
 		this.allowTeleport = this.getConfigBool(ALLOW_SPECIAL);
-		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.3D);
 		this.goalSelector.addGoal(7, new WaterAvoidingRandomWalkingGoal(this, 1.0D, 0.0F));
 	}
 
@@ -59,11 +58,6 @@ public class EndstoneGolem extends GolemBase {
 		super(entityType, world);
 		this.range = teleportRange;
 		this.hasAmbientParticles = ambientParticles;
-	}
-
-	@Override
-	protected ResourceLocation applyTexture() {
-		return makeTexture(ExtraGolems.MODID, GolemNames.ENDSTONE_GOLEM);
 	}
 
 	@Override
@@ -177,10 +171,5 @@ public class EndstoneGolem extends GolemBase {
 		}
 
 		return flag;
-	}
-
-	@Override
-	public SoundEvent getGolemSound() {
-		return SoundEvents.BLOCK_STONE_STEP;
 	}
 }

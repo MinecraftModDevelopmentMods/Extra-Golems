@@ -1,15 +1,11 @@
 package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
-import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.util.GolemNames;
+
 import net.minecraft.entity.EntityType;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 
 public final class BookshelfGolem extends GolemBase {
@@ -22,11 +18,6 @@ public final class BookshelfGolem extends GolemBase {
 
 	public BookshelfGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);
-		this.enableSwim();
-	}
-
-	protected ResourceLocation applyTexture() {
-		return makeTexture(ExtraGolems.MODID, GolemNames.BOOKSHELF_GOLEM);
 	}
 
 	/**
@@ -43,10 +34,5 @@ public final class BookshelfGolem extends GolemBase {
 			final int len = potion.isInstant() ? 1 : 200 + 100 * (1 + rand.nextInt(5));
 			this.addPotionEffect(new EffectInstance(potion, len, rand.nextInt(2)));
 		}
-	}
-
-	@Override
-	public SoundEvent getGolemSound() {
-		return SoundEvents.BLOCK_WOOD_STEP;
 	}
 }
