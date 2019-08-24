@@ -8,6 +8,7 @@ import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.util.GolemNames;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
@@ -25,6 +26,7 @@ public final class RedstoneGolem extends GolemBase {
 		final int freq = BlockUtilityPower.UPDATE_TICKS;
 		final boolean allow = this.getConfigBool(ALLOW_SPECIAL);
 		this.goalSelector.addGoal(9, new PlaceUtilityBlockGoal(this, state, freq, allow));
+		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(1.0D);
 	}
 
 	@Override

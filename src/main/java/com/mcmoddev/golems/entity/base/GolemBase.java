@@ -14,6 +14,10 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
@@ -30,8 +34,8 @@ import net.minecraftforge.common.ForgeConfigSpec;
  **/
 public abstract class GolemBase extends IronGolemEntity {
 	
-	// TODO protected final DataParameter<Boolean> CHILD = EntityDataManager.createKey(GolemBase.class, DataSerializers.BOOLEAN);
-	// TODO protected final String KEY_CHILD = "isChild";
+	protected static final DataParameter<Boolean> CHILD = EntityDataManager.createKey(GolemBase.class, DataSerializers.BOOLEAN);
+	protected static final String KEY_CHILD = "isChild";
 	
 	protected final GolemContainer container;
 	protected ResourceLocation textureLoc;
@@ -51,8 +55,8 @@ public abstract class GolemBase extends IronGolemEntity {
 	 * @param arm1
 	 * @param arm2
 	 */
-	public void onBuilt(BlockState body, BlockState legs, BlockState arm1, BlockState arm2) {
-		//do nothing by default
+	public void onBuilt(final BlockState body, final BlockState legs, final BlockState arm1, final BlockState arm2) {
+		// do nothing
 	}
 
 	@Override
@@ -64,12 +68,14 @@ public abstract class GolemBase extends IronGolemEntity {
 			.setBaseValue(golemContainer.getAttack());
 		this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(golemContainer.getHealth());
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(golemContainer.getSpeed());
+		// by default, golems do NOT have full knockback resistance
+		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.4D);
 	}
 
 	@Override
 	protected void registerData() {
 		super.registerData();
-		// TODO this.getDataManager().register(CHILD, Boolean.FALSE);
+		this.getDataManager().register(CHILD, Boolean.valueOf(false));
 		this.setTextureType(this.applyTexture());
 	}
 
@@ -111,7 +117,7 @@ public abstract class GolemBase extends IronGolemEntity {
 	 * Allows the golem to take fall damage.
 	 * This is disabled by default.
 	 **/
-	public void enableFallDamage() {
+	protected void enableFallDamage() {
 		canFall = true;
 	}
 	
@@ -126,7 +132,7 @@ public abstract class GolemBase extends IronGolemEntity {
 	 * Allows the golem to swim actively.
 	 * This is disabled by default.
 	 **/
-	public void enableSwim() {
+	protected void enableSwim() {
 		this.canSwim = true;
 		this.goalSelector.addGoal(0, new SwimGoal(this));
 		this.navigator.setCanSwim(true);
@@ -202,9 +208,40 @@ public abstract class GolemBase extends IronGolemEntity {
 	}
 	
 	@Override
+	public boolean canAttack(final EntityType<?> type) {
+		return (type == EntityType.PLAYER && this.isPlayerCreated() && ExtraGolemsConfig.enableFriendlyFire()) 
+					|| super.canAttack(type);
+	}
+	
+	@Override
 	public ItemStack getPickedResult(final RayTraceResult ray) {
 		final Block block = this.container.getPrimaryBuildingBlock();
 		return block != null ? new ItemStack(block) : ItemStack.EMPTY;
+	}
+	
+	@Override
+	public boolean isChild() {
+		return this.getDataManager().get(CHILD).booleanValue();
+	}
+	
+	/** Update whether this entity is 'child' and recalculate size **/
+	public void setChild(final boolean isChild) {
+		if(this.getDataManager().get(CHILD).booleanValue() != isChild) {
+			this.getDataManager().set(CHILD, Boolean.valueOf(isChild));
+			this.recalculateSize();
+		}
+	}
+	
+	@Override
+	public void readAdditional(final CompoundNBT tag) {
+		super.readAdditional(tag);
+		this.setChild(tag.getBoolean(KEY_CHILD));
+	}
+	
+	@Override
+	public void writeAdditional(final CompoundNBT tag) {
+		super.writeAdditional(tag);
+		tag.putBoolean(KEY_CHILD, this.isChild());
 	}
 
 	/////////////// TEXTURE HELPERS //////////////////
@@ -228,6 +265,7 @@ public abstract class GolemBase extends IronGolemEntity {
 	/**
 	 * Makes a ResourceLocation using the passed mod id and part of the texture name. Texture should
 	 * be at 'assets/[MODID]/textures/entity/[TEXTURE].png'
+	 * @see #makeTexture(String)
 	 **/
 	public static ResourceLocation makeTexture(final String MODID, final String TEXTURE) {
 		return new ResourceLocation(MODID + ":textures/entity/" + TEXTURE + ".png");
@@ -254,16 +292,15 @@ public abstract class GolemBase extends IronGolemEntity {
 	 * Called from {@link #registerData()} and used to set the texture type <b>before</b> the entity is
 	 * fully constructed or rendered. Example implementation: texture is at
 	 * 'assets/golems/textures/entity/golem_clay.png'
-	 *
 	 * <pre>
 	 * {@code
 	 * protected ResourceLocation applyTexture() {
-	 * 	return this.makeGolemTexture("golems", "clay");
+	 * 	return makeTexture("golems", "golem_clay");
 	 * }
 	 * </pre>
-	 *
 	 * @return a ResourceLocation for this golem's texture
-	 * @see #makeGolemTexture(String, String)
+	 * @see #makeTexture(String)
+	 * @see #makeTexture(String, String)
 	 **/
 	protected abstract ResourceLocation applyTexture();
 

@@ -14,7 +14,7 @@ public final class QuartzGolem extends GolemBase {
 
 	public QuartzGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);
-		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.3D);
+		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.6D);
 	}
 
 	@Override

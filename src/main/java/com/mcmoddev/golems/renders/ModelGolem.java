@@ -78,10 +78,10 @@ public class ModelGolem extends EntityModel<GolemBase> {
 
 		this.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
 
-		float scaleChild = 0.5F;
+		float scaleChild = entityIn.getRenderScale();
 		GlStateManager.pushMatrix();
 
-		if (this.isChild) {
+		if (entityIn.isChild()) {
 			GlStateManager.scalef(scaleChild, scaleChild, scaleChild);
 			GlStateManager.translatef(0.0F, 24.0F * scale, 0.0F);
 		}
