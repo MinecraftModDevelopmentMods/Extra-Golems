@@ -5,9 +5,9 @@ import com.mcmoddev.golems.entity.base.GolemBase;
 import net.minecraft.entity.EntityType;
 import net.minecraft.world.World;
 
-public final class RedSandstoneGolem extends GolemBase {
+public final class GenericGolem extends GolemBase {
 
-	public RedSandstoneGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+	public GenericGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);
 	}
 }

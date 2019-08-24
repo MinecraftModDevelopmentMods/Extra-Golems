@@ -1,31 +1,14 @@
 package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
-import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.util.GolemNames;
+
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public final class EmeraldGolem extends GolemBase {
 
 	public EmeraldGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);
-		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.8D);
-	}
-
-	@Override
-	protected ResourceLocation applyTexture() {
-		return makeTexture(ExtraGolems.MODID, GolemNames.EMERALD_GOLEM);
-	}
-
-	@Override
-	public SoundEvent getGolemSound() {
-		return SoundEvents.BLOCK_STONE_STEP;
 	}
 
 //	//Broken in 9.0.0

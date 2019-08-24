@@ -2,17 +2,13 @@ package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.entity.ai.PlaceBlocksGoal;
 import com.mcmoddev.golems.entity.base.GolemBase;
-import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.util.GolemNames;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 
 public final class MelonGolem extends GolemBase {
@@ -23,17 +19,6 @@ public final class MelonGolem extends GolemBase {
 	
 	public MelonGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);
-		this.enableSwim();
-	}
-
-	@Override
-	protected ResourceLocation applyTexture() {
-		return makeTexture(ExtraGolems.MODID, GolemNames.MELON_GOLEM);
-	}
-
-	@Override
-	public SoundEvent getGolemSound() {
-		return SoundEvents.BLOCK_STONE_STEP;
 	}
 
 	/**

@@ -26,17 +26,11 @@ public final class StainedGlassGolem extends GolemMultiColorized {
 
 	public StainedGlassGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world, ExtraGolems.MODID, TEXTURE_BASE, TEXTURE_OVERLAY, DYE_COLORS);
-		this.enableFallDamage();
 	}
 
 	@Override
 	public boolean hasTransparency() {
 		return true;
-	}
-
-	@Override
-	public SoundEvent getGolemSound() {
-		return SoundEvents.BLOCK_GLASS_STEP;
 	}
 
 	@Override

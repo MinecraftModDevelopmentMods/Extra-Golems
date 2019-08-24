@@ -28,12 +28,6 @@ public final class ConcreteGolem extends GolemMultiColorized {
 
 	public ConcreteGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world, ExtraGolems.MODID, TEXTURE_BASE, TEXTURE_OVERLAY, DYE_COLORS);
-		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.2D);
-	}
-
-	@Override
-	public SoundEvent getGolemSound() {
-		return SoundEvents.BLOCK_STONE_STEP;
 	}
 
 	@Override
@@ -50,8 +44,6 @@ public final class ConcreteGolem extends GolemMultiColorized {
 
 	@Override
 	public void onBuilt(BlockState body, BlockState legs, BlockState arm1, BlockState arm2) {
-		// uses HashMap to determine which texture this golem should apply
-		// based on the top-middle building block. Defaults to a random texture.
 		byte textureNum = GolemTextureBytes.getByBlock(GolemTextureBytes.CONCRETE, body.getBlock());
 		this.setTextureNum(textureNum);
 	}

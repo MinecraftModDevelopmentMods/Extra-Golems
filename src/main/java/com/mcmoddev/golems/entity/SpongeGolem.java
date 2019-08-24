@@ -5,15 +5,11 @@ import java.util.function.Function;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.events.SpongeGolemSoakEvent;
-import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.util.GolemNames;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -28,12 +24,6 @@ public final class SpongeGolem extends GolemBase {
 
 	public SpongeGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);
-		this.enableSwim();
-	}
-
-	@Override
-	protected ResourceLocation applyTexture() {
-		return makeTexture(ExtraGolems.MODID, GolemNames.SPONGE_GOLEM);
 	}
 
 	/**
@@ -68,11 +58,6 @@ public final class SpongeGolem extends GolemBase {
 					(this.rand.nextDouble() - 0.5D) * 0.5D, this.rand.nextDouble() - 0.5D,
 					(this.rand.nextDouble() - 0.5D) * 0.5D);
 		}
-	}
-
-	@Override
-	public SoundEvent getGolemSound() {
-		return SoundEvents.BLOCK_WOOL_STEP;
 	}
 
 	/**

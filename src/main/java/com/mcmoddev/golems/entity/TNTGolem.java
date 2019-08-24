@@ -1,8 +1,7 @@
 package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
-import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.util.GolemNames;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -12,7 +11,9 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.*;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.Hand;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.world.Explosion.Mode;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
@@ -39,7 +40,6 @@ public class TNTGolem extends GolemBase {
 	public TNTGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		this(entityType, world, 6, 8, 50, 10);
 		this.allowedToExplode = this.getConfigBool(ALLOW_SPECIAL);
-		this.enableSwim();
 	}
 
 	/**
@@ -66,11 +66,6 @@ public class TNTGolem extends GolemBase {
 	protected void registerData() {
 		super.registerData();
 		this.dataManager.register(DATA_IGNITED, false);
-	}
-
-	@Override
-	protected ResourceLocation applyTexture() {
-		return makeTexture(ExtraGolems.MODID, GolemNames.TNT_GOLEM);
 	}
 
 	/**
@@ -206,10 +201,5 @@ public class TNTGolem extends GolemBase {
 		} else {
 			resetIgnite();
 		}
-	}
-
-	@Override
-	public SoundEvent getGolemSound() {
-		return SoundEvents.BLOCK_GRAVEL_STEP;
 	}
 }

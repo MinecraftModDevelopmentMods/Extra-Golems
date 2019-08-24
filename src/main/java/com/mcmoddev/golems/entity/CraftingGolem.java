@@ -1,8 +1,6 @@
 package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
-import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -14,9 +12,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Hand;
 import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -28,12 +23,6 @@ public final class CraftingGolem extends GolemBase {
 	
 	public CraftingGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);
-		this.enableSwim();
-	}
-
-	@Override
-	protected ResourceLocation applyTexture() {
-		return makeTexture(ExtraGolems.MODID, GolemNames.CRAFTING_GOLEM);
 	}
 
 	@Override
@@ -50,11 +39,6 @@ public final class CraftingGolem extends GolemBase {
 		}
 
 		return super.processInteract(player, hand);
-	}
-
-	@Override
-	public SoundEvent getGolemSound() {
-		return SoundEvents.BLOCK_WOOD_STEP;
 	}
 
 	public static class ContainerPortableWorkbench extends WorkbenchContainer {

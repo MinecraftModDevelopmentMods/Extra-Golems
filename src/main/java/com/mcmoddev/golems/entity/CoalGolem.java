@@ -20,12 +20,6 @@ public final class CoalGolem extends GolemBase {
 
 	public CoalGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);
-		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.2D);
-	}
-
-	@Override
-	protected ResourceLocation applyTexture() {
-		return makeTexture(ExtraGolems.MODID, GolemNames.COAL_GOLEM);
 	}
 
 	/**
@@ -52,13 +46,8 @@ public final class CoalGolem extends GolemBase {
 	public void livingTick() {
 		super.livingTick();
 		// if burning, the fire never goes out on its own
-		if (this.isBurning()) {
+		if (this.isBurning() && !this.isWet()) {
 			this.setFire(2);
 		}
-	}
-
-	@Override
-	public SoundEvent getGolemSound() {
-		return SoundEvents.BLOCK_STONE_STEP;
 	}
 }

@@ -1,18 +1,13 @@
 package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
-import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.util.GolemNames;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropsBlock;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.StemBlock;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.item.BoneMealItem;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -27,12 +22,10 @@ public final class StrawGolem extends GolemBase {
 
 	public StrawGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);
-		this.enableSwim();
 		this.boostFreq = this.getConfigInt(SPECIAL_FREQ);
 		this.boostFreq += this.rand.nextInt(Math.max(10, this.boostFreq / 2));
 		this.range = 4;
 		this.allowed = this.getConfigBool(ALLOW_SPECIAL);
-		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.0D);
 	}
 
 	/**
@@ -87,15 +80,5 @@ public final class StrawGolem extends GolemBase {
 			}
 		}
 		return false;
-	}
-
-	@Override
-	protected ResourceLocation applyTexture() {
-		return makeTexture(ExtraGolems.MODID, GolemNames.STRAW_GOLEM);
-	}
-
-	@Override
-	public SoundEvent getGolemSound() {
-		return SoundEvents.BLOCK_GRAVEL_STEP;
 	}
 }

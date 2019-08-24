@@ -91,11 +91,6 @@ public final class MagmaGolem extends GolemBase {
 	}
 
 	@Override
-	protected ResourceLocation applyTexture() {
-		return TEXTURES[0];
-	}
-
-	@Override
 	public ResourceLocation getTextureType() {
 		final int changeInterval = 5;
 		int textureNum = ((this.ticksExisted + this.getEntityId()) / changeInterval) % TEXTURES.length;
@@ -185,10 +180,5 @@ public final class MagmaGolem extends GolemBase {
 	@OnlyIn(Dist.CLIENT)
 	public int getBrightnessForRender() {
 		return 15728880;
-	}
-
-	@Override
-	public SoundEvent getGolemSound() {
-		return SoundEvents.BLOCK_STONE_STEP;
 	}
 }

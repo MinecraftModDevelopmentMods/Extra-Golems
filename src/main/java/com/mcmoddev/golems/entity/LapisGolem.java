@@ -1,18 +1,13 @@
 package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
-import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.util.GolemNames;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 
 public final class LapisGolem extends GolemBase {
@@ -24,14 +19,8 @@ public final class LapisGolem extends GolemBase {
 
 	public LapisGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);
-		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.4D);
 	}
-
-	@Override
-	protected ResourceLocation applyTexture() {
-		return makeTexture(ExtraGolems.MODID, GolemNames.LAPIS_GOLEM);
-	}
-
+	
 	/**
 	 * Attack by adding potion effect as well.
 	 */
@@ -49,10 +38,5 @@ public final class LapisGolem extends GolemBase {
 			return true;
 		}
 		return false;
-	}
-
-	@Override
-	public SoundEvent getGolemSound() {
-		return SoundEvents.BLOCK_STONE_STEP;
 	}
 }

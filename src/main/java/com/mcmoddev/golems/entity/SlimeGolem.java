@@ -1,8 +1,6 @@
 package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
-import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.util.GolemNames;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
 
 import net.minecraft.entity.Entity;
@@ -11,9 +9,6 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.SlimeEntity;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 
 public final class SlimeGolem extends GolemBase {
@@ -24,12 +19,6 @@ public final class SlimeGolem extends GolemBase {
 	
 	public SlimeGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);
-		this.enableSwim();
-	}
-
-	@Override
-	protected ResourceLocation applyTexture() {
-		return makeTexture(ExtraGolems.MODID, GolemNames.SLIME_GOLEM);
 	}
 
 	@Override
@@ -104,15 +93,10 @@ public final class SlimeGolem extends GolemBase {
 			} else {
 				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.getHealth());
 				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.getAttack());
-				this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.35D);
+				this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(container.getKnockbackResist());
 			}
 			// recalculate size
 			this.recalculateSize();
 		}
-	}
-
-	@Override
-	public SoundEvent getGolemSound() {
-		return SoundEvents.BLOCK_SLIME_BLOCK_STEP;
 	}
 }
