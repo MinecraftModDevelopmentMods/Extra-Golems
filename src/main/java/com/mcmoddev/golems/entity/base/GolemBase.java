@@ -1,6 +1,5 @@
 package com.mcmoddev.golems.entity.base;
 
-import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.ExtraGolemsEntities;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mcmoddev.golems.util.config.GolemContainer;
@@ -24,6 +23,7 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
@@ -276,12 +276,12 @@ public abstract class GolemBase extends IronGolemEntity {
 
 	@Override
 	protected SoundEvent getHurtSound(final DamageSource ignored) {
-		return getGolemSound();
+		return getGolemSound() == SoundEvents.BLOCK_GLASS_STEP ? SoundEvents.BLOCK_GLASS_HIT : getGolemSound();
 	}
 
 	@Override
 	protected SoundEvent getDeathSound() {
-		return getGolemSound();
+		return getGolemSound() == SoundEvents.BLOCK_GLASS_STEP ? SoundEvents.BLOCK_GLASS_BREAK : getGolemSound();
 	}
 	
 	/**

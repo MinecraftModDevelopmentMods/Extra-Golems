@@ -36,11 +36,6 @@ public final class GlowstoneGolem extends GolemBase {
 	}
 
 	@Override
-	protected SoundEvent getDeathSound() {
-		return SoundEvents.BLOCK_GLASS_BREAK;
-	}
-
-	@Override
 	@OnlyIn(Dist.CLIENT)
 	public int getBrightnessForRender() {
 		return (int) (15728880F * this.brightness);

@@ -37,6 +37,7 @@ public class GolemContainer {
 	private final List<ResourceLocation> validBuildingBlockTags;
 	private final EntityType<? extends GolemBase> entityType;
 	private final String name;
+	private final ResourceLocation id;
 //	private final ResourceLocation lootTable;
 	private final ResourceLocation basicTexture;
 	private final SoundEvent basicSound;
@@ -80,6 +81,7 @@ public class GolemContainer {
 		this.validBuildingBlocks = lValidBuildingBlocks;
 		this.validBuildingBlockTags = lValidBuildingBlockTags;
 		this.name = lPath;
+		this.id = lEntityType.getRegistryName();
 		this.health = lHealth;
 		this.attack = lAttack;
 		this.speed = lSpeed;
@@ -251,6 +253,10 @@ public class GolemContainer {
 	public String getName() {
 		return this.name;
 	}
+	
+	public ResourceLocation getID() {
+		return this.id;
+	}
 
 	public double getHealth() {
 		return this.health;
@@ -326,7 +332,8 @@ public class GolemContainer {
 		 *
 		 * @param golemName     the name of the golem
 		 * @param entityClazz   the class of the golem (e.g. EntityFooGolem.class)
-		 * @param entityFactory the constructor function of the class (e.g. EntityFooGolem::new)
+		 * @param entityFactory the constructor function of the class (e.g. EntityFooGolem::new).
+		 * For golems with no special abilities, use {@code GenericGolem.class}
 		 **/
 		public Builder(final String golemName, final Class<? extends GolemBase> entityClazz,
 				final EntityType.IFactory<? extends GolemBase> entityFactory) {

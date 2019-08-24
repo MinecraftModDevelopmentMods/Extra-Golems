@@ -66,11 +66,6 @@ public final class IceGolem extends GolemBase {
 		return false;
 	}
 
-	@Override
-	protected SoundEvent getDeathSound() {
-		return SoundEvents.BLOCK_GLASS_BREAK;
-	}
-
 	/**
 	 * Usually called after creating and firing a {@link IceGolemFreezeEvent}. Iterates through the
 	 * list of positions and calls {@code apply(BlockState input)} on the passed

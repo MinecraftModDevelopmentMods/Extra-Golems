@@ -5,14 +5,14 @@ import java.util.Objects;
 
 import javax.annotation.Nullable;
 
-import com.mcmoddev.golems.entity.BedrockGolem;
-
+import com.mcmoddev.golems.main.ExtraGolems;
+import com.mcmoddev.golems.util.GolemNames;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mcmoddev.golems.util.config.GolemContainer;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
@@ -24,6 +24,7 @@ import net.minecraft.item.ItemUseContext;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -32,14 +33,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Objects;
-
-import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Objects;
 
 public final class ItemBedrockGolem extends Item {
 
@@ -68,7 +61,7 @@ public final class ItemBedrockGolem extends Item {
 		}
 
 		// check if the golem is enabled
-		final GolemContainer container = GolemRegistrar.getContainer(BedrockGolem.class);
+		final GolemContainer container = GolemRegistrar.getContainer(new ResourceLocation(ExtraGolems.MODID, GolemNames.BEDROCK_GOLEM));
 		if (container.isEnabled()) {
 			// make sure the golem can be spawned here (empty block)
 			BlockState state = worldIn.getBlockState(pos);

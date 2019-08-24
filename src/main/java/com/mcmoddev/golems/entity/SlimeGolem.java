@@ -1,7 +1,6 @@
 package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
-import com.mcmoddev.golems.util.config.GolemRegistrar;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -57,8 +56,8 @@ public final class SlimeGolem extends GolemBase {
 	@Override
 	public void onDeath(final DamageSource source) {
 		if(!this.world.isRemote && !this.isChild() && this.getConfigBool(ALLOW_SPLITTING)) {
-			GolemBase slime1 = GolemRegistrar.getContainer(SlimeGolem.class).getEntityType().create(this.world);
-			GolemBase slime2 = GolemRegistrar.getContainer(SlimeGolem.class).getEntityType().create(this.world);
+			GolemBase slime1 = this.container.getEntityType().create(this.world);
+			GolemBase slime2 = this.container.getEntityType().create(this.world);
 			slime1.setChild(true);
 			slime2.setChild(true);
 			// copy attack target info

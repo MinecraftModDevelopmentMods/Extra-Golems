@@ -34,11 +34,6 @@ public final class StainedGlassGolem extends GolemMultiColorized {
 	}
 
 	@Override
-	protected SoundEvent getDeathSound() {
-		return SoundEvents.BLOCK_GLASS_BREAK;
-	}
-
-	@Override
 	public void onBuilt(BlockState body, BlockState legs, BlockState arm1, BlockState arm2) {
 		// uses HashMap to determine which texture this golem should apply
 		// based on the top-middle building block. Defaults to a random texture.

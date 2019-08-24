@@ -52,9 +52,4 @@ public final class SeaLanternGolem extends GolemBase {
 	public boolean isProvidingLight() {
 		return true;
 	}
-
-	@Override
-	protected SoundEvent getDeathSound() {
-		return SoundEvents.BLOCK_GLASS_BREAK;
-	}
 }

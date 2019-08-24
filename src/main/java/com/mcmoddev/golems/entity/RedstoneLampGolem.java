@@ -50,11 +50,6 @@ public final class RedstoneLampGolem extends GolemMultiTextured {
 	}
 
 	@Override
-	protected SoundEvent getDeathSound() {
-		return SoundEvents.BLOCK_GLASS_BREAK;
-	}
-
-	@Override
 	@OnlyIn(Dist.CLIENT)
 	public int getBrightnessForRender() {
 		return isProvidingLight() ? 15728880 : super.getBrightnessForRender();

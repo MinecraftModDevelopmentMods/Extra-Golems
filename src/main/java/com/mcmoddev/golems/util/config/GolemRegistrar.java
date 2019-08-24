@@ -1,14 +1,17 @@
 package com.mcmoddev.golems.util.config;
 
+import java.util.Collection;
+import java.util.HashMap;
+
+import javax.annotation.Nullable;
+
 import com.mcmoddev.golems.entity.base.GolemBase;
+import com.mcmoddev.golems.main.ExtraGolems;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.HashMap;
 
 /**
  * This class, unlike most of the others in this package, is my own work.
@@ -19,19 +22,17 @@ import java.util.HashMap;
 public final class GolemRegistrar {
 
 	protected static HashMap<ResourceLocation, GolemContainer> golemList = new HashMap<>();
-	protected static HashMap<Class<? extends GolemBase>, ResourceLocation> nameList = new HashMap<>();
 
 	private GolemRegistrar() {
 		//
 	}
 
 	public static void registerGolem(final GolemContainer container) {
-		golemList.put(container.getEntityType().getRegistryName(), container);
-		nameList.put(container.getEntityClass(), container.getRegistryName());
-	}
-
-	public static GolemContainer getContainer(final Class<? extends GolemBase> entityClass) {
-		return getContainer(nameList.get(entityClass));
+		if(golemList.containsKey(container.getID())) {
+			ExtraGolems.LOGGER.error("Tried to register duplicate GolemContainer for key " + container.getID() + ", skipping.");
+			return;
+		}
+		golemList.put(container.getID(), container);
 	}
 
 	public static GolemContainer getContainer(final EntityType<?> entityType) {

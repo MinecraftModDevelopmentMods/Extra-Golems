@@ -1,43 +1,6 @@
 package com.mcmoddev.golems.main;
 
-import com.mcmoddev.golems.entity.BedrockGolem;
-import com.mcmoddev.golems.entity.BoneGolem;
-import com.mcmoddev.golems.entity.BookshelfGolem;
-import com.mcmoddev.golems.entity.ClayGolem;
-import com.mcmoddev.golems.entity.CoalGolem;
-import com.mcmoddev.golems.entity.ConcreteGolem;
-import com.mcmoddev.golems.entity.CraftingGolem;
-import com.mcmoddev.golems.entity.DiamondGolem;
-import com.mcmoddev.golems.entity.EmeraldGolem;
-import com.mcmoddev.golems.entity.EndstoneGolem;
-import com.mcmoddev.golems.entity.GlassGolem;
-import com.mcmoddev.golems.entity.GlowstoneGolem;
-import com.mcmoddev.golems.entity.GoldGolem;
-import com.mcmoddev.golems.entity.IceGolem;
-import com.mcmoddev.golems.entity.LapisGolem;
-import com.mcmoddev.golems.entity.LeafGolem;
-import com.mcmoddev.golems.entity.MagmaGolem;
-import com.mcmoddev.golems.entity.MelonGolem;
-import com.mcmoddev.golems.entity.MushroomGolem;
-import com.mcmoddev.golems.entity.NetherBrickGolem;
-import com.mcmoddev.golems.entity.NetherWartGolem;
-import com.mcmoddev.golems.entity.ObsidianGolem;
-import com.mcmoddev.golems.entity.PrismarineGolem;
-import com.mcmoddev.golems.entity.QuartzGolem;
-import com.mcmoddev.golems.entity.RedSandstoneGolem;
-import com.mcmoddev.golems.entity.RedstoneGolem;
-import com.mcmoddev.golems.entity.RedstoneLampGolem;
-import com.mcmoddev.golems.entity.SandstoneGolem;
-import com.mcmoddev.golems.entity.SeaLanternGolem;
-import com.mcmoddev.golems.entity.SlimeGolem;
-import com.mcmoddev.golems.entity.SpongeGolem;
-import com.mcmoddev.golems.entity.StainedGlassGolem;
-import com.mcmoddev.golems.entity.StainedTerracottaGolem;
-import com.mcmoddev.golems.entity.StrawGolem;
-import com.mcmoddev.golems.entity.TNTGolem;
-import com.mcmoddev.golems.entity.TerracottaGolem;
-import com.mcmoddev.golems.entity.WoodenGolem;
-import com.mcmoddev.golems.entity.WoolGolem;
+import com.mcmoddev.golems.entity.*;
 import com.mcmoddev.golems.entity.base.GolemMultiColorized;
 import com.mcmoddev.golems.events.GolemRegistrarEvent;
 import com.mcmoddev.golems.util.BlockTagUtil;
@@ -82,7 +45,7 @@ public final class ExtraGolemsEntities {
 								.applyTextStyle(TextFormatting.DARK_RED)))
 				.build());
 		// BONE GOLEM
-		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.BONE_GOLEM, BoneGolem.class, BoneGolem::new)
+		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.BONE_GOLEM, GenericGolem.class, GenericGolem::new)
 				.setHealth(40.0D).setAttack(9.5D).setSpeed(0.30D).addBlocks(Blocks.BONE_BLOCK)
 				.setTexture(makeTexture(GolemNames.BONE_GOLEM + "_skeleton")).enableFallDamage().build());
 		// BOOKSHELF GOLEM
@@ -92,7 +55,7 @@ public final class ExtraGolemsEntities {
 						new TranslationTextComponent("entitytip.grants_self_potion_effects").applyTextStyle(TextFormatting.LIGHT_PURPLE))
 				.enableSwim().setSound(SoundEvents.BLOCK_WOOD_STEP).build());
 		// CLAY GOLEM
-		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.CLAY_GOLEM, ClayGolem.class, ClayGolem::new)
+		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.CLAY_GOLEM, GenericGolem.class, GenericGolem::new)
 				.setHealth(20.0D).setAttack(2.0D).addBlocks(Blocks.CLAY).basicTexture().setSound(SoundEvents.BLOCK_GRAVEL_STEP).build());
 		// COAL GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.COAL_GOLEM, CoalGolem.class, CoalGolem::new)
@@ -113,10 +76,10 @@ public final class ExtraGolemsEntities {
 						new TranslationTextComponent("entitytip.click_open_crafting").applyTextStyle(TextFormatting.BLUE))
 				.enableSwim().setSound(SoundEvents.BLOCK_WOOD_STEP).build());
 		// DIAMOND GOLEM
-		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.DIAMOND_GOLEM, DiamondGolem.class, DiamondGolem::new)
+		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.DIAMOND_GOLEM, GenericGolem.class, GenericGolem::new)
 				.setHealth(220.0D).setAttack(20.0D).setKnockback(0.8D).addBlocks(Blocks.DIAMOND_BLOCK).basicTexture().build());
 		// EMERALD GOLEM
-		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.EMERALD_GOLEM, EmeraldGolem.class, EmeraldGolem::new)
+		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.EMERALD_GOLEM, GenericGolem.class, GenericGolem::new)
 				.setHealth(190.0D).setAttack(18.0D).setKnockback(0.8D).addBlocks(Blocks.EMERALD_BLOCK).basicTexture().build());
 		// ENDSTONE GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.ENDSTONE_GOLEM, EndstoneGolem.class, EndstoneGolem::new)
@@ -126,7 +89,7 @@ public final class ExtraGolemsEntities {
 						new TranslationTextComponent("entitytip.can_teleport").applyTextStyle(TextFormatting.DARK_AQUA))
 				.basicTexture().build());
 		// GLASS GOLEM
-		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.GLASS_GOLEM, GlassGolem.class, GlassGolem::new)
+		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.GLASS_GOLEM, GenericGolem.class, GenericGolem::new)
 				.setHealth(8.0D).setAttack(13.0D).setSpeed(0.30D).addBlocks(Blocks.GLASS).basicTexture().enableFallDamage()
 				.setSound(SoundEvents.BLOCK_GLASS_STEP).build());
 		// GLOWSTONE GOLEM
@@ -136,7 +99,7 @@ public final class ExtraGolemsEntities {
 						new TranslationTextComponent("entitytip.lights_area").applyTextStyle(TextFormatting.RED))
 				.immuneToFire().addDesc(FIREPROOF).setSound(SoundEvents.BLOCK_GLASS_STEP).basicTexture().build());
 		// GOLD GOLEM
-		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.GOLD_GOLEM, GoldGolem.class, GoldGolem::new)
+		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.GOLD_GOLEM, GenericGolem.class, GenericGolem::new)
 				.setHealth(80.0D).setAttack(8.0D).setSpeed(0.21D).setKnockback(1.0D).addBlocks(Blocks.GOLD_BLOCK).basicTexture().build());
 		// ICE GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.ICE_GOLEM, IceGolem.class, IceGolem::new)
@@ -205,19 +168,19 @@ public final class ExtraGolemsEntities {
 						new TranslationTextComponent("entitytip.plants_warts").applyTextStyle(TextFormatting.RED))
 				.immuneToFire().addDesc(FIREPROOF).enableSwim().setSound(SoundEvents.BLOCK_WOOD_STEP).build());
 		// OBSIDIAN GOLEM
-		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.OBSIDIAN_GOLEM, ObsidianGolem.class, ObsidianGolem::new)
+		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.OBSIDIAN_GOLEM, GenericGolem.class, GenericGolem::new)
 				.setHealth(120.0D).setAttack(18.0D).setSpeed(0.23D).setKnockback(0.8D).addBlocks(Blocks.OBSIDIAN)
 				.basicTexture().immuneToFire().addDesc(FIREPROOF).build());
 		// PRISMARINE GOLEM
-		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.PRISMARINE_GOLEM, PrismarineGolem.class, PrismarineGolem::new)
+		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.PRISMARINE_GOLEM, GenericGolem.class, GenericGolem::new)
 				.setHealth(34.0D).setAttack(8.0D).setKnockback(0.7D).addBlocks(BlockTagUtil.TAG_PRISMARINE)
 				.basicTexture().addDesc(BREATHE_WATER).build());
 		// QUARTZ GOLEM
-		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.QUARTZ_GOLEM, QuartzGolem.class, QuartzGolem::new)
+		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.QUARTZ_GOLEM, GenericGolem.class, GenericGolem::new)
 				.setHealth(85.0D).setAttack(8.5D).setSpeed(0.28D).setKnockback(0.6D).addBlocks(BlockTagUtil.TAG_QUARTZ)
 				.basicTexture().setSound(SoundEvents.BLOCK_GLASS_STEP).build());
 		// RED SANDSTONE GOLEM
-		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.REDSANDSTONE_GOLEM, RedSandstoneGolem.class, RedSandstoneGolem::new)
+		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.REDSANDSTONE_GOLEM, GenericGolem.class, GenericGolem::new)
 				.setHealth(22.0D).setAttack(4.0D).setSpeed(0.28D).setKnockback(0.6D).addBlocks(BlockTagUtil.TAG_RED_SANDSTONE)
 				.basicTexture().build());
 		// REDSTONE GOLEM
@@ -233,7 +196,7 @@ public final class ExtraGolemsEntities {
 						new TranslationTextComponent("entitytip.lights_area_toggle").applyTextStyle(TextFormatting.GOLD))
 				.enableFallDamage().setSound(SoundEvents.BLOCK_GLASS_STEP).build());
 		// SANDSTONE GOLEM
-		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.SANDSTONE_GOLEM, SandstoneGolem.class, SandstoneGolem::new)
+		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.SANDSTONE_GOLEM, GenericGolem.class, GenericGolem::new)
 				.setHealth(22.0D).setAttack(4.0D).setSpeed(0.28D).setKnockback(0.6D).addBlocks(BlockTagUtil.TAG_SANDSTONE)
 				.basicTexture().build());
 		// SEA LANTERN GOLEM
@@ -274,7 +237,7 @@ public final class ExtraGolemsEntities {
 						new TranslationTextComponent("entitytip.grows_crops").applyTextStyle(TextFormatting.GREEN))
 				.enableSwim().setSound(SoundEvents.BLOCK_GRASS_STEP).build());
 		// TERRACOTTA GOLEM
-		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.TERRACOTTA_GOLEM, TerracottaGolem.class, TerracottaGolem::new)
+		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.TERRACOTTA_GOLEM, GenericGolem.class, GenericGolem::new)
 				.setHealth(42.0D).setAttack(4.0D).setSpeed(0.208D).setKnockback(0.6D).addBlocks(Blocks.TERRACOTTA)
 				.basicTexture().build());
 		// TNT GOLEM

@@ -3,7 +3,6 @@ package com.mcmoddev.golems.entity;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
-import com.mcmoddev.golems.util.config.GolemRegistrar;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -154,8 +153,8 @@ public final class MagmaGolem extends GolemBase {
 	@Override
 	public void onDeath(final DamageSource source) {
 		if(!this.world.isRemote && !this.isChild() && this.getConfigBool(ALLOW_SPLITTING)) {
-			GolemBase child1 = GolemRegistrar.getContainer(MagmaGolem.class).getEntityType().create(this.world);
-			GolemBase child2 = GolemRegistrar.getContainer(MagmaGolem.class).getEntityType().create(this.world);
+			GolemBase child1 = this.container.getEntityType().create(this.world);
+			GolemBase child2 = this.container.getEntityType().create(this.world);
 			child1.setChild(true);
 			child2.setChild(true);
 			// copy attack target info
