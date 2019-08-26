@@ -36,13 +36,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public final class ItemBedrockGolem extends Item {
 
-
-	private static final ITextComponent loreCreativeOnly = trans("tooltip.creative_only_item").applyTextStyle(TextFormatting.RED);
-
-	private static final ITextComponent lorePressShift = trans("tooltip.press").applyTextStyle(TextFormatting.GRAY)
-			.appendSibling(wrap(" ")).appendSibling(trans("tooltip.shift").applyTextStyle(TextFormatting.YELLOW))
-			.appendSibling(wrap(" ")).appendSibling(trans("tooltip.for_more_details").applyTextStyle(TextFormatting.GRAY));
-
 	public ItemBedrockGolem() {
 		super(new Properties().group(ItemGroup.MISC));
 	}
@@ -100,6 +93,10 @@ public final class ItemBedrockGolem extends Item {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+		final ITextComponent loreCreativeOnly = trans("tooltip.creative_only_item").applyTextStyle(TextFormatting.RED);
+		final ITextComponent lorePressShift = trans("tooltip.press").applyTextStyle(TextFormatting.GRAY)
+				.appendSibling(wrap(" ")).appendSibling(trans("tooltip.shift").applyTextStyle(TextFormatting.YELLOW))
+				.appendSibling(wrap(" ")).appendSibling(trans("tooltip.for_more_details").applyTextStyle(TextFormatting.GRAY));
 		// "Creative-Mode Only"
 		if (true /* ExtraGolemsConfig.bedrockGolemCreativeOnly() //todo This isn't working */ ) {
 			tooltip.add(loreCreativeOnly);
