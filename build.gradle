@@ -69,11 +69,34 @@ minecraft {
     }
 }
 
+repositories {
+    maven { // JEI
+        name 'DVS1 Maven FS'
+        url 'http://dvs1.progwml6.com/files/maven/'
+    }
+    maven { // The One Probe
+        name 'tterrag'
+        url 'https://maven.tterrag.com/'
+    }
+    maven {
+        name 'MMD'
+        url 'https://maven.mcmoddev.com/'
+    }
+    maven { // HWYLA
+        name 'tehnut'
+        url 'https://tehnut.info/maven/'
+    }
+}
+
 dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
+	
+	compile fg.deobf(project.dependencies.create("mcp.mobius.waila:Hwyla:${hwyla_version}") {
+        transitive = false
+    })
 
     // You may put jars on which you depend on in ./libs or you may define them like so..
     // compile "some.group:artifact:version:classifier"
