@@ -35,6 +35,6 @@ public class RenderGolem extends LivingRenderer<GolemBase, ModelGolem> {
 	 */
 	@Override
 	protected ResourceLocation getEntityTexture(final GolemBase golem) {
-		return golem.getTextureType();
+		return golem.getTexture();
 	}
 }

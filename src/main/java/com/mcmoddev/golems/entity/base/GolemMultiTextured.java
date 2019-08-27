@@ -38,13 +38,13 @@ public abstract class GolemMultiTextured extends GolemBase {
 	 * <p><b>Example call to this constructor:</b>
 	 * <p><code>
 	 * String[] NAMES = new String[] {"one","two","three"};
-	 * <br><br>public EntityExampleGolem(World world) {
-	 * <br>super(EntityExampleGolem.class, world, "example", NAMES);
+	 * <br><br>public EntityExampleGolem(EntityType<?> entityType, World world) {
+	 * <br>super(entityType, world, "golems", "example", NAMES);
 	 * <br>}</code>
 	 * <p>This will initialize textures at:
-	 * <br><code>[getModId()]/textures/entity/golem_example/one.png</code>
-	 * <br><code>[getModId()]/textures/entity/golem_example/two.png</code>
-	 * <br><code>[getModId()]/textures/entity/golem_example/three.png</code>
+	 * <br><code>golems/textures/entity/golem_example/one.png</code>
+	 * <br><code>golems/textures/entity/golem_example/two.png</code>
+	 * <br><code>golems/textures/entity/golem_example/three.png</code>
 	 * <br> as well as loot tables for the same names with the JSON suffix
 	 **/
 	public GolemMultiTextured(final EntityType<? extends GolemBase> entityType,
@@ -86,17 +86,13 @@ public abstract class GolemMultiTextured extends GolemBase {
 		super.notifyDataManagerChange(key);
 		// attempt to sync texture from client -> server -> other clients
 		if (DATA_TEXTURE.equals(key)) {
-			this.setTextureType(this.getTextureFromArray(this.getTextureNum()));
+			this.setTextureNum((byte) this.getTextureNum());
 		}
 	}
 
 	@Override
 	public void livingTick() {
 		super.livingTick();
-		// since textureNum is correct, update texture AFTER loading from NBT and init
-		if (this.ticksExisted == 2) {
-			this.setTextureType(this.getTextureFromArray(this.getTextureNum()));
-		}
 	}
 
 	@Override
@@ -122,21 +118,13 @@ public abstract class GolemMultiTextured extends GolemBase {
 	}
 
 	/**
-	 * Calls {@link #setTextureNum(byte, boolean)} with <b>toSet</b> and <b>true</b>.
-	 **/
-	public void setTextureNum(final byte toSet) {
-		setTextureNum(toSet, true);
-	}
-
-	/**
 	 * Update the texture data. If <b>updateInstantly</b> is true, call
 	 * {@link #setTextureType(ResourceLocation)} based on {@link #getTextureFromArray(int)} and
 	 * {@link #getTextureNum()}
 	 **/
-	public void setTextureNum(final byte toSet, final boolean updateInstantly) {
-		this.getDataManager().set(DATA_TEXTURE, Byte.valueOf(toSet));
-		if (updateInstantly) {
-			this.setTextureType(this.getTextureFromArray(this.getTextureNum()));
+	public void setTextureNum(final byte toSet) {
+		if(toSet != this.getDataManager().get(DATA_TEXTURE).byteValue()) {
+			this.getDataManager().set(DATA_TEXTURE, Byte.valueOf(toSet));
 		}
 	}
 
@@ -158,6 +146,11 @@ public abstract class GolemMultiTextured extends GolemBase {
 
 	public ResourceLocation getTextureFromArray(final int index) {
 		return this.textures[index % this.textures.length];
+	}
+	
+	@Override
+	public ResourceLocation getTexture() {
+		return getTextureFromArray(getTextureNum());
 	}
 	
 	// ABSTRACT

@@ -23,10 +23,10 @@ public final class WoolGolem extends GolemMultiTextured {
 	}
 
 	@Override
-	public void setTextureNum(byte toSet, final boolean updateInstantly) {
+	public void setTextureNum(byte toSet) {
 		//  note: skips texture for 'white'
 		toSet %= (byte) (coloredWoolTypes.length - 1);
-		super.setTextureNum(toSet, updateInstantly);
+		super.setTextureNum(toSet);
 	}
 
 	@Override

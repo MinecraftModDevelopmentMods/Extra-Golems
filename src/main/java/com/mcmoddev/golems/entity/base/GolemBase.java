@@ -39,7 +39,6 @@ public abstract class GolemBase extends IronGolemEntity {
 	protected static final String KEY_CHILD = "isChild";
 	
 	protected final GolemContainer container;
-	protected ResourceLocation textureLoc;
 	private boolean canFall = false;
 	private boolean canSwim = false;
 	//type, world
@@ -78,10 +77,7 @@ public abstract class GolemBase extends IronGolemEntity {
 	@Override
 	protected void registerData() {
 		super.registerData();
-		//Called in super constructor; this.container == null
-		GolemContainer golemContainer = GolemRegistrar.getContainer(this.getType());
 		this.getDataManager().register(CHILD, Boolean.valueOf(false));
-		this.setTextureType(golemContainer.getTexture());
 	}
 
 	/**
@@ -236,11 +232,14 @@ public abstract class GolemBase extends IronGolemEntity {
 
 	/////////////// TEXTURE HELPERS //////////////////
 
-	public void setTextureType(final ResourceLocation texturelocation) {
-		this.textureLoc = texturelocation;
-	}
-
-	public ResourceLocation getTextureType() {
+	/**
+	 * This method is called from the golem Render code
+	 * and should return the current texture (skin) of
+	 * the golem. Defaults to querying the container for
+	 * a texture.
+	 * @return a ResourceLocation to use for rendering
+	 **/
+	public ResourceLocation getTexture() {
 		return this.container.getTexture();
 	}
 
