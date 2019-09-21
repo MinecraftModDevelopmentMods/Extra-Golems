@@ -1,5 +1,5 @@
 # Items and Blocks used by this mod
-item.golem_paper.name=§cGolem Spell§r
+item.golem_paper.name=Golem Spell
 item.spawn_bedrock_golem.name=Spawn Bedrock Golem
 tile.golem_head.name=Golem Head
 

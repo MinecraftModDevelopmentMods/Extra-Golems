@@ -1,64 +1,60 @@
 package com.golems.entity;
 
-import com.golems.blocks.BlockUtility;
-import com.golems.entity.ai.EntityAIDefendAgainstMonsters;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.golems.main.Config;
 import com.golems.main.ExtraGolems;
 import com.golems.main.GolemItems;
 import com.golems.util.GolemConfigSet;
 import com.golems.util.GolemLookup;
-import com.google.common.base.Predicate;
+
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.*;
-import net.minecraft.entity.monster.EntityCreeper;
-import net.minecraft.entity.monster.IMob;
-import net.minecraft.entity.passive.IAnimals;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAIWander;
+import net.minecraft.entity.ai.EntityAIWanderAvoidWater;
+import net.minecraft.entity.monster.EntityIronGolem;
+import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.PathNavigateGround;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.village.Village;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.List;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 /**
  * Base class for all golems in this mod.
  **/
-public abstract class GolemBase extends EntityCreature implements IAnimals {
+public abstract class GolemBase extends EntityIronGolem {
 
 	private static final DataParameter<Boolean> BABY = EntityDataManager.<Boolean>createKey(GolemBase.class, DataSerializers.BOOLEAN);
 	private static final String KEY_BABY = "isChild";
 	public static final int WANDER_DISTANCE = 64;
 	
-	protected int attackTimer;
-	protected boolean isPlayerCreated;
 	protected ResourceLocation textureLoc;
 	protected ResourceLocation lootTableLoc;
 	protected ItemStack creativeReturn;
-	Village villageObj;
-	protected boolean hasHome = false;
-	/**
-	 * deincrements, and a distance-to-home check is done at 0.
-	 **/
-	private int homeCheckTimer = 180;
 
 	// customizable variables with default values //
 	protected double knockbackY = 0.4000000059604645D;
@@ -68,7 +64,6 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	protected int criticalChance = 5;
 	protected boolean takesFallDamage = false;
 	protected boolean canDrown = false;
-	protected boolean isLeashable = true;
 	
 	// swimming AI
 	protected EntityAIBase swimmingAI = new EntityAISwimming(this);
@@ -80,7 +75,8 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	/**
 	 * Initializes this golem with the given World. 
 	 * Also sets the following:
-	 * <br>{@code setBaseAttackDamage} using the config
+	 * <br>{@code SharedMonsterAttributes.ATTACK_DAMAGE} using the config
+	 * <br>{@code SharedMonsterAttributes.MAX_HEALTH} using the config
 	 * <br>{@code takesFallDamage} to false
 	 * <br>{@code canSwim} to false.
 	 * <br>{@code creativeReturn} to the map result of {@code GolemLookup} with this golem.
@@ -95,7 +91,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 		this.setCanSwim(false);
 		Block pickBlock = GolemLookup.hasBuildingBlock(this.getClass())
 			? GolemLookup.getFirstBuildingBlock(this.getClass()) : GolemItems.golemHead;
-		this.setCreativeReturn(pickBlock);
+		this.setCreativeReturn(new ItemStack(pickBlock));
 		GolemConfigSet cfg = getConfig(this);
 		this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(cfg.getBaseAttack());
 		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(cfg.getMaxHealth());
@@ -106,6 +102,8 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 
 	@Override
 	protected void initEntityAI() {
+		super.initEntityAI();
+		/*
 		// all of these tasks are copied from the Iron Golem and adjusted for movement speed
 		this.tasks.addTask(1, new EntityAIAttackMelee(this, this.getBaseMoveSpeed() * 4.0D, true));
 		this.tasks.addTask(2,
@@ -117,7 +115,7 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 		//// Wander AI has been moved to setCanSwim(boolean)
 		this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
 		this.tasks.addTask(7, new EntityAILookIdle(this));
-		this.targetTasks.addTask(1, new EntityAIDefendAgainstMonsters(this));
+		this.targetTasks.addTask(1, new EntityAIDefendVillage(this));
 		this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, false, (Class[]) new Class[0]));
 		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityLiving.class,
 			10, false, true, new Predicate<EntityLiving>() {
@@ -127,13 +125,14 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 					&& !(e instanceof EntityCreeper);
 					}
 				}));
+		*/
 	}
 
 	@Override
 	protected void entityInit() {
 		super.entityInit();
 		this.setTextureType(this.applyTexture());
-		this.getDataManager().register(BABY, false);
+		this.getDataManager().register(BABY, Boolean.valueOf(false));
 	}
 
 	@Override
@@ -147,101 +146,32 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	}
 
 	/**
-	 * main AI tick function, replaces updateEntityActionState.
-	 */
-	@Override
-	protected void updateAITasks() {
-		if(this.homeCheckTimer > 0) {
-			--homeCheckTimer;
-		} else {
-			// check for home village
-			this.updateHomeVillage();
-	        this.homeCheckTimer = 180;
-		}
-
-		super.updateAITasks();
-	}
-
-	/**
-	 * Decrements the entity's air supply when underwater.
-	 */
-	@Override
-	protected int decreaseAirSupply(final int i) {
-		return this.canDrown ? super.decreaseAirSupply(i) : i;
-	}
-
-	@Override
-	public boolean canBeLeashedTo(final EntityPlayer player) {
-		return this.isLeashable && super.canBeLeashedTo(player);
-	}
-
-	@Override
-	protected void collideWithEntity(final Entity entityIn) {
-		if (entityIn instanceof IMob && entityIn instanceof EntityLivingBase && !(entityIn instanceof EntityCreeper)
-			&& this.getRNG().nextInt(20) == 0) {
-			this.setAttackTarget((EntityLivingBase) entityIn);
-		}
-
-		super.collideWithEntity(entityIn);
-	}
-
-	/**
-	 * Called frequently so the entity can update its state every tick as required. For example,
-	 * zombies and skeletons use this to react to sunlight and start to burn.
-	 */
-	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
-		if (this.attackTimer > 0) {
-			--this.attackTimer;
-		}
-
-		// spawn block particles when this golem moves
-		if (this.motionX * this.motionX + this.motionZ * this.motionZ > 2.500000277905201E-7D
-			&& this.rand.nextInt(5) == 0) {
-			final int i = MathHelper.floor(this.posX);
-			final int j = MathHelper.floor(this.posY - 0.20000000298023224D);
-			final int k = MathHelper.floor(this.posZ);
-			final IBlockState iblockstate = this.world.getBlockState(new BlockPos(i, j, k));
-
-			if (iblockstate.getMaterial() != Material.AIR 
-					&& !(iblockstate.getBlock() instanceof BlockUtility)) {
-				this.world.spawnParticle(EnumParticleTypes.BLOCK_CRACK,
-					this.posX + ((double) this.rand.nextFloat() - 0.5D) * (double) this.width,
-					this.getEntityBoundingBox().minY + 0.1D,
-					this.posZ + ((double) this.rand.nextFloat() - 0.5D) * (double) this.width,
-					4.0D * ((double) this.rand.nextFloat() - 0.5D), 0.5D,
-					((double) this.rand.nextFloat() - 0.5D) * 4.0D,
-					Block.getStateId(iblockstate) );
-			}
-		}
-	}
-
-	/**
 	 * Returns true if this entity can attack entities of the specified class.
 	 */
 	@Override
 	public boolean canAttackClass(final Class<? extends EntityLivingBase> cls) {
-		return this.isPlayerCreated() && EntityPlayer.class.isAssignableFrom(cls) ? false
-			: (cls == EntityCreeper.class ? false : super.canAttackClass(cls));
+		
+		if(this.isPlayerCreated() && EntityPlayer.class.isAssignableFrom(cls)) {
+			return Config.enableFriendlyFire();
+		}
+		if(cls == EntityVillager.class || GolemBase.class.isAssignableFrom(cls)) {
+			return false;
+		}
+		return super.canAttackClass(cls);
 	}
 
 	@Override
 	public boolean attackEntityAsMob(final Entity entity) {
-		// (0.0 ~ 1.0] lower number results in less variance
-		final float VARIANCE = 0.8F;
 		// calculate damage based on current attack damage and variance
 		final float currentAttack = (float) this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE)
 			.getAttributeValue();
-		float damage = currentAttack
-			+ (float) (rand.nextDouble() - 0.5D) * VARIANCE * currentAttack;
-
+		float damage = currentAttack + (float) (rand.nextDouble() - 0.5D) * 0.75F * currentAttack;
 		// try to increase damage if random critical chance succeeds
 		if (rand.nextInt(100) < this.criticalChance) {
 			damage *= this.criticalModifier;
 		}
-
-		this.attackTimer = 10;
+		// use reflection to reset 'attackTimer' field
+		ReflectionHelper.setPrivateValue(EntityIronGolem.class, this, 10, "field_70855_f", "attackTimer");
 		this.world.setEntityState(this, (byte) 4);
 		final boolean flag = entity.attackEntityFrom(DamageSource.causeMobDamage(this), damage);
 
@@ -254,27 +184,35 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 		return flag;
 	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void handleStatusUpdate(final byte b) {
-		if (b == 4) {
-			this.attackTimer = 10;
-			this.playSound(this.getThrowSound(), 1.0F, 0.9F + rand.nextFloat() * 0.2F);
-		} else {
-			super.handleStatusUpdate(b);
-		}
-	}
-
-	@SideOnly(Side.CLIENT)
-	public int getAttackTimer() {
-		return this.attackTimer;
-	}
-
 	/** Called when the mob is falling. Calculates and applies fall damage **/
 	@Override
-	public void fall(final float distance, final float damageMultiplier) {
-		if (this.canTakeFallDamage()) {
-			super.fall(distance, damageMultiplier);
+	public void fall(float distance, float damageMultiplier) {
+		if(!this.canTakeFallDamage()) {
+			return;
+		}
+		float[] ret = net.minecraftforge.common.ForgeHooks.onLivingFall(this, distance, damageMultiplier);
+		if (ret == null)
+			return;
+		distance = ret[0];
+		damageMultiplier = ret[1];
+		super.fall(distance, damageMultiplier);
+		PotionEffect potioneffect = this.getActivePotionEffect(MobEffects.JUMP_BOOST);
+		float f = potioneffect == null ? 0.0F : (float) (potioneffect.getAmplifier() + 1);
+		int i = MathHelper.ceil((distance - 3.0F - f) * damageMultiplier);
+
+		if (i > 0) {
+			this.playSound(this.getFallSound(i), 1.0F, 1.0F);
+			this.attackEntityFrom(DamageSource.FALL, (float) i);
+			int j = MathHelper.floor(this.posX);
+			int k = MathHelper.floor(this.posY - 0.20000000298023224D);
+			int l = MathHelper.floor(this.posZ);
+			IBlockState iblockstate = this.world.getBlockState(new BlockPos(j, k, l));
+
+			if (iblockstate.getMaterial() != Material.AIR) {
+				SoundType soundtype = iblockstate.getBlock().getSoundType(iblockstate, world, new BlockPos(j, k, l),
+						this);
+				this.playSound(soundtype.getFallSound(), soundtype.getVolume() * 0.5F, soundtype.getPitch() * 0.75F);
+			}
 		}
 	}
 
@@ -289,20 +227,6 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 		this.playSound(this.getWalkingSound(), 0.76F, 0.9F + rand.nextFloat() * 0.2F);
 	}
 
-	/** Determines if an entity can be despawned, used on idle far away entities. **/
-	@Override
-	protected boolean canDespawn() {
-		return false;
-	}
-
-	/**
-	 * Get number of ticks, at least during which the living entity will be silent.
-	 */
-	@Override
-	public int getTalkInterval() {
-		return 24000;
-	}
-
 	/**
 	 * Called when a user uses the creative pick block button on this entity.
 	 *
@@ -313,18 +237,6 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 	@Override
 	public ItemStack getPickedResult(final RayTraceResult target) {
 		return this.creativeReturn;
-	}
-
-	/**
-	 * Called when the mob's health reaches 0.
-	 */
-	@Override
-	public void onDeath(final DamageSource src) {
-		if (!this.isPlayerCreated() && this.attackingPlayer != null && this.villageObj != null) {
-			this.villageObj.modifyPlayerReputation(this.attackingPlayer.getUniqueID(), -5);
-		}
-
-		super.onDeath(src);
 	}
 	
 	@Override
@@ -344,22 +256,6 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 		return this.lootTableLoc;
     }
 	
-	/** 
-	 * Updates this golem's home position IF there is a nearby village.
-	 * @return if the golem found a village home
-	 **/
-	public boolean updateHomeVillage() {
-		// set home position based on nearest village ONLY if one is close enough
-		this.villageObj = this.world.getVillageCollection().getNearestVillage(new BlockPos(this), WANDER_DISTANCE * 2);
-        if (this.villageObj != null) {
-        	final BlockPos home = this.villageObj.getCenter();
-            final int wanderDistance = (int)((float)this.villageObj.getVillageRadius() * 0.8F);
-            this.setHomePosAndDistance(home, wanderDistance);
-            return true;
-        }
-        return false;
-	}
-
 	/////////////// OTHER SETTERS AND GETTERS /////////////////
 	
 	/** 
@@ -388,6 +284,11 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 		return this.textureLoc;
 	}
 
+	
+	/**
+	 * Use instead {@link #setCreativeReturn(ItemStack)}
+	 **/
+	@Deprecated
 	public void setCreativeReturn(final Block blockToReturn) {
 		this.setCreativeReturn(new ItemStack(blockToReturn, 1));
 	}
@@ -406,10 +307,6 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 
 	public double getBaseMoveSpeed() {
 		return this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getBaseValue();
-	}
-
-	public Village getVillage() {
-		return this.villageObj;
 	}
 	
 	public void setChild(boolean isChild) {
@@ -447,14 +344,6 @@ public abstract class GolemBase extends EntityCreature implements IAnimals {
 			this.tasks.removeTask(wander);
 			this.tasks.addTask(5, wanderAvoidWater);
 		}
-	}
-
-	public void setPlayerCreated(final boolean bool) {
-		this.isPlayerCreated = bool;
-	}
-
-	public boolean isPlayerCreated() {
-		return this.isPlayerCreated;
 	}
 
 	public void setImmuneToFire(final boolean toSet) {

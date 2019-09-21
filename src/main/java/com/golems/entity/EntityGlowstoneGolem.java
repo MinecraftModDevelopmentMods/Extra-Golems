@@ -23,6 +23,7 @@ public final class EntityGlowstoneGolem extends GolemBase {
 
 	public static final String ALLOW_SPECIAL = "Allow Special: Emit Light";
 	public static final String FREQUENCY = "Light Frequency";
+	private boolean allowSpecial;
 
 	/**
 	 * Float value between 0.0F and 1.0F that determines light level
@@ -49,6 +50,7 @@ public final class EntityGlowstoneGolem extends GolemBase {
 	public EntityGlowstoneGolem(final World world,
 				    final float lightLevel, final int freq, final boolean allowed) {
 		super(world);
+		this.allowSpecial = allowed;
 		int lightInt = (int) (lightLevel * 15.0F);
 		this.brightness = lightLevel;
 		final IBlockState state = GolemItems.blockLightSource.getDefaultState().withProperty(BlockUtilityGlow.LIGHT_LEVEL, lightInt);
@@ -88,8 +90,7 @@ public final class EntityGlowstoneGolem extends GolemBase {
 
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
-		// does not fire for child classes
-		if (this.getClass() == EntityGlowstoneGolem.class && getConfig(this).getBoolean(ALLOW_SPECIAL)) {
+		if (allowSpecial) {
 			list.add(TextFormatting.RED + trans("entitytip.lights_area"));
 		}
 		return list;

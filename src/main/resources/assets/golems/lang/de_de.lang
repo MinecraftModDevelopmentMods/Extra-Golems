@@ -1,5 +1,5 @@
 # Items and Blocks used by this mod
-item.golem_paper.name=§cGolemzauber§r
+item.golem_paper.name=Golemzauber
 item.spawn_bedrock_golem.name=Erschaffe Grundgesteingolem
 tile.golem_head.name=Golemkopf
 

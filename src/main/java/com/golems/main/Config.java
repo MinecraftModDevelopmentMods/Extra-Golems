@@ -30,6 +30,7 @@ public final class Config {
 	private static boolean bedrockGolemCreativeOnly;
 	private static boolean useOreDictName;
 	private static boolean enableInteractTexture;
+	private static boolean enableFriendlyFire;
 	private static int villageGolemSpawnChance;
 	private static String[] villageGolemSpawnsDesert = new String[] {
 		GolemNames.STRAW_GOLEM, GolemNames.SANDSTONE_GOLEM, GolemNames.SANDSTONE_GOLEM,
@@ -146,6 +147,8 @@ public final class Config {
 	}
 
 	private static void loadOther(final Configuration config) {
+		enableFriendlyFire = config.getBoolean("Friendly Fire", CATEGORY_OTHER, true, 
+				"When false, attacking a player-built golem will not make it attack you");
 		bedrockGolemCreativeOnly = config.getBoolean("Bedrock Golem Creative Only", CATEGORY_OTHER,
 			true, "When true, only players in creative mode can use a Bedrock Golem spawn item");
 		pumpkinBuildsGolem = config.getBoolean("Pumpkin Builds Golems", CATEGORY_OTHER, false, 
@@ -180,6 +183,10 @@ public final class Config {
 	
 	public static boolean interactChangesTexture() {
 		return enableInteractTexture;
+	}
+	
+	public static boolean enableFriendlyFire() {
+		return enableFriendlyFire;
 	}
 	
 	public static List<Class<? extends GolemBase>> getDesertGolems() {

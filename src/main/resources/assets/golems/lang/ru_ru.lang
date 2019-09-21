@@ -1,6 +1,6 @@
 # Credit to vigcrafter for the Russian translation
 # Предметы и блоки, используемые в этом моде:
-item.golem_paper.name=§cЧасть голема§r
+item.golem_paper.name=Часть голема
 item.spawn_bedrock_golem.name=Призвать бедрокового голема
 tile.golem_head.name=Голова голема
  

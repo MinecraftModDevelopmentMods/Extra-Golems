@@ -29,20 +29,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.BlockPumpkin;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.ai.EntityAIFindEntityNearest;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.EntityAITasks;
-import net.minecraft.entity.monster.AbstractIllager;
-import net.minecraft.entity.monster.AbstractSkeleton;
-import net.minecraft.entity.monster.EntityPigZombie;
-import net.minecraft.entity.monster.EntitySlime;
-import net.minecraft.entity.monster.EntitySpider;
-import net.minecraft.entity.monster.EntityZombie;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -56,11 +44,9 @@ import net.minecraft.world.biome.BiomeSavanna;
 import net.minecraft.world.biome.BiomeSnow;
 import net.minecraft.world.biome.BiomeSwamp;
 import net.minecraft.world.biome.BiomeTaiga;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * Handles events added specifically from this mod.
@@ -226,47 +212,6 @@ public class GolemCommonEventHandler {
 					}
 				}
 			}
-		}
-	}
-
-	@SubscribeEvent
-	public void onLivingSpawned(final EntityJoinWorldEvent event) {
-		// add custom 'attack golem' AI to hostile mobs. They already have this for regular iron golems
-		if(event.getEntity() instanceof EntityCreature) {
-			final EntityCreature creature = (EntityCreature) event.getEntity();
-			if (creatureAttacksGolems(creature)) {
-				for (final EntityAITasks.EntityAITaskEntry entry : creature.targetTasks.taskEntries) {
-					if (entry.action instanceof EntityAIAttackGolem) {
-						return;
-					}
-				}
-				creature.targetTasks.addTask(3, new EntityAIAttackGolem(creature));
-			}
-		// add custom 'chase golem' AI to hostile entities that do not inherit from EntityCreature
-		// (currently just EntitySlime)
-		} else if(event.getEntity() instanceof EntityLiving) {
-			final EntityLiving living = (EntityLiving) event.getEntity();
-			if (livingAttacksGolems(living)) {
-				living.targetTasks.addTask(3, new EntityAIFindEntityNearest(living, GolemBase.class));
-			}
-		}
-	}
-	
-	/** Returns true if this entity is an EntityCreature AND normally attacks Iron Golems **/
-	private static boolean creatureAttacksGolems(EntityCreature e) {
-		return e instanceof AbstractSkeleton || e instanceof EntitySpider 
-				|| e instanceof AbstractIllager
-				|| (e instanceof EntityZombie && !(e instanceof EntityPigZombie));
-	}
-	
-	/** Returns true if this entity is any EntityLivingBase AND chases after Iron Golems **/
-	private static boolean livingAttacksGolems(EntityLivingBase e) {
-		return e instanceof EntitySlime;
-	}
-
-	private static final class EntityAIAttackGolem extends EntityAINearestAttackableTarget<GolemBase> {
-		private EntityAIAttackGolem(final EntityCreature creature) {
-			super(creature, GolemBase.class, true);
 		}
 	}
 }

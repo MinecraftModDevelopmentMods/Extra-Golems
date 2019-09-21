@@ -7,6 +7,7 @@ import com.golems.blocks.BlockUtilityPower;
 import com.golems.entity.*;
 import com.golems.events.handlers.GolemCommonEventHandler;
 import com.golems.items.ItemBedrockGolem;
+import com.golems.items.ItemGolemSpell;
 import com.golems.items.ItemInfoBook;
 import com.golems.main.ExtraGolems;
 import com.golems.main.GolemItems;
@@ -143,8 +144,8 @@ public class CommonProxy {
 			.register(new ItemBedrockGolem().setTranslationKey("spawn_bedrock_golem")
 				.setRegistryName(ExtraGolems.MODID, "spawn_bedrock_golem"));
 
-		event.getRegistry().register(new Item().setTranslationKey("golem_paper")
-			.setRegistryName(ExtraGolems.MODID, "golem_paper").setCreativeTab(CreativeTabs.MISC));
+		event.getRegistry().register(new ItemGolemSpell().setTranslationKey("golem_paper")
+			.setRegistryName(ExtraGolems.MODID, "golem_paper"));
 		
 		event.getRegistry().register(new ItemInfoBook().setTranslationKey("info_book")
 			.setRegistryName(ExtraGolems.MODID, "info_book"));
