@@ -20,9 +20,11 @@ public final class LeafGolem extends GolemColorized {
 		GolemBase.makeTexture(ExtraGolems.MODID, GolemNames.LEAF_GOLEM);
 	private static final ResourceLocation TEXTURE_OVERLAY = GolemBase
 			.makeTexture(ExtraGolems.MODID, GolemNames.LEAF_GOLEM + "_grayscale");
+	private boolean allowSpecial;
 
 	public LeafGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world, 0x5F904A, TEXTURE_BASE, TEXTURE_OVERLAY);
+		this.allowSpecial = this.getConfigBool(ALLOW_SPECIAL);
 	}
 
 	/**
@@ -32,7 +34,7 @@ public final class LeafGolem extends GolemColorized {
 	@Override
 	public void livingTick() {
 		super.livingTick();
-		if (this.getConfigBool(ALLOW_SPECIAL) && this.getActivePotionEffect(Effects.REGENERATION) == null
+		if (allowSpecial && this.getActivePotionEffect(Effects.REGENERATION) == null
 				&& rand.nextInt(40) == 0) {
 			this.addPotionEffect(
 					new EffectInstance(Effects.REGENERATION, 200 + 20 * (1 + rand.nextInt(8)), rand.nextInt(2)));

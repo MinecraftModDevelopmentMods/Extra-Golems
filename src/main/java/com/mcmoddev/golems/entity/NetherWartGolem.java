@@ -17,9 +17,11 @@ public final class NetherWartGolem extends GolemBase {
 	public static final String ALLOW_SPECIAL = "Allow Special: Plant Netherwart";
 	public static final String FREQUENCY = "Netherwart Frequency";
 	public static final String ALLOW_HEALING = "Allow Special: Random Healing";
+	private boolean allowHealing;
 
 	public NetherWartGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);
+		this.allowHealing = this.getConfigBool(ALLOW_HEALING);
 	}
 
 	/**
@@ -31,7 +33,7 @@ public final class NetherWartGolem extends GolemBase {
 		super.livingTick();
 		// heals randomly, but only at night or in the nether (least to most expensive)
 		if ((!this.getEntityWorld().isDaytime() || this.getEntityWorld().dimension.isNether())
-				&& this.getConfigBool(ALLOW_HEALING) && rand.nextInt(450) == 0) {
+				&& allowHealing && rand.nextInt(450) == 0) {
 			this.addPotionEffect(new EffectInstance(Effects.REGENERATION, 50, 1));
 		}
 	}

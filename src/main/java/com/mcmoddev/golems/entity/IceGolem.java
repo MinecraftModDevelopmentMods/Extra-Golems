@@ -22,9 +22,11 @@ public final class IceGolem extends GolemBase {
 
 	public static final String AOE = "Area of Effect";
 	public static final String FROST = "Use Frosted Ice";
+	private int aoe = 0;
 
 	public IceGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);
+		aoe = this.getConfigInt(AOE);
 	}
 
 	/**
@@ -44,7 +46,6 @@ public final class IceGolem extends GolemBase {
 			if (this.world.getBiome(below).getTemperature(below) > 1.0F) {
 				this.attackEntityFrom(DamageSource.ON_FIRE, 1.0F);
 			}
-			int aoe = this.getConfigInt(AOE);
 			if (aoe > 0) {
 				final IceGolemFreezeEvent event = new IceGolemFreezeEvent(this, below, aoe);
 				if (!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Event.Result.DENY) {

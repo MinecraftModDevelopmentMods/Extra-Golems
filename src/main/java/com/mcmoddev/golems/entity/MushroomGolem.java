@@ -23,9 +23,12 @@ public final class MushroomGolem extends GolemMultiTextured {
 
 	public static final String SHROOM_PREFIX = "shroom";
 	public static final String[] SHROOM_TYPES = { "red", "brown" };
+	
+	private boolean allowHealing;
 
 	public MushroomGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world, ExtraGolems.MODID, SHROOM_PREFIX, SHROOM_TYPES);
+		allowHealing = this.getConfigBool(ALLOW_HEALING);
 	}
 
 	@Override
@@ -50,8 +53,7 @@ public final class MushroomGolem extends GolemMultiTextured {
 	public void livingTick() {
 		super.livingTick();
 		// heals randomly, but only at night
-		//Note how it goes from least expensive to most expensive
-		if (!this.getEntityWorld().isDaytime() && this.getConfigBool(ALLOW_HEALING) && rand.nextInt(450) == 0) {
+		if (allowHealing && !this.getEntityWorld().isDaytime() && rand.nextInt(450) == 0) {
 			this.addPotionEffect(new EffectInstance(Effects.REGENERATION, 50, 1));
 		}
 	}

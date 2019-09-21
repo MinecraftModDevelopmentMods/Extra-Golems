@@ -21,9 +21,15 @@ public final class SpongeGolem extends GolemBase {
 	public static final String ALLOW_SPECIAL = "Allow Special: Absorb Water";
 	public static final String INTERVAL = "Water Soaking Frequency";
 	public static final String RANGE = "Water Soaking Range";
+	private boolean allowSpecial;
+	private int interval;
+	private int range;
 
 	public SpongeGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);
+		this.allowSpecial = this.getConfigBool(ALLOW_SPECIAL);
+		this.interval = this.getConfigInt(INTERVAL);
+		this.range = this.getConfigInt(RANGE);
 	}
 
 	/**
@@ -33,15 +39,12 @@ public final class SpongeGolem extends GolemBase {
 	@Override
 	public void livingTick() {
 		super.livingTick();
-		final int interval = this.getConfigInt(INTERVAL);
-		if (this.getConfigBool(ALLOW_SPECIAL)
-				&& (this.ticksExisted % interval == 0)) {
+		if (allowSpecial && (this.ticksExisted % interval == 0)) {
 			final int x = MathHelper.floor(this.posX);
 			final int y = MathHelper.floor(this.posY - 0.20000000298023224D) + 2;
 			final int z = MathHelper.floor(this.posZ);
 			final BlockPos center = new BlockPos(x, y, z);
-			final SpongeGolemSoakEvent event = new SpongeGolemSoakEvent(this, center,
-					this.getConfigInt(RANGE));
+			final SpongeGolemSoakEvent event = new SpongeGolemSoakEvent(this, center, range);
 			if (!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Event.Result.DENY) {
 				this.replaceWater(event.getPositionList(), event.getAbsorbFunction(),
 						event.updateFlag);

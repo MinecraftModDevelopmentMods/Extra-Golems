@@ -195,8 +195,13 @@ public abstract class GolemBase extends IronGolemEntity {
 	
 	@Override
 	public boolean canAttack(final EntityType<?> type) {
-		return (type == EntityType.PLAYER && this.isPlayerCreated() && ExtraGolemsConfig.enableFriendlyFire()) 
-					|| super.canAttack(type);
+		if(type == EntityType.PLAYER && this.isPlayerCreated()) {
+			return ExtraGolemsConfig.enableFriendlyFire();
+		}
+		if(type == EntityType.VILLAGER || type.getRegistryName().toString().contains("golem")) {
+			return false;
+		}
+		return super.canAttack(type);
 	}
 	
 	@Override
@@ -255,7 +260,7 @@ public abstract class GolemBase extends IronGolemEntity {
 	}
 
 	/**
-	 * Makes a ResourceLocation using the passed mod id and part of the texture name. Texture should
+	 * Makes a ResourceLocation using the passed mod id and the texture name. Texture should
 	 * be at 'assets/[MODID]/textures/entity/[TEXTURE].png'
 	 * <br>For most golems, set the texture when building the GolemContainer using
 	 * {@link GolemContainer.Builder#setTexture(ResourceLocation)} or
@@ -289,20 +294,4 @@ public abstract class GolemBase extends IronGolemEntity {
 	public final SoundEvent getGolemSound() {
 		return this.container.getSound();
 	}
-
-	/**
-	 * Called from {@link #registerData()} and used to set the texture type <b>before</b> the entity is
-	 * fully constructed or rendered. Example implementation: texture is at
-	 * 'assets/golems/textures/entity/golem_clay.png'
-	 * <pre>
-	 * {@code
-	 * protected ResourceLocation applyTexture() {
-	 * 	return makeTexture("golems", "golem_clay");
-	 * }
-	 * </pre>
-	 * @return a ResourceLocation for this golem's texture
-	 * @see #makeTexture(String)
-	 * @see #makeTexture(String, String)
-	 **/
-	// protected abstract ResourceLocation applyTexture();
 }

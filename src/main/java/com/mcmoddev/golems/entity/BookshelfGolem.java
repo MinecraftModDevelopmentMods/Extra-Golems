@@ -15,9 +15,11 @@ public final class BookshelfGolem extends GolemBase {
 			Effects.STRENGTH, Effects.ABSORPTION, Effects.LUCK, Effects.INSTANT_HEALTH,
 			Effects.RESISTANCE, Effects.INVISIBILITY, Effects.SPEED,
 			Effects.JUMP_BOOST };
+	private boolean allowSpecial;
 
 	public BookshelfGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);
+		this.allowSpecial = this.getConfigBool(ALLOW_SPECIAL);
 	}
 
 	/**
@@ -28,7 +30,7 @@ public final class BookshelfGolem extends GolemBase {
 	@Override
 	public void livingTick() {
 		super.livingTick();
-		if (getConfigBool(ALLOW_SPECIAL) && this.getActivePotionEffects().isEmpty()
+		if (allowSpecial && this.getActivePotionEffects().isEmpty()
 				&& rand.nextInt(40) == 0) {
 			final Effect potion = goodEffects[rand.nextInt(goodEffects.length)];
 			final int len = potion.isInstant() ? 1 : 200 + 100 * (1 + rand.nextInt(5));

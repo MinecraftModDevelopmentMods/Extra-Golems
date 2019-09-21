@@ -16,9 +16,11 @@ public final class MelonGolem extends GolemBase {
 	public static final String ALLOW_SPECIAL = "Allow Special: Plant Flowers";
 	public static final String FREQUENCY = "Flower Frequency";
 	public static final String ALLOW_HEALING = "Allow Special: Random Healing";
+	private boolean allowHealing;
 	
 	public MelonGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);
+		this.allowHealing = this.getConfigBool(ALLOW_HEALING);
 	}
 
 	/**
@@ -28,7 +30,7 @@ public final class MelonGolem extends GolemBase {
 	@Override
 	public void livingTick() {
 		super.livingTick();
-		if (!this.getConfigBool(ALLOW_HEALING)) return;
+		if (!allowHealing) return;
 		// heals randomly (about every 20 sec)
 		if (rand.nextInt(450) == 0) {
 			this.addPotionEffect(new EffectInstance(Effects.REGENERATION, 50, 1));
