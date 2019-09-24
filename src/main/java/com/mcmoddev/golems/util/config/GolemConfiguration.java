@@ -22,6 +22,7 @@ public class GolemConfiguration {
 	public ForgeConfigSpec.BooleanValue enableFriendlyFire;
 	public ForgeConfigSpec.BooleanValue enableTextureInteract;
 	public ForgeConfigSpec.BooleanValue enableUseItemSpell;
+	public ForgeConfigSpec.IntValue villagerGolemSpawnChance;
 
 // TODO implement the following config values
 //		villageGolemSpawnsDesert = config.getStringList("Desert Village Golem Spawns", CATEGORY_OTHER, villageGolemSpawnsDesert,
@@ -45,6 +46,8 @@ public class GolemConfiguration {
 			.define("texture_interact", false);
 		this.enableUseItemSpell = builder.comment("When enabled, players can 'use' the spell item on a carved pumpkin to convert it to a golem head in-world")
 				.define("use_spell", true);
+		this.villagerGolemSpawnChance = builder.comment("Percent chance for a villager to successfully summon an Extra Golems golem")
+				.defineInRange("villager_summon_chance", 90, 0, 100);
 
 		builder.pop();
 
@@ -69,6 +72,7 @@ public class GolemConfiguration {
 			GolemConfigurationSection section = e.getValue();
 			c.setAttack(section.attack.get());
 			c.setHealth(section.health.get());
+			c.setEnabled(section.enabled.get());
 
 			for (GolemSpecialContainer specialC : c.specialContainers.values()) {
 				specialC.value = specials.get(specialC).value;

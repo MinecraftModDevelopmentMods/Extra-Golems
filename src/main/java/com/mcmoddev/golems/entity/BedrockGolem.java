@@ -3,6 +3,7 @@ package com.mcmoddev.golems.entity;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.items.ItemBedrockGolem;
 import com.mcmoddev.golems.main.GolemItems;
+import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -41,7 +42,8 @@ public final class BedrockGolem extends GolemBase {
 	protected boolean processInteract(final PlayerEntity player, final Hand hand) {
 		// creative players can "despawn" by using spawnBedrockGolem on this entity
 		final ItemStack itemstack = player.getHeldItem(hand);
-		if (player.abilities.isCreativeMode && !itemstack.isEmpty() && itemstack.getItem() == GolemItems.SPAWN_BEDROCK_GOLEM) {
+		if ((player.abilities.isCreativeMode || !ExtraGolemsConfig.bedrockGolemCreativeOnly()) 
+				&& !itemstack.isEmpty() && itemstack.getItem() == GolemItems.SPAWN_BEDROCK_GOLEM) {
 			player.swingArm(hand);
 			if (!this.world.isRemote) {
 				this.remove();

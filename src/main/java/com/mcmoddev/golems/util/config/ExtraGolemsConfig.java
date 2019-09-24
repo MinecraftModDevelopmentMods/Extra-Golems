@@ -49,4 +49,8 @@ public class ExtraGolemsConfig {
 	public static boolean enableUseSpellItem() {
 		return GOLEM_CONFIG != null && GOLEM_CONFIG.enableUseItemSpell.get();
 	}
+	
+	public static int villagerSummonChance() {
+		return GOLEM_CONFIG != null ? GOLEM_CONFIG.villagerGolemSpawnChance.get() : 0;
+	}
 }
