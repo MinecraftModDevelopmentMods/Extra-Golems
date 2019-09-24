@@ -80,7 +80,7 @@ public abstract class GolemMultiTextured extends GolemBase {
 	public boolean processInteract(final EntityPlayer player, final EnumHand hand) {
 		final ItemStack stack = player.getHeldItem(hand);
 		// only change texture when player has empty hand
-		if (!stack.isEmpty()) {
+		if (!stack.isEmpty() || !this.doesInteractChangeTexture()) {
 			return super.processInteract(player, hand);
 		} else {
 			final int incremented = (this.getTextureNum() + 1) % this.textures.length;

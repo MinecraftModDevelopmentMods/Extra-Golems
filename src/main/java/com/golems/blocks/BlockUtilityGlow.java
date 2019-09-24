@@ -81,6 +81,11 @@ public class BlockUtilityGlow extends BlockUtility {
 			meta = 15;
 		return this.getDefaultState().withProperty(LIGHT_LEVEL, meta);
 	}
+	
+	@Override
+	public int getLightValue(IBlockState state) {
+		return state.getValue(LIGHT_LEVEL);
+	}
 
 	/**
 	 * Convert the BlockState into the correct metadata value
