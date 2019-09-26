@@ -1,6 +1,7 @@
 package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
+import com.mcmoddev.golems.items.ItemBedrockGolem;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -89,28 +90,8 @@ public class TNTGolem extends GolemBase {
 		if (this.isIgnited()) {
 			this.setMotion(0.0D, this.getMotion().getY(), 0.0D);
 			this.fuseTimer--;
-			if (!this.world.isRemote) {
-				for (int i = 0; i < 3; i++) {
-					this.world.addParticle(ParticleTypes.LARGE_SMOKE, this.posX,
-							this.posY + 2.0D, this.posZ, 0.0D, 0.0D, 0.0D);
-					this.world.addParticle(ParticleTypes.LARGE_SMOKE, this.posX + 0.75D,
-							this.posY + 1.0D + rand.nextDouble() * 2, this.posZ + 0.75D,
-							0.5 * (0.5D - rand.nextDouble()), 0.0D,
-							0.5 * (0.5D - rand.nextDouble()));
-					this.world.addParticle(ParticleTypes.LARGE_SMOKE, this.posX + 0.75D,
-							this.posY + 1.0D + rand.nextDouble() * 2, this.posZ - 0.75D,
-							0.5 * (0.5D - rand.nextDouble()), 0.0D,
-							0.5 * (0.5D - rand.nextDouble()));
-					this.world.addParticle(ParticleTypes.LARGE_SMOKE, this.posX - 0.75D,
-							this.posY + 1.0D + rand.nextDouble() * 2, this.posZ + 0.75D,
-							0.5 * (0.5D - rand.nextDouble()), 0.0D,
-							0.5 * (0.5D - rand.nextDouble()));
-					this.world.addParticle(ParticleTypes.LARGE_SMOKE, this.posX - 0.75D,
-							this.posY + 1.0D + rand.nextDouble() * 2, this.posZ - 0.75D,
-							0.5 * (0.5D - rand.nextDouble()), 0.0D,
-							0.5 * (0.5D - rand.nextDouble()));
-				}
-			}
+			ItemBedrockGolem.spawnParticles(this.world, this.posX - 0.5D, this.posY + 1.0D,
+					this.posZ - 0.5D, 0.21D, ParticleTypes.SMOKE, 6);
 			if (this.fuseTimer <= 0) {
 				this.willExplode = true;
 			}

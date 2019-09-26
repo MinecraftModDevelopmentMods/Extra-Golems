@@ -19,7 +19,7 @@ public abstract class GolemMultiTextured extends GolemBase {
 	 **/
 	protected static final DataParameter<Byte> DATA_TEXTURE = EntityDataManager
 		.<Byte>createKey(GolemMultiTextured.class, DataSerializers.BYTE);
-	protected static final String NBT_TEXTURE = "GolemTextureData";
+	protected static final String KEY_TEXTURE = "GolemTextureData";
 
 	/**
 	 * ResourceLocation array of textures to loop through when the player interacts with this golem.
@@ -91,20 +91,15 @@ public abstract class GolemMultiTextured extends GolemBase {
 	}
 
 	@Override
-	public void livingTick() {
-		super.livingTick();
-	}
-
-	@Override
 	public void writeAdditional(final CompoundNBT nbt) {
 		super.writeAdditional(nbt);
-		nbt.putByte(NBT_TEXTURE, (byte) this.getTextureNum());
+		nbt.putByte(KEY_TEXTURE, (byte) this.getTextureNum());
 	}
 
 	@Override
 	public void readAdditional(final CompoundNBT nbt) {
 		super.readAdditional(nbt);
-		this.setTextureNum(nbt.getByte(NBT_TEXTURE));
+		this.setTextureNum(nbt.getByte(KEY_TEXTURE));
 	}
 
 	@Override
@@ -145,7 +140,7 @@ public abstract class GolemMultiTextured extends GolemBase {
 	}
 
 	public ResourceLocation getTextureFromArray(final int index) {
-		return this.textures[index % this.textures.length];
+		return getTextureArray()[index % this.textures.length];
 	}
 	
 	@Override

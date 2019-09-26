@@ -17,6 +17,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.Tags;
 
 public final class ExtraGolemsEntities {
 
@@ -69,6 +70,13 @@ public final class ExtraGolemsEntities {
 				.addSpecial(ConcreteGolem.ALLOW_RESIST, true, "Whether this golem reduces damage it takes",
 						new TranslationTextComponent("effect.minecraft.resistance").applyTextStyle(TextFormatting.DARK_GRAY))
 				.build());
+		
+		// CORAL GOLEM
+		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.CORAL_GOLEM, CoralGolem.class, CoralGolem::new)
+				.setHealth(38.0D).setAttack(6.0D).setSpeed(0.28D).addBlocks(BlockTags.CORAL_BLOCKS)
+				.addDesc(BREATHE_WATER).setSound(SoundEvents.BLOCK_CORAL_BLOCK_STEP)
+				.build());
+		
 		// CRAFTING GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.CRAFTING_GOLEM, CraftingGolem.class, CraftingGolem::new)
 				.setHealth(24.0D).setAttack(2.0D).setSpeed(0.29D).addBlocks(Blocks.CRAFTING_TABLE).basicTexture()
@@ -224,7 +232,7 @@ public final class ExtraGolemsEntities {
 				.enableSwim().setSound(SoundEvents.BLOCK_WOOL_STEP).build());
 		// STAINED GLASS GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.STAINEDGLASS_GOLEM, StainedGlassGolem.class, StainedGlassGolem::new)
-				.setHealth(9.0D).setAttack(12.0D).setSpeed(0.29D).addBlocks(BlockTagUtil.TAG_STAINED_GLASS)
+				.setHealth(9.0D).setAttack(12.0D).setSpeed(0.29D).addBlocks(Tags.Blocks.STAINED_GLASS)
 				.enableFallDamage().setSound(SoundEvents.BLOCK_GLASS_STEP).build());
 		// STAINED TERRACOTTA GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.STAINEDTERRACOTTA_GOLEM, StainedTerracottaGolem.class, StainedTerracottaGolem::new)

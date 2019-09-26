@@ -21,6 +21,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
+import net.minecraft.particles.IParticleData;
+import net.minecraft.particles.ParticleType;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
@@ -79,9 +81,14 @@ public final class ItemBedrockGolem extends Item {
 	}
 
 	public static void spawnParticles(final World world, final double x, final double y, final double z, final double motion) {
+		spawnParticles(world, x, y, z, motion, ParticleTypes.LARGE_SMOKE, 60);
+	}
+	
+	public static void spawnParticles(final World world, final double x, final double y, final double z, final double motion,
+			final IParticleData type, final int num) {
 		if (world.isRemote) {
-			for (int i1 = 60 + world.rand.nextInt(30); i1 > 0; --i1) {
-				world.addParticle(ParticleTypes.LARGE_SMOKE, x + world.rand.nextDouble() - 0.5D,
+			for (int i1 = num + world.rand.nextInt(Math.max(1, num / 2)); i1 > 0; --i1) {
+				world.addParticle(type, x + world.rand.nextDouble() - 0.5D,
 						y + world.rand.nextDouble() - 0.5D, z + world.rand.nextDouble() - 0.5D,
 						world.rand.nextDouble() * motion,
 						world.rand.nextDouble() * motion * 0.25D + 0.08D,

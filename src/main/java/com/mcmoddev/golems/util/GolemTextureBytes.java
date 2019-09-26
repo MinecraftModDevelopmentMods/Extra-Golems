@@ -16,6 +16,8 @@ public final class GolemTextureBytes {
 	public static final Map<Block, Byte> WOOL = new HashMap<>();
 	public static final Map<Block, Byte> TERRACOTTA = new HashMap<>();
 	public static final Map<Block, Byte> GLASS = new HashMap<>();
+	public static final Map<Block, Byte> CORAL = new HashMap<>();
+	public static final Map<Block, Byte> CORAL_DEAD = new HashMap<>();
 
 	static {
 		// Concrete blocks
@@ -86,6 +88,18 @@ public final class GolemTextureBytes {
 		GLASS.put(Blocks.GREEN_STAINED_GLASS, (byte) 13);
 		GLASS.put(Blocks.RED_STAINED_GLASS, (byte) 14);
 		GLASS.put(Blocks.BLACK_STAINED_GLASS, (byte) 15);
+		// Live Coral Blocks
+		CORAL.put(Blocks.TUBE_CORAL_BLOCK, (byte)0);
+		CORAL.put(Blocks.BRAIN_CORAL_BLOCK, (byte)1);
+		CORAL.put(Blocks.BUBBLE_CORAL_BLOCK, (byte)2);
+		CORAL.put(Blocks.FIRE_CORAL_BLOCK, (byte)3);
+		CORAL.put(Blocks.HORN_CORAL_BLOCK, (byte)4);
+		// Dead Coral Blocks
+		CORAL_DEAD.put(Blocks.DEAD_TUBE_CORAL_BLOCK, (byte)0);
+		CORAL_DEAD.put(Blocks.DEAD_BRAIN_CORAL_BLOCK, (byte)1);
+		CORAL_DEAD.put(Blocks.DEAD_BUBBLE_CORAL_BLOCK, (byte)2);
+		CORAL_DEAD.put(Blocks.DEAD_FIRE_CORAL_BLOCK, (byte)3);
+		CORAL_DEAD.put(Blocks.DEAD_HORN_CORAL_BLOCK, (byte)4);
 	}
 	
 	/**
