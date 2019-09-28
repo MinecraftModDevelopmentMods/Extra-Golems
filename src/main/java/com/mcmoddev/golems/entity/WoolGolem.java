@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 public final class WoolGolem extends GolemMultiTextured {
 
 	public static final String[] coloredWoolTypes = { "black", "orange", "magenta", "light_blue",
-		"yellow", "lime", "pink", "gray", "silver", "cyan", "purple", "blue", "brown", "green",
+		"yellow", "lime", "pink", "gray", "light_gray", "cyan", "purple", "blue", "brown", "green",
 		"red", "white" };
 
 	public WoolGolem(final EntityType<? extends GolemBase> entityType, final World world) {
@@ -31,7 +31,7 @@ public final class WoolGolem extends GolemMultiTextured {
 	@Override
 	public void onBuilt(BlockState body, BlockState legs, BlockState arm1, BlockState arm2) {
 		// uses HashMap to determine which texture this golem should apply
-		// based on the top-middle building block. Defaults to a random texture.
+		// based on the top-middle building block. Defaults to 0.
 		byte textureNum = GolemTextureBytes.getByBlock(GolemTextureBytes.WOOL, body.getBlock());
 		this.setTextureNum(textureNum);
 	}
