@@ -291,6 +291,7 @@ public class GolemContainer {
 		return this.knockbackResist;
 	}
 
+	/** @return true if the Golem is enabled by the config settings **/
 	public boolean isEnabled() {
 		return this.enabled;
 	}

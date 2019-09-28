@@ -56,7 +56,7 @@ public final class ItemBedrockGolem extends Item {
 
 		// check if the golem is enabled
 		final GolemContainer container = GolemRegistrar.getContainer(new ResourceLocation(ExtraGolems.MODID, GolemNames.BEDROCK_GOLEM));
-		if (container.isEnabled()) {
+		if (container != null && container.isEnabled()) {
 			// make sure the golem can be spawned here (empty block)
 			BlockState state = worldIn.getBlockState(pos);
 			BlockPos spawnPos;
