@@ -8,10 +8,6 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Predicate;
 
-import javax.annotation.Nullable;
-import java.util.List;
-import java.util.function.Predicate;
-
 /**
  * Holds an {@link ITextComponent} and an
  * optional {@link GolemSpecialContainer} key

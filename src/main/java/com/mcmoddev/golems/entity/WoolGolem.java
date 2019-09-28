@@ -13,13 +13,12 @@ import net.minecraft.world.World;
 
 public final class WoolGolem extends GolemMultiTextured {
 
-	public static final String WOOL_PREFIX = "wool";
 	public static final String[] coloredWoolTypes = { "black", "orange", "magenta", "light_blue",
 		"yellow", "lime", "pink", "gray", "silver", "cyan", "purple", "blue", "brown", "green",
 		"red", "white" };
 
 	public WoolGolem(final EntityType<? extends GolemBase> entityType, final World world) {
-		super(entityType, world, ExtraGolems.MODID, WOOL_PREFIX, coloredWoolTypes);
+		super(entityType, world, ExtraGolems.MODID, coloredWoolTypes);
 	}
 
 	@Override

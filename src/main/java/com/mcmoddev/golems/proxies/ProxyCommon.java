@@ -34,7 +34,7 @@ public class ProxyCommon {
 	}
 
 	public void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
-		// Register Golem EntityEntries as well as building blocks
+		// Register Golem EntityTypes by iterating through each registered GolemContainer
 		GolemRegistrar.getContainers().forEach(container -> event.getRegistry().register(container.getEntityType()));
 	}
 

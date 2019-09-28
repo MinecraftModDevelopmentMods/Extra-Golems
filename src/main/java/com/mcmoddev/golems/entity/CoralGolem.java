@@ -27,11 +27,10 @@ import net.minecraft.world.World;
 
 public final class CoralGolem extends GolemMultiTextured {
 
-	protected static final DataParameter<Boolean> DRY = EntityDataManager.createKey(GolemBase.class, DataSerializers.BOOLEAN);
+	protected static final DataParameter<Boolean> DRY = EntityDataManager.createKey(CoralGolem.class, DataSerializers.BOOLEAN);
 	protected static final String KEY_DRY = "isDry";
-	public static final String CORAL_PREFIX = "coral";
-	public static final String[] VARIANTS = { "tube", "brain", "bubble", "fire", "horn" };
 	
+	public static final String[] VARIANTS = { "tube", "brain", "bubble", "fire", "horn" };
 	public final ResourceLocation[] texturesDry;
 	
 	// the minimum amount of time before golem will change between "dry" and "wet"
@@ -40,10 +39,11 @@ public final class CoralGolem extends GolemMultiTextured {
 	private int timeChanging = 0;
 	
 	public CoralGolem(final EntityType<? extends GolemBase> entityType, final World world) {
-		super(entityType, world, ExtraGolems.MODID, CORAL_PREFIX, VARIANTS);
-		this.texturesDry = new ResourceLocation[textures.length];
-		for(int i = 0, l = this.textures.length; i < l; i++) {
-			this.texturesDry[i] = new ResourceLocation(this.textures[i].toString().concat("_dead"));
+		super(entityType, world, ExtraGolems.MODID, VARIANTS);
+		this.texturesDry = new ResourceLocation[VARIANTS.length];
+		for (int n = 0, len = VARIANTS.length; n < len; n++) {
+			// initialize "dead" textures
+			this.texturesDry[n] = makeTexture(ExtraGolems.MODID, this.container.getName() + "/" + VARIANTS[n] + "_dead");
 		}
 	}
 	
@@ -68,9 +68,11 @@ public final class CoralGolem extends GolemMultiTextured {
 		super.livingTick();
 		// update "dry" data if the golem has been "changing" state for long enough
 		final boolean isChanging = this.isInWaterOrBubbleColumn() == this.isDry();
-		if(isChanging && !this.world.isRemote && ++timeChanging > TIME_TO_CHANGE) {
-			this.setDry(!this.isInWaterOrBubbleColumn());
-			this.timeChanging = 0;
+		if(isChanging) {
+			if(!this.world.isRemote && ++timeChanging > TIME_TO_CHANGE) {
+				this.setDry(!this.isInWaterOrBubbleColumn());
+				this.timeChanging = 0;
+			}
 		} else {
 			timeChanging = 0;
 		}
@@ -78,6 +80,11 @@ public final class CoralGolem extends GolemMultiTextured {
 		if (!this.isDry() && rand.nextInt(650) == 0) {
 			this.addPotionEffect(new EffectInstance(Effects.REGENERATION, 50, 1));
 		}
+	}
+	
+	@Override
+	protected float getWaterSlowDown() {
+		return 0.92F;
 	}
 
 	@Override
@@ -89,8 +96,10 @@ public final class CoralGolem extends GolemMultiTextured {
 				// truncate these values to one decimal place after modifying them from base values
 				double dryHealth = Math.floor(container.getHealth() * 0.8D);
 				double dryAttack = Math.floor(container.getAttack() * 1.8D * 10D) / 10D;
+				double drySpeed = Math.floor(container.getSpeed() * 0.7D);
 				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(dryHealth);
 				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(dryAttack);
+				this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(drySpeed);
 				// particle effects to show that the golem is "drying out"
 				if(this.world.isRemote) {
 					ItemBedrockGolem.spawnParticles(this.world, this.posX - 0.5D, this.posY + 0.1D,
@@ -99,6 +108,7 @@ public final class CoralGolem extends GolemMultiTextured {
 			} else {
 				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.getHealth());
 				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.getAttack());
+				this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(container.getSpeed());
 			}
 		}
 	}

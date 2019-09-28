@@ -6,7 +6,6 @@ import java.util.Map.Entry;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.item.ItemStack;
 
 public final class GolemTextureBytes {
 	

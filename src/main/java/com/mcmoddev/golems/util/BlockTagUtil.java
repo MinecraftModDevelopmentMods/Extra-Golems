@@ -14,6 +14,7 @@ public class BlockTagUtil {
 	public static Tag<Block> TAG_PRISMARINE;
 	public static Tag<Block> TAG_TERRACOTTA;
 	public static Tag<Block> TAG_QUARTZ;
+	public static Tag<Block> TAG_DEAD_CORAL_BLOCKS;
 
 	public static void loadTags() {
 		TAG_CONCRETE = getTag(new ResourceLocation(ExtraGolems.MODID, "concrete"));
@@ -22,6 +23,7 @@ public class BlockTagUtil {
 		TAG_PRISMARINE = getTag(new ResourceLocation(ExtraGolems.MODID, "prismarine"));
 		TAG_TERRACOTTA = getTag(new ResourceLocation(ExtraGolems.MODID, "colored_terracotta"));
 		TAG_QUARTZ = getTag(new ResourceLocation(ExtraGolems.MODID, "quartz"));
+		TAG_DEAD_CORAL_BLOCKS = getTag(new ResourceLocation(ExtraGolems.MODID, "dead_coral_block"));
 	}
 
 	public static Tag<Block> getTag(ResourceLocation path) {

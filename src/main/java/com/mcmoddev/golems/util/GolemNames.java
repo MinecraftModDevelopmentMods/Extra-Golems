@@ -1,7 +1,5 @@
 package com.mcmoddev.golems.util;
 
-import java.util.function.Consumer;
-
 public final class GolemNames {
 
 	private GolemNames() {

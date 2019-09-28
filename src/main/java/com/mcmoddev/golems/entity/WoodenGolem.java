@@ -15,12 +15,11 @@ import net.minecraft.world.World;
 
 public final class WoodenGolem extends GolemMultiTextured {
 
-	public static final String WOOD_PREFIX = "wooden";
 	public static final String[] WOOD_TYPES = { "oak", "spruce", "birch", "jungle", "acacia",
 			"big_oak" };
 
 	public WoodenGolem(final EntityType<? extends GolemBase> entityType, final World world) {
-		super(entityType, world, ExtraGolems.MODID, WOOD_PREFIX, WOOD_TYPES);
+		super(entityType, world, ExtraGolems.MODID, WOOD_TYPES);
 	}
 
 	@Override

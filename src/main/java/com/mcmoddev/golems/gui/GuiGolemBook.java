@@ -24,10 +24,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 public class GuiGolemBook extends Screen {
 
 	//////////// GUI GOLEM BOOK LAYOUT ////////////

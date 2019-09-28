@@ -27,18 +27,37 @@ public final class GolemRegistrar {
 		//
 	}
 
+	/**
+	 * Register a fully built GolemContainer to the mod.
+	 * @param container a unique GolemContainer with a unique ID
+	 * @see GolemContainer#getID()
+	 **/
 	public static void registerGolem(final GolemContainer container) {
-		if(golemList.containsKey(container.getID())) {
-			ExtraGolems.LOGGER.error("Tried to register duplicate GolemContainer for key " + container.getID() + ", skipping.");
+		if(golemList.containsKey(container.getRegistryName())) {
+			ExtraGolems.LOGGER.error("Tried to register duplicate GolemContainer for key " + container.getRegistryName() + ", skipping.");
 			return;
 		}
-		golemList.put(container.getID(), container);
+		golemList.put(container.getRegistryName(), container);
 	}
 
+	/**
+	 * @param entityType the EntityType of this golem
+	 * @return the GolemContainer registered under this EntityType,
+	 * or null if none is found
+	 * @see #getContainer(ResourceLocation)
+	 **/
+	@Nullable
 	public static GolemContainer getContainer(final EntityType<?> entityType) {
-		return getContainer(entityType.getRegistryName());
+		return entityType != null ? getContainer(entityType.getRegistryName()) : null;
 	}
 
+	/**
+	 * @param name a ResourceLocation key, usually the result of
+	 * {@code EntityType#getRegistryName()}
+	 * @return the GolemContainer registered under this name, or null
+	 * if none is found
+	 **/
+	@Nullable
 	public static GolemContainer getContainer(final ResourceLocation name) {
 		return golemList.get(name);
 	}

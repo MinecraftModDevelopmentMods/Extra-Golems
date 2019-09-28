@@ -13,10 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Function;
-
 /**
  * This event exists for other mods or addons to handle and modify the Sponge Golem's behavior. It
  * is not handled in Extra Golems. To modify which blocks count as 'water' you must call

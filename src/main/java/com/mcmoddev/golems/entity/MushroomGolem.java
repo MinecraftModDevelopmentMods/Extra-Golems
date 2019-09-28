@@ -21,13 +21,12 @@ public final class MushroomGolem extends GolemMultiTextured {
 	public static final String FREQUENCY = "Mushroom Frequency";
 	public static final String ALLOW_HEALING = "Allow Special: Random Healing";
 
-	public static final String SHROOM_PREFIX = "shroom";
 	public static final String[] SHROOM_TYPES = { "red", "brown" };
 	
 	private boolean allowHealing;
 
 	public MushroomGolem(final EntityType<? extends GolemBase> entityType, final World world) {
-		super(entityType, world, ExtraGolems.MODID, SHROOM_PREFIX, SHROOM_TYPES);
+		super(entityType, world, ExtraGolems.MODID, SHROOM_TYPES);
 		allowHealing = this.getConfigBool(ALLOW_HEALING);
 	}
 

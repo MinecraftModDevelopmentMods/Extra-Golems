@@ -14,12 +14,6 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import java.util.LinkedList;
-import java.util.List;
-
 /**
  * Base class to get in-game information about types of golems. Currently used for Waila and The One
  * Probe integration.

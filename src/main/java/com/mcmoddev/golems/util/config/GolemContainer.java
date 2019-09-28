@@ -37,8 +37,6 @@ public class GolemContainer {
 	private final List<ResourceLocation> validBuildingBlockTags;
 	private final EntityType<? extends GolemBase> entityType;
 	private final String name;
-	private final ResourceLocation id;
-//	private final ResourceLocation lootTable;
 	private final ResourceLocation basicTexture;
 	private final SoundEvent basicSound;
 	private final boolean fallDamage;
@@ -63,12 +61,12 @@ public class GolemContainer {
 	 * @param lHealth                 base health value
 	 * @param lAttack                 base attack value
 	 * @param lSpeed                  base speed value
-	 * @param lCanSwim 
-	 * @param lFallDamage 
+	 * @param lCanSwim                whether or not the golem floats in water
+	 * @param lFallDamage             whether or not the golem can take fall damage
 	 * @param lSpecialContainers      any golem specials as a Map
 	 * @param lDesc                   any special descriptions for the golem
 	 * @param lLootTable              a ResourceLocation for the on-death loot table, may be null
-	 * @param basicSound 
+	 * @param basicSound              a default SoundEvent to use for the golem
 	 **/
 	private GolemContainer(final EntityType<? extends GolemBase> lEntityType,
 			final Class<? extends GolemBase> lEntityClass, final String lPath,
@@ -81,7 +79,6 @@ public class GolemContainer {
 		this.validBuildingBlocks = lValidBuildingBlocks;
 		this.validBuildingBlockTags = lValidBuildingBlockTags;
 		this.name = lPath;
-		this.id = lEntityType.getRegistryName();
 		this.health = lHealth;
 		this.attack = lAttack;
 		this.speed = lSpeed;
@@ -204,7 +201,7 @@ public class GolemContainer {
 	 * can not be stored or queried before they are properly loaded and reloaded.
 	 *
 	 * @param rls a Collection of ResourceLocation IDs that represent Block Tags.
-	 * @return
+	 * @return a current Collection of Block Tags
 	 **/
 	private static Collection<Tag<Block>> loadTags(final Collection<ResourceLocation> rls) {
 		final Collection<Tag<Block>> tags = new HashSet<>();
@@ -217,59 +214,79 @@ public class GolemContainer {
 	}
 
 	////////// SETTERS //////////
+	
+	/**
+	 * <b>DO NOT CALL</b> unless you are the config!
+	 * @param pHealth new 'health' value
+	 **/
 	public void setHealth(final double pHealth) {
 		this.health = pHealth;
 	}
 
+	/**
+	 * <b>DO NOT CALL</b> unless you are the config!
+	 * @param pAttack new 'attack' value
+	 **/
 	public void setAttack(final double pAttack) {
 		this.attack = pAttack;
 	}
 
+	/**
+	 * <b>DO NOT CALL</b> unless you are the config!
+	 * @param pEnabled new 'enabled' value
+	 **/
 	public void setEnabled(final boolean pEnabled) {
 		this.enabled = pEnabled;
 	}
 
 	////////// GETTERS //////////
+	
+	/** @return the base class used by the Golem. Not always unique. **/
 	public Class<? extends GolemBase> getEntityClass() {
 		return this.entityClass;
 	}
 
+	/** @return the EntityType of the Golem. Always unique. **/
 	public EntityType<? extends GolemBase> getEntityType() {
 		return this.entityType;
 	}
 
+	/** @return a unique ResourceLocation ID for the Golem. Always unique. **/
 	public ResourceLocation getRegistryName() {
 		return this.entityType.getRegistryName();
 	}
 	
+	/** @return a default texture for the Golem. May be null. **/
 	public ResourceLocation getTexture() {
 		return this.basicTexture;
 	}
 	
+	/** @return a default SoundEvent to play when the Golem moves or is attacked **/
 	public SoundEvent getSound() {
 		return this.basicSound;
 	}
 
+	/** @return the name of the Golem as specified in the Builder **/
 	public String getName() {
 		return this.name;
 	}
-	
-	public ResourceLocation getID() {
-		return this.id;
-	}
 
+	/** @return the Golem's default health. Mutable. **/
 	public double getHealth() {
 		return this.health;
 	}
-
+	
+	/** @return the Golem's default attack power. Mutable. **/
 	public double getAttack() {
 		return this.attack;
 	}
 
+	/** @return the Golem's default move speed. Immutable. **/
 	public double getSpeed() {
 		return this.speed;
 	}
 	
+	/** @return the Golem's default knockback resistance. Immutable. **/
 	public double getKnockbackResist() {
 		return this.knockbackResist;
 	}
@@ -278,22 +295,15 @@ public class GolemContainer {
 		return this.enabled;
 	}
 	
+	/** @return true if the Golem takes damage upon falling from heights **/
 	public boolean takesFallDamage() {
 		return this.fallDamage;
 	}
 	
+	/** @return true if the Golem can swim on top of water **/
 	public boolean canSwim() {
 		return this.canSwim;
 	}
-
-//	public boolean hasLootTable() {
-//		return this.lootTable != null;
-//	}
-//
-//	@Nullable
-//	public ResourceLocation getLootTable() {
-//		return this.lootTable;
-//	}
 
 	//////////////////////////////////////////////////////////////
 	/////////////////// END OF GOLEM CONTAINER ///////////////////
@@ -301,6 +311,8 @@ public class GolemContainer {
 
 	/**
 	 * This class is my own work
+	 * <p>Use this class to build GolemContainer objects that can be
+	 * registered to the {@link GolemRegistrar}
 	 *
 	 * @author Glitch
 	 */
@@ -309,8 +321,7 @@ public class GolemContainer {
 		private final Class<? extends GolemBase> entityClass;
 		private EntityType.Builder<? extends GolemBase> entityTypeBuilder;
 		
-//		private ResourceLocation lootTable = null;
-		private ResourceLocation basicTexture;
+		private ResourceLocation basicTexture = null;
 		private SoundEvent basicSound = SoundEvents.BLOCK_STONE_STEP;
 		
 		private String modid = ExtraGolems.MODID;
@@ -330,7 +341,7 @@ public class GolemContainer {
 		/**
 		 * Creates the builder
 		 *
-		 * @param golemName     the name of the golem
+		 * @param golemName     the name of the golem (e.g. "golem_foo")
 		 * @param entityClazz   the class of the golem (e.g. EntityFooGolem.class)
 		 * @param entityFactory the constructor function of the class (e.g. EntityFooGolem::new).
 		 * For golems with no special abilities, use {@code GenericGolem.class}

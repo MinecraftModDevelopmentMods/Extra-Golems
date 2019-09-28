@@ -16,16 +16,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.function.Function;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.function.Function;
-
 /**
  * This event exists for other mods or addons to handle and modify the Ice Golem's behavior. It
  * is not handled in Extra Golems.
@@ -164,10 +154,6 @@ public final class IceGolemFreezeEvent extends Event {
 				} else if (block == Blocks.LAVA) {
 					final boolean isNotObsidian = this.random.nextInt(100) < this.cobbleChance;
 					return isNotObsidian ? cobbleState : Blocks.OBSIDIAN.getDefaultState();
-				} else if (block == Blocks.WATER) {
-					return iceState;
-				} else if (block == Blocks.LAVA) {
-					return cobbleState;
 				}
 			}
 

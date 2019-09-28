@@ -73,7 +73,7 @@ public final class ExtraGolemsEntities {
 		
 		// CORAL GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.CORAL_GOLEM, CoralGolem.class, CoralGolem::new)
-				.setHealth(38.0D).setAttack(6.0D).setSpeed(0.28D).addBlocks(BlockTags.CORAL_BLOCKS)
+				.setHealth(38.0D).setAttack(6.0D).setSpeed(0.29D).addBlocks(BlockTags.CORAL_BLOCKS).addBlocks(BlockTagUtil.TAG_DEAD_CORAL_BLOCKS)
 				.addDesc(BREATHE_WATER).setSound(SoundEvents.BLOCK_CORAL_BLOCK_STEP)
 				.build());
 		

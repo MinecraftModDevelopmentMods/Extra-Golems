@@ -11,8 +11,6 @@ import net.minecraft.util.math.MathHelper;
 
 import java.util.function.BiPredicate;
 
-import java.util.function.BiPredicate;
-
 /**
  * Places a single BlockState every {@code tickDelay} ticks with certain conditions
  **/
@@ -66,8 +64,8 @@ public class PlaceUtilityBlockGoal extends Goal {
 	 */
 	@Override
 	public void tick() {
-		long tickMod = this.golem.ticksExisted % this.tickDelay;
-		if (this.configAllows && tickMod == (long) 0) {
+		final int tickMod = this.golem.ticksExisted % this.tickDelay;
+		if (this.configAllows && tickMod == 0) {
 			final int x = MathHelper.floor(golem.posX);
 			final int y = MathHelper.floor(golem.posY - 0.20000000298023224D - golem.getYOffset());
 			final int z = MathHelper.floor(golem.posZ);
