@@ -40,7 +40,7 @@ public class GolemContainer {
 	private final ResourceLocation basicTexture;
 	private final SoundEvent basicSound;
 	private final boolean fallDamage;
-	private final boolean canSwim;
+	private final SwimMode swimMode;
 
 	private double health;
 	private double attack;
@@ -61,7 +61,7 @@ public class GolemContainer {
 	 * @param lHealth                 base health value
 	 * @param lAttack                 base attack value
 	 * @param lSpeed                  base speed value
-	 * @param lCanSwim                whether or not the golem floats in water
+	 * @param lSwimMode                whether or not the golem floats in water
 	 * @param lFallDamage             whether or not the golem can take fall damage
 	 * @param lSpecialContainers      any golem specials as a Map
 	 * @param lDesc                   any special descriptions for the golem
@@ -72,7 +72,7 @@ public class GolemContainer {
 			final Class<? extends GolemBase> lEntityClass, final String lPath,
 			final List<Block> lValidBuildingBlocks, final List<ResourceLocation> lValidBuildingBlockTags,
 			final double lHealth, final double lAttack, final double lSpeed, final double lKnockbackResist,
-			final boolean lFallDamage, final boolean lCanSwim, final HashMap<String, GolemSpecialContainer> lSpecialContainers,
+			final boolean lFallDamage, final SwimMode lSwimMode, final HashMap<String, GolemSpecialContainer> lSpecialContainers,
 			final List<GolemDescription> lDesc, final ResourceLocation lTexture, final SoundEvent lBasicSound) {
 		this.entityType = lEntityType;
 		this.entityClass = lEntityClass;
@@ -84,7 +84,7 @@ public class GolemContainer {
 		this.speed = lSpeed;
 		this.knockbackResist = lKnockbackResist;
 		this.fallDamage = lFallDamage;
-		this.canSwim = lCanSwim;
+		this.swimMode = lSwimMode;
 		this.specialContainers = lSpecialContainers;
 		this.descContainers = lDesc;
 		this.basicTexture = lTexture;
@@ -303,7 +303,12 @@ public class GolemContainer {
 	
 	/** @return true if the Golem can swim on top of water **/
 	public boolean canSwim() {
-		return this.canSwim;
+		return this.swimMode == SwimMode.FLOAT;
+	}
+	
+	/** @return the {@link SwimMode} of the Golem **/
+	public SwimMode getSwimMode() {
+		return this.swimMode;
 	}
 
 	//////////////////////////////////////////////////////////////
@@ -331,7 +336,7 @@ public class GolemContainer {
 		private double speed = 0.25D;
 		private double knockBackResist = 0.4D;
 		private boolean fallDamage = false;
-		private boolean canSwim = false;
+		private SwimMode swimMode = SwimMode.SINK;
 		//This is a list to allow determining the "priority" of golem blocks. This could be used to our
 		//advantage in golem building logic for conflicts in the future.
 		private List<Block> validBuildingBlocks = new ArrayList<>();
@@ -450,7 +455,19 @@ public class GolemContainer {
 			basicSound = lSound;
 			return this;
 		}
-
+		
+		/**
+		 * Sets the Swim Mode of a golem: SINK, FLOAT, or SWIM.
+		 * <b>Defaults to SwimMode.SINK</b>
+		 *
+		 * @return instance to allow chaining of methods
+		 * @see GolemContainer.SwimMode
+		 **/
+		public Builder setSwimMode(GolemContainer.SwimMode mode) {
+			this.swimMode = mode;
+			return this;
+		}
+		
 		/**
 		 * Adds building blocks that may be used for creating the golem.
 		 * If no blocks are added via this method or the Block Tag version,
@@ -552,17 +569,7 @@ public class GolemContainer {
 			this.entityTypeBuilder = this.entityTypeBuilder.immuneToFire();
 			return this;
 		}
-		
-		/**
-		 * Makes the golem swim instead of sink.
-		 *
-		 * @return instance to allow chaining of methods
-		 **/
-		public Builder enableSwim() {
-			this.canSwim = true;
-			return this;
-		}
-		
+	
 		/**
 		 * Makes the golem vulnerable to fall damage.
 		 *
@@ -588,9 +595,19 @@ public class GolemContainer {
 			}
 			return new GolemContainer(entityType, entityClass, golemName,
 					validBuildingBlocks, validBuildingBlockTags,
-					health, attack, speed, knockBackResist, fallDamage, canSwim, 
+					health, attack, speed, knockBackResist, fallDamage, swimMode, 
 					containerMap, descriptions, basicTexture, basicSound);
 		}
 	}
 
+	/**
+	 * There are three distinct behaviors when a golem
+	 * is in contact with water:
+	 * <br>{@code SINK} = the golem does not swim at all
+	 * <br>{@code FLOAT} = the golem swims on top of water
+	 * <br>{@code SWIM} = the golem navigates up and down in the water
+	 **/
+	public enum SwimMode {
+		SINK, FLOAT, SWIM;
+	}
 }

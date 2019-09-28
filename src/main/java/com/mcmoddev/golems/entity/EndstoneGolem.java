@@ -9,6 +9,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.IndirectEntityDamageSource;
 import net.minecraft.util.SoundEvents;
@@ -41,6 +42,9 @@ public class EndstoneGolem extends GolemBase {
 		this.isHurtByWater = this.getConfigBool(ALLOW_WATER_HURT);
 		this.allowTeleport = this.getConfigBool(ALLOW_SPECIAL);
 		this.goalSelector.addGoal(7, new WaterAvoidingRandomWalkingGoal(this, 1.0D, 0.0F));
+		if(isHurtByWater) {
+			this.setPathPriority(PathNodeType.WATER, -1.0F);
+		}
 	}
 
 	/**

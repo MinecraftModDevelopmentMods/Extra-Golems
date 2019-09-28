@@ -9,6 +9,7 @@ import com.mcmoddev.golems.util.GolemTextureBytes;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
@@ -25,6 +26,7 @@ public final class ConcreteGolem extends GolemMultiColorized {
 
 	public ConcreteGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world, ExtraGolems.MODID, TEXTURE_BASE, TEXTURE_OVERLAY, DYE_COLORS);
+		this.setPathPriority(PathNodeType.WATER, -0.8F);
 	}
 
 	@Override

@@ -11,6 +11,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -59,6 +60,9 @@ public final class MagmaGolem extends GolemBase {
 		this.allowMelting = this.getConfigBool(ALLOW_LAVA_SPECIAL);
 		this.meltDelay = this.getConfigInt(MELT_DELAY);
 		this.ticksStandingStill = 0;
+		if(isHurtByWater) {
+			this.setPathPriority(PathNodeType.WATER, -1.0F);
+		}
 	}
 
 	@Override

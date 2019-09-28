@@ -1,15 +1,22 @@
 package com.mcmoddev.golems.entity.base;
 
+
+import com.mcmoddev.golems.entity.ai.GoToWaterGoal;
+import com.mcmoddev.golems.entity.ai.SwimUpGoal;
+import com.mcmoddev.golems.entity.ai.SwimmingMovementController;
 import com.mcmoddev.golems.main.ExtraGolemsEntities;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mcmoddev.golems.util.config.GolemContainer;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
+import com.mcmoddev.golems.util.config.GolemContainer.SwimMode;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MoverType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.passive.IronGolemEntity;
@@ -18,6 +25,9 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.pathfinding.GroundPathNavigator;
+import net.minecraft.pathfinding.PathNodeType;
+import net.minecraft.pathfinding.SwimmerPathNavigator;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
@@ -27,6 +37,7 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeConfigSpec;
 
@@ -39,15 +50,36 @@ public abstract class GolemBase extends IronGolemEntity {
 	protected static final String KEY_CHILD = "isChild";
 	
 	protected final GolemContainer container;
-	private boolean canFall = false;
-	private boolean canSwim = false;
-	//type, world
+	
+	// swimming helpers
+	protected final SwimmerPathNavigator waterNavigator;
+	protected final GroundPathNavigator groundNavigator;
+	protected boolean swimmingUp;
+	
 	public GolemBase(EntityType<? extends GolemBase> type, World world) {
 		super(type, world);
 		this.container = GolemRegistrar.getContainer(type);
-		canFall = container.takesFallDamage();
-		if(container.canSwim()) {
-			this.enableSwim();
+		// the following will be unused if swimming is not enabled
+		this.waterNavigator = new SwimmerPathNavigator(this, world);
+		this.groundNavigator = new GroundPathNavigator(this, world);
+		// define behavior for the given swimming ability
+		switch(container.getSwimMode()) {
+		case FLOAT:
+			// basic swimming AI
+			this.goalSelector.addGoal(0, new SwimGoal(this));
+			this.navigator.setCanSwim(true);
+			break;
+		case SWIM:
+			// advanced swimming AI
+			this.stepHeight = 1.0F;
+			this.moveController = new SwimmingMovementController(this);
+			this.setPathPriority(PathNodeType.WATER, 0.0F);
+			this.goalSelector.addGoal(1, new GoToWaterGoal(this, 1.0D));
+			this.goalSelector.addGoal(6, new SwimUpGoal(this, 1.0D, this.world.getSeaLevel()));
+			break;
+		case SINK: default:
+			// no swimming AI
+			break;
 		}
 	}
 
@@ -113,21 +145,6 @@ public abstract class GolemBase extends IronGolemEntity {
 	public boolean isProvidingPower() {
 		return false;
 	}
-	
-	/**
-	 * Allows the golem to swim actively.
-	 * This is disabled by default.
-	 **/
-	private void enableSwim() {
-		this.canSwim = true;
-		this.goalSelector.addGoal(0, new SwimGoal(this));
-		this.navigator.setCanSwim(true);
-	}
-	
-	@Override
-	public boolean canSwim() {
-		return canSwim;
-	}
 
 	public GolemContainer getGolemContainer() {
 		return container != null ? container : GolemRegistrar.getContainer(this.getType().getRegistryName());
@@ -151,7 +168,7 @@ public abstract class GolemBase extends IronGolemEntity {
 
 	@Override
 	public void fall(float distance, float damageMultiplier) {
-		if(!canFall) return;
+		if(!this.container.takesFallDamage()) return;
 		float[] ret = net.minecraftforge.common.ForgeHooks.onLivingFall(this, distance, damageMultiplier);
 		if (ret == null) return;
 		distance = ret[0]; damageMultiplier = ret[1];
@@ -293,5 +310,64 @@ public abstract class GolemBase extends IronGolemEntity {
 	 **/
 	public final SoundEvent getGolemSound() {
 		return this.container.getSound();
+	}
+	
+	///////////////////// SWIMMING BEHAVIOR ////////////////////////
+
+	@Override
+	public boolean canSwim() {
+		return this.container.getSwimMode() != SwimMode.SINK;
+	}
+	
+	@Override
+	public void travel(final Vec3d vec) {
+		if (isServerWorld() && container.getSwimMode() == SwimMode.SWIM && isInWater() && isSwimmingUp()) {
+			moveRelative(0.01F, vec);
+			move(MoverType.SELF, getMotion());
+			setMotion(getMotion().scale(0.9D));
+			this.limbSwing += this.limbSwingAmount;
+		} else {
+			super.travel(vec);
+		}
+	}
+
+	@Override
+	public void updateSwimming() {
+		if(container.getSwimMode() != SwimMode.SWIM) {
+			super.updateSwimming();
+			return;
+		}
+		if (!this.world.isRemote) {
+			if (isServerWorld() && isInWater() && isSwimmingUp()) {
+				this.navigator = this.waterNavigator;
+				setSwimming(true);
+			} else {
+				this.navigator = this.groundNavigator;
+				setSwimming(false);
+			}
+		}
+	}
+	
+	@Override
+	protected float getWaterSlowDown() {
+		return container.getSwimMode() == SwimMode.SWIM ? 0.9F : super.getWaterSlowDown();
+	}
+
+	public void setSwimmingUp(boolean isSwimmingUp) {
+		this.swimmingUp = isSwimmingUp && container.getSwimMode() == SwimMode.SWIM;
+	}
+	
+	public boolean isSwimmingUp() {
+		if(this.container.getSwimMode() != SwimMode.SWIM) {
+			return false;
+		}
+		if (this.swimmingUp) {
+			return true;
+		}
+		LivingEntity e = getAttackTarget();
+		if (e != null && e.isInWater()) {
+			return true;
+		}
+		return false;
 	}
 }
