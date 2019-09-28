@@ -24,6 +24,10 @@
 		{
 		  "type": "item",
 		  "name": "minecraft:dead_horn_coral_block"
+		},
+		{
+		  "type": "item",
+		  "name": "minecraft:horn_coral_block"
 		}
 	  ]
 	},

@@ -24,6 +24,10 @@
 		{
 		  "type": "item",
 		  "name": "minecraft:dead_fire_coral_block"
+		},
+		{
+		  "type": "item",
+		  "name": "minecraft:fire_coral_block"
 		}
 	  ]
 	},

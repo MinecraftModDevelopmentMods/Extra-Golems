@@ -24,6 +24,10 @@
 		{
 		  "type": "item",
 		  "name": "minecraft:dead_brain_coral_block"
+		},
+		{
+		  "type": "item",
+		  "name": "minecraft:brain_coral_block"
 		}
 	  ]
 	},

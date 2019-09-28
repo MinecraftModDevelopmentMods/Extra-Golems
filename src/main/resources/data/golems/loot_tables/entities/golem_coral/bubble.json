@@ -24,6 +24,10 @@
 		{
 		  "type": "item",
 		  "name": "minecraft:dead_bubble_coral_block"
+		},
+		{
+		  "type": "item",
+		  "name": "minecraft:bubble_coral_block"
 		}
 	  ]
 	},
