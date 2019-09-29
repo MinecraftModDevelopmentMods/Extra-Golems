@@ -2,6 +2,7 @@ package com.mcmoddev.golems.entity;
 
 import java.util.Map;
 
+import com.mcmoddev.golems.entity.ai.GoToWaterGoal;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.items.ItemBedrockGolem;
@@ -21,8 +22,10 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public final class CoralGolem extends GolemMultiTextured {
@@ -30,11 +33,15 @@ public final class CoralGolem extends GolemMultiTextured {
 	protected static final DataParameter<Boolean> DRY = EntityDataManager.createKey(CoralGolem.class, DataSerializers.BOOLEAN);
 	protected static final String KEY_DRY = "isDry";
 	
+	public static final String ALLOW_HEALING = "Allow Special: Healing";
+	public static final String DRY_TIMER = "Max Wet Time";
+	
 	public static final String[] VARIANTS = { "tube", "brain", "bubble", "fire", "horn" };
 	public final ResourceLocation[] texturesDry;
 	
+	private final boolean allowHealing;
 	// the minimum amount of time before golem will change between "dry" and "wet"
-	private static final int TIME_TO_CHANGE = 240;
+	private final int MAX_CHANGING_TIME;
 	// the amount of time since this golem started changing between "dry" and "wet"
 	private int timeChanging = 0;
 	
@@ -44,7 +51,9 @@ public final class CoralGolem extends GolemMultiTextured {
 		for (int n = 0, len = VARIANTS.length; n < len; n++) {
 			// initialize "dead" textures
 			this.texturesDry[n] = makeTexture(ExtraGolems.MODID, this.container.getName() + "/" + VARIANTS[n] + "_dead");
-		}		
+		}
+		allowHealing = this.getConfigBool(ALLOW_HEALING);
+		MAX_CHANGING_TIME = this.getConfigInt(DRY_TIMER);		
 	}
 	
 	public boolean isDry() {
@@ -55,6 +64,15 @@ public final class CoralGolem extends GolemMultiTextured {
 		if(this.getDataManager().get(DRY).booleanValue() != isDry) {
 			this.getDataManager().set(DRY, Boolean.valueOf(isDry));
 		}
+	}
+	
+	@Override
+	protected void damageEntity(DamageSource source, float amount) {
+		if (this.isDry()) {
+			// damage resistant when dried out
+			amount *= 0.7F;
+		}
+		super.damageEntity(source, amount);
 	}
 	
 	@Override
@@ -69,16 +87,24 @@ public final class CoralGolem extends GolemMultiTextured {
 		// update "dry" data if the golem has been "changing" state for long enough
 		final boolean isChanging = this.isInWaterOrBubbleColumn() == this.isDry();
 		if(isChanging) {
-			if(!this.world.isRemote && ++timeChanging > TIME_TO_CHANGE) {
+			if(!this.world.isRemote && ++timeChanging > MAX_CHANGING_TIME) {
 				this.setDry(!this.isInWaterOrBubbleColumn());
 				this.timeChanging = 0;
 			}
 		} else {
 			timeChanging = 0;
 		}
-		// heals randomly, but only when wet
-		if (!this.isDry() && rand.nextInt(650) == 0) {
-			this.addPotionEffect(new EffectInstance(Effects.REGENERATION, 60, 1));
+		// only do some behavior when not dried out
+		if(!this.isDry()) {
+			// randomly reduce timer if golem is wet (but not submerged)
+			// extends "wet" lifetime by roughly 30%
+			if(this.isWet() && timeChanging > 0 && rand.nextInt(3) == 0) {
+				timeChanging--;
+			}
+			// heals randomly when wet
+			if (this.allowHealing && rand.nextInt(650) == 0) {
+				this.addPotionEffect(new EffectInstance(Effects.REGENERATION, 50, 1));
+			}
 		}
 	}
 
@@ -87,11 +113,12 @@ public final class CoralGolem extends GolemMultiTextured {
 		super.notifyDataManagerChange(key);
 		if (DRY.equals(key)) {
 			this.setDry(this.getDataManager().get(DRY).booleanValue());
-			if (this.getDataManager().get(DRY).booleanValue()) {
-				// truncate these values to one decimal place after modifying them from base values
-				double dryHealth = Math.floor(container.getHealth() * 0.8D);
+			if (this.isDry()) {
+				// adjust values when the golem dries out:  less health, less speed, more attack
+				// note how we use mult and div to truncate to a specific number of decimal places
+				double dryHealth = Math.floor(container.getHealth() * 0.7D * 10D) / 10D;
 				double dryAttack = Math.floor(container.getAttack() * 1.8D * 10D) / 10D;
-				double drySpeed = Math.floor(container.getSpeed() * 0.7D);
+				double drySpeed = Math.floor(container.getSpeed() * 0.7D * 100D) / 100D;
 				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(dryHealth);
 				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(dryAttack);
 				this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(drySpeed);
@@ -139,5 +166,25 @@ public final class CoralGolem extends GolemMultiTextured {
 		return new ItemStack(GolemTextureBytes.getByByte(
 				this.isDry() ? GolemTextureBytes.CORAL_DEAD : GolemTextureBytes.CORAL, 
 				(byte)this.getTextureNum()));
-	}	
+	}
+	
+	@Override
+	public boolean shouldMoveToWater(final Vec3d target) {
+		if (!this.isDry()) {
+			// determine how long the golem will have to move to the water before drying out
+			double dis = this.getPositionVec().distanceTo(target);
+			double moveSpeed = this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getValue();
+			int eta = (int) Math.ceil(dis / moveSpeed);
+			// if we still have that much time left (give or take 40 ticks)
+			// then we don't need to move toward water (yet)
+			if (this.getTimeUntilChange() - 40 > eta) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public int getTimeUntilChange() {
+		return MAX_CHANGING_TIME - timeChanging;
+	}
 }

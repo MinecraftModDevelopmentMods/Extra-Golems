@@ -43,7 +43,7 @@ public abstract class GolemDescriptionManager {
 	public List<ITextComponent> getEntityDescription(final GolemBase golem) {
 		List<ITextComponent> list = new LinkedList<>();
 		if (showAttack) {
-			double attack = (golem.getGolemContainer().getAttack());
+			double attack = (golem.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getValue());
 			list.add(new TranslationTextComponent("entitytip.attack")
 				.applyTextStyle(TextFormatting.GRAY)
 				.appendSibling(new StringTextComponent(": "))

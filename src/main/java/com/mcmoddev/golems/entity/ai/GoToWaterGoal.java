@@ -3,9 +3,11 @@ package com.mcmoddev.golems.entity.ai;
 import java.util.EnumSet;
 import java.util.Random;
 
+import com.mcmoddev.golems.entity.CoralGolem;
 import com.mcmoddev.golems.entity.base.GolemBase;
 
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -33,13 +35,14 @@ public class GoToWaterGoal extends Goal {
 			return false;
 		}
 
-		Vec3d vec = getNearbyWater();
-		if (vec == null) {
+		Vec3d target = getNearbyWater();
+		if (target == null || !this.golem.shouldMoveToWater(target)) {
 			return false;
 		}
-		this.targetX = vec.x;
-		this.targetY = vec.y;
-		this.targetZ = vec.z;
+		
+		this.targetX = target.x;
+		this.targetY = target.y;
+		this.targetZ = target.z;
 		return true;
 	}
 

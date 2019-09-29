@@ -74,6 +74,8 @@ public final class ExtraGolemsEntities {
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.CORAL_GOLEM, CoralGolem.class, CoralGolem::new)
 				.setHealth(38.0D).setAttack(6.0D).setSpeed(0.29D).setSwimMode(SwimMode.SWIM)
 				.addDesc(SWIMS).setSound(SoundEvents.BLOCK_CORAL_BLOCK_STEP)
+				.addSpecial(CoralGolem.ALLOW_HEALING, true, "Whether this golem can occasionally heal when wet", HEALS)
+				.addSpecial(CoralGolem.DRY_TIMER, 425, "Number of ticks golem can stay out of water before drying out")
 				.addBlocks(BlockTags.CORAL_BLOCKS).addBlocks(BlockTagUtil.TAG_DEAD_CORAL_BLOCKS).build());
 		// CRAFTING GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.CRAFTING_GOLEM, CraftingGolem.class, CraftingGolem::new)

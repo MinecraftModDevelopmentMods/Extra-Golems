@@ -20,7 +20,10 @@ public class SwimUpGoal extends Goal {
 		this.speed = speedIn;
 		this.targetY = seaLevel;
 	}
-	public boolean shouldExecute() { return (!this.golem.world.isDaytime() && this.golem.isInWater() && this.golem.posY < (this.targetY - 2)); }
+
+	public boolean shouldExecute() {
+		return (this.golem.isInWater() && this.golem.posY < (this.targetY - 2));
+	}
 
 	@Override
 	public boolean shouldContinueExecuting() {
@@ -29,8 +32,7 @@ public class SwimUpGoal extends Goal {
 
 	@Override
 	public void tick() {
-		if (this.golem.posY < (this.targetY - 1)
-				&& (this.golem.getNavigator().noPath() || isCloseToPathTarget())) {
+		if (this.golem.posY < (this.targetY - 1) && (this.golem.getNavigator().noPath() || isCloseToPathTarget())) {
 
 			Vec3d vec = RandomPositionGenerator.findRandomTargetBlockTowards(this.golem, 4, 8,
 					new Vec3d(this.golem.posX, (this.targetY - 1), this.golem.posZ));
