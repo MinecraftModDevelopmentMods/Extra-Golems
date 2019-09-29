@@ -447,7 +447,7 @@ public class GolemContainer {
 		/**
 		 * Sets an all-purpose SoundEvent of a golem
 		 *
-		 * @param lTexture The sound this golem makes when walking, attacked, or killed.
+		 * @param lSound The sound this golem makes when walking, attacked, or killed.
 		 * Defaults to {@code SoundEvents.BLOCK_STONE_STEP}
 		 * @return instance to allow chaining of methods
 		 **/
@@ -460,6 +460,7 @@ public class GolemContainer {
 		 * Sets the Swim Mode of a golem: SINK, FLOAT, or SWIM.
 		 * <b>Defaults to SwimMode.SINK</b>
 		 *
+		 * @param mode the SwimMode to use for this golem
 		 * @return instance to allow chaining of methods
 		 * @see GolemContainer.SwimMode
 		 **/

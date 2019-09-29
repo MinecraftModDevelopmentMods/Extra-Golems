@@ -38,10 +38,11 @@ public abstract class GolemMultiTextured extends GolemBase {
 	 * <p><b>Example call to this constructor:</b>
 	 * <p><code>
 	 * String[] NAMES = new String[] {"one","two","three"};
-	 * <br><br>public EntityExampleGolem(EntityType<?> entityType, World world) {
-	 * <br>super(entityType, world, "golems", "example", NAMES);
+	 * <br><br>public EntityExampleGolem(EntityType entityType, World world) {
+	 * <br>&nbsp;&nbsp;super(entityType, world, "golems", NAMES);
 	 * <br>}</code>
-	 * <p>This will initialize textures at:
+	 * <p>If the golem was registered with name <code>"golem_example"</code>,
+	 * then the following textures will be initialized:
 	 * <br><code>golems/textures/entity/golem_example/one.png</code>
 	 * <br><code>golems/textures/entity/golem_example/two.png</code>
 	 * <br><code>golems/textures/entity/golem_example/three.png</code>
@@ -113,9 +114,7 @@ public abstract class GolemMultiTextured extends GolemBase {
 	}
 
 	/**
-	 * Update the texture data. If <b>updateInstantly</b> is true, call
-	 * {@link #setTextureType(ResourceLocation)} based on {@link #getTextureFromArray(int)} and
-	 * {@link #getTextureNum()}
+	 * Update the texture data
 	 **/
 	public void setTextureNum(final byte toSet) {
 		if(toSet != this.getDataManager().get(DATA_TEXTURE).byteValue()) {

@@ -490,7 +490,7 @@ public class GuiGolemBook extends Screen {
 
 	/**
 	 * Called when a mouse button is pressed and the mouse is moved around. Parameters are : mouseX, mouseY,
-	 * lastButtonClicked & timeSinceMouseClick.
+	 * lastButtonClicked and timeSinceMouseClick.
 	 */
 	@Override
 	public boolean mouseDragged(double mouseX, double mouseY, int state, double parDouble1, double parDouble2) {

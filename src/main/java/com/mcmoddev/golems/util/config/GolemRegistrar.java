@@ -9,6 +9,7 @@ import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -30,7 +31,7 @@ public final class GolemRegistrar {
 	/**
 	 * Register a fully built GolemContainer to the mod.
 	 * @param container a unique GolemContainer with a unique ID
-	 * @see GolemContainer#getID()
+	 * @see GolemContainer#getRegistryName()
 	 **/
 	public static void registerGolem(final GolemContainer container) {
 		if(golemList.containsKey(container.getRegistryName())) {

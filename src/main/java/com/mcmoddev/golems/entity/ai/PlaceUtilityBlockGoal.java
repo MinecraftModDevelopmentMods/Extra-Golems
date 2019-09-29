@@ -29,7 +29,7 @@ public class PlaceUtilityBlockGoal extends Goal {
 	 * @param cfgAllows      whether this AI is enabled by the config
 	 * @param canReplacePred an optional BiPredicate to use when determining whether to place a Block.
 	 *                       Defaults to replacing air only.
-	 * @see #getDefaultBiPred(GolemBase, BlockState)
+	 * @see #getDefaultBiPred(BlockState)
 	 **/
 	public PlaceUtilityBlockGoal(final GolemBase golemIn, final BlockState stateIn, final int interval,
 			final boolean cfgAllows, final BiPredicate<GolemBase, BlockState> canReplacePred) {

@@ -24,15 +24,16 @@ public abstract class GolemColorized extends GolemBase {
 
 	/**
 	 * Flexible constructor so child classes can "borrow" this class's behavior and customize. It is
-	 * fine to pass 'null' for {@link rBase} or {@link rOverlay}, and null textures will not be
+	 * fine to pass 'null' for {@code rBase} or {@code rOverlay}, and null textures will not be
 	 * rendered. Args: world, attack, buildingBlock, initialColor, rBase, rOverlay.
 	 *
-	 * @param world
-	 * @param initial  the (usually temporary) color to apply to this golem until it is updated by some
-	 *                 other method.
-	 * @param rBase    an optional texture that will not be recolored or rendered transparent, to render
-	 *                 before {@link OVERLAY}
-	 * @param rOverlay a texture that will be recolored and optionally rendered as transparent.
+	 * @param entityType  the entity type
+	 * @param world       the entity world
+	 * @param initial     the (usually temporary) color to apply to this golem until it is updated by some
+	 *                    other method.
+	 * @param rBase       an optional texture that will not be recolored or rendered transparent, to render
+	 *                    before the {@code overlay}
+	 * @param rOverlay    a texture that will be recolored and optionally rendered as transparent.
 	 **/
 	public GolemColorized(final EntityType<? extends GolemBase> entityType, final World world, final long initial,
 			@Nullable final ResourceLocation rBase, @Nullable final ResourceLocation rOverlay) {
@@ -71,7 +72,7 @@ public abstract class GolemColorized extends GolemBase {
 	}
 
 	/**
-	 * Updates {@link #color} as well as calculates the RGBA components of that color.
+	 * Updates {@code #color} as well as calculates the RGBA components of that color.
 	 * Note: normal render class cannot handle an alpha value here, the actual texture
 	 * image must be saved with transparency instead.
 	 **/
@@ -116,8 +117,8 @@ public abstract class GolemColorized extends GolemBase {
 	}
 
 	/**
-	 * Whether {@link overlay} should be rendered as transparent.
-	 * This is not called for rendering {@link base},
+	 * Whether {@code overlay} should be rendered as transparent.
+	 * This is not called for rendering {@code base},
 	 * only for rendering the colorized layer.
 	 **/
 	public boolean hasTransparency() {

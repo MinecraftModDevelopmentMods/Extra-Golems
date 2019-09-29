@@ -12,9 +12,6 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
-/**
- * @see EntityAIPlaceRandomBlocksStrictly
- **/
 public class PlaceBlocksGoal extends Goal {
 
 	public final GolemBase golem;

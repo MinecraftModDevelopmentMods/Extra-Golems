@@ -43,7 +43,7 @@ public class GolemDescription {
 	 * Creates a new {@link GolemDescription} with a text component
 	 * and String key to use in the config. Assumes that the key links to a
 	 * {@code ConfigValue<Boolean>} - if this is not the case, use
-	 * {@link #GolemDescriptionContainer(ITextComponent, String, Predicate)}
+	 * {@link #GolemDescription(ITextComponent, String, Predicate)}
 	 *
 	 * @param textIn      a pre-formatted text component to display
 	 * @param configKeyIn an optional String to match against the config before

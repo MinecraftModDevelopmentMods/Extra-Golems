@@ -46,7 +46,7 @@ public class TNTGolem extends GolemBase {
 	/**
 	 * Flexible constructor to allow child classes to customize.
 	 *
-	 * @param clazz
+	 * @param entityType
 	 * @param world
 	 * @param minExplosionRange
 	 * @param maxExplosionRange

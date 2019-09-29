@@ -50,12 +50,10 @@ public class EndstoneGolem extends GolemBase {
 	/**
 	 * Flexible constructor to allow child classes to customize.
 	 *
+	 * @param entityType         the EntityType
 	 * @param world              the worldObj
-	 * @param attack             base attack damage
-	 * @param pick               Creative pick-block return
 	 * @param teleportRange      64.0 for enderman, 32.0 for endstone golem
-	 * @param teleportingAllowed usually set by the config, checked here
-	 * @param ambientParticles   whether always to display "portal" particles
+	 * @param ambientParticles   whether to always display "portal" particles
 	 **/
 	public EndstoneGolem(final EntityType<? extends GolemBase> entityType, final World world, 
 			final double teleportRange, final boolean ambientParticles) {

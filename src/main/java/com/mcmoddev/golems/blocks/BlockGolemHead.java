@@ -141,6 +141,10 @@ public final class BlockGolemHead extends HorizontalBlock {
 			world.addEntity(ironGolem);
 			return true;
 		}
+		
+		if(isInvalidBlock(blockBelow1) || isInvalidBlock(blockBelow2)) {
+			return false;
+		}
 
 		////// Attempt to spawn a Golem from this mod //////
 		GolemBase golem = GolemRegistrar.getGolem(world, blockBelow1, blockBelow2, blockArmNorth, blockArmSouth);
@@ -206,5 +210,10 @@ public final class BlockGolemHead extends HorizontalBlock {
 			world.destroyBlock(pos.down(1).north(1), false);
 			world.destroyBlock(pos.down(1).south(1), false);
 		}
+	}
+	
+	/** @return true if the block should not be considered a golem building block **/
+	private static boolean isInvalidBlock(final Block b) {
+		return b == null || b == Blocks.AIR || b == Blocks.WATER;
 	}
 }
