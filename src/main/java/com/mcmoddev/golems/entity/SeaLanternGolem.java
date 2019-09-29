@@ -6,6 +6,7 @@ import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.GolemItems;
 
 import net.minecraft.entity.EntityType;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -49,5 +50,11 @@ public final class SeaLanternGolem extends GolemBase {
 	@Override
 	public boolean isProvidingLight() {
 		return true;
+	}
+	
+	@Override
+	public boolean shouldMoveToWater(final Vec3d target) {
+		// allowed to leave water at night to protect village, etc.
+		return this.world.isDaytime();
 	}
 }

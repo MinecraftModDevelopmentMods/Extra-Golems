@@ -117,14 +117,14 @@ public final class CoralGolem extends GolemMultiTextured {
 				// adjust values when the golem dries out:  less health, less speed, more attack
 				// note how we use mult and div to truncate to a specific number of decimal places
 				double dryHealth = Math.floor(container.getHealth() * 0.7D * 10D) / 10D;
-				double dryAttack = Math.floor(container.getAttack() * 1.8D * 10D) / 10D;
+				double dryAttack = Math.floor(container.getAttack() * 1.45D * 10D) / 10D;
 				double drySpeed = Math.floor(container.getSpeed() * 0.7D * 100D) / 100D;
 				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(dryHealth);
 				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(dryAttack);
 				this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(drySpeed);
 				// particle effects to show that the golem is "drying out"
 				ItemBedrockGolem.spawnParticles(this.world, this.posX - 0.5D, this.posY + 0.1D,
-						this.posZ - 0.5D, 0.09D, ParticleTypes.SMOKE, 40);
+						this.posZ - 0.5D, 0.09D, ParticleTypes.SMOKE, 80);
 			} else {
 				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.getHealth());
 				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.getAttack());
@@ -170,14 +170,10 @@ public final class CoralGolem extends GolemMultiTextured {
 	
 	@Override
 	public boolean shouldMoveToWater(final Vec3d target) {
+		// allowed to leave water if NOT dry and NOT too far away
 		if (!this.isDry()) {
-			// determine how long the golem will have to move to the water before drying out
 			double dis = this.getPositionVec().distanceTo(target);
-			double moveSpeed = this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getValue();
-			int eta = (int) Math.ceil(dis / moveSpeed);
-			// if we still have that much time left (give or take 40 ticks)
-			// then we don't need to move toward water (yet)
-			if (this.getTimeUntilChange() - 40 > eta) {
+			if(dis < 8.0D && getTimeUntilChange() > 60) {
 				return false;
 			}
 		}

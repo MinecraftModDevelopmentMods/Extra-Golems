@@ -382,6 +382,11 @@ public abstract class GolemBase extends IronGolemEntity {
 		return false;
 	}
 	
+	/**
+	 * Referenced from {@link GoToWaterGoal}.
+	 * @param target a location representing a water block
+	 * @return true if the golem should move towards the water
+	 **/
 	public boolean shouldMoveToWater(final Vec3d target) {
 		return this.container.getSwimMode() == SwimMode.SWIM;
 	}
