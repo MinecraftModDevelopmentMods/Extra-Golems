@@ -70,7 +70,7 @@
   "entitytip.explodes": "Peut exploser de manière aléatoire",
   "entitytip.emits_redstone_signal": "Donne le pouvoir redstone",
   "entitytip.click_open_crafting": "Clic droit pour ouvrir un menu d'Établi",
-  "entitytip.breathes_underwater": "Respire sous l'eau",
+  "entitytip.advanced_swim": "Grand nageur",
   "entitytip.heals": "Se guérit lentement",
   "entitytip.grows_crops": "Cultive les cultures voisines",
   "entitytip.splits_upon_death": "Divisé en deux!",

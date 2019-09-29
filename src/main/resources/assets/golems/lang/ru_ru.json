@@ -77,6 +77,7 @@
   "entitytip.explodes": "Может взорваться!",
   "entitytip.emits_redstone_signal": "Передает RF",
   "entitytip.click_open_crafting": "ПКМ, чтобы открыть меню крафта",
+  "entitytip.advanced_swim": "Отличный пловец",
   "entitytip.heals": "медленно лечит себя",
   "entitytip.grows_crops": "Выращивает близлежащие культуры",
   "entitytip.splits_upon_death": "Разделить пополам",

@@ -56,7 +56,7 @@ public class GolemCommonEventHandler {
 
 	@SubscribeEvent
 	public void onLivingUpdate(final LivingEvent.LivingUpdateEvent event) {
-		if (event.getEntityLiving().getType() == EntityType.VILLAGER) {
+		if (event.getEntityLiving().getType() == EntityType.VILLAGER && ExtraGolemsConfig.villagerSummonChance() > 0) {
 			VillagerEntity villager = (VillagerEntity) event.getEntityLiving();
 			VillagerData villagerdata = villager.getVillagerData();
 			// determine whether to spawn a golem this tick

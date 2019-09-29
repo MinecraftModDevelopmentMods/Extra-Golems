@@ -73,6 +73,7 @@
   "entitytip.slowly_melts": "Schmilzt langsam %s",
   "entitytip.has_knockback": "Massiver Rückstoß-Angriff!",
   "entitytip.absorbs_water": "Absorbiert Wasser",
+  "entitytip.advanced_swim": "Großartiger Schwimmer",
   "entitytip.explodes": "Kann zufällig explodieren",
   "entitytip.emits_redstone_signal": "Sendet ein Redstone-Signal",
   "entitytip.heals": "Heilt sich langsam selbst",

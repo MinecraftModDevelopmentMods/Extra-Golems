@@ -71,7 +71,7 @@
   "entitytip.explodes": "Peligro: Puede explotar",
   "entitytip.emits_redstone_signal": "Emite impulsos de redstone",
   "entitytip.click_open_crafting": "Toca para abrir menú de fabricación",
-  "entitytip.breathes_underwater": "Respira bajo el agua",
+  "entitytip.advanced_swim": "Gran nadador",
   "entitytip.heals": "Sana lentamente",
   "entitytip.grows_crops": "Ayuda a los cultivos cercanos",
   "entitytip.splits_upon_death": "Divide en dos",
