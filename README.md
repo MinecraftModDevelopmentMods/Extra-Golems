@@ -1,4 +1,8 @@
 ![banner](https://raw.githubusercontent.com/skyjay1/img/master/extragolems/golem_logo.png)
+[![](https://img.shields.io/badge/Discord-MMD-green.svg?style=flat&logo=Discord)](https://discord.mcmoddev.com)
+[![](http://cf.way2muchnoise.eu/full_extra-golems_downloads.svg)](http://minecraft.curseforge.com/projects/extra-golems)
+[![](http://cf.way2muchnoise.eu/versions/Minecraft_extra-golems_all.svg)](http://minecraft.curseforge.com/projects/extra-golems)
+
 # Extra-Golems
 Extra-Golems is a Forge mod that adds over 35 unique golems to Minecraft.
 ### Downloads
