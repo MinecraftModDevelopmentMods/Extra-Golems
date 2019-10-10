@@ -1,28 +1,28 @@
-How to add a Golem:
-1) Make a class that inherits from one of the base classes. If the Golem will have no special abilities, this step is not necessary, and you will instead use GenericGolem.class for further steps
+--NO LONGER VALID AS OF 8.0.0
+HOW TO ADD A GOLEM TO EXTRA GOLEMS:
+
+1) Add a static GolemConfigSet to Config
+	a) Initialize it with default values for health and attack strength inside Config.initGolemConfigSets
+	b) Load any other golem-specific information from the config by adding a key in Config.loadSpecials
+2) Draw a texture for the golem, saving it as src/main/resources/assets/golems/textures/entity/golem_example.png
+	a) Replace 'example' with the name of that golem
+3) Make a class in com.golems.entity that inherits from GolemBase
 	a) Use one of these classes:
-	    * GolemBase is used for all golems that do not need behavior added by one of the other base classes
-	    * GolemMultiTextured is used for golems that have a variety of textures that (usually) will not change behavior
-	    * GolemColorized and GolemMultiColorized are used for golems that have grayscale textures that are re-colored in code
-	    * EndstoneGolem and TNTGolem have extra-flexible constructors for easy reuse
-	b) Add any special behavior
-	    * To place plants (mushrooms, ferns, etc.), add the PlaceBlocksGoal
-	    * To provide light or redstone power, add the PlaceUtilityBlockGoal
-	    * Most other behavior can be added by making a custom Goal or by overriding methods that handle attack, living tick, etc.
-2) Make a texture for the golem and save it as src/main/resources/assets/MODID/textures/entity/NAME.png
-	a) MODID is the mod id
-	b) NAME is the registered name of the golem, eg "golem_example"
-3) Register a GolemContainer to the GolemRegistrar
-	a) This is done either inside ExtraGolemsEntities.initEntityTypes or by handling the GolemRegistrarEvent
-	b) Create a GolemContainer using the GolemContainer.Builder
-	    * The Builder requires a unique name for the golem, a base class (either the one created in Step 1 or GenericGolem.class), and an IFactory created by the syntax ExampleGolem::new
-	    * All other options have default values, but in almost every case, you will call methods to set attack power and health. Many golems also specify move speed and knockback resistance
-	    * If this is an addon, specify the mod id. Otherwise it will default to "golems"
-	    * If the golem is not multi-textured, set the texture location using #setTexture (or call #basicTexture to automatically register a location based on mod id and golem name)
-	    * Add all valid building blocks using either a hard-coded array of Blocks or a reference to a Tag<Block>
-	    * Add any special config options using GolemSpecialContainer or one of the #addSpecial helper methods
-	    * Add any descriptions that will show up in the Golem Book or Hwyla using GolemDescription. If the GolemDescription depends on a config value, it can be added at the same time as the config option in #addSpecial
-	    * Call all other customization methods, such as setting immune to fire, setting a custom sound, specifying swimming ability, enabling fall damage, etc.
-	    * After setting all desired values, call #build and pass the result to GolemRegistrar#registerGolem
-4) Add the golem's name to as many *.json language files as possible in src/main/resources/assets/golems/lang/
-5) Test, debug, and enjoy!
+	  * GolemBase is used for all golems that have unique behavior or no special abilities
+	  * GolemLightProvider is used for golems that place temporary light sources.
+	  * GolemMultiTextured is used to change texture upon entity interaction.
+	  * GolemColorized and GolemColorizedMultiTextured are used for grayscale->colored textures
+	  * EntityEndstoneGolem, EntityRedstoneGolem, and EntityTNTGolem have extra-flexible constructors for easy reuse
+	b) Provide the necessary arguments in the call to the super constructor
+	  * Usually this includes the World, attack damage, and the block used to make this golem
+	c) Implement all required methods
+	d) Replace any initialization of attack power or health to reference the GolemConfigSet
+	e) Add any special behavior
+4) Register the golem by adding a call to CommonProxy.register inside CommonProxy#registerEntities
+5) Register the render class by adding a call to ClientProxy.registerTextured or ClientProxy.registerColorized inside ClientProxy#registerEntities
+6) Add an else-if statement to GolemCommonEventHandler
+	a) Follow the pattern of checking for that block, then calling GolemBuildEvent#setGolem
+	b) Pass a new instance of the golem along with GolemConfigSet#canSpawn()
+7) Add the name of the block used to build the golem in ItemGolemPaper#addInformation -- use the blocks lang entry for this
+8) Add the golem's name to as many *.lang files as possible at src/main/resources/assets/golems/lang/
+9) Test, debug, and enjoy!
