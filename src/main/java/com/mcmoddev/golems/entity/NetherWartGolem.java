@@ -1,5 +1,6 @@
 package com.mcmoddev.golems.entity;
 
+import com.mcmoddev.golems.entity.ai.PassiveEffectsGoal;
 import com.mcmoddev.golems.entity.ai.PlaceBlocksGoal;
 import com.mcmoddev.golems.entity.base.GolemBase;
 
@@ -8,7 +9,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.NetherWartBlock;
 import net.minecraft.entity.EntityType;
-import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.world.World;
 
@@ -24,20 +24,6 @@ public final class NetherWartGolem extends GolemBase {
 		this.allowHealing = this.getConfigBool(ALLOW_HEALING);
 	}
 
-	/**
-	 * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
-	 * use this to react to sunlight and start to burn.
-	 */
-	@Override
-	public void livingTick() {
-		super.livingTick();
-		// heals randomly, but only at night or in the nether (least to most expensive)
-		if ((!this.getEntityWorld().isDaytime() || this.getEntityWorld().dimension.isNether())
-				&& allowHealing && rand.nextInt(450) == 0) {
-			this.addPotionEffect(new EffectInstance(Effects.REGENERATION, 50, 1));
-		}
-	}
-
 	@Override
 	protected void registerGoals() {
 		super.registerGoals();
@@ -48,7 +34,11 @@ public final class NetherWartGolem extends GolemBase {
 		final Block[] soils = { Blocks.SOUL_SAND };
 		final boolean allow = this.getConfigBool(ALLOW_SPECIAL);
 		final int freq = this.getConfigInt(FREQUENCY);
-		this.goalSelector.addGoal(2,
-				new PlaceBlocksGoal(this, freq, flowers, soils, allow));
+		this.goalSelector.addGoal(2, new PlaceBlocksGoal(this, freq, flowers, soils, allow));
+		if(this.getConfigBool(ALLOW_HEALING)) {
+			this.goalSelector.addGoal(4, new PassiveEffectsGoal(this, Effects.REGENERATION, 50, 60, 1, 1, 
+					g -> (g.getEntityWorld().dimension.isNether() || !g.getEntityWorld().isDaytime()) 
+					&& g.getEntityWorld().getRandom().nextInt(450) == 0));
+		}
 	}
 }

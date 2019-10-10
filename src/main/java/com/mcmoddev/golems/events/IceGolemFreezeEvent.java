@@ -44,9 +44,9 @@ public final class IceGolemFreezeEvent extends Event {
 	 **/
 	public int updateFlag;
 
-	public IceGolemFreezeEvent(final GolemBase golem, final BlockPos center, final int radius) {
+	public IceGolemFreezeEvent(final GolemBase golem, final BlockPos center, final int radius, final boolean frostedIce) {
 		this(golem, center, radius, new DefaultFreezeFunction(
-				golem.getRNG(), golem.getConfigBool(IceGolem.FROST), ICE_CHANCE, COBBLE_CHANCE));
+				golem.getRNG(), frostedIce, ICE_CHANCE, COBBLE_CHANCE));
 	}
 
 	public IceGolemFreezeEvent(final GolemBase golem, final BlockPos center,

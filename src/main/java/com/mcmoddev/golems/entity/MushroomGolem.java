@@ -1,5 +1,6 @@
 package com.mcmoddev.golems.entity;
 
+import com.mcmoddev.golems.entity.ai.PassiveEffectsGoal;
 import com.mcmoddev.golems.entity.ai.PlaceBlocksGoal;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
@@ -23,11 +24,9 @@ public final class MushroomGolem extends GolemMultiTextured {
 
 	public static final String[] SHROOM_TYPES = { "red", "brown" };
 	
-	private boolean allowHealing;
 
 	public MushroomGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world, ExtraGolems.MODID, SHROOM_TYPES);
-		allowHealing = this.getConfigBool(ALLOW_HEALING);
 	}
 
 	@Override
@@ -42,18 +41,9 @@ public final class MushroomGolem extends GolemMultiTextured {
 				{ Blocks.DIRT, Blocks.GRASS_BLOCK, Blocks.MYCELIUM, Blocks.PODZOL, Blocks.NETHERRACK, Blocks.SOUL_SAND };
 		this.goalSelector.addGoal(2,
 				new PlaceBlocksGoal(this, freq, mushrooms, soils, allowed));
-	}
-
-	/**
-	 * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
-	 * use this to react to sunlight and start to burn.
-	 */
-	@Override
-	public void livingTick() {
-		super.livingTick();
-		// heals randomly, but only at night
-		if (allowHealing && !this.getEntityWorld().isDaytime() && rand.nextInt(450) == 0) {
-			this.addPotionEffect(new EffectInstance(Effects.REGENERATION, 50, 1));
+		if(this.getConfigBool(ALLOW_HEALING)) {
+			this.goalSelector.addGoal(4, new PassiveEffectsGoal(this, Effects.REGENERATION, 50, 60, 1, 1, 
+					g -> !g.getEntityWorld().isDaytime() && g.getEntityWorld().getRandom().nextInt(450) == 0));
 		}
 	}
 

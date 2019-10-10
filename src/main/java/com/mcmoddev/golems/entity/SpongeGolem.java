@@ -8,6 +8,7 @@ import com.mcmoddev.golems.events.SpongeGolemSoakEvent;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
@@ -21,15 +22,17 @@ public final class SpongeGolem extends GolemBase {
 	public static final String ALLOW_SPECIAL = "Allow Special: Absorb Water";
 	public static final String INTERVAL = "Water Soaking Frequency";
 	public static final String RANGE = "Water Soaking Range";
-	private boolean allowSpecial;
-	private int interval;
-	private int range;
 
 	public SpongeGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);
-		this.allowSpecial = this.getConfigBool(ALLOW_SPECIAL);
-		this.interval = this.getConfigInt(INTERVAL);
-		this.range = this.getConfigInt(RANGE);
+	}
+	
+	@Override
+	protected void registerGoals() {
+		super.registerGoals();
+		if(this.getConfigBool(ALLOW_SPECIAL)) {
+			this.goalSelector.addGoal(2, new SoakWaterGoal(this, this.getConfigInt(INTERVAL), this.getConfigInt(RANGE)));
+		}
 	}
 
 	/**
@@ -39,17 +42,6 @@ public final class SpongeGolem extends GolemBase {
 	@Override
 	public void livingTick() {
 		super.livingTick();
-		if (allowSpecial && (this.ticksExisted % interval == 0)) {
-			final int x = MathHelper.floor(this.posX);
-			final int y = MathHelper.floor(this.posY - 0.20000000298023224D) + 2;
-			final int z = MathHelper.floor(this.posZ);
-			final BlockPos center = new BlockPos(x, y, z);
-			final SpongeGolemSoakEvent event = new SpongeGolemSoakEvent(this, center, range);
-			if (!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Event.Result.DENY) {
-				this.replaceWater(event.getPositionList(), event.getAbsorbFunction(),
-						event.updateFlag);
-			}
-		}
 		if (Math.abs(this.getMotion().getX()) < 0.03D
 				&& Math.abs(this.getMotion().getZ()) < 0.03D && world.isRemote) {
 			final BasicParticleType particle = this.isBurning() ? ParticleTypes.SMOKE
@@ -63,18 +55,57 @@ public final class SpongeGolem extends GolemBase {
 		}
 	}
 
-	/**
-	 * Usually called after creating and firing a {@link SpongeGolemSoakEvent}. Iterates through the
-	 * list of positions and replaces each one with the passed BlockState.
-	 *
-	 * @return whether all setBlockState calls were successful.
-	 **/
-	public boolean replaceWater(final List<BlockPos> positions,
-			final Function<BlockState, BlockState> replaceWater, final int updateFlag) {
-		boolean flag = true;
-		for (final BlockPos p : positions) {
-			flag &= this.world.setBlockState(p, replaceWater.apply(world.getBlockState(p)), updateFlag);
+	
+	
+	public static class SoakWaterGoal extends Goal {
+		
+		protected final GolemBase golem;
+		protected final int interval;
+		protected final int range;
+		
+		public SoakWaterGoal(final GolemBase golemIn, final int intervalIn, final int rangeIn) {
+			golem = golemIn;
+			interval = Math.min(1, intervalIn);
+			range = rangeIn;
 		}
-		return flag;
+
+		@Override
+		public boolean shouldExecute() {
+			return golem.ticksExisted % interval == 0;
+		}
+		
+		@Override
+		public boolean shouldContinueExecuting() {
+			return false;
+		}
+		
+		@Override
+		public void startExecuting() {
+			final int x = MathHelper.floor(golem.posX);
+			final int y = MathHelper.floor(golem.posY - 0.20000000298023224D) + 2;
+			final int z = MathHelper.floor(golem.posZ);
+			final BlockPos center = new BlockPos(x, y, z);
+			final SpongeGolemSoakEvent event = new SpongeGolemSoakEvent(golem, center, range);
+			if (!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Event.Result.DENY) {
+				this.replaceWater(event.getPositionList(), event.getAbsorbFunction(),
+						event.updateFlag);
+			}
+		}
+		
+		/**
+		 * Usually called after creating and firing a {@link SpongeGolemSoakEvent}. Iterates through the
+		 * list of positions and replaces each one with the passed BlockState.
+		 *
+		 * @return whether all setBlockState calls were successful.
+		 **/
+		public boolean replaceWater(final List<BlockPos> positions,
+				final Function<BlockState, BlockState> replaceWater, final int updateFlag) {
+			boolean flag = true;
+			for (final BlockPos p : positions) {
+				flag &= golem.getEntityWorld().setBlockState(p, replaceWater.apply(golem.getEntityWorld().getBlockState(p)), updateFlag);
+			}
+			return flag;
+		}
 	}
+
 }

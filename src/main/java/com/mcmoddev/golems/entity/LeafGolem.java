@@ -1,5 +1,6 @@
 package com.mcmoddev.golems.entity;
 
+import com.mcmoddev.golems.entity.ai.PassiveEffectsGoal;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemColorized;
 import com.mcmoddev.golems.main.ExtraGolems;
@@ -20,11 +21,19 @@ public final class LeafGolem extends GolemColorized {
 		GolemBase.makeTexture(ExtraGolems.MODID, GolemNames.LEAF_GOLEM);
 	private static final ResourceLocation TEXTURE_OVERLAY = GolemBase
 			.makeTexture(ExtraGolems.MODID, GolemNames.LEAF_GOLEM + "_grayscale");
-	private boolean allowSpecial;
 
 	public LeafGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world, 0x5F904A, TEXTURE_BASE, TEXTURE_OVERLAY);
-		this.allowSpecial = this.getConfigBool(ALLOW_SPECIAL);
+	}
+	
+	@Override
+	protected void registerGoals() {
+		super.registerGoals();
+		if(this.getConfigBool(ALLOW_SPECIAL)) {
+			this.goalSelector.addGoal(4, new PassiveEffectsGoal(this, Effects.REGENERATION, 200, 360, 0, 1, 
+					PassiveEffectsGoal.doesNotHaveEffect(Effects.REGENERATION)
+					.and(g -> g.getEntityWorld().getRandom().nextInt(40) == 0)));
+		}
 	}
 
 	/**
@@ -34,12 +43,8 @@ public final class LeafGolem extends GolemColorized {
 	@Override
 	public void livingTick() {
 		super.livingTick();
-		if (allowSpecial && this.getActivePotionEffect(Effects.REGENERATION) == null
-				&& rand.nextInt(40) == 0) {
-			this.addPotionEffect(
-					new EffectInstance(Effects.REGENERATION, 200 + 20 * (1 + rand.nextInt(8)), rand.nextInt(2)));
-		}
 
+		// update color
 		if (this.ticksExisted % 10 == 2 && this.world.isRemote) {
 			Biome biome = this.world.getBiome(this.getPosition());
 			long color = biome.getFoliageColor(this.getPosition());
