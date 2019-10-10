@@ -41,6 +41,7 @@ public class GolemContainer {
 	private final SoundEvent basicSound;
 	private final boolean fallDamage;
 	private final SwimMode swimMode;
+	private final GolemPattern specialPattern;
 
 	private double health;
 	private double attack;
@@ -58,6 +59,7 @@ public class GolemContainer {
 	 * @param lPath                   the golem name
 	 * @param lValidBuildingBlocks    a List of blocks to build the golem
 	 * @param lValidBuildingBlockTags a List of Block Tags to build the golem
+	 * @param specialPattern 
 	 * @param lHealth                 base health value
 	 * @param lAttack                 base attack value
 	 * @param lSpeed                  base speed value
@@ -70,7 +72,7 @@ public class GolemContainer {
 	 **/
 	private GolemContainer(final EntityType<? extends GolemBase> lEntityType,
 			final Class<? extends GolemBase> lEntityClass, final String lPath,
-			final List<Block> lValidBuildingBlocks, final List<ResourceLocation> lValidBuildingBlockTags,
+			final List<Block> lValidBuildingBlocks, final List<ResourceLocation> lValidBuildingBlockTags, final GolemPattern lPattern, 
 			final double lHealth, final double lAttack, final double lSpeed, final double lKnockbackResist,
 			final boolean lFallDamage, final SwimMode lSwimMode, final HashMap<String, GolemSpecialContainer> lSpecialContainers,
 			final List<GolemDescription> lDesc, final ResourceLocation lTexture, final SoundEvent lBasicSound) {
@@ -78,6 +80,7 @@ public class GolemContainer {
 		this.entityClass = lEntityClass;
 		this.validBuildingBlocks = lValidBuildingBlocks;
 		this.validBuildingBlockTags = lValidBuildingBlockTags;
+		this.specialPattern = lPattern;
 		this.name = lPath;
 		this.health = lHealth;
 		this.attack = lAttack;
@@ -146,6 +149,9 @@ public class GolemContainer {
 	 * @see #getBuildingBlocks()
 	 **/
 	public boolean areBuildingBlocks(final Block body, final Block legs, final Block arm1, final Block arm2) {
+		if(specialPattern != null) {
+			return specialPattern.matches(body, legs, arm1, arm2);
+		}
 		final Set<Block> blocks = getBuildingBlocks();
 		return blocks.contains(body) && blocks.contains(legs) && blocks.contains(arm1) && blocks.contains(arm2);
 	}
@@ -310,6 +316,12 @@ public class GolemContainer {
 	public SwimMode getSwimMode() {
 		return this.swimMode;
 	}
+	
+	/**  @return the Special GolemPattern if enabled **/
+	@Nullable
+	public GolemPattern getSpecialPattern() {
+		return specialPattern;
+	}
 
 	//////////////////////////////////////////////////////////////
 	/////////////////// END OF GOLEM CONTAINER ///////////////////
@@ -337,6 +349,7 @@ public class GolemContainer {
 		private double knockBackResist = 0.4D;
 		private boolean fallDamage = false;
 		private SwimMode swimMode = SwimMode.SINK;
+		private GolemPattern specialPattern = null;
 		//This is a list to allow determining the "priority" of golem blocks. This could be used to our
 		//advantage in golem building logic for conflicts in the future.
 		private List<Block> validBuildingBlocks = new ArrayList<>();
@@ -460,12 +473,24 @@ public class GolemContainer {
 		 * Sets the Swim Mode of a golem: SINK, FLOAT, or SWIM.
 		 * <b>Defaults to SwimMode.SINK</b>
 		 *
-		 * @param mode the SwimMode to use for this golem
+		 * @param lMode the SwimMode to use for this golem
 		 * @return instance to allow chaining of methods
 		 * @see GolemContainer.SwimMode
 		 **/
-		public Builder setSwimMode(GolemContainer.SwimMode mode) {
-			this.swimMode = mode;
+		public Builder setSwimMode(GolemContainer.SwimMode lMode) {
+			this.swimMode = lMode;
+			return this;
+		}
+		
+		/**
+		 * Sets a specific pattern to override usual pattern-matching code
+		 *
+		 * @param lPattern a complete GolemPattern to use instead of usual code
+		 * @return instance to allow chaining of methods
+		 * @see GolemPattern
+		 **/
+		public Builder setPattern(final GolemPattern lPattern) {
+			this.specialPattern = lPattern;
 			return this;
 		}
 		
@@ -595,7 +620,7 @@ public class GolemContainer {
 				containerMap.put(c.name, c);
 			}
 			return new GolemContainer(entityType, entityClass, golemName,
-					validBuildingBlocks, validBuildingBlockTags,
+					validBuildingBlocks, validBuildingBlockTags, specialPattern,
 					health, attack, speed, knockBackResist, fallDamage, swimMode, 
 					containerMap, descriptions, basicTexture, basicSound);
 		}

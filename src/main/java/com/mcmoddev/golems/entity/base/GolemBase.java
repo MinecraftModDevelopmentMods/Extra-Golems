@@ -19,7 +19,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.goal.SwimGoal;
-import net.minecraft.entity.passive.IFlyingAnimal;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -326,19 +325,12 @@ public abstract class GolemBase extends IronGolemEntity {
 			moveRelative(0.01F, vec);
 			move(MoverType.SELF, getMotion());
 			setMotion(getMotion().scale(0.9D));
-			// update limb swing amounts by including vertical motion
-			this.prevLimbSwingAmount = this.limbSwingAmount;
-			double d5 = this.posX - this.prevPosX;
-			double d6 = this.posZ - this.prevPosZ;
-			double d8 = this.posY - this.prevPosY;
-			float f8 = MathHelper.sqrt(d5 * d5 + d8 * d8 + d6 * d6) * 4.0F;
-			if (f8 > 1.0F) {
-				f8 = 1.0F;
-			}
-			this.limbSwingAmount += (f8 - this.limbSwingAmount) * 0.4F;
-			this.limbSwing += this.limbSwingAmount;
 		} else {
 			super.travel(vec);
+		}
+		if(isInWater()) {
+			// update limb swing amounts by including vertical motion
+			this.limbSwing += this.limbSwingAmount;
 		}
 	}
 
