@@ -15,25 +15,25 @@ public final class GolemItems {
 
 	////// ITEMS //////
 	@ObjectHolder(ExtraGolems.MODID + ":golem_paper")
-	public static Item GOLEM_SPELL;
+	public static final Item GOLEM_SPELL = null;
 
 	@ObjectHolder(ExtraGolems.MODID + ":spawn_bedrock_golem")
-	public static Item SPAWN_BEDROCK_GOLEM;
+	public static final Item SPAWN_BEDROCK_GOLEM = null;
 
 	@ObjectHolder(ExtraGolems.MODID + ":info_book")
-	public static Item GOLEM_BOOK;
+	public static final Item GOLEM_BOOK = null;
 
 	////// BLOCKS //////
 	@ObjectHolder(ExtraGolems.MODID + ":golem_head")
-	public static Block GOLEM_HEAD;
+	public static final Block GOLEM_HEAD = null;
 
 	@ObjectHolder(ExtraGolems.MODID + ":light_provider_full")
-	public static Block UTILITY_LIGHT;
+	public static final Block UTILITY_LIGHT = null;
 
 	@ObjectHolder(ExtraGolems.MODID + ":power_provider_all")
-	public static Block UTILITY_POWER;
+	public static final Block UTILITY_POWER = null;
 	
 	////// OTHER //////
 	@ObjectHolder(ExtraGolems.MODID + ":crafting_portable")
-	public static ContainerType<CraftingGolem.ContainerPortableWorkbench> CRAFTING;
+	public static final ContainerType<CraftingGolem.ContainerPortableWorkbench> CRAFTING = null;
 }
