@@ -316,11 +316,6 @@ public abstract class GolemBase extends IronGolemEntity {
 	///////////////////// SWIMMING BEHAVIOR ////////////////////////
 
 	@Override
-	public boolean canSwim() {
-		return this.container.getSwimMode() != SwimMode.SINK;
-	}
-	
-	@Override
 	public void travel(final Vec3d vec) {
 		if (isServerWorld() && container.getSwimMode() == SwimMode.SWIM && isInWater() && isSwimmingUp()) {
 			moveRelative(0.01F, vec);
