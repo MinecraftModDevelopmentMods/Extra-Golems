@@ -4,6 +4,7 @@ package com.mcmoddev.golems.entity.base;
 import com.mcmoddev.golems.entity.ai.GoToWaterGoal;
 import com.mcmoddev.golems.entity.ai.SwimUpGoal;
 import com.mcmoddev.golems.entity.ai.SwimmingMovementController;
+import com.mcmoddev.golems.items.ItemBedrockGolem;
 import com.mcmoddev.golems.main.ExtraGolemsEntities;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mcmoddev.golems.util.config.GolemContainer;
@@ -19,19 +20,22 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.goal.SwimGoal;
-import net.minecraft.entity.passive.IFlyingAnimal;
 import net.minecraft.entity.passive.IronGolemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.pathfinding.SwimmerPathNavigator;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
@@ -112,6 +116,8 @@ public abstract class GolemBase extends IronGolemEntity {
 		super.registerData();
 		this.getDataManager().register(CHILD, Boolean.valueOf(false));
 	}
+	
+	/////////////// GOLEM UTILITY METHODS //////////////////
 
 	/**
 	 * Whether right-clicking on this entity triggers a texture change.
@@ -147,11 +153,39 @@ public abstract class GolemBase extends IronGolemEntity {
 		return false;
 	}
 
+	/** @return the Golem Container **/
 	public GolemContainer getGolemContainer() {
 		return container != null ? container : GolemRegistrar.getContainer(this.getType().getRegistryName());
 	}
+	
+	/**
+	 * @param i the ItemStack being applied to the golem
+	 * @return true if the golem can be built the given item-block
+	 **/
+	public boolean isHealingItem(final ItemStack i) {
+		if(!i.isEmpty() && i.getItem() instanceof BlockItem) {
+			for(final Block b : getGolemContainer().getBuildingBlocks()) {
+				if(i.isItemEqual(new ItemStack(b))) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * @param i the ItemStack being used to heal the golem
+	 * @return the amount by which this item should heal the golem,
+	 * in half-hearts. Defaults to 25% of max health or 32.0, 
+	 * whichever is smaller
+	 **/
+	public float getHealAmount(final ItemStack i) {
+		return Math.min(this.getMaxHealth() * 0.25F, 32.0F);
+	}
+	
+	/////////////// CONFIG HELPERS //////////////////
 
-	public ForgeConfigSpec.ConfigValue getConfigValue(String name) {
+	public ForgeConfigSpec.ConfigValue getConfigValue(final String name) {
 		return (ExtraGolemsConfig.GOLEM_CONFIG.specials.get(this.getGolemContainer().specialContainers.get(name))).value;
 	}
 
@@ -166,6 +200,8 @@ public abstract class GolemBase extends IronGolemEntity {
 	public double getConfigDouble(final String name) {
 		return (Double) getConfigValue(name).get();
 	}
+	
+	/////////////// OVERRIDEN BEHAVIOR //////////////////
 
 	@Override
 	public void fall(float distance, float damageMultiplier) {
@@ -183,9 +219,10 @@ public abstract class GolemBase extends IronGolemEntity {
 			int j = MathHelper.floor(this.posX);
 			int k = MathHelper.floor(this.posY - (double)0.2F);
 			int l = MathHelper.floor(this.posZ);
-			BlockState blockstate = this.world.getBlockState(new BlockPos(j, k, l));
-			if (!blockstate.isAir()) {
-				SoundType soundtype = blockstate.getSoundType(world, new BlockPos(j, k, l), this);
+			final BlockPos pos = new BlockPos(j, k, l);
+			BlockState blockstate = this.world.getBlockState(pos);
+			if (!this.world.isAirBlock(pos)) {
+				SoundType soundtype = blockstate.getSoundType(world, pos, this);
 				this.playSound(soundtype.getFallSound(), soundtype.getVolume() * 0.5F, soundtype.getPitch() * 0.75F);
 			}
 		}
@@ -226,6 +263,29 @@ public abstract class GolemBase extends IronGolemEntity {
 	public ItemStack getPickedResult(final RayTraceResult ray) {
 		final Block block = this.container.getPrimaryBuildingBlock();
 		return block != null ? new ItemStack(block) : ItemStack.EMPTY;
+	}
+	
+	@Override
+	protected boolean processInteract(final PlayerEntity player, final Hand hand) {
+		final ItemStack stack = player.getHeldItem(hand);
+		if(ExtraGolemsConfig.enableHealGolems() && this.getHealth() < this.getMaxHealth() && isHealingItem(stack)) {
+			heal(getHealAmount(stack));
+			stack.shrink(1);
+			// if currently attacking this player, stop
+			if(this.getAttackTarget() == player) {
+				this.setRevengeTarget(null);
+				this.setAttackTarget(null);
+			}
+			// spawn particles and play sound
+			if(this.world.isRemote) {
+				ItemBedrockGolem.spawnParticles(this.world, this.posX - 0.5D, this.posY + this.getHeight() / 2.0D,
+						this.posZ - 0.5D, 0.12D, ParticleTypes.HAPPY_VILLAGER, 20);
+			}
+			this.playSound(SoundEvents.BLOCK_STONE_PLACE, 0.85F, 1.1F + rand.nextFloat() * 0.2F);
+			return true;
+		} else {
+			return super.processInteract(player, hand);
+		}
 	}
 	
 	@Override

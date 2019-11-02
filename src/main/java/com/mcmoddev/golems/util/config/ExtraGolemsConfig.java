@@ -50,6 +50,10 @@ public class ExtraGolemsConfig {
 		return GOLEM_CONFIG != null && GOLEM_CONFIG.enableUseItemSpell.get();
 	}
 	
+	public static boolean enableHealGolems() {
+		return GOLEM_CONFIG != null && GOLEM_CONFIG.enableHealGolems.get();
+	}
+	
 	public static int villagerSummonChance() {
 		return GOLEM_CONFIG != null ? GOLEM_CONFIG.villagerGolemSpawnChance.get() : 0;
 	}

@@ -22,6 +22,7 @@ public class GolemConfiguration {
 	public ForgeConfigSpec.BooleanValue enableFriendlyFire;
 	public ForgeConfigSpec.BooleanValue enableTextureInteract;
 	public ForgeConfigSpec.BooleanValue enableUseItemSpell;
+	public ForgeConfigSpec.BooleanValue enableHealGolems;
 	public ForgeConfigSpec.IntValue villagerGolemSpawnChance;
 
 // TODO implement the following config values
@@ -38,7 +39,7 @@ public class GolemConfiguration {
 		builder.push("general");
 		this.bedrockGolemCreativeOnly = builder.comment("When true, only players in creative mode can use a Bedrock Golem spawn item")
 			.define("bedrock_golem_creative_only", true);
-		this.pumpkinBuildsGolem = builder.comment("(Experimental) When true, pumpkins can be used to build this mod's golems")
+		this.pumpkinBuildsGolem = builder.comment("When true, pumpkins can be used to build this mod's golems")
 			.define("pumpkin_builds_golems", false);
 		this.enableFriendlyFire = builder.comment("When enabled, attacking a player-built golem will make it attack you")
 			.define("friendly_fire", true);
@@ -48,6 +49,8 @@ public class GolemConfiguration {
 				.define("use_spell", true);
 		this.villagerGolemSpawnChance = builder.comment("Percent chance for a villager to successfully summon an Extra Golems golem")
 				.defineInRange("villager_summon_chance", 90, 0, 100);
+		this.enableHealGolems = builder.comment("When enabled, giving blocks to golems can restore health")
+				.define("heal_golems", true);
 
 		builder.pop();
 

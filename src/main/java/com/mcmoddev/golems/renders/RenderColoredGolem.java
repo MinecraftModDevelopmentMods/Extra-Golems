@@ -1,30 +1,23 @@
 package com.mcmoddev.golems.renders;
 
-import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemColorized;
-import com.mcmoddev.golems.main.ExtraGolemsEntities;
-import com.mcmoddev.golems.util.GolemNames;
 import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;
 
 /**
- * RenderColoredGolem is the same as RenderGolem but with casting to GolemColorized instead of
- * GolemBase.
+ * RenderColoredGolem is the same as RenderGolem but applies multiple specially rendered layers
  */
-public class RenderColoredGolem extends RenderGolem {
+public class RenderColoredGolem extends RenderGolem<GolemColorized> {
 
-	private static final ResourceLocation fallbackTexture = ExtraGolemsEntities.makeTexture(GolemNames.CLAY_GOLEM);
-	private ResourceLocation texture;
-	
 	public RenderColoredGolem(final EntityRendererManager renderManagerIn) {
 		super(renderManagerIn);
 	}
 
 	@Override
-	public void doRender(final GolemBase entity, final double x, final double y, final double z, final float f0, final float f1) {
-		final GolemColorized golem = (GolemColorized) entity;
+	public void doRender(final GolemColorized golem, final double x, final double y, final double z,
+			final float entityYaw, final float partialTicks) {
 		final float colorRed = golem.getColorRed();
 		final float colorGreen = golem.getColorGreen();
 		final float colorBlue = golem.getColorBlue();
@@ -33,7 +26,7 @@ public class RenderColoredGolem extends RenderGolem {
 		// render first pass of golem texture (usually eyes and other opaque, pre-colored features)
 		if (golem.hasBase()) {
 			this.texture = golem.getTextureBase();
-			super.doRender(golem, x, y, z, f0, f1);
+			super.doRender(golem, x, y, z, entityYaw, partialTicks);
 		}
 
 		// prepare to render the complicated layer
@@ -49,7 +42,7 @@ public class RenderColoredGolem extends RenderGolem {
 		// render second pass of golem texture
 		if (golem.hasOverlay()) {
 			this.texture = golem.getTextureToColor();
-			super.doRender(golem, x, y, z, f0, f1);
+			super.doRender(golem, x, y, z, entityYaw, partialTicks);
 		}
 
 		// return GL11 settings to normal
@@ -58,23 +51,5 @@ public class RenderColoredGolem extends RenderGolem {
 			GlStateManager.disableNormalize();
 		}
 		GlStateManager.popMatrix();
-	}
-
-//	@Override
-//	protected void applyRotations(final GolemBase golem, final float ageInTicks, final float rotationYaw,
-//			final float partialTicks) {
-//		super.applyRotations(golem, ageInTicks, rotationYaw, partialTicks);
-//
-//		if ((double) golem.limbSwingAmount >= 0.01D) {
-//			final float f = 13.0F;
-//			final float f1 = golem.limbSwing - golem.limbSwingAmount * (1.0F - partialTicks) + 6.0F;
-//			final float f2 = (Math.abs(f1 % f - f * 0.5F) - f * 0.25F) / (f * 0.25F);
-//			GlStateManager.rotatef(6.5F * f2, 0.0F, 0.0F, 1.0F);
-//		}
-//	}
-
-	@Override
-	protected ResourceLocation getEntityTexture(final GolemBase golem) {
-		return this.texture != null ? this.texture : fallbackTexture;
 	}
 }

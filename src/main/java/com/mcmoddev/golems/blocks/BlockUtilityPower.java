@@ -26,7 +26,7 @@ public class BlockUtilityPower extends BlockUtility {
 	}
 
 	@Override
-	public void tick(BlockState state, World worldIn, BlockPos pos, Random random) {
+	public void tick(final BlockState state, final World worldIn, final BlockPos pos, final Random random) {
 		// make a slightly expanded AABB to check for the golem
 		AxisAlignedBB toCheck = new AxisAlignedBB(pos).grow(0.25D);
 		List<GolemBase> list = worldIn.getEntitiesWithinAABB(GolemBase.class, toCheck);
@@ -41,7 +41,7 @@ public class BlockUtilityPower extends BlockUtility {
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+	protected void fillStateContainer(final StateContainer.Builder<Block, BlockState> builder) {
 		super.fillStateContainer(builder);
 		builder.add(POWER_LEVEL);
 	}
@@ -50,12 +50,12 @@ public class BlockUtilityPower extends BlockUtility {
 	 * "Implementing/overriding is fine."
 	 */
 	@Override
-	public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+	public int getWeakPower(final BlockState blockState, final IBlockReader blockAccess, final BlockPos pos, final Direction side) {
 		return blockState.get(POWER_LEVEL);
 	}
 
 	@Override
-	public int getStrongPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+	public int getStrongPower(final BlockState blockState, final IBlockReader blockAccess, final BlockPos pos, final Direction side) {
 		return blockState.get(POWER_LEVEL);
 	}
 

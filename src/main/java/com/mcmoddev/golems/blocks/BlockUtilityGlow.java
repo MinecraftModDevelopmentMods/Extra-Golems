@@ -19,14 +19,14 @@ public class BlockUtilityGlow extends BlockUtility {
 	/* Default value for TICK_RATE. Not necessary to define through config. */
 	public static final int UPDATE_TICKS = 6;
 
-	public BlockUtilityGlow(Material m, final float defaultLight, final int tickRate) {
+	public BlockUtilityGlow(final Material m, final float defaultLight, final int tickRate) {
 		super(Properties.create(m).tickRandomly().lightValue((int) (defaultLight * 15.0F)), tickRate);
 		int light = (int) (defaultLight * 15.0F);
 		this.setDefaultState(this.getDefaultState().with(LIGHT_LEVEL, light));
 	}
 
 	@Override
-	public void tick(BlockState state, World worldIn, BlockPos pos, Random random) {
+	public void tick(final BlockState state, final World worldIn, final BlockPos pos, final Random random) {
 		// make a slightly expanded AABB to check for the golem
 		final AxisAlignedBB toCheck = new AxisAlignedBB(pos).grow(0.5D);
 		// we'll probably only ever get one golem, but it doesn't hurt to be safe and check them all
@@ -42,13 +42,13 @@ public class BlockUtilityGlow extends BlockUtility {
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+	protected void fillStateContainer(final StateContainer.Builder<Block, BlockState> builder) {
 		super.fillStateContainer(builder);
 		builder.add(LIGHT_LEVEL);
 	}
 
 	@Override
-	public int getLightValue(BlockState state) {
+	public int getLightValue(final BlockState state) {
 		return state.get(LIGHT_LEVEL);
 	}
 

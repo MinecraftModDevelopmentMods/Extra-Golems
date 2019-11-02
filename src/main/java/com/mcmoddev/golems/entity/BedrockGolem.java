@@ -23,7 +23,7 @@ public final class BedrockGolem extends GolemBase {
 	}
 
 	@Override
-	public boolean isInvulnerableTo(DamageSource source) {
+	public boolean isInvulnerableTo(final DamageSource source) {
 		return true;
 	}
 

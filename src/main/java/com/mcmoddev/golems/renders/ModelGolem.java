@@ -8,7 +8,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class ModelGolem extends EntityModel<GolemBase> {
+public class ModelGolem<T extends GolemBase> extends EntityModel<T> {
 
 	/**
 	 * The head model for the iron golem.
@@ -73,7 +73,7 @@ public class ModelGolem extends EntityModel<GolemBase> {
 	 * Sets the models various rotation angles then renders the model.
 	 */
 	@Override
-	public void render(final GolemBase entityIn, final float limbSwing, final float limbSwingAmount, final float ageInTicks,
+	public void render(final T entityIn, final float limbSwing, final float limbSwingAmount, final float ageInTicks,
 			final float netHeadYaw, final float headPitch, final float scale) {
 
 		this.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
@@ -102,7 +102,7 @@ public class ModelGolem extends EntityModel<GolemBase> {
 	 * back and forth) and par2 represents how "far" arms and legs can swing at most.
 	 */
 	@Override
-	public void setRotationAngles(final GolemBase entity, final float limbSwing, final float limbSwingAmount, final float ageInTicks,
+	public void setRotationAngles(final T entity, final float limbSwing, final float limbSwingAmount, final float ageInTicks,
 			final float netHeadYaw, final float headPitch, final float scaleFactor) {
 		this.golemHead.rotateAngleY = netHeadYaw / (180F / (float) Math.PI);
 		this.golemHead.rotateAngleX = headPitch / (180F / (float) Math.PI);
@@ -119,7 +119,7 @@ public class ModelGolem extends EntityModel<GolemBase> {
 	 * are the same second and third as in the setRotationAngles method.
 	 */
 	@Override
-	public void setLivingAnimations(final GolemBase entity, final float limbSwing,
+	public void setLivingAnimations(final T entity, final float limbSwing,
 			final float limbSwingAmount, final float partialTickTime) {
 		int i = entity.getAttackTimer();
 

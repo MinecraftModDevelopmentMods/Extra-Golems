@@ -52,12 +52,12 @@ public abstract class BlockUtility extends Block implements IBucketPickupHandler
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+	protected void fillStateContainer(final StateContainer.Builder<Block, BlockState> builder) {
 		builder.add(BlockStateProperties.WATERLOGGED);
 	}
 
 	@Override
-	public Fluid pickupFluid(IWorld worldIn, BlockPos pos, BlockState state) {
+	public Fluid pickupFluid(final IWorld worldIn, final BlockPos pos, final BlockState state) {
 		if (state.get(BlockStateProperties.WATERLOGGED)) {
 			worldIn.setBlockState(pos, state.with(BlockStateProperties.WATERLOGGED, Boolean.valueOf(false)), 3);
 			return Fluids.WATER;
@@ -67,18 +67,20 @@ public abstract class BlockUtility extends Block implements IBucketPickupHandler
 	}
 
 	@Override
-	public IFluidState getFluidState(BlockState state) {
+	public IFluidState getFluidState(final BlockState state) {
 		return state.get(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getStillFluidState(false)
 			: super.getFluidState(state);
 	}
 
 	@Override
-	public boolean canContainFluid(IBlockReader worldIn, BlockPos pos, BlockState state, Fluid fluidIn) {
+	public boolean canContainFluid(final IBlockReader worldIn, final BlockPos pos, final BlockState state,
+			final Fluid fluidIn) {
 		return !state.get(BlockStateProperties.WATERLOGGED) && fluidIn == Fluids.WATER;
 	}
 
 	@Override
-	public boolean receiveFluid(IWorld worldIn, BlockPos pos, BlockState state, IFluidState fluidStateIn) {
+	public boolean receiveFluid(final IWorld worldIn, final BlockPos pos, final BlockState state,
+			final IFluidState fluidStateIn) {
 		if (!state.get(BlockStateProperties.WATERLOGGED) && fluidStateIn.getFluid() == Fluids.WATER) {
 			if (!worldIn.isRemote()) {
 				worldIn.setBlockState(pos, state.with(BlockStateProperties.WATERLOGGED, Boolean.valueOf(true)), 3);
@@ -92,7 +94,7 @@ public abstract class BlockUtility extends Block implements IBucketPickupHandler
 	}
 
 	@Override
-	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+	public void onBlockAdded(final BlockState state, final World worldIn, final BlockPos pos, final BlockState oldState, final boolean isMoving) {
 		if(this.ticksRandomly(state)) {
 			worldIn.getPendingBlockTicks().scheduleTick(pos, this, this.tickRate(worldIn));
 			worldIn.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
@@ -106,7 +108,7 @@ public abstract class BlockUtility extends Block implements IBucketPickupHandler
 	}
 
 	@Override
-	public int tickRate(IWorldReader worldIn) {
+	public int tickRate(final IWorldReader worldIn) {
 		return this.ticksRandomly ? tickRate : super.tickRate(worldIn);
 	}
 	
@@ -151,19 +153,19 @@ public abstract class BlockUtility extends Block implements IBucketPickupHandler
 //	}
 	
 	@Override
-	public boolean isReplaceable(BlockState state, BlockItemUseContext useContext) {
+	public boolean isReplaceable(final BlockState state, final BlockItemUseContext useContext) {
 		return true;
 	}
 
 	@Nullable
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
+	public BlockState getStateForPlacement(final BlockItemUseContext context) {
 		return getDefaultState();
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockState state, Direction facing, BlockState state2, IWorld world,
-			BlockPos pos1, BlockPos pos2, Hand hand) {
+	public BlockState getStateForPlacement(final BlockState state, final Direction facing, final BlockState state2,
+			final IWorld world, final BlockPos pos1, final BlockPos pos2, final Hand hand) {
 		return getDefaultState();
 	}
 
@@ -172,7 +174,7 @@ public abstract class BlockUtility extends Block implements IBucketPickupHandler
 	 */
 	@Deprecated
 	@Override
-	public BlockRenderType getRenderType(BlockState state) {
+	public BlockRenderType getRenderType(final BlockState state) {
 		return BlockRenderType.INVISIBLE;
 	}
 
@@ -193,7 +195,7 @@ public abstract class BlockUtility extends Block implements IBucketPickupHandler
 	}
 
 	@Override
-	public void onLanded(IBlockReader worldIn, Entity entityIn) {
+	public void onLanded(final IBlockReader worldIn, final Entity entityIn) {
 		// do nothing
 	}
 
