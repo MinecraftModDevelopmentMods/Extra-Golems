@@ -79,8 +79,8 @@ public abstract class GolemBase extends IronGolemEntity {
 			this.stepHeight = 1.0F;
 			this.moveController = new SwimmingMovementController(this);
 			this.setPathPriority(PathNodeType.WATER, 0.0F);
-			this.goalSelector.addGoal(1, new GoToWaterGoal(this, 1.0D));
-			this.goalSelector.addGoal(6, new SwimUpGoal(this, 1.0D, this.world.getSeaLevel()));
+			this.goalSelector.addGoal(1, new GoToWaterGoal(this, 14, 1.0D));
+			this.goalSelector.addGoal(2, new SwimUpGoal(this, 1.0D, this.world.getSeaLevel()));
 			break;
 		case SINK: default:
 			// no swimming AI
@@ -404,7 +404,7 @@ public abstract class GolemBase extends IronGolemEntity {
 			return;
 		}
 		if (!this.world.isRemote) {
-			if (isServerWorld() && isInWater() && isSwimmingUp()) {
+			if (isServerWorld() && isInWater() && isSwimming() && isSwimmingUp()) {
 				this.navigator = this.waterNavigator;
 				setSwimming(true);
 			} else {
