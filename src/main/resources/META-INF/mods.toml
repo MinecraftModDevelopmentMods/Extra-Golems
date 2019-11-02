@@ -11,7 +11,7 @@ issueTrackerURL="https://github.com/MinecraftModDevelopmentMods/Extra-Golems/iss
 
 [[mods]]
     modId="golems"
-    version="TODO-golems_version"
+    version="9.0.3"
     displayName="Extra Golems"
     credits="TheGlitch76, jriwanek, and translators - Thanks!"
     authors="skyjay1 and the MMD Team"
