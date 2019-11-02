@@ -48,8 +48,17 @@ public class RenderGolem<T extends GolemBase> extends LivingRenderer<T, ModelGol
 	public void doRender(final T golem, final double x, final double y, final double z, final float entityYaw,
 			final float partialTicks) {
 		// render everything else first
-		texture = golem.getTexture();
+		this.bindGolemTexture(golem);
 		super.doRender(golem, x, y, z, entityYaw, partialTicks);
+		this.renderDamage(golem, x, y, z, entityYaw, partialTicks);
+	}
+	
+	protected void bindGolemTexture(final T golem) {
+		texture = golem.getTexture();
+	}
+	
+	protected void renderDamage(final T golem, final double x, final double y, final double z, final float entityYaw,
+			final float partialTicks) {
 		// render damage indicator if necessary
 		final int index = Math.min(getDamageTexture(golem), damageIndicators.length - 1);
 		if (index > -1) {
@@ -68,7 +77,6 @@ public class RenderGolem<T extends GolemBase> extends LivingRenderer<T, ModelGol
 			GlStateManager.disableNormalize();
 			GlStateManager.popMatrix();
 		}
-		
 	}
 
 	/**

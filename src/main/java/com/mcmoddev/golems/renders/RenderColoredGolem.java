@@ -4,7 +4,6 @@ import com.mcmoddev.golems.entity.base.GolemColorized;
 import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.util.ResourceLocation;
 
 /**
  * RenderColoredGolem is the same as RenderGolem but applies multiple specially rendered layers
@@ -51,5 +50,10 @@ public class RenderColoredGolem extends RenderGolem<GolemColorized> {
 			GlStateManager.disableNormalize();
 		}
 		GlStateManager.popMatrix();
+	}
+	
+	@Override
+	protected void bindGolemTexture(final GolemColorized golem) {
+		// do nothing
 	}
 }
