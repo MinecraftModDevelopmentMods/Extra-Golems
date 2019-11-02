@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 
 import com.mcmoddev.golems.blocks.BlockGolemHead;
+import com.mcmoddev.golems.entity.FurnaceGolem;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemMultiColorized;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
@@ -18,6 +19,7 @@ import com.mcmoddev.golems.util.config.GolemRegistrar;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.brain.memory.MemoryModuleType;
 import net.minecraft.entity.merchant.villager.VillagerData;
@@ -32,6 +34,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -51,6 +54,19 @@ public class GolemCommonEventHandler {
 				&& event.getPlacedBlock().getBlock() == Blocks.CARVED_PUMPKIN && event.getWorld() instanceof World) {
 			// try to spawn a golem!
 			BlockGolemHead.trySpawnGolem((World) event.getWorld(), event.getPos());
+		}
+	}
+	
+	/**
+	 * Prevents mobs from targeting inert Furnace Golems
+	 **/
+	@SubscribeEvent
+	public void onTargetEvent(final LivingSetAttackTargetEvent event) {
+		if(event.getEntityLiving() instanceof MobEntity 
+				&& event.getTarget() instanceof FurnaceGolem 
+				&& !((FurnaceGolem)event.getTarget()).hasFuel()) {
+			// clear the attack target
+			((MobEntity)event.getEntityLiving()).setAttackTarget(null);
 		}
 	}
 

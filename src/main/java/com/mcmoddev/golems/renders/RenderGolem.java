@@ -29,6 +29,7 @@ public class RenderGolem<T extends GolemBase> extends LivingRenderer<T, ModelGol
 
 	public RenderGolem(final EntityRendererManager renderManagerIn) {
 		super(renderManagerIn, new ModelGolem<T>(), 0.5F);
+		this.addLayer(new LayerInertGolem<T>(this));
 	}
 
 	@Override

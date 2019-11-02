@@ -96,6 +96,11 @@ public final class ExtraGolemsEntities {
 				.addSpecial(EndstoneGolem.ALLOW_SPECIAL, true, "Whether this golem can teleport",
 						new TranslationTextComponent("entitytip.can_teleport").applyTextStyle(TextFormatting.DARK_AQUA))
 				.basicTexture().build());
+		// FURNACE GOLEM
+		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.FURNACE_GOLEM, FurnaceGolem.class, FurnaceGolem::new)
+				.setHealth(88.0D).setAttack(6.5D).setSpeed(0.24D).setKnockback(1.0D).addBlocks(Blocks.FURNACE)
+				.addSpecial(FurnaceGolem.FUEL_FACTOR, 10, "Higher numbers cause fuel to last longer")
+				.build());
 		// GLASS GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.GLASS_GOLEM, GenericGolem.class, GenericGolem::new)
 				.setHealth(8.0D).setAttack(13.0D).setSpeed(0.30D).addBlocks(Blocks.GLASS).basicTexture().enableFallDamage()
