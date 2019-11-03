@@ -63,9 +63,9 @@ public final class FurnaceGolem extends GolemBase {
 			// particle effects
 			final double pMotion = 0.03D;
 			world.addParticle(this.hasFuel() ? ParticleTypes.FLAME : ParticleTypes.SMOKE, 
-					this.posX + world.rand.nextDouble() * 0.25D - 0.125D + this.getMotion().getX() * 8,
-					this.posY + world.rand.nextDouble() * 0.5D + this.getHeight() / 2.0D, 
-					this.posZ + world.rand.nextDouble() * 0.25D - 0.125D + this.getMotion().getZ() * 8,
+					this.posX + world.rand.nextDouble() * 0.4D - 0.2D + this.getMotion().getX() * 8,
+					this.posY + world.rand.nextDouble() * 0.5D + this.getHeight() / 3.0D, 
+					this.posZ + world.rand.nextDouble() * 0.4D - 0.2D + this.getMotion().getZ() * 8,
 					world.rand.nextDouble() * pMotion - pMotion * 0.5D,
 					world.rand.nextDouble() * pMotion * 0.75D,
 					world.rand.nextDouble() * pMotion - pMotion * 0.5D);
@@ -106,10 +106,8 @@ public final class FurnaceGolem extends GolemBase {
 			// update the player's held item
 			player.setHeldItem(hand, stack);
 			// add particles
-			if(this.world.isRemote) {
-				ItemBedrockGolem.spawnParticles(this.world, this.posX, this.posY + this.getHeight() / 3.0D,
-						this.posZ, 0.03D, ParticleTypes.FLAME, 10);
-			}
+			ItemBedrockGolem.spawnParticles(this.world, this.posX, this.posY + this.getHeight() / 3.0D,
+					this.posZ, 0.03D, ParticleTypes.FLAME, 10);
 			return true;
 		}
 		
@@ -117,6 +115,8 @@ public final class FurnaceGolem extends GolemBase {
 		if(stack.getItem() == Items.WATER_BUCKET) {
 			this.setFuel(0);
 			player.setHeldItem(hand, stack.getContainerItem());
+			ItemBedrockGolem.spawnParticles(this.world, this.posX, this.posY + this.getHeight() / 3.0D,
+					this.posZ, 0.1D, ParticleTypes.LARGE_SMOKE, 15);
 			return true;
 		}
 		
