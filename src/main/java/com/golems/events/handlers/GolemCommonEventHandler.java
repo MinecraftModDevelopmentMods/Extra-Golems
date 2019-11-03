@@ -10,6 +10,7 @@ import com.golems.blocks.BlockGolemHead;
 import com.golems.entity.EntityBookshelfGolem;
 import com.golems.entity.EntityClayGolem;
 import com.golems.entity.EntityCraftingGolem;
+import com.golems.entity.EntityFurnaceGolem;
 import com.golems.entity.EntityGlowstoneGolem;
 import com.golems.entity.EntityHardenedClayGolem;
 import com.golems.entity.EntityIceGolem;
@@ -31,6 +32,7 @@ import net.minecraft.block.BlockPumpkin;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -44,6 +46,7 @@ import net.minecraft.world.biome.BiomeSavanna;
 import net.minecraft.world.biome.BiomeSnow;
 import net.minecraft.world.biome.BiomeSwamp;
 import net.minecraft.world.biome.BiomeTaiga;
+import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -212,6 +215,20 @@ public class GolemCommonEventHandler {
 					}
 				}
 			}
+		}
+	}
+	
+
+	/**
+	 * Prevents mobs from targeting inert Furnace Golems
+	 **/
+	@SubscribeEvent
+	public void onTargetEvent(final LivingSetAttackTargetEvent event) {
+		if(event.getEntityLiving() instanceof EntityMob 
+				&& event.getTarget() instanceof EntityFurnaceGolem 
+				&& !((EntityFurnaceGolem)event.getTarget()).hasFuel()) {
+			// clear the attack target
+			((EntityMob)event.getEntityLiving()).setAttackTarget(null);
 		}
 	}
 }

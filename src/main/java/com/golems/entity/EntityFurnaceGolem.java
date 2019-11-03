@@ -7,6 +7,8 @@ import com.golems.main.ExtraGolems;
 import com.golems.util.GolemNames;
 
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAITempt;
 import net.minecraft.entity.player.EntityPlayer;
@@ -41,6 +43,7 @@ public final class EntityFurnaceGolem extends GolemBase {
 	public EntityFurnaceGolem(final World world) {
 		super(world);
 		fuelBurnFactor = Math.max(1, getConfig(this).getInt(FUEL_FACTOR));
+		this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(1.0D);
 	}
 	
 	@Override
@@ -83,6 +86,21 @@ public final class EntityFurnaceGolem extends GolemBase {
 	public void writeEntityToNBT(final NBTTagCompound tag) {
 		super.writeEntityToNBT(tag);
 		tag.setInteger(KEY_FUEL, getFuel());
+	}
+
+	/**
+	 * Applies a velocity to the entities, to push them away from eachother.
+	 */
+	@Override
+	public void applyEntityCollision(final Entity entityIn) {
+		if (this.hasFuel()) {
+			super.applyEntityCollision(entityIn);
+		}
+	}
+
+	@Override
+	public float getCollisionBorderSize() {
+		return this.hasFuel() ? super.getCollisionBorderSize() : 0.0F;
 	}
 	
 	@Override
@@ -227,7 +245,7 @@ public final class EntityFurnaceGolem extends GolemBase {
 		
 		protected InertGoal(final EntityFurnaceGolem entity) {
 			super();
-			this.setMutexBits(1 | 2 | 4);
+			this.setMutexBits(7);
 			golem = entity;
 		}
 		
@@ -238,6 +256,7 @@ public final class EntityFurnaceGolem extends GolemBase {
 		
 		@Override
 		public boolean shouldContinueExecuting() {
+			golem.newPosRotationIncrements = 3;
 			return false;
 		}
 		
@@ -265,6 +284,8 @@ public final class EntityFurnaceGolem extends GolemBase {
 			final double lookY = Math.toRadians(-75D);
 			final double lookZ = golem.getLookVec().z;
 			golem.getLookHelper().setLookPosition(lookX, lookY, lookZ, golem.getHorizontalFaceSpeed(), golem.getVerticalFaceSpeed());			
+			golem.newPosRotationIncrements = 100;
+
 		}
 	}
 }
