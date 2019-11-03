@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.mcmoddev.golems.blocks.BlockGolemHead;
@@ -11,6 +12,7 @@ import com.mcmoddev.golems.entity.FurnaceGolem;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemMultiColorized;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
+import com.mcmoddev.golems.items.ItemBedrockGolem;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
@@ -25,9 +27,13 @@ import net.minecraft.entity.ai.brain.memory.MemoryModuleType;
 import net.minecraft.entity.merchant.villager.VillagerData;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
+import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -35,6 +41,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -69,15 +76,40 @@ public class GolemCommonEventHandler {
 			((MobEntity)event.getEntityLiving()).setAttackTarget(null);
 		}
 	}
+	
+	/**
+	 * Allow healing of Iron Golems
+	 **/
+	@SubscribeEvent
+	public void onEntityInteract(final PlayerInteractEvent.EntityInteractSpecific event) {
+		if(ExtraGolemsConfig.enableHealGolems() && event.getTarget() instanceof IronGolemEntity 
+				&& new ItemStack(Blocks.IRON_BLOCK).isItemEqual(event.getItemStack())) {
+			// heal the golem and reduce the itemstack
+			final IronGolemEntity golem = (IronGolemEntity)event.getTarget();
+			if(golem.getHealth() < golem.getMaxHealth()) {
+				golem.heal(golem.getMaxHealth() * 0.25F);
+				event.getItemStack().shrink(1);
+				// if currently attacking this player, stop
+				if(golem.getAttackTarget() == event.getPlayer()) {
+					golem.setRevengeTarget(null);
+					golem.setAttackTarget(null);
+				}
+				// spawn particles and play sound
+				ItemBedrockGolem.spawnParticles(golem.getEntityWorld(), golem.posX, golem.posY + golem.getHeight() / 2.0D,
+						golem.posZ, 0.12D, ParticleTypes.HAPPY_VILLAGER, 20);
+				golem.playSound(SoundEvents.BLOCK_STONE_PLACE, 0.85F, 1.1F + golem.getRNG().nextFloat() * 0.2F);
+			}
+		}
+	}
 
 	@SubscribeEvent
 	public void onLivingUpdate(final LivingEvent.LivingUpdateEvent event) {
-		if (ExtraGolemsConfig.villagerSummonChance() > 0 && event.getEntityLiving() != null 
-				&& event.getEntityLiving().isServerWorld() && event.getEntityLiving().getType() == EntityType.VILLAGER) {
+		if (ExtraGolemsConfig.villagerSummonChance() > 0 && event.getEntityLiving() instanceof VillagerEntity 
+				&& event.getEntityLiving().isServerWorld()) {
 			VillagerEntity villager = (VillagerEntity) event.getEntityLiving();
 			VillagerData villagerdata = villager.getVillagerData();
 			// determine whether to spawn a golem this tick
-			if (!villager.isChild() && villagerdata.getProfession() != VillagerProfession.NITWIT) {
+			if (villagerdata != null && !villager.isChild() && villagerdata.getProfession() != VillagerProfession.NITWIT) {
 				final long time = villager.getEntityWorld().getGameTime();
 				final int minNumVillagers = 3;
 				// here is some code that was used in VillagerEntity
@@ -102,7 +134,7 @@ public class GolemCommonEventHandler {
 	}
 
 	@Nullable
-	private static GolemBase summonGolem(VillagerEntity villager) {
+	private static GolemBase summonGolem(@Nonnull VillagerEntity villager) {
 		// This is copied from the VillagerEntity summonGolem code
 		final World world = villager.getEntityWorld();
 		BlockPos blockpos = new BlockPos(villager);
@@ -159,9 +191,6 @@ public class GolemCommonEventHandler {
 		}
 		if (world.getRandom().nextInt(100) < 50) {
 			options.add(GolemNames.CRAFTING_GOLEM);
-		}
-		if (world.getRandom().nextInt(100) < 20) {
-			options.add(GolemNames.FURNACE_GOLEM);
 		}
 		if (world.getRandom().nextInt(100) < 20) {
 			options.add(GolemNames.OBSIDIAN_GOLEM);

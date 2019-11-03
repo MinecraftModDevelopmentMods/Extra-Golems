@@ -59,12 +59,12 @@ public final class FurnaceGolem extends GolemBase {
 	@Override
 	public void livingTick() {
 		super.livingTick();
-		if(this.world.isRemote && rand.nextInt(24) == 0) {
+		if(this.world.isRemote && rand.nextInt(20) == 0) {
 			// particle effects
 			final double pMotion = 0.03D;
 			world.addParticle(this.hasFuel() ? ParticleTypes.FLAME : ParticleTypes.SMOKE, 
 					this.posX + world.rand.nextDouble() * 0.4D - 0.2D + this.getMotion().getX() * 8,
-					this.posY + world.rand.nextDouble() * 0.5D + this.getHeight() / 3.0D, 
+					this.posY + world.rand.nextDouble() * 0.5D + this.getHeight() / 2.0D, 
 					this.posZ + world.rand.nextDouble() * 0.4D - 0.2D + this.getMotion().getZ() * 8,
 					world.rand.nextDouble() * pMotion - pMotion * 0.5D,
 					world.rand.nextDouble() * pMotion * 0.75D,
@@ -88,8 +88,8 @@ public final class FurnaceGolem extends GolemBase {
 	protected boolean processInteract(final PlayerEntity player, final Hand hand) {
 		// allow player to add fuel to the golem by clicking on them with a fuel item
 		ItemStack stack = player.getHeldItem(hand);
-		int burnTime = ForgeHooks.getBurnTime(stack);
-		if(burnTime > 0 && getFuel() < MAX_FUEL) {
+		int burnTime = ForgeHooks.getBurnTime(stack) * (player.isSneaking() ? stack.getCount() : 1);
+		if (burnTime > 0 && (getFuel() + burnTime) <= MAX_FUEL) {
 			if(player.isSneaking()) {
 				// take entire ItemStack
 				this.addFuel(burnTime * stack.getCount());
@@ -106,7 +106,7 @@ public final class FurnaceGolem extends GolemBase {
 			// update the player's held item
 			player.setHeldItem(hand, stack);
 			// add particles
-			ItemBedrockGolem.spawnParticles(this.world, this.posX, this.posY + this.getHeight() / 3.0D,
+			ItemBedrockGolem.spawnParticles(this.world, this.posX, this.posY + this.getHeight() / 2.0D,
 					this.posZ, 0.03D, ParticleTypes.FLAME, 10);
 			return true;
 		}
@@ -115,7 +115,7 @@ public final class FurnaceGolem extends GolemBase {
 		if(stack.getItem() == Items.WATER_BUCKET) {
 			this.setFuel(0);
 			player.setHeldItem(hand, stack.getContainerItem());
-			ItemBedrockGolem.spawnParticles(this.world, this.posX, this.posY + this.getHeight() / 3.0D,
+			ItemBedrockGolem.spawnParticles(this.world, this.posX, this.posY + this.getHeight() / 2.0D,
 					this.posZ, 0.1D, ParticleTypes.LARGE_SMOKE, 15);
 			return true;
 		}
@@ -216,11 +216,11 @@ public final class FurnaceGolem extends GolemBase {
 			golem.setAttackTarget(null);
 			golem.setRevengeTarget(null);
 			golem.getNavigator().clearPath();
-			golem.rotationPitch = golem.prevRotationPitch;
-			golem.rotationYaw = golem.prevRotationYaw;
+			golem.prevRotationPitch = -15F;
+			golem.setRotation(prevRotationYaw, prevRotationPitch);
 			// set looking down
 			final double lookX = golem.getLookVec().getX();
-			final double lookY = Math.toRadians(-75D);
+			final double lookY = Math.toRadians(-15D);
 			final double lookZ = golem.getLookVec().getZ();
 			golem.getLookController().setLookPosition(lookX, lookY, lookZ, golem.getHorizontalFaceSpeed(), golem.getVerticalFaceSpeed());			
 		}
