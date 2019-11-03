@@ -2,7 +2,6 @@ package com.mcmoddev.golems.entity;
 
 import java.util.Map;
 
-import com.mcmoddev.golems.entity.ai.GoToWaterGoal;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.items.ItemBedrockGolem;
@@ -30,8 +29,8 @@ import net.minecraft.world.World;
 
 public final class CoralGolem extends GolemMultiTextured {
 
-	protected static final DataParameter<Boolean> DRY = EntityDataManager.createKey(CoralGolem.class, DataSerializers.BOOLEAN);
-	protected static final String KEY_DRY = "isDry";
+	private static final DataParameter<Boolean> DRY = EntityDataManager.createKey(CoralGolem.class, DataSerializers.BOOLEAN);
+	private static final String KEY_DRY = "isDry";
 	
 	public static final String ALLOW_HEALING = "Allow Special: Healing";
 	public static final String DRY_TIMER = "Max Wet Time";
@@ -41,7 +40,7 @@ public final class CoralGolem extends GolemMultiTextured {
 	
 	private final boolean allowHealing;
 	// the minimum amount of time before golem will change between "dry" and "wet"
-	private final int MAX_CHANGING_TIME;
+	private final int maxChangingTime;
 	// the amount of time since this golem started changing between "dry" and "wet"
 	private int timeChanging = 0;
 	
@@ -53,7 +52,7 @@ public final class CoralGolem extends GolemMultiTextured {
 			this.texturesDry[n] = makeTexture(ExtraGolems.MODID, this.container.getName() + "/" + VARIANTS[n] + "_dead");
 		}
 		allowHealing = this.getConfigBool(ALLOW_HEALING);
-		MAX_CHANGING_TIME = this.getConfigInt(DRY_TIMER);		
+		maxChangingTime = this.getConfigInt(DRY_TIMER);		
 	}
 	
 	public boolean isDry() {
@@ -87,7 +86,7 @@ public final class CoralGolem extends GolemMultiTextured {
 		// update "dry" data if the golem has been "changing" state for long enough
 		final boolean isChanging = this.isInWaterOrBubbleColumn() == this.isDry();
 		if(isChanging) {
-			if(!this.world.isRemote && ++timeChanging > MAX_CHANGING_TIME) {
+			if(!this.world.isRemote && ++timeChanging > maxChangingTime) {
 				this.setDry(!this.isInWaterOrBubbleColumn());
 				this.timeChanging = 0;
 			}
@@ -123,8 +122,8 @@ public final class CoralGolem extends GolemMultiTextured {
 				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(dryAttack);
 				this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(drySpeed);
 				// particle effects to show that the golem is "drying out"
-				ItemBedrockGolem.spawnParticles(this.world, this.posX - 0.5D, this.posY + 0.1D,
-						this.posZ - 0.5D, 0.09D, ParticleTypes.SMOKE, 80);
+				ItemBedrockGolem.spawnParticles(this.world, this.posX, this.posY + 0.1D,
+						this.posZ, 0.09D, ParticleTypes.SMOKE, 80);
 			} else {
 				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.getHealth());
 				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.getAttack());
@@ -181,6 +180,6 @@ public final class CoralGolem extends GolemMultiTextured {
 	}
 	
 	public int getTimeUntilChange() {
-		return MAX_CHANGING_TIME - timeChanging;
+		return maxChangingTime - timeChanging;
 	}
 }

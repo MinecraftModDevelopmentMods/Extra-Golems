@@ -74,13 +74,25 @@ public abstract class GolemDescriptionManager {
 				.applyTextStyle(TextFormatting.GRAY));
 		}
 		
-		// add fuel amount if this is furnace golem
-		if(golem instanceof FurnaceGolem) {
-			list.add(new TranslationTextComponent("entitytip.fuel")
-					.applyTextStyle(TextFormatting.GRAY)
+		// add fuel amount if this is a furnace golem
+		if(showSpecial && golem instanceof FurnaceGolem) {
+			final FurnaceGolem g = (FurnaceGolem)golem;
+			final int fuel = g.getFuel();
+			final int percentFuel = (int)Math.ceil(g.getFuelPercentage() * 100F);
+			final TextFormatting color;
+			if(percentFuel < 6) {
+				color = TextFormatting.RED;
+			} else if(percentFuel < 16) {
+				color = TextFormatting.YELLOW;
+			} else {
+				color = TextFormatting.WHITE;
+			}
+			// if sneaking, show exact value, otherwise show percentage value
+			final String fuelString = isShiftDown() ? Integer.toString(fuel) : (Integer.toString(percentFuel) + "%");
+			// actually add the description
+			list.add(new TranslationTextComponent("entitytip.fuel").applyTextStyle(TextFormatting.GRAY)
 					.appendSibling(new StringTextComponent(": "))
-					.appendSibling(new StringTextComponent(Integer.toString(((FurnaceGolem)golem).getFuel()))
-						.applyTextStyle(TextFormatting.WHITE)));
+					.appendSibling(new StringTextComponent(fuelString).applyTextStyle(color)));
 		}
 
 		// add special information

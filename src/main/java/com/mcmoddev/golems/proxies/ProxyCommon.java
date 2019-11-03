@@ -10,6 +10,7 @@ import com.mcmoddev.golems.items.ItemInfoBook;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityType;
@@ -63,6 +64,6 @@ public class ProxyCommon {
 	
 	public void registerContainers(final RegistryEvent.Register<ContainerType<?>> event) {
 		event.getRegistry().register(new ContainerType<CraftingGolem.ContainerPortableWorkbench>
-			((i, p) -> new CraftingGolem.ContainerPortableWorkbench(i, p)).setRegistryName(ExtraGolems.MODID, "crafting_portable"));
+			(CraftingGolem.ContainerPortableWorkbench::new).setRegistryName(ExtraGolems.MODID, "crafting_portable"));
 	}
 }

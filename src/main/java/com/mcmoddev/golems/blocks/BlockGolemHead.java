@@ -88,7 +88,9 @@ public final class BlockGolemHead extends HorizontalBlock {
 	 * @return if the golem was built and spawned
 	 */
 	public static boolean trySpawnGolem(final World world, final BlockPos headPos) {
-		if (world.isRemote) return false;
+		if (world.isRemote) {
+			return false;
+		}
 
 		// get all the block and state values that we will be using in the following code
 		final BlockState stateBelow1 = world.getBlockState(headPos.down(1));

@@ -6,6 +6,7 @@ import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolemsEntities;
 import com.mcmoddev.golems.util.GolemNames;
 import com.mojang.blaze3d.platform.GlStateManager;
+
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.util.ResourceLocation;
@@ -29,7 +30,6 @@ public class RenderGolem<T extends GolemBase> extends LivingRenderer<T, ModelGol
 
 	public RenderGolem(final EntityRendererManager renderManagerIn) {
 		super(renderManagerIn, new ModelGolem<T>(), 0.5F);
-		this.addLayer(new LayerInertGolem<T>(this));
 	}
 
 	@Override

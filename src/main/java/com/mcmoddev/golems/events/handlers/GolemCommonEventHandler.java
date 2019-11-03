@@ -72,13 +72,14 @@ public class GolemCommonEventHandler {
 
 	@SubscribeEvent
 	public void onLivingUpdate(final LivingEvent.LivingUpdateEvent event) {
-		if (event.getEntityLiving().getType() == EntityType.VILLAGER && ExtraGolemsConfig.villagerSummonChance() > 0) {
+		if (ExtraGolemsConfig.villagerSummonChance() > 0 && event.getEntityLiving() != null 
+				&& event.getEntityLiving().isServerWorld() && event.getEntityLiving().getType() == EntityType.VILLAGER) {
 			VillagerEntity villager = (VillagerEntity) event.getEntityLiving();
 			VillagerData villagerdata = villager.getVillagerData();
 			// determine whether to spawn a golem this tick
 			if (!villager.isChild() && villagerdata.getProfession() != VillagerProfession.NITWIT) {
 				final long time = villager.getEntityWorld().getGameTime();
-				final int minNumVillagers = 2;
+				final int minNumVillagers = 3;
 				// here is some code that was used in VillagerEntity
 				final AxisAlignedBB aabb = villager.getBoundingBox().grow(10.0D, 10.0D, 10.0D);
 				List<VillagerEntity> list = villager.getEntityWorld().getEntitiesWithinAABB(VillagerEntity.class, aabb);
@@ -86,13 +87,13 @@ public class GolemCommonEventHandler {
 						.collect(Collectors.toList());
 				if (list1.size() >= minNumVillagers) {
 					// one last check (against config) to adjust frequency
-					if(villager.getEntityWorld().getRandom().nextInt(100) > ExtraGolemsConfig.villagerSummonChance()) {
+					if(villager.getRNG().nextInt(100) > ExtraGolemsConfig.villagerSummonChance()) {
 						return;
 					}
 					// summon a golem
 					GolemBase golem = summonGolem(villager);
-					ExtraGolems.LOGGER.info("Villager summoned a golem! " + golem.toString());
 					if (golem != null) {
+						ExtraGolems.LOGGER.info("Villager summoned a golem! " + golem.toString());
 						list.forEach(v -> v.getBrain().setMemory(MemoryModuleType.GOLEM_LAST_SEEN_TIME, time));
 					}
 				}
@@ -153,12 +154,27 @@ public class GolemCommonEventHandler {
 		options.add(GolemNames.STRAW_GOLEM);
 		options.add(GolemNames.WOODEN_GOLEM);
 		// add some rare and semi-rare golems
-		if(world.getRandom().nextInt(100) < 30) { options.add(GolemNames.CLAY_GOLEM); }
-		if(world.getRandom().nextInt(100) < 50) { options.add(GolemNames.CRAFTING_GOLEM); }
-		if(world.getRandom().nextInt(100) < 20) { options.add(GolemNames.OBSIDIAN_GOLEM); }
-		if(world.getRandom().nextInt(100) < 20) { options.add(GolemNames.GLOWSTONE_GOLEM); }
-		if(world.getRandom().nextInt(100) < 50) { options.add(GolemNames.BOOKSHELF_GOLEM); }
-		if(world.getRandom().nextInt(100) < 30) { options.add(GolemNames.COAL_GOLEM); }
+		if (world.getRandom().nextInt(100) < 30) {
+			options.add(GolemNames.CLAY_GOLEM);
+		}
+		if (world.getRandom().nextInt(100) < 50) {
+			options.add(GolemNames.CRAFTING_GOLEM);
+		}
+		if (world.getRandom().nextInt(100) < 20) {
+			options.add(GolemNames.FURNACE_GOLEM);
+		}
+		if (world.getRandom().nextInt(100) < 20) {
+			options.add(GolemNames.OBSIDIAN_GOLEM);
+		}
+		if (world.getRandom().nextInt(100) < 20) {
+			options.add(GolemNames.GLOWSTONE_GOLEM);
+		}
+		if (world.getRandom().nextInt(100) < 50) {
+			options.add(GolemNames.BOOKSHELF_GOLEM);
+		}
+		if (world.getRandom().nextInt(100) < 30) {
+			options.add(GolemNames.COAL_GOLEM);
+		}
 		// use the biome type to add more golems to the list
 		final Biome.Category biome = world.getBiome(pos).getCategory();
 		switch(biome) {

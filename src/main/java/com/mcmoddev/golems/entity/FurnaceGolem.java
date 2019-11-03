@@ -29,17 +29,17 @@ public final class FurnaceGolem extends GolemBase {
 	private static final DataParameter<Integer> FUEL = EntityDataManager.createKey(FurnaceGolem.class,
 			DataSerializers.VARINT);
 	private static final String KEY_FUEL = "FuelRemaining";
-	private static final int MAX_FUEL = 102400;
 	
 	private static final ResourceLocation LIT = makeTexture(GolemNames.FURNACE_GOLEM + "/lit");
 	private static final ResourceLocation UNLIT = makeTexture(GolemNames.FURNACE_GOLEM + "/unlit");
 	
 	public static final String FUEL_FACTOR = "Burn Time";
-	protected final int fuelBurnTime;
+	public static final int MAX_FUEL = 102400;
+	public final int fuelBurnFactor;
 
 	public FurnaceGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);
-		fuelBurnTime = getConfigInt(FUEL_FACTOR);
+		fuelBurnFactor = Math.max(1, getConfigInt(FUEL_FACTOR));
 	}
 	
 	@Override
@@ -88,7 +88,7 @@ public final class FurnaceGolem extends GolemBase {
 	protected boolean processInteract(final PlayerEntity player, final Hand hand) {
 		// allow player to add fuel to the golem by clicking on them with a fuel item
 		ItemStack stack = player.getHeldItem(hand);
-		int burnTime = getFuelAmount(stack);
+		int burnTime = ForgeHooks.getBurnTime(stack);
 		if(burnTime > 0 && getFuel() < MAX_FUEL) {
 			if(player.isSneaking()) {
 				// take entire ItemStack
@@ -107,8 +107,8 @@ public final class FurnaceGolem extends GolemBase {
 			player.setHeldItem(hand, stack);
 			// add particles
 			if(this.world.isRemote) {
-				ItemBedrockGolem.spawnParticles(this.world, this.posX - 0.5D, this.posY + this.getHeight() / 3.0D,
-						this.posZ - 0.5D, 0.03D, ParticleTypes.FLAME, 10);
+				ItemBedrockGolem.spawnParticles(this.world, this.posX, this.posY + this.getHeight() / 3.0D,
+						this.posZ, 0.03D, ParticleTypes.FLAME, 10);
 			}
 			return true;
 		}
@@ -132,8 +132,14 @@ public final class FurnaceGolem extends GolemBase {
 		return getFuel() > 0;
 	}
 	
+	/** @return the current fuel level as a number **/
 	public int getFuel() {
 		return this.getDataManager().get(FUEL).intValue();
+	}
+	
+	/** @return a number between 0.0 and 1.0 to indicate fuel level **/
+	public float getFuelPercentage() {
+		return (float)getFuel() / (float)MAX_FUEL;
 	}
 	
 	public void setFuel(final int fuel) {
@@ -148,10 +154,6 @@ public final class FurnaceGolem extends GolemBase {
 		}
 	}
 	
-	private static int getFuelAmount(final ItemStack i) {
-		return ForgeHooks.getBurnTime(i);
-	}
-	
 	class UseFuelGoal extends Goal {
 		
 		private final FurnaceGolem golem;
@@ -164,7 +166,7 @@ public final class FurnaceGolem extends GolemBase {
 		@Override
 		public boolean shouldExecute() {
 			// only uses fuel every X ticks
-			return golem.isServerWorld() && golem.getFuel() > 0 && golem.ticksExisted % golem.fuelBurnTime == 0;
+			return golem.isServerWorld() && golem.getFuel() > 0 && golem.ticksExisted % golem.fuelBurnFactor == 0;
 		}
 		
 		@Override
@@ -216,6 +218,11 @@ public final class FurnaceGolem extends GolemBase {
 			golem.getNavigator().clearPath();
 			golem.rotationPitch = golem.prevRotationPitch;
 			golem.rotationYaw = golem.prevRotationYaw;
+			// set looking down
+			final double lookX = golem.getLookVec().getX();
+			final double lookY = Math.toRadians(-75D);
+			final double lookZ = golem.getLookVec().getZ();
+			golem.getLookController().setLookPosition(lookX, lookY, lookZ, golem.getHorizontalFaceSpeed(), golem.getVerticalFaceSpeed());			
 		}
 	}
 }

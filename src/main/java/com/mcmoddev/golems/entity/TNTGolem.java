@@ -90,8 +90,8 @@ public class TNTGolem extends GolemBase {
 		if (this.isIgnited()) {
 			this.setMotion(0.0D, this.getMotion().getY(), 0.0D);
 			this.fuseTimer--;
-			ItemBedrockGolem.spawnParticles(this.world, this.posX - 0.5D, this.posY + 1.0D,
-					this.posZ - 0.5D, 0.21D, ParticleTypes.SMOKE, 6);
+			ItemBedrockGolem.spawnParticles(this.world, this.posX, this.posY + 1.0D,
+					this.posZ, 0.21D, ParticleTypes.SMOKE, 6);
 			if (this.fuseTimer <= 0) {
 				this.willExplode = true;
 			}

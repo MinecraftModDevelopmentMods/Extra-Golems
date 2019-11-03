@@ -14,16 +14,16 @@ import net.minecraftforge.common.ForgeConfigSpec;
  */
 public class GolemConfiguration {
 
-	public Map<GolemContainer, GolemConfigurationSection> sections = new HashMap<>();
-	public Map<GolemSpecialContainer, GolemSpecialSection> specials = new HashMap<>();
+	public final Map<GolemContainer, GolemConfigurationSection> sections = new HashMap<>();
+	public final Map<GolemSpecialContainer, GolemSpecialSection> specials = new HashMap<>();
 
-	public ForgeConfigSpec.BooleanValue bedrockGolemCreativeOnly;
-	public ForgeConfigSpec.BooleanValue pumpkinBuildsGolem;
-	public ForgeConfigSpec.BooleanValue enableFriendlyFire;
-	public ForgeConfigSpec.BooleanValue enableTextureInteract;
-	public ForgeConfigSpec.BooleanValue enableUseItemSpell;
-	public ForgeConfigSpec.BooleanValue enableHealGolems;
-	public ForgeConfigSpec.IntValue villagerGolemSpawnChance;
+	public final ForgeConfigSpec.BooleanValue bedrockGolemCreativeOnly;
+	public final ForgeConfigSpec.BooleanValue pumpkinBuildsGolem;
+	public final ForgeConfigSpec.BooleanValue enableFriendlyFire;
+	public final ForgeConfigSpec.BooleanValue enableTextureInteract;
+	public final ForgeConfigSpec.BooleanValue enableUseItemSpell;
+	public final ForgeConfigSpec.BooleanValue enableHealGolems;
+	public final ForgeConfigSpec.IntValue villagerGolemSpawnChance;
 
 // TODO implement the following config values
 //		villageGolemSpawnsDesert = config.getStringList("Desert Village Golem Spawns", CATEGORY_OTHER, villageGolemSpawnsDesert,
@@ -62,7 +62,8 @@ public class GolemConfiguration {
 			for (GolemSpecialContainer specialC : c.specialContainers.values()) {
 				specials.put(specialC, new GolemSpecialSection(specialC, builder));
 			}
-			builder.pop(2); //Pops specials and the golem
+			//Pops specials and the golem
+			builder.pop(2);
 		}
 	}
 

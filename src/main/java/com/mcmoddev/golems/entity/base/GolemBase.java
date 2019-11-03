@@ -205,10 +205,15 @@ public abstract class GolemBase extends IronGolemEntity {
 
 	@Override
 	public void fall(float distance, float damageMultiplier) {
-		if(!this.container.takesFallDamage()) return;
+		if(!this.container.takesFallDamage()) {
+			return;
+		}
 		float[] ret = net.minecraftforge.common.ForgeHooks.onLivingFall(this, distance, damageMultiplier);
-		if (ret == null) return;
-		distance = ret[0]; damageMultiplier = ret[1];
+		if (ret == null) {
+			return;
+		}
+		distance = ret[0]; 
+		damageMultiplier = ret[1];
 		super.fall(distance, damageMultiplier);
 		EffectInstance effectinstance = this.getActivePotionEffect(Effects.JUMP_BOOST);
 		float f = effectinstance == null ? 0.0F : (float)(effectinstance.getAmplifier() + 1);
@@ -278,8 +283,8 @@ public abstract class GolemBase extends IronGolemEntity {
 			}
 			// spawn particles and play sound
 			if(this.world.isRemote) {
-				ItemBedrockGolem.spawnParticles(this.world, this.posX - 0.5D, this.posY + this.getHeight() / 2.0D,
-						this.posZ - 0.5D, 0.12D, ParticleTypes.HAPPY_VILLAGER, 20);
+				ItemBedrockGolem.spawnParticles(this.world, this.posX, this.posY + this.getHeight() / 2.0D,
+						this.posZ, 0.12D, ParticleTypes.HAPPY_VILLAGER, 20);
 			}
 			this.playSound(SoundEvents.BLOCK_STONE_PLACE, 0.85F, 1.1F + rand.nextFloat() * 0.2F);
 			return true;
@@ -431,10 +436,7 @@ public abstract class GolemBase extends IronGolemEntity {
 			return true;
 		}
 		LivingEntity e = getAttackTarget();
-		if (e != null && e.isInWater()) {
-			return true;
-		}
-		return false;
+		return e != null && e.isInWater();
 	}
 	
 	/**

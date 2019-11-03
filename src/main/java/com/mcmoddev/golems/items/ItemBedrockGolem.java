@@ -106,9 +106,7 @@ public final class ItemBedrockGolem extends Item {
 				.appendSibling(wrap(" ")).appendSibling(trans("tooltip.shift").applyTextStyle(TextFormatting.YELLOW))
 				.appendSibling(wrap(" ")).appendSibling(trans("tooltip.for_more_details").applyTextStyle(TextFormatting.GRAY));
 		// "Creative-Mode Only"
-		if (true /* ExtraGolemsConfig.bedrockGolemCreativeOnly() //todo This isn't working */ ) {
-			tooltip.add(loreCreativeOnly);
-		}
+		tooltip.add(loreCreativeOnly);
 		// "Use to spawn Bedrock Golem. Use on existing Bedrock Golem to remove it"
 		if (Screen.hasShiftDown()) {
 			tooltip.add(trans("tooltip.use_to_spawn", trans("entity.golems.golem_bedrock")));

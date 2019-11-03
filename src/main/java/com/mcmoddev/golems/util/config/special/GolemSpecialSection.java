@@ -5,7 +5,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 public class GolemSpecialSection {
 
 	public final String name;
-	public ForgeConfigSpec.ConfigValue value;
+	public ForgeConfigSpec.ConfigValue<?> value;
 
 	/**
 	 * Should be pushed before all constructors are called and popped after all construtctors are called

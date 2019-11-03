@@ -20,7 +20,7 @@ public class GolemDescription {
 
 	private final ITextComponent text;
 	private final String configKey;
-	private final Predicate<ForgeConfigSpec.ConfigValue> configValue;
+	private final Predicate<ForgeConfigSpec.ConfigValue<?>> configValue;
 
 	/**
 	 * Creates a new {@link GolemDescription} with a text component
@@ -33,10 +33,10 @@ public class GolemDescription {
 	 *                      adding this text to any description lists.
 	 **/
 	public GolemDescription(final ITextComponent textIn, final String configKeyIn,
-			@Nullable final Predicate<ForgeConfigSpec.ConfigValue> configValueIn) {
+			@Nullable final Predicate<ForgeConfigSpec.ConfigValue<?>> configValueIn) {
 		this.text = textIn;
 		this.configKey = configKeyIn != null ? configKeyIn : "";
-		this.configValue = configValueIn != null ? configValueIn : c -> true;
+		this.configValue = configValueIn != null ? configValueIn : (c -> true);
 	}
 
 	/**
@@ -50,7 +50,7 @@ public class GolemDescription {
 	 *                    adding this text to any description lists.
 	 **/
 	public GolemDescription(final ITextComponent textIn, final String configKeyIn) {
-		this(textIn, configKeyIn, (c) -> c != null && c.get() instanceof Boolean && (Boolean) c.get());
+		this(textIn, configKeyIn, c -> c != null && c.get() instanceof Boolean && (Boolean) c.get());
 	}
 
 	/**

@@ -83,7 +83,7 @@
   "entitytip.heals": "Slowly heals",
   "entitytip.grows_crops": "Grows nearby crops",
   "entitytip.splits_upon_death": "Splits in two!",
-  "entitytip.use_fuel": "Requires fuel",
+  "entitytip.use_fuel": "Consumes fuel",
   "entitytip.fuel": "Fuel",
   "_comment": "Golem Guide Book entries",
   "item.golems.info_book": "Extra Golems Guide",

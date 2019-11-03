@@ -9,7 +9,6 @@ import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -83,7 +82,9 @@ public final class GolemRegistrar {
 				break;
 			}
 		}
-		if (container == null) return null;
+		if (container == null) {
+			return null;
+		}
 		return container.getEntityType().create(world);
 	}
 

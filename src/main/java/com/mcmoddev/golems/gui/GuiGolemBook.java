@@ -92,8 +92,6 @@ public class GuiGolemBook extends Screen {
 	protected static final int SUPP_WIDTH = 100;
 	protected static final int SUPP_HEIGHT = 50;
 
-	// Button to exit GUI
-	private Button buttonDone;
 	// If a Block is displayed on the LEFT side, this helps with the tooltip
 	private GuiGolemBook.BlockButton buttonBlockLeft;
 	// If a Block is displayed on the RIGHT side, this helps with the tooltip
@@ -188,7 +186,7 @@ public class GuiGolemBook extends Screen {
 		int doneH = 20;
 		int doneX = (this.width - doneW) / 2;
 		int doneY = BOOK_HEIGHT + SCR_OFFSET_Y + 8;
-		this.buttonDone = this.addButton(new Button(doneX, doneY, doneW, doneH, I18n.format("gui.done"), c -> onClose()));
+		this.addButton(new Button(doneX, doneY, doneW, doneH, I18n.format("gui.done"), c -> onClose()));
 		// locate and activate the "page change" arrows
 		int arrowX = (this.width - BOOK_WIDTH) / 2;
 		int arrowY = SCR_OFFSET_Y + BOOK_HEIGHT - (ARROW_HEIGHT * 3 / 2);
@@ -284,7 +282,7 @@ public class GuiGolemBook extends Screen {
 				// draw scroll bar
 				startX = getScrollX(this.width) - 2;
 				startY = getScrollY(this.currentScroll);
-				this.blit(startX, startY, this.isScrolling ? SCROLL_W + DEF_SEP : 0,
+				this.blit(startX, startY, this.isScrolling ? (SCROLL_W + DEF_SEP) : 0,
 						CONTENTS_H + DEF_SEP, SCROLL_W, SCROLL_H); // drawTexturedModalRect
 
 				// update button contents
@@ -692,7 +690,7 @@ public class GuiGolemBook extends Screen {
 				GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 				// draw the background of the button
 				this.blit(this.x, this.y, CONTENTS_W + DEF_SEP,
-						this.isHovered ? ENTRY_H + DEF_SEP : 0, ENTRY_W, ENTRY_H); // drawTexturedModalRect
+						this.isHovered ? (ENTRY_H + DEF_SEP) : 0, ENTRY_W, ENTRY_H); // drawTexturedModalRect
 				// draw the block and name of the golem
 				int index = (int) (gui.ticksOpen / 30);
 				gui.drawBlock(this.entry.getBlock(index), this.x - MARGIN - 2, this.y - 9, 1.0F);

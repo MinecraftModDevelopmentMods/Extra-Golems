@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Function;
 
-import com.mcmoddev.golems.entity.IceGolem;
-
 import com.mcmoddev.golems.entity.base.GolemBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -23,8 +21,8 @@ import net.minecraftforge.eventbus.api.Event;
 @Cancelable
 public final class IceGolemFreezeEvent extends Event {
 
-	protected List<BlockPos> affectedBlocks;
-	protected Function<BlockState, BlockState> freezeFunction;
+	private List<BlockPos> affectedBlocks;
+	private Function<BlockState, BlockState> freezeFunction;
 
 	public final GolemBase iceGolem;
 	public final BlockPos iceGolemPos;
