@@ -31,8 +31,8 @@ public final class FurnaceGolem extends GolemBase {
 	private static final String KEY_FUEL = "FuelRemaining";
 	private static final int MAX_FUEL = 102400;
 	
-	private static final ResourceLocation ACTIVE = makeTexture(GolemNames.FURNACE_GOLEM + "/active");
-	private static final ResourceLocation INERT = makeTexture(GolemNames.FURNACE_GOLEM + "/inert");
+	private static final ResourceLocation LIT = makeTexture(GolemNames.FURNACE_GOLEM + "/lit");
+	private static final ResourceLocation UNLIT = makeTexture(GolemNames.FURNACE_GOLEM + "/unlit");
 	
 	public static final String FUEL_FACTOR = "Burn Time";
 	protected final int fuelBurnTime;
@@ -53,7 +53,7 @@ public final class FurnaceGolem extends GolemBase {
 		super.registerGoals();
 		this.goalSelector.addGoal(0, new InertGoal(this));
 		this.goalSelector.addGoal(1, new UseFuelGoal(this));
-		this.goalSelector.addGoal(2, new TemptGoal(this, 0.7D, Ingredient.fromTag(ItemTags.COALS), false));
+		this.goalSelector.addGoal(1, new TemptGoal(this, 0.7D, Ingredient.fromTag(ItemTags.COALS), false));
 	}
 	
 	@Override
@@ -69,11 +69,6 @@ public final class FurnaceGolem extends GolemBase {
 					world.rand.nextDouble() * pMotion - pMotion * 0.5D,
 					world.rand.nextDouble() * pMotion * 0.75D,
 					world.rand.nextDouble() * pMotion - pMotion * 0.5D);
-		}
-		
-		if(this.ticksExisted % 20 == 0) {
-			// DEBUG
-			System.out.println("Fuel is now " + getFuel());
 		}
 	}
 	
@@ -98,14 +93,18 @@ public final class FurnaceGolem extends GolemBase {
 			if(player.isSneaking()) {
 				// take entire ItemStack
 				this.addFuel(burnTime * stack.getCount());
-				stack.setCount(0);
+				stack = stack.getContainerItem();
 			} else {
 				// take one item from ItemStack
 				this.addFuel(burnTime);
-				stack.shrink(1);
+				if(stack.getCount() > 1) {
+					stack.shrink(1);
+				} else {
+					stack = stack.getContainerItem();
+				}
 			}
 			// update the player's held item
-			player.setHeldItem(hand, stack.isEmpty() ? stack.getContainerItem() : stack);
+			player.setHeldItem(hand, stack);
 			// add particles
 			if(this.world.isRemote) {
 				ItemBedrockGolem.spawnParticles(this.world, this.posX - 0.5D, this.posY + this.getHeight() / 3.0D,
@@ -126,7 +125,7 @@ public final class FurnaceGolem extends GolemBase {
 	
 	@Override
 	public ResourceLocation getTexture() {
-		return hasFuel() ? ACTIVE : INERT;
+		return hasFuel() ? LIT : UNLIT;
 	}
 	
 	public boolean hasFuel() {
@@ -175,11 +174,6 @@ public final class FurnaceGolem extends GolemBase {
 		
 		@Override
 		public void startExecuting() {
-			tick();
-		}
-		
-		@Override
-		public void tick() {
 			golem.addFuel(-1);
 		}
 	}
@@ -220,20 +214,8 @@ public final class FurnaceGolem extends GolemBase {
 			golem.setAttackTarget(null);
 			golem.setRevengeTarget(null);
 			golem.getNavigator().clearPath();
-			golem.rotationPitch = (float)Math.toRadians(60D);
+			golem.rotationPitch = golem.prevRotationPitch;
 			golem.rotationYaw = golem.prevRotationYaw;
-			// remove this golem from being targeted
-			// MOVED TO EVENT HANDLER
-//			if(golem.ticksExisted % 10 == 0) {
-//				final List<MobEntity> list = golem.getEntityWorld()
-//						.getEntitiesWithinAABB(MobEntity.class, golem.getBoundingBox().grow(20D, 8D, 20D), 
-//								e -> e.getAttackTarget() == golem || e.getRevengeTarget() == golem);
-//				for(final MobEntity m : list) {
-//					m.setAttackTarget(null);
-//					m.setRevengeTarget(null);
-//				}
-//			}
 		}
-		
 	}
 }

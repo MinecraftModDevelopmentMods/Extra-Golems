@@ -4,9 +4,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.mcmoddev.golems.entity.BedrockGolem;
+import com.mcmoddev.golems.entity.FurnaceGolem;
 import com.mcmoddev.golems.entity.RedstoneLampGolem;
-
 import com.mcmoddev.golems.entity.base.GolemBase;
+
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.text.ITextComponent;
@@ -71,6 +72,15 @@ public abstract class GolemDescriptionManager {
 				.getBaseValue() > 0.8999D) {
 			list.add(new TranslationTextComponent("attribute.name.generic.knockbackResistance")
 				.applyTextStyle(TextFormatting.GRAY));
+		}
+		
+		// add fuel amount if this is furnace golem
+		if(golem instanceof FurnaceGolem) {
+			list.add(new TranslationTextComponent("entitytip.fuel")
+					.applyTextStyle(TextFormatting.GRAY)
+					.appendSibling(new StringTextComponent(": "))
+					.appendSibling(new StringTextComponent(Integer.toString(((FurnaceGolem)golem).getFuel()))
+						.applyTextStyle(TextFormatting.WHITE)));
 		}
 
 		// add special information

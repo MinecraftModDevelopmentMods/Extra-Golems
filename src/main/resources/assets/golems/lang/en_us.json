@@ -83,6 +83,8 @@
   "entitytip.heals": "Slowly heals",
   "entitytip.grows_crops": "Grows nearby crops",
   "entitytip.splits_upon_death": "Splits in two!",
+  "entitytip.use_fuel": "Requires fuel",
+  "entitytip.fuel": "Fuel",
   "_comment": "Golem Guide Book entries",
   "item.golems.info_book": "Extra Golems Guide",
   "golembook.intro1": "Welcome to Extra Golems! This guide will help you build your very own golem army.",

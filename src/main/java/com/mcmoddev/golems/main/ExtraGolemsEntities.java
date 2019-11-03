@@ -99,8 +99,9 @@ public final class ExtraGolemsEntities {
 		// FURNACE GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.FURNACE_GOLEM, FurnaceGolem.class, FurnaceGolem::new)
 				.setHealth(88.0D).setAttack(6.5D).setSpeed(0.24D).setKnockback(1.0D).addBlocks(Blocks.FURNACE)
+				.addDesc(new GolemDescription(new TranslationTextComponent("entitytip.use_fuel").applyTextStyle(TextFormatting.GRAY)))
 				.addSpecial(FurnaceGolem.FUEL_FACTOR, 10, "Higher numbers cause fuel to last longer")
-				.build());
+				.immuneToFire().build());
 		// GLASS GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.GLASS_GOLEM, GenericGolem.class, GenericGolem::new)
 				.setHealth(8.0D).setAttack(13.0D).setSpeed(0.30D).addBlocks(Blocks.GLASS).basicTexture().enableFallDamage()
