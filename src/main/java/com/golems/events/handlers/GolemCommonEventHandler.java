@@ -24,6 +24,7 @@ import com.golems.entity.EntityWoolGolem;
 import com.golems.entity.GolemBase;
 import com.golems.entity.GolemColorizedMultiTextured;
 import com.golems.entity.GolemMultiTextured;
+import com.golems.items.ItemBedrockGolem;
 import com.golems.main.Config;
 
 import net.minecraft.block.Block;
@@ -33,8 +34,12 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntityIronGolem;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.village.Village;
 import net.minecraft.world.biome.Biome;
@@ -186,7 +191,7 @@ public class GolemCommonEventHandler {
 	 * May have problems with dedicated server, or it might be fine.
 	 */
 	@SubscribeEvent
-	public void onPlayerInteract(PlayerInteractEvent.RightClickBlock event) {
+	public void onPlayerPlaceBlock(PlayerInteractEvent.RightClickBlock event) {
 		ItemStack stack = event.getItemStack();
 		// check qualifications for running this event...
 		if(Config.doesPumpkinBuildGolem() && !event.isCanceled() 
@@ -218,6 +223,30 @@ public class GolemCommonEventHandler {
 		}
 	}
 	
+	/**
+	 * Allow healing of Iron Golems
+	 **/
+	@SubscribeEvent
+	public void onEntityInteract(final PlayerInteractEvent.EntityInteractSpecific event) {
+		if(Config.enableHealGolems() && event.getTarget() instanceof EntityIronGolem 
+				&& new ItemStack(Blocks.IRON_BLOCK).isItemEqual(event.getItemStack())) {
+			// heal the golem and reduce the itemstack
+			final EntityIronGolem golem = (EntityIronGolem)event.getTarget();
+			if(golem.getHealth() < golem.getMaxHealth()) {
+				golem.heal(golem.getMaxHealth() * 0.25F);
+				event.getItemStack().shrink(1);
+				// if currently attacking this player, stop
+				if(golem.getAttackTarget() == event.getEntityPlayer()) {
+					golem.setRevengeTarget(null);
+					golem.setAttackTarget(null);
+				}
+				// spawn particles and play sound
+				ItemBedrockGolem.spawnParticles(golem.getEntityWorld(), golem.posX, golem.posY + golem.height / 2.0D,
+						golem.posZ, 0.12D, EnumParticleTypes.VILLAGER_HAPPY, 20);
+				golem.playSound(SoundEvents.BLOCK_STONE_PLACE, 0.85F, 1.1F + golem.getRNG().nextFloat() * 0.2F);
+			}
+		}
+	}
 
 	/**
 	 * Prevents mobs from targeting inert Furnace Golems

@@ -77,6 +77,9 @@ public final class EntityFurnaceGolem extends GolemBase {
 					world.rand.nextDouble() * pMotion - pMotion * 0.5D, world.rand.nextDouble() * pMotion * 0.75D,
 					world.rand.nextDouble() * pMotion - pMotion * 0.5D);
 		}
+		if(!hasFuel() && this.getAttackTarget() != null) {
+			this.setAttackTarget(null);
+		}
 	}
 
 	@Override
