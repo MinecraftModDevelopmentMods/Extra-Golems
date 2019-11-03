@@ -92,6 +92,7 @@ public class CommonProxy {
 				build(EntityDiamondGolem.class, GolemNames.DIAMOND_GOLEM, Blocks.DIAMOND_BLOCK),
 				build(EntityEmeraldGolem.class, GolemNames.EMERALD_GOLEM, Blocks.EMERALD_BLOCK),
 				build(EntityEndstoneGolem.class, GolemNames.ENDSTONE_GOLEM, Blocks.END_STONE),
+				build(EntityFurnaceGolem.class, GolemNames.FURNACE_GOLEM, Blocks.FURNACE, Blocks.LIT_FURNACE),
 				build(EntityGlassGolem.class, GolemNames.GLASS_GOLEM, Blocks.GLASS),
 				build(EntityGlowstoneGolem.class, GolemNames.GLOWSTONE_GOLEM, Blocks.GLOWSTONE),
 				build(EntityGoldGolem.class, GolemNames.GOLD_GOLEM, Blocks.GOLD_BLOCK),

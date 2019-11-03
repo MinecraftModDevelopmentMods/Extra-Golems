@@ -1,6 +1,5 @@
 package com.golems.entity;
 
-import com.golems.main.Config;
 import com.golems.main.ExtraGolems;
 import com.golems.util.GolemNames;
 
@@ -119,11 +118,6 @@ public abstract class GolemMultiTextured extends GolemBase {
 	public void readEntityFromNBT(final NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		this.setTextureNum(nbt.getByte(NBT_TEXTURE));
-	}
-
-	@Override
-	public boolean doesInteractChangeTexture() {
-		return Config.interactChangesTexture();
 	}
 
 	/**

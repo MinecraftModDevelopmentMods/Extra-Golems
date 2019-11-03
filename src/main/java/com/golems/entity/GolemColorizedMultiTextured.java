@@ -96,11 +96,6 @@ public abstract class GolemColorizedMultiTextured extends GolemColorized {
 	}
 
 	@Override
-	public boolean doesInteractChangeTexture() {
-		return Config.interactChangesTexture();
-	}
-	
-	@Override
     protected ResourceLocation getLootTable()
     {
         return this.lootTables[this.getTextureNum() % this.lootTables.length];

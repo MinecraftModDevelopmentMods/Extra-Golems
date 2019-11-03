@@ -5,6 +5,7 @@ import com.golems.main.ExtraGolems;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundEvent;
@@ -43,7 +44,7 @@ public final class EntityWoolGolem extends GolemMultiTextured {
 
 	@Override
 	public ItemStack getCreativeReturn() {
-		ItemStack woolStack = super.getCreativeReturn();
+		ItemStack woolStack = new ItemStack(Blocks.WOOL);
 		woolStack.setItemDamage(this.getTextureNum() % (coloredWoolTypes.length + 1));
 		return woolStack;
 	}

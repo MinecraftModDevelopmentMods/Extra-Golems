@@ -19,6 +19,7 @@ entity.golems.golem_crafting.name=Crafting Golem
 entity.golems.golem_diamond.name=Diamond Golem
 entity.golems.golem_emerald.name=Emerald Golem
 entity.golems.golem_end_stone.name=Endstone Golem
+entity.golems.golem_furnace.name=Furnace Golem
 entity.golems.golem_glass.name=Glass Golem
 entity.golems.golem_glowstone.name=Glowstone Golem
 entity.golems.golem_gold.name=Gold Golem
@@ -85,6 +86,8 @@ entitytip.breathes_underwater=Breathes Underwater
 entitytip.heals=Slowly heals
 entitytip.grows_crops=Grows nearby crops
 entitytip.splits_upon_death=Splits in two!
+entitytip.fuel=Fuel
+entitytip.use_fuel=Consumes fuel
 
 # Golem Guide Book entries
 item.info_book.name=Extra Golems Guide

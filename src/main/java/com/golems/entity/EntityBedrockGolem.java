@@ -7,6 +7,7 @@ import com.golems.main.ExtraGolems;
 import com.golems.main.GolemItems;
 import com.golems.util.GolemNames;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -15,6 +16,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -24,7 +26,6 @@ public final class EntityBedrockGolem extends GolemBase {
 
 	public EntityBedrockGolem(final World world) {
 		super(world);
-		this.setCreativeReturn(new ItemStack(GolemItems.spawnBedrockGolem));
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.24D);
 	}
 
@@ -53,8 +54,7 @@ public final class EntityBedrockGolem extends GolemBase {
 			if (!this.world.isRemote) {
 				this.setDead();
 			} else {
-				ItemBedrockGolem.spawnParticles(this.world, this.posX - 0.5D, this.posY + 0.1D,
-						this.posZ - 0.5D, 0.1D);
+				ItemBedrockGolem.spawnParticles(this.world, this.posX, this.posY + 0.1D, this.posZ, 0.1D);
 			}
 		}
 
@@ -69,6 +69,11 @@ public final class EntityBedrockGolem extends GolemBase {
 	@Override
 	public SoundEvent getGolemSound() {
 		return SoundEvents.BLOCK_STONE_STEP;
+	}
+	
+	@Override
+	public ItemStack getPickedResult(final RayTraceResult target) {
+		return new ItemStack(GolemItems.spawnBedrockGolem);
 	}
 	
 	@Override

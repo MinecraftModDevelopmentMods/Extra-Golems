@@ -5,9 +5,9 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.golems.items.ItemBedrockGolem;
 import com.golems.main.Config;
 import com.golems.main.ExtraGolems;
-import com.golems.main.GolemItems;
 import com.golems.util.GolemConfigSet;
 import com.golems.util.GolemLookup;
 
@@ -15,7 +15,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -27,6 +26,8 @@ import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -35,11 +36,14 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
@@ -54,7 +58,6 @@ public abstract class GolemBase extends EntityIronGolem {
 	
 	protected ResourceLocation textureLoc;
 	protected ResourceLocation lootTableLoc;
-	protected ItemStack creativeReturn;
 
 	// customizable variables with default values //
 	protected double knockbackY = 0.4000000059604645D;
@@ -89,9 +92,6 @@ public abstract class GolemBase extends EntityIronGolem {
 		this.setSize(1.4F, 2.9F);
 		this.setCanTakeFallDamage(false);
 		this.setCanSwim(false);
-		Block pickBlock = GolemLookup.hasBuildingBlock(this.getClass())
-			? GolemLookup.getFirstBuildingBlock(this.getClass()) : GolemItems.golemHead;
-		this.setCreativeReturn(new ItemStack(pickBlock));
 		GolemConfigSet cfg = getConfig(this);
 		this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(cfg.getBaseAttack());
 		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(cfg.getMaxHealth());
@@ -99,34 +99,6 @@ public abstract class GolemBase extends EntityIronGolem {
 	}
 
 	////////////// BEHAVIOR OVERRIDES //////////////////
-
-	@Override
-	protected void initEntityAI() {
-		super.initEntityAI();
-		/*
-		// all of these tasks are copied from the Iron Golem and adjusted for movement speed
-		this.tasks.addTask(1, new EntityAIAttackMelee(this, this.getBaseMoveSpeed() * 4.0D, true));
-		this.tasks.addTask(2,
-			new EntityAIMoveTowardsTarget(this, this.getBaseMoveSpeed() * 3.75D, 32.0F));
-		this.tasks.addTask(3,
-			new EntityAIMoveThroughVillage(this, this.getBaseMoveSpeed() * 2.25D, true));
-		this.tasks.addTask(4,
-			new EntityAIMoveTowardsRestriction(this, this.getBaseMoveSpeed() * 4.0D));
-		//// Wander AI has been moved to setCanSwim(boolean)
-		this.tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
-		this.tasks.addTask(7, new EntityAILookIdle(this));
-		this.targetTasks.addTask(1, new EntityAIDefendVillage(this));
-		this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, false, (Class[]) new Class[0]));
-		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityLiving.class,
-			10, false, true, new Predicate<EntityLiving>() {
-
-			public boolean apply(final EntityLiving e) {
-				return e != null && IMob.VISIBLE_MOB_SELECTOR.apply(e)
-					&& !(e instanceof EntityCreeper);
-					}
-				}));
-		*/
-	}
 
 	@Override
 	protected void entityInit() {
@@ -236,7 +208,8 @@ public abstract class GolemBase extends EntityIronGolem {
 	 */
 	@Override
 	public ItemStack getPickedResult(final RayTraceResult target) {
-		return this.creativeReturn;
+		Block pickBlock = GolemLookup.getFirstBuildingBlock(this.getClass());
+		return pickBlock != null ? new ItemStack(pickBlock) : ItemStack.EMPTY;
 	}
 	
 	@Override
@@ -255,6 +228,29 @@ public abstract class GolemBase extends EntityIronGolem {
 	protected ResourceLocation getLootTable() {
 		return this.lootTableLoc;
     }
+	
+	@Override
+	protected boolean processInteract(final EntityPlayer player, final EnumHand hand) {
+		final ItemStack stack = player.getHeldItem(hand);
+		if(Config.enableHealGolems() && this.getHealth() < this.getMaxHealth() && isHealingItem(stack)) {
+			heal(getHealAmount(stack));
+			stack.shrink(1);
+			// if currently attacking this player, stop
+			if(this.getAttackTarget() == player) {
+				this.setRevengeTarget(null);
+				this.setAttackTarget(null);
+			}
+			// spawn particles and play sound
+			if(this.world.isRemote) {
+				ItemBedrockGolem.spawnParticles(this.world, this.posX, this.posY + this.height / 2.0D,
+						this.posZ, 0.12D, EnumParticleTypes.VILLAGER_HAPPY, 20);
+			}
+			this.playSound(SoundEvents.BLOCK_STONE_PLACE, 0.85F, 1.1F + rand.nextFloat() * 0.2F);
+			return true;
+		} else {
+			return super.processInteract(player, hand);
+		}
+	}
 	
 	/////////////// OTHER SETTERS AND GETTERS /////////////////
 	
@@ -284,21 +280,13 @@ public abstract class GolemBase extends EntityIronGolem {
 		return this.textureLoc;
 	}
 
-	
-	/**
-	 * Use instead {@link #setCreativeReturn(ItemStack)}
-	 **/
 	@Deprecated
-	public void setCreativeReturn(final Block blockToReturn) {
-		this.setCreativeReturn(new ItemStack(blockToReturn, 1));
-	}
-
 	public void setCreativeReturn(final ItemStack blockToReturn) {
-		this.creativeReturn = blockToReturn;
 	}
 
+	@Deprecated
 	public ItemStack getCreativeReturn() {
-		return this.creativeReturn;
+		return ItemStack.EMPTY;
 	}
 	
 	public float getBaseAttackDamage() {
@@ -350,9 +338,16 @@ public abstract class GolemBase extends EntityIronGolem {
 		this.isImmuneToFire = toSet;
 	}
 
-	/** Whether right-clicking on this entity triggers a texture change **/
+	/**
+	 * Whether right-clicking on this entity triggers a texture change.
+	 *
+	 * @return True if this is a {@link GolemMultiTextured} or a
+	 * {@link GolemMultiColorized} AND the config option is enabled.
+	 **/
 	public boolean doesInteractChangeTexture() {
-		return false;
+		return Config.interactChangesTexture()
+			&& (GolemMultiTextured.class.isAssignableFrom(this.getClass())
+			|| GolemColorizedMultiTextured.class.isAssignableFrom(this.getClass()));
 	}
 	
 	/**
@@ -382,33 +377,42 @@ public abstract class GolemBase extends EntityIronGolem {
 	public static GolemConfigSet getConfig(GolemBase golem) {
 		return golem != null && GolemLookup.hasConfig(golem.getClass()) ? GolemLookup.getConfig(golem.getClass()) : GolemConfigSet.EMPTY;
 	}
+	
+	/**
+	 * @param i the ItemStack being applied to the golem
+	 * @return true if the golem can be built the given item-block
+	 **/
+	public boolean isHealingItem(final ItemStack i) {
+		final Block[] blocks = getBuildingBlocks(this);
+		if(i != null && blocks != null && !i.isEmpty() && i.getItem() instanceof ItemBlock) {
+			for(final Block b : blocks) {
+				if(i.isItemEqual(new ItemStack(b))) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * @param i the ItemStack being used to heal the golem
+	 * @return the amount by which this item should heal the golem,
+	 * in half-hearts. Defaults to 25% of max health or 32.0, 
+	 * whichever is smaller
+	 **/
+	public float getHealAmount(final ItemStack i) {
+		return Math.min(this.getMaxHealth() * 0.25F, 32.0F);
+	}
 
 	/** 
 	 * Helper method for translating text into local language using {@code I18n}
 	 * @see addSpecialDesc 
 	 **/
 	protected static String trans(final String s, final Object... strings) {
-		return I18n.format(s, strings);
+		return new TextComponentTranslation(s, strings).getFormattedText();
 	}
 
 	/////////////// TEXTURE HELPERS //////////////////
-
-	/** Makes a texture on the assumption that MODID is 'golems'. **/
-	@Deprecated
-	public static ResourceLocation makeGolemTexture(final String texture) {
-		return makeGolemTexture(ExtraGolems.MODID, texture);
-	}
-
-	/**
-	 * Makes a ResourceLocation using the passed mod id and part of the texture name. Texture should
-	 * be at 'assets/<b>MODID</b>/textures/entity/golem_<b>suffix</b>.png'
-	 *
-	 * @see {@link #applyTexture()}
-	 **/
-	@Deprecated
-	public static ResourceLocation makeGolemTexture(final String modid, final String texture) {
-		return makeTexture(modid, "golem_" + texture);
-	}
 	
 	/**
 	 * Makes a ResourceLocation using the passed mod id and part of the texture name. Texture should

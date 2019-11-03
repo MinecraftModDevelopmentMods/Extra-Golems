@@ -31,6 +31,7 @@ public final class Config {
 	private static boolean useOreDictName;
 	private static boolean enableInteractTexture;
 	private static boolean enableFriendlyFire;
+	private static boolean enableHealGolems;
 	private static int villageGolemSpawnChance;
 	private static String[] villageGolemSpawnsDesert = new String[] {
 		GolemNames.STRAW_GOLEM, GolemNames.SANDSTONE_GOLEM, GolemNames.SANDSTONE_GOLEM,
@@ -79,6 +80,8 @@ public final class Config {
 		GolemLookup.addConfig(EntityEndstoneGolem.class, new GolemConfigSet(config, "Endstone Golem", 50.0D, 8.0F)
 			.addKey(EntityEndstoneGolem.ALLOW_SPECIAL, true, "Whether this golem can teleport")
 			.addKey(EntityEndstoneGolem.ALLOW_WATER_HURT, true, "Whether the Endstone Golem takes damage from water"));
+		GolemLookup.addConfig(EntityFurnaceGolem.class, new GolemConfigSet(config, "Furnace Golem", 88.0D, 6.5F)
+				.addKey(EntityFurnaceGolem.FUEL_FACTOR, 10, 1, 24000, "Higher values make fuel last longer"));
 		GolemLookup.addConfig(EntityGlassGolem.class, new GolemConfigSet(config, "Glass Golem", 8.0D, 13.0F));
 		GolemLookup.addConfig(EntityGlowstoneGolem.class, new GolemConfigSet(config, "Glowstone Golem", 8.0D, 12.0F)
 			.addKey(EntityGlowstoneGolem.ALLOW_SPECIAL, true, "Whether this golem can light the area")
@@ -147,6 +150,8 @@ public final class Config {
 	}
 
 	private static void loadOther(final Configuration config) {
+		enableHealGolems = config.getBoolean("Heal Golems", CATEGORY_OTHER, true, 
+				"When enabled, giving blocks to golems can restore health");
 		enableFriendlyFire = config.getBoolean("Friendly Fire", CATEGORY_OTHER, true, 
 				"When false, attacking a player-built golem will not make it attack you");
 		bedrockGolemCreativeOnly = config.getBoolean("Bedrock Golem Creative Only", CATEGORY_OTHER,
@@ -187,6 +192,10 @@ public final class Config {
 	
 	public static boolean enableFriendlyFire() {
 		return enableFriendlyFire;
+	}
+	
+	public static boolean enableHealGolems() {
+		return enableHealGolems;
 	}
 	
 	public static List<Class<? extends GolemBase>> getDesertGolems() {

@@ -1,0 +1,56 @@
+{
+  "pools": [
+	{
+	  "name": "main",
+	  "rolls": 1,
+	  "entries": [
+		{
+		  "type": "item",
+		  "name": "minecraft:furnace",
+		  "functions": [
+			{
+			  "function": "set_count",
+			  "count": {
+				"min": 0,
+				"max": 1
+			  }
+			},
+			{
+			  "function": "looting_enchant",
+			  "count": 1
+			}
+		  ]
+		}
+	  ]
+	},
+	{
+	  "name": "pool1",
+	  "rolls": 1,
+	  "entries": [
+		{
+		  "type": "item",
+		  "name": "minecraft:cobblestone",
+		  "functions": [
+			{
+			  "function": "set_count",
+			  "count": {
+				"min": 2,
+				"max": 8
+			  }
+			}
+		  ]
+		}
+	  ]
+	},
+	{
+	  "name": "pool2",
+	  "rolls": 1,
+	  "entries": [
+		{
+		  "type": "loot_table",
+		  "name": "golems:entities/_golem_base"
+		}
+	  ]
+	}
+  ]
+}

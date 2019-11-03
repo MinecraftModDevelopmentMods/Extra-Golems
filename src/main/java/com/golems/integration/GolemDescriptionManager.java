@@ -1,15 +1,15 @@
 package com.golems.integration;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import com.golems.entity.EntityBedrockGolem;
 import com.golems.entity.EntityRedstoneLampGolem;
 import com.golems.entity.GolemBase;
-import com.golems.entity.GolemMultiTextured;
+
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.text.TextFormatting;
-
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Base class to get in-game information about types of golems. Currently used for Waila and The One

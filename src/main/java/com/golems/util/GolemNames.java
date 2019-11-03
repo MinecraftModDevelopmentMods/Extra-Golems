@@ -18,6 +18,7 @@ public final class GolemNames {
 	public static final String DIAMOND_GOLEM = "golem_diamond";
 	public static final String EMERALD_GOLEM = "golem_emerald";
 	public static final String ENDSTONE_GOLEM = "golem_end_stone";
+	public static final String FURNACE_GOLEM = "golem_furnace";
 	public static final String GLASS_GOLEM = "golem_glass";
 	public static final String GLOWSTONE_GOLEM = "golem_glowstone";
 	public static final String GOLD_GOLEM = "golem_gold";
