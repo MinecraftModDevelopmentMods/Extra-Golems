@@ -81,7 +81,7 @@ public final class Config {
 			.addKey(EntityEndstoneGolem.ALLOW_SPECIAL, true, "Whether this golem can teleport")
 			.addKey(EntityEndstoneGolem.ALLOW_WATER_HURT, true, "Whether the Endstone Golem takes damage from water"));
 		GolemLookup.addConfig(EntityFurnaceGolem.class, new GolemConfigSet(config, "Furnace Golem", 88.0D, 6.5F)
-				.addKey(EntityFurnaceGolem.FUEL_FACTOR, 10, 1, 24000, "Higher values make fuel last longer"));
+				.addKey(EntityFurnaceGolem.FUEL_FACTOR, 8, 1, 24000, "Higher values make fuel last longer"));
 		GolemLookup.addConfig(EntityGlassGolem.class, new GolemConfigSet(config, "Glass Golem", 8.0D, 13.0F));
 		GolemLookup.addConfig(EntityGlowstoneGolem.class, new GolemConfigSet(config, "Glowstone Golem", 8.0D, 12.0F)
 			.addKey(EntityGlowstoneGolem.ALLOW_SPECIAL, true, "Whether this golem can light the area")

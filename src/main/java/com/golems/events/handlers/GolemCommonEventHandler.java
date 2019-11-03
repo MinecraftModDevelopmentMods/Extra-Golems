@@ -31,8 +31,8 @@ import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.BlockPumpkin;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -224,11 +224,16 @@ public class GolemCommonEventHandler {
 	 **/
 	@SubscribeEvent
 	public void onTargetEvent(final LivingSetAttackTargetEvent event) {
-		if(event.getEntityLiving() instanceof EntityMob 
+		if(event.getEntityLiving() instanceof EntityLiving 
 				&& event.getTarget() instanceof EntityFurnaceGolem 
 				&& !((EntityFurnaceGolem)event.getTarget()).hasFuel()) {
-			// clear the attack target
-			((EntityMob)event.getEntityLiving()).setAttackTarget(null);
-		}
+				// clear the attack target
+				((EntityLiving)event.getEntityLiving()).setAttackTarget(null);
+			} 
+//				else if(event.getEntityLiving() instanceof EntityFurnaceGolem
+//					&& !((EntityFurnaceGolem)event.getEntityLiving()).hasFuel()) {
+//				((EntityFurnaceGolem)event.getEntityLiving()).setAttackTarget(null);
+//			}
+//		}
 	}
 }

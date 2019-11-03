@@ -8,6 +8,7 @@ import com.golems.util.GolemNames;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAITempt;
@@ -104,25 +105,32 @@ public final class EntityFurnaceGolem extends GolemBase {
 	public float getCollisionBorderSize() {
 		return this.hasFuel() ? super.getCollisionBorderSize() : 0.0F;
 	}
+	
+	@Override
+	public boolean canAttackClass(final Class<? extends EntityLivingBase> cls) {
+		return hasFuel() && super.canAttackClass(cls);
+	}
+	
+	@Override
+	public void setAttackTarget(final EntityLivingBase target) {
+		if(hasFuel()) {
+			super.setAttackTarget(target);
+		}
+	}
 
 	@Override
 	protected boolean processInteract(final EntityPlayer player, final EnumHand hand) {
 		// allow player to add fuel to the golem by clicking on them with a fuel item
 		ItemStack stack = player.getHeldItem(hand);
-		int burnTime = getBurnAmount(stack);
-		if (burnTime > 0 && getFuel() < MAX_FUEL) {
-			if (player.isSneaking()) {
-				// take entire ItemStack
-				this.addFuel(burnTime * stack.getCount());
-				stack = stack.getItem().getContainerItem(stack);
+		int burnTime = getBurnAmount(stack) * (player.isSneaking() ? stack.getCount() : 1);
+		if (burnTime > 0 && (getFuel() + burnTime) <= MAX_FUEL) {
+			// add the fuel
+			this.addFuel(burnTime);
+			// reduce the itemstack
+			if(stack.getCount() > 1 && !player.isSneaking()) {
+				stack.shrink(1);
 			} else {
-				// take one item from ItemStack
-				this.addFuel(burnTime);
-				if (stack.getCount() > 1) {
-					stack.shrink(1);
-				} else {
-					stack = stack.getItem().getContainerItem(stack);
-				}
+				stack = stack.getItem().getContainerItem(stack);
 			}
 			// update the player's held item
 			player.setHeldItem(hand, stack);
@@ -293,10 +301,11 @@ public final class EntityFurnaceGolem extends GolemBase {
 			golem.setMoveStrafing(0F);
 			golem.getMoveHelper().setMoveTo(golem.posX, golem.posY, golem.posZ, 0.1D);
 			golem.setJumping(false);
-			golem.setAttackTarget(null);
-			golem.setRevengeTarget(null);
+			//golem.setAttackTarget(null);
+			//golem.setRevengeTarget(null);
 			golem.getNavigator().clearPath();
-			golem.setRotation(golem.prevRotationYaw, -15F);
+			golem.prevRotationYaw = -15F;
+			golem.setRotation(golem.prevRotationYaw, prevRotationYaw);
 			// set looking down
 			final double lookX = golem.getLookVec().x;
 			final double lookY = Math.toRadians(-15D);
