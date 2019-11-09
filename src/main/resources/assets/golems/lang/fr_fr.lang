@@ -11,6 +11,7 @@ entity.golems.golem_crafting.name=Golem de Fabrication
 entity.golems.golem_diamond.name=Golem de Diamant
 entity.golems.golem_emerald.name=Golem d'Émeraude
 entity.golems.golem_end_stone.name=Golem de Pierre du Néant
+entity.golems.golem_furnace.name=Golem de Fourneau
 entity.golems.golem_glass.name=Golem de Verre
 entity.golems.golem_glowstone.name=Golem de Pierre Lumineuse
 entity.golems.golem_gold.name=Golem d'Or
@@ -75,6 +76,8 @@ entitytip.breathes_underwater=Respire sous l'eau
 entitytip.heals=Se guérit lentement
 entitytip.grows_crops=Cultive les cultures voisines
 entitytip.splits_upon_death=Divisé en deux!
+entitytip.fuel=Carburant
+entitytip.use_fuel=Consomme du carburant
 
 # Golem Guide Book entries
 item.info_book.name=Guide pour Extra Golems

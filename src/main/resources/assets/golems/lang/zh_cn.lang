@@ -11,6 +11,7 @@ entity.golems.golems.crafting_golem.name=合成傀儡
 entity.golems.golem_diamond.name=钻石傀儡
 entity.golems.golem_emerald.name=翡翠傀儡
 entity.golems.golem_end_stone.name=终界傀儡
+entity.golems.golem_furnace.name=炉傀儡
 entity.golems.golem_glass.name=玻璃傀儡
 entity.golems.golem_glowstone.name=萤石傀儡
 entity.golems.golem_gold.name=金傀儡

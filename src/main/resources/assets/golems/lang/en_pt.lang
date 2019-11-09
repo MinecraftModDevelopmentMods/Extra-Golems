@@ -11,6 +11,7 @@ entity.golems.golem_crafting.name=Craftin' Golem
 entity.golems.golem_diamond.name=Bejewelled Golem
 entity.golems.golem_emerald.name=Golem o' the Seasick Sailor's Vomit
 entity.golems.golem_end_stone.name=Ye Tall One's Golem
+entity.golems.golem_furnace.name=Oven Golem
 entity.golems.golem_glass.name=Porthole Golem
 entity.golems.golem_glowstone.name=Brimstone Golem
 entity.golems.golem_gold.name=Doubloon Golem
@@ -75,6 +76,8 @@ entitytip.breathes_underwater=Mermaid's Blessin'
 entitytip.heals=Moarr Hearties
 entitytip.grows_crops=Grows yer seaweed
 entitytip.splits_upon_death=Splinters in two!
+entitytip.fuel=Fuel
+entitytip.use_fuel=Munches fuel
 
 # Golem Guide Book entries
 item.info_book.name=Logbook fer Extra Golems

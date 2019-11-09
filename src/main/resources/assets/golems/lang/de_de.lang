@@ -18,6 +18,7 @@ entity.golems.golem_crafting.name=Werkbankgolem
 entity.golems.golem_diamond.name=Diamantgolem
 entity.golems.golem_emerald.name=Smaragdgolem
 entity.golems.golem_end_stone.name=Endsteingolem
+entity.golems.golem_furnace.name=Ofengolem
 entity.golems.golem_glass.name=Glasgolem
 entity.golems.golem_glowstone.name=Glowstone-Golem
 entity.golems.golem_gold.name=Goldgolem
@@ -81,6 +82,8 @@ entitytip.emits_redstone_signal=Sendet ein Redstone-Signal
 entitytip.heals=Heilt sich langsam selbst
 entitytip.grows_crops=Wächst in der Nähe angebaute Kulturen
 entitytype.splits_upon_death=Splits in zwei!
+entitytip.fuel=Kraftstoff
+entitytip.use_fuel=Verbraucht Kraftstoff
 
 # Golem Guide Book entries
 item.info_book.name=Leitfaden für Extra Golems

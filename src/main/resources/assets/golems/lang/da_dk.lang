@@ -10,6 +10,7 @@ entity.golems.golem_crafting.name=Fremstilling Golem
 entity.golems.golem_diamond.name=Diamant Golem
 entity.golems.golem_emerald.name=Emerald Golem
 entity.golems.golem_end_stone.name=Endsten Golem
+entity.golems.golem_furnace.name=Ovn Golem
 entity.golems.golem_glass.name=Glass Golem
 entity.golems.golem_glowstone.name=Glødesten Golem
 entity.golems.golem_gold.name=Guld Golem
@@ -73,6 +74,8 @@ entitytip.breathes_underwater=Trækker vejret under vandet
 entitytip.heals=Går langsomt sig selv
 entitytip.grows_crops=Vokser i nærheden afgrøder
 entitytip.splits_upon_death=Splitter i to!
+entitytip.fuel=Brændstof
+entitytip.use_fuel=Forbruger af brændstof
 
 # Golem Guide Book entries
 item.info_book.name=Guide til Extra Golems

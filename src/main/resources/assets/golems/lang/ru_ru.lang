@@ -18,6 +18,7 @@ entity.golems.golem_crafting.name=Голем-крафтер
 entity.golems.golem_diamond.name=Алмазный голем
 entity.golems.golem_emerald.name=Изумрудный голем
 entity.golems.golem_end_stone.name=Адский голем
+entity.golems.golem_furnace.name=Печь голем
 entity.golems.golem_glass.name=Стеклянный голем
 entity.golems.golem_glowstone.name=Голем Крифера Великого
 entity.golems.golem_gold.name=Золотой голем
@@ -83,6 +84,8 @@ entitytip.click_open_crafting=ПКМ, чтобы открыть меню кра�
 entitytip.heals=медленно лечит себя
 entitytip.grows_crops=Выращивает близлежащие культуры
 entitytip.splits_upon_death=Разделить пополам
+entitytip.fuel=топливо
+entitytip.use_fuel=Использует топливо
 
 # Golem Guide Book entries
 item.info_book.name=Руководство по Extra Golems
