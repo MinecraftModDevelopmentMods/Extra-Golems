@@ -1,0 +1,8 @@
+{
+	"screens" : [{
+		"class" : "com.mcmoddev.golems.gui.GuiGolemBook", 
+		"texture" : "golems:textures/gui/info_book.png",
+		"size" : [512, 328], 
+		"texSize" : [512, 512]
+	}]
+}
