@@ -3,7 +3,6 @@ package com.golems.blocks;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.BlockRenderLayer;
@@ -23,12 +22,13 @@ public class BlockUtilityGlowWater extends BlockUtilityGlow {
 
 	@Override
 	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[]{BlockUtilityGlow.LIGHT_LEVEL, BlockLiquid.LEVEL});
+		return new BlockStateContainer(this, BlockUtilityGlow.LIGHT_LEVEL, BlockLiquid.LEVEL);
 	}
 
 	/**
 	 * Convert the given metadata into a BlockState for this Block
 	 **/
+	@Override
 	public IBlockState getStateFromMeta(final int metaIn) {
 		int meta = metaIn;
 		if (meta < 0)
@@ -55,11 +55,11 @@ public class BlockUtilityGlowWater extends BlockUtilityGlow {
 		return EnumBlockRenderType.MODEL;
 	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getRenderLayer() {
-		return BlockRenderLayer.TRANSLUCENT;
-	}
+//	@Override
+//	@SideOnly(Side.CLIENT)
+//	public BlockRenderLayer getRenderLayer() {
+//		return BlockRenderLayer.TRANSLUCENT;
+//	}
 
 	/**
 	 * @deprecated call via {@link IBlockState#shouldSideBeRendered(IBlockAccess, BlockPos, EnumFacing)} whenever
