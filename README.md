@@ -1,7 +1,7 @@
 # Extra-Golems
-![alt tag](https://cdn.pbrd.co/images/bAfyzoMsY.png) <br/>
-##This Forge-based mod adds 35 golems to Minecraft. It is currently being maintained by MinecraftModDevelopment<br/>
-###About:
+![alt text](https://raw.githubusercontent.com/skyjay1/img/master/extragolems/golem_logo.png "Extra Golems Logo")<br/>
+## This Forge-based mod adds 35 golems to Minecraft. It is currently being maintained by MinecraftModDevelopment<br/>
+### About:
 <b>Extra Golems</b> adds the following golems to the Minecraft universe:<br/>
 <b>Diamond</b> Golem, <b>Emerald</b> Golem, <b>Gold</b> Golem, <b>Lapis Lazuli</b> Golem,<br/>
 <b>Sandstone</b> Golem, <b>Red Sandstone</b> Golem, <b>Wool</b> Golem, <b>Hardened Clay</b> Golem,<br/>
@@ -15,7 +15,7 @@
 <br/>
 More information and images can be found at the MinecraftForge page: http://minecraft.curseforge.com/projects/extra-golems <br/>
 ###Other versions:
-The 1.7.10 GitHub can be found at https://github.com/sky0-1/Extra-Golems-1.7.10 <br/>
-The 1.8.9 GitHub can be found at https://github.com/sky0-1/Extra-Golems-1.8.9 <br/>
-The 1.9.4 GitHub can be found at https://github.com/sky0-1/Extra-Golems-1.9.4 <br/>
-The 1.10 GitHub can be found at https://github.com/sky0-1/Extra-Golems-1.10 <br/>
+The 1.7.10 GitHub can be found at https://github.com/skyjay1/Extra-Golems-1.7.10 <br/>
+The 1.8.9 GitHub can be found at https://github.com/sky0jay1/Extra-Golems-1.8.9 <br/>
+The 1.9.4 GitHub can be found at https://github.com/sky0jay1/Extra-Golems-1.9.4 <br/>
+Most other versions are included as branches in this project.
