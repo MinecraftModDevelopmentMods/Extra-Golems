@@ -1,16 +1,18 @@
 [
-{
-  "modid": "examplemod",
-  "name": "Example Mod",
-  "description": "Example placeholder mod.",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
-  "url": "",
-  "updateUrl": "",
-  "authorList": ["ExampleDude"],
-  "credits": "The Forge and FML guys, for making this example",
-  "logoFile": "",
-  "screenshots": [],
-  "dependencies": []
-}
+  {
+    "modid": "golems",
+    "name": "Extra Golems",
+    "description": "Adds dozens of golems to the minecraft universe, each with unique textures and abilities!",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "http://goo.gl/5IpqWW",
+    "updateUrl": "",
+    "authorList": [
+      "skyjay1", "MMD Team"
+    ],
+    "credits": "Textures made with Gimp 2.8",
+    "logoFile": "golem_logo.png",
+    "screenshots": [],
+    "dependencies": []
+  }
 ]

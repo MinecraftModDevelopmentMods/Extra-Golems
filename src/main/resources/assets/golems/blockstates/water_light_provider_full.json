@@ -1,0 +1,772 @@
+{
+  "variants": {
+    "level=0,light=0": {
+      "model": "golems:water_light_provider"
+    },
+    "level=0,light=1": {
+      "model": "golems:water_light_provider"
+    },
+    "level=0,light=2": {
+      "model": "golems:water_light_provider"
+    },
+    "level=0,light=3": {
+      "model": "golems:water_light_provider"
+    },
+    "level=0,light=4": {
+      "model": "golems:water_light_provider"
+    },
+    "level=0,light=5": {
+      "model": "golems:water_light_provider"
+    },
+    "level=0,light=6": {
+      "model": "golems:water_light_provider"
+    },
+    "level=0,light=7": {
+      "model": "golems:water_light_provider"
+    },
+    "level=0,light=8": {
+      "model": "golems:water_light_provider"
+    },
+    "level=0,light=9": {
+      "model": "golems:water_light_provider"
+    },
+    "level=0,light=10": {
+      "model": "golems:water_light_provider"
+    },
+    "level=0,light=11": {
+      "model": "golems:water_light_provider"
+    },
+    "level=0,light=12": {
+      "model": "golems:water_light_provider"
+    },
+    "level=0,light=13": {
+      "model": "golems:water_light_provider"
+    },
+    "level=0,light=14": {
+      "model": "golems:water_light_provider"
+    },
+    "level=0,light=15": {
+      "model": "golems:water_light_provider"
+    },
+    "level=1,light=0": {
+      "model": "golems:water_light_provider"
+    },
+    "level=1,light=1": {
+      "model": "golems:water_light_provider"
+    },
+    "level=1,light=2": {
+      "model": "golems:water_light_provider"
+    },
+    "level=1,light=3": {
+      "model": "golems:water_light_provider"
+    },
+    "level=1,light=4": {
+      "model": "golems:water_light_provider"
+    },
+    "level=1,light=5": {
+      "model": "golems:water_light_provider"
+    },
+    "level=1,light=6": {
+      "model": "golems:water_light_provider"
+    },
+    "level=1,light=7": {
+      "model": "golems:water_light_provider"
+    },
+    "level=1,light=8": {
+      "model": "golems:water_light_provider"
+    },
+    "level=1,light=9": {
+      "model": "golems:water_light_provider"
+    },
+    "level=1,light=10": {
+      "model": "golems:water_light_provider"
+    },
+    "level=1,light=11": {
+      "model": "golems:water_light_provider"
+    },
+    "level=1,light=12": {
+      "model": "golems:water_light_provider"
+    },
+    "level=1,light=13": {
+      "model": "golems:water_light_provider"
+    },
+    "level=1,light=14": {
+      "model": "golems:water_light_provider"
+    },
+    "level=1,light=15": {
+      "model": "golems:water_light_provider"
+    },
+    "level=2,light=0": {
+      "model": "golems:water_light_provider"
+    },
+    "level=2,light=1": {
+      "model": "golems:water_light_provider"
+    },
+    "level=2,light=2": {
+      "model": "golems:water_light_provider"
+    },
+    "level=2,light=3": {
+      "model": "golems:water_light_provider"
+    },
+    "level=2,light=4": {
+      "model": "golems:water_light_provider"
+    },
+    "level=2,light=5": {
+      "model": "golems:water_light_provider"
+    },
+    "level=2,light=6": {
+      "model": "golems:water_light_provider"
+    },
+    "level=2,light=7": {
+      "model": "golems:water_light_provider"
+    },
+    "level=2,light=8": {
+      "model": "golems:water_light_provider"
+    },
+    "level=2,light=9": {
+      "model": "golems:water_light_provider"
+    },
+    "level=2,light=10": {
+      "model": "golems:water_light_provider"
+    },
+    "level=2,light=11": {
+      "model": "golems:water_light_provider"
+    },
+    "level=2,light=12": {
+      "model": "golems:water_light_provider"
+    },
+    "level=2,light=13": {
+      "model": "golems:water_light_provider"
+    },
+    "level=2,light=14": {
+      "model": "golems:water_light_provider"
+    },
+    "level=2,light=15": {
+      "model": "golems:water_light_provider"
+    },
+    "level=3,light=0": {
+      "model": "golems:water_light_provider"
+    },
+    "level=3,light=1": {
+      "model": "golems:water_light_provider"
+    },
+    "level=3,light=2": {
+      "model": "golems:water_light_provider"
+    },
+    "level=3,light=3": {
+      "model": "golems:water_light_provider"
+    },
+    "level=3,light=4": {
+      "model": "golems:water_light_provider"
+    },
+    "level=3,light=5": {
+      "model": "golems:water_light_provider"
+    },
+    "level=3,light=6": {
+      "model": "golems:water_light_provider"
+    },
+    "level=3,light=7": {
+      "model": "golems:water_light_provider"
+    },
+    "level=3,light=8": {
+      "model": "golems:water_light_provider"
+    },
+    "level=3,light=9": {
+      "model": "golems:water_light_provider"
+    },
+    "level=3,light=10": {
+      "model": "golems:water_light_provider"
+    },
+    "level=3,light=11": {
+      "model": "golems:water_light_provider"
+    },
+    "level=3,light=12": {
+      "model": "golems:water_light_provider"
+    },
+    "level=3,light=13": {
+      "model": "golems:water_light_provider"
+    },
+    "level=3,light=14": {
+      "model": "golems:water_light_provider"
+    },
+    "level=3,light=15": {
+      "model": "golems:water_light_provider"
+    },
+    "level=4,light=0": {
+      "model": "golems:water_light_provider"
+    },
+    "level=4,light=1": {
+      "model": "golems:water_light_provider"
+    },
+    "level=4,light=2": {
+      "model": "golems:water_light_provider"
+    },
+    "level=4,light=3": {
+      "model": "golems:water_light_provider"
+    },
+    "level=4,light=4": {
+      "model": "golems:water_light_provider"
+    },
+    "level=4,light=5": {
+      "model": "golems:water_light_provider"
+    },
+    "level=4,light=6": {
+      "model": "golems:water_light_provider"
+    },
+    "level=4,light=7": {
+      "model": "golems:water_light_provider"
+    },
+    "level=4,light=8": {
+      "model": "golems:water_light_provider"
+    },
+    "level=4,light=9": {
+      "model": "golems:water_light_provider"
+    },
+    "level=4,light=10": {
+      "model": "golems:water_light_provider"
+    },
+    "level=4,light=11": {
+      "model": "golems:water_light_provider"
+    },
+    "level=4,light=12": {
+      "model": "golems:water_light_provider"
+    },
+    "level=4,light=13": {
+      "model": "golems:water_light_provider"
+    },
+    "level=4,light=14": {
+      "model": "golems:water_light_provider"
+    },
+    "level=4,light=15": {
+      "model": "golems:water_light_provider"
+    },
+    "level=5,light=0": {
+      "model": "golems:water_light_provider"
+    },
+    "level=5,light=1": {
+      "model": "golems:water_light_provider"
+    },
+    "level=5,light=2": {
+      "model": "golems:water_light_provider"
+    },
+    "level=5,light=3": {
+      "model": "golems:water_light_provider"
+    },
+    "level=5,light=4": {
+      "model": "golems:water_light_provider"
+    },
+    "level=5,light=5": {
+      "model": "golems:water_light_provider"
+    },
+    "level=5,light=6": {
+      "model": "golems:water_light_provider"
+    },
+    "level=5,light=7": {
+      "model": "golems:water_light_provider"
+    },
+    "level=5,light=8": {
+      "model": "golems:water_light_provider"
+    },
+    "level=5,light=9": {
+      "model": "golems:water_light_provider"
+    },
+    "level=5,light=10": {
+      "model": "golems:water_light_provider"
+    },
+    "level=5,light=11": {
+      "model": "golems:water_light_provider"
+    },
+    "level=5,light=12": {
+      "model": "golems:water_light_provider"
+    },
+    "level=5,light=13": {
+      "model": "golems:water_light_provider"
+    },
+    "level=5,light=14": {
+      "model": "golems:water_light_provider"
+    },
+    "level=5,light=15": {
+      "model": "golems:water_light_provider"
+    },
+    "level=6,light=0": {
+      "model": "golems:water_light_provider"
+    },
+    "level=6,light=1": {
+      "model": "golems:water_light_provider"
+    },
+    "level=6,light=2": {
+      "model": "golems:water_light_provider"
+    },
+    "level=6,light=3": {
+      "model": "golems:water_light_provider"
+    },
+    "level=6,light=4": {
+      "model": "golems:water_light_provider"
+    },
+    "level=6,light=5": {
+      "model": "golems:water_light_provider"
+    },
+    "level=6,light=6": {
+      "model": "golems:water_light_provider"
+    },
+    "level=6,light=7": {
+      "model": "golems:water_light_provider"
+    },
+    "level=6,light=8": {
+      "model": "golems:water_light_provider"
+    },
+    "level=6,light=9": {
+      "model": "golems:water_light_provider"
+    },
+    "level=6,light=10": {
+      "model": "golems:water_light_provider"
+    },
+    "level=6,light=11": {
+      "model": "golems:water_light_provider"
+    },
+    "level=6,light=12": {
+      "model": "golems:water_light_provider"
+    },
+    "level=6,light=13": {
+      "model": "golems:water_light_provider"
+    },
+    "level=6,light=14": {
+      "model": "golems:water_light_provider"
+    },
+    "level=6,light=15": {
+      "model": "golems:water_light_provider"
+    },
+    "level=7,light=0": {
+      "model": "golems:water_light_provider"
+    },
+    "level=7,light=1": {
+      "model": "golems:water_light_provider"
+    },
+    "level=7,light=2": {
+      "model": "golems:water_light_provider"
+    },
+    "level=7,light=3": {
+      "model": "golems:water_light_provider"
+    },
+    "level=7,light=4": {
+      "model": "golems:water_light_provider"
+    },
+    "level=7,light=5": {
+      "model": "golems:water_light_provider"
+    },
+    "level=7,light=6": {
+      "model": "golems:water_light_provider"
+    },
+    "level=7,light=7": {
+      "model": "golems:water_light_provider"
+    },
+    "level=7,light=8": {
+      "model": "golems:water_light_provider"
+    },
+    "level=7,light=9": {
+      "model": "golems:water_light_provider"
+    },
+    "level=7,light=10": {
+      "model": "golems:water_light_provider"
+    },
+    "level=7,light=11": {
+      "model": "golems:water_light_provider"
+    },
+    "level=7,light=12": {
+      "model": "golems:water_light_provider"
+    },
+    "level=7,light=13": {
+      "model": "golems:water_light_provider"
+    },
+    "level=7,light=14": {
+      "model": "golems:water_light_provider"
+    },
+    "level=7,light=15": {
+      "model": "golems:water_light_provider"
+    },
+    "level=8,light=0": {
+      "model": "golems:water_light_provider"
+    },
+    "level=8,light=1": {
+      "model": "golems:water_light_provider"
+    },
+    "level=8,light=2": {
+      "model": "golems:water_light_provider"
+    },
+    "level=8,light=3": {
+      "model": "golems:water_light_provider"
+    },
+    "level=8,light=4": {
+      "model": "golems:water_light_provider"
+    },
+    "level=8,light=5": {
+      "model": "golems:water_light_provider"
+    },
+    "level=8,light=6": {
+      "model": "golems:water_light_provider"
+    },
+    "level=8,light=7": {
+      "model": "golems:water_light_provider"
+    },
+    "level=8,light=8": {
+      "model": "golems:water_light_provider"
+    },
+    "level=8,light=9": {
+      "model": "golems:water_light_provider"
+    },
+    "level=8,light=10": {
+      "model": "golems:water_light_provider"
+    },
+    "level=8,light=11": {
+      "model": "golems:water_light_provider"
+    },
+    "level=8,light=12": {
+      "model": "golems:water_light_provider"
+    },
+    "level=8,light=13": {
+      "model": "golems:water_light_provider"
+    },
+    "level=8,light=14": {
+      "model": "golems:water_light_provider"
+    },
+    "level=8,light=15": {
+      "model": "golems:water_light_provider"
+    },
+    "level=9,light=0": {
+      "model": "golems:water_light_provider"
+    },
+    "level=9,light=1": {
+      "model": "golems:water_light_provider"
+    },
+    "level=9,light=2": {
+      "model": "golems:water_light_provider"
+    },
+    "level=9,light=3": {
+      "model": "golems:water_light_provider"
+    },
+    "level=9,light=4": {
+      "model": "golems:water_light_provider"
+    },
+    "level=9,light=5": {
+      "model": "golems:water_light_provider"
+    },
+    "level=9,light=6": {
+      "model": "golems:water_light_provider"
+    },
+    "level=9,light=7": {
+      "model": "golems:water_light_provider"
+    },
+    "level=9,light=8": {
+      "model": "golems:water_light_provider"
+    },
+    "level=9,light=9": {
+      "model": "golems:water_light_provider"
+    },
+    "level=9,light=10": {
+      "model": "golems:water_light_provider"
+    },
+    "level=9,light=11": {
+      "model": "golems:water_light_provider"
+    },
+    "level=9,light=12": {
+      "model": "golems:water_light_provider"
+    },
+    "level=9,light=13": {
+      "model": "golems:water_light_provider"
+    },
+    "level=9,light=14": {
+      "model": "golems:water_light_provider"
+    },
+    "level=9,light=15": {
+      "model": "golems:water_light_provider"
+    },
+    "level=10,light=0": {
+      "model": "golems:water_light_provider"
+    },
+    "level=10,light=1": {
+      "model": "golems:water_light_provider"
+    },
+    "level=10,light=2": {
+      "model": "golems:water_light_provider"
+    },
+    "level=10,light=3": {
+      "model": "golems:water_light_provider"
+    },
+    "level=10,light=4": {
+      "model": "golems:water_light_provider"
+    },
+    "level=10,light=5": {
+      "model": "golems:water_light_provider"
+    },
+    "level=10,light=6": {
+      "model": "golems:water_light_provider"
+    },
+    "level=10,light=7": {
+      "model": "golems:water_light_provider"
+    },
+    "level=10,light=8": {
+      "model": "golems:water_light_provider"
+    },
+    "level=10,light=9": {
+      "model": "golems:water_light_provider"
+    },
+    "level=10,light=10": {
+      "model": "golems:water_light_provider"
+    },
+    "level=10,light=11": {
+      "model": "golems:water_light_provider"
+    },
+    "level=10,light=12": {
+      "model": "golems:water_light_provider"
+    },
+    "level=10,light=13": {
+      "model": "golems:water_light_provider"
+    },
+    "level=10,light=14": {
+      "model": "golems:water_light_provider"
+    },
+    "level=10,light=15": {
+      "model": "golems:water_light_provider"
+    },
+    "level=11,light=0": {
+      "model": "golems:water_light_provider"
+    },
+    "level=11,light=1": {
+      "model": "golems:water_light_provider"
+    },
+    "level=11,light=2": {
+      "model": "golems:water_light_provider"
+    },
+    "level=11,light=3": {
+      "model": "golems:water_light_provider"
+    },
+    "level=11,light=4": {
+      "model": "golems:water_light_provider"
+    },
+    "level=11,light=5": {
+      "model": "golems:water_light_provider"
+    },
+    "level=11,light=6": {
+      "model": "golems:water_light_provider"
+    },
+    "level=11,light=7": {
+      "model": "golems:water_light_provider"
+    },
+    "level=11,light=8": {
+      "model": "golems:water_light_provider"
+    },
+    "level=11,light=9": {
+      "model": "golems:water_light_provider"
+    },
+    "level=11,light=10": {
+      "model": "golems:water_light_provider"
+    },
+    "level=11,light=11": {
+      "model": "golems:water_light_provider"
+    },
+    "level=11,light=12": {
+      "model": "golems:water_light_provider"
+    },
+    "level=11,light=13": {
+      "model": "golems:water_light_provider"
+    },
+    "level=11,light=14": {
+      "model": "golems:water_light_provider"
+    },
+    "level=11,light=15": {
+      "model": "golems:water_light_provider"
+    },
+    "level=12,light=0": {
+      "model": "golems:water_light_provider"
+    },
+    "level=12,light=1": {
+      "model": "golems:water_light_provider"
+    },
+    "level=12,light=2": {
+      "model": "golems:water_light_provider"
+    },
+    "level=12,light=3": {
+      "model": "golems:water_light_provider"
+    },
+    "level=12,light=4": {
+      "model": "golems:water_light_provider"
+    },
+    "level=12,light=5": {
+      "model": "golems:water_light_provider"
+    },
+    "level=12,light=6": {
+      "model": "golems:water_light_provider"
+    },
+    "level=12,light=7": {
+      "model": "golems:water_light_provider"
+    },
+    "level=12,light=8": {
+      "model": "golems:water_light_provider"
+    },
+    "level=12,light=9": {
+      "model": "golems:water_light_provider"
+    },
+    "level=12,light=10": {
+      "model": "golems:water_light_provider"
+    },
+    "level=12,light=11": {
+      "model": "golems:water_light_provider"
+    },
+    "level=12,light=12": {
+      "model": "golems:water_light_provider"
+    },
+    "level=12,light=13": {
+      "model": "golems:water_light_provider"
+    },
+    "level=12,light=14": {
+      "model": "golems:water_light_provider"
+    },
+    "level=12,light=15": {
+      "model": "golems:water_light_provider"
+    },
+    "level=13,light=0": {
+      "model": "golems:water_light_provider"
+    },
+    "level=13,light=1": {
+      "model": "golems:water_light_provider"
+    },
+    "level=13,light=2": {
+      "model": "golems:water_light_provider"
+    },
+    "level=13,light=3": {
+      "model": "golems:water_light_provider"
+    },
+    "level=13,light=4": {
+      "model": "golems:water_light_provider"
+    },
+    "level=13,light=5": {
+      "model": "golems:water_light_provider"
+    },
+    "level=13,light=6": {
+      "model": "golems:water_light_provider"
+    },
+    "level=13,light=7": {
+      "model": "golems:water_light_provider"
+    },
+    "level=13,light=8": {
+      "model": "golems:water_light_provider"
+    },
+    "level=13,light=9": {
+      "model": "golems:water_light_provider"
+    },
+    "level=13,light=10": {
+      "model": "golems:water_light_provider"
+    },
+    "level=13,light=11": {
+      "model": "golems:water_light_provider"
+    },
+    "level=13,light=12": {
+      "model": "golems:water_light_provider"
+    },
+    "level=13,light=13": {
+      "model": "golems:water_light_provider"
+    },
+    "level=13,light=14": {
+      "model": "golems:water_light_provider"
+    },
+    "level=13,light=15": {
+      "model": "golems:water_light_provider"
+    },
+    "level=14,light=0": {
+      "model": "golems:water_light_provider"
+    },
+    "level=14,light=1": {
+      "model": "golems:water_light_provider"
+    },
+    "level=14,light=2": {
+      "model": "golems:water_light_provider"
+    },
+    "level=14,light=3": {
+      "model": "golems:water_light_provider"
+    },
+    "level=14,light=4": {
+      "model": "golems:water_light_provider"
+    },
+    "level=14,light=5": {
+      "model": "golems:water_light_provider"
+    },
+    "level=14,light=6": {
+      "model": "golems:water_light_provider"
+    },
+    "level=14,light=7": {
+      "model": "golems:water_light_provider"
+    },
+    "level=14,light=8": {
+      "model": "golems:water_light_provider"
+    },
+    "level=14,light=9": {
+      "model": "golems:water_light_provider"
+    },
+    "level=14,light=10": {
+      "model": "golems:water_light_provider"
+    },
+    "level=14,light=11": {
+      "model": "golems:water_light_provider"
+    },
+    "level=14,light=12": {
+      "model": "golems:water_light_provider"
+    },
+    "level=14,light=13": {
+      "model": "golems:water_light_provider"
+    },
+    "level=14,light=14": {
+      "model": "golems:water_light_provider"
+    },
+    "level=14,light=15": {
+      "model": "golems:water_light_provider"
+    },
+    "level=15,light=0": {
+      "model": "golems:water_light_provider"
+    },
+    "level=15,light=1": {
+      "model": "golems:water_light_provider"
+    },
+    "level=15,light=2": {
+      "model": "golems:water_light_provider"
+    },
+    "level=15,light=3": {
+      "model": "golems:water_light_provider"
+    },
+    "level=15,light=4": {
+      "model": "golems:water_light_provider"
+    },
+    "level=15,light=5": {
+      "model": "golems:water_light_provider"
+    },
+    "level=15,light=6": {
+      "model": "golems:water_light_provider"
+    },
+    "level=15,light=7": {
+      "model": "golems:water_light_provider"
+    },
+    "level=15,light=8": {
+      "model": "golems:water_light_provider"
+    },
+    "level=15,light=9": {
+      "model": "golems:water_light_provider"
+    },
+    "level=15,light=10": {
+      "model": "golems:water_light_provider"
+    },
+    "level=15,light=11": {
+      "model": "golems:water_light_provider"
+    },
+    "level=15,light=12": {
+      "model": "golems:water_light_provider"
+    },
+    "level=15,light=13": {
+      "model": "golems:water_light_provider"
+    },
+    "level=15,light=14": {
+      "model": "golems:water_light_provider"
+    },
+    "level=15,light=15": {
+      "model": "golems:water_light_provider"
+    }
+  }
+}

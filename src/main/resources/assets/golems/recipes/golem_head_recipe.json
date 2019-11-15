@@ -1,0 +1,14 @@
+{
+  "result": {
+    "item": "golem_head"
+  },
+  "type": "forge:ore_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:pumpkin"
+    },
+    {
+      "item": "golems:golem_paper"
+    }
+  ]
+}

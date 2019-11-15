@@ -1,0 +1,101 @@
+# Credit to vigcrafter for the Russian translation
+# Предметы и блоки, используемые в этом моде:
+item.golem_paper.name=Часть голема
+item.spawn_bedrock_golem.name=Призвать бедрокового голема
+tile.golem_head.name=Голова голема
+ 
+# Функции JEI
+tile.light_provider_full.name=Полный свет динамического голема
+tile.power_provider_full.name=Источник энергии динамического голема
+ 
+# Названия големов
+entity.golems.golem_bedrock.name=Бедроковый голем
+entity.golems.golem_bone.name=Костяной голем
+entity.golems.golem_bookshelf.name=Библиотечный голем
+entity.golems.golem_clay.name=Глиняный голем
+entity.golems.golem_coal.name=Угольный голем
+entity.golems.golem_crafting.name=Голем-крафтер
+entity.golems.golem_diamond.name=Алмазный голем
+entity.golems.golem_emerald.name=Изумрудный голем
+entity.golems.golem_end_stone.name=Адский голем
+entity.golems.golem_furnace.name=Печь голем
+entity.golems.golem_glass.name=Стеклянный голем
+entity.golems.golem_glowstone.name=Голем Крифера Великого
+entity.golems.golem_gold.name=Золотой голем
+entity.golems.golem_hardened_clay.name=Керамический голем
+entity.golems.golem_ice.name=Ледяной голем
+entity.golems.golem_lapis.name=Ляпис-голем
+entity.golems.golem_leaves.name=Защитник из листвы
+entity.golems.golem_magma.name=Магмовый голем
+entity.golems.golem_melon.name=Тыквенный голем
+entity.golems.golem_nether_brick.name=Улучшенный адский голем
+entity.golems.golem_nether_wart.name=Голем адского нароста
+entity.golems.golem_obsidian.name=Обсидиановый голем
+entity.golems.golem_prismarine.name=Призмариновый голем
+entity.golems.golem_quartz.name=Кварцевый голем
+entity.golems.golem_redstone.name=Редстоуновый голем
+entity.golems.golem_redstone_lamp.name=Редстоуновый фонарь голем
+entity.golems.golem_red_sandstone.name=Краснопесчаниковый голем
+entity.golems.golem_sandstone.name=Песчаниковый голем
+entity.golems.golem_sea_lantern.name=Морской голем-осветитель
+entity.golems.golem_shroom.name=Голем-грибник
+entity.golems.golem_slime.name=Склизкий голем
+entity.golems.golem_sponge.name=Защитник из губок
+entity.golems.golem_stained_clay.name=Окрашенный глиняный голем
+entity.golems.golem_stained_glass.name=Окрашенный стеклянный голем
+entity.golems.golem_straw.name=Соломенный голем
+entity.golems.golem_tnt.name=Взрывной голем
+entity.golems.golem_wooden.name=Деревянный голем
+entity.golems.golem_wool.name=Шерстяной голем
+ 
+# Подсказки
+tooltip.creative_only_item=Только в творческом режиме.
+tooltip.press=Нажми
+tooltip.shift=Shift
+tooltip.for_more_details=Для дополнительной информации
+tooltip.use_to_spawn=Используй, чтобы призвать %s
+tooltip.use_on_existing=Используй на существующем %s
+tooltip.to_remove_it=чтобы убить его
+ 
+# Entity headings (for Waila and TOP)
+entitytip.name=название
+entitytip.health=здоровье
+entitytip.attack=Атака
+entitytip.lights_area=Проводит свет
+entitytip.click_change_texture=ПКМ, чтобы сменить текстуру
+entitytip.indestructible=Невозможно уничтожить!
+entitytip.grants_self_potion_effects=Имеет сильные эффекты зелий
+entitytip.blinds_creatures=Не видит...
+entitytip.can_teleport=Телепортируется в рандомные точки
+entitytip.freezes_blocks=Замораживает воду и воздействует на лаву
+entitytip.knockback_resist=Отдача неэффективна
+entitytip.attacks_use_potion_effects=Плохие эффекты зелий
+entitytip.plants_flowers=Садит цветы
+entitytip.plants_shrooms=Садит грибы
+entitytip.plants_warts=Садит адский нарост
+entitytip.lights_mobs_on_fire=Вызывает пожары в структурах
+entitytip.is_fireproof=Огнеупорен
+entitytip.slowly_melts=Медленно расплавляется %s
+entitytip.has_knockback=Массивная атака отдачей!
+entitytip.absorbs_water=Абсорбирует воду
+entitytip.explodes=Может взорваться!
+entitytip.emits_redstone_signal=Передает RF
+entitytip.click_open_crafting=ПКМ, чтобы открыть меню крафта
+entitytip.heals=медленно лечит себя
+entitytip.grows_crops=Выращивает близлежащие культуры
+entitytip.splits_upon_death=Разделить пополам
+entitytip.fuel=топливо
+entitytip.use_fuel=Использует топливо
+
+# Golem Guide Book entries
+item.info_book.name=Руководство по Extra Golems
+golembook.intro1=Добро пожаловать в Extra Golems! Это руководство поможет вам создать собственную армию големов.
+golembook.intro2=Переверните страницу, чтобы начать!
+golembook.contents.title=оглавление
+golembook.recipe_spell.recipe=Легко! Чтобы получить %1$s, объедините  1 %2$s, 1 %3$s, 1 %4$s, и 1 %5$s
+golembook.recipe_head.recipe=Еще проще! Чтобы получить %1$s, объедините %2$s и 1 %3$s
+golembook.build_golem.title=Как построить голема
+golembook.build_golem.howto1=Поместите 2 блока, один поверх другого.
+golembook.build_golem.howto2=Поместите еще 2 блока на противоположных сторонах верхнего блока.
+golembook.build_golem.howto3=Поместите %s поверх среднего блока, и все готово!
+tile.concrete.name=бетон

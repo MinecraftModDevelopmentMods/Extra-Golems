@@ -1,0 +1,14 @@
+{
+  "result": {
+    "item": "info_book"
+  },
+  "type": "forge:ore_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:book"
+    },
+    {
+      "item": "minecraft:pumpkin"
+    }
+  ]
+}
