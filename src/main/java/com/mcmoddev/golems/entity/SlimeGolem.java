@@ -56,8 +56,8 @@ public final class SlimeGolem extends GolemBase {
 	@Override
 	public void onDeath(final DamageSource source) {
 		if(!this.world.isRemote && !this.isChild() && this.getConfigBool(ALLOW_SPLITTING)) {
-			GolemBase slime1 = this.container.getEntityType().create(this.world);
-			GolemBase slime2 = this.container.getEntityType().create(this.world);
+			GolemBase slime1 = this.getGolemContainer().getEntityType().create(this.world);
+			GolemBase slime2 = this.getGolemContainer().getEntityType().create(this.world);
 			slime1.setChild(true);
 			slime2.setChild(true);
 			// copy attack target info
@@ -84,15 +84,15 @@ public final class SlimeGolem extends GolemBase {
 		if (CHILD.equals(key)) {
 			if (this.isChild()) {
 				// truncate these values to one decimal place after reducing them from base values
-				double childHealth = (Math.floor(container.getHealth() * 0.3D * 10D)) / 10D;
-				double childAttack = (Math.floor(container.getAttack() * 0.6D * 10D)) / 10D;
+				double childHealth = (Math.floor(getGolemContainer().getHealth() * 0.3D * 10D)) / 10D;
+				double childAttack = (Math.floor(getGolemContainer().getAttack() * 0.6D * 10D)) / 10D;
 				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(childHealth);
 				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(childAttack);
 				this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.0D);
 			} else {
-				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.getHealth());
-				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.getAttack());
-				this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(container.getKnockbackResist());
+				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(getGolemContainer().getHealth());
+				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(getGolemContainer().getAttack());
+				this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(getGolemContainer().getKnockbackResist());
 			}
 			// recalculate size
 			this.recalculateSize();

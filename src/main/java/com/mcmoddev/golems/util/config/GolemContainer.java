@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,15 +26,16 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.registries.IRegistryDelegate;
 
 /**
  * Adapted from BetterAnimalsPlus by its_meow. Used with permission.
  */
 @SuppressWarnings("rawtypes")
-public class GolemContainer {
+public final class GolemContainer {
 
 	private final Class<? extends GolemBase> entityClass;
-	private final List<Block> validBuildingBlocks;
+	private final List<IRegistryDelegate<Block>> validBuildingBlocks;
 	private final List<ResourceLocation> validBuildingBlockTags;
 	private final EntityType<? extends GolemBase> entityType;
 	private final String name;
@@ -56,7 +58,7 @@ public class GolemContainer {
 	 *
 	 * @param lEntityType             a constructed EntityType for the golem
 	 * @param lPath                   the golem name
-	 * @param lValidBuildingBlocks    a List of blocks to build the golem
+	 * @param lValidBuildingBlocks    a List of block delegates to build the golem
 	 * @param lValidBuildingBlockTags a List of Block Tags to build the golem
 	 * @param lHealth                 base health value
 	 * @param lAttack                 base attack value
@@ -70,7 +72,7 @@ public class GolemContainer {
 	 **/
 	private GolemContainer(final EntityType<? extends GolemBase> lEntityType,
 			final Class<? extends GolemBase> lEntityClass, final String lPath,
-			final List<Block> lValidBuildingBlocks, final List<ResourceLocation> lValidBuildingBlockTags,
+			final List<IRegistryDelegate<Block>> lValidBuildingBlocks, final List<ResourceLocation> lValidBuildingBlockTags,
 			final double lHealth, final double lAttack, final double lSpeed, final double lKnockbackResist,
 			final boolean lFallDamage, final SwimMode lSwimMode, final HashMap<String, GolemSpecialContainer> lSpecialContainers,
 			final List<GolemDescription> lDesc, final ResourceLocation lTexture, final SoundEvent lBasicSound) {
@@ -120,8 +122,9 @@ public class GolemContainer {
 	 **/
 	public Set<Block> getBuildingBlocks() {
 		// make set of all blocks including tags (run-time only)
-		Set<Block> blocks = new HashSet<>();
-		blocks.addAll(validBuildingBlocks);
+		Set<Block> blocks = validBuildingBlocks.isEmpty()
+				? new HashSet<>()
+				: validBuildingBlocks.stream().map(d -> d.get()).collect(Collectors.toSet());
 		for (final Tag<Block> tag : loadTags(validBuildingBlockTags)) {
 			blocks.addAll(tag.getAllElements());
 		}
@@ -180,7 +183,8 @@ public class GolemContainer {
 	 * @return if the blocks were added successfully
 	 **/
 	public boolean addBlocks(@Nonnull final Block... additional) {
-		return additional.length > 0 && this.validBuildingBlocks.addAll(Arrays.asList(additional));
+		return additional.length > 0 && this.validBuildingBlocks.addAll(
+				Arrays.asList(additional).stream().map(d -> d.delegate).collect(Collectors.toList()));
 	}
 
 	/**
@@ -339,7 +343,7 @@ public class GolemContainer {
 		private SwimMode swimMode = SwimMode.SINK;
 		//This is a list to allow determining the "priority" of golem blocks. This could be used to our
 		//advantage in golem building logic for conflicts in the future.
-		private List<Block> validBuildingBlocks = new ArrayList<>();
+		private List<IRegistryDelegate<Block>> validBuildingBlocks = new ArrayList<>();
 		private List<ResourceLocation> validBuildingBlockTags = new ArrayList<>();
 		private List<GolemSpecialContainer> specials = new ArrayList<>();
 		private List<GolemDescription> descriptions = new ArrayList<>();
@@ -480,7 +484,8 @@ public class GolemContainer {
 		 **/
 		public Builder addBlocks(final Block... additionalBlocks) {
 			if (additionalBlocks != null && additionalBlocks.length > 0) {
-				this.validBuildingBlocks.addAll(Arrays.asList(additionalBlocks));
+				this.validBuildingBlocks.addAll(Arrays.asList(additionalBlocks)
+						.stream().map(b -> b.delegate).collect(Collectors.toList()));
 			}
 			return this;
 		}

@@ -56,9 +56,9 @@ public abstract class GolemMultiTextured extends GolemBase {
 		for (int n = 0, len = textureNames.length; n < len; n++) {
 			// initialize textures
 			final String s = textureNames[n];
-			this.textures[n] = makeTexture(modid, this.container.getName() + "/" + s);
+			this.textures[n] = makeTexture(modid, this.getGolemContainer().getName() + "/" + s);
 			// initialize loot tables
-			this.lootTables[n] = new ResourceLocation(modid, "entities/" + this.container.getName() + "/" + s);
+			this.lootTables[n] = new ResourceLocation(modid, "entities/" + this.getGolemContainer().getName() + "/" + s);
 		}
 	}
 

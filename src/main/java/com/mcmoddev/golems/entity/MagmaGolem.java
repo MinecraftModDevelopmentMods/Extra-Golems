@@ -79,14 +79,14 @@ public final class MagmaGolem extends GolemBase {
 				// child golem can't use special abilities
 				this.allowMelting = false;
 				// truncate these values to one decimal place after reducing them from base values
-				double childHealth = (Math.floor(container.getHealth() * 0.3D * 10D)) / 10D;
-				double childAttack = (Math.floor(container.getAttack() * 0.6D * 10D)) / 10D;
+				double childHealth = (Math.floor(getGolemContainer().getHealth() * 0.3D * 10D)) / 10D;
+				double childAttack = (Math.floor(getGolemContainer().getAttack() * 0.6D * 10D)) / 10D;
 				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(childHealth);
 				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(childAttack);
 			} else {
 				this.allowMelting = this.getConfigBool(ALLOW_LAVA_SPECIAL);
-				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.getAttack());
-				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.getHealth());
+				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(getGolemContainer().getAttack());
+				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(getGolemContainer().getHealth());
 			}
 			// recalculate size just in case
 			this.recalculateSize();
@@ -157,8 +157,8 @@ public final class MagmaGolem extends GolemBase {
 	@Override
 	public void onDeath(final DamageSource source) {
 		if(!this.world.isRemote && !this.isChild() && this.getConfigBool(ALLOW_SPLITTING)) {
-			GolemBase child1 = this.container.getEntityType().create(this.world);
-			GolemBase child2 = this.container.getEntityType().create(this.world);
+			GolemBase child1 = this.getGolemContainer().getEntityType().create(this.world);
+			GolemBase child2 = this.getGolemContainer().getEntityType().create(this.world);
 			child1.setChild(true);
 			child2.setChild(true);
 			// copy attack target info

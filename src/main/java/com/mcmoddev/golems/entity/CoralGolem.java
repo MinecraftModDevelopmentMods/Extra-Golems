@@ -49,7 +49,7 @@ public final class CoralGolem extends GolemMultiTextured {
 		this.texturesDry = new ResourceLocation[VARIANTS.length];
 		for (int n = 0, len = VARIANTS.length; n < len; n++) {
 			// initialize "dead" textures
-			this.texturesDry[n] = makeTexture(ExtraGolems.MODID, this.container.getName() + "/" + VARIANTS[n] + "_dead");
+			this.texturesDry[n] = makeTexture(ExtraGolems.MODID, this.getGolemContainer().getName() + "/" + VARIANTS[n] + "_dead");
 		}
 		allowHealing = this.getConfigBool(ALLOW_HEALING);
 		maxChangingTime = this.getConfigInt(DRY_TIMER);		
@@ -115,9 +115,9 @@ public final class CoralGolem extends GolemMultiTextured {
 			if (this.isDry()) {
 				// adjust values when the golem dries out:  less health, less speed, more attack
 				// note how we use mult and div to truncate to a specific number of decimal places
-				double dryHealth = Math.floor(container.getHealth() * 0.7D * 10D) / 10D;
-				double dryAttack = Math.floor(container.getAttack() * 1.45D * 10D) / 10D;
-				double drySpeed = Math.floor(container.getSpeed() * 0.7D * 100D) / 100D;
+				double dryHealth = Math.floor(getGolemContainer().getHealth() * 0.7D * 10D) / 10D;
+				double dryAttack = Math.floor(getGolemContainer().getAttack() * 1.45D * 10D) / 10D;
+				double drySpeed = Math.floor(getGolemContainer().getSpeed() * 0.7D * 100D) / 100D;
 				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(dryHealth);
 				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(dryAttack);
 				this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(drySpeed);
@@ -125,9 +125,9 @@ public final class CoralGolem extends GolemMultiTextured {
 				ItemBedrockGolem.spawnParticles(this.world, this.posX, this.posY + 0.1D,
 						this.posZ, 0.09D, ParticleTypes.SMOKE, 80);
 			} else {
-				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(container.getHealth());
-				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(container.getAttack());
-				this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(container.getSpeed());
+				this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(getGolemContainer().getHealth());
+				this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(getGolemContainer().getAttack());
+				this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(getGolemContainer().getSpeed());
 			}
 		}
 	}
