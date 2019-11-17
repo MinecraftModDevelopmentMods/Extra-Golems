@@ -45,13 +45,15 @@ public final class EntityMagmaGolem extends GolemBase {
 	/**
 	 * Helpers for "Standing Still" code
 	 */
-	private int stillX, stillZ;
+	private int stillX;
+	private int stillZ;
 	/**
 	 * Whether this golem is hurt by water
 	 */
 	private boolean isHurtByWater = true;
 
 	private boolean allowMelting;
+	private boolean allowFire;
 	private int meltDelay;
 
 	public EntityMagmaGolem(final World world, final boolean isChild) {
@@ -60,6 +62,7 @@ public final class EntityMagmaGolem extends GolemBase {
 		this.isHurtByWater = getConfig(this).getBoolean(ALLOW_WATER_DAMAGE);
 		this.allowMelting = getConfig(this).getBoolean(ALLOW_LAVA_SPECIAL);
 		this.meltDelay = getConfig(this).getInt(MELT_DELAY);
+		this.allowFire = getConfig(this).getBoolean(ALLOW_FIRE_SPECIAL);
 		this.ticksStandingStill = 0;
 		this.setImmuneToFire(true);
 		this.setCanSwim(!this.isHurtByWater);
@@ -106,8 +109,9 @@ public final class EntityMagmaGolem extends GolemBase {
 	@Override
 	public boolean attackEntityAsMob(final Entity entity) {
 		if (super.attackEntityAsMob(entity)) {
-			if (getConfig(this).getBoolean(ALLOW_FIRE_SPECIAL)) {
-				entity.setFire(2 + rand.nextInt(5));
+			if (allowFire) {
+				final int fireTime = this.isChild() ? (rand.nextInt(2) + 1) : (rand.nextInt(5) + 2);
+				entity.setFire(fireTime);
 			}
 			return true;
 		}
@@ -127,13 +131,10 @@ public final class EntityMagmaGolem extends GolemBase {
 		}
 		// check the cobblestone-melting math
 		if (this.allowMelting && !this.isChild()) {
-			final int x = MathHelper.floor_double(this.posX);
-			final int y = MathHelper.floor_double(this.posY - 0.20000000298023224D);
-			final int z = MathHelper.floor_double(this.posZ);
-			final BlockPos below = new BlockPos(x, y, z);
+			final BlockPos below = getBlockBelow();
 			final Block b1 = this.worldObj.getBlockState(below).getBlock();
 
-			if (x == this.stillX && z == this.stillZ) {
+			if (below.getX() == this.stillX && below.getZ() == this.stillZ) {
 				// check if it's been holding still long enough AND on top of cobblestone
 				if (++this.ticksStandingStill >= this.meltDelay
 					&& b1 == Blocks.COBBLESTONE && rand.nextInt(16) == 0) {
@@ -143,8 +144,8 @@ public final class EntityMagmaGolem extends GolemBase {
 				}
 			} else {
 				this.ticksStandingStill = 0;
-				this.stillX = x;
-				this.stillZ = z;
+				this.stillX = below.getX();
+				this.stillZ = below.getZ();
 			}
 		}
 	}

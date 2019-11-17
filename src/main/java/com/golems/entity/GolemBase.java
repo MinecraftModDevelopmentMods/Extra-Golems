@@ -174,14 +174,11 @@ public abstract class GolemBase extends EntityIronGolem {
 		if (i > 0) {
 			this.playSound(this.getFallSound(i), 1.0F, 1.0F);
 			this.attackEntityFrom(DamageSource.fall, (float) i);
-			int j = MathHelper.floor_double(this.posX);
-			int k = MathHelper.floor_double(this.posY - 0.20000000298023224D);
-			int l = MathHelper.floor_double(this.posZ);
-			IBlockState iblockstate = this.worldObj.getBlockState(new BlockPos(j, k, l));
+			final BlockPos below = getBlockBelow();
+			IBlockState iblockstate = this.worldObj.getBlockState(below);
 
 			if (iblockstate.getMaterial() != Material.AIR) {
-				SoundType soundtype = iblockstate.getBlock().getSoundType(iblockstate, worldObj, new BlockPos(j, k, l),
-						this);
+				SoundType soundtype = iblockstate.getBlock().getSoundType(iblockstate, worldObj, below, this);
 				this.playSound(soundtype.getFallSound(), soundtype.getVolume() * 0.5F, soundtype.getPitch() * 0.75F);
 			}
 		}
@@ -206,6 +203,7 @@ public abstract class GolemBase extends EntityIronGolem {
 	 * @return A ItemStack to add to the player's inventory, Null if nothing should be added.
 	 */
 	@Override
+	@Nullable
 	public ItemStack getPickedResult(final RayTraceResult target) {
 		Block pickBlock = GolemLookup.getFirstBuildingBlock(this.getClass());
 		return pickBlock != null ? new ItemStack(pickBlock) : null;
@@ -234,6 +232,9 @@ public abstract class GolemBase extends EntityIronGolem {
 		if(Config.enableHealGolems() && this.getHealth() < this.getMaxHealth() && stack != null && isHealingItem(stack)) {
 			heal(getHealAmount(stack));
 			stack.stackSize--;
+			if(stack.stackSize <= 0) {
+				player.setHeldItem(hand, null);
+			}
 			// if currently attacking this player, stop
 			if(this.getAttackTarget() == player) {
 				this.setRevengeTarget(null);
@@ -276,15 +277,6 @@ public abstract class GolemBase extends EntityIronGolem {
 
 	public ResourceLocation getTextureType() {
 		return this.textureLoc;
-	}
-
-	@Deprecated
-	public void setCreativeReturn(final ItemStack blockToReturn) {
-	}
-
-	@Deprecated
-	public ItemStack getCreativeReturn() {
-		return new ItemStack(Blocks.AIR);
 	}
 	
 	public float getBaseAttackDamage() {
@@ -373,7 +365,7 @@ public abstract class GolemBase extends EntityIronGolem {
 		final Block[] blocks = getBuildingBlocks(this);
 		if(i != null && blocks != null && i.getItem() instanceof ItemBlock) {
 			for(final Block b : blocks) {
-				if(i.isItemEqual(new ItemStack(b))) {
+				if(i.getItem() == (new ItemStack(b)).getItem()) {
 					return true;
 				}
 			}
@@ -388,9 +380,19 @@ public abstract class GolemBase extends EntityIronGolem {
 	 * whichever is smaller
 	 **/
 	public float getHealAmount(final ItemStack i) {
-		return Math.min(this.getMaxHealth() * 0.25F, 32.0F);
+		return this.isChild() ? (this.getMaxHealth() * 0.5F) : Math.min(this.getMaxHealth() * 0.25F, 32.0F);
 	}
-
+	
+	/**
+	 * @return the BlockPos directly below the golem
+	 **/
+	public BlockPos getBlockBelow() {
+		int j = MathHelper.floor_double(this.posX);
+		int k = MathHelper.floor_double(this.posY - 0.20000000298023224D);
+		int l = MathHelper.floor_double(this.posZ);
+		return new BlockPos(j, k, l);
+	}
+	
 	/** 
 	 * Helper method for translating text into local language using {@code I18n}
 	 * @see addSpecialDesc 

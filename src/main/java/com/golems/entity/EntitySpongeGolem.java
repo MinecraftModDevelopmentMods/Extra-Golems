@@ -49,10 +49,7 @@ public final class EntitySpongeGolem extends GolemBase {
 		//TODO: Fix possible NPE
 		if (cfg.getBoolean(ALLOW_SPECIAL)
 			&& (interval <= 1 || this.ticksExisted % interval == 0)) {
-			final int x = MathHelper.floor_double(this.posX);
-			final int y = MathHelper.floor_double(this.posY - 0.20000000298023224D) + 2;
-			final int z = MathHelper.floor_double(this.posZ);
-			final BlockPos center = new BlockPos(x, y, z);
+			final BlockPos center = getBlockBelow();
 
 			final SpongeGolemSoakEvent event = new SpongeGolemSoakEvent(this, center,
 				cfg.getInt(RANGE));

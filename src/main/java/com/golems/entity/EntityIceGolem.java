@@ -48,10 +48,7 @@ public final class EntityIceGolem extends GolemBase {
 		super.onLivingUpdate();
 		// calling every other tick reduces lag by 50%
 		if (this.ticksExisted % 2 == 0) {
-			final int x = MathHelper.floor_double(this.posX);
-			final int y = MathHelper.floor_double(this.posY - 0.20000000298023224D);
-			final int z = MathHelper.floor_double(this.posZ);
-			final BlockPos below = new BlockPos(x, y, z);
+			final BlockPos below = getBlockBelow();
 
 			if (this.worldObj.getBiome(below).getTemperature() > 1.0F) {
 				this.attackEntityFrom(DamageSource.onFire, 1.0F);

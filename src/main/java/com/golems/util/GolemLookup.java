@@ -16,10 +16,11 @@ import com.golems.main.Config;
 import com.golems.main.ExtraGolems;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.RegistryDelegate;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -155,12 +156,7 @@ public final class GolemLookup {
 		
 		Class<? extends GolemBase> clazz = getGolemClass(block);
 		if(clazz != null) {
-			// try to make a new instance of the golem
-			try {
-				return clazz.getConstructor(World.class).newInstance(world);
-			} catch (final Exception e) {
-				ExtraGolems.LOGGER.error(e.getMessage());
-			}
+			return getGolemInstance(clazz, world);
 		}
 		return null;
 	}
@@ -190,6 +186,23 @@ public final class GolemLookup {
 				ExtraGolems.LOGGER.error("Tried to make a golem with an unknown block: " + block.getRegistryName());
 			}
 		}	
+		return null;
+	}
+	
+	/**
+	 * Attempts to instantiate the given golem class
+	 * @param clazz the Golem class
+	 * @param world the world to pass to the golem's constructor
+	 * @return a GolemBase instance, or null if failed
+	 **/
+	@Nullable
+	private static GolemBase getGolemInstance(final Class<? extends GolemBase> clazz, final World world) {
+		// try to make a new instance of the golem
+		try {
+			return clazz.getConstructor(World.class).newInstance(world);
+		} catch (final Exception e) {
+			ExtraGolems.LOGGER.error(e.getMessage());
+		}
 		return null;
 	}
 	
@@ -296,9 +309,12 @@ public final class GolemLookup {
 	public static List<GolemBase> getDummyGolemList(final World world) {
 		final List<GolemBase> list = new LinkedList();
 		// for each entity, find out if it's a golem and add it to the list
-		for (EntityEntry entry : ForgeRegistries.ENTITIES) {
-			if (GolemBase.class.isAssignableFrom(entry.getEntityClass())) {
-				list.add((GolemBase) entry.newInstance(world));
+		for (Class<? extends Entity> entry : EntityList.CLASS_TO_NAME.keySet()) {
+			if (GolemBase.class.isAssignableFrom(entry)) {
+				final GolemBase golemInstance = getGolemInstance((Class<? extends GolemBase>) entry, world);
+				if(golemInstance != null) {
+					list.add(golemInstance);
+				}
 			}
 		}		
 		return list;

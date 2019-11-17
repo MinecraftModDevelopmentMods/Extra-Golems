@@ -13,6 +13,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 public final class EntityWoodenGolem extends GolemMultiTextured {
@@ -28,7 +29,7 @@ public final class EntityWoodenGolem extends GolemMultiTextured {
 	}
 
 	@Override
-	public ItemStack getCreativeReturn() {
+	public ItemStack getPickedResult(final RayTraceResult target) {
 		// try to return the same block of this golem's texture
 		Block block = Blocks.LOG;
 		int damage = this.getTextureNum() % woodTypes.length;

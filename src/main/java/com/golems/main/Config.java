@@ -5,14 +5,51 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.golems.entity.*;
+import com.golems.entity.EntityBedrockGolem;
+import com.golems.entity.EntityBoneGolem;
+import com.golems.entity.EntityBookshelfGolem;
+import com.golems.entity.EntityClayGolem;
+import com.golems.entity.EntityCoalGolem;
+import com.golems.entity.EntityCraftingGolem;
+import com.golems.entity.EntityDiamondGolem;
+import com.golems.entity.EntityEmeraldGolem;
+import com.golems.entity.EntityEndstoneGolem;
+import com.golems.entity.EntityFurnaceGolem;
+import com.golems.entity.EntityGlassGolem;
+import com.golems.entity.EntityGlowstoneGolem;
+import com.golems.entity.EntityGoldGolem;
+import com.golems.entity.EntityHardenedClayGolem;
+import com.golems.entity.EntityIceGolem;
+import com.golems.entity.EntityLapisGolem;
+import com.golems.entity.EntityLeafGolem;
+import com.golems.entity.EntityMagmaGolem;
+import com.golems.entity.EntityMelonGolem;
+import com.golems.entity.EntityMushroomGolem;
+import com.golems.entity.EntityNetherBrickGolem;
+import com.golems.entity.EntityNetherWartGolem;
+import com.golems.entity.EntityObsidianGolem;
+import com.golems.entity.EntityPrismarineGolem;
+import com.golems.entity.EntityQuartzGolem;
+import com.golems.entity.EntityRedSandstoneGolem;
+import com.golems.entity.EntityRedstoneGolem;
+import com.golems.entity.EntityRedstoneLampGolem;
+import com.golems.entity.EntitySandstoneGolem;
+import com.golems.entity.EntitySeaLanternGolem;
+import com.golems.entity.EntitySlimeGolem;
+import com.golems.entity.EntitySpongeGolem;
+import com.golems.entity.EntityStainedClayGolem;
+import com.golems.entity.EntityStainedGlassGolem;
+import com.golems.entity.EntityStrawGolem;
+import com.golems.entity.EntityTNTGolem;
+import com.golems.entity.EntityWoodenGolem;
+import com.golems.entity.EntityWoolGolem;
+import com.golems.entity.GolemBase;
 import com.golems.util.GolemConfigSet;
 import com.golems.util.GolemLookup;
 import com.golems.util.GolemNames;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.entity.EntityList;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 /**
  * Registers the config settings to adjust aspects of this mod.
@@ -198,10 +235,12 @@ public final class Config {
 		if(desertGolems.isEmpty()) {
 			// populate the list from the config values found earlier
 			for(final String s : villageGolemSpawnsDesert) {
-				final ResourceLocation name = new ResourceLocation(ExtraGolems.MODID, s);
-				EntityEntry entityEntry = ForgeRegistries.ENTITIES.getValue(name);
-				if(entityEntry != null && (GolemBase.class).isAssignableFrom(entityEntry.getEntityClass())) {
-					desertGolems.add((Class<? extends GolemBase>)entityEntry.getEntityClass());
+				final String name = ExtraGolems.MODID.concat(".").concat(s);
+				if(EntityList.NAME_TO_CLASS.containsKey(name)) {
+					final Class clazz = EntityList.NAME_TO_CLASS.get(name);
+					if(clazz != null && (GolemBase.class).isAssignableFrom(clazz)) {
+						desertGolems.add((Class<? extends GolemBase>)clazz);
+					}
 				} else ExtraGolems.LOGGER.error("Tried to parse an unknown entity from the config! Skipping '" + s + "' in \"Desert Village Golem Spawns\"");
 			}
 		}
@@ -211,11 +250,13 @@ public final class Config {
 	
 	public static List<Class<? extends GolemBase>> getPlainsGolems() {
 		if(plainsGolems.isEmpty()) {
-			for(String s : villageGolemSpawnsPlains) {
-				final ResourceLocation name = new ResourceLocation(ExtraGolems.MODID, s);
-				EntityEntry entityEntry = ForgeRegistries.ENTITIES.getValue(name);
-				if(entityEntry != null && (GolemBase.class).isAssignableFrom(entityEntry.getEntityClass())) {
-					plainsGolems.add((Class<? extends GolemBase>)entityEntry.getEntityClass());
+			for(final String s : villageGolemSpawnsPlains) {
+				final String name = ExtraGolems.MODID.concat(".").concat(s);
+				if(EntityList.NAME_TO_CLASS.containsKey(name)) {
+					final Class clazz = EntityList.NAME_TO_CLASS.get(name);
+					if(clazz != null && (GolemBase.class).isAssignableFrom(clazz)) {
+						plainsGolems.add((Class<? extends GolemBase>)clazz);
+					}
 				} else ExtraGolems.LOGGER.error("Tried to parse an unknown entity from the config! Skipping '" + s + "' in \"Plains Village Golem Spawns\"");
 			}
 		}

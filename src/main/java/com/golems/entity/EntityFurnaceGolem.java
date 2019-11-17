@@ -141,7 +141,7 @@ public final class EntityFurnaceGolem extends GolemBase {
 				stack = stack.getItem().getContainerItem(stack);
 			}
 			// update the player's held item
-			player.setHeldItem(hand, stack);
+			player.setHeldItem(hand, stack.stackSize > 0 ? stack : null);
 			// add particles
 			ItemBedrockGolem.spawnParticles(this.worldObj, this.posX, this.posY + this.height / 2.0D, this.posZ, 0.03D,
 					EnumParticleTypes.FLAME, 10);

@@ -67,7 +67,8 @@ public final class EntityLeafGolem extends GolemColorized {
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
 		if (getConfig(this).getBoolean(EntityLeafGolem.ALLOW_SPECIAL)) {
-			list.add(TextFormatting.DARK_GREEN + trans("effect.regeneration") + " " + trans("enchantment.level.1"));
+			list.add(TextFormatting.DARK_GREEN + trans("effect.regeneration") + " " 
+					+ TextFormatting.DARK_GREEN + trans("enchantment.level.1"));
 		}
 		return list;
 	}

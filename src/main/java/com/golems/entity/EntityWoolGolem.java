@@ -9,6 +9,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
@@ -43,7 +44,7 @@ public final class EntityWoolGolem extends GolemMultiTextured {
 	}
 
 	@Override
-	public ItemStack getCreativeReturn() {
+	public ItemStack getPickedResult(final RayTraceResult target) {
 		ItemStack woolStack = new ItemStack(Blocks.WOOL);
 		woolStack.setItemDamage(this.getTextureNum() % (coloredWoolTypes.length + 1));
 		return woolStack;

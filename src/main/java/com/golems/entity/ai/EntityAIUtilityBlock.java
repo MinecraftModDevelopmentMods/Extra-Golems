@@ -65,10 +65,7 @@ public class EntityAIUtilityBlock extends EntityAIBase {
 	public void updateTask() {
 		long tickMod = this.golem.ticksExisted % this.tickDelay;
 		if (this.configAllows && tickMod == (long) 0) {
-			final int x = MathHelper.floor_double(golem.posX);
-			final int y = MathHelper.floor_double(golem.posY - 0.20000000298023224D - golem.getYOffset());
-			final int z = MathHelper.floor_double(golem.posZ);
-			final BlockPos blockPosIn = new BlockPos(x, y, z);
+			final BlockPos blockPosIn = golem.getBlockBelow();
 			// test the predicate against each BlockPos in a vertical column around this golem
 			// when it passes, place the block and return
 			for (int i = 0; i < 3; i++) {

@@ -52,13 +52,10 @@ public class CommonProxy {
 	}	
 	
 	/**
-	 * THIS IS 100% THE MOST IMPORTANT EVENT HANDLER IN THE ENTIRE MOD.
 	 * This method 1) registers all golems 2) registers their loot tables
 	 * and 3) registers which block to use for which golem.
-	 * @param event The EntityEntry registration event
 	 */
-	@SubscribeEvent
-	public static void registerEntities() {
+	public void registerEntities() {
 		golemEntityCount = 0;
 		// Register Golem EntityEntries as well as registering blocks
 		register(EntityBedrockGolem.class, GolemNames.BEDROCK_GOLEM, (Block)null);
@@ -122,8 +119,8 @@ public class CommonProxy {
 		if(blocks != null && blocks.length > 0) {
 			GolemLookup.addGolem(entityClass, blocks);
 		}
-		if(lootTable && !entityClass.isAssignableFrom(GolemColorized.class) 
-				&& !entityClass.isAssignableFrom(GolemMultiTextured.class)) {
+		if(lootTable && !GolemColorized.class.isAssignableFrom(entityClass) 
+				&& !GolemMultiTextured.class.isAssignableFrom(entityClass)) {
 			LootTableList.register(new ResourceLocation(ExtraGolems.MODID, "entities/" + name));
 		}
 	}
@@ -152,13 +149,12 @@ public class CommonProxy {
 
 	@SubscribeEvent
 	public static void registerBlocks(final RegistryEvent.Register<Block> event) {
-		final int GLOWSTONE_FREQ = GolemLookup.getConfig(EntityGlowstoneGolem.class).getInt(EntityGlowstoneGolem.FREQUENCY);
-		final int SEALANTERN_FREQ = GolemLookup.getConfig(EntitySeaLanternGolem.class).getInt(EntitySeaLanternGolem.FREQUENCY);
+		final int defaultFrequency = 2;
 		event.getRegistry().registerAll(
 			new BlockGolemHead().setUnlocalizedName("golem_head").setRegistryName(ExtraGolems.MODID, "golem_head"),
-			new BlockUtilityGlow(Material.GLASS, 1.0F, GLOWSTONE_FREQ, Blocks.AIR.getDefaultState())
+			new BlockUtilityGlow(Material.GLASS, 1.0F, defaultFrequency, Blocks.AIR.getDefaultState())
 				.setUnlocalizedName("light_provider_full").setRegistryName(ExtraGolems.MODID, "light_provider_full"),
-			new BlockUtilityGlowWater(Material.WATER, 1.0F, SEALANTERN_FREQ, Blocks.WATER.getDefaultState().withProperty(BlockLiquid.LEVEL, 0))
+			new BlockUtilityGlowWater(Material.WATER, 1.0F, defaultFrequency, Blocks.WATER.getDefaultState().withProperty(BlockLiquid.LEVEL, 0))
 				.setUnlocalizedName("water_light_provider_full").setRegistryName(ExtraGolems.MODID, "water_light_provider_full"),
 			new BlockUtilityPower(15, EntityRedstoneGolem.DEF_FREQ).setUnlocalizedName("power_provider_all").setRegistryName(ExtraGolems.MODID, "power_provider_all"));
 	}

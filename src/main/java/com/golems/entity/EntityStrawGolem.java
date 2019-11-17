@@ -61,18 +61,16 @@ public final class EntityStrawGolem extends GolemBase {
 	private boolean tryBoostCrop() {
 		final int maxAttempts = 25;
 		final int variationY = 2;
+		final BlockPos below = getBlockBelow();
 		int attempts = 0;
 		while(attempts <= maxAttempts) {
 			// increment attempts
 			++attempts;
 			// get random block in radius
-			final int x = MathHelper.floor_double(this.posX);
-			final int y = MathHelper.floor_double(this.posY);
-			final int z = MathHelper.floor_double(this.posZ);
 			final int x1 = this.rand.nextInt(this.range * 2) - this.range;
 			final int y1 = this.rand.nextInt(variationY * 2) - variationY;
 			final int z1 = this.rand.nextInt(this.range * 2) - this.range;
-			final BlockPos blockpos = new BlockPos(x + x1, y + y1, z + z1);
+			final BlockPos blockpos = below.add(x1, y1, z1);
 			final IBlockState state = this.getEntityWorld().getBlockState(blockpos);
 			// if the block can be grown, grow it and return
 			if(state.getBlock() instanceof BlockCrops || state.getBlock() instanceof BlockStem) {
