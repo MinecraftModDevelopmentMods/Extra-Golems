@@ -68,7 +68,7 @@ public abstract class GolemBase extends IronGolemEntity {
 		this.waterNavigator = new SwimmerPathNavigator(this, world);
 		this.groundNavigator = new GroundPathNavigator(this, world);
 		// define behavior for the given swimming ability
-		switch(this.getGolemContainer().getSwimMode()) {
+		switch(container.getSwimMode()) {
 		case FLOAT:
 			// basic swimming AI
 			this.goalSelector.addGoal(0, new SwimGoal(this));
@@ -164,7 +164,7 @@ public abstract class GolemBase extends IronGolemEntity {
 	 **/
 	public boolean isHealingItem(final ItemStack i) {
 		if(!i.isEmpty() && i.getItem() instanceof BlockItem) {
-			for(final Block b : getGolemContainer().getBuildingBlocks()) {
+			for(final Block b : container.getBuildingBlocks()) {
 				if(i.isItemEqual(new ItemStack(b))) {
 					return true;
 				}
@@ -205,7 +205,7 @@ public abstract class GolemBase extends IronGolemEntity {
 
 	@Override
 	public void fall(float distance, float damageMultiplier) {
-		if(!this.getGolemContainer().takesFallDamage()) {
+		if(!container.takesFallDamage()) {
 			return;
 		}
 		float[] ret = net.minecraftforge.common.ForgeHooks.onLivingFall(this, distance, damageMultiplier);
@@ -266,7 +266,7 @@ public abstract class GolemBase extends IronGolemEntity {
 	
 	@Override
 	public ItemStack getPickedResult(final RayTraceResult ray) {
-		final Block block = this.getGolemContainer().getPrimaryBuildingBlock();
+		final Block block = container.getPrimaryBuildingBlock();
 		return block != null ? new ItemStack(block) : ItemStack.EMPTY;
 	}
 	
@@ -375,14 +375,14 @@ public abstract class GolemBase extends IronGolemEntity {
 	 * @return A SoundEvent to play when the golem is attacking, walking, hurt, and on death
 	 **/
 	public final SoundEvent getGolemSound() {
-		return this.getGolemContainer().getSound();
+		return container.getSound();
 	}
 	
 	///////////////////// SWIMMING BEHAVIOR ////////////////////////
 
 	@Override
 	public void travel(final Vec3d vec) {
-		if (isServerWorld() && getGolemContainer().getSwimMode() == SwimMode.SWIM && isInWater() && isSwimmingUp()) {
+		if (isServerWorld() && container.getSwimMode() == SwimMode.SWIM && isInWater() && isSwimmingUp()) {
 			moveRelative(0.01F, vec);
 			move(MoverType.SELF, getMotion());
 			setMotion(getMotion().scale(0.9D));
@@ -404,7 +404,7 @@ public abstract class GolemBase extends IronGolemEntity {
 
 	@Override
 	public void updateSwimming() {
-		if(getGolemContainer().getSwimMode() != SwimMode.SWIM) {
+		if(container.getSwimMode() != SwimMode.SWIM) {
 			super.updateSwimming();
 			return;
 		}
@@ -421,15 +421,15 @@ public abstract class GolemBase extends IronGolemEntity {
 	
 	@Override
 	protected float getWaterSlowDown() {
-		return this.getGolemContainer().getSwimMode() == SwimMode.SWIM ? 0.88F : super.getWaterSlowDown();
+		return container.getSwimMode() == SwimMode.SWIM ? 0.88F : super.getWaterSlowDown();
 	}
 
 	public void setSwimmingUp(boolean isSwimmingUp) {
-		this.swimmingUp = (isSwimmingUp && this.getGolemContainer().getSwimMode() == SwimMode.SWIM);
+		this.swimmingUp = (isSwimmingUp && container.getSwimMode() == SwimMode.SWIM);
 	}
 	
 	public boolean isSwimmingUp() {
-		if(this.getGolemContainer().getSwimMode() != SwimMode.SWIM) {
+		if(container.getSwimMode() != SwimMode.SWIM) {
 			return false;
 		}
 		if (this.swimmingUp) {
@@ -445,6 +445,6 @@ public abstract class GolemBase extends IronGolemEntity {
 	 * @return true if the golem should move towards the water
 	 **/
 	public boolean shouldMoveToWater(final Vec3d target) {
-		return this.getGolemContainer().getSwimMode() == SwimMode.SWIM;
+		return container.getSwimMode() == SwimMode.SWIM;
 	}
 }
