@@ -113,6 +113,7 @@ public abstract class GolemBase extends EntityIronGolem {
 			.setBaseValue(cfg.getBaseAttack());
 		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(cfg.getMaxHealth());
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.22D);
+		this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.4D);
 	}
 
 	/**

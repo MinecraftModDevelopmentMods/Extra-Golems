@@ -7,11 +7,14 @@ import javax.annotation.Nonnull;
 import com.golems.entity.GolemBase;
 import com.golems.integration.GolemDescriptionManager;
 import com.golems.integration.ModIds;
+import com.golems.main.ExtraGolems;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaEntityAccessor;
 import mcp.mobius.waila.api.IWailaEntityProvider;
+import mcp.mobius.waila.api.IWailaPlugin;
 import mcp.mobius.waila.api.IWailaRegistrar;
+import mcp.mobius.waila.api.WailaPlugin;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,10 +22,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 
 /**
- * WAILA integration -- using Hwyla:1.8.23-B38_1.12.
+ * WAILA integration
  **/
-@Optional.Interface(iface = "mcp.mobius.waila.api.IWailaEntityProvider", modid = ModIds.WAILA)
-public final class WailaExtraGolems extends GolemDescriptionManager implements IWailaEntityProvider {
+@WailaPlugin(ExtraGolems.MODID)
+public final class WailaExtraGolems extends GolemDescriptionManager implements IWailaEntityProvider, IWailaPlugin {
 
 	public static final String CONFIG_SHOW_ATTACK_DAMAGE = "extragolems.show_attack_damage_tip";
 	public static final String CONFIG_SHOW_SPECIAL_ABILITIES = "extragolems.show_special_abilities_tip";
@@ -32,6 +35,10 @@ public final class WailaExtraGolems extends GolemDescriptionManager implements I
 
 	public WailaExtraGolems() {
 		super();
+	}
+	
+	public void register(final IWailaRegistrar registrar) {
+		registrar.registerBodyProvider(this, GolemBase.class);
 	}
 
 	@Optional.Method(modid = ModIds.WAILA)
@@ -49,17 +56,6 @@ public final class WailaExtraGolems extends GolemDescriptionManager implements I
 	}
 
 	@Override
-	@Optional.Method(modid = ModIds.WAILA)
-	@Nonnull
-	public NBTTagCompound getNBTData(final EntityPlayerMP player, final Entity entity, final NBTTagCompound tag,
-					 final World world) {
-		final NBTTagCompound tag2 = new NBTTagCompound();
-		entity.writeToNBT(tag2);
-		return tag2;
-	}
-
-	@Override
-	@Optional.Method(modid = ModIds.WAILA)
 	@Nonnull
 	public List<String> getWailaBody(final Entity entity, final List<String> tip, final IWailaEntityAccessor accessor,
 					 final IWailaConfigHandler config) {
@@ -78,9 +74,15 @@ public final class WailaExtraGolems extends GolemDescriptionManager implements I
 		}
 		return tip;
 	}
+	
+	@Override
+	@Nonnull
+	public NBTTagCompound getNBTData(final EntityPlayerMP player, final Entity entity, final NBTTagCompound tag,
+					 final World world) {
+		return tag;
+	}
 
 	@Override
-	@Optional.Method(modid = ModIds.WAILA)
 	@Nonnull
 	public List<String> getWailaHead(final Entity entity, final List<String> currenttip,
 					 final IWailaEntityAccessor accessor, final IWailaConfigHandler config) {
@@ -88,13 +90,11 @@ public final class WailaExtraGolems extends GolemDescriptionManager implements I
 	}
 
 	@Override
-	@Optional.Method(modid = ModIds.WAILA)
 	public Entity getWailaOverride(final IWailaEntityAccessor accessor, final IWailaConfigHandler config) {
 		return accessor.getEntity();
 	}
 
 	@Override
-	@Optional.Method(modid = ModIds.WAILA)
 	@Nonnull
 	public List<String> getWailaTail(final Entity entity, final List<String> currenttip,
 					 final IWailaEntityAccessor accessor, final IWailaConfigHandler config) {

@@ -58,7 +58,7 @@ public class CommonProxy {
 	public void registerEntities() {
 		golemEntityCount = 0;
 		// Register Golem EntityEntries as well as registering blocks
-		register(EntityBedrockGolem.class, GolemNames.BEDROCK_GOLEM, (Block)null);
+		register(EntityBedrockGolem.class, GolemNames.BEDROCK_GOLEM, false, (Block)null);
 		register(EntityBoneGolem.class, GolemNames.BONE_GOLEM, Blocks.BONE_BLOCK);
 		register(EntityBookshelfGolem.class, GolemNames.BOOKSHELF_GOLEM, Blocks.BOOKSHELF);
 		register(EntityClayGolem.class, GolemNames.CLAY_GOLEM, Blocks.CLAY);

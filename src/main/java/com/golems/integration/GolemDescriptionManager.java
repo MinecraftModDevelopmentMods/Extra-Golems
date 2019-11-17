@@ -7,6 +7,7 @@ import com.golems.entity.EntityBedrockGolem;
 import com.golems.entity.EntityRedstoneLampGolem;
 import com.golems.entity.GolemBase;
 
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.text.TextFormatting;
@@ -61,7 +62,7 @@ public abstract class GolemDescriptionManager {
 		// add knockback resist to tip if possible
 		if (this.showKnockbackResist
 			&& golem.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE)
-			.getBaseValue() > 0.8999D) {
+			.getBaseValue() > 0.88D) {
 			final String sResist = TextFormatting.GRAY + trans("attribute.name.generic.knockbackResistance");
 			list.add(sResist);
 		}
@@ -71,6 +72,10 @@ public abstract class GolemDescriptionManager {
 			golem.addSpecialDesc(list);
 		}
 		return list;
+	}
+	
+	protected boolean isShiftDown() {
+		return GuiScreen.isShiftKeyDown();
 	}
 
 	/**

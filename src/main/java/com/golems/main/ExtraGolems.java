@@ -47,10 +47,10 @@ public class ExtraGolems {
 
 		proxy.registerEvents();
 
-		if (Loader.isModLoaded(ModIds.WAILA)) {
-			FMLInterModComms.sendMessage(ModIds.WAILA, "register",
-				"com.golems.integration.waila.WailaExtraGolems.callbackRegister");
-		}
+//		if (Loader.isModLoaded(ModIds.WAILA)) {
+//			FMLInterModComms.sendMessage(ModIds.WAILA, "register",
+//				"com.golems.integration.waila.WailaExtraGolems.callbackRegister");
+//		}
 		if (Loader.isModLoaded(ModIds.TOP)) {
 			FMLInterModComms.sendFunctionMessage(ModIds.TOP, "getTheOneProbe",
 				"com.golems.integration.theoneprobe.TOPExtraGolems$GetTheOneProbe");

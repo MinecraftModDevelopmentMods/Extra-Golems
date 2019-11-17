@@ -31,6 +31,7 @@ public class RenderGolem<T extends GolemBase> extends RenderLiving<T> {
 
 	public RenderGolem(final RenderManager renderManagerIn) {
 		super(renderManagerIn, new ModelGolem(), 0.5F);
+		this.addLayer(new LayerGolemFlower(this));
 	}
 	
 	@Override
