@@ -15,6 +15,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.MinecraftForge;
@@ -89,9 +90,12 @@ public final class ExtraGolemsEntities {
 		// DISPENSER GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.DISPENSER_GOLEM, DispenserGolem.class, DispenserGolem::new)
 				// TODO attributes
+				
 				.addSpecial(DispenserGolem.ALLOW_SPECIAL, true, "Whether the golem can shoot arrows",
 						new TranslationTextComponent("entitytip.shoots_arrows").applyTextStyle(TextFormatting.LIGHT_PURPLE))
-				.addSpecial(DispenserGolem.ARROW_DAMAGE, Double.valueOf(5.0D), "Amount of damage dealt per arrow")
+				.addSpecial(DispenserGolem.ARROW_DAMAGE, Double.valueOf(4.25D), "Amount of damage dealt per arrow")
+				.addDesc(new GolemDescription(new TranslationTextComponent("entitytip.click_refill")
+						.applyTextStyle(TextFormatting.GRAY), DispenserGolem.ALLOW_SPECIAL))
 				.addBlocks(Blocks.DISPENSER)
 				.build());
 		// EMERALD GOLEM

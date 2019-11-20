@@ -9,6 +9,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.ArrowItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -29,7 +30,7 @@ public class ContainerDispenserGolem extends Container {
 
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
-				addSlot(new Slot(inv, j + i * 3, 62 + j * 18, 17 + i * 18));
+				addSlot(new ArrowSlot(inv, j + i * 3, 62 + j * 18, 17 + i * 18));
 			}
 		}
 
@@ -105,6 +106,18 @@ public class ContainerDispenserGolem extends Container {
 		@Override
 		public ITextComponent getDisplayName() {
 			return new TranslationTextComponent("entity.golems.golem_dispenser");
+		}
+	}
+	
+	public static class ArrowSlot extends Slot {
+
+		public ArrowSlot(IInventory inventoryIn, int index, int xPosition, int yPosition) {
+			super(inventoryIn, index, xPosition, yPosition);
+		}
+
+		@Override
+		public boolean isItemValid(final ItemStack stack) {
+			return stack.isEmpty() || stack.getItem() instanceof ArrowItem;
 		}
 	}
 }
