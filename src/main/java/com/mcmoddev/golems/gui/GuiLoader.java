@@ -10,10 +10,11 @@ public final class GuiLoader {
 		//
 	}
 
-	public static void loadBookGui(PlayerEntity playerIn, ItemStack itemstack) {
+	public static void loadBookGui(final PlayerEntity playerIn, final ItemStack itemstack) {
 		// only load client-side, of course
-		if (!playerIn.getEntityWorld().isRemote)
+		if (!playerIn.getEntityWorld().isRemote) {
 			return;
+		}
 		// open the gui
 		Minecraft.getInstance().displayGuiScreen(new GuiGolemBook(playerIn, itemstack));
 	}

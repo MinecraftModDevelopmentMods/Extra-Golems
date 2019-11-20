@@ -1,13 +1,12 @@
 package com.mcmoddev.golems.entity;
 
+import com.mcmoddev.golems.container.ContainerPortableWorkbench;
 import com.mcmoddev.golems.entity.base.GolemBase;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.inventory.container.SimpleNamedContainerProvider;
-import net.minecraft.inventory.container.WorkbenchContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Hand;
@@ -39,21 +38,5 @@ public final class CraftingGolem extends GolemBase {
 		}
 
 		return super.processInteract(player, hand);
-	}
-
-	public static class ContainerPortableWorkbench extends WorkbenchContainer {
-		
-		public ContainerPortableWorkbench(final int i, final PlayerInventory inv) {
-			this(i, inv, null);
-		}
-
-		public ContainerPortableWorkbench(final int i, final PlayerInventory inv, final IWorldPosCallable call) {
-			super(i, inv, call);
-		}
-
-		@Override
-		public boolean canInteractWith(final PlayerEntity playerIn) {
-			return true;
-		}
 	}
 }

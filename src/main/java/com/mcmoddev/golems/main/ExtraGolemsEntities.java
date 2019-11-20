@@ -77,7 +77,7 @@ public final class ExtraGolemsEntities {
 				.addSpecial(CoralGolem.ALLOW_HEALING, true, "Whether this golem can occasionally heal when wet", HEALS)
 				.addSpecial(CoralGolem.DRY_TIMER, 425, "Number of ticks golem can stay out of water before drying out")
 				.addBlocks(BlockTags.CORAL_BLOCKS).addBlocks(BlockTagUtil.TAG_DEAD_CORAL_BLOCKS).build());
-		// CRAFTING GOLEM
+		// CRAFTING_GOLEM GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.CRAFTING_GOLEM, CraftingGolem.class, CraftingGolem::new)
 				.setHealth(24.0D).setAttack(2.0D).setSpeed(0.29D).addBlocks(Blocks.CRAFTING_TABLE).basicTexture()
 				.addSpecial(CraftingGolem.ALLOW_SPECIAL, true, "Whether this golem can open a crafting grid",
@@ -86,6 +86,14 @@ public final class ExtraGolemsEntities {
 		// DIAMOND GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.DIAMOND_GOLEM, GenericGolem.class, GenericGolem::new)
 				.setHealth(220.0D).setAttack(20.0D).setKnockback(0.8D).addBlocks(Blocks.DIAMOND_BLOCK).basicTexture().build());
+		// DISPENSER GOLEM
+		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.DISPENSER_GOLEM, DispenserGolem.class, DispenserGolem::new)
+				// TODO attributes
+				.addSpecial(DispenserGolem.ALLOW_SPECIAL, true, "Whether the golem can shoot arrows",
+						new TranslationTextComponent("entitytip.shoots_arrows").applyTextStyle(TextFormatting.LIGHT_PURPLE))
+				.addSpecial(DispenserGolem.ARROW_DAMAGE, Double.valueOf(5.0D), "Amount of damage dealt per arrow")
+				.addBlocks(Blocks.DISPENSER)
+				.build());
 		// EMERALD GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.EMERALD_GOLEM, GenericGolem.class, GenericGolem::new)
 				.setHealth(190.0D).setAttack(18.0D).setKnockback(0.8D).addBlocks(Blocks.EMERALD_BLOCK).basicTexture().build());

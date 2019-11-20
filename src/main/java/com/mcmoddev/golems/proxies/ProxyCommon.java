@@ -3,7 +3,8 @@ package com.mcmoddev.golems.proxies;
 import com.mcmoddev.golems.blocks.BlockGolemHead;
 import com.mcmoddev.golems.blocks.BlockUtilityGlow;
 import com.mcmoddev.golems.blocks.BlockUtilityPower;
-import com.mcmoddev.golems.entity.CraftingGolem;
+import com.mcmoddev.golems.container.ContainerDispenserGolem;
+import com.mcmoddev.golems.container.ContainerPortableWorkbench;
 import com.mcmoddev.golems.items.ItemBedrockGolem;
 import com.mcmoddev.golems.items.ItemGolemSpell;
 import com.mcmoddev.golems.items.ItemInfoBook;
@@ -63,7 +64,8 @@ public class ProxyCommon {
 	}
 	
 	public void registerContainers(final RegistryEvent.Register<ContainerType<?>> event) {
-		event.getRegistry().register(new ContainerType<CraftingGolem.ContainerPortableWorkbench>
-			(CraftingGolem.ContainerPortableWorkbench::new).setRegistryName(ExtraGolems.MODID, "crafting_portable"));
+		event.getRegistry().register(GolemItems.CRAFTING_GOLEM.setRegistryName(ExtraGolems.MODID, "crafting_portable"));
+		
+		event.getRegistry().register(GolemItems.DISPENSER_GOLEM.setRegistryName(ExtraGolems.MODID, "dispenser_portable"));
 	}
 }
