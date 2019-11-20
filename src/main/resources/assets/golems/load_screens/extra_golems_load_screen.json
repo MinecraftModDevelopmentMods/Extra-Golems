@@ -1,8 +1,14 @@
 {
-	"screens" : [{
-		"class" : "com.mcmoddev.golems.gui.GuiGolemBook", 
-		"texture" : "golems:textures/gui/info_book.png",
-		"size" : [512, 328], 
-		"texSize" : [512, 512]
-	}]
+	"screens" : [
+		{
+			"class" : "com.mcmoddev.golems.gui.GuiGolemBook", 
+			"texture" : "golems:textures/gui/info_book.png",
+			"size" : [512, 328], 
+			"texSize" : [512, 512]
+		},
+		{
+			"class" : "com.mcmoddev.golems.gui.GuiDispenserGolem", 
+			"texture" : "minecraft:textures/gui/container/dispenser.png"
+		}
+	]
 }

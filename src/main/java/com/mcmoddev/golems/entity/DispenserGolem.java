@@ -23,7 +23,6 @@ import net.minecraft.inventory.IInventoryChangedListener;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ArrowItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Hand;
@@ -38,13 +37,12 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
 	private static final String KEY_INVENTORY = "Items";
 	private static final String KEY_SLOT = "Slot";
 	private static final int INVENTORY_SIZE = 9;
-	private boolean allowArrows = true;
-	private double arrowDamage = 5.0D;
+	private boolean allowArrows;
+	private double arrowDamage;
 	private Inventory inventory;
 
-
-	// TODO tweak arguments?
-	private final RangedAttackGoal aiArrowAttack = new RangedAttackGoal(this, 1.0D, 30,	15.0F);
+	// TODO tweak arguments? (IRangedAttackMob, ???, firingSpeed, range)
+	private final RangedAttackGoal aiArrowAttack = new RangedAttackGoal(this, 1.0D, 30,	20.0F);
 	private Goal aiMeleeAttack = new MeleeAttackGoal(this, 1.0D, true);
 
 	public DispenserGolem(final EntityType<? extends GolemBase> entityType, final World world) {
@@ -63,6 +61,12 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
 	}
 	
 	@Override
+	protected void collideWithEntity(Entity entityIn) {
+		super.collideWithEntity(entityIn);
+		this.updateCombatTask(entityIn != null && this.getAttackTarget() != null && entityIn == this.getAttackTarget());
+	}
+	
+	@Override
 	public void livingTick() {
 		super.livingTick();
 		// update combat style every few seconds
@@ -71,17 +75,18 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
 			this.updateCombatTask(forceMelee);
 		}
 		// pick up any arrow items that are nearby
+		// note: does not pick up arrow entities, only itemstacks for now
 		final int frequency = 30;
 		final double range = 0.9D;
 		if(this.isServerWorld() && rand.nextInt(frequency) == 0) {
-			final List<ItemEntity> list = this.world.getEntitiesWithinAABB(ItemEntity.class, 
+			// get a list of nearby entity items that contain arrows
+			final List<ItemEntity> itemList = this.world.getEntitiesWithinAABB(ItemEntity.class, 
 					this.getBoundingBox().grow(range), i -> i != null && !i.getItem().isEmpty() &&
 					!i.cannotPickup() && i.getItem().getItem() instanceof ArrowItem);
 			// if any are found, try to add them to the inventory
-			for(final ItemEntity i : list) {
+			for(final ItemEntity i : itemList) {
 				final ItemStack item = i.getItem().copy();
 				i.setItem(this.inventory.addItem(item));
-				System.out.println("item found: " + item + "; item entity is now: " + i.getItem());
 			}
 		}
 	}
@@ -163,7 +168,7 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
 	@Override
 	public void onInventoryChanged(final IInventory inv) {
 		if(this.isServerWorld()) {
-			this.updateCombatTask(!allowArrows);
+			this.updateCombatTask();
 		}
 	}
 	
@@ -203,6 +208,10 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
 		}
 	}
 	
+	public void updateCombatTask() {
+		updateCombatTask(!allowArrows);
+	}
+	
 	public void updateCombatTask(final boolean forceMelee) {
 		if (this.world != null && !this.world.isRemote) {
 			// remove both goals (clean slate)
@@ -216,43 +225,5 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
 				this.goalSelector.addGoal(0, aiArrowAttack);
 			}			
 		}
-	}
-	
-	class CollectArrowsGoal extends Goal {
-		
-		private final DispenserGolem entity;
-		private final double range;
-		private final int frequency;
-		
-		protected CollectArrowsGoal(final DispenserGolem entityIn, final double rangeIn, final int delay) {
-			entity = entityIn;
-			range = rangeIn;
-			frequency = delay;
-		}
-
-		@Override
-		public boolean shouldExecute() {
-			return entity.getEntityWorld().getRandom().nextInt(frequency + 10) == 0;
-		}
-		
-		@Override
-		public boolean shouldContinueExecuting() {
-			return false;
-		}
-		
-		@Override
-		public void startExecuting() {
-			// search for nearby arrow items
-			final List<ItemEntity> list = entity.getEntityWorld().getEntitiesWithinAABB(ItemEntity.class, 
-					entity.getBoundingBox().grow(range), i -> i != null && !i.getItem().isEmpty() &&
-					!i.cannotPickup() && i.getItem().getItem() instanceof ArrowItem);
-			// if any are found, try to add them to the inventory
-			for(final ItemEntity i : list) {
-				final ItemStack item = i.getItem().copy();
-				i.setItem(entity.inventory.addItem(item));
-				System.out.println("item found: " + item + "; item entity is now: " + i.getItem());
-			}
-		}
-		
 	}
 }
