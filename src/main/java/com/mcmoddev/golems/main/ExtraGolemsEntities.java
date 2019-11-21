@@ -15,7 +15,6 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.MinecraftForge;
@@ -89,14 +88,14 @@ public final class ExtraGolemsEntities {
 				.setHealth(220.0D).setAttack(20.0D).setKnockback(0.8D).addBlocks(Blocks.DIAMOND_BLOCK).basicTexture().build());
 		// DISPENSER GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.DISPENSER_GOLEM, DispenserGolem.class, DispenserGolem::new)
-				// TODO attributes
-				
+				.setHealth(68.0D).setAttack(5.2D).setSpeed(0.24D).setKnockback(1.0D)
 				.addSpecial(DispenserGolem.ALLOW_SPECIAL, true, "Whether the golem can shoot arrows",
 						new TranslationTextComponent("entitytip.shoots_arrows").applyTextStyle(TextFormatting.LIGHT_PURPLE))
-				.addSpecial(DispenserGolem.ARROW_DAMAGE, Double.valueOf(4.25D), "Amount of damage dealt per arrow")
+				.addSpecial(DispenserGolem.ARROW_DAMAGE, Double.valueOf(4.25D), "Base amount of damage dealt per arrow")
+				.addSpecial(DispenserGolem.ARROW_SPEED, 30, "Number of ticks between shooting arrows")
 				.addDesc(new GolemDescription(new TranslationTextComponent("entitytip.click_refill")
 						.applyTextStyle(TextFormatting.GRAY), DispenserGolem.ALLOW_SPECIAL))
-				.addBlocks(Blocks.DISPENSER)
+				.basicTexture().addBlocks(Blocks.DISPENSER)
 				.build());
 		// EMERALD GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.EMERALD_GOLEM, GenericGolem.class, GenericGolem::new)
@@ -112,7 +111,7 @@ public final class ExtraGolemsEntities {
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.FURNACE_GOLEM, FurnaceGolem.class, FurnaceGolem::new)
 				.setHealth(88.0D).setAttack(6.5D).setSpeed(0.24D).setKnockback(1.0D).addBlocks(Blocks.FURNACE)
 				.addDesc(new GolemDescription(new TranslationTextComponent("entitytip.use_fuel").applyTextStyle(TextFormatting.GRAY)))
-				.addSpecial(FurnaceGolem.FUEL_FACTOR, 10, "Higher numbers cause fuel to last longer")
+				.addSpecial(FurnaceGolem.FUEL_FACTOR, 10, "Number of ticks between using fuel points")
 				.immuneToFire().build());
 		// GLASS GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.GLASS_GOLEM, GenericGolem.class, GenericGolem::new)
@@ -148,7 +147,7 @@ public final class ExtraGolemsEntities {
 				.setHealth(6.0D).setAttack(0.5D).setSpeed(0.31D).setKnockback(0.0D).addBlocks(BlockTags.LEAVES)
 				.addSpecial(LeafGolem.ALLOW_SPECIAL, true, "Whether this golem can heal itself",
 						new TranslationTextComponent("effect.minecraft.regeneration").applyTextStyle(TextFormatting.DARK_GREEN)
-								.appendText(" ").appendSibling(new TranslationTextComponent("enchantment.level.1")))
+								.appendText(" ").appendSibling(new TranslationTextComponent("enchantment.level.1").applyTextStyle(TextFormatting.DARK_GREEN)))
 				.setSwimMode(SwimMode.FLOAT).setSound(SoundEvents.BLOCK_GRASS_STEP).build());
 		// MAGMA GOLEM
 		GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.MAGMA_GOLEM, MagmaGolem.class, MagmaGolem::new)

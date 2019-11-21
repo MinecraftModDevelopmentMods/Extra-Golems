@@ -35,7 +35,10 @@ public final class ProxyClient extends ProxyCommon {
 
 	@Override
 	public void registerEntityRenders() {
-		GolemRegistrar.getContainers().forEach(container -> registerEntityRender(container.getEntityClass()));
+		GolemRegistrar.getContainers().forEach(container -> {
+			if(container.useDefaultRender()) {
+				registerEntityRender(container.getEntityClass());
+			}});
 	}
 
 	/**

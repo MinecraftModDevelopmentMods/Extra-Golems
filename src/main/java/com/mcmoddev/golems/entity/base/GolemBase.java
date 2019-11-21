@@ -337,6 +337,7 @@ public abstract class GolemBase extends IronGolemEntity {
 	 * <br>For most golems, set the texture when building the GolemContainer using
 	 * {@link GolemContainer.Builder#setTexture(ResourceLocation)} or
 	 * {@link GolemContainer.Builder#basicTexture()}
+	 * @see ExtraGolemsEntities#makeTexture(String)
 	 **/
 	protected static ResourceLocation makeTexture(final String TEXTURE) {
 		return ExtraGolemsEntities.makeTexture(TEXTURE);
@@ -349,6 +350,7 @@ public abstract class GolemBase extends IronGolemEntity {
 	 * {@link GolemContainer.Builder#setTexture(ResourceLocation)} or
 	 * {@link GolemContainer.Builder#basicTexture()}
 	 * @see #makeTexture(String)
+	 * @see ExtraGolemsEntities#makeTexture(String, String)
 	 **/
 	protected static ResourceLocation makeTexture(final String MODID, final String TEXTURE) {
 		return ExtraGolemsEntities.makeTexture(MODID, TEXTURE);

@@ -43,6 +43,7 @@ public final class GolemContainer {
 	private final SoundEvent basicSound;
 	private final boolean fallDamage;
 	private final SwimMode swimMode;
+	private final boolean hasCustomRender;
 
 	private double health;
 	private double attack;
@@ -75,7 +76,7 @@ public final class GolemContainer {
 			final List<IRegistryDelegate<Block>> lValidBuildingBlocks, final List<ResourceLocation> lValidBuildingBlockTags,
 			final double lHealth, final double lAttack, final double lSpeed, final double lKnockbackResist,
 			final boolean lFallDamage, final SwimMode lSwimMode, final HashMap<String, GolemSpecialContainer> lSpecialContainers,
-			final List<GolemDescription> lDesc, final ResourceLocation lTexture, final SoundEvent lBasicSound) {
+			final List<GolemDescription> lDesc, final ResourceLocation lTexture, final SoundEvent lBasicSound, final boolean lCustomRender) {
 		this.entityType = lEntityType;
 		this.entityClass = lEntityClass;
 		this.validBuildingBlocks = lValidBuildingBlocks;
@@ -91,6 +92,7 @@ public final class GolemContainer {
 		this.descContainers = lDesc;
 		this.basicTexture = lTexture;
 		this.basicSound = lBasicSound;
+		this.hasCustomRender = lCustomRender;
 	}
 
 	/**
@@ -265,6 +267,11 @@ public final class GolemContainer {
 		return this.basicTexture;
 	}
 	
+	/** @return whether the golem should use the default IRenderFactory for rendering **/
+	public boolean useDefaultRender() {
+		return !this.hasCustomRender;
+	}
+	
 	/** @return a default SoundEvent to play when the Golem moves or is attacked **/
 	public SoundEvent getSound() {
 		return this.basicSound;
@@ -295,7 +302,7 @@ public final class GolemContainer {
 		return this.knockbackResist;
 	}
 
-	/** @return true if the Golem is enabled by the config settings **/
+	/** @return true if the Golem is enabled by the config settings. Mutable. **/
 	public boolean isEnabled() {
 		return this.enabled;
 	}
@@ -340,6 +347,7 @@ public final class GolemContainer {
 		private double speed = 0.25D;
 		private double knockBackResist = 0.4D;
 		private boolean fallDamage = false;
+		private boolean customRender = false;
 		private SwimMode swimMode = SwimMode.SINK;
 		//This is a list to allow determining the "priority" of golem blocks. This could be used to our
 		//advantage in golem building logic for conflicts in the future.
@@ -446,6 +454,16 @@ public final class GolemContainer {
 		 **/
 		public Builder basicTexture() {
 			return setTexture(new ResourceLocation(modid + ":textures/entity/" + golemName + ".png"));
+		}
+		
+		/**
+		 * Prevents the golem from using the default render factory.
+		 * If this is called, you must register your own {@code LivingRenderer}
+		 * @return instance to allow chaining of methods
+		 **/
+		public Builder hasCustomRender() {
+			this.customRender = true;
+			return this;
 		}
 		
 		/**
@@ -602,7 +620,7 @@ public final class GolemContainer {
 			return new GolemContainer(entityType, entityClass, golemName,
 					validBuildingBlocks, validBuildingBlockTags,
 					health, attack, speed, knockBackResist, fallDamage, swimMode, 
-					containerMap, descriptions, basicTexture, basicSound);
+					containerMap, descriptions, basicTexture, basicSound, customRender);
 		}
 	}
 

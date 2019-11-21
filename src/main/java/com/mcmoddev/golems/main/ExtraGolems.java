@@ -85,22 +85,4 @@ public class ExtraGolems {
 		ExtraGolems.PROXY.registerContainers(event);
 		ExtraGolems.PROXY.registerContainerRenders();
 	}
-
-//	@Mod.EventHandler
-//	public static void init(final FMLInitializationEvent event) {
-//
-//		PROXY.registerEvents();
-//
-//		if (Loader.isModLoaded(ModIds.WAILA)) {
-//			FMLInterModComms.sendMessage(ModIds.WAILA, "register",
-//				"com.golems.integration.waila.WailaExtraGolems.callbackRegister");
-//		}
-//		if (Loader.isModLoaded(ModIds.TOP)) {
-//			FMLInterModComms.sendFunctionMessage(ModIds.TOP, "getTheOneProbe",
-//				"com.golems.integration.theoneprobe.TOPExtraGolems$GetTheOneProbe");
-//		}
-//		// Trial-run these methods to give the user feedback if there's errors
-//		Config.getPlainsGolems();
-//		Config.getDesertGolems();
-//	}
 }

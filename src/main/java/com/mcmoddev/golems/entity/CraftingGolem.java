@@ -5,16 +5,11 @@ import com.mcmoddev.golems.entity.base.GolemBase;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.inventory.container.SimpleNamedContainerProvider;
-import net.minecraft.item.ItemStack;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Hand;
-import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 public final class CraftingGolem extends GolemBase {
 
@@ -26,17 +21,13 @@ public final class CraftingGolem extends GolemBase {
 
 	@Override
 	protected boolean processInteract(final PlayerEntity player, final Hand hand) {
-		final ItemStack itemstack = player.getHeldItem(hand);
-		if (!player.world.isRemote && itemstack.isEmpty()) {
-			// display crafting grid for player
-			ITextComponent itextcomponent = new TranslationTextComponent("");
-			INamedContainerProvider provider = new SimpleNamedContainerProvider((i, inv, call) -> 
-				new ContainerPortableWorkbench(i, inv, IWorldPosCallable.of(player.world, new BlockPos(player))), itextcomponent);
-			player.openContainer(provider);
+		if(!player.isSneaking() && player instanceof ServerPlayerEntity) {
+			// display crafting grid by sending request to server
+			NetworkHooks.openGui((ServerPlayerEntity)player, new ContainerPortableWorkbench.Provider());
 			player.addStat(Stats.INTERACT_WITH_CRAFTING_TABLE);
 			player.swingArm(hand);
+			return true;
 		}
-
 		return super.processInteract(player, hand);
 	}
 }

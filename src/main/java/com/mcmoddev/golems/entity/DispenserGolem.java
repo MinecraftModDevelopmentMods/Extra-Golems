@@ -9,7 +9,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.ai.goal.RangedAttackGoal;
 import net.minecraft.entity.item.ItemEntity;
@@ -28,28 +27,36 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public final class DispenserGolem extends GolemBase implements IRangedAttackMob, IInventoryChangedListener {
 	public static final String ALLOW_SPECIAL = "Allow Special: Shoot Arrows";
 	public static final String ARROW_DAMAGE = "Arrow Damage";
+	public static final String ARROW_SPEED = "Arrow Speed";
+	
 	private static final String KEY_INVENTORY = "Items";
 	private static final String KEY_SLOT = "Slot";
 	private static final int INVENTORY_SIZE = 9;
+	
 	private boolean allowArrows;
 	private double arrowDamage;
+	private int arrowSpeed;
 	private Inventory inventory;
 
-	// TODO tweak arguments? (IRangedAttackMob, ???, firingSpeed, range)
-	private final RangedAttackGoal aiArrowAttack = new RangedAttackGoal(this, 1.0D, 30,	20.0F);
-	private Goal aiMeleeAttack = new MeleeAttackGoal(this, 1.0D, true);
+	private final RangedAttackGoal aiArrowAttack;
+	private final MeleeAttackGoal aiMeleeAttack;
 
 	public DispenserGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world);
 		// set config values
 		this.allowArrows = this.getConfigBool(ALLOW_SPECIAL);
 		this.arrowDamage = Math.max(0D, this.getConfigDouble(ARROW_DAMAGE));
+		this.arrowSpeed = this.getConfigInt(ARROW_SPEED);
+		// init combat AI
+		aiArrowAttack = new RangedAttackGoal(this, 1.0D, arrowSpeed, 32.0F);
+		aiMeleeAttack = new MeleeAttackGoal(this, 1.0D, true);
 		// init inventory
 		this.initInventory();
 	}
@@ -76,12 +83,13 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
 		}
 		// pick up any arrow items that are nearby
 		// note: does not pick up arrow entities, only itemstacks for now
-		final int frequency = 30;
-		final double range = 0.9D;
-		if(this.isServerWorld() && rand.nextInt(frequency) == 0) {
+		final int frequency = 24;
+		final double range = 0.8D;
+		final boolean gameRule = this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING);
+		if(this.isServerWorld() && gameRule && rand.nextInt(frequency) == 0) {
 			// get a list of nearby entity items that contain arrows
 			final List<ItemEntity> itemList = this.world.getEntitiesWithinAABB(ItemEntity.class, 
-					this.getBoundingBox().grow(range), i -> i != null && !i.getItem().isEmpty() &&
+					this.getBoundingBox().grow(range, 0, range), i -> i != null && !i.getItem().isEmpty() &&
 					!i.cannotPickup() && i.getItem().getItem() instanceof ArrowItem);
 			// if any are found, try to add them to the inventory
 			for(final ItemEntity i : itemList) {
@@ -93,9 +101,10 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
 	
 	@Override
 	protected boolean processInteract(final PlayerEntity player, final Hand hand) {
-		// open GUI by sending request to server
 		if(!player.isSneaking() && player instanceof ServerPlayerEntity) {
+			// open dispenser GUI by sending request to server
 			NetworkHooks.openGui((ServerPlayerEntity)player, new ContainerDispenserGolem.Provider(inventory));
+			player.swingArm(hand);
 			return true;
 		}
 		return super.processInteract(player, hand);

@@ -1,6 +1,7 @@
 package com.mcmoddev.golems.container;
 
 import com.mcmoddev.golems.main.GolemItems;
+import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -105,7 +106,7 @@ public class ContainerDispenserGolem extends Container {
 
 		@Override
 		public ITextComponent getDisplayName() {
-			return new TranslationTextComponent("entity.golems.golem_dispenser");
+			return new TranslationTextComponent("entity.golems." + GolemNames.DISPENSER_GOLEM);
 		}
 	}
 	
