@@ -43,10 +43,6 @@ public class CommonProxy {
 	
 	protected static int golemEntityCount;
 
-	public void preInitRenders() {
-		// Unused
-	}
-
 	public void registerEvents() {
 		MinecraftForge.EVENT_BUS.register(new GolemCommonEventHandler());
 	}	
@@ -65,6 +61,7 @@ public class CommonProxy {
 		register(EntityCoalGolem.class, GolemNames.COAL_GOLEM, Blocks.COAL_BLOCK);
 		register(EntityCraftingGolem.class, GolemNames.CRAFTING_GOLEM, Blocks.CRAFTING_TABLE);
 		register(EntityDiamondGolem.class, GolemNames.DIAMOND_GOLEM, Blocks.DIAMOND_BLOCK);
+		register(EntityDispenserGolem.class, GolemNames.DISPENSER_GOLEM, Blocks.DISPENSER);
 		register(EntityEmeraldGolem.class, GolemNames.EMERALD_GOLEM, Blocks.EMERALD_BLOCK);
 		register(EntityEndstoneGolem.class, GolemNames.ENDSTONE_GOLEM, Blocks.END_STONE);
 		register(EntityFurnaceGolem.class, GolemNames.FURNACE_GOLEM, Blocks.FURNACE, Blocks.LIT_FURNACE);

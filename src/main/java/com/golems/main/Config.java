@@ -12,6 +12,7 @@ import com.golems.entity.EntityClayGolem;
 import com.golems.entity.EntityCoalGolem;
 import com.golems.entity.EntityCraftingGolem;
 import com.golems.entity.EntityDiamondGolem;
+import com.golems.entity.EntityDispenserGolem;
 import com.golems.entity.EntityEmeraldGolem;
 import com.golems.entity.EntityEndstoneGolem;
 import com.golems.entity.EntityFurnaceGolem;
@@ -109,6 +110,10 @@ public final class Config {
 		GolemLookup.addConfig(EntityCraftingGolem.class, new GolemConfigSet(config, "Crafting Golem", 24.0D, 2.0F)
 			.addKey(EntityCraftingGolem.ALLOW_SPECIAL, true, "Whether this golem can open a crafting grid"));
 		GolemLookup.addConfig(EntityDiamondGolem.class, new GolemConfigSet(config, "Diamond Golem", 220.0D, 20.0F));
+		GolemLookup.addConfig(EntityDispenserGolem.class, new GolemConfigSet(config, "Dispenser Golem", 78.0D, 5.2F)
+			.addKey(EntityDispenserGolem.ALLOW_SPECIAL, true, "Whether the golem can shoot arrows")
+			.addKey(EntityDispenserGolem.ARROW_DAMAGE, 4.25F, 0F, 50F, "Base amount of damage dealt per arrow")
+			.addKey(EntityDispenserGolem.ARROW_SPEED, 30, 1, 12000, "Number of ticks between shooting arrows"));
 		GolemLookup.addConfig(EntityEmeraldGolem.class, new GolemConfigSet(config, "Emerald Golem", 190.0D, 18.0F));
 		GolemLookup.addConfig(EntityEndstoneGolem.class, new GolemConfigSet(config, "Endstone Golem", 50.0D, 8.0F)
 			.addKey(EntityEndstoneGolem.ALLOW_SPECIAL, true, "Whether this golem can teleport")

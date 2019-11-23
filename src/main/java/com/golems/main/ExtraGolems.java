@@ -17,6 +17,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
@@ -44,9 +45,11 @@ public class ExtraGolems {
 
 	@Mod.EventHandler
 	public static void init(final FMLInitializationEvent event) {
-
+		// events
 		proxy.registerEvents();
-
+		// gui handler
+		//NetworkRegistry.INSTANCE.registerGuiHandler(instance, null);
+		
 //		if (Loader.isModLoaded(ModIds.WAILA)) {
 //			FMLInterModComms.sendMessage(ModIds.WAILA, "register",
 //				"com.golems.integration.waila.WailaExtraGolems.callbackRegister");

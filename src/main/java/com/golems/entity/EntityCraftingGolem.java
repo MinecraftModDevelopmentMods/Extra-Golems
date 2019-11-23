@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.golems.blocks.ContainerPortableWorkbench;
+import com.golems.container.ContainerPortableWorkbench;
 import com.golems.main.ExtraGolems;
 import com.golems.util.GolemNames;
 
@@ -44,7 +44,7 @@ public final class EntityCraftingGolem extends GolemBase {
     		@Nullable final ItemStack stack, final EnumHand hand) {
 		if (!player.worldObj.isRemote && stack == null) {
 			// display crafting grid for player
-			player.displayGui(new EntityCraftingGolem.InterfaceCraftingGrid(player.worldObj,
+			player.displayGui(new ContainerPortableWorkbench.InterfaceCraftingGrid(player.worldObj,
 					player.bedLocation));
 			player.addStat(StatList.CRAFTING_TABLE_INTERACTION);
 			player.swingArm(hand);
@@ -64,23 +64,5 @@ public final class EntityCraftingGolem extends GolemBase {
 			list.add(TextFormatting.BLUE + trans("entitytip.click_open_crafting"));
 		}
 		return list;
-	}
-
-	public static class InterfaceCraftingGrid
-			extends net.minecraft.block.BlockWorkbench.InterfaceCraftingTable {
-
-		private final World world2;
-		private final BlockPos position2;
-
-		public InterfaceCraftingGrid(final World worldIn, final BlockPos pos) {
-			super(worldIn, pos);
-			this.world2 = worldIn;
-			this.position2 = pos;
-		}
-
-		@Override
-		public Container createContainer(final InventoryPlayer playerInventory, final EntityPlayer playerIn) {
-			return new ContainerPortableWorkbench(playerInventory, this.world2, this.position2);
-		}
 	}
 }

@@ -15,6 +15,7 @@ public final class GolemNames {
 	public static final String COAL_GOLEM = "golem_coal";
 	public static final String CRAFTING_GOLEM = "golem_crafting";
 	public static final String DIAMOND_GOLEM = "golem_diamond";
+	public static final String DISPENSER_GOLEM = "golem_dispenser";
 	public static final String EMERALD_GOLEM = "golem_emerald";
 	public static final String ENDSTONE_GOLEM = "golem_end_stone";
 	public static final String FURNACE_GOLEM = "golem_furnace";
@@ -46,29 +47,13 @@ public final class GolemNames {
 	public static final String TNT_GOLEM = "golem_tnt";
 	public static final String WOODEN_GOLEM = "golem_wooden";
 	public static final String WOOL_GOLEM = "golem_wool";
-
-	public static final String[] ALL_GOLEMS = new String[] {
-		BEDROCK_GOLEM, BONE_GOLEM, BOOKSHELF_GOLEM, CLAY_GOLEM, COAL_GOLEM,
-		CRAFTING_GOLEM, DIAMOND_GOLEM, EMERALD_GOLEM, ENDSTONE_GOLEM, GLASS_GOLEM,
-		GLOWSTONE_GOLEM, GOLD_GOLEM, ICE_GOLEM, LAPIS_GOLEM, LEAF_GOLEM, MAGMA_GOLEM,
-		MELON_GOLEM, MUSHROOM_GOLEM, NETHERBRICK_GOLEM, NETHERWART_GOLEM, OBSIDIAN_GOLEM,
-		PRISMARINE_GOLEM, QUARTZ_GOLEM, REDSANDSTONE_GOLEM, REDSTONE_GOLEM, REDSTONELAMP_GOLEM, 
-		SANDSTONE_GOLEM, SEALANTERN_GOLEM, SLIME_GOLEM, SPONGE_GOLEM, STAINEDGLASS_GOLEM, 
-		STAINEDTERRACOTTA_GOLEM, STRAW_GOLEM, TERRACOTTA_GOLEM, TNT_GOLEM, WOODEN_GOLEM, WOOL_GOLEM
-	};
-	
-	
-	public static void forEach(Consumer<String> consumer) {
-		for(final String s : ALL_GOLEMS) {
-			consumer.accept(s);
-		}
-	}
 	
 	/** Currently Unused **/
 	public static String strip(final String nameIn) {
 		final String GOLEM = "golem_";
 		if(nameIn.contains(GOLEM)) {
 			return nameIn.replace(GOLEM, "");
-		} else return nameIn;
+		} 
+		return nameIn;
 	}
 }

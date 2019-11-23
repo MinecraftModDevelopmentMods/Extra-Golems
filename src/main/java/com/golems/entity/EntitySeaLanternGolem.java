@@ -44,6 +44,7 @@ public final class EntitySeaLanternGolem extends GolemBase {
 		this.canDrown = false;
 		this.setLootTableLoc(GolemNames.SEALANTERN_GOLEM);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
+		this.stepHeight = 1.0F;
 
 	}
 
