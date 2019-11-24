@@ -53,8 +53,8 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
  **/
 public abstract class GolemBase extends EntityIronGolem {
 
-	private static final DataParameter<Boolean> BABY = EntityDataManager.<Boolean>createKey(GolemBase.class, DataSerializers.BOOLEAN);
-	private static final String KEY_BABY = "isChild";
+	private static final DataParameter<Boolean> CHILD = EntityDataManager.<Boolean>createKey(GolemBase.class, DataSerializers.BOOLEAN);
+	private static final String KEY_CHILD = "isChild";
 	public static final int WANDER_DISTANCE = 64;
 	
 	protected ResourceLocation textureLoc;
@@ -102,7 +102,7 @@ public abstract class GolemBase extends EntityIronGolem {
 	protected void entityInit() {
 		super.entityInit();
 		this.setTextureType(this.applyTexture());
-		this.getDataManager().register(BABY, Boolean.valueOf(false));
+		this.getDataManager().register(CHILD, Boolean.valueOf(false));
 	}
 
 	@Override
@@ -148,6 +148,7 @@ public abstract class GolemBase extends EntityIronGolem {
 
 		if (flag) {
 			entity.motionY += knockbackY;
+			entity.velocityChanged = true;
 			this.applyEnchantments(this, entity);
 		}
 
@@ -213,13 +214,13 @@ public abstract class GolemBase extends EntityIronGolem {
 	@Override
 	public void writeEntityToNBT(NBTTagCompound compound) {
         super.writeEntityToNBT(compound);
-        compound.setBoolean(KEY_BABY, this.isChild());
+        compound.setBoolean(KEY_CHILD, this.isChild());
     }
 	
 	@Override
 	public void readEntityFromNBT(NBTTagCompound compound) {
 		super.readEntityFromNBT(compound);
-		this.setChild(compound.getBoolean(KEY_BABY));
+		this.setChild(compound.getBoolean(KEY_CHILD));
 	}
 
 	@Override
@@ -289,12 +290,12 @@ public abstract class GolemBase extends EntityIronGolem {
 	}
 	
 	public void setChild(boolean isChild) {
-		this.getDataManager().set(BABY, isChild);
+		this.getDataManager().set(CHILD, isChild);
 	}
 	
 	@Override
 	public boolean isChild() {
-		return this.getDataManager().get(BABY).booleanValue();
+		return this.getDataManager().get(CHILD).booleanValue();
 	}
 
 	public void setCanTakeFallDamage(final boolean toSet) {

@@ -9,6 +9,7 @@ import com.golems.gui.GuiLoader;
 import com.golems.main.ExtraGolems;
 import com.golems.util.GolemConfigSet;
 import com.golems.util.GolemNames;
+import com.google.common.base.Predicate;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -22,7 +23,6 @@ import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityArrow.PickupStatus;
 import net.minecraft.entity.projectile.EntitySpectralArrow;
 import net.minecraft.entity.projectile.EntityTippedArrow;
-import net.minecraft.entity.projectile.ProjectileHelper;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
@@ -51,6 +51,13 @@ public final class EntityDispenserGolem extends GolemBase implements IRangedAtta
 	private static final String KEY_INVENTORY = "Items";
 	private static final String KEY_SLOT = "Slot";
 	private static final int INVENTORY_SIZE = 9;
+	private static final Predicate ARROW_PREDICATE = new Predicate<EntityItem>() {
+			@Override
+			public boolean apply(final EntityItem i) {
+				return i != null && i.getEntityItem() != null &&
+						!i.cannotPickup() && i.getEntityItem().getItem() instanceof ItemArrow;
+			}
+		};
 	
 	private boolean allowArrows;
 	private double arrowDamage;
@@ -115,8 +122,7 @@ public final class EntityDispenserGolem extends GolemBase implements IRangedAtta
 		if(this.isServerWorld() && gameRule && rand.nextInt(frequency) == 0) {
 			// get a list of nearby entity items that contain arrows
 			final List<EntityItem> itemList = this.worldObj.getEntitiesWithinAABB(EntityItem.class, 
-					this.getEntityBoundingBox().expand(range, 0, range), i -> i != null && i.getEntityItem() != null &&
-					!i.cannotPickup() && i.getEntityItem().getItem() instanceof ItemArrow);
+					this.getEntityBoundingBox().expand(range, 0, range), ARROW_PREDICATE);					
 			// if any are found, try to add them to the inventory
 			for(final EntityItem i : itemList) {
 				final ItemStack item = i.getEntityItem().copy();
