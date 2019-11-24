@@ -1,5 +1,8 @@
 package com.mcmoddev.golems.entity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.mcmoddev.golems.entity.ai.PassiveEffectsGoal;
 import com.mcmoddev.golems.entity.ai.PlaceBlocksGoal;
 import com.mcmoddev.golems.entity.base.GolemBase;
@@ -58,5 +61,10 @@ public final class MushroomGolem extends GolemMultiTextured {
 	@Override
 	public ItemStack getCreativeReturn(final RayTraceResult target) {
 		return this.getTextureNum() == 0 ? new ItemStack(Blocks.RED_MUSHROOM_BLOCK) : new ItemStack(Blocks.BROWN_MUSHROOM_BLOCK);
+	}
+
+	@Override
+	public Map<Block, Byte> getTextureBytes() {
+		return new HashMap<>();
 	}
 }

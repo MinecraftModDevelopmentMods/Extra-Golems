@@ -24,7 +24,9 @@ import net.minecraft.item.ArrowItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
+import net.minecraft.util.IndirectEntityDamageSource;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.GameRules;
@@ -77,8 +79,9 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
 	public void livingTick() {
 		super.livingTick();
 		// update combat style every few seconds
-		if(this.ticksExisted % 50 == 0 && this.getAttackTarget() != null) {
-			final boolean forceMelee = !allowArrows || this.getAttackTarget().getDistanceSq(this) < 4.5D;
+		if(this.ticksExisted % 50 == 0) {
+			final boolean forceMelee = !allowArrows || 
+					(this.getAttackTarget() != null && this.getAttackTarget().getDistanceSq(this) < 4.5D);
 			this.updateCombatTask(forceMelee);
 		}
 		// pick up any arrow items that are nearby
@@ -108,6 +111,18 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
 			return true;
 		}
 		return super.processInteract(player, hand);
+	}
+	
+	@Override
+	public boolean attackEntityFrom(final DamageSource src, final float amnt) {
+		if(super.attackEntityFrom(src, amnt)) {
+			// if it's an arrow or something, set the attacker as revenge target
+			if (src instanceof IndirectEntityDamageSource && src.getTrueSource() instanceof LivingEntity) {
+				this.setRevengeTarget((LivingEntity) src.getTrueSource());
+			}
+			return true;
+		}
+		return false;
 	}
 
 	@Override

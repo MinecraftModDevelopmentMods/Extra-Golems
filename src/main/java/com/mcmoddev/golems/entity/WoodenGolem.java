@@ -1,5 +1,8 @@
 package com.mcmoddev.golems.entity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
@@ -23,7 +26,7 @@ public final class WoodenGolem extends GolemMultiTextured {
 	}
 
 	@Override
-	public void onBuilt(BlockState body, BlockState legs, BlockState arm1, BlockState arm2) {
+	public void onBuilt(final BlockState body, final BlockState legs, final BlockState arm1, final BlockState arm2) {
 		// uses the top-middle building block of this golem to set texture.
 		// defaults to a random texture.
 		final Block b = body.getBlock();
@@ -42,7 +45,8 @@ public final class WoodenGolem extends GolemMultiTextured {
 		} else if (b.isIn(BlockTags.DARK_OAK_LOGS)) {
 			textureNum = 5;
 		} else {
-			textureNum = (byte) this.rand.nextInt(WOOD_TYPES.length);
+			this.randomizeTexture(this.world, this.getPosition());
+			return;
 		}
 		// set the texture num based on above
 		this.setTextureNum(textureNum);
@@ -59,5 +63,24 @@ public final class WoodenGolem extends GolemMultiTextured {
 		case 5: return new ItemStack(Blocks.DARK_OAK_LOG);
 		default: return ItemStack.EMPTY;
 		}
+	}
+	
+//	@Override
+//	public byte randomizeTexture(final World world, final BlockPos pos) {
+//		// use the location to select a biome-appropriate texture
+//		final boolean useBiome = world.getRandom().nextBoolean();
+//		if(useBiome) {
+//			byte texture = 0;
+//			final Biome biome = world.getBiome(pos);
+//			// TODO find an easier way to get the preferred log type from the biome			
+//			setTextureNum(texture);
+//			return texture;
+//		}
+//		return super.randomizeTexture(world, pos);
+//	}	
+
+	@Override
+	public Map<Block, Byte> getTextureBytes() {
+		return new HashMap<>();
 	}
 }

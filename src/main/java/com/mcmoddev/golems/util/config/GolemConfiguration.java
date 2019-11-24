@@ -1,13 +1,19 @@
 package com.mcmoddev.golems.util.config;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.mcmoddev.golems.main.ExtraGolems;
+import com.mcmoddev.golems.util.GolemNames;
 import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
 import com.mcmoddev.golems.util.config.special.GolemSpecialSection;
 
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 
 /**
  * Adapted from BetterAnimalsPlus by its_meow. Used with permission.
@@ -24,15 +30,16 @@ public class GolemConfiguration {
 	public final ForgeConfigSpec.BooleanValue enableUseItemSpell;
 	public final ForgeConfigSpec.BooleanValue enableHealGolems;
 	public final ForgeConfigSpec.IntValue villagerGolemSpawnChance;
-
-// TODO implement the following config values
-//		villageGolemSpawnsDesert = config.getStringList("Desert Village Golem Spawns", CATEGORY_OTHER, villageGolemSpawnsDesert,
-//				"The following golems will appear in villages in Desert biomes. (Duplicate entries increase chances)");
-//		villageGolemSpawnsPlains = config.getStringList("Plains Village Golem Spawns", CATEGORY_OTHER, villageGolemSpawnsPlains,
-//				"The following golems will appear in villages in Plains biomes. (Duplicate entries increase chances)");
-//		villageGolemSpawnChance = config.getInt("Village Golem Spawn Chance", CATEGORY_OTHER, 60, 0, 100,
-//				"Percent chance for each village chunk to include an Extra Golems golem. Set to 0 to disable");
-
+	private final ConfigValue<List<? extends String>> villagerGolemSpawns;
+	private static final String[] defaultVillagerGolemSpawns = {
+			GolemNames.BOOKSHELF_GOLEM, GolemNames.CLAY_GOLEM, 
+			GolemNames.COAL_GOLEM, GolemNames.CRAFTING_GOLEM, GolemNames.GLASS_GOLEM, 
+			GolemNames.GLOWSTONE_GOLEM, GolemNames.LEAF_GOLEM, GolemNames.MELON_GOLEM, 
+			GolemNames.MUSHROOM_GOLEM, GolemNames.OBSIDIAN_GOLEM, GolemNames.QUARTZ_GOLEM, 
+			GolemNames.REDSANDSTONE_GOLEM, GolemNames.SANDSTONE_GOLEM, 
+			GolemNames.STAINEDGLASS_GOLEM, GolemNames.STAINEDTERRACOTTA_GOLEM, GolemNames.STRAW_GOLEM, 
+			GolemNames.TERRACOTTA_GOLEM, GolemNames.WOODEN_GOLEM, GolemNames.WOOL_GOLEM 
+		};
 
 	public GolemConfiguration(ForgeConfigSpec.Builder builder) {
 		// Global values
@@ -51,6 +58,8 @@ public class GolemConfiguration {
 				.defineInRange("villager_summon_chance", 90, 0, 100);
 		this.enableHealGolems = builder.comment("When enabled, giving blocks to golems can restore health")
 				.define("heal_golems", true);
+		this.villagerGolemSpawns = builder.comment("Golems that can be summoned by villagers", "(Duplicate entries increase chances)")
+				.defineList("villager_summon_golems", initVillagerGolemList(defaultVillagerGolemSpawns), o -> o instanceof String);
 
 		builder.pop();
 
@@ -83,5 +92,25 @@ public class GolemConfiguration {
 			}
 		}
 	}
-
+	
+	private static List<String> initVillagerGolemList(final String[] names) {
+		final List<String> list = new ArrayList<>();
+		for(final String s : names) {
+			list.add(ExtraGolems.MODID.concat(":").concat(s));
+		}
+		return list;
+	}
+	
+	public List<GolemContainer> loadVillagerGolemList() {
+		final List<GolemContainer> list = new ArrayList<>();
+		for(final String s : villagerGolemSpawns.get()) {
+			if(s != null && !s.isEmpty()) {
+				final GolemContainer container = GolemRegistrar.getContainer(new ResourceLocation(s));
+				if(container != null) {
+					list.add(container);
+				}
+			}
+		}
+		return list;
+	}
 }

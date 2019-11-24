@@ -26,7 +26,7 @@ public class RenderGolem<T extends GolemBase> extends LivingRenderer<T, ModelGol
 			ExtraGolemsEntities.makeTexture("damage/damaged_2") 
 	};
 	
-	protected static final float DAMAGE_ALPHA = 0.5F;
+	protected static final float DAMAGE_ALPHA = 0.55F;
 
 	public RenderGolem(final EntityRendererManager renderManagerIn) {
 		super(renderManagerIn, new ModelGolem<T>(), 0.5F);

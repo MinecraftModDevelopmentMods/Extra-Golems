@@ -1,5 +1,7 @@
 package com.mcmoddev.golems.entity;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.BiPredicate;
 
 import com.mcmoddev.golems.blocks.BlockUtilityGlow;
@@ -9,6 +11,7 @@ import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
@@ -60,5 +63,10 @@ public final class RedstoneLampGolem extends GolemMultiTextured {
 	@Override
 	public ItemStack getCreativeReturn(final RayTraceResult target) {
 		return new ItemStack(Blocks.REDSTONE_LAMP);
+	}
+
+	@Override
+	public Map<Block, Byte> getTextureBytes() {
+		return new HashMap<>();
 	}
 }

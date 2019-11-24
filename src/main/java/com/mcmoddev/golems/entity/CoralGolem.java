@@ -151,13 +151,8 @@ public final class CoralGolem extends GolemMultiTextured {
 	
 	@Override
 	public void onBuilt(BlockState body, BlockState legs, BlockState arm1, BlockState arm2) {
-		// uses HashMap to determine which texture this golem should apply
-		// based on the top-middle building block.
 		this.setDry(!(body.getBlock() instanceof CoralBlock));
-		final Map<Block, Byte> map = this.isDry() 
-				? GolemTextureBytes.CORAL_DEAD : GolemTextureBytes.CORAL;
-		byte textureNum = GolemTextureBytes.getByBlock(map, body.getBlock());
-		this.setTextureNum(textureNum);
+		super.onBuilt(body, legs, arm1, arm2);
 	}
 
 	@Override
@@ -178,7 +173,12 @@ public final class CoralGolem extends GolemMultiTextured {
 		}
 		return true;
 	}
-	
+
+	@Override
+	public Map<Block, Byte> getTextureBytes() {
+		return this.isDry() ? GolemTextureBytes.CORAL_DEAD : GolemTextureBytes.CORAL;
+	}
+
 	public int getTimeUntilChange() {
 		return maxChangingTime - timeChanging;
 	}

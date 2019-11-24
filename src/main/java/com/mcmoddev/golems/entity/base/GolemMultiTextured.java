@@ -1,5 +1,11 @@
 package com.mcmoddev.golems.entity.base;
 
+import java.util.Map;
+
+import com.mcmoddev.golems.util.GolemTextureBytes;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -12,7 +18,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
-public abstract class GolemMultiTextured extends GolemBase {
+public abstract class GolemMultiTextured extends GolemBase implements IMultiTexturedGolem<ResourceLocation> {
 
 	/**
 	 * The DataParameter that stores which texture this golem is using. Max value is 128
@@ -81,6 +87,15 @@ public abstract class GolemMultiTextured extends GolemBase {
 			return super.processInteract(player, hand);
 		}
 	}
+	
+	@Override
+	public void onBuilt(final BlockState body, final BlockState legs, final BlockState arm1, final BlockState arm2) {
+		final Map<Block, Byte> map = this.getTextureBytes();
+		if(map != null && !map.isEmpty()) {
+			byte textureNum = GolemTextureBytes.getByBlock(map, body.getBlock());
+			this.setTextureNum(textureNum);
+		}
+	}
 
 	@Override
 	public void notifyDataManagerChange(DataParameter<?> key) {
@@ -113,27 +128,24 @@ public abstract class GolemMultiTextured extends GolemBase {
 		return getCreativeReturn(target);
 	}
 
-	/**
-	 * Update the texture data
-	 **/
+	@Override
 	public void setTextureNum(final byte toSet) {
 		if(toSet != this.getDataManager().get(DATA_TEXTURE).byteValue()) {
 			this.getDataManager().set(DATA_TEXTURE, Byte.valueOf(toSet));
 		}
 	}
 
+	@Override
 	public int getTextureNum() {
 		return this.getDataManager().get(DATA_TEXTURE).byteValue();
 	}
 
+	@Override
 	public int getNumTextures() {
 		return this.textures != null ? this.textures.length : null;
 	}
 
-	public int getMaxTextureNum() {
-		return getNumTextures() - 1;
-	}
-
+	@Override
 	public ResourceLocation[] getTextureArray() {
 		return this.textures;
 	}
@@ -146,14 +158,4 @@ public abstract class GolemMultiTextured extends GolemBase {
 	public ResourceLocation getTexture() {
 		return getTextureFromArray(getTextureNum());
 	}
-	
-	// ABSTRACT
-	
-	/**
-	 * Called when the player middle-clicks on a golem to get its "spawn egg"
-	 * or similar item
-	 * @param target
-	 * @return an ItemStack that best represents this golem, or an empty itemstack
-	 **/
-	public abstract ItemStack getCreativeReturn(final RayTraceResult target);
 }

@@ -2,6 +2,9 @@ package com.mcmoddev.golems.entity.base;
 
 import javax.annotation.Nullable;
 
+import com.mcmoddev.golems.util.GolemTextureBytes;
+
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -15,16 +18,16 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 @SuppressWarnings("EntityConstructor")
-public abstract class GolemMultiColorized extends GolemColorized {
+public abstract class GolemMultiColorized extends GolemColorized implements IMultiTexturedGolem<Integer> {
 
 	protected static final DataParameter<Byte> DATA_TEXTURE = EntityDataManager
 		.<Byte>createKey(GolemMultiColorized.class, DataSerializers.BYTE);
 	protected static final String NBT_TEXTURE = "GolemTextureData";
-	protected final int[] colors;
+	protected final Integer[] colors;
 	protected final ResourceLocation[] lootTables;
 
 	// here for convenience, used only by child classes
-	public static final int[] DYE_COLORS = {
+	public static final Integer[] DYE_COLORS = {
 			16383998, 16351261, 13061821, 3847130,
 			16701501, 8439583, 15961002, 4673362,
 			10329495, 1481884, 8991416, 3949738,
@@ -39,7 +42,7 @@ public abstract class GolemMultiColorized extends GolemColorized {
 	 * @param lColors an int[] of color values to use for rendering -- interacting with this golem  will go to the next color
 	 **/
 	public GolemMultiColorized(final EntityType<? extends GolemBase> entityType, final World world, final String modid,
-			@Nullable final ResourceLocation base, @Nullable final ResourceLocation overlay, final int[] lColors) {
+			@Nullable final ResourceLocation base, @Nullable final ResourceLocation overlay, final Integer[] lColors) {
 		super(entityType, world, 0L, base, overlay);
 		colors = lColors;
 		lootTables = new ResourceLocation[colors.length];
@@ -61,7 +64,7 @@ public abstract class GolemMultiColorized extends GolemColorized {
 		final ItemStack stack = player.getHeldItem(hand);
 		// only change texture when player has empty hand
 		if (stack.isEmpty() && this.canInteractChangeTexture()) {
-			final int incremented = (this.getTextureNum() + 1) % this.getColorArray().length;
+			final int incremented = (this.getTextureNum() + 1) % this.getTextureArray().length;
 			this.setTextureNum((byte) incremented);
 			player.swingArm(hand);
 			return true;
@@ -87,6 +90,12 @@ public abstract class GolemMultiColorized extends GolemColorized {
 			this.updateTextureByData(this.getTextureNum());
 		}
 	}
+	
+	@Override
+	public void onBuilt(final BlockState body, final BlockState legs, final BlockState arm1, final BlockState arm2) {
+		byte textureNum = GolemTextureBytes.getByBlock(this.getTextureBytes(), body.getBlock());
+		this.setTextureNum(textureNum);
+	}
 
 	@Override
 	public void writeAdditional(final CompoundNBT nbt) {
@@ -110,29 +119,22 @@ public abstract class GolemMultiColorized extends GolemColorized {
 		return getCreativeReturn(target);
 	}
 
+	@Override
 	public void setTextureNum(final byte toSet) {
 		this.getDataManager().set(DATA_TEXTURE, toSet);
 	}
 
+	@Override
 	public int getTextureNum() {
 		return this.getDataManager().get(DATA_TEXTURE).intValue();
 	}
 
-	public int[] getColorArray() {
+	@Override
+	public Integer[] getTextureArray() {
 		return this.colors;
 	}
 
 	protected void updateTextureByData(final int data) {
 		this.setColor(this.colors[data]);
 	}
-	
-	// ABSTRACT
-	
-	/**
-	 * Called when the player middle-clicks on a golem to get its "spawn egg"
-	 * or similar item
-	 * @param target
-	 * @return an ItemStack that best represents this golem, or an empty itemstack
-	 **/
-	public abstract ItemStack getCreativeReturn(final RayTraceResult target);
 }
