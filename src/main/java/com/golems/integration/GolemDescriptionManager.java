@@ -42,8 +42,9 @@ public abstract class GolemDescriptionManager {
 	public List<String> getEntityDescription(final GolemBase golem) {
 		List<String> list = new LinkedList<>();
 		if (showAttack) {
+			final float attackAmount = (float)golem.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getBaseValue();
 			list.add(TextFormatting.GRAY + trans("entitytip.attack") + " : "
-				+ TextFormatting.WHITE + golem.getBaseAttackDamage());
+				+ TextFormatting.WHITE + attackAmount);
 		}
 
 		// add right-click-texture to tip if possible

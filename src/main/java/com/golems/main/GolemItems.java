@@ -12,24 +12,24 @@ public final class GolemItems {
 
 	////// ITEMS //////
 	@GameRegistry.ObjectHolder(ExtraGolems.MODID + ":golem_paper")
-	public static Item golemPaper;
+	public static final Item golemPaper = null;
 
 	@GameRegistry.ObjectHolder(ExtraGolems.MODID + ":spawn_bedrock_golem")
-	public static Item spawnBedrockGolem;
+	public static final Item spawnBedrockGolem = null;
 
 	@GameRegistry.ObjectHolder(ExtraGolems.MODID + ":info_book")
-	public static Item infoBook;
+	public static final Item infoBook = null;
 
 	////// BLOCKS //////
 	@GameRegistry.ObjectHolder(ExtraGolems.MODID + ":golem_head")
-	public static Block golemHead;
+	public static final Block golemHead = null;
 
 	@GameRegistry.ObjectHolder(ExtraGolems.MODID + ":light_provider_full")
-	public static Block blockLightSource;
+	public static final Block blockLightSource = null;
 
 	@GameRegistry.ObjectHolder(ExtraGolems.MODID + ":water_light_provider_full")
-	public static Block blockLightSourceWater;
+	public static final Block blockLightSourceWater = null;
 
 	@GameRegistry.ObjectHolder(ExtraGolems.MODID + ":power_provider_all")
-	public static Block blockPowerSource;
+	public static final Block blockPowerSource = null;
 }

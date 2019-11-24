@@ -4,6 +4,7 @@ import com.golems.main.ExtraGolems;
 import com.golems.util.GolemLookup;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
 public final class GuiLoader {
@@ -22,5 +23,14 @@ public final class GuiLoader {
     	}
     	// open the gui
     	Minecraft.getMinecraft().displayGuiScreen(new GuiGolemBook(playerIn, itemstack));
+    }   
+    
+    public static void loadDispenserGolemGui(final EntityPlayer player, final IInventory golemInv) {
+    	// only load client-side, of course
+    	if(!player.getEntityWorld().isRemote) {
+    		return;
+    	}
+    	// open the gui
+    	Minecraft.getMinecraft().displayGuiScreen(new GuiDispenserGolem(player.inventory, golemInv));
     }   
 }

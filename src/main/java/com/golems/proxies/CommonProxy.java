@@ -11,14 +11,12 @@ import com.golems.items.ItemGolemSpell;
 import com.golems.items.ItemInfoBook;
 import com.golems.main.ExtraGolems;
 import com.golems.main.GolemItems;
-import com.golems.util.ConsumerLootTables;
 import com.golems.util.GolemLookup;
 import com.golems.util.GolemNames;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -57,7 +55,12 @@ public class CommonProxy {
 		MinecraftForge.EVENT_BUS.register(new GolemCommonEventHandler());
 	}	
 	
-	private static EntityEntry build(final Class<? extends GolemBase> entityClass, final String name, Block... blocks) {
+	protected static EntityEntry build(Class<? extends GolemBase> entityClass, String name, Block... blocks) {
+		return build(entityClass, name, true, blocks);
+	}
+	
+	protected static EntityEntry build(final Class<? extends GolemBase> entityClass, final String name,
+			final boolean lootTable, final Block... blocks) {
 		// register block(s) with GolemLookup
 		if(blocks != null && blocks.length > 0) {
 			GolemLookup.addGolem(entityClass, blocks);
@@ -68,6 +71,12 @@ public class CommonProxy {
 		builder.name(ExtraGolems.MODID + "." + name);
 		builder.id(new ResourceLocation(ExtraGolems.MODID, name), ++golemEntityCount);
 		builder.tracker(48, 3, true);
+		// add loot table
+		if(lootTable && !GolemColorized.class.isAssignableFrom(entityClass) 
+				&& !GolemMultiTextured.class.isAssignableFrom(entityClass)) {
+			LootTableList.register(new ResourceLocation(ExtraGolems.MODID, "entities/" + name));
+		}
+		// return the completed EntityEntry
 		return builder.build();
 	}
 	
@@ -82,7 +91,7 @@ public class CommonProxy {
 		golemEntityCount = 0;
 		// Register Golem EntityEntries as well as building blocks
 		event.getRegistry().registerAll(
-				build(EntityBedrockGolem.class, GolemNames.BEDROCK_GOLEM, (Block)null),
+				build(EntityBedrockGolem.class, GolemNames.BEDROCK_GOLEM, false, (Block)null),
 				build(EntityBoneGolem.class, GolemNames.BONE_GOLEM, Blocks.BONE_BLOCK),
 				build(EntityBookshelfGolem.class, GolemNames.BOOKSHELF_GOLEM, Blocks.BOOKSHELF),
 				build(EntityClayGolem.class, GolemNames.CLAY_GOLEM, Blocks.CLAY),
@@ -90,6 +99,7 @@ public class CommonProxy {
 				build(EntityConcreteGolem.class, GolemNames.CONCRETE_GOLEM, Blocks.CONCRETE),
 				build(EntityCraftingGolem.class, GolemNames.CRAFTING_GOLEM, Blocks.CRAFTING_TABLE),
 				build(EntityDiamondGolem.class, GolemNames.DIAMOND_GOLEM, Blocks.DIAMOND_BLOCK),
+				build(EntityDispenserGolem.class, GolemNames.DISPENSER_GOLEM, Blocks.DISPENSER),
 				build(EntityEmeraldGolem.class, GolemNames.EMERALD_GOLEM, Blocks.EMERALD_BLOCK),
 				build(EntityEndstoneGolem.class, GolemNames.ENDSTONE_GOLEM, Blocks.END_STONE),
 				build(EntityFurnaceGolem.class, GolemNames.FURNACE_GOLEM, Blocks.FURNACE, Blocks.LIT_FURNACE),
@@ -127,13 +137,18 @@ public class CommonProxy {
 		
 		// Also register Golem Loot Tables
 		LootTableList.register(new ResourceLocation(ExtraGolems.MODID, "entities/_golem_base"));
-		GolemNames.forEach(new ConsumerLootTables());
+		registerLootTables(ExtraGolems.MODID, GolemNames.WOOL_GOLEM, EntityWoolGolem.coloredWoolTypes);
+		registerLootTables(ExtraGolems.MODID, GolemNames.WOODEN_GOLEM, EntityWoodenGolem.woodTypes);
+		registerLootTables(ExtraGolems.MODID, GolemNames.MUSHROOM_GOLEM, EntityMushroomGolem.SHROOM_TYPES);
+		registerLootTables(ExtraGolems.MODID, GolemNames.REDSTONELAMP_GOLEM, EntityRedstoneLampGolem.VARIANTS);
+		registerLootTables(ExtraGolems.MODID, GolemNames.CONCRETE_GOLEM, EntityConcreteGolem.COLOR_ARRAY.length);
+		registerLootTables(ExtraGolems.MODID, GolemNames.STAINEDGLASS_GOLEM, EntityStainedGlassGolem.COLOR_ARRAY.length);
+		registerLootTables(ExtraGolems.MODID, GolemNames.STAINEDTERRACOTTA_GOLEM, EntityStainedClayGolem.COLOR_ARRAY.length);
 	}
 
 	@SubscribeEvent
 	public static void registerItems(final RegistryEvent.Register<Item> event) {
 		event.getRegistry().register(new ItemBlock(GolemItems.golemHead) {
-
 			@Override
 			@SideOnly(Side.CLIENT)
 			public boolean hasEffect(final ItemStack stack) {
@@ -165,4 +180,25 @@ public class CommonProxy {
 			new BlockUtilityPower(15, EntityRedstoneGolem.DEF_FREQ).setTranslationKey("power_provider_all").setRegistryName(ExtraGolems.MODID, "power_provider_all"));
 	}
 
+	/**
+	 * Registers multiple loot tables for each of the textures specified. They are registered under
+	 * the subfile [name] and individually named according to each element in [textures]
+	 */
+	public static void registerLootTables(final String MODID, final String name, final String[] textures) {
+		for(String s : textures) {
+			LootTableList.register(new ResourceLocation(MODID, "entities/" + name + "/" + s));
+		}
+	}
+	
+	/**
+	 * Registers loot tables for GolemColorizedMultiTextured, with loot tables 
+	 * registered under the subfile [name] and individually named '0' through '[max-1]'
+	 */
+	public static void registerLootTables(final String MODID, final String name, final int max) {
+		String[] array = new String[max];
+		for (int i = 0; i < max; i++) {
+			array[i] = Integer.toString(i);
+		}
+		registerLootTables(MODID, name, array);
+	}
 }

@@ -17,6 +17,7 @@ entity.golems.golem_coal.name=Coal Golem
 entity.golems.golem_concrete.name=Concrete Golem
 entity.golems.golem_crafting.name=Crafting Golem
 entity.golems.golem_diamond.name=Diamond Golem
+entity.golems.golem_dispenser.name=Dispenser Golem
 entity.golems.golem_emerald.name=Emerald Golem
 entity.golems.golem_end_stone.name=Endstone Golem
 entity.golems.golem_furnace.name=Furnace Golem
@@ -88,6 +89,8 @@ entitytip.grows_crops=Grows nearby crops
 entitytip.splits_upon_death=Splits in two!
 entitytip.fuel=Fuel
 entitytip.use_fuel=Consumes fuel
+entitytip.shoots_arrows=Shoots arrows!
+entitytip.click_refill=(Right click to refill)
 
 # Golem Guide Book entries
 item.info_book.name=Extra Golems Guide

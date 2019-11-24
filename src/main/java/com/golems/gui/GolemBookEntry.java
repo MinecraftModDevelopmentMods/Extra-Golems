@@ -18,6 +18,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
@@ -43,7 +44,7 @@ public class GolemBookEntry {
 		this.MULTI_TEXTURE = golem.doesInteractChangeTexture() && !(golem instanceof EntityRedstoneLampGolem);
 		this.FIREPROOF = (golem.isImmuneToFire() && !(golem instanceof EntityBedrockGolem));
 		this.HEALTH = (int) golem.getMaxHealth();
-		this.ATTACK = golem.getBaseAttackDamage();
+		this.ATTACK = (float) golem.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getBaseValue();
 		this.SPECIALS = golem.addSpecialDesc(new ArrayList<String>());
 		this.BLOCKS = GolemLookup.getBuildingBlocks(golem.getClass());
 		
@@ -51,10 +52,10 @@ public class GolemBookEntry {
 		final String img = (ExtraGolems.MODID + ":textures/gui/screenshots/")
 				.concat(EntityList.getEntityString(golem).replaceFirst(ExtraGolems.MODID + ".", "")).concat(".png");
 		try {
-			System.out.println("LOADING IMAGE:  " + img);
+			// System.out.println("LOADING IMAGE:  " + img);
 			this.IMAGE = Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(img)).getResourceLocation();
 		} catch (IOException e) {
-			System.out.println("NO IMAGE FOUND FOR " + EntityList.getEntityString(golem));
+			// System.out.println("NO IMAGE FOUND FOR " + EntityList.getEntityString(golem));
 			// skip loading this texture
 		}
 	}
