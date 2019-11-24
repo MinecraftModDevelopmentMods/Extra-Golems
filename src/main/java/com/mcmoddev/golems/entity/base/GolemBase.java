@@ -384,21 +384,10 @@ public abstract class GolemBase extends IronGolemEntity {
 
 	@Override
 	public void travel(final Vec3d vec) {
-		if (isServerWorld() && container.getSwimMode() == SwimMode.SWIM && isInWater() && isSwimmingUp()) {
+		if (isServerWorld() && isInWater() && isSwimmingUp()) {
 			moveRelative(0.01F, vec);
 			move(MoverType.SELF, getMotion());
 			setMotion(getMotion().scale(0.9D));
-			// update limb swing amounts by including vertical motion
-			this.prevLimbSwingAmount = this.limbSwingAmount;
-			double d5 = this.posX - this.prevPosX;
-			double d6 = this.posZ - this.prevPosZ;
-			double d8 = this.posY - this.prevPosY;
-			float f8 = MathHelper.sqrt(d5 * d5 + d8 * d8 + d6 * d6) * 4.0F;
-			if (f8 > 1.0F) {
-				f8 = 1.0F;
-			}
-			this.limbSwingAmount += (f8 - this.limbSwingAmount) * 0.4F;
-			this.limbSwing += this.limbSwingAmount;
 		} else {
 			super.travel(vec);
 		}
@@ -411,7 +400,7 @@ public abstract class GolemBase extends IronGolemEntity {
 			return;
 		}
 		if (!this.world.isRemote) {
-			if (isServerWorld() && isInWater() && isSwimming() && isSwimmingUp()) {
+			if (isServerWorld() && isInWater() && isSwimmingUp()) {
 				this.navigator = this.waterNavigator;
 				setSwimming(true);
 			} else {
@@ -424,6 +413,11 @@ public abstract class GolemBase extends IronGolemEntity {
 	@Override
 	protected float getWaterSlowDown() {
 		return container.getSwimMode() == SwimMode.SWIM ? 0.88F : super.getWaterSlowDown();
+	}
+
+	@Override
+	public boolean isPushedByWater() {
+		return !isSwimming();
 	}
 
 	public void setSwimmingUp(boolean isSwimmingUp) {
@@ -439,6 +433,10 @@ public abstract class GolemBase extends IronGolemEntity {
 		}
 		LivingEntity e = getAttackTarget();
 		return e != null && e.isInWater();
+	}
+	
+	public static boolean isSwimmingUp(final GolemBase golem) {
+		return golem.swimmingUp;
 	}
 	
 	/**

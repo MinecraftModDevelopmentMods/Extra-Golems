@@ -18,8 +18,8 @@ public class SwimmingMovementController extends MovementController {
 	@Override
 	public void tick() {
 		LivingEntity target = this.golem.getAttackTarget();
-		if (this.golem.isSwimmingUp() && this.golem.isInWater()) {
-			if (target != null && target.posY > this.golem.posY) {
+		if (GolemBase.isSwimmingUp(this.golem) && this.golem.isInWater()) {
+			if (target != null && (target.posY > this.golem.posY || golem.isSwimmingUp())) {
 				this.golem.setMotion(this.golem.getMotion().add(0.0D, 0.002D, 0.0D));
 			}
 
