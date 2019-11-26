@@ -13,8 +13,10 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 
 public final class WoodenGolem extends GolemMultiTextured {
 
@@ -65,19 +67,20 @@ public final class WoodenGolem extends GolemMultiTextured {
 		}
 	}
 	
-//	@Override
-//	public byte randomizeTexture(final World world, final BlockPos pos) {
-//		// use the location to select a biome-appropriate texture
-//		final boolean useBiome = world.getRandom().nextBoolean();
-//		if(useBiome) {
-//			byte texture = 0;
-//			final Biome biome = world.getBiome(pos);
-//			// TODO find an easier way to get the preferred log type from the biome			
-//			setTextureNum(texture);
-//			return texture;
-//		}
-//		return super.randomizeTexture(world, pos);
-//	}	
+	@Override
+	public void randomizeTexture(final World world, final BlockPos pos) {
+		// use the location to select a biome-appropriate texture
+		final boolean useBiome = world.getRandom().nextBoolean();
+		if(useBiome) {
+			byte texture = 0;
+			final Biome biome = world.getBiome(pos);
+			// TODO find an easy way to get the preferred log type from the biome
+			
+			setTextureNum(texture);
+			// return;
+		}
+		super.randomizeTexture(world, pos);
+	}	
 
 	@Override
 	public Map<Block, Byte> getTextureBytes() {

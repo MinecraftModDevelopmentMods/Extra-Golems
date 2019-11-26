@@ -61,9 +61,8 @@ public abstract class GolemMultiColorized extends GolemColorized implements IMul
 
 	@Override
 	public boolean processInteract(final PlayerEntity player, final Hand hand) {
-		final ItemStack stack = player.getHeldItem(hand);
-		// only change texture when player has empty hand
-		if (stack.isEmpty() && this.canInteractChangeTexture()) {
+		// change texture when player clicks (if enabled)
+		if (!player.isSneaking() && this.canInteractChangeTexture()) {
 			final int incremented = (this.getTextureNum() + 1) % this.getTextureArray().length;
 			this.setTextureNum((byte) incremented);
 			player.swingArm(hand);

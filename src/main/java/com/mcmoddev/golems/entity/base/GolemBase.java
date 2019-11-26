@@ -122,13 +122,10 @@ public abstract class GolemBase extends IronGolemEntity {
 	/**
 	 * Whether right-clicking on this entity triggers a texture change.
 	 *
-	 * @return True if this is a {@link GolemMultiTextured} or a
-	 * {@link GolemMultiColorized} AND the config option is enabled.
+	 * @return True if this is a {@link IMultiTexturedGolem} AND the config option is enabled.
 	 **/
 	public boolean canInteractChangeTexture() {
-		return ExtraGolemsConfig.enableTextureInteract()
-			&& (GolemMultiTextured.class.isAssignableFrom(this.getClass())
-			|| GolemMultiColorized.class.isAssignableFrom(this.getClass()));
+		return ExtraGolemsConfig.enableTextureInteract() && this instanceof IMultiTexturedGolem;
 	}
 
 	/**

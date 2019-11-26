@@ -29,7 +29,7 @@ public interface IMultiTexturedGolem<T> {
 	
 	/**
 	 * @return a Map that relates specific blocks to specific texture indices, 
-	 * to use when building the golem
+	 * to use when building the golem. Can be empty. Cannot be null.
 	 * @see com.mcmoddev.golems.util.GolemTextureBytes
 	 **/
 	Map<Block, Byte> getTextureBytes();
