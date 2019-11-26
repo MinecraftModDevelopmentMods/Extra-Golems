@@ -94,7 +94,7 @@ public final class EntityDispenserGolem extends GolemBase implements IRangedAtta
 		if(super.attackEntityFrom(source, amount)) {
 			// target the actual source of damage, eg, the skeleton that shot the arrow
 			if(source.getTrueSource() instanceof EntityLivingBase) {
-				this.setAttackTarget((EntityLivingBase) source.getTrueSource());
+				this.setRevengeTarget((EntityLivingBase) source.getTrueSource());
 			}
 			return true;
 		}
@@ -249,6 +249,26 @@ public final class EntityDispenserGolem extends GolemBase implements IRangedAtta
 		}
 		return inv.getStackInSlot(slot);
 	}
+	
+	/**
+	 * @param inv the inventory to search
+	 * @return the total number of arrows in the inventory.
+	 * May be zero.
+	 **/
+	private static int countArrows(final IInventory inv) {
+		// search inventory to find suitable arrow itemstack
+		if(inv == null) {
+			return 0;
+		}
+		int arrowCount = 0;
+		for (int i = 0, l = inv.getSizeInventory(); i < l; i++) {
+			final ItemStack stack = inv.getStackInSlot(i);
+			if(!stack.isEmpty() && stack.getItem() instanceof ItemArrow) {
+				arrowCount += stack.getCount();
+			}
+		}
+		return arrowCount;
+	}
 
 	@Override
 	public void attackEntityWithRangedAttack(final EntityLivingBase target, final float distanceFactor) {
@@ -317,7 +337,13 @@ public final class EntityDispenserGolem extends GolemBase implements IRangedAtta
 	public List<String> addSpecialDesc(final List<String> list) {
 		if(getConfig(this).getBoolean(ALLOW_SPECIAL)) {
 			list.add(TextFormatting.LIGHT_PURPLE + trans("entitytip.shoots_arrows"));
-			list.add(TextFormatting.GRAY + trans("entitytip.click_refill"));
+			//final int arrowCount = countArrows(this.inventory);
+			//if(arrowCount > 0) {
+				// TODO this number only updates client-side after opening inventory
+				//list.add(TextFormatting.GRAY + trans("entitytip.arrows") + ": " + TextFormatting.WHITE + arrowCount);
+			//} else {
+				list.add(TextFormatting.GRAY + trans("entitytip.click_refill"));
+			//}			
 		}
 		return list;
 	}	

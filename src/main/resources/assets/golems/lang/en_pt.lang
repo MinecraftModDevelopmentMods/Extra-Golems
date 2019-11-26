@@ -79,6 +79,7 @@ entitytip.grows_crops=Grows yer seaweed
 entitytip.splits_upon_death=Splinters in two!
 entitytip.fuel=Fuel
 entitytip.use_fuel=Munches fuel
+entitytip.arrows=Arrows
 entitytip.shoots_arrows=Blastrr o' arrows!
 entitytip.click_refill=(Right Click t' fill wit' moarr arrows)
 

@@ -89,6 +89,7 @@ entitytip.grows_crops=Grows nearby crops
 entitytip.splits_upon_death=Splits in two!
 entitytip.fuel=Fuel
 entitytip.use_fuel=Consumes fuel
+entitytip.arrows=Arrows
 entitytip.shoots_arrows=Shoots arrows!
 entitytip.click_refill=(Right click to refill)
 

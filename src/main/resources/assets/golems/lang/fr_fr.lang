@@ -80,6 +80,7 @@ entitytip.grows_crops=Cultive les cultures voisines
 entitytip.splits_upon_death=Divisé en deux!
 entitytip.fuel=Carburant
 entitytip.use_fuel=Consomme du carburant
+entitytip.arrows=Flèches
 entitytip.shoots_arrows=Tire des flèches!
 entitytip.click_refill=(Clic droit pour remplir)
 

@@ -77,6 +77,7 @@ entitytip.grows_crops=Vokser i nærheden afgrøder
 entitytip.splits_upon_death=Splitter i to!
 entitytip.fuel=Brændstof
 entitytip.use_fuel=Forbruger af brændstof
+entitytip.arrows=Pile
 entitytip.shoots_arrows=Kan skyde pile!
 entitytip.click_refill=(Højreklik for at genopfylde)
 

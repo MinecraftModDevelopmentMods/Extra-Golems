@@ -87,6 +87,7 @@ entitytip.grows_crops=Выращивает близлежащие культур
 entitytip.splits_upon_death=Разделить пополам
 entitytip.fuel=топливо
 entitytip.use_fuel=Использует топливо
+entitytip.arrows=стрелы
 entitytip.shoots_arrows=стреляет стрелами!
 entitytip.click_refill=(ПКМ, чтобы пополнить)
 

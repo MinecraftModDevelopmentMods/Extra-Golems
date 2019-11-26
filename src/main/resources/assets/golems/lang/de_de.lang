@@ -85,6 +85,7 @@ entitytip.grows_crops=Wächst in der Nähe angebaute Kulturen
 entitytype.splits_upon_death=Splits in zwei!
 entitytip.fuel=Kraftstoff
 entitytip.use_fuel=Verbraucht Kraftstoff
+entitytip.arrows=schießen
 entitytip.shoots_arrows=Kann Pfeile schießen!
 entitytip.click_refill=(Rechtsklick zum Nachfüllen)
 
