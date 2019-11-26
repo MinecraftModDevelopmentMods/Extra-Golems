@@ -8,6 +8,7 @@ entity.golems.golem_clay.name=Ler Golem
 entity.golems.golem_coal.name=Kul Golem
 entity.golems.golem_crafting.name=Fremstilling Golem
 entity.golems.golem_diamond.name=Diamant Golem
+entity.golems.golem_dispenser.name=Automat Golem
 entity.golems.golem_emerald.name=Emerald Golem
 entity.golems.golem_end_stone.name=Endsten Golem
 entity.golems.golem_furnace.name=Ovn Golem
@@ -76,6 +77,8 @@ entitytip.grows_crops=Vokser i nærheden afgrøder
 entitytip.splits_upon_death=Splitter i to!
 entitytip.fuel=Brændstof
 entitytip.use_fuel=Forbruger af brændstof
+entitytip.shoots_arrows=Kan skyde pile!
+entitytip.click_refill=(Højreklik for at genopfylde)
 
 # Golem Guide Book entries
 item.info_book.name=Guide til Extra Golems

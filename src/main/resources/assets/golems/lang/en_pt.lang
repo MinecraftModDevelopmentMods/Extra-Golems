@@ -9,6 +9,7 @@ entity.golems.golem_clay.name=Solid Mud Golem
 entity.golems.golem_coal.name=Golem o' Burnin' Rock
 entity.golems.golem_crafting.name=Craftin' Golem
 entity.golems.golem_diamond.name=Bejewelled Golem
+entity.golems.golem_dispenser.name=Cannon Golem
 entity.golems.golem_emerald.name=Golem o' the Seasick Sailor's Vomit
 entity.golems.golem_end_stone.name=Ye Tall One's Golem
 entity.golems.golem_furnace.name=Oven Golem
@@ -78,6 +79,8 @@ entitytip.grows_crops=Grows yer seaweed
 entitytip.splits_upon_death=Splinters in two!
 entitytip.fuel=Fuel
 entitytip.use_fuel=Munches fuel
+entitytip.shoots_arrows=Blastrr o' arrows!
+entitytip.click_refill=(Right Click t' fill wit' moarr arrows)
 
 # Golem Guide Book entries
 item.info_book.name=Logbook fer Extra Golems

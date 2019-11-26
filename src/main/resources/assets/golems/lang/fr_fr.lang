@@ -9,6 +9,7 @@ entity.golems.golem_clay.name=Golem d'Argile
 entity.golems.golem_coal.name=Golem de Charbon
 entity.golems.golem_crafting.name=Golem de Fabrication
 entity.golems.golem_diamond.name=Golem de Diamant
+entity.golems.golem_dispenser.name=Golem de Distributeur
 entity.golems.golem_emerald.name=Golem d'Émeraude
 entity.golems.golem_end_stone.name=Golem de Pierre du Néant
 entity.golems.golem_furnace.name=Golem de Fourneau
@@ -54,6 +55,7 @@ entitytip.name=Nom
 entitytip.health=Vie
 entitytip.attack=Attaque
 entitytip.lights_area=Fournit de la lumière
+entitytip.lights_area_toggle=Clic droit pour basculer la lumière
 entitytip.click_change_texture=Clic droit pour changer la texture
 entitytip.indestructible=Indestructible!
 entitytip.grants_self_potion_effects=A de bons effets de potion
@@ -78,6 +80,8 @@ entitytip.grows_crops=Cultive les cultures voisines
 entitytip.splits_upon_death=Divisé en deux!
 entitytip.fuel=Carburant
 entitytip.use_fuel=Consomme du carburant
+entitytip.shoots_arrows=Tire des flèches!
+entitytip.click_refill=(Clic droit pour remplir)
 
 # Golem Guide Book entries
 item.info_book.name=Guide pour Extra Golems

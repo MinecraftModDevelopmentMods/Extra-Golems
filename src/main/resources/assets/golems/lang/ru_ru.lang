@@ -16,6 +16,7 @@ entity.golems.golem_clay.name=Глиняный голем
 entity.golems.golem_coal.name=Угольный голем
 entity.golems.golem_crafting.name=Голем-крафтер
 entity.golems.golem_diamond.name=Алмазный голем
+entity.golems.golem_dispenser.name=Раздатчик голем
 entity.golems.golem_emerald.name=Изумрудный голем
 entity.golems.golem_end_stone.name=Адский голем
 entity.golems.golem_furnace.name=Печь голем
@@ -86,6 +87,8 @@ entitytip.grows_crops=Выращивает близлежащие культур
 entitytip.splits_upon_death=Разделить пополам
 entitytip.fuel=топливо
 entitytip.use_fuel=Использует топливо
+entitytip.shoots_arrows=стреляет стрелами!
+entitytip.click_refill=(ПКМ, чтобы пополнить)
 
 # Golem Guide Book entries
 item.info_book.name=Руководство по Extra Golems

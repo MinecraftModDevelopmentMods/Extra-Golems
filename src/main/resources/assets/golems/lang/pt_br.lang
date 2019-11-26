@@ -9,6 +9,7 @@ entity.golems.golem_clay.name=Golem de Argila
 entity.golems.golem_crafting.name=Golem de Trabalho
 entity.golems.golem_coal.name=Golem de Carvão
 entity.golems.golem_diamond.name=Golem de Diamante
+entity.golems.golem_dispenser.name=Golem de Ejetor
 entity.golems.golem_emerald.name=Golem de Esmeralda
 entity.golems.golem_end_stone.name=Golem de Pedra do Fim
 entity.golems.golem_furnace.name=Golem de Fornalha
@@ -78,6 +79,8 @@ entitytip.grows_crops=Cresce culturas próximas
 entitytip.splits_upon_death=Divide em dois
 entitytip.fuel=Combustível
 entitytip.use_fuel=Consome combustível
+entitytip.shoots_arrows=Atira flechas!
+entitytip.click_refill=(Clique dir. para recarregar)
 
 # Golem Guide Book entries
 item.info_book.name=Guia Extra Golems
