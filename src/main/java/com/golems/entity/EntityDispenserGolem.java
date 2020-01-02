@@ -69,6 +69,7 @@ public final class EntityDispenserGolem extends GolemBase implements IRangedAtta
 
 	public EntityDispenserGolem(final World world) {
 		super(world);
+		this.setLootTableLoc(GolemNames.DISPENSER_GOLEM);
 		// set config values
 		final GolemConfigSet cfg = getConfig(this);
 		this.allowArrows = cfg.getBoolean(ALLOW_SPECIAL);
