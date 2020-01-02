@@ -359,6 +359,24 @@ public final class GolemContainer {
 		/**
 		 * Creates the builder
 		 *
+		 * @param modId			the mod ID (e.g., "golems_addon")
+		 * @param golemName     the name of the golem (e.g. "golem_foo")
+		 * @param entityClazz   the class of the golem (e.g. EntityFooGolem.class)
+		 * @param entityFactory the constructor function of the class (e.g. EntityFooGolem::new).
+		 * For golems with no special abilities, use {@code GenericGolem.class}
+		 **/
+		public Builder(final String modId, final String golemName, final Class<? extends GolemBase> entityClazz,
+				final EntityType.IFactory<? extends GolemBase> entityFactory) {
+			this.modid = modId;
+			this.golemName = golemName;
+			this.entityClass = entityClazz;
+			this.entityTypeBuilder = EntityType.Builder.create(entityFactory, EntityClassification.MISC)
+				.setTrackingRange(48).setUpdateInterval(3).setShouldReceiveVelocityUpdates(true)
+				.size(1.4F, 2.9F);
+		}
+		/**
+		 * Creates the builder with the assumption that the mod id is "golems"
+		 *
 		 * @param golemName     the name of the golem (e.g. "golem_foo")
 		 * @param entityClazz   the class of the golem (e.g. EntityFooGolem.class)
 		 * @param entityFactory the constructor function of the class (e.g. EntityFooGolem::new).
@@ -366,11 +384,7 @@ public final class GolemContainer {
 		 **/
 		public Builder(final String golemName, final Class<? extends GolemBase> entityClazz,
 				final EntityType.IFactory<? extends GolemBase> entityFactory) {
-			this.golemName = golemName;
-			this.entityClass = entityClazz;
-			this.entityTypeBuilder = EntityType.Builder.create(entityFactory, EntityClassification.MISC)
-				.setTrackingRange(48).setUpdateInterval(3).setShouldReceiveVelocityUpdates(true)
-				.size(1.4F, 2.9F);
+			this(ExtraGolems.MODID, golemName, entityClazz, entityFactory);
 		}
 
 		/**
