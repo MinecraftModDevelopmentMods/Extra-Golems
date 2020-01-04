@@ -6,6 +6,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.controller.MovementController;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 
 public class SwimmingMovementController extends MovementController {
 	private final GolemBase golem;
@@ -18,8 +19,10 @@ public class SwimmingMovementController extends MovementController {
 	@Override
 	public void tick() {
 		LivingEntity target = this.golem.getAttackTarget();
+		final Vec3d gPos = this.golem.getPositionVec();
+		final Vec3d tPos = target.getPositionVec();
 		if (GolemBase.isSwimmingUp(this.golem) && this.golem.isInWater()) {
-			if (target != null && (target.posY > this.golem.posY || golem.isSwimmingUp())) {
+			if (target != null && (tPos.y > gPos.y || golem.isSwimmingUp())) {
 				this.golem.setMotion(this.golem.getMotion().add(0.0D, 0.002D, 0.0D));
 			}
 
@@ -28,9 +31,9 @@ public class SwimmingMovementController extends MovementController {
 
 				return;
 			}
-			double x1 = this.posX - this.golem.posX;
-			double y1 = this.posY - this.golem.posY;
-			double z1 = this.posZ - this.golem.posZ;
+			double x1 = this.posX - gPos.x;
+			double y1 = this.posY - gPos.y;
+			double z1 = this.posZ - gPos.z;
 			double dis = MathHelper.sqrt(x1 * x1 + y1 * y1 + z1 * z1);
 			y1 /= dis;
 

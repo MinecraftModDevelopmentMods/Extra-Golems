@@ -21,6 +21,7 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 
@@ -51,7 +52,7 @@ public final class FurnaceGolem extends GolemBase {
 	@Override
 	protected void registerGoals() {
 		super.registerGoals();
-		this.goalSelector.addGoal(0, new InertGoal(this));
+		this.targetSelector.addGoal(0, new InertGoal(this));
 		this.goalSelector.addGoal(1, new UseFuelGoal(this));
 		this.goalSelector.addGoal(1, new TemptGoal(this, 0.7D, Ingredient.fromTag(ItemTags.COALS), false));
 	}
@@ -62,10 +63,11 @@ public final class FurnaceGolem extends GolemBase {
 		if(this.world.isRemote && rand.nextInt(20) == 0) {
 			// particle effects
 			final double pMotion = 0.03D;
+			final Vec3d pos = this.getPositionVec();
 			world.addParticle(this.hasFuel() ? ParticleTypes.FLAME : ParticleTypes.SMOKE, 
-					this.posX + world.rand.nextDouble() * 0.4D - 0.2D + this.getMotion().getX() * 8,
-					this.posY + world.rand.nextDouble() * 0.5D + this.getHeight() / 2.0D, 
-					this.posZ + world.rand.nextDouble() * 0.4D - 0.2D + this.getMotion().getZ() * 8,
+					pos.x + world.rand.nextDouble() * 0.4D - 0.2D + this.getMotion().getX() * 8,
+					pos.y + world.rand.nextDouble() * 0.5D + this.getHeight() / 2.0D, 
+					pos.z + world.rand.nextDouble() * 0.4D - 0.2D + this.getMotion().getZ() * 8,
 					world.rand.nextDouble() * pMotion - pMotion * 0.5D,
 					world.rand.nextDouble() * pMotion * 0.75D,
 					world.rand.nextDouble() * pMotion - pMotion * 0.5D);
@@ -87,10 +89,11 @@ public final class FurnaceGolem extends GolemBase {
 	@Override
 	protected boolean processInteract(final PlayerEntity player, final Hand hand) {
 		// allow player to add fuel to the golem by clicking on them with a fuel item
+		final Vec3d pos = this.getPositionVec();
 		ItemStack stack = player.getHeldItem(hand);
-		int burnTime = ForgeHooks.getBurnTime(stack) * (player.isSneaking() ? stack.getCount() : 1);
+		int burnTime = ForgeHooks.getBurnTime(stack) * (player.isCrouching() ? stack.getCount() : 1);
 		if (burnTime > 0 && (getFuel() + burnTime) <= MAX_FUEL) {
-			if(player.isSneaking()) {
+			if(player.isCrouching()) {
 				// take entire ItemStack
 				this.addFuel(burnTime * stack.getCount());
 				stack = stack.getContainerItem();
@@ -106,8 +109,8 @@ public final class FurnaceGolem extends GolemBase {
 			// update the player's held item
 			player.setHeldItem(hand, stack);
 			// add particles
-			ItemBedrockGolem.spawnParticles(this.world, this.posX, this.posY + this.getHeight() / 2.0D,
-					this.posZ, 0.03D, ParticleTypes.FLAME, 10);
+			ItemBedrockGolem.spawnParticles(this.world, pos.x, pos.y + this.getHeight() / 2.0D,
+					pos.z, 0.03D, ParticleTypes.FLAME, 10);
 			return true;
 		}
 		
@@ -115,8 +118,8 @@ public final class FurnaceGolem extends GolemBase {
 		if(stack.getItem() == Items.WATER_BUCKET) {
 			this.setFuel(0);
 			player.setHeldItem(hand, stack.getContainerItem());
-			ItemBedrockGolem.spawnParticles(this.world, this.posX, this.posY + this.getHeight() / 2.0D,
-					this.posZ, 0.1D, ParticleTypes.LARGE_SMOKE, 15);
+			ItemBedrockGolem.spawnParticles(this.world, pos.x, pos.y + this.getHeight() / 2.0D,
+					pos.z, 0.1D, ParticleTypes.LARGE_SMOKE, 15);
 			return true;
 		}
 		
@@ -208,10 +211,11 @@ public final class FurnaceGolem extends GolemBase {
 		@Override
 		public void tick() {
 			// freeze the golem and ai tasks
+			final Vec3d pos = golem.getPositionVec();
 			golem.setMotion(golem.getMotion().mul(0, 1.0D, 0));
 			golem.setMoveForward(0F);
 			golem.setMoveStrafing(0F);
-			golem.moveController.setMoveTo(golem.posX, golem.posY, golem.posZ, 0.1D);
+			golem.moveController.setMoveTo(pos.x, pos.y, pos.z, 0.1D);
 			golem.setJumping(false);
 			golem.setAttackTarget(null);
 			golem.setRevengeTarget(null);

@@ -9,6 +9,7 @@ import com.mcmoddev.golems.renders.RenderGolem;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
 
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.entity.EntityType;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
@@ -33,37 +34,34 @@ public final class ProxyClient extends ProxyCommon {
 		ScreenManager.registerFactory(GolemItems.DISPENSER_GOLEM, GuiDispenserGolem::new);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void registerEntityRenders() {
 		GolemRegistrar.getContainers().forEach(container -> {
 			if(container.useDefaultRender()) {
-				registerEntityRender(container.getEntityClass());
+				if(GolemColorized.class.isAssignableFrom(container.getEntityClass())) {
+					registerColorized((EntityType<? extends GolemColorized>)container.getEntityType());
+				} else {
+					registerTextured(container.getEntityType());
+				}
+				
+				
 			}});
 	}
 
 	/**
-	 * Helper function for entity rendering registration.
-	 * If the class inherits from {@code GolemColorized.class},
-	 * then it will be register using  {@link #registerColorized}.
-	 * Otherwise, the class will be registered using
-	 * {@link #registerTextured(Class)} by default.
+	 * Registers an entity with the RenderGolem rendering class.
+	 * @param type the EntityType. Must be of type {@code EntityType<GolemBase>}
 	 */
-	public static void registerEntityRender(final Class<? extends GolemBase> clazz) {
-		if (GolemColorized.class.isAssignableFrom(clazz)) {
-			registerColorized((Class<? extends GolemColorized>) clazz);
-		} else {
-			registerTextured(clazz);
-		}
+	public static void registerTextured(final EntityType<? extends GolemBase> type) {
+		RenderingRegistry.registerEntityRenderingHandler(type, FACTORY_TEXTURED_GOLEM);
 	}
 
 	/**
-	 * Registers an entity with the RenderGolem rendering class.
-	 */
-	public static void registerTextured(final Class<? extends GolemBase> golem) {
-		RenderingRegistry.registerEntityRenderingHandler(golem, FACTORY_TEXTURED_GOLEM);
-	}
-
-	public static void registerColorized(final Class<? extends GolemColorized> golem) {
-		RenderingRegistry.registerEntityRenderingHandler(golem, FACTORY_COLORED_GOLEM);
+	 * Registers an entity with the RenderColoredGolem class
+	 * @param type the EntityType. Must be of type {@code EntityType<GolemColorized>}
+	 **/
+	public static void registerColorized(final EntityType<? extends GolemColorized> type) {
+		RenderingRegistry.registerEntityRenderingHandler(type, FACTORY_COLORED_GOLEM);
 	}
 }

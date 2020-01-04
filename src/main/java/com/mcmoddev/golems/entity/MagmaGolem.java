@@ -127,13 +127,10 @@ public final class MagmaGolem extends GolemBase {
 		}
 		// check the cobblestone-melting math
 		if (this.allowMelting && !this.isChild()) {
-			final int x = MathHelper.floor(this.posX);
-			final int y = MathHelper.floor(this.posY - 0.20000000298023224D);
-			final int z = MathHelper.floor(this.posZ);
-			final BlockPos below = new BlockPos(x, y, z);
+			final BlockPos below = this.getBlockBelow();
 			final Block b1 = this.world.getBlockState(below).getBlock();
 
-			if (x == this.stillX && z == this.stillZ) {
+			if (below.getX() == this.stillX && below.getZ() == this.stillZ) {
 				// check if it's been holding still long enough AND on top of cobblestone
 				if (++this.ticksStandingStill >= this.meltDelay
 						&& b1 == Blocks.COBBLESTONE && rand.nextInt(16) == 0) {
@@ -143,8 +140,8 @@ public final class MagmaGolem extends GolemBase {
 				}
 			} else {
 				this.ticksStandingStill = 0;
-				this.stillX = x;
-				this.stillZ = z;
+				this.stillX = below.getX();
+				this.stillZ = below.getZ();
 			}
 		}
 	}
@@ -167,21 +164,17 @@ public final class MagmaGolem extends GolemBase {
 				child2.setAttackTarget(this.getAttackTarget());
 			}
 			// set location
-			child1.setLocationAndAngles(this.posX + rand.nextDouble() - 0.5D, this.posY,
-					this.posZ + rand.nextDouble() - 0.5D, this.rotationYaw + rand.nextInt(20) - 10, 0);
-			child2.setLocationAndAngles(this.posX + rand.nextDouble() - 0.5D, this.posY,
-					this.posZ + rand.nextDouble() - 0.5D, this.rotationYaw + rand.nextInt(20) - 10, 0);
+			child1.copyLocationAndAnglesFrom(this);
+			child2.copyLocationAndAnglesFrom(this);
+//			child1.setLocationAndAngles(this.posX + rand.nextDouble() - 0.5D, this.posY,
+//					this.posZ + rand.nextDouble() - 0.5D, this.rotationYaw + rand.nextInt(20) - 10, 0);
+//			child2.setLocationAndAngles(this.posX + rand.nextDouble() - 0.5D, this.posY,
+//					this.posZ + rand.nextDouble() - 0.5D, this.rotationYaw + rand.nextInt(20) - 10, 0);
 			// spawn the entities
 			this.getEntityWorld().addEntity(child1);
 			this.getEntityWorld().addEntity(child2);
 		}
 
 		super.onDeath(source);
-	}
-
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public int getBrightnessForRender() {
-		return 15728880;
 	}
 }

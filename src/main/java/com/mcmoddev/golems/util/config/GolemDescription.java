@@ -1,12 +1,14 @@
 package com.mcmoddev.golems.util.config;
 
-import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.common.ForgeConfigSpec;
-
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Predicate;
+
+import javax.annotation.Nullable;
+
+import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
+
+import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 /**
  * Holds an {@link ITextComponent} and an

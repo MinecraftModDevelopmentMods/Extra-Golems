@@ -8,12 +8,11 @@ import com.mcmoddev.golems.items.ItemBedrockGolem;
 import com.mcmoddev.golems.main.ExtraGolemsEntities;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mcmoddev.golems.util.config.GolemContainer;
-import com.mcmoddev.golems.util.config.GolemRegistrar;
 import com.mcmoddev.golems.util.config.GolemContainer.SwimMode;
+import com.mcmoddev.golems.util.config.GolemRegistrar;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -32,15 +31,12 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.pathfinding.SwimmerPathNavigator;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -180,6 +176,10 @@ public abstract class GolemBase extends IronGolemEntity {
 		return Math.min(this.getMaxHealth() * (this.isChild() ? 0.5F : 0.25F), 32.0F);
 	}
 	
+	public BlockPos getBlockBelow() {
+		return this.func_226268_ag_();
+	}
+	
 	/////////////// CONFIG HELPERS //////////////////
 
 	public ForgeConfigSpec.ConfigValue getConfigValue(final String name) {
@@ -200,33 +200,29 @@ public abstract class GolemBase extends IronGolemEntity {
 	
 	/////////////// OVERRIDEN BEHAVIOR //////////////////
 
+	// fall(float, float)
 	@Override
-	public void fall(float distance, float damageMultiplier) {
+	public boolean func_225503_b_(float distance, float damageMultiplier) {
 		if(!container.takesFallDamage()) {
-			return;
+			return false;
 		}
+
 		float[] ret = net.minecraftforge.common.ForgeHooks.onLivingFall(this, distance, damageMultiplier);
 		if (ret == null) {
-			return;
+			return false;
 		}
-		distance = ret[0]; 
+		distance = ret[0];
 		damageMultiplier = ret[1];
-		super.fall(distance, damageMultiplier);
-		EffectInstance effectinstance = this.getActivePotionEffect(Effects.JUMP_BOOST);
-		float f = effectinstance == null ? 0.0F : (float)(effectinstance.getAmplifier() + 1);
-		int i = MathHelper.ceil((distance - 3.0F - f) * damageMultiplier);
+
+		boolean flag = super.func_225503_b_(distance, damageMultiplier);
+		int i = this.func_225508_e_(distance, damageMultiplier);
 		if (i > 0) {
 			this.playSound(this.getFallSound(i), 1.0F, 1.0F);
-			this.attackEntityFrom(DamageSource.FALL, (float)i);
-			int j = MathHelper.floor(this.posX);
-			int k = MathHelper.floor(this.posY - (double)0.2F);
-			int l = MathHelper.floor(this.posZ);
-			final BlockPos pos = new BlockPos(j, k, l);
-			BlockState blockstate = this.world.getBlockState(pos);
-			if (!this.world.isAirBlock(pos)) {
-				SoundType soundtype = blockstate.getSoundType(world, pos, this);
-				this.playSound(soundtype.getFallSound(), soundtype.getVolume() * 0.5F, soundtype.getPitch() * 0.75F);
-			}
+			this.func_226295_cZ_();
+			this.attackEntityFrom(DamageSource.FALL, (float) i);
+			return true;
+		} else {
+			return flag;
 		}
 	}
 	
@@ -280,8 +276,9 @@ public abstract class GolemBase extends IronGolemEntity {
 			}
 			// spawn particles and play sound
 			if(this.world.isRemote) {
-				ItemBedrockGolem.spawnParticles(this.world, this.posX, this.posY + this.getHeight() / 2.0D,
-						this.posZ, 0.12D, ParticleTypes.HAPPY_VILLAGER, 20);
+				final Vec3d pos = this.getPositionVec();
+				ItemBedrockGolem.spawnParticles(this.world, pos.x, pos.y + this.getHeight() / 2.0D,
+						pos.z, 0.12D, ParticleTypes.HAPPY_VILLAGER, 20);
 			}
 			this.playSound(SoundEvents.BLOCK_STONE_PLACE, 0.85F, 1.1F + rand.nextFloat() * 0.2F);
 			return true;

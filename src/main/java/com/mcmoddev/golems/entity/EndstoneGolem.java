@@ -82,11 +82,12 @@ public class EndstoneGolem extends GolemBase {
 	@Override
 	public void livingTick() {
 		if (this.world.isRemote && this.hasAmbientParticles) {
+			final Vec3d pos = this.getPositionVec();
 			for (int i = 0; i < 2; ++i) {
 				this.world.addParticle(ParticleTypes.PORTAL,
-						this.posX + (this.rand.nextDouble() - 0.5D) * (double) this.getWidth(),
-						this.posY + this.rand.nextDouble() * (double) this.getHeight() - 0.25D,
-						this.posZ + (this.rand.nextDouble() - 0.5D) * (double) this.getWidth(),
+						pos.x + (this.rand.nextDouble() - 0.5D) * (double) this.getWidth(),
+						pos.y + this.rand.nextDouble() * (double) this.getHeight() - 0.25D,
+						pos.z + (this.rand.nextDouble() - 0.5D) * (double) this.getWidth(),
 						(this.rand.nextDouble() - 0.5D) * 2.0D, -this.rand.nextDouble(),
 						(this.rand.nextDouble() - 0.5D) * 2.0D);
 			}
@@ -133,9 +134,10 @@ public class EndstoneGolem extends GolemBase {
 	}
 
 	protected boolean teleportRandomly() {
-		final double d0 = this.posX + (this.rand.nextDouble() - 0.5D) * range;
-		final double d1 = this.posY + (this.rand.nextDouble() - 0.5D) * range * 0.5D;
-		final double d2 = this.posZ + (this.rand.nextDouble() - 0.5D) * range;
+		final Vec3d pos = this.getPositionVec();
+		final double d0 = pos.x + (this.rand.nextDouble() - 0.5D) * range;
+		final double d1 = pos.y + (this.rand.nextDouble() - 0.5D) * range * 0.5D;
+		final double d2 = pos.z + (this.rand.nextDouble() - 0.5D) * range;
 		return this.teleportTo(d0, d1, d2);
 	}
 
@@ -143,15 +145,17 @@ public class EndstoneGolem extends GolemBase {
 	 * Teleport the golem to another entity.
 	 **/
 	protected boolean teleportToEntity(final Entity entity) {
-		Vec3d vec3d = new Vec3d(this.posX - entity.posX,
-				this.getBoundingBox().minY + (double) (this.getHeight() / 2.0F) - entity.posY
+		final Vec3d curPos = this.getPositionVec();
+		final Vec3d ePos = entity.getPositionVec();
+		Vec3d vec3d = new Vec3d(curPos.x - ePos.x,
+				this.getBoundingBox().minY + (double) (this.getHeight() / 2.0F) - ePos.y
 						+ (double) entity.getEyeHeight(),
-				this.posZ - entity.posZ);
+				curPos.z - ePos.z);
 		vec3d = vec3d.normalize();
 		final double d0 = 16.0D;
-		final double d1 = this.posX + (this.rand.nextDouble() - 0.5D) * 8.0D - vec3d.x * d0;
-		final double d2 = this.posY + (double) (this.rand.nextInt(16) - 8) - vec3d.y * d0;
-		final double d3 = this.posZ + (this.rand.nextDouble() - 0.5D) * 8.0D - vec3d.z * d0;
+		final double d1 = curPos.x + (this.rand.nextDouble() - 0.5D) * 8.0D - vec3d.x * d0;
+		final double d2 = curPos.y + (double) (this.rand.nextInt(16) - 8) - vec3d.y * d0;
+		final double d3 = curPos.z + (this.rand.nextDouble() - 0.5D) * 8.0D - vec3d.z * d0;
 		return this.teleportTo(d1, d2, d3);
 	}
 

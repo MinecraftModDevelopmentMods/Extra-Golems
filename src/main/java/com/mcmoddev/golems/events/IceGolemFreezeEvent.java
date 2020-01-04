@@ -6,6 +6,7 @@ import java.util.Random;
 import java.util.function.Function;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;

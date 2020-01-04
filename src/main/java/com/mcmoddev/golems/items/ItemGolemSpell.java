@@ -3,6 +3,7 @@ package com.mcmoddev.golems.items;
 import com.mcmoddev.golems.blocks.BlockGolemHead;
 import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalBlock;

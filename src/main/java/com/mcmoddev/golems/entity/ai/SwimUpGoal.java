@@ -22,7 +22,7 @@ public class SwimUpGoal extends Goal {
 	}
 
 	public boolean shouldExecute() {
-		return (this.golem.isInWater() && this.golem.posY < (this.targetY - 2));
+		return (this.golem.isInWater() && this.golem.getPositionVec().y < (this.targetY - 2));
 	}
 
 	@Override
@@ -32,10 +32,11 @@ public class SwimUpGoal extends Goal {
 
 	@Override
 	public void tick() {
-		if (this.golem.posY < (this.targetY - 1) && (this.golem.getNavigator().noPath() || isCloseToPathTarget())) {
+		final Vec3d gPos = golem.getPositionVec();
+		if (gPos.y < (this.targetY - 1) && (this.golem.getNavigator().noPath() || isCloseToPathTarget())) {
 
 			Vec3d vec = RandomPositionGenerator.findRandomTargetBlockTowards(this.golem, 4, 8,
-					new Vec3d(this.golem.posX, (this.targetY - 1), this.golem.posZ));
+					new Vec3d(gPos.x, (this.targetY - 1), gPos.z));
 			if (vec == null) {
 				this.obstructed = true;
 				return;

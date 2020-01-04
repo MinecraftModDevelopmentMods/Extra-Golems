@@ -8,8 +8,6 @@ import com.mcmoddev.golems.main.GolemItems;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public final class GlowstoneGolem extends GolemBase {
 
@@ -31,12 +29,6 @@ public final class GlowstoneGolem extends GolemBase {
 	@Override
 	public boolean isProvidingLight() {
 		return true;
-	}
-
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public int getBrightnessForRender() {
-		return (int) (15728880F * this.brightness);
 	}
 
 	@Override

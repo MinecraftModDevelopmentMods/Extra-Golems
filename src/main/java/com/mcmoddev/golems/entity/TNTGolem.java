@@ -15,6 +15,7 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Explosion.Mode;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
@@ -39,7 +40,7 @@ public class TNTGolem extends GolemBase {
 
 	/** Default constructor for TNT golem. **/
 	public TNTGolem(final EntityType<? extends GolemBase> entityType, final World world) {
-		this(entityType, world, 6, 8, 50, 10);
+		this(entityType, world, 6, 10, 50, 10);
 		this.allowedToExplode = this.getConfigBool(ALLOW_SPECIAL);
 	}
 
@@ -90,8 +91,9 @@ public class TNTGolem extends GolemBase {
 		if (this.isIgnited()) {
 			this.setMotion(0.0D, this.getMotion().getY(), 0.0D);
 			this.fuseTimer--;
-			ItemBedrockGolem.spawnParticles(this.world, this.posX, this.posY + 1.0D,
-					this.posZ, 0.21D, ParticleTypes.SMOKE, 6);
+			final Vec3d pos = this.getPositionVec();
+			ItemBedrockGolem.spawnParticles(this.world, pos.x, pos.y + 1.0D,
+					pos.z, 0.21D, ParticleTypes.SMOKE, 6);
 			if (this.fuseTimer <= 0) {
 				this.willExplode = true;
 			}
@@ -124,7 +126,8 @@ public class TNTGolem extends GolemBase {
 	protected boolean processInteract(final PlayerEntity player, final Hand hand) {
 		final ItemStack itemstack = player.getHeldItem(hand);
 		if (!itemstack.isEmpty() && itemstack.getItem() == Items.FLINT_AND_STEEL) {
-			this.world.playSound(player, this.posX, this.posY, this.posZ,
+			final Vec3d pos = this.getPositionVec();
+			this.world.playSound(player, pos.x, pos.y, pos.z,
 					SoundEvents.ITEM_FLINTANDSTEEL_USE, this.getSoundCategory(), 1.0F,
 					this.rand.nextFloat() * 0.4F + 0.8F);
 			player.swingArm(hand);
@@ -174,9 +177,10 @@ public class TNTGolem extends GolemBase {
 			if (!this.world.isRemote) {
 				final boolean flag = this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING);
 				final float range = this.maxExplosionRad > this.minExplosionRad
-						? rand.nextInt(maxExplosionRad - minExplosionRad)
+						? (minExplosionRad + rand.nextInt(maxExplosionRad - minExplosionRad))
 						: this.minExplosionRad;
-				this.world.createExplosion(this, this.posX, this.posY, this.posZ, range, flag ? Mode.BREAK : Mode.NONE);
+				final Vec3d pos = this.getPositionVec();
+				this.world.createExplosion(this, pos.x, pos.y, pos.z, range, flag ? Mode.BREAK : Mode.NONE);
 				this.remove();
 			}
 		} else {

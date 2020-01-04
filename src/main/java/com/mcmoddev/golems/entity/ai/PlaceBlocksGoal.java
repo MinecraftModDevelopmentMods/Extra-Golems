@@ -1,6 +1,11 @@
 package com.mcmoddev.golems.entity.ai;
 
+import java.util.function.Predicate;
+
+import javax.annotation.Nullable;
+
 import com.mcmoddev.golems.entity.base.GolemBase;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.ai.goal.Goal;
@@ -8,9 +13,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
-import java.util.function.Predicate;
 
 public class PlaceBlocksGoal extends Goal {
 
@@ -54,10 +56,7 @@ public class PlaceBlocksGoal extends Goal {
 
 	@Override
 	public void startExecuting() {
-		final int x = MathHelper.floor(golem.posX);
-		final int y = MathHelper.floor(golem.posY - 0.20000000298023224D);
-		final int z = MathHelper.floor(golem.posZ);
-		final BlockPos below = new BlockPos(x, y, z);
+		final BlockPos below = golem.getBlockBelow();
 		final BlockPos in = below.up(1);
 
 		if (golem.world.isAirBlock(in) && isPlantSupport(golem.world, below)) {

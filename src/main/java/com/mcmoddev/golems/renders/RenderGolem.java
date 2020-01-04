@@ -9,13 +9,14 @@ import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
+import net.minecraft.client.renderer.entity.model.IronGolemModel;
 import net.minecraft.util.ResourceLocation;
 
 /**
  * RenderGolem is the same as RenderIronGolem but with casting to GolemBase instead of
  * EntityIronGolem.
  */
-public class RenderGolem<T extends GolemBase> extends LivingRenderer<T, ModelGolem<T>> {
+public class RenderGolem<T extends GolemBase> extends LivingRenderer<T, IronGolemModel<T>> {
 	
 	protected static final ResourceLocation fallbackTexture = ExtraGolemsEntities.makeTexture(GolemNames.CLAY_GOLEM);
 	protected ResourceLocation texture;
@@ -29,22 +30,9 @@ public class RenderGolem<T extends GolemBase> extends LivingRenderer<T, ModelGol
 	protected static final float DAMAGE_ALPHA = 0.55F;
 
 	public RenderGolem(final EntityRendererManager renderManagerIn) {
-		super(renderManagerIn, new ModelGolem<T>(), 0.5F);
+		super(renderManagerIn, new IronGolemModel<T>(), 0.5F);
 	}
 
-	@Override
-	protected void applyRotations(final T golem, final float ageInTicks, final float rotationYaw,
-			final float partialTicks) {
-		super.applyRotations(golem, ageInTicks, rotationYaw, partialTicks);
-
-		if ((double) golem.limbSwingAmount >= 0.01D) {
-			final float f = 13.0F;
-			final float f1 = golem.limbSwing - golem.limbSwingAmount * (1.0F - partialTicks) + 6.0F;
-			final float f2 = (Math.abs(f1 % f - f * 0.5F) - f * 0.25F) / (f * 0.25F);
-			GlStateManager.rotatef(6.5F * f2, 0.0F, 0.0F, 1.0F);
-		}
-	}
-	
 	@Override
 	public void doRender(final T golem, final double x, final double y, final double z, final float entityYaw,
 			final float partialTicks) {

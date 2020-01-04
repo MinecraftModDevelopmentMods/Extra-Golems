@@ -73,7 +73,7 @@ public final class WoodenGolem extends GolemMultiTextured {
 		final boolean useBiome = world.getRandom().nextBoolean();
 		if(useBiome) {
 			byte texture = 0;
-			final Biome biome = world.getBiome(pos);
+			// final Biome biome = world.getBiome(pos);
 			// TODO find an easy way to get the preferred log type from the biome
 			
 			setTextureNum(texture);

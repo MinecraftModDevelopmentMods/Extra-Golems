@@ -1,6 +1,7 @@
 package com.mcmoddev.golems.util;
 
 import com.mcmoddev.golems.main.ExtraGolems;
+
 import net.minecraft.block.Block;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;

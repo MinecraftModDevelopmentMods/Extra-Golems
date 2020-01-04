@@ -1,6 +1,10 @@
 package com.mcmoddev.golems.blocks;
 
+import java.util.List;
+import java.util.Random;
+
 import com.mcmoddev.golems.entity.base.GolemBase;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
@@ -9,9 +13,6 @@ import net.minecraft.state.StateContainer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import java.util.List;
-import java.util.Random;
 
 public class BlockUtilityGlow extends BlockUtility {
 
@@ -25,6 +26,7 @@ public class BlockUtilityGlow extends BlockUtility {
 		this.setDefaultState(this.getDefaultState().with(LIGHT_LEVEL, light));
 	}
 
+	// TODO possibly renamed to func_225534_a_(BlockState, ServerWorld, BlockPos, Random)
 	@Override
 	public void tick(final BlockState state, final World worldIn, final BlockPos pos, final Random random) {
 		// make a slightly expanded AABB to check for the golem

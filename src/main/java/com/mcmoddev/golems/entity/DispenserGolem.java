@@ -29,6 +29,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.IndirectEntityDamageSource;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -104,7 +105,7 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
 	
 	@Override
 	protected boolean processInteract(final PlayerEntity player, final Hand hand) {
-		if(!player.isSneaking() && player instanceof ServerPlayerEntity) {
+		if(!player.isCrouching() && player instanceof ServerPlayerEntity) {
 			// open dispenser GUI by sending request to server
 			NetworkHooks.openGui((ServerPlayerEntity)player, new ContainerDispenserGolem.Provider(inventory));
 			player.swingArm(hand);
@@ -214,10 +215,11 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
 			// make an arrow out of the inventory
 			AbstractArrowEntity arrow = ProjectileHelper.func_221272_a(this, itemstack, distanceFactor);
 			// set the arrow position and velocity
-			arrow.posY = this.posY + this.getHeight() * 0.6F;
-			double d0 = target.posX - this.posX;
-			double d1 = target.getBoundingBox().minY + (double) (target.getHeight() / 3.0F) - arrow.posY;
-			double d2 = target.posZ - this.posZ;
+			final Vec3d myPos = this.getPositionVec();
+			arrow.setPosition(myPos.x, myPos.y + this.getHeight() * 0.66666F, myPos.z);
+			double d0 = target.func_226277_ct_() - this.func_226277_ct_();
+			double d1 = target.func_226283_e_(1.0D / 3.0D) - arrow.func_226278_cu_();
+			double d2 = target.func_226281_cx_() - this.func_226281_cx_();
 			double d3 = (double) MathHelper.sqrt(d0 * d0 + d2 * d2);
 			arrow.setShooter(this);
 			arrow.setDamage(arrowDamage + rand.nextDouble() * 0.5D);

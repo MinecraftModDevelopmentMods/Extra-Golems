@@ -21,7 +21,7 @@ public final class CraftingGolem extends GolemBase {
 
 	@Override
 	protected boolean processInteract(final PlayerEntity player, final Hand hand) {
-		if(!player.isSneaking() && player instanceof ServerPlayerEntity) {
+		if(!player.isCrouching() && player instanceof ServerPlayerEntity) {
 			// display crafting grid by sending request to server
 			NetworkHooks.openGui((ServerPlayerEntity)player, new ContainerPortableWorkbench.Provider());
 			player.addStat(Stats.INTERACT_WITH_CRAFTING_TABLE);

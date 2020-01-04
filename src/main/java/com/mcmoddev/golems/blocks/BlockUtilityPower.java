@@ -1,6 +1,10 @@
 package com.mcmoddev.golems.blocks;
 
+import java.util.List;
+import java.util.Random;
+
 import com.mcmoddev.golems.entity.base.GolemBase;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
@@ -12,9 +16,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-import java.util.List;
-import java.util.Random;
-
 public class BlockUtilityPower extends BlockUtility {
 	public static final IntegerProperty POWER_LEVEL = IntegerProperty.create("power", 0, 15);
 	/* Default value for TICK_RATE. Not necessary to define through config. */
@@ -25,6 +26,7 @@ public class BlockUtilityPower extends BlockUtility {
 		this.setDefaultState(this.getDefaultState().with(POWER_LEVEL, powerLevel));
 	}
 
+	// TODO possibly renamed to func_225534_a_(BlockState, ServerWorld, BlockPos, Random)
 	@Override
 	public void tick(final BlockState state, final World worldIn, final BlockPos pos, final Random random) {
 		// make a slightly expanded AABB to check for the golem

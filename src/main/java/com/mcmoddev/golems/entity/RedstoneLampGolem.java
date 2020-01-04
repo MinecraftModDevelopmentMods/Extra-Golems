@@ -18,8 +18,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public final class RedstoneLampGolem extends GolemMultiTextured {
 
@@ -47,12 +45,6 @@ public final class RedstoneLampGolem extends GolemMultiTextured {
 	public boolean isProvidingLight() {
 		// only allow light if correct texture data
 		return this.getTextureNum() == 0;
-	}
-
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public int getBrightnessForRender() {
-		return isProvidingLight() ? 15728880 : super.getBrightnessForRender();
 	}
 
 	@Override

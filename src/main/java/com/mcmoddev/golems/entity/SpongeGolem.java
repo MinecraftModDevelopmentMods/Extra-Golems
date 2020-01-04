@@ -13,6 +13,7 @@ import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
@@ -49,7 +50,8 @@ public final class SpongeGolem extends GolemBase {
 			final double x = this.rand.nextDouble() - 0.5D * (double) this.getWidth() * 0.6D;
 			final double y = this.rand.nextDouble() * (this.getHeight() - 0.75D);
 			final double z = this.rand.nextDouble() - 0.5D * (double) this.getWidth();
-			this.world.addParticle(particle, this.posX + x, this.posY + y, this.posZ + z,
+			final Vec3d pos = this.getPositionVec();
+			this.world.addParticle(particle, pos.x + x, pos.y + y, pos.z + z,
 					(this.rand.nextDouble() - 0.5D) * 0.5D, this.rand.nextDouble() - 0.5D,
 					(this.rand.nextDouble() - 0.5D) * 0.5D);
 		}
@@ -81,10 +83,7 @@ public final class SpongeGolem extends GolemBase {
 		
 		@Override
 		public void startExecuting() {
-			final int x = MathHelper.floor(golem.posX);
-			final int y = MathHelper.floor(golem.posY - 0.20000000298023224D) + 2;
-			final int z = MathHelper.floor(golem.posZ);
-			final BlockPos center = new BlockPos(x, y, z);
+			final BlockPos center = this.golem.getBlockBelow();
 			final SpongeGolemSoakEvent event = new SpongeGolemSoakEvent(golem, center, range);
 			if (!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Event.Result.DENY) {
 				this.replaceWater(event.getPositionList(), event.getAbsorbFunction(),

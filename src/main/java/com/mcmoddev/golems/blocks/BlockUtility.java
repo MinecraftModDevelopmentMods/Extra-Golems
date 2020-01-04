@@ -1,7 +1,5 @@
 package com.mcmoddev.golems.blocks;
 
-import java.util.Random;
-
 import javax.annotation.Nullable;
 
 import net.minecraft.block.Block;
@@ -18,7 +16,6 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -29,8 +26,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public abstract class BlockUtility extends Block implements IBucketPickupHandler, ILiquidContainer {
 
@@ -101,11 +96,11 @@ public abstract class BlockUtility extends Block implements IBucketPickupHandler
 			worldIn.notifyNeighbors(pos, this);
 		}
 	}
-
-	@Override
-	public void randomTick(final BlockState state, final World worldIn, final BlockPos pos, final Random rand) {
-		this.tick(state, worldIn, pos, rand);
-	}
+//
+//	@Override
+//	public void randomTick(final BlockState state, final World worldIn, final BlockPos pos, final Random rand) {
+//		this.tick(state, worldIn, pos, rand);
+//	}
 
 	@Override
 	public int tickRate(final IWorldReader worldIn) {
@@ -136,11 +131,11 @@ public abstract class BlockUtility extends Block implements IBucketPickupHandler
 	public boolean isNormalCube(final BlockState state, final IBlockReader worldIn, final BlockPos pos) {
 		return false;
 	}
-	
-	@Override
-	public boolean isSolid(final BlockState state) {
-		return false;
-	}
+//	
+//	@Override
+//	public boolean isSolid(final BlockState state) {
+//		return false;
+//	}
 	
 	@Override
 	public ItemStack getItem(final IBlockReader worldIn, final BlockPos pos, final BlockState state) {
@@ -169,19 +164,9 @@ public abstract class BlockUtility extends Block implements IBucketPickupHandler
 		return getDefaultState();
 	}
 
-	/**
-	 * @deprecated
-	 */
-	@Deprecated
 	@Override
 	public BlockRenderType getRenderType(final BlockState state) {
 		return BlockRenderType.INVISIBLE;
-	}
-
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public BlockRenderLayer getRenderLayer() {
-		return BlockRenderLayer.CUTOUT;
 	}
 
 	@Override

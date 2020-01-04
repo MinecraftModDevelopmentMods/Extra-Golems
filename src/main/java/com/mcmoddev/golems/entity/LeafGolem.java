@@ -45,7 +45,9 @@ public final class LeafGolem extends GolemColorized {
 
 		// update color
 		if (this.ticksExisted % 10 == 2 && this.world.isRemote) {
-			Biome biome = this.world.getBiome(this.getPosition());
+			// this.world.getBiomeManager().getBiome(BlockPos)
+			Biome biome = this.world.func_225523_d_().func_226836_a_(this.getPosition());
+			// TODO biome.func_229979_u_() is client-only and not visible :(
 			long color = biome.getFoliageColor(this.getPosition());
 			this.setColor(color);
 		}

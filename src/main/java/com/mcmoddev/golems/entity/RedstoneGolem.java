@@ -29,8 +29,7 @@ public final class RedstoneGolem extends GolemBase {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public int getBrightnessForRender() {
-		return super.getBrightnessForRender() + 64;
+	public float getBrightness() {
+		return super.getBrightness() * 1.2F;
 	}
 }

@@ -1,10 +1,15 @@
 package com.mcmoddev.golems.gui;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.util.config.GolemContainer;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
 import com.mojang.blaze3d.platform.GlStateManager;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
@@ -19,10 +24,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class GuiGolemBook extends Screen {
 

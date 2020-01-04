@@ -53,7 +53,7 @@ public class RenderColoredGolem extends RenderGolem<GolemColorized> {
 	}
 	
 	@Override
-	protected void bindGolemTexture(final GolemColorized golem) {
+	public void bindGolemTexture(final GolemColorized golem) {
 		// do nothing
 	}
 }

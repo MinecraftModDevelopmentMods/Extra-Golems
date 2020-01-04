@@ -11,8 +11,8 @@ import net.minecraft.block.StemBlock;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 public final class StrawGolem extends GolemBase {
 	
@@ -69,20 +69,18 @@ public final class StrawGolem extends GolemBase {
 				// increment attempts
 				++attempts;
 				// get random block in radius
-				final int x = MathHelper.floor(golem.posX);
-				final int y = MathHelper.floor(golem.posY);
-				final int z = MathHelper.floor(golem.posZ);
 				final int x1 = rand.nextInt(this.range * 2) - this.range;
 				final int y1 = rand.nextInt(variationY * 2) - variationY;
 				final int z1 = rand.nextInt(this.range * 2) - this.range;
-				final BlockPos blockpos = new BlockPos(x + x1, y + y1, z + z1);
+				final BlockPos blockpos = this.golem.getPosition().add(x1, y1, z1);
 				final BlockState state = golem.getEntityWorld().getBlockState(blockpos);
 				// if the block can be grown, grow it and return
 				if (state.getBlock() instanceof CropsBlock || state.getBlock() instanceof StemBlock) {
 					IGrowable crop = (IGrowable) state.getBlock();
-					if (crop.canGrow(golem.getEntityWorld(), blockpos, state, golem.getEntityWorld().isRemote)) {
+					if (golem.getEntityWorld() instanceof ServerWorld && 
+							crop.canGrow(golem.getEntityWorld(), blockpos, state, golem.getEntityWorld().isRemote)) {
 						// grow the crop!
-						crop.grow(golem.getEntityWorld(), rand, blockpos, state);
+						crop.func_225535_a_((ServerWorld)golem.getEntityWorld(), rand, blockpos, state);
 						// spawn particles
 						//if (golem.getEntityWorld().isRemote) {
 						//	BoneMealItem.spawnBonemealParticles(golem.getEntityWorld(), blockpos, 0);

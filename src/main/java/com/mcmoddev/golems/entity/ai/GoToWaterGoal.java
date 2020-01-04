@@ -58,8 +58,8 @@ public class GoToWaterGoal extends Goal {
 
 	private Vec3d getNearbyWater() {
 		Random rand = this.golem.getRNG();
-		BlockPos pos1 = new BlockPos(this.golem.posX, (this.golem.getBoundingBox()).minY,
-				this.golem.posZ);
+		
+		BlockPos pos1 = this.golem.getBlockBelow();
 
 		for (int i = 0; i < 10; i++) {
 			BlockPos pos2 = pos1.add(rand.nextInt(detectWaterRadius * 2) - detectWaterRadius, 

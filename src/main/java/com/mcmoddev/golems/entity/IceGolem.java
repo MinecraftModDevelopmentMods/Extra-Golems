@@ -40,7 +40,8 @@ public final class IceGolem extends GolemBase {
 	public void livingTick() {
 		super.livingTick();
 		final BlockPos pos = this.getPosition();
-		if (this.world.getBiome(pos).getTemperature(pos) > 1.0F) {
+		// this.world.getBiomeManager().getBiome(BlockPos)
+		if (this.world.func_225523_d_().func_226836_a_(pos).getTemperature(pos) > 1.0F) {
 			this.attackEntityFrom(DamageSource.ON_FIRE, 1.0F);
 		}
 	}
@@ -80,10 +81,7 @@ public final class IceGolem extends GolemBase {
 		
 		@Override
 		public void startExecuting() {
-			final int x = MathHelper.floor(golem.posX);
-			final int y = MathHelper.floor(golem.posY - 0.20000000298023224D);
-			final int z = MathHelper.floor(golem.posZ);
-			final BlockPos below = new BlockPos(x, y, z);
+			final BlockPos below = this.golem.getBlockBelow();
 
 			if (range > 0) {
 				final IceGolemFreezeEvent event = new IceGolemFreezeEvent(golem, below, range, frosted);

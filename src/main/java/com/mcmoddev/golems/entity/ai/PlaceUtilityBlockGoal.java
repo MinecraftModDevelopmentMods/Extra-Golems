@@ -1,6 +1,9 @@
 package com.mcmoddev.golems.entity.ai;
 
+import java.util.function.BiPredicate;
+
 import com.mcmoddev.golems.entity.base.GolemBase;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FlowingFluidBlock;
@@ -8,8 +11,6 @@ import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-
-import java.util.function.BiPredicate;
 
 /**
  * Places a single BlockState every {@code tickDelay} ticks with certain conditions
@@ -66,10 +67,7 @@ public class PlaceUtilityBlockGoal extends Goal {
 	public void tick() {
 		final int tickMod = this.golem.ticksExisted % this.tickDelay;
 		if (this.configAllows && tickMod == 0) {
-			final int x = MathHelper.floor(golem.posX);
-			final int y = MathHelper.floor(golem.posY - 0.20000000298023224D - golem.getYOffset());
-			final int z = MathHelper.floor(golem.posZ);
-			final BlockPos blockPosIn = new BlockPos(x, y, z);
+			final BlockPos blockPosIn = golem.getBlockBelow();
 			// test the predicate against each BlockPos in a vertical column around this golem
 			// when it passes, place the block and return
 			for (int i = 0; i < 3; i++) {

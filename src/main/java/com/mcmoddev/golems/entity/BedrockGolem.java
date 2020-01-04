@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -48,8 +49,8 @@ public final class BedrockGolem extends GolemBase {
 			if (!this.world.isRemote) {
 				this.remove();
 			} else {
-				ItemBedrockGolem.spawnParticles(this.world, this.posX - 0.5D, this.posY + 0.1D,
-					this.posZ - 0.5D, 0.12D);
+				final Vec3d pos = this.getPositionVec().add(0, 0.2D, 0);
+				ItemBedrockGolem.spawnParticles(this.world, pos.x, pos.y, pos.z, 0.12D);
 			}
 		}
 

@@ -1,7 +1,6 @@
 package com.mcmoddev.golems.events.handlers;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,6 +30,7 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -89,8 +89,9 @@ public class GolemCommonEventHandler {
 					golem.setAttackTarget(null);
 				}
 				// spawn particles and play sound
-				ItemBedrockGolem.spawnParticles(golem.getEntityWorld(), golem.posX, golem.posY + golem.getHeight() / 2.0D,
-						golem.posZ, 0.12D, ParticleTypes.HAPPY_VILLAGER, 20);
+				final Vec3d pos = golem.getPositionVec();
+				ItemBedrockGolem.spawnParticles(golem.getEntityWorld(), pos.x, pos.y + golem.getHeight() / 2.0D,
+						pos.z, 0.12D, ParticleTypes.HAPPY_VILLAGER, 20);
 				golem.playSound(SoundEvents.BLOCK_STONE_PLACE, 0.85F, 1.1F + golem.getRNG().nextFloat() * 0.2F);
 			}
 		}
