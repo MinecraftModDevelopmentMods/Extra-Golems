@@ -174,7 +174,7 @@ public class TNTGolem extends GolemBase {
 			if (!this.world.isRemote) {
 				final boolean flag = this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING);
 				final float range = this.maxExplosionRad > this.minExplosionRad
-						? rand.nextInt(maxExplosionRad - minExplosionRad)
+						? (minExplosionRad + rand.nextInt(maxExplosionRad - minExplosionRad))
 						: this.minExplosionRad;
 				this.world.createExplosion(this, this.posX, this.posY, this.posZ, range, flag ? Mode.BREAK : Mode.NONE);
 				this.remove();
