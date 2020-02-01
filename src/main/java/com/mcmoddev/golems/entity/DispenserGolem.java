@@ -213,13 +213,13 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
 		ItemStack itemstack = findArrows(this.inventory);
 		if(!itemstack.isEmpty()) {
 			// make an arrow out of the inventory
-			AbstractArrowEntity arrow = ProjectileHelper.func_221272_a(this, itemstack, distanceFactor);
+			AbstractArrowEntity arrow = ProjectileHelper.fireArrow(this, itemstack, distanceFactor);
 			// set the arrow position and velocity
 			final Vec3d myPos = this.getPositionVec();
 			arrow.setPosition(myPos.x, myPos.y + this.getHeight() * 0.66666F, myPos.z);
-			double d0 = target.func_226277_ct_() - this.func_226277_ct_();
-			double d1 = target.func_226283_e_(1.0D / 3.0D) - arrow.func_226278_cu_();
-			double d2 = target.func_226281_cx_() - this.func_226281_cx_();
+			double d0 = target.getPosX() - this.getPosX();
+			double d1 = target.getPosYHeight(1.0D / 3.0D) - arrow.getPosY();
+			double d2 = target.getPosZ() - this.getPosZ();
 			double d3 = (double) MathHelper.sqrt(d0 * d0 + d2 * d2);
 			arrow.setShooter(this);
 			arrow.setDamage(arrowDamage + rand.nextDouble() * 0.5D);

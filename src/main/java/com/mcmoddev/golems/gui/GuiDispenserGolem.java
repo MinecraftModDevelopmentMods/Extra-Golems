@@ -1,7 +1,7 @@
 package com.mcmoddev.golems.gui;
 
 import com.mcmoddev.golems.container.ContainerDispenserGolem;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
@@ -28,7 +28,7 @@ public class GuiDispenserGolem extends ContainerScreen<ContainerDispenserGolem> 
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		this.getMinecraft().getTextureManager().bindTexture(BG_TEXTURE);
 		int startX = (this.width - this.xSize) / 2;
 		int startY = (this.height - this.ySize) / 2;

@@ -5,8 +5,10 @@ import org.lwjgl.opengl.GL11;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolemsEntities;
 import com.mcmoddev.golems.util.GolemNames;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.model.IronGolemModel;
@@ -34,37 +36,37 @@ public class RenderGolem<T extends GolemBase> extends LivingRenderer<T, IronGole
 	}
 
 	@Override
-	public void doRender(final T golem, final double x, final double y, final double z, final float entityYaw,
-			final float partialTicks) {
+	public void render(final T golem, final float entityYaw, final float partialTicks, 
+			final MatrixStack matrixStackIn, final IRenderTypeBuffer bufferIn, final int packedLightIn) {
 		// render everything else first
 		this.bindGolemTexture(golem);
-		super.doRender(golem, x, y, z, entityYaw, partialTicks);
-		this.renderDamage(golem, x, y, z, entityYaw, partialTicks);
+		super.render(golem, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
+		this.renderDamage(golem, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
 	}
 	
 	protected void bindGolemTexture(final T golem) {
 		texture = golem.getTexture();
 	}
 	
-	protected void renderDamage(final T golem, final double x, final double y, final double z, final float entityYaw,
-			final float partialTicks) {
+	protected void renderDamage(final T golem, final float entityYaw, final float partialTicks, 
+			final MatrixStack matrixStackIn, final IRenderTypeBuffer bufferIn, final int packedLightIn) {
 		// render damage indicator if necessary
 		final int index = Math.min(getDamageTexture(golem), damageIndicators.length - 1);
 		if (index > -1) {
-			GlStateManager.pushMatrix();
-			GlStateManager.color4f(1.0F, 1.0F, 1.0F, DAMAGE_ALPHA);
-			GlStateManager.enableNormalize();
-			GlStateManager.enableBlend();
-			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			//GlStateManager.blendFunc(GL11.GL_SRC_COLOR, GL11.GL_ONE_MINUS_SRC_COLOR);
-			//GlStateManager.blendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_DST_COLOR, GL11.GL_ONE_MINUS_DST_COLOR);
+			RenderSystem.pushMatrix();
+			RenderSystem.color4f(1.0F, 1.0F, 1.0F, DAMAGE_ALPHA);
+			RenderSystem.enableRescaleNormal();
+			RenderSystem.enableBlend();
+			RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			//RenderSystem.blendFunc(GL11.GL_SRC_COLOR, GL11.GL_ONE_MINUS_SRC_COLOR);
+			//RenderSystem.blendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_DST_COLOR, GL11.GL_ONE_MINUS_DST_COLOR);
 			// actually render the damage texture
 			this.texture = damageIndicators[index];
-			super.doRender(golem, x, y, z, entityYaw, partialTicks);
+			super.render(golem, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
 			// return GL settings to normal
-			GlStateManager.disableBlend();
-			GlStateManager.disableNormalize();
-			GlStateManager.popMatrix();
+			RenderSystem.disableBlend();
+			RenderSystem.disableRescaleNormal();
+			RenderSystem.popMatrix();
 		}
 	}
 
@@ -73,7 +75,7 @@ public class RenderGolem<T extends GolemBase> extends LivingRenderer<T, IronGole
 	 * Render.bindEntityTexture.
 	 */
 	@Override
-	protected ResourceLocation getEntityTexture(final T golem) {
+	public ResourceLocation getEntityTexture(final T golem) {
 		return this.texture != null ? this.texture : fallbackTexture;
 	}
 	

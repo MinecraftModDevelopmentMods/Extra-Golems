@@ -1,8 +1,10 @@
 package com.mcmoddev.golems.renders;
 
 import com.mcmoddev.golems.entity.base.GolemColorized;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 
 /**
@@ -15,8 +17,8 @@ public class RenderColoredGolem extends RenderGolem<GolemColorized> {
 	}
 
 	@Override
-	public void doRender(final GolemColorized golem, final double x, final double y, final double z,
-			final float entityYaw, final float partialTicks) {
+	public void render(final GolemColorized golem, final float entityYaw, final float partialTicks, 
+			final MatrixStack matrixStackIn, final IRenderTypeBuffer bufferIn, final int packedLightIn) {
 		final float colorRed = golem.getColorRed();
 		final float colorGreen = golem.getColorGreen();
 		final float colorBlue = golem.getColorBlue();
@@ -25,31 +27,31 @@ public class RenderColoredGolem extends RenderGolem<GolemColorized> {
 		// render first pass of golem texture (usually eyes and other opaque, pre-colored features)
 		if (golem.hasBase()) {
 			this.texture = golem.getTextureBase();
-			super.doRender(golem, x, y, z, entityYaw, partialTicks);
+			super.render(golem, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
 		}
 
 		// prepare to render the complicated layer
-		GlStateManager.pushMatrix();
+		RenderSystem.pushMatrix();
 		// enable transparency if needed
-		GlStateManager.color4f(colorRed, colorGreen, colorBlue, colorAlpha);
+		RenderSystem.color4f(colorRed, colorGreen, colorBlue, colorAlpha);
 		if (golem.hasTransparency()) {
-			GlStateManager.enableNormalize();
-			GlStateManager.enableBlend();
-			GlStateManager.blendFunc(770, 771);
+			RenderSystem.enableRescaleNormal();
+			RenderSystem.enableBlend();
+			RenderSystem.blendFunc(770, 771);
 		}
 
 		// render second pass of golem texture
 		if (golem.hasOverlay()) {
 			this.texture = golem.getTextureToColor();
-			super.doRender(golem, x, y, z, entityYaw, partialTicks);
+			super.render(golem, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
 		}
 
 		// return GL11 settings to normal
 		if (golem.hasTransparency()) {
-			GlStateManager.disableBlend();
-			GlStateManager.disableNormalize();
+			RenderSystem.disableBlend();
+			RenderSystem.disableRescaleNormal();
 		}
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 	}
 	
 	@Override

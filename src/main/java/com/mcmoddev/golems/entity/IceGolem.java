@@ -12,7 +12,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
@@ -41,7 +40,7 @@ public final class IceGolem extends GolemBase {
 		super.livingTick();
 		final BlockPos pos = this.getPosition();
 		// this.world.getBiomeManager().getBiome(BlockPos)
-		if (this.world.func_225523_d_().func_226836_a_(pos).getTemperature(pos) > 1.0F) {
+		if (this.world.getBiome(pos).getTemperature(pos) > 1.0F) {
 			this.attackEntityFrom(DamageSource.ON_FIRE, 1.0F);
 		}
 	}

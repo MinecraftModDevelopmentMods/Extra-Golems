@@ -37,6 +37,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -100,8 +101,7 @@ public abstract class GolemBase extends IronGolemEntity {
 		super.registerAttributes();
 		//Called in super constructor; this.container == null
 		GolemContainer golemContainer = GolemRegistrar.getContainer(this.getType());
-		this.getAttributes().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE)
-			.setBaseValue(golemContainer.getAttack());
+		this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(golemContainer.getAttack());
 		this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(golemContainer.getHealth());
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(golemContainer.getSpeed());
 		this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(golemContainer.getKnockbackResist());
@@ -175,9 +175,12 @@ public abstract class GolemBase extends IronGolemEntity {
 	public float getHealAmount(final ItemStack i) {
 		return Math.min(this.getMaxHealth() * (this.isChild() ? 0.5F : 0.25F), 32.0F);
 	}
-	
+
 	public BlockPos getBlockBelow() {
-		return this.func_226268_ag_();
+		int i = MathHelper.floor(this.getPosX());
+		int j = MathHelper.floor(this.getPosY() - 0.2D);
+		int k = MathHelper.floor(this.getPosZ());
+		return new BlockPos(i, j, k);
 	}
 	
 	/////////////// CONFIG HELPERS //////////////////
@@ -202,7 +205,7 @@ public abstract class GolemBase extends IronGolemEntity {
 
 	// fall(float, float)
 	@Override
-	public boolean func_225503_b_(float distance, float damageMultiplier) {
+	public boolean onLivingFall(float distance, float damageMultiplier) {
 		if(!container.takesFallDamage()) {
 			return false;
 		}
@@ -214,11 +217,11 @@ public abstract class GolemBase extends IronGolemEntity {
 		distance = ret[0];
 		damageMultiplier = ret[1];
 
-		boolean flag = super.func_225503_b_(distance, damageMultiplier);
+		boolean flag = super.onLivingFall(distance, damageMultiplier);
 		int i = this.func_225508_e_(distance, damageMultiplier);
 		if (i > 0) {
 			this.playSound(this.getFallSound(i), 1.0F, 1.0F);
-			this.func_226295_cZ_();
+			this.playFallSound();
 			this.attackEntityFrom(DamageSource.FALL, (float) i);
 			return true;
 		} else {

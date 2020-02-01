@@ -33,8 +33,8 @@ public final class StrawGolem extends GolemBase {
 	
 	public static class BoostCropGoal extends Goal {
 		protected final GolemBase golem;
-		final int range;
-		final int frequency;
+		protected final int range;
+		protected final int frequency;
 		
 		public BoostCropGoal(final GolemBase golemIn, final int rangeIn, final int freq) {
 			golem = golemIn;
@@ -80,7 +80,7 @@ public final class StrawGolem extends GolemBase {
 					if (golem.getEntityWorld() instanceof ServerWorld && 
 							crop.canGrow(golem.getEntityWorld(), blockpos, state, golem.getEntityWorld().isRemote)) {
 						// grow the crop!
-						crop.func_225535_a_((ServerWorld)golem.getEntityWorld(), rand, blockpos, state);
+						crop.grow((ServerWorld)golem.getEntityWorld(), rand, blockpos, state);
 						// spawn particles
 						//if (golem.getEntityWorld().isRemote) {
 						//	BoneMealItem.spawnBonemealParticles(golem.getEntityWorld(), blockpos, 0);

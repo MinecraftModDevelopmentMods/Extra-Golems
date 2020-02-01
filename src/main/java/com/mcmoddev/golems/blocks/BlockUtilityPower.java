@@ -14,7 +14,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 public class BlockUtilityPower extends BlockUtility {
 	public static final IntegerProperty POWER_LEVEL = IntegerProperty.create("power", 0, 15);
@@ -26,9 +26,8 @@ public class BlockUtilityPower extends BlockUtility {
 		this.setDefaultState(this.getDefaultState().with(POWER_LEVEL, powerLevel));
 	}
 
-	// TODO possibly renamed to func_225534_a_(BlockState, ServerWorld, BlockPos, Random)
 	@Override
-	public void tick(final BlockState state, final World worldIn, final BlockPos pos, final Random random) {
+	public void tick(final BlockState state, final ServerWorld worldIn, final BlockPos pos, final Random random) {
 		// make a slightly expanded AABB to check for the golem
 		AxisAlignedBB toCheck = new AxisAlignedBB(pos).grow(0.25D);
 		List<GolemBase> list = worldIn.getEntitiesWithinAABB(GolemBase.class, toCheck);

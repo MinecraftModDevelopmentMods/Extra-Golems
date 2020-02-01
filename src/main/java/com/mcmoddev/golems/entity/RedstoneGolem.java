@@ -8,8 +8,6 @@ import com.mcmoddev.golems.main.GolemItems;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public final class RedstoneGolem extends GolemBase {
 
