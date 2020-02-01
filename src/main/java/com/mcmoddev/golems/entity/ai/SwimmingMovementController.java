@@ -3,7 +3,6 @@ package com.mcmoddev.golems.entity.ai;
 import com.mcmoddev.golems.entity.base.GolemBase;
 
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.controller.MovementController;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -20,9 +19,9 @@ public class SwimmingMovementController extends MovementController {
 	public void tick() {
 		LivingEntity target = this.golem.getAttackTarget();
 		final Vec3d gPos = this.golem.getPositionVec();
-		final Vec3d tPos = target.getPositionVec();
+		final Vec3d tPos = target != null ? target.getPositionVec() : null;
 		if (GolemBase.isSwimmingUp(this.golem) && this.golem.isInWater()) {
-			if (target != null && (tPos.y > gPos.y || golem.isSwimmingUp())) {
+			if (target != null && tPos != null && (tPos.y > gPos.y || golem.isSwimmingUp())) {
 				this.golem.setMotion(this.golem.getMotion().add(0.0D, 0.002D, 0.0D));
 			}
 
@@ -41,9 +40,7 @@ public class SwimmingMovementController extends MovementController {
 			this.golem.rotationYaw = limitAngle(this.golem.rotationYaw, f1, 90.0F);
 			this.golem.renderYawOffset = this.golem.rotationYaw;
 
-			float moveSpeed = (float) (this.speed
-					* this.golem.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getValue());
-			float moveSpeed2 = MathHelper.lerp(0.125F, this.golem.getAIMoveSpeed(), moveSpeed);
+			float moveSpeed2 = MathHelper.lerp(0.125F, this.golem.getAIMoveSpeed(), (float) this.speed);
 			this.golem.setAIMoveSpeed(moveSpeed2);
 			this.golem.setMotion(this.golem.getMotion().add(moveSpeed2 * x1 * 0.005D,
 					moveSpeed2 * y1 * 0.1D, moveSpeed2 * z1 * 0.005D));

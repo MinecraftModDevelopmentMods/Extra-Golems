@@ -51,23 +51,28 @@ public class RenderGolem<T extends GolemBase> extends LivingRenderer<T, GolemMod
 		texture = golem.getTexture();
 	}
 	
+	protected void resetColor() {
+		this.entityModel.resetColor();
+	}
+	
 	protected void renderDamage(final T golem, final float entityYaw, final float partialTicks, 
 			final MatrixStack matrixStackIn, final IRenderTypeBuffer bufferIn, final int packedLightIn) {
 		// render damage indicator if necessary
 		final int index = Math.min(getDamageTexture(golem), damageIndicators.length - 1);
 		if (index > -1) {
-			RenderSystem.pushMatrix();
-			RenderSystem.color4f(1.0F, 1.0F, 1.0F, DAMAGE_ALPHA);
+			matrixStackIn.push();
 			RenderSystem.enableAlphaTest();
 			RenderSystem.defaultAlphaFunc();
 			RenderSystem.enableBlend();
+			// set alpha
+			this.entityModel.setAlpha(DAMAGE_ALPHA);
 			// actually render the damage texture
 			this.texture = damageIndicators[index];
 			super.render(golem, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
 			// return GL settings to normal
 			RenderSystem.disableAlphaTest();
 			RenderSystem.disableBlend();
-			RenderSystem.popMatrix();
+			matrixStackIn.pop();
 		}
 	}
 
@@ -84,10 +89,8 @@ public class RenderGolem<T extends GolemBase> extends LivingRenderer<T, GolemMod
 	@Nullable
 	protected RenderType func_230042_a_(final T golem, boolean isVisible, boolean isVisibleToPlayer) {
 		ResourceLocation tex = this.getEntityTexture(golem);
-		if (isVisibleToPlayer) {
+		if (isVisible || isVisibleToPlayer) {
 			return RenderType.entityTranslucent(tex);
-		} else if (isVisible) {
-			return golem.hasTransparency() ? RenderType.entityTranslucent(tex) : RenderType.entityCutout(tex);
 		} else {
 			return golem.isGlowing() ? RenderType.outline(tex) : null;
 		}
@@ -99,7 +102,5 @@ public class RenderGolem<T extends GolemBase> extends LivingRenderer<T, GolemMod
 		return damageIndicators.length - (int)Math.ceil(percentHealth * 4.0F);
 	}
 	
-	protected void resetColor() {
-		this.entityModel.resetColor();
-	}
+
 }

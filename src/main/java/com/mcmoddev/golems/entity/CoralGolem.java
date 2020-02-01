@@ -29,40 +29,61 @@ import net.minecraft.world.World;
 
 public final class CoralGolem extends GolemMultiTextured {
 
+	// whether or not this golem is "dry"
 	private static final DataParameter<Boolean> DRY = EntityDataManager.createKey(CoralGolem.class, DataSerializers.BOOLEAN);
+	
+	// the amount of time since this golem started changing between "dry" and "wet"
+	private static final DataParameter<Byte> CHANGE_TIME = EntityDataManager.createKey(CoralGolem.class, DataSerializers.BYTE);
+	
 	private static final String KEY_DRY = "isDry";
+	private static final String KEY_CHANGE = "changeTime";
 	
 	public static final String ALLOW_HEALING = "Allow Special: Healing";
 	public static final String DRY_TIMER = "Max Wet Time";
-	
 	public static final String[] VARIANTS = { "tube", "brain", "bubble", "fire", "horn" };
-	public final ResourceLocation[] texturesDry;
-	
+	public final ResourceLocation[] variantsDry;
 	private final boolean allowHealing;
+	
 	// the minimum amount of time before golem will change between "dry" and "wet"
 	private final int maxChangingTime;
-	// the amount of time since this golem started changing between "dry" and "wet"
-	private int timeChanging = 0;
 	
 	public CoralGolem(final EntityType<? extends GolemBase> entityType, final World world) {
 		super(entityType, world, ExtraGolems.MODID, VARIANTS);
-		this.texturesDry = new ResourceLocation[VARIANTS.length];
+		this.variantsDry = new ResourceLocation[VARIANTS.length];
 		for (int n = 0, len = VARIANTS.length; n < len; n++) {
 			// initialize "dead" textures
-			this.texturesDry[n] = makeTexture(ExtraGolems.MODID, this.getGolemContainer().getName() + "/" + VARIANTS[n] + "_dead");
+			this.variantsDry[n] = makeTexture(ExtraGolems.MODID, this.getGolemContainer().getName() + "/" + VARIANTS[n] + "_dead");
 		}
 		allowHealing = this.getConfigBool(ALLOW_HEALING);
-		maxChangingTime = this.getConfigInt(DRY_TIMER);		
+		maxChangingTime = this.getConfigInt(DRY_TIMER);	
 	}
 	
+	/** @return whether this golem is dried out or wet **/
 	public boolean isDry() {
 		return this.getDataManager().get(DRY).booleanValue();
 	}
 	
+	/** Updates the "Dry" flag **/
 	public void setDry(boolean isDry) {
-		if(this.getDataManager().get(DRY).booleanValue() != isDry) {
+		if(isDry() != isDry) {
 			this.getDataManager().set(DRY, Boolean.valueOf(isDry));
 		}
+	}
+	
+	/** @return the amount of time this golem has been "changing" **/
+	public int getChangingTime() {
+		return this.getDataManager().get(CHANGE_TIME).intValue();
+	}
+	
+	/** Adds or removes time to the change timer **/
+	public void addChangingTime(final int toAdd) {
+		if(toAdd != 0) {
+			this.getDataManager().set(CHANGE_TIME, (byte)(getChangingTime() + toAdd));
+		}
+	}
+	
+	public void setChangingTime(final int toSet) {
+		this.getDataManager().set(CHANGE_TIME, (byte)toSet);
 	}
 	
 	@Override
@@ -78,31 +99,37 @@ public final class CoralGolem extends GolemMultiTextured {
 	protected void registerData() {
 		super.registerData();
 		this.getDataManager().register(DRY, Boolean.valueOf(false));
+		this.getDataManager().register(CHANGE_TIME, Byte.valueOf((byte)0));
 	}
 	
 	@Override
 	public void livingTick() {
 		super.livingTick();
-		// update "dry" data if the golem has been "changing" state for long enough
-		final boolean isChanging = this.isInWaterOrBubbleColumn() == this.isDry();
-		if(isChanging) {
-			if(!this.world.isRemote && ++timeChanging > maxChangingTime) {
-				this.setDry(!this.isInWaterOrBubbleColumn());
-				this.timeChanging = 0;
+		if(this.isServerWorld() && !this.world.isRemote) {
+			// the golem is "changing" whenever it is either in water AND dry, or out of water AND wet
+			final boolean isChanging = (this.isInWater() == this.isDry());
+			if(isChanging) {
+				// update change timer
+				addChangingTime(1);
+				// update "dry" data if the golem has been "changing" for long enough
+				if(getChangingTime() > maxChangingTime) {
+					setDry(!this.isInWater());
+					setChangingTime(0);
+				}
+			} else {
+				setChangingTime(0);
 			}
-		} else {
-			timeChanging = 0;
-		}
-		// only do some behavior when not dried out
-		if(!this.isDry()) {
-			// randomly reduce timer if golem is wet (but not submerged)
-			// extends "wet" lifetime by roughly 30%
-			if(this.isWet() && timeChanging > 0 && rand.nextInt(3) == 0) {
-				timeChanging--;
-			}
-			// heals randomly when wet
-			if (this.allowHealing && rand.nextInt(650) == 0) {
-				this.addPotionEffect(new EffectInstance(Effects.REGENERATION, 50, 1));
+			// only do some behavior when wet (not dried out)
+			if(!this.isDry()) {
+				// randomly reduce timer if golem is wet (but not submerged)
+				// extends "wet" lifetime by roughly 30%
+				if(isChanging && this.isWet() && getChangingTime() > 0 && rand.nextInt(3) == 0) {
+					addChangingTime(-1);
+				}
+				// heals randomly when wet
+				if (this.allowHealing && rand.nextInt(650) == 0) {
+					this.addPotionEffect(new EffectInstance(Effects.REGENERATION, 50, 1));
+				}
 			}
 		}
 	}
@@ -136,17 +163,19 @@ public final class CoralGolem extends GolemMultiTextured {
 	public void writeAdditional(final CompoundNBT nbt) {
 		super.writeAdditional(nbt);
 		nbt.putBoolean(KEY_DRY, this.isDry());
+		nbt.putByte(KEY_CHANGE, (byte)this.getChangingTime());
 	}
 
 	@Override
 	public void readAdditional(final CompoundNBT nbt) {
 		super.readAdditional(nbt);
 		this.setDry(nbt.getBoolean(KEY_DRY));
+		this.setChangingTime(nbt.getByte(KEY_CHANGE));
 	}
 	
 	@Override
 	public ResourceLocation[] getTextureArray() {
-		return this.isDry() ? this.texturesDry : this.textures;
+		return this.isDry() ? this.variantsDry : super.getTextureArray();
 	}
 	
 	@Override
@@ -165,13 +194,12 @@ public final class CoralGolem extends GolemMultiTextured {
 	@Override
 	public boolean shouldMoveToWater(final Vec3d target) {
 		// allowed to leave water if NOT dry and NOT too far away
-		if (!this.isDry()) {
+		if(this.isDry()) {
+			return true;
+		} else {
 			double dis = this.getPositionVec().distanceTo(target);
-			if(dis < 8.0D && getTimeUntilChange() > 60) {
-				return false;
-			}
+			return dis > 8.0D && getTimeUntilChange() < 60;
 		}
-		return true;
 	}
 
 	@Override
@@ -180,6 +208,6 @@ public final class CoralGolem extends GolemMultiTextured {
 	}
 
 	public int getTimeUntilChange() {
-		return maxChangingTime - timeChanging;
+		return maxChangingTime - getChangingTime();
 	}
 }

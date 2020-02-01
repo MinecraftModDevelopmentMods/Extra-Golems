@@ -27,6 +27,10 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> {
 		alpha = a;
 	}
 	
+	public void setAlpha(final float a) {
+		alpha = a;
+	}
+	
 	public void resetColor() {
 		red = green = blue = alpha = 1.0F;
 	}
