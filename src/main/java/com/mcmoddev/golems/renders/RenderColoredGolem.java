@@ -35,9 +35,9 @@ public class RenderColoredGolem extends RenderGolem<GolemColorized> {
 		// enable transparency if needed
 		RenderSystem.color4f(colorRed, colorGreen, colorBlue, colorAlpha);
 		if (golem.hasTransparency()) {
-			RenderSystem.enableRescaleNormal();
+			RenderSystem.enableAlphaTest();
+			RenderSystem.defaultAlphaFunc();
 			RenderSystem.enableBlend();
-			RenderSystem.blendFunc(770, 771);
 		}
 
 		// render second pass of golem texture
@@ -48,8 +48,8 @@ public class RenderColoredGolem extends RenderGolem<GolemColorized> {
 
 		// return GL11 settings to normal
 		if (golem.hasTransparency()) {
+			RenderSystem.disableAlphaTest();
 			RenderSystem.disableBlend();
-			RenderSystem.disableRescaleNormal();
 		}
 		RenderSystem.popMatrix();
 	}

@@ -1,7 +1,5 @@
 package com.mcmoddev.golems.renders;
 
-import org.lwjgl.opengl.GL11;
-
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolemsEntities;
 import com.mcmoddev.golems.util.GolemNames;
@@ -55,17 +53,15 @@ public class RenderGolem<T extends GolemBase> extends LivingRenderer<T, IronGole
 		if (index > -1) {
 			RenderSystem.pushMatrix();
 			RenderSystem.color4f(1.0F, 1.0F, 1.0F, DAMAGE_ALPHA);
-			RenderSystem.enableRescaleNormal();
+			RenderSystem.enableAlphaTest();
+			RenderSystem.defaultAlphaFunc();
 			RenderSystem.enableBlend();
-			RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			//RenderSystem.blendFunc(GL11.GL_SRC_COLOR, GL11.GL_ONE_MINUS_SRC_COLOR);
-			//RenderSystem.blendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_DST_COLOR, GL11.GL_ONE_MINUS_DST_COLOR);
 			// actually render the damage texture
 			this.texture = damageIndicators[index];
 			super.render(golem, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
 			// return GL settings to normal
+			RenderSystem.disableAlphaTest();
 			RenderSystem.disableBlend();
-			RenderSystem.disableRescaleNormal();
 			RenderSystem.popMatrix();
 		}
 	}
