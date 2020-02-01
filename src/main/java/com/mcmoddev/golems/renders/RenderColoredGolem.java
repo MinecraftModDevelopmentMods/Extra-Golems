@@ -23,17 +23,19 @@ public class RenderColoredGolem extends RenderGolem<GolemColorized> {
 		final float colorGreen = golem.getColorGreen();
 		final float colorBlue = golem.getColorBlue();
 		final float colorAlpha = golem.getColorAlpha();
-
+		
 		// render first pass of golem texture (usually eyes and other opaque, pre-colored features)
 		if (golem.hasBase()) {
+			this.entityModel.resetColor();
 			this.texture = golem.getTextureBase();
 			super.render(golem, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
 		}
 
 		// prepare to render the complicated layer
-		RenderSystem.pushMatrix();
+		matrixStackIn.push();
+		// recolor
+		this.entityModel.setColor(colorRed, colorGreen, colorBlue, colorAlpha);
 		// enable transparency if needed
-		RenderSystem.color4f(colorRed, colorGreen, colorBlue, colorAlpha);
 		if (golem.hasTransparency()) {
 			RenderSystem.enableAlphaTest();
 			RenderSystem.defaultAlphaFunc();
@@ -51,11 +53,16 @@ public class RenderColoredGolem extends RenderGolem<GolemColorized> {
 			RenderSystem.disableAlphaTest();
 			RenderSystem.disableBlend();
 		}
-		RenderSystem.popMatrix();
+		matrixStackIn.pop();
 	}
 	
 	@Override
 	public void bindGolemTexture(final GolemColorized golem) {
+		// do nothing
+	}
+	
+	@Override
+	protected void resetColor() {
 		// do nothing
 	}
 }

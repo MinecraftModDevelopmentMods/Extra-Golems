@@ -115,13 +115,4 @@ public abstract class GolemColorized extends GolemBase {
 	public float getColorAlpha() {
 		return this.colorAlpha;
 	}
-
-	/**
-	 * Whether {@code overlay} should be rendered as transparent.
-	 * This is not called for rendering {@code base},
-	 * only for rendering the colorized layer.
-	 **/
-	public boolean hasTransparency() {
-		return false;
-	}
 }
