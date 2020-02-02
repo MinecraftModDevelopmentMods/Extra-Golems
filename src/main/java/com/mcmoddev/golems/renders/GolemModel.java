@@ -13,11 +13,20 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> {
 	private float blue = 1.0f;
 	private float alpha = 1.0f;
 	
+	
+	
 	@Override
-	public void render(final MatrixStack matrixStack, final IVertexBuilder vertexBuilder,
+	public void render(final MatrixStack matrixStackIn, final IVertexBuilder vertexBuilder,
 			final int i3, final int i4, final float redIn, final float greenIn,
 			final float blueIn, final float alphaIn) {
-		super.render(matrixStack, vertexBuilder, i3, i4, red, green, blue, alpha);
+		// scale as necessary
+		if (isChild) {
+			float scaleChild = 0.5F;
+			matrixStackIn.scale(scaleChild, scaleChild, scaleChild);
+			matrixStackIn.translate(0.0F, 1.5F, 0.0F);
+		}
+		// render with custom colors
+		super.render(matrixStackIn, vertexBuilder, i3, i4, red, green, blue, alpha);
 	}
 	
 	public void setColor(final float r, final float g, final float b, final float a) {

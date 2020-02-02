@@ -163,10 +163,6 @@ public final class MagmaGolem extends GolemBase {
 			// set location
 			child1.copyLocationAndAnglesFrom(this);
 			child2.copyLocationAndAnglesFrom(this);
-//			child1.setLocationAndAngles(this.posX + rand.nextDouble() - 0.5D, this.posY,
-//					this.posZ + rand.nextDouble() - 0.5D, this.rotationYaw + rand.nextInt(20) - 10, 0);
-//			child2.setLocationAndAngles(this.posX + rand.nextDouble() - 0.5D, this.posY,
-//					this.posZ + rand.nextDouble() - 0.5D, this.rotationYaw + rand.nextInt(20) - 10, 0);
 			// spawn the entities
 			this.getEntityWorld().addEntity(child1);
 			this.getEntityWorld().addEntity(child2);
