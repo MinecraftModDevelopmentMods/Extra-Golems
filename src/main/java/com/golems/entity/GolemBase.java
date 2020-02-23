@@ -1,6 +1,9 @@
 package com.golems.entity;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,8 +28,10 @@ import net.minecraft.entity.ai.EntityAIWanderAvoidWater;
 import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -55,6 +60,9 @@ public abstract class GolemBase extends EntityIronGolem {
 	private static final DataParameter<Boolean> CHILD = EntityDataManager.<Boolean>createKey(GolemBase.class, DataSerializers.BOOLEAN);
 	private static final String KEY_CHILD = "isChild";
 	public static final int WANDER_DISTANCE = 64;
+	
+	/** Map to customize healing items **/
+	protected Map<ItemStack, Double> healItemMap = new HashMap<>();
 	
 	protected ResourceLocation textureLoc;
 	protected ResourceLocation lootTableLoc;
@@ -96,6 +104,13 @@ public abstract class GolemBase extends EntityIronGolem {
 		this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(cfg.getBaseAttack());
 		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(cfg.getMaxHealth());
 		this.experienceValue = 4 + rand.nextInt((int)8);
+		// map healing items based on building blocks
+		for(final Block b : getBuildingBlocks(this)) {
+			Item i = Item.getItemFromBlock(b);
+			if(i != Items.AIR) {
+				healItemMap.put(new ItemStack(i), 0.75D);
+			}
+		}
 	}
 
 	////////////// BEHAVIOR OVERRIDES //////////////////
@@ -126,7 +141,7 @@ public abstract class GolemBase extends EntityIronGolem {
 		if(this.isPlayerCreated() && EntityPlayer.class.isAssignableFrom(cls)) {
 			return Config.enableFriendlyFire();
 		}
-		if(cls == EntityVillager.class || GolemBase.class.isAssignableFrom(cls)) {
+		if(EntityVillager.class.isAssignableFrom(cls) || GolemBase.class.isAssignableFrom(cls)) {
 			return false;
 		}
 		return super.canAttackClass(cls);
@@ -233,8 +248,9 @@ public abstract class GolemBase extends EntityIronGolem {
 	@Override
 	protected boolean processInteract(final EntityPlayer player, final EnumHand hand) {
 		final ItemStack stack = player.getHeldItem(hand);
-		if(Config.enableHealGolems() && this.getHealth() < this.getMaxHealth() && isHealingItem(stack)) {
-			heal(getHealAmount(stack));
+		final float addHealth = Config.enableHealGolems() ? getHealAmount(stack) : 0;
+		if(addHealth > 0 && this.getHealth() < this.getMaxHealth() && !player.isSneaking()) {
+			heal(addHealth);
 			stack.shrink(1);
 			// if currently attacking this player, stop
 			if(this.getAttackTarget() == player) {
@@ -280,25 +296,6 @@ public abstract class GolemBase extends EntityIronGolem {
 	public ResourceLocation getTextureType() {
 		return this.textureLoc;
 	}
-
-	@Deprecated
-	public void setCreativeReturn(final ItemStack blockToReturn) {
-	}
-
-	@Deprecated
-	public ItemStack getCreativeReturn() {
-		return ItemStack.EMPTY;
-	}
-	
-	@Deprecated
-	public float getBaseAttackDamage() {
-		return (float) this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getBaseValue();
-	}
-
-	@Deprecated
-	public double getBaseMoveSpeed() {
-		return this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getBaseValue();
-	}
 	
 	public void setChild(boolean isChild) {
 		this.getDataManager().set(CHILD, isChild);
@@ -309,6 +306,9 @@ public abstract class GolemBase extends EntityIronGolem {
 		return this.getDataManager().get(CHILD).booleanValue();
 	}
 
+	/**
+	 * @param toSet true if the golem should take fall damage
+	 **/
 	public void setCanTakeFallDamage(final boolean toSet) {
 		this.takesFallDamage = toSet;
 	}
@@ -317,6 +317,9 @@ public abstract class GolemBase extends EntityIronGolem {
 		return this.takesFallDamage;
 	}
 
+	/**
+	 * @param canSwim true if golem can swim, false if golem sinks
+	 **/
 	public void setCanSwim(final boolean canSwim) {
 		((PathNavigateGround) this.getNavigator()).setCanSwim(canSwim);
 		if(null == wander) {
@@ -337,8 +340,21 @@ public abstract class GolemBase extends EntityIronGolem {
 		}
 	}
 
+	/**
+	 * @param toSet whether golem is immune to fire
+	 **/
 	public void setImmuneToFire(final boolean toSet) {
 		this.isImmuneToFire = toSet;
+	}
+	
+	/**
+	 * Registers an item that can be used to heal the golem
+	 * @param s an ItemStack containing the item
+	 * @param multiplier the percentage of health that should be added (typically 0.25 or 0.5)
+	 **/
+	public GolemBase addHealItem(final ItemStack s, final double multiplier) {
+		healItemMap.put(s, multiplier);
+		return this;
 	}
 
 	/**
@@ -380,23 +396,7 @@ public abstract class GolemBase extends EntityIronGolem {
 	public static GolemConfigSet getConfig(GolemBase golem) {
 		return golem != null && GolemLookup.hasConfig(golem.getClass()) ? GolemLookup.getConfig(golem.getClass()) : GolemConfigSet.EMPTY;
 	}
-	
-	/**
-	 * @param i the ItemStack being applied to the golem
-	 * @return true if the golem can be built the given item-block
-	 **/
-	public boolean isHealingItem(final ItemStack i) {
-		final Block[] blocks = getBuildingBlocks(this);
-		if(i != null && blocks != null && !i.isEmpty() && i.getItem() instanceof ItemBlock) {
-			for(final Block b : blocks) {
-				if(i.isItemEqual(new ItemStack(b))) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-	
+
 	/**
 	 * @param i the ItemStack being used to heal the golem
 	 * @return the amount by which this item should heal the golem,
@@ -404,7 +404,19 @@ public abstract class GolemBase extends EntityIronGolem {
 	 * whichever is smaller
 	 **/
 	public float getHealAmount(final ItemStack i) {
-		return Math.min(this.getMaxHealth() * 0.25F, 32.0F);
+		if(i != null && !i.isEmpty()) {
+			// check each entry in the map for matches (item AND metadata)
+			for(final Entry<ItemStack, Double> e : healItemMap.entrySet()) {
+				if(e.getKey().isItemEqual(i) && e.getKey().getMetadata() == i.getMetadata()) {
+					double h = this.getMaxHealth() * e.getValue();
+					if(this.isChild()) {
+						h *= 1.75D;
+					}
+					return Math.min((float)h, 32.0F);
+				}
+			}
+		}
+		return 0;		
 	}
 
 	/** 

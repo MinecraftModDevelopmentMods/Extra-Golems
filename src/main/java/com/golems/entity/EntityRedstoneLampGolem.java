@@ -10,7 +10,9 @@ import com.golems.main.GolemItems;
 import com.golems.util.GolemConfigSet;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -31,6 +33,8 @@ public final class EntityRedstoneLampGolem extends GolemMultiTextured {
 	public EntityRedstoneLampGolem(final World world) {
 		super(world, LAMP_PREFIX, VARIANTS);
 		this.setCanTakeFallDamage(true);
+		this.addHealItem(new ItemStack(Items.REDSTONE), 0.25D);
+		this.addHealItem(new ItemStack(Items.GLOWSTONE_DUST), 0.25D);
 		final GolemConfigSet cfg = getConfig(this);
 		final IBlockState state = GolemItems.blockLightSource.getDefaultState().withProperty(BlockUtilityGlow.LIGHT_LEVEL, 15);
 		this.tasks.addTask(9, new EntityAIUtilityBlock(this, state, cfg.getInt(FREQUENCY), 

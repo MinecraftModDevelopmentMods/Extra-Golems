@@ -7,7 +7,9 @@ import com.golems.util.GolemNames;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntitySlime;
+import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
@@ -34,6 +36,7 @@ public final class EntitySlimeGolem extends GolemBase {
 		this.setChild(isBaby);
 		this.setCanSwim(true);
 		this.setLootTableLoc(GolemNames.SLIME_GOLEM);
+		this.addHealItem(new ItemStack(Items.SLIME_BALL), 0.25D);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.29D);
 	}
 

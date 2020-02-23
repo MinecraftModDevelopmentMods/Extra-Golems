@@ -13,6 +13,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAITempt;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -47,6 +48,7 @@ public final class EntityFurnaceGolem extends GolemBase {
 		super(world);
 		fuelBurnFactor = Math.max(1, getConfig(this).getInt(FUEL_FACTOR));
 		this.setImmuneToFire(true);
+		this.addHealItem(new ItemStack(Blocks.COBBLESTONE), 0.25D);
 		this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(1.0D);
 	}
 

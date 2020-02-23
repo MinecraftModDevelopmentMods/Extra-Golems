@@ -5,8 +5,11 @@ import com.golems.util.GolemConfigSet;
 import com.golems.util.GolemNames;
 
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
@@ -28,6 +31,8 @@ public final class EntityBookshelfGolem extends GolemBase {
 		super(world);
 		this.setLootTableLoc(GolemNames.BOOKSHELF_GOLEM);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.29D);
+		this.addHealItem(new ItemStack(Items.BOOK), 0.25D);
+		this.addHealItem(new ItemStack(Blocks.PLANKS), 0.25D);
 	}
 
 	protected ResourceLocation applyTexture() {

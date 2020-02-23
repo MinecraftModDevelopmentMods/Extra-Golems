@@ -10,8 +10,10 @@ import net.minecraft.block.BlockStem;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemDye;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -30,6 +32,8 @@ public final class EntityStrawGolem extends GolemBase {
 	public EntityStrawGolem(final World world) {
 		super(world);
 		this.setCanSwim(true);
+		this.addHealItem(new ItemStack(Items.WHEAT), 0.25D);
+		this.addHealItem(new ItemStack(Items.WHEAT_SEEDS), 0.025D);
 		this.setLootTableLoc(GolemNames.STRAW_GOLEM);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.35D);
 		this.boostFreq = getConfig(this).getInt(SPECIAL_FREQ);

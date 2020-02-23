@@ -6,9 +6,11 @@ import com.golems.main.ExtraGolems;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
@@ -26,6 +28,7 @@ public final class EntityWoolGolem extends GolemMultiTextured {
 	public EntityWoolGolem(final World world) {
 		super(world, WOOL_PREFIX, coloredWoolTypes);
 		this.setCanSwim(true);
+		this.addHealItem(new ItemStack(Items.STRING), 0.1D);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
 	}
 	
@@ -43,7 +46,7 @@ public final class EntityWoolGolem extends GolemMultiTextured {
 	}
 
 	@Override
-	public ItemStack getCreativeReturn() {
+	public ItemStack getPickedResult(final RayTraceResult target) {
 		ItemStack woolStack = new ItemStack(Blocks.WOOL);
 		woolStack.setItemDamage(this.getTextureNum() % (coloredWoolTypes.length + 1));
 		return woolStack;
@@ -80,13 +83,14 @@ public final class EntityWoolGolem extends GolemMultiTextured {
 		if(this.secret) {
 			String name = getRainbowString(this.getCustomNameTag(), this.ticksExisted / 2);
 			return new TextComponentString(name);
-		} else return super.getDisplayName();
+		} 
+		return super.getDisplayName();
 	}
 	
 	private static String getRainbowString(final String stringIn, final long timeIn) {
 		String in = TextFormatting.getTextWithoutFormattingCodes(stringIn);
 		StringBuilder stringOut = new StringBuilder(stringIn.length() * 2);
-		int time = timeIn > Integer.MAX_VALUE / 2 ? Integer.MAX_VALUE / 2 : (int)timeIn;
+		int time = (int)(timeIn % (Integer.MAX_VALUE / 2));
 		   TextFormatting[] colorChar = 
 		      {
 		         TextFormatting.RED,
@@ -99,7 +103,7 @@ public final class EntityWoolGolem extends GolemMultiTextured {
 		         TextFormatting.DARK_PURPLE
 		      };
 		   for(int i = 0, l = in.length(), cl = colorChar.length; i < l; i++) {
-			   int meta = i + time ;
+			   int meta = i + time;
 			   stringOut.append(colorChar[meta % cl] + "" + in.charAt(i));
 		   }
 		   return stringOut.toString();

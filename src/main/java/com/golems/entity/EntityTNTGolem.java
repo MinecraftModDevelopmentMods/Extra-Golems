@@ -3,6 +3,7 @@ package com.golems.entity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -41,6 +42,8 @@ public class EntityTNTGolem extends GolemBase {
 	public EntityTNTGolem(final World world) {
 		this(world, 3, 6, 50, 10);
 		this.setLootTableLoc(GolemNames.TNT_GOLEM);
+		this.addHealItem(new ItemStack(Items.GUNPOWDER), 0.25D);
+		this.addHealItem(new ItemStack(Blocks.SAND), 0.25D);
 		this.allowedToExplode = getConfig(this).getBoolean(ALLOW_SPECIAL);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
@@ -48,14 +51,11 @@ public class EntityTNTGolem extends GolemBase {
 	/**
 	 * Flexible constructor to allow child classes to customize.
 	 * 
-	 * @param world
-	 * @param attack
-	 * @param pick
-	 * @param minExplosionRange
-	 * @param maxExplosionRange
-	 * @param minFuseLength
-	 * @param randomExplosionChance
-	 * @param configAllowsExplode
+	 * @param world the world
+	 * @param minExplosionRange minimum size of an explosion
+	 * @param maxExplosionRange maximum size of an explosion
+	 * @param minFuseLength minimum time between ignition and explosion
+	 * @param randomExplosionChance percent chance (1-100) of exploding while attacking
 	 */
 	public EntityTNTGolem(final World world, final int minExplosionRange,
 			      final int maxExplosionRange, final int minFuseLength, final int randomExplosionChance) {

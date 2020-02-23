@@ -11,7 +11,9 @@ import com.golems.util.GolemNames;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
@@ -30,6 +32,7 @@ public final class EntityRedstoneGolem extends GolemBase {
 	public EntityRedstoneGolem(final World world) {
 		this(world, GolemLookup.getConfig(EntityRedstoneGolem.class).getBoolean(ALLOW_SPECIAL), 15, DEF_FREQ);
 		this.setLootTableLoc(GolemNames.REDSTONE_GOLEM);
+		this.addHealItem(new ItemStack(Items.REDSTONE), 0.25D);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 

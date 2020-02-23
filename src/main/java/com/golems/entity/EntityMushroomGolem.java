@@ -10,8 +10,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
@@ -27,19 +29,20 @@ public final class EntityMushroomGolem extends GolemMultiTextured {
 
 	public static final String SHROOM_PREFIX = "shroom";
 	public static final String[] SHROOM_TYPES = {"red", "brown"};
-	public final IBlockState[] mushrooms = {Blocks.BROWN_MUSHROOM.getDefaultState(),
-		Blocks.RED_MUSHROOM.getDefaultState()};
-	protected static final Block[] soils = {Blocks.DIRT, Blocks.GRASS, Blocks.MYCELIUM};
 
 	public EntityMushroomGolem(final World world) {
 		super(world, SHROOM_PREFIX, SHROOM_TYPES);
 		this.setCanSwim(true);
+		this.addHealItem(new ItemStack(Blocks.BROWN_MUSHROOM), 0.25D);
+		this.addHealItem(new ItemStack(Blocks.RED_MUSHROOM), 0.25D);
 		GolemConfigSet cfg = getConfig(this);
 		final boolean allowed = cfg.getBoolean(ALLOW_SPECIAL);
 		int freq = allowed ? cfg.getInt(FREQUENCY) : -100;
 		freq += this.rand.nextInt(Math.max(10, freq / 2));
 		this.tasks.addTask(2,
-			new EntityAIPlaceRandomBlocksStrictly(this, freq, mushrooms, soils, allowed));
+			new EntityAIPlaceRandomBlocksStrictly(this, freq, 
+			new IBlockState[] {Blocks.BROWN_MUSHROOM.getDefaultState(), Blocks.RED_MUSHROOM.getDefaultState()}, 
+			new Block[] {Blocks.DIRT, Blocks.GRASS, Blocks.MYCELIUM, Blocks.GRAVEL}, allowed));
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
 	}
 

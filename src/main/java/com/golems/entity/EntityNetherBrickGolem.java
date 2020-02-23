@@ -1,18 +1,20 @@
 package com.golems.entity;
 
+import java.util.List;
+
 import com.golems.main.ExtraGolems;
 import com.golems.util.GolemConfigSet;
 import com.golems.util.GolemNames;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-
-import java.util.List;
 
 public final class EntityNetherBrickGolem extends GolemBase {
 
@@ -22,6 +24,7 @@ public final class EntityNetherBrickGolem extends GolemBase {
 		super(world);
 		this.setImmuneToFire(true);
 		this.setLootTableLoc(GolemNames.NETHERBRICK_GOLEM);
+		this.addHealItem(new ItemStack(Items.NETHERBRICK), 0.25D);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
 	}
 

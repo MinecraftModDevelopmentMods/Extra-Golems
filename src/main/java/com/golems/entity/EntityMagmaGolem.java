@@ -9,7 +9,9 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
@@ -65,6 +67,7 @@ public final class EntityMagmaGolem extends GolemBase {
 		this.setCanSwim(!this.isHurtByWater);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
 		this.setLootTableLoc(GolemNames.MAGMA_GOLEM);
+		this.addHealItem(new ItemStack(Items.MAGMA_CREAM), 0.25D);
 	}
 	
 	public EntityMagmaGolem(final World world) {

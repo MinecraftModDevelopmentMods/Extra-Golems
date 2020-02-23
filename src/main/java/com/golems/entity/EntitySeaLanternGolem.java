@@ -15,8 +15,10 @@ import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -38,6 +40,8 @@ public final class EntitySeaLanternGolem extends GolemBase {
 	public EntitySeaLanternGolem(final World world) {
 		super(world);
 		this.canDrown = false;
+		this.addHealItem(new ItemStack(Items.PRISMARINE_CRYSTALS), 0.25D);
+		this.addHealItem(new ItemStack(Items.PRISMARINE_SHARD), 0.25D);
 		this.setLootTableLoc(GolemNames.SEALANTERN_GOLEM);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 

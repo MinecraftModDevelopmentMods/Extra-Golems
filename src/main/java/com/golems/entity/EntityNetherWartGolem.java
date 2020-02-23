@@ -1,5 +1,7 @@
 package com.golems.entity;
 
+import java.util.List;
+
 import com.golems.entity.ai.EntityAIPlaceRandomBlocksStrictly;
 import com.golems.main.Config;
 import com.golems.main.ExtraGolems;
@@ -11,15 +13,15 @@ import net.minecraft.block.BlockNetherWart;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-
-import java.util.List;
 
 public final class EntityNetherWartGolem extends GolemBase {
 
@@ -33,6 +35,7 @@ public final class EntityNetherWartGolem extends GolemBase {
 		super(world);
 		this.setCanSwim(true);
 		this.setLootTableLoc(GolemNames.NETHERWART_GOLEM);
+		this.addHealItem(new ItemStack(Items.NETHER_WART), 0.25D);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 	

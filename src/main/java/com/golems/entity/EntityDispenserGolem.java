@@ -21,6 +21,7 @@ import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityArrow.PickupStatus;
 import net.minecraft.entity.projectile.EntitySpectralArrow;
 import net.minecraft.entity.projectile.EntityTippedArrow;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.IInventory;
@@ -65,6 +66,7 @@ public final class EntityDispenserGolem extends GolemBase implements IRangedAtta
 	public EntityDispenserGolem(final World world) {
 		super(world);
 		this.setLootTableLoc(GolemNames.DISPENSER_GOLEM);
+		this.addHealItem(new ItemStack(Blocks.COBBLESTONE), 0.25D);
 		// set config values
 		final GolemConfigSet cfg = getConfig(this);
 		this.allowArrows = cfg.getBoolean(ALLOW_SPECIAL);

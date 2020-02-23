@@ -14,8 +14,10 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -36,6 +38,9 @@ public final class EntityMelonGolem extends GolemBase {
 		this.setCanSwim(true);
 		this.tasks.addTask(2, this.makeFlowerAI());
 		this.setLootTableLoc(GolemNames.MELON_GOLEM);
+		this.addHealItem(new ItemStack(Items.MELON), 0.25D);
+		this.addHealItem(new ItemStack(Items.SPECKLED_MELON), 0.35D);
+		this.addHealItem(new ItemStack(Items.MELON_SEEDS), 0.1D);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 

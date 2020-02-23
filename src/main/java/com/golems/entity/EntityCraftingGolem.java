@@ -9,6 +9,8 @@ import com.golems.util.GolemNames;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
@@ -28,6 +30,7 @@ public final class EntityCraftingGolem extends GolemBase {
 		super(world);
 		this.setLootTableLoc(GolemNames.CRAFTING_GOLEM);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.29D);
+		this.addHealItem(new ItemStack(Blocks.PLANKS), 0.25D);
 	}
 
 	@Override
@@ -38,7 +41,7 @@ public final class EntityCraftingGolem extends GolemBase {
 	@Override
 	protected boolean processInteract(final EntityPlayer player, final EnumHand hand) {
 		final ItemStack itemstack = player.getHeldItem(hand);
-		if (!player.world.isRemote && itemstack.isEmpty()) {
+		if (!player.world.isRemote && itemstack.isEmpty() && !player.isSneaking()) {
 			// display crafting grid for player
 			player.displayGui(new EntityCraftingGolem.InterfaceCraftingGrid(player.world,
 					player.bedLocation));

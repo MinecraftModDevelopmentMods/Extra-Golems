@@ -7,8 +7,10 @@ import com.golems.util.GolemNames;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -25,6 +27,8 @@ public final class EntityCoalGolem extends GolemBase {
 		super(world);
 		this.setLootTableLoc(GolemNames.COAL_GOLEM);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
+		this.addHealItem(new ItemStack(Items.COAL, 1, 0), 0.25D);
+		this.addHealItem(new ItemStack(Items.COAL, 1, 1), 0.25D);
 	}
 
 	@Override

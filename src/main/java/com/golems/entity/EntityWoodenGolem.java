@@ -10,9 +10,11 @@ import net.minecraft.block.BlockOldLog;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 public final class EntityWoodenGolem extends GolemMultiTextured {
@@ -24,11 +26,13 @@ public final class EntityWoodenGolem extends GolemMultiTextured {
 	public EntityWoodenGolem(final World world) {
 		super(world, WOOD_PREFIX, woodTypes);
 		this.setCanSwim(true);
+		this.addHealItem(new ItemStack(Blocks.PLANKS), 0.25D);
+		this.addHealItem(new ItemStack(Items.STICK), 0.1D);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
 	}
 
 	@Override
-	public ItemStack getCreativeReturn() {
+	public ItemStack getPickedResult(final RayTraceResult target) {
 		// try to return the same block of this golem's texture
 		Block block = Blocks.LOG;
 		int damage = this.getTextureNum() % woodTypes.length;

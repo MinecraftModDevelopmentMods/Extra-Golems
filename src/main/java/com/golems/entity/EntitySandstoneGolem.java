@@ -4,7 +4,10 @@ import com.golems.main.ExtraGolems;
 import com.golems.util.GolemNames;
 
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
@@ -14,6 +17,7 @@ public final class EntitySandstoneGolem extends GolemBase {
 	public EntitySandstoneGolem(final World world) {
 		super(world);
 		this.setLootTableLoc(GolemNames.SANDSTONE_GOLEM);
+		this.addHealItem(new ItemStack(Blocks.SAND, 1, 0), 0.25D);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
 	}
 
