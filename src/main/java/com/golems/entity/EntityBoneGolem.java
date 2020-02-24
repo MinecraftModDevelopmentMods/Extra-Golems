@@ -14,21 +14,21 @@ import net.minecraft.world.World;
 
 public final class EntityBoneGolem extends GolemBase {
 
-	public EntityBoneGolem(final World world) {
-		super(world);
-		this.setCanTakeFallDamage(true);
-		this.setLootTableLoc(GolemNames.BONE_GOLEM);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
-		this.addHealItem(new ItemStack(Items.BONE), 0.25D);
-		this.addHealItem(new ItemStack(Items.DYE, 1, EnumDyeColor.WHITE.getDyeDamage()), 0.08D);
-	}
+  public EntityBoneGolem(final World world) {
+    super(world);
+    this.setCanTakeFallDamage(true);
+    this.setLootTableLoc(GolemNames.BONE_GOLEM);
+    this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
+    this.addHealItem(new ItemStack(Items.BONE), 0.25D);
+    this.addHealItem(new ItemStack(Items.DYE, 1, EnumDyeColor.WHITE.getDyeDamage()), 0.08D);
+  }
 
-	protected ResourceLocation applyTexture() {
-		return makeTexture(ExtraGolems.MODID, GolemNames.BONE_GOLEM + "_skeleton");
-	}
+  protected ResourceLocation applyTexture() {
+    return makeTexture(ExtraGolems.MODID, GolemNames.BONE_GOLEM + "_skeleton");
+  }
 
-	@Override
-	public SoundEvent getGolemSound() {
-		return SoundEvents.BLOCK_STONE_STEP;
-	}
+  @Override
+  public SoundEvent getGolemSound() {
+    return SoundEvents.BLOCK_STONE_STEP;
+  }
 }

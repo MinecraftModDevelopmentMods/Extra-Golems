@@ -13,25 +13,25 @@ import net.minecraft.world.World;
 
 public final class EntityQuartzGolem extends GolemBase {
 
-	public EntityQuartzGolem(final World world) {
-		super(world);
-		this.setLootTableLoc(GolemNames.QUARTZ_GOLEM);
-		this.addHealItem(new ItemStack(Items.QUARTZ), 0.25D);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
-	}
+  public EntityQuartzGolem(final World world) {
+    super(world);
+    this.setLootTableLoc(GolemNames.QUARTZ_GOLEM);
+    this.addHealItem(new ItemStack(Items.QUARTZ), 0.25D);
+    this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
+  }
 
-	@Override
-	protected ResourceLocation applyTexture() {
-		return makeTexture(ExtraGolems.MODID, GolemNames.QUARTZ_GOLEM);
-	}
+  @Override
+  protected ResourceLocation applyTexture() {
+    return makeTexture(ExtraGolems.MODID, GolemNames.QUARTZ_GOLEM);
+  }
 
-	@Override
-	public SoundEvent getGolemSound() {
-		return SoundEvents.BLOCK_GLASS_STEP;
-	}
+  @Override
+  public SoundEvent getGolemSound() {
+    return SoundEvents.BLOCK_GLASS_STEP;
+  }
 
-	@Override
-	protected SoundEvent getDeathSound() {
-		return SoundEvents.BLOCK_GLASS_BREAK;
-	}
+  @Override
+  protected SoundEvent getDeathSound() {
+    return SoundEvents.BLOCK_GLASS_BREAK;
+  }
 }

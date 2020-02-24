@@ -13,21 +13,21 @@ import net.minecraft.world.World;
 
 public final class EntityGoldGolem extends GolemBase {
 
-	public EntityGoldGolem(final World world) {
-		super(world);
-		this.setLootTableLoc(GolemNames.GOLD_GOLEM);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.19D);
-		this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.9D);
-		this.addHealItem(new ItemStack(Items.GOLD_INGOT), 0.25D);
-		this.addHealItem(new ItemStack(Items.GOLD_NUGGET), 0.025D);
-	}
+  public EntityGoldGolem(final World world) {
+    super(world);
+    this.setLootTableLoc(GolemNames.GOLD_GOLEM);
+    this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.19D);
+    this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.9D);
+    this.addHealItem(new ItemStack(Items.GOLD_INGOT), 0.25D);
+    this.addHealItem(new ItemStack(Items.GOLD_NUGGET), 0.025D);
+  }
 
-	protected ResourceLocation applyTexture() {
-		return makeTexture(ExtraGolems.MODID, GolemNames.GOLD_GOLEM);
-	}
+  protected ResourceLocation applyTexture() {
+    return makeTexture(ExtraGolems.MODID, GolemNames.GOLD_GOLEM);
+  }
 
-	@Override
-	public SoundEvent getGolemSound() {
-		return SoundEvents.BLOCK_STONE_STEP;
-	}
+  @Override
+  public SoundEvent getGolemSound() {
+    return SoundEvents.BLOCK_STONE_STEP;
+  }
 }

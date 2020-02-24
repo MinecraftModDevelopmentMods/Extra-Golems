@@ -20,52 +20,50 @@ import net.minecraftforge.oredict.OreDictionary;
 
 public final class EntityWoodenGolem extends GolemMultiTextured {
 
-	public static final String WOOD_PREFIX = "wooden";
-	public static final String[] woodTypes = {"oak", "spruce", "birch", "jungle", "acacia",
-		"big_oak"};
-	
-	public EntityWoodenGolem(final World world) {
-		super(world, WOOD_PREFIX, woodTypes);
-		this.setCanSwim(true);
-		this.addHealItem(new ItemStack(Blocks.LOG, 1, OreDictionary.WILDCARD_VALUE), 0.75D);
-		this.addHealItem(new ItemStack(Blocks.LOG2, 1, OreDictionary.WILDCARD_VALUE), 0.75D);
-		this.addHealItem(new ItemStack(Blocks.PLANKS), 0.25D);
-		this.addHealItem(new ItemStack(Items.STICK), 0.1D);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
-	}
+  public static final String WOOD_PREFIX = "wooden";
+  public static final String[] woodTypes = { "oak", "spruce", "birch", "jungle", "acacia", "big_oak" };
 
-	@Override
-	public ItemStack getPickedResult(final RayTraceResult target) {
-		// try to return the same block of this golem's texture
-		Block block = Blocks.LOG;
-		int damage = this.getTextureNum() % woodTypes.length;
-		if (this.getTextureNum() > 3) {
-			block = Blocks.LOG2;
-			damage %= 2;
-		}
-		return new ItemStack(block, 1, damage);
-	}
+  public EntityWoodenGolem(final World world) {
+    super(world, WOOD_PREFIX, woodTypes);
+    this.setCanSwim(true);
+    this.addHealItem(new ItemStack(Blocks.LOG, 1, OreDictionary.WILDCARD_VALUE), 0.75D);
+    this.addHealItem(new ItemStack(Blocks.LOG2, 1, OreDictionary.WILDCARD_VALUE), 0.75D);
+    this.addHealItem(new ItemStack(Blocks.PLANKS), 0.25D);
+    this.addHealItem(new ItemStack(Items.STICK), 0.1D);
+    this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
+  }
 
-	@Override
-	public String getModId() {
-		return ExtraGolems.MODID;
-	}
+  @Override
+  public ItemStack getPickedResult(final RayTraceResult target) {
+    // try to return the same block of this golem's texture
+    Block block = Blocks.LOG;
+    int damage = this.getTextureNum() % woodTypes.length;
+    if (this.getTextureNum() > 3) {
+      block = Blocks.LOG2;
+      damage %= 2;
+    }
+    return new ItemStack(block, 1, damage);
+  }
 
-	@Override
-	public void onBuilt(IBlockState body, IBlockState legs, IBlockState arm1, IBlockState arm2) {
-		// use block metadata to give this golem the right texture
-		if(body.getBlock() instanceof BlockNewLog || body.getBlock() instanceof BlockOldLog) {
-			final int meta = body.getBlock().getMetaFromState(
-			body.withProperty(BlockLog.LOG_AXIS, EnumAxis.NONE));
-			byte textureNum = body.getBlock() == Blocks.LOG2 ? (byte) (meta + 4) : (byte) meta;
-			textureNum %= this.getNumTextures();
-			this.setTextureNum(textureNum);
-		}
-		
-	}
+  @Override
+  public String getModId() {
+    return ExtraGolems.MODID;
+  }
 
-	@Override
-	public SoundEvent getGolemSound() {
-		return SoundEvents.BLOCK_WOOD_STEP;
-	}
+  @Override
+  public void onBuilt(IBlockState body, IBlockState legs, IBlockState arm1, IBlockState arm2) {
+    // use block metadata to give this golem the right texture
+    if (body.getBlock() instanceof BlockNewLog || body.getBlock() instanceof BlockOldLog) {
+      final int meta = body.getBlock().getMetaFromState(body.withProperty(BlockLog.LOG_AXIS, EnumAxis.NONE));
+      byte textureNum = body.getBlock() == Blocks.LOG2 ? (byte) (meta + 4) : (byte) meta;
+      textureNum %= this.getNumTextures();
+      this.setTextureNum(textureNum);
+    }
+
+  }
+
+  @Override
+  public SoundEvent getGolemSound() {
+    return SoundEvents.BLOCK_WOOD_STEP;
+  }
 }

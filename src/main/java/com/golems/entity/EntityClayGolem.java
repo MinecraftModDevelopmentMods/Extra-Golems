@@ -12,19 +12,19 @@ import net.minecraft.world.World;
 
 public final class EntityClayGolem extends GolemBase {
 
-	public EntityClayGolem(final World world) {
-		super(world);
-		this.setLootTableLoc(GolemNames.CLAY_GOLEM);
-		this.addHealItem(new ItemStack(Items.CLAY_BALL), 0.25D);
-	}
+  public EntityClayGolem(final World world) {
+    super(world);
+    this.setLootTableLoc(GolemNames.CLAY_GOLEM);
+    this.addHealItem(new ItemStack(Items.CLAY_BALL), 0.25D);
+  }
 
-	@Override
-	protected ResourceLocation applyTexture() {
-		return makeTexture(ExtraGolems.MODID, GolemNames.CLAY_GOLEM);
-	}
+  @Override
+  protected ResourceLocation applyTexture() {
+    return makeTexture(ExtraGolems.MODID, GolemNames.CLAY_GOLEM);
+  }
 
-	@Override
-	public SoundEvent getGolemSound() {
-		return SoundEvents.BLOCK_GRAVEL_STEP;
-	}
+  @Override
+  public SoundEvent getGolemSound() {
+    return SoundEvents.BLOCK_GRAVEL_STEP;
+  }
 }

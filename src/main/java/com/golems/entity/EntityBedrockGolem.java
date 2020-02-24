@@ -24,62 +24,63 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public final class EntityBedrockGolem extends GolemBase {
 
-	public EntityBedrockGolem(final World world) {
-		super(world);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.24D);
-	}
+  public EntityBedrockGolem(final World world) {
+    super(world);
+    this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.24D);
+  }
 
-	@Override
-	protected ResourceLocation applyTexture() {
-		return makeTexture(ExtraGolems.MODID, GolemNames.BEDROCK_GOLEM);
-	}
+  @Override
+  protected ResourceLocation applyTexture() {
+    return makeTexture(ExtraGolems.MODID, GolemNames.BEDROCK_GOLEM);
+  }
 
-	@Override
-	public boolean isEntityInvulnerable(final DamageSource src) {
-		return true;
-	}
+  @Override
+  public boolean isEntityInvulnerable(final DamageSource src) {
+    return true;
+  }
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public boolean canRenderOnFire() {
-		return false;
-	}
+  @SideOnly(Side.CLIENT)
+  @Override
+  public boolean canRenderOnFire() {
+    return false;
+  }
 
-	@Override
-	protected boolean processInteract(final EntityPlayer player, final EnumHand hand) {
-		// creative players can "despawn" by using spawnBedrockGolem on this entity
-		final ItemStack itemstack = player.getHeldItem(hand);
-		if (player.capabilities.isCreativeMode && !itemstack.isEmpty() && itemstack.getItem() == GolemItems.spawnBedrockGolem) {
-			player.swingArm(hand);
-			if (!this.world.isRemote) {
-				this.setDead();
-			} else {
-				ItemBedrockGolem.spawnParticles(this.world, this.posX, this.posY + 0.1D, this.posZ, 0.1D);
-			}
-		}
+  @Override
+  protected boolean processInteract(final EntityPlayer player, final EnumHand hand) {
+    // creative players can "despawn" by using spawnBedrockGolem on this entity
+    final ItemStack itemstack = player.getHeldItem(hand);
+    if (player.capabilities.isCreativeMode && !itemstack.isEmpty()
+        && itemstack.getItem() == GolemItems.spawnBedrockGolem) {
+      player.swingArm(hand);
+      if (!this.world.isRemote) {
+        this.setDead();
+      } else {
+        ItemBedrockGolem.spawnParticles(this.world, this.posX, this.posY + 0.1D, this.posZ, 0.1D);
+      }
+    }
 
-		return super.processInteract(player, hand);
-	}
+    return super.processInteract(player, hand);
+  }
 
-	@Override
-	protected void damageEntity(final DamageSource source, final float amount) {
-		//
-	}
+  @Override
+  protected void damageEntity(final DamageSource source, final float amount) {
+    //
+  }
 
-	@Override
-	public SoundEvent getGolemSound() {
-		return SoundEvents.BLOCK_STONE_STEP;
-	}
-	
-	@Override
-	public ItemStack getPickedResult(final RayTraceResult target) {
-		return new ItemStack(GolemItems.spawnBedrockGolem);
-	}
-	
-	@Override
-	public List<String> addSpecialDesc(final List<String> list) {
-		list.add(TextFormatting.WHITE + "" + TextFormatting.BOLD + trans("entitytip.indestructible"));
-		list.add(TextFormatting.DARK_RED + trans("tooltip.creative_only_item"));
-		return list;
-	}
+  @Override
+  public SoundEvent getGolemSound() {
+    return SoundEvents.BLOCK_STONE_STEP;
+  }
+
+  @Override
+  public ItemStack getPickedResult(final RayTraceResult target) {
+    return new ItemStack(GolemItems.spawnBedrockGolem);
+  }
+
+  @Override
+  public List<String> addSpecialDesc(final List<String> list) {
+    list.add(TextFormatting.WHITE + "" + TextFormatting.BOLD + trans("entitytip.indestructible"));
+    list.add(TextFormatting.DARK_RED + trans("tooltip.creative_only_item"));
+    return list;
+  }
 }

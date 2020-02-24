@@ -22,49 +22,48 @@ import java.util.List;
 
 public final class EntityBookshelfGolem extends GolemBase {
 
-	public static final String ALLOW_SPECIAL = "Allow Special: Potion Effects";
-	private static final Potion[] goodEffects = {MobEffects.FIRE_RESISTANCE, MobEffects.REGENERATION,
-		MobEffects.STRENGTH, MobEffects.ABSORPTION, MobEffects.LUCK, MobEffects.INSTANT_HEALTH,
-		MobEffects.RESISTANCE, MobEffects.INVISIBILITY, MobEffects.SPEED,
-		MobEffects.JUMP_BOOST};
+  public static final String ALLOW_SPECIAL = "Allow Special: Potion Effects";
+  private static final Potion[] goodEffects = { MobEffects.FIRE_RESISTANCE, MobEffects.REGENERATION,
+      MobEffects.STRENGTH, MobEffects.ABSORPTION, MobEffects.LUCK, MobEffects.INSTANT_HEALTH, MobEffects.RESISTANCE,
+      MobEffects.INVISIBILITY, MobEffects.SPEED, MobEffects.JUMP_BOOST };
 
-	public EntityBookshelfGolem(final World world) {
-		super(world);
-		this.setLootTableLoc(GolemNames.BOOKSHELF_GOLEM);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.29D);
-		this.addHealItem(new ItemStack(Items.BOOK), 0.25D);
-		this.addHealItem(new ItemStack(Blocks.PLANKS, 1, OreDictionary.WILDCARD_VALUE), 0.25D);
-	}
+  public EntityBookshelfGolem(final World world) {
+    super(world);
+    this.setLootTableLoc(GolemNames.BOOKSHELF_GOLEM);
+    this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.29D);
+    this.addHealItem(new ItemStack(Items.BOOK), 0.25D);
+    this.addHealItem(new ItemStack(Blocks.PLANKS, 1, OreDictionary.WILDCARD_VALUE), 0.25D);
+  }
 
-	protected ResourceLocation applyTexture() {
-		return makeTexture(ExtraGolems.MODID, GolemNames.BOOKSHELF_GOLEM);
-	}
+  protected ResourceLocation applyTexture() {
+    return makeTexture(ExtraGolems.MODID, GolemNames.BOOKSHELF_GOLEM);
+  }
 
-	/**
-	 * Called frequently so the entity can update its state every tick as required. For example,
-	 * zombies and skeletons use this to react to sunlight and start to burn.
-	 */
-	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
-		GolemConfigSet cfg = getConfig(this);
-		if (cfg.getBoolean(ALLOW_SPECIAL) && this.getActivePotionEffects().isEmpty()
-			&& rand.nextInt(40) == 0) {
-			final Potion potion = goodEffects[rand.nextInt(goodEffects.length)];
-			final int len = potion.isInstant() ? 1 : 200 + 100 * (1 + rand.nextInt(5));
-			this.addPotionEffect(new PotionEffect(potion, len, rand.nextInt(2)));
-		}
-	}
+  /**
+   * Called frequently so the entity can update its state every tick as required.
+   * For example, zombies and skeletons use this to react to sunlight and start to
+   * burn.
+   */
+  @Override
+  public void onLivingUpdate() {
+    super.onLivingUpdate();
+    GolemConfigSet cfg = getConfig(this);
+    if (cfg.getBoolean(ALLOW_SPECIAL) && this.getActivePotionEffects().isEmpty() && rand.nextInt(40) == 0) {
+      final Potion potion = goodEffects[rand.nextInt(goodEffects.length)];
+      final int len = potion.isInstant() ? 1 : 200 + 100 * (1 + rand.nextInt(5));
+      this.addPotionEffect(new PotionEffect(potion, len, rand.nextInt(2)));
+    }
+  }
 
-	@Override
-	public SoundEvent getGolemSound() {
-		return SoundEvents.BLOCK_WOOD_STEP;
-	}
+  @Override
+  public SoundEvent getGolemSound() {
+    return SoundEvents.BLOCK_WOOD_STEP;
+  }
 
-	@Override
-	public List<String> addSpecialDesc(final List<String> list) {
-		if (getConfig(this).getBoolean(EntityBookshelfGolem.ALLOW_SPECIAL))
-			list.add(TextFormatting.LIGHT_PURPLE + trans("entitytip.grants_self_potion_effects"));
-		return list;
-	}
+  @Override
+  public List<String> addSpecialDesc(final List<String> list) {
+    if (getConfig(this).getBoolean(EntityBookshelfGolem.ALLOW_SPECIAL))
+      list.add(TextFormatting.LIGHT_PURPLE + trans("entitytip.grants_self_potion_effects"));
+    return list;
+  }
 }

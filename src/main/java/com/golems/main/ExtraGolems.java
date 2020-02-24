@@ -15,39 +15,39 @@ import org.apache.logging.log4j.Logger;
 @Mod(modid = ExtraGolems.MODID, name = ExtraGolems.NAME, version = ExtraGolems.VERSION)
 public class ExtraGolems {
 
-	public static final String MODID = "golems";
-	protected static final String NAME = "Extra Golems";
-	protected static final String VERSION = "7.1.8";
+  public static final String MODID = "golems";
+  protected static final String NAME = "Extra Golems";
+  protected static final String VERSION = "7.1.8";
 
-	@SidedProxy(clientSide = "com." + MODID + ".proxies.ClientProxy", serverSide = "com." + MODID
-		+ ".proxies.CommonProxy")
-	public static CommonProxy proxy;
+  @SidedProxy(clientSide = "com." + MODID + ".proxies.ClientProxy", serverSide = "com." + MODID
+      + ".proxies.CommonProxy")
+  public static CommonProxy proxy;
 
-	@Mod.Instance(ExtraGolems.MODID)
-	public static ExtraGolems instance;
+  @Mod.Instance(ExtraGolems.MODID)
+  public static ExtraGolems instance;
 
-	public static final Logger LOGGER = LogManager.getFormatterLogger(ExtraGolems.MODID);
+  public static final Logger LOGGER = LogManager.getFormatterLogger(ExtraGolems.MODID);
 
-	@Mod.EventHandler
-	public static void preInit(final FMLPreInitializationEvent event) {
-		Config.mainRegistry(new Configuration(event.getSuggestedConfigurationFile()));
-	}
+  @Mod.EventHandler
+  public static void preInit(final FMLPreInitializationEvent event) {
+    Config.mainRegistry(new Configuration(event.getSuggestedConfigurationFile()));
+  }
 
-	@Mod.EventHandler
-	public static void init(final FMLInitializationEvent event) {
+  @Mod.EventHandler
+  public static void init(final FMLInitializationEvent event) {
 
-		proxy.registerEvents();
+    proxy.registerEvents();
 
-		if (Loader.isModLoaded(ModIds.WAILA)) {
-			FMLInterModComms.sendMessage(ModIds.WAILA, "register",
-				"com.golems.integration.waila.WailaExtraGolems.callbackRegister");
-		}
-		if (Loader.isModLoaded(ModIds.TOP)) {
-			FMLInterModComms.sendFunctionMessage(ModIds.TOP, "getTheOneProbe",
-				"com.golems.integration.theoneprobe.TOPExtraGolems$GetTheOneProbe");
-		}
-		// Trial-run these methods to give the user feedback if there's errors
-		Config.getPlainsGolems();
-		Config.getDesertGolems();
-	}
+    if (Loader.isModLoaded(ModIds.WAILA)) {
+      FMLInterModComms.sendMessage(ModIds.WAILA, "register",
+          "com.golems.integration.waila.WailaExtraGolems.callbackRegister");
+    }
+    if (Loader.isModLoaded(ModIds.TOP)) {
+      FMLInterModComms.sendFunctionMessage(ModIds.TOP, "getTheOneProbe",
+          "com.golems.integration.theoneprobe.TOPExtraGolems$GetTheOneProbe");
+    }
+    // Trial-run these methods to give the user feedback if there's errors
+    Config.getPlainsGolems();
+    Config.getDesertGolems();
+  }
 }

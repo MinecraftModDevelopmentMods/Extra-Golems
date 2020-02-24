@@ -23,70 +23,72 @@ import java.util.List;
 
 public final class EntityMushroomGolem extends GolemMultiTextured {
 
-	public static final String ALLOW_SPECIAL = "Allow Special: Plant Mushrooms";
-	public static final String FREQUENCY = "Mushroom Frequency";
-	public static final String ALLOW_HEALING = "Allow Special: Random Healing";
+  public static final String ALLOW_SPECIAL = "Allow Special: Plant Mushrooms";
+  public static final String FREQUENCY = "Mushroom Frequency";
+  public static final String ALLOW_HEALING = "Allow Special: Random Healing";
 
-	public static final String SHROOM_PREFIX = "shroom";
-	public static final String[] SHROOM_TYPES = {"red", "brown"};
+  public static final String SHROOM_PREFIX = "shroom";
+  public static final String[] SHROOM_TYPES = { "red", "brown" };
 
-	public EntityMushroomGolem(final World world) {
-		super(world, SHROOM_PREFIX, SHROOM_TYPES);
-		this.setCanSwim(true);
-		this.addHealItem(new ItemStack(Blocks.BROWN_MUSHROOM), 0.25D);
-		this.addHealItem(new ItemStack(Blocks.RED_MUSHROOM), 0.25D);
-		GolemConfigSet cfg = getConfig(this);
-		final boolean allowed = cfg.getBoolean(ALLOW_SPECIAL);
-		int freq = allowed ? cfg.getInt(FREQUENCY) : -100;
-		freq += this.rand.nextInt(Math.max(10, freq / 2));
-		this.tasks.addTask(2,
-			new EntityAIPlaceRandomBlocksStrictly(this, freq, 
-			new IBlockState[] {Blocks.BROWN_MUSHROOM.getDefaultState(), Blocks.RED_MUSHROOM.getDefaultState()}, 
-			new Block[] {Blocks.DIRT, Blocks.GRASS, Blocks.MYCELIUM, Blocks.GRAVEL}, allowed));
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
-	}
+  public EntityMushroomGolem(final World world) {
+    super(world, SHROOM_PREFIX, SHROOM_TYPES);
+    this.setCanSwim(true);
+    this.addHealItem(new ItemStack(Blocks.BROWN_MUSHROOM), 0.25D);
+    this.addHealItem(new ItemStack(Blocks.RED_MUSHROOM), 0.25D);
+    GolemConfigSet cfg = getConfig(this);
+    final boolean allowed = cfg.getBoolean(ALLOW_SPECIAL);
+    int freq = allowed ? cfg.getInt(FREQUENCY) : -100;
+    freq += this.rand.nextInt(Math.max(10, freq / 2));
+    this.tasks.addTask(2,
+        new EntityAIPlaceRandomBlocksStrictly(this, freq,
+            new IBlockState[] { Blocks.BROWN_MUSHROOM.getDefaultState(), Blocks.RED_MUSHROOM.getDefaultState() },
+            new Block[] { Blocks.DIRT, Blocks.GRASS, Blocks.MYCELIUM, Blocks.GRAVEL }, allowed));
+    this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
+  }
 
-	@Override
-	public String getModId() {
-		return ExtraGolems.MODID;
-	}
+  @Override
+  public String getModId() {
+    return ExtraGolems.MODID;
+  }
 
-	@Override
-	public SoundEvent getGolemSound() {
-		return SoundEvents.BLOCK_GRASS_STEP;
-	}
-	
-	/**
-	 * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
-	 * use this to react to sunlight and start to burn.
-	 */
-	@Override
-	public void onLivingUpdate() {
-		super.onLivingUpdate();
-		// heals randomly, but only at night
-		if(!this.getEntityWorld().isDaytime() && rand.nextInt(Config.RANDOM_HEAL_TIMER) == 0 && getConfig(this).getBoolean(ALLOW_HEALING)) {
-			this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 20, 2));
-		}
-	}
+  @Override
+  public SoundEvent getGolemSound() {
+    return SoundEvents.BLOCK_GRASS_STEP;
+  }
 
-	@Override
-	public void onBuilt(IBlockState body, IBlockState legs, IBlockState arm1, IBlockState arm2) {
-		// use block type to give this golem the right texture (defaults to brown mushroom)
-		byte textureNum = body.getBlock() == Blocks.RED_MUSHROOM_BLOCK ? (byte) 0
-			: (byte) 1;
-		textureNum %= this.getNumTextures();
-		this.setTextureNum(textureNum);
-	}
+  /**
+   * Called frequently so the entity can update its state every tick as required.
+   * For example, zombies and skeletons use this to react to sunlight and start to
+   * burn.
+   */
+  @Override
+  public void onLivingUpdate() {
+    super.onLivingUpdate();
+    // heals randomly, but only at night
+    if (!this.getEntityWorld().isDaytime() && rand.nextInt(Config.RANDOM_HEAL_TIMER) == 0
+        && getConfig(this).getBoolean(ALLOW_HEALING)) {
+      this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 20, 2));
+    }
+  }
 
-	@Override
-	public List<String> addSpecialDesc(final List<String> list) {
-		if (getConfig(this).getBoolean(EntityMushroomGolem.ALLOW_SPECIAL)) {
-			list.add(TextFormatting.DARK_GREEN + trans("entitytip.plants_shrooms"));
-		}
-		if(getConfig(this).getBoolean(ALLOW_HEALING)) {
-			String sHeals = TextFormatting.LIGHT_PURPLE + trans("entitytip.heals");
-			list.add(sHeals);
-		}
-		return list;
-	}
+  @Override
+  public void onBuilt(IBlockState body, IBlockState legs, IBlockState arm1, IBlockState arm2) {
+    // use block type to give this golem the right texture (defaults to brown
+    // mushroom)
+    byte textureNum = body.getBlock() == Blocks.RED_MUSHROOM_BLOCK ? (byte) 0 : (byte) 1;
+    textureNum %= this.getNumTextures();
+    this.setTextureNum(textureNum);
+  }
+
+  @Override
+  public List<String> addSpecialDesc(final List<String> list) {
+    if (getConfig(this).getBoolean(EntityMushroomGolem.ALLOW_SPECIAL)) {
+      list.add(TextFormatting.DARK_GREEN + trans("entitytip.plants_shrooms"));
+    }
+    if (getConfig(this).getBoolean(ALLOW_HEALING)) {
+      String sHeals = TextFormatting.LIGHT_PURPLE + trans("entitytip.heals");
+      list.add(sHeals);
+    }
+    return list;
+  }
 }

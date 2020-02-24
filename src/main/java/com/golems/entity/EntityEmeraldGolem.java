@@ -13,20 +13,20 @@ import net.minecraft.world.World;
 
 public final class EntityEmeraldGolem extends GolemBase {
 
-	public EntityEmeraldGolem(final World world) {
-		super(world);
-		this.setLootTableLoc(GolemNames.EMERALD_GOLEM);
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
-		this.addHealItem(new ItemStack(Items.EMERALD), 0.25D);
-	}
+  public EntityEmeraldGolem(final World world) {
+    super(world);
+    this.setLootTableLoc(GolemNames.EMERALD_GOLEM);
+    this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
+    this.addHealItem(new ItemStack(Items.EMERALD), 0.25D);
+  }
 
-	@Override
-	protected ResourceLocation applyTexture() {
-		return makeTexture(ExtraGolems.MODID, GolemNames.EMERALD_GOLEM);
-	}
+  @Override
+  protected ResourceLocation applyTexture() {
+    return makeTexture(ExtraGolems.MODID, GolemNames.EMERALD_GOLEM);
+  }
 
-	@Override
-	public SoundEvent getGolemSound() {
-		return SoundEvents.BLOCK_STONE_STEP;
-	}
+  @Override
+  public SoundEvent getGolemSound() {
+    return SoundEvents.BLOCK_STONE_STEP;
+  }
 }

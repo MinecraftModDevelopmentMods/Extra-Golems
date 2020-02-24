@@ -9,28 +9,28 @@ import net.minecraft.item.ItemStack;
 
 public final class GuiLoader {
 
-	private GuiLoader() {
-		//
-	}
+  private GuiLoader() {
+    //
+  }
 
-    public static void loadBookGui(EntityPlayer playerIn, ItemStack itemstack) {
-    	// only load client-side, of course
-    	if(!playerIn.getEntityWorld().isRemote)
-    		return;
-    	// populate the DummyGolems list if it is empty
-    	if(ExtraGolems.proxy.DUMMY_GOLEMS.isEmpty()) {
-    		ExtraGolems.proxy.DUMMY_GOLEMS.addAll(GolemLookup.getDummyGolemList(playerIn.getEntityWorld()));
-    	}
-    	// open the gui
-    	Minecraft.getMinecraft().displayGuiScreen(new GuiGolemBook(playerIn, itemstack));
-    }   
-    
-    public static void loadDispenserGolemGui(final EntityPlayer player, final IInventory golemInv) {
-    	// only load client-side, of course
-    	if(!player.getEntityWorld().isRemote) {
-    		return;
-    	}
-    	// open the gui
-    	Minecraft.getMinecraft().displayGuiScreen(new GuiDispenserGolem(player.inventory, golemInv));
-    }   
+  public static void loadBookGui(EntityPlayer playerIn, ItemStack itemstack) {
+    // only load client-side, of course
+    if (!playerIn.getEntityWorld().isRemote)
+      return;
+    // populate the DummyGolems list if it is empty
+    if (ExtraGolems.proxy.DUMMY_GOLEMS.isEmpty()) {
+      ExtraGolems.proxy.DUMMY_GOLEMS.addAll(GolemLookup.getDummyGolemList(playerIn.getEntityWorld()));
+    }
+    // open the gui
+    Minecraft.getMinecraft().displayGuiScreen(new GuiGolemBook(playerIn, itemstack));
+  }
+
+  public static void loadDispenserGolemGui(final EntityPlayer player, final IInventory golemInv) {
+    // only load client-side, of course
+    if (!player.getEntityWorld().isRemote) {
+      return;
+    }
+    // open the gui
+    Minecraft.getMinecraft().displayGuiScreen(new GuiDispenserGolem(player.inventory, golemInv));
+  }
 }

@@ -59,455 +59,469 @@ import net.minecraftforge.oredict.OreDictionary;
  **/
 public abstract class GolemBase extends EntityIronGolem {
 
-	private static final DataParameter<Boolean> CHILD = EntityDataManager.<Boolean>createKey(GolemBase.class, DataSerializers.BOOLEAN);
-	private static final String KEY_CHILD = "isChild";
-	public static final int WANDER_DISTANCE = 64;
-	
-	/** Map to customize healing items **/
-	protected Map<ItemStack, Double> healItemMap = new HashMap<>();
-	
-	protected ResourceLocation textureLoc;
-	protected ResourceLocation lootTableLoc;
+  private static final DataParameter<Boolean> CHILD = EntityDataManager.<Boolean>createKey(GolemBase.class,
+      DataSerializers.BOOLEAN);
+  private static final String KEY_CHILD = "isChild";
+  public static final int WANDER_DISTANCE = 64;
 
-	// customizable variables with default values //
-	protected double knockbackY = 0.4000000059604645D;
-	/** Amount by which to multiply damage if it's a critical. **/
-	protected float criticalModifier = 2.25F;
-	/** Percent chance to multiply damage [0, 100]. **/
-	protected int criticalChance = 5;
-	protected boolean takesFallDamage = false;
-	protected boolean canDrown = false;
-	
-	// swimming AI
-	protected EntityAIBase swimmingAI = new EntityAISwimming(this);
-	protected EntityAIBase wanderAvoidWater = null;
-	protected EntityAIBase wander = null;
+  /** Map to customize healing items **/
+  protected Map<ItemStack, Double> healItemMap = new HashMap<>();
 
-	/////////////// CONSTRUCTORS /////////////////
+  protected ResourceLocation textureLoc;
+  protected ResourceLocation lootTableLoc;
 
-	/**
-	 * Initializes this golem with the given World. 
-	 * Also sets the following:
-	 * <br>{@code SharedMonsterAttributes.ATTACK_DAMAGE} using the config
-	 * <br>{@code SharedMonsterAttributes.MAX_HEALTH} using the config
-	 * <br>{@code takesFallDamage} to false
-	 * <br>{@code canSwim} to false.
-	 * <br>{@code creativeReturn} to the map result of {@code GolemLookup} with this golem.
-	 * Defaults to the Golem Head if no block is found. Call {@link #setCreativeReturn(ItemStack)}
-	 * if you want to return something different.
-	 * @param world the entity world
-	 **/
-	public GolemBase(final World world) {
-		super(world);
-		this.setSize(1.4F, 2.9F);
-		this.setCanTakeFallDamage(false);
-		this.setCanSwim(false);
-		GolemConfigSet cfg = getConfig(this);
-		this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(cfg.getBaseAttack());
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(cfg.getMaxHealth());
-		this.experienceValue = 4 + rand.nextInt((int)8);
-		// map healing items based on building blocks
-		for(final Block b : getBuildingBlocks(this)) {
-			Item i = Item.getItemFromBlock(b);
-			if(i != Items.AIR) {
-				healItemMap.put(new ItemStack(i), 0.75D);
-			}
-		}
-	}
+  // customizable variables with default values //
+  protected double knockbackY = 0.4000000059604645D;
+  /** Amount by which to multiply damage if it's a critical. **/
+  protected float criticalModifier = 2.25F;
+  /** Percent chance to multiply damage [0, 100]. **/
+  protected int criticalChance = 5;
+  protected boolean takesFallDamage = false;
+  protected boolean canDrown = false;
 
-	////////////// BEHAVIOR OVERRIDES //////////////////
+  // swimming AI
+  protected EntityAIBase swimmingAI = new EntityAISwimming(this);
+  protected EntityAIBase wanderAvoidWater = null;
+  protected EntityAIBase wander = null;
 
-	@Override
-	protected void entityInit() {
-		super.entityInit();
-		this.setTextureType(this.applyTexture());
-		this.getDataManager().register(CHILD, Boolean.valueOf(false));
-	}
+  /////////////// CONSTRUCTORS /////////////////
 
-	@Override
-	protected void applyEntityAttributes() {
-		super.applyEntityAttributes();
-		GolemConfigSet cfg = getConfig(this);
-		this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE)
-			.setBaseValue(cfg.getBaseAttack());
-		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(cfg.getMaxHealth());
-		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.22D);
-	}
-
-	/**
-	 * Returns true if this entity can attack entities of the specified class.
-	 */
-	@Override
-	public boolean canAttackClass(final Class<? extends EntityLivingBase> cls) {
-		
-		if(this.isPlayerCreated() && EntityPlayer.class.isAssignableFrom(cls)) {
-			return Config.enableFriendlyFire();
-		}
-		if(EntityVillager.class.isAssignableFrom(cls) || GolemBase.class.isAssignableFrom(cls)) {
-			return false;
-		}
-		return super.canAttackClass(cls);
-	}
-
-	@Override
-	public boolean attackEntityAsMob(final Entity entity) {
-		// calculate damage based on current attack damage and variance
-		final float currentAttack = (float) this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE)
-			.getAttributeValue();
-		float damage = currentAttack + (float) (rand.nextDouble() - 0.5D) * 0.75F * currentAttack;
-		// try to increase damage if random critical chance succeeds
-		if (rand.nextInt(100) < this.criticalChance) {
-			damage *= this.criticalModifier;
-		}
-		// use reflection to reset 'attackTimer' field
-		ReflectionHelper.setPrivateValue(EntityIronGolem.class, this, 10, "field_70855_f", "attackTimer");
-		this.world.setEntityState(this, (byte) 4);
-		final boolean flag = entity.attackEntityFrom(DamageSource.causeMobDamage(this), damage);
-
-		if (flag) {
-			entity.motionY += knockbackY;
-			this.applyEnchantments(this, entity);
-		}
-
-		this.playSound(this.getThrowSound(), 1.0F, 0.9F + rand.nextFloat() * 0.2F);
-		return flag;
-	}
-
-	/** Called when the mob is falling. Calculates and applies fall damage **/
-	@Override
-	public void fall(float distance, float damageMultiplier) {
-		if(!this.canTakeFallDamage()) {
-			return;
-		}
-		float[] ret = net.minecraftforge.common.ForgeHooks.onLivingFall(this, distance, damageMultiplier);
-		if (ret == null) {
-			return;
-		}
-		distance = ret[0];
-		damageMultiplier = ret[1];
-		super.fall(distance, damageMultiplier);
-		PotionEffect potioneffect = this.getActivePotionEffect(MobEffects.JUMP_BOOST);
-		float f = potioneffect == null ? 0.0F : (float) (potioneffect.getAmplifier() + 1);
-		int i = MathHelper.ceil((distance - 3.0F - f) * damageMultiplier);
-
-		if (i > 0) {
-			this.playSound(this.getFallSound(i), 1.0F, 1.0F);
-			this.attackEntityFrom(DamageSource.FALL, (float) i);
-			int j = MathHelper.floor(this.posX);
-			int k = MathHelper.floor(this.posY - 0.20000000298023224D);
-			int l = MathHelper.floor(this.posZ);
-			IBlockState iblockstate = this.world.getBlockState(new BlockPos(j, k, l));
-
-			if (iblockstate.getMaterial() != Material.AIR) {
-				SoundType soundtype = iblockstate.getBlock().getSoundType(iblockstate, world, new BlockPos(j, k, l),
-						this);
-				this.playSound(soundtype.getFallSound(), soundtype.getVolume() * 0.5F, soundtype.getPitch() * 0.75F);
-			}
-		}
-	}
-
-	@Override
-	public int getMaxFallHeight() {
-		return this.canTakeFallDamage() ? super.getMaxFallHeight() : 64;
-	}
-
-	/** Plays sound of golem walking **/
-	@Override
-	protected void playStepSound(final BlockPos pos, final Block block) {
-		this.playSound(this.getWalkingSound(), 0.76F, 0.9F + rand.nextFloat() * 0.2F);
-	}
-
-	/**
-	 * Called when a user uses the creative pick block button on this entity.
-	 *
-	 * @param target
-	 *            The full target the player is looking at
-	 * @return A ItemStack to add to the player's inventory, Null if nothing should be added.
-	 */
-	@Override
-	public ItemStack getPickedResult(final RayTraceResult target) {
-		Block pickBlock = GolemLookup.getFirstBuildingBlock(this.getClass());
-		return pickBlock != null ? new ItemStack(pickBlock) : ItemStack.EMPTY;
-	}
-	
-	@Override
-	public void writeEntityToNBT(NBTTagCompound compound) {
-        super.writeEntityToNBT(compound);
-        compound.setBoolean(KEY_CHILD, this.isChild());
+  /**
+   * Initializes this golem with the given World. Also sets the following: <br>
+   * {@code SharedMonsterAttributes.ATTACK_DAMAGE} using the config <br>
+   * {@code SharedMonsterAttributes.MAX_HEALTH} using the config <br>
+   * {@code takesFallDamage} to false <br>
+   * {@code canSwim} to false. <br>
+   * {@code creativeReturn} to the map result of {@code GolemLookup} with this
+   * golem. Defaults to the Golem Head if no block is found. Call
+   * {@link #setCreativeReturn(ItemStack)} if you want to return something
+   * different.
+   * 
+   * @param world the entity world
+   **/
+  public GolemBase(final World world) {
+    super(world);
+    this.setSize(1.4F, 2.9F);
+    this.setCanTakeFallDamage(false);
+    this.setCanSwim(false);
+    GolemConfigSet cfg = getConfig(this);
+    this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(cfg.getBaseAttack());
+    this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(cfg.getMaxHealth());
+    this.experienceValue = 4 + rand.nextInt((int) 8);
+    // map healing items based on building blocks
+    for (final Block b : getBuildingBlocks(this)) {
+      Item i = Item.getItemFromBlock(b);
+      if (i != Items.AIR) {
+        healItemMap.put(new ItemStack(i), 0.75D);
+      }
     }
-	
-	@Override
-	public void readEntityFromNBT(NBTTagCompound compound) {
-		super.readEntityFromNBT(compound);
-		this.setChild(compound.getBoolean(KEY_CHILD));
-	}
+  }
 
-	@Override
-	protected ResourceLocation getLootTable() {
-		return this.lootTableLoc;
+  ////////////// BEHAVIOR OVERRIDES //////////////////
+
+  @Override
+  protected void entityInit() {
+    super.entityInit();
+    this.setTextureType(this.applyTexture());
+    this.getDataManager().register(CHILD, Boolean.valueOf(false));
+  }
+
+  @Override
+  protected void applyEntityAttributes() {
+    super.applyEntityAttributes();
+    GolemConfigSet cfg = getConfig(this);
+    this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(cfg.getBaseAttack());
+    this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(cfg.getMaxHealth());
+    this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.22D);
+  }
+
+  /**
+   * Returns true if this entity can attack entities of the specified class.
+   */
+  @Override
+  public boolean canAttackClass(final Class<? extends EntityLivingBase> cls) {
+
+    if (this.isPlayerCreated() && EntityPlayer.class.isAssignableFrom(cls)) {
+      return Config.enableFriendlyFire();
     }
-	
-	@Override
-	protected boolean processInteract(final EntityPlayer player, final EnumHand hand) {
-		final ItemStack stack = player.getHeldItem(hand);
-		final float addHealth = Config.enableHealGolems() ? getHealAmount(stack) : 0;
-		if(addHealth > 0 && this.getHealth() < this.getMaxHealth() && !player.isSneaking()) {
-			heal(addHealth);
-			stack.shrink(1);
-			// if currently attacking this player, stop
-			if(this.getAttackTarget() == player) {
-				this.setRevengeTarget(null);
-				this.setAttackTarget(null);
-			}
-			// spawn particles and play sound
-			if(this.world.isRemote) {
-				ItemBedrockGolem.spawnParticles(this.world, this.posX, this.posY + this.height / 2.0D,
-						this.posZ, 0.12D, EnumParticleTypes.VILLAGER_HAPPY, 20);
-			}
-			this.playSound(SoundEvents.BLOCK_STONE_PLACE, 0.85F, 1.1F + rand.nextFloat() * 0.2F);
-			return true;
-		} else {
-			return super.processInteract(player, hand);
-		}
-	}
-	
-	/////////////// OTHER SETTERS AND GETTERS /////////////////
-	
-	/** 
-	 * Called after golem has been spawned. Parameters are the exact IBlockStates used to
-	 * make this golem (especially used with multi-textured golems)
-	 **/
-	public void onBuilt(IBlockState body, IBlockState legs, IBlockState arm1, IBlockState arm2) { }
+    if (EntityVillager.class.isAssignableFrom(cls) || GolemBase.class.isAssignableFrom(cls)) {
+      return false;
+    }
+    return super.canAttackClass(cls);
+  }
 
-	public void setLootTableLoc(final ResourceLocation lootTable) {
-		this.lootTableLoc = lootTable;
-	}
+  @Override
+  public boolean attackEntityAsMob(final Entity entity) {
+    // calculate damage based on current attack damage and variance
+    final float currentAttack = (float) this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE)
+        .getAttributeValue();
+    float damage = currentAttack + (float) (rand.nextDouble() - 0.5D) * 0.75F * currentAttack;
+    // try to increase damage if random critical chance succeeds
+    if (rand.nextInt(100) < this.criticalChance) {
+      damage *= this.criticalModifier;
+    }
+    // use reflection to reset 'attackTimer' field
+    ReflectionHelper.setPrivateValue(EntityIronGolem.class, this, 10, "field_70855_f", "attackTimer");
+    this.world.setEntityState(this, (byte) 4);
+    final boolean flag = entity.attackEntityFrom(DamageSource.causeMobDamage(this), damage);
 
-	public void setLootTableLoc(String modid, final String name) {
-		this.lootTableLoc = new ResourceLocation(modid, "entities/" + name);
-	}
-	
-	public void setLootTableLoc(final String name) {
-		this.setLootTableLoc(ExtraGolems.MODID, name);
-	}
-	
-	public void setTextureType(final ResourceLocation texturelocation) {
-		this.textureLoc = texturelocation;
-	}
+    if (flag) {
+      entity.motionY += knockbackY;
+      this.applyEnchantments(this, entity);
+    }
 
-	public ResourceLocation getTextureType() {
-		return this.textureLoc;
-	}
-	
-	public void setChild(boolean isChild) {
-		this.getDataManager().set(CHILD, isChild);
-	}
-	
-	@Override
-	public boolean isChild() {
-		return this.getDataManager().get(CHILD).booleanValue();
-	}
+    this.playSound(this.getThrowSound(), 1.0F, 0.9F + rand.nextFloat() * 0.2F);
+    return flag;
+  }
 
-	/**
-	 * @param toSet true if the golem should take fall damage
-	 **/
-	public void setCanTakeFallDamage(final boolean toSet) {
-		this.takesFallDamage = toSet;
-	}
+  /** Called when the mob is falling. Calculates and applies fall damage **/
+  @Override
+  public void fall(float distance, float damageMultiplier) {
+    if (!this.canTakeFallDamage()) {
+      return;
+    }
+    float[] ret = net.minecraftforge.common.ForgeHooks.onLivingFall(this, distance, damageMultiplier);
+    if (ret == null) {
+      return;
+    }
+    distance = ret[0];
+    damageMultiplier = ret[1];
+    super.fall(distance, damageMultiplier);
+    PotionEffect potioneffect = this.getActivePotionEffect(MobEffects.JUMP_BOOST);
+    float f = potioneffect == null ? 0.0F : (float) (potioneffect.getAmplifier() + 1);
+    int i = MathHelper.ceil((distance - 3.0F - f) * damageMultiplier);
 
-	public boolean canTakeFallDamage() {
-		return this.takesFallDamage;
-	}
+    if (i > 0) {
+      this.playSound(this.getFallSound(i), 1.0F, 1.0F);
+      this.attackEntityFrom(DamageSource.FALL, (float) i);
+      int j = MathHelper.floor(this.posX);
+      int k = MathHelper.floor(this.posY - 0.20000000298023224D);
+      int l = MathHelper.floor(this.posZ);
+      IBlockState iblockstate = this.world.getBlockState(new BlockPos(j, k, l));
 
-	/**
-	 * @param canSwim true if golem can swim, false if golem sinks
-	 **/
-	public void setCanSwim(final boolean canSwim) {
-		((PathNavigateGround) this.getNavigator()).setCanSwim(canSwim);
-		if(null == wander) {
-			wander = new EntityAIWander(this, 0.8D);
-		}
-		if(null == wanderAvoidWater) {
-			wanderAvoidWater = new EntityAIWanderAvoidWater(this, 0.8);
-		}
-		
-		if (canSwim) {
-			this.tasks.addTask(0, swimmingAI);
-			this.tasks.addTask(5, wander);
-			this.tasks.removeTask(wanderAvoidWater);
-		} else {
-			this.tasks.removeTask(swimmingAI);
-			this.tasks.removeTask(wander);
-			this.tasks.addTask(5, wanderAvoidWater);
-		}
-	}
+      if (iblockstate.getMaterial() != Material.AIR) {
+        SoundType soundtype = iblockstate.getBlock().getSoundType(iblockstate, world, new BlockPos(j, k, l), this);
+        this.playSound(soundtype.getFallSound(), soundtype.getVolume() * 0.5F, soundtype.getPitch() * 0.75F);
+      }
+    }
+  }
 
-	/**
-	 * @param toSet whether golem is immune to fire
-	 **/
-	public void setImmuneToFire(final boolean toSet) {
-		this.isImmuneToFire = toSet;
-	}
-	
-	/**
-	 * Registers an item that can be used to heal the golem
-	 * @param s an ItemStack containing the item
-	 * @param multiplier the percentage of health that should be added (typically 0.25 or 0.5)
-	 **/
-	public GolemBase addHealItem(final ItemStack s, final double multiplier) {
-		healItemMap.put(s, multiplier);
-		return this;
-	}
-	
-	/**
-	 * @return a Set of ItemStacks that are valid healing items
-	 **/
-	public Set<ItemStack> getHealItems() {
-		return healItemMap.keySet();
-	}
+  @Override
+  public int getMaxFallHeight() {
+    return this.canTakeFallDamage() ? super.getMaxFallHeight() : 64;
+  }
 
-	/**
-	 * Whether right-clicking on this entity triggers a texture change.
-	 *
-	 * @return True if this is a {@link GolemMultiTextured} or a
-	 * {@link GolemMultiColorized} AND the config option is enabled.
-	 **/
-	public boolean doesInteractChangeTexture() {
-		return Config.interactChangesTexture()
-			&& (GolemMultiTextured.class.isAssignableFrom(this.getClass())
-			|| GolemColorizedMultiTextured.class.isAssignableFrom(this.getClass()));
-	}
-	
-	/**
-	 * Does not change behavior, but is required when the
-	 * utility block checks for valid golems
-	 **/
-	public boolean isProvidingLight() {
-		return false;
-	}
-	
-	/**
-	 * Does not change behavior, but is required when the
-	 * utility block checks for valid golems
-	 **/
-	public boolean isProvidingPower() {
-		return false;
-	}
+  /** Plays sound of golem walking **/
+  @Override
+  protected void playStepSound(final BlockPos pos, final Block block) {
+    this.playSound(this.getWalkingSound(), 0.76F, 0.9F + rand.nextFloat() * 0.2F);
+  }
 
-	/** @return The Blocks used to build this golem, or null if there is none **/
-	@Nullable
-	public static Block[] getBuildingBlocks(GolemBase golem) {
-		return GolemLookup.getBuildingBlocks(golem.getClass());
-	}
+  /**
+   * Called when a user uses the creative pick block button on this entity.
+   *
+   * @param target The full target the player is looking at
+   * @return A ItemStack to add to the player's inventory, Null if nothing should
+   *         be added.
+   */
+  @Override
+  public ItemStack getPickedResult(final RayTraceResult target) {
+    Block pickBlock = GolemLookup.getFirstBuildingBlock(this.getClass());
+    return pickBlock != null ? new ItemStack(pickBlock) : ItemStack.EMPTY;
+  }
 
-	/** The GolemConfigSet associated with this golem, or the empty GCS if there is none **/
-	@Nonnull
-	public static GolemConfigSet getConfig(GolemBase golem) {
-		return golem != null && GolemLookup.hasConfig(golem.getClass()) ? GolemLookup.getConfig(golem.getClass()) : GolemConfigSet.EMPTY;
-	}
+  @Override
+  public void writeEntityToNBT(NBTTagCompound compound) {
+    super.writeEntityToNBT(compound);
+    compound.setBoolean(KEY_CHILD, this.isChild());
+  }
 
-	/**
-	 * @param i the ItemStack being used to heal the golem
-	 * @return the amount by which this item should heal the golem,
-	 * in half-hearts. Defaults to 25% of max health or 32.0, 
-	 * whichever is smaller
-	 **/
-	public float getHealAmount(final ItemStack i) {
-		if(i != null && !i.isEmpty()) {
-			// check each entry in the map for matches
-			for(final Entry<ItemStack, Double> e : healItemMap.entrySet()) {
-				// make sure item and metadata are the same (or WILDCARD)
-				boolean itemMatches = e.getKey().getItem() == i.getItem();
-				boolean metaMatches = e.getKey().getMetadata() == OreDictionary.WILDCARD_VALUE || e.getKey().getMetadata() == i.getMetadata();
-				// if it's a match, use the mapped percentage to calculate health to restore
-				if(itemMatches && metaMatches) {
-					double h = this.getMaxHealth() * e.getValue();
-					if(this.isChild()) {
-						h *= 1.75D;
-					}
-					// maximum heal amount is 32, for no reason at all
-					return Math.min((float)h, 32.0F);
-				}
-			}
-		}
-		return 0;		
-	}
+  @Override
+  public void readEntityFromNBT(NBTTagCompound compound) {
+    super.readEntityFromNBT(compound);
+    this.setChild(compound.getBoolean(KEY_CHILD));
+  }
 
-	/** 
-	 * Helper method for translating text into local language using {@code I18n}
-	 * @see addSpecialDesc 
-	 **/
-	protected static String trans(final String s, final Object... strings) {
-		return new TextComponentTranslation(s, strings).getFormattedText();
-	}
+  @Override
+  protected ResourceLocation getLootTable() {
+    return this.lootTableLoc;
+  }
 
-	/////////////// TEXTURE HELPERS //////////////////
-	
-	/**
-	 * Makes a ResourceLocation using the passed mod id and part of the texture name. Texture should
-	 * be at 'assets/[MODID]/textures/entity/[TEXTURE].png'
-	 **/
-	public static ResourceLocation makeTexture(final String MODID, final String TEXTURE) {
-		return new ResourceLocation(MODID + ":textures/entity/" + TEXTURE + ".png");
-	}
+  @Override
+  protected boolean processInteract(final EntityPlayer player, final EnumHand hand) {
+    final ItemStack stack = player.getHeldItem(hand);
+    final float addHealth = Config.enableHealGolems() ? getHealAmount(stack) : 0;
+    if (addHealth > 0 && this.getHealth() < this.getMaxHealth() && !player.isSneaking()) {
+      heal(addHealth);
+      stack.shrink(1);
+      // if currently attacking this player, stop
+      if (this.getAttackTarget() == player) {
+        this.setRevengeTarget(null);
+        this.setAttackTarget(null);
+      }
+      // spawn particles and play sound
+      if (this.world.isRemote) {
+        ItemBedrockGolem.spawnParticles(this.world, this.posX, this.posY + this.height / 2.0D, this.posZ, 0.12D,
+            EnumParticleTypes.VILLAGER_HAPPY, 20);
+      }
+      this.playSound(SoundEvents.BLOCK_STONE_PLACE, 0.85F, 1.1F + rand.nextFloat() * 0.2F);
+      return true;
+    } else {
+      return super.processInteract(player, hand);
+    }
+  }
 
-	///////////////////// SOUND OVERRIDES ////////////////////
+  /////////////// OTHER SETTERS AND GETTERS /////////////////
 
-	@Override
-	protected SoundEvent getAmbientSound() {
-		return getGolemSound();
-	}
+  /**
+   * Called after golem has been spawned. Parameters are the exact IBlockStates
+   * used to make this golem (especially used with multi-textured golems)
+   **/
+  public void onBuilt(IBlockState body, IBlockState legs, IBlockState arm1, IBlockState arm2) {
+  }
 
-	protected SoundEvent getWalkingSound() {
-		return getGolemSound();
-	}
+  public void setLootTableLoc(final ResourceLocation lootTable) {
+    this.lootTableLoc = lootTable;
+  }
 
-	/** Returns the sound this mob makes when it attacks. **/
-	public SoundEvent getThrowSound() {
-		return getGolemSound();
-	}
+  public void setLootTableLoc(String modid, final String name) {
+    this.lootTableLoc = new ResourceLocation(modid, "entities/" + name);
+  }
 
-	@Override
-	protected SoundEvent getHurtSound(final DamageSource ignored) {
-		return getGolemSound();
-	}
+  public void setLootTableLoc(final String name) {
+    this.setLootTableLoc(ExtraGolems.MODID, name);
+  }
 
-	@Override
-	protected SoundEvent getDeathSound() {
-		return getGolemSound();
-	}
+  public void setTextureType(final ResourceLocation texturelocation) {
+    this.textureLoc = texturelocation;
+  }
 
-	////////////////////////////////////////////////////////////
-	// Override ALL OF THE FOLLOWING FUNCTIONS FOR EACH GOLEM //
-	////////////////////////////////////////////////////////////
+  public ResourceLocation getTextureType() {
+    return this.textureLoc;
+  }
 
-	/**
-	 * Allows each golem to add special information to in-game info (eg, Waila, Hwyla, TOP, etc.).
-	 * Typically checks if the Config allows this golem's special ability (if it has one) and adds a
-	 * formatted String to the passed list.
-	 *
-	 * @param list The list to which the golem adds description strings (separate entries are separate lines)
-	 * @return the passed list with or without this golem's added description
-	 **/
-	public List<String> addSpecialDesc(final List<String> list) { return list; }
-	
-	/**
-	 * Called from {@link #entityInit()} and used to set the texture type <b>before</b> the entity is
-	 * fully constructed or rendered. Example implementation: texture is at
-	 * 'assets/golems/textures/entity/golem_clay.png'
-	 *
-	 * <pre>
-	 * {@code
-	 * protected ResourceLocation applyTexture() {
-	 * 	return this.makeGolemTexture("golems", "clay");
-	 *}
-	 * </pre>
-	 *
-	 * @return a ResourceLocation for this golem's texture
-	 * @see #makeGolemTexture(String, String)
-	 **/
-	protected abstract ResourceLocation applyTexture();
+  public void setChild(boolean isChild) {
+    this.getDataManager().set(CHILD, isChild);
+  }
 
-	/** @return A SoundEvent to play when the golem is attacking, walking, hurt, and on death **/
-	public abstract SoundEvent getGolemSound();
+  @Override
+  public boolean isChild() {
+    return this.getDataManager().get(CHILD).booleanValue();
+  }
+
+  /**
+   * @param toSet true if the golem should take fall damage
+   **/
+  public void setCanTakeFallDamage(final boolean toSet) {
+    this.takesFallDamage = toSet;
+  }
+
+  public boolean canTakeFallDamage() {
+    return this.takesFallDamage;
+  }
+
+  /**
+   * @param canSwim true if golem can swim, false if golem sinks
+   **/
+  public void setCanSwim(final boolean canSwim) {
+    ((PathNavigateGround) this.getNavigator()).setCanSwim(canSwim);
+    if (null == wander) {
+      wander = new EntityAIWander(this, 0.8D);
+    }
+    if (null == wanderAvoidWater) {
+      wanderAvoidWater = new EntityAIWanderAvoidWater(this, 0.8);
+    }
+
+    if (canSwim) {
+      this.tasks.addTask(0, swimmingAI);
+      this.tasks.addTask(5, wander);
+      this.tasks.removeTask(wanderAvoidWater);
+    } else {
+      this.tasks.removeTask(swimmingAI);
+      this.tasks.removeTask(wander);
+      this.tasks.addTask(5, wanderAvoidWater);
+    }
+  }
+
+  /**
+   * @param toSet whether golem is immune to fire
+   **/
+  public void setImmuneToFire(final boolean toSet) {
+    this.isImmuneToFire = toSet;
+  }
+
+  /**
+   * Registers an item that can be used to heal the golem
+   * 
+   * @param s          an ItemStack containing the item
+   * @param multiplier the percentage of health that should be added (typically
+   *                   0.25 or 0.5)
+   **/
+  public GolemBase addHealItem(final ItemStack s, final double multiplier) {
+    healItemMap.put(s, multiplier);
+    return this;
+  }
+
+  /**
+   * @return a Set of ItemStacks that are valid healing items
+   **/
+  public Set<ItemStack> getHealItems() {
+    return healItemMap.keySet();
+  }
+
+  /**
+   * Whether right-clicking on this entity triggers a texture change.
+   *
+   * @return True if this is a {@link GolemMultiTextured} or a
+   *         {@link GolemMultiColorized} AND the config option is enabled.
+   **/
+  public boolean doesInteractChangeTexture() {
+    return Config.interactChangesTexture() && (GolemMultiTextured.class.isAssignableFrom(this.getClass())
+        || GolemColorizedMultiTextured.class.isAssignableFrom(this.getClass()));
+  }
+
+  /**
+   * Does not change behavior, but is required when the utility block checks for
+   * valid golems
+   **/
+  public boolean isProvidingLight() {
+    return false;
+  }
+
+  /**
+   * Does not change behavior, but is required when the utility block checks for
+   * valid golems
+   **/
+  public boolean isProvidingPower() {
+    return false;
+  }
+
+  /** @return The Blocks used to build this golem, or null if there is none **/
+  @Nullable
+  public static Block[] getBuildingBlocks(GolemBase golem) {
+    return GolemLookup.getBuildingBlocks(golem.getClass());
+  }
+
+  /**
+   * The GolemConfigSet associated with this golem, or the empty GCS if there is
+   * none
+   **/
+  @Nonnull
+  public static GolemConfigSet getConfig(GolemBase golem) {
+    return golem != null && GolemLookup.hasConfig(golem.getClass()) ? GolemLookup.getConfig(golem.getClass())
+        : GolemConfigSet.EMPTY;
+  }
+
+  /**
+   * @param i the ItemStack being used to heal the golem
+   * @return the amount by which this item should heal the golem, in half-hearts.
+   *         Defaults to 25% of max health or 32.0, whichever is smaller
+   **/
+  public float getHealAmount(final ItemStack i) {
+    if (i != null && !i.isEmpty()) {
+      // check each entry in the map for matches
+      for (final Entry<ItemStack, Double> e : healItemMap.entrySet()) {
+        // make sure item and metadata are the same (or WILDCARD)
+        boolean itemMatches = e.getKey().getItem() == i.getItem();
+        boolean metaMatches = e.getKey().getMetadata() == OreDictionary.WILDCARD_VALUE
+            || e.getKey().getMetadata() == i.getMetadata();
+        // if it's a match, use the mapped percentage to calculate health to restore
+        if (itemMatches && metaMatches) {
+          double h = this.getMaxHealth() * e.getValue();
+          if (this.isChild()) {
+            h *= 1.75D;
+          }
+          // maximum heal amount is 32, for no reason at all
+          return Math.min((float) h, 32.0F);
+        }
+      }
+    }
+    return 0;
+  }
+
+  /**
+   * Helper method for translating text into local language using {@code I18n}
+   * 
+   * @see addSpecialDesc
+   **/
+  protected static String trans(final String s, final Object... strings) {
+    return new TextComponentTranslation(s, strings).getFormattedText();
+  }
+
+  /////////////// TEXTURE HELPERS //////////////////
+
+  /**
+   * Makes a ResourceLocation using the passed mod id and part of the texture
+   * name. Texture should be at 'assets/[MODID]/textures/entity/[TEXTURE].png'
+   **/
+  public static ResourceLocation makeTexture(final String MODID, final String TEXTURE) {
+    return new ResourceLocation(MODID + ":textures/entity/" + TEXTURE + ".png");
+  }
+
+  ///////////////////// SOUND OVERRIDES ////////////////////
+
+  @Override
+  protected SoundEvent getAmbientSound() {
+    return getGolemSound();
+  }
+
+  protected SoundEvent getWalkingSound() {
+    return getGolemSound();
+  }
+
+  /** Returns the sound this mob makes when it attacks. **/
+  public SoundEvent getThrowSound() {
+    return getGolemSound();
+  }
+
+  @Override
+  protected SoundEvent getHurtSound(final DamageSource ignored) {
+    return getGolemSound();
+  }
+
+  @Override
+  protected SoundEvent getDeathSound() {
+    return getGolemSound();
+  }
+
+  ////////////////////////////////////////////////////////////
+  // Override ALL OF THE FOLLOWING FUNCTIONS FOR EACH GOLEM //
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Allows each golem to add special information to in-game info (eg, Waila,
+   * Hwyla, TOP, etc.). Typically checks if the Config allows this golem's special
+   * ability (if it has one) and adds a formatted String to the passed list.
+   *
+   * @param list The list to which the golem adds description strings (separate
+   *             entries are separate lines)
+   * @return the passed list with or without this golem's added description
+   **/
+  public List<String> addSpecialDesc(final List<String> list) {
+    return list;
+  }
+
+  /**
+   * Called from {@link #entityInit()} and used to set the texture type
+   * <b>before</b> the entity is fully constructed or rendered. Example
+   * implementation: texture is at 'assets/golems/textures/entity/golem_clay.png'
+   *
+   * <pre>
+   * {@code
+   * protected ResourceLocation applyTexture() {
+   * 	return this.makeGolemTexture("golems", "clay");
+   *}
+   * </pre>
+   *
+   * @return a ResourceLocation for this golem's texture
+   * 
+   * @see #makeGolemTexture(String, String)
+   **/
+  protected abstract ResourceLocation applyTexture();
+
+  /**
+   * @return A SoundEvent to play when the golem is attacking, walking, hurt, and
+   *         on death
+   **/
+  public abstract SoundEvent getGolemSound();
 }
