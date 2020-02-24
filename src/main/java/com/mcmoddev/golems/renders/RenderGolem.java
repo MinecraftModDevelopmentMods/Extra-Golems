@@ -86,9 +86,9 @@ public class RenderGolem<T extends GolemBase> extends MobRenderer<T, GolemModel<
   protected RenderType func_230042_a_(final T golem, boolean isVisible, boolean isVisibleToPlayer) {
     ResourceLocation tex = this.getEntityTexture(golem);
     if (isVisible || isVisibleToPlayer) {
-      return RenderType.entityTranslucent(tex);
+      return RenderType.getEntityTranslucent(tex);
     } else {
-      return golem.isGlowing() ? RenderType.outline(tex) : null;
+      return golem.isGlowing() ? RenderType.getOutline(tex) : null;
     }
   }
 

@@ -13,6 +13,9 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.google.common.collect.ImmutableCollection;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
@@ -20,6 +23,8 @@ import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
+import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
@@ -51,32 +56,38 @@ public final class GolemContainer {
   private final double knockbackResist;
   private boolean enabled = true;
 
-  public final Map<String, GolemSpecialContainer> specialContainers;
-  public final List<GolemDescription> descContainers;
+  private final ImmutableMap<String, GolemSpecialContainer> specialContainers;
+  private final ImmutableList<GolemDescription> descContainers;
+  private final ImmutableMap<IRegistryDelegate<Item>, Double> healItemMap;
 
   /**
    * Constructor for GolemContainer (use the Builder!)
    *
    * @param lEntityType             a constructed EntityType for the golem
+   * @param lEntityClass            the class that will handle the golem behavior
    * @param lPath                   the golem name
    * @param lValidBuildingBlocks    a List of block delegates to build the golem
    * @param lValidBuildingBlockTags a List of Block Tags to build the golem
    * @param lHealth                 base health value
    * @param lAttack                 base attack value
    * @param lSpeed                  base speed value
-   * @param lSwimMode               whether or not the golem floats in water
+   * @param lKnockbackResist        base knockback resistance
    * @param lFallDamage             whether or not the golem can take fall damage
+   * @param lSwimMode               whether or not the golem floats in water
    * @param lSpecialContainers      any golem specials as a Map
    * @param lDesc                   any special descriptions for the golem
-   * @param lLootTable              a ResourceLocation for the on-death loot
-   *                                table, may be null
-   * @param basicSound              a default SoundEvent to use for the golem
+   * @param lHealItemMap            a map of items and their corresponding heal amounts
+   * @param lTexture                a ResourceLocation for a single default texture
+   * @param lBasicSound             a default SoundEvent to use for the golem
+   * @param lCustomRender           whether or not the golem will use the default renderer
    **/
-  private GolemContainer(final EntityType<? extends GolemBase> lEntityType, final Class<? extends GolemBase> lEntityClass, final String lPath,
-      final List<IRegistryDelegate<Block>> lValidBuildingBlocks, final List<ResourceLocation> lValidBuildingBlockTags, final double lHealth,
-      final double lAttack, final double lSpeed, final double lKnockbackResist, final boolean lFallDamage, final SwimMode lSwimMode,
-      final HashMap<String, GolemSpecialContainer> lSpecialContainers, final List<GolemDescription> lDesc, final ResourceLocation lTexture,
-      final SoundEvent lBasicSound, final boolean lCustomRender) {
+  private GolemContainer(final EntityType<? extends GolemBase> lEntityType, final Class<? extends GolemBase> lEntityClass,
+      final String lPath, final List<IRegistryDelegate<Block>> lValidBuildingBlocks,
+      final List<ResourceLocation> lValidBuildingBlockTags, final double lHealth, final double lAttack, final double lSpeed,
+      final double lKnockbackResist, final boolean lFallDamage, final SwimMode lSwimMode,
+      final HashMap<String, GolemSpecialContainer> lSpecialContainers, final List<GolemDescription> lDesc,
+      final Map<IRegistryDelegate<Item>, Double> lHealItemMap, final ResourceLocation lTexture, final SoundEvent lBasicSound,
+      final boolean lCustomRender) {
     this.entityType = lEntityType;
     this.entityClass = lEntityClass;
     this.validBuildingBlocks = lValidBuildingBlocks;
@@ -88,8 +99,9 @@ public final class GolemContainer {
     this.knockbackResist = lKnockbackResist;
     this.fallDamage = lFallDamage;
     this.swimMode = lSwimMode;
-    this.specialContainers = lSpecialContainers;
-    this.descContainers = lDesc;
+    this.specialContainers = ImmutableMap.copyOf(lSpecialContainers);
+    this.descContainers = ImmutableList.copyOf(lDesc);
+    this.healItemMap = ImmutableMap.copyOf(lHealItemMap);
     this.basicTexture = lTexture;
     this.basicSound = lBasicSound;
     this.hasCustomRender = lCustomRender;
@@ -131,10 +143,32 @@ public final class GolemContainer {
   }
 
   /**
-   * @deprecated use {@link #areBuildingBlocks(Block, Block, Block, Block)}
+   * @return a collection of all the GolemSpecialContainers used by this golem
    **/
-  public boolean isBuildingBlock(final Block b) {
-    return areBuildingBlocks(b, b, b, b);
+  public ImmutableCollection<GolemSpecialContainer> getSpecialContainers() {
+    return specialContainers.values();
+  }
+  
+  /**
+   * @param key a String key used to find the special container
+   * @return the GolemSpecialContainer if found, otherwise null
+   **/
+  public GolemSpecialContainer getSpecialContainer(final String key) {
+    return specialContainers.get(key);
+  }
+  
+  /**
+   * @param item an item that could potentially heal the golem
+   * @return a percentage of health to restore. May be zero.
+   **/
+  public double getHealAmount(final Item item) {
+    // check the map for the value
+    final Map<IRegistryDelegate<Item>, Double> map = loadTagsForHealMap(getBuildingBlocks(), healItemMap);
+    if(item != null && item != Items.AIR && map.containsKey(item.delegate)) {
+      return map.get(item.delegate);
+    }
+    // default value is zero
+    return 0;
   }
 
   /**
@@ -213,6 +247,19 @@ public final class GolemContainer {
       }
     }
     return tags;
+  }
+  
+  private static Map<IRegistryDelegate<Item>, Double> loadTagsForHealMap(final Set<Block> set, final Map<IRegistryDelegate<Item>, Double> healItems) {
+    final Map<IRegistryDelegate<Item>, Double> map = new HashMap<>(healItems);
+    // add each block in the set to the given map
+    for(final Block b : set) {
+      Item ib = b.asItem();
+      if(ib != Items.AIR && !map.containsKey(ib.delegate)) {
+        // building blocks restore 75% of golem health
+        map.put(ib.delegate, 0.75D);
+      }
+    }
+    return map;
   }
 
   ////////// SETTERS //////////
@@ -358,6 +405,7 @@ public final class GolemContainer {
     private List<ResourceLocation> validBuildingBlockTags = new ArrayList<>();
     private List<GolemSpecialContainer> specials = new ArrayList<>();
     private List<GolemDescription> descriptions = new ArrayList<>();
+    private final Map<IRegistryDelegate<Item>, Double> healItemMap = new HashMap<>();
 
     /**
      * Creates the builder
@@ -589,6 +637,20 @@ public final class GolemContainer {
       }
       return this;
     }
+    
+    /**
+     * Associates a specific item with a percentage of health
+     * that is restored by using that item on the golem
+     * 
+     * @param item the item
+     * @param amount percentage of health that the item restores 
+     * (typically 0.25 or 0.5)
+     * @return instance to allow chaining of methods
+     **/
+    public Builder addHealItem(final Item item, final double amount) {
+      healItemMap.put(item.delegate, Double.valueOf(amount));
+      return this;
+    }
 
     /**
      * Makes the golem immune to fire damage.
@@ -624,7 +686,7 @@ public final class GolemContainer {
         containerMap.put(c.name, c);
       }
       return new GolemContainer(entityType, entityClass, golemName, validBuildingBlocks, validBuildingBlockTags, health, attack, speed,
-          knockBackResist, fallDamage, swimMode, containerMap, descriptions, basicTexture, basicSound, customRender);
+          knockBackResist, fallDamage, swimMode, containerMap, descriptions, healItemMap, basicTexture, basicSound, customRender);
     }
   }
 

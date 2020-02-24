@@ -62,7 +62,7 @@ public class GolemConfiguration {
       builder.push(c.getName());
       sections.put(c, new GolemConfigurationSection(c, builder));
       builder.push("specials"); // golem.specials
-      for (GolemSpecialContainer specialC : c.specialContainers.values()) {
+      for (GolemSpecialContainer specialC : c.getSpecialContainers()) {
         specials.put(specialC, new GolemSpecialSection(specialC, builder));
       }
       // Pops specials and the golem
@@ -81,7 +81,7 @@ public class GolemConfiguration {
       c.setHealth(section.health.get());
       c.setEnabled(section.enabled.get());
 
-      for (GolemSpecialContainer specialC : c.specialContainers.values()) {
+      for (GolemSpecialContainer specialC : c.getSpecialContainers()) {
         specialC.value = specials.get(specialC).value;
       }
     }

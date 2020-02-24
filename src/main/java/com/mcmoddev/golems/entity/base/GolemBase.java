@@ -187,7 +187,7 @@ public abstract class GolemBase extends IronGolemEntity {
   /////////////// CONFIG HELPERS //////////////////
 
   public ForgeConfigSpec.ConfigValue getConfigValue(final String name) {
-    return (ExtraGolemsConfig.GOLEM_CONFIG.specials.get(this.getGolemContainer().specialContainers.get(name))).value;
+    return (ExtraGolemsConfig.GOLEM_CONFIG.specials.get(this.getGolemContainer().getSpecialContainer(name))).value;
   }
 
   public boolean getConfigBool(final String name) {
