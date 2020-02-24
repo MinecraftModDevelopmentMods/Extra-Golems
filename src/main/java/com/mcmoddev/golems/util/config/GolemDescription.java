@@ -97,6 +97,6 @@ public class GolemDescription {
    **/
   public boolean isEnabledFor(final GolemContainer container) {
     return this.configKey.isEmpty()
-        || this.configValue.test(ExtraGolemsConfig.GOLEM_CONFIG.specials.get(container.specialContainers.get(this.configKey)).value);
+        || this.configValue.test(ExtraGolemsConfig.GOLEM_CONFIG.specials.get(container.getSpecialContainer(this.configKey)).value);
   }
 }

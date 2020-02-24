@@ -7,8 +7,8 @@ import com.mcmoddev.golems.items.ItemBedrockGolem;
 import com.mcmoddev.golems.main.ExtraGolemsEntities;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mcmoddev.golems.util.config.GolemContainer;
-import com.mcmoddev.golems.util.config.GolemRegistrar;
 import com.mcmoddev.golems.util.config.GolemContainer.SwimMode;
+import com.mcmoddev.golems.util.config.GolemRegistrar;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -21,12 +21,12 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.pathfinding.PathNodeType;
@@ -157,33 +157,23 @@ public abstract class GolemBase extends IronGolemEntity {
   }
 
   /**
-   * @param i the ItemStack being applied to the golem
-   * @return true if the golem can be built using the given item-block
-   **/
-  public boolean isHealingItem(final ItemStack i) {
-    if (!i.isEmpty() && i.getItem() instanceof BlockItem) {
-      for (final Block b : container.getBuildingBlocks()) {
-        if (i.isItemEqual(new ItemStack(b))) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
-  /**
    * @param i the ItemStack being used to heal the golem
    * @return the amount by which this item should heal the golem, in half-hearts.
    *         Defaults to 25% of max health or 32.0, whichever is smaller
    **/
   public float getHealAmount(final ItemStack i) {
-    return Math.min(this.getMaxHealth() * (this.isChild() ? 0.5F : 0.25F), 32.0F);
+    float amount = (float) (this.getMaxHealth() * this.getGolemContainer().getHealAmount(i.getItem()));
+    if(this.isChild()) {
+      amount *= 1.75F;
+    }
+    // max heal amount is 32, for no reason at all
+    return Math.min(amount, 32.0F);
   }
 
   /////////////// CONFIG HELPERS //////////////////
 
   public ForgeConfigSpec.ConfigValue getConfigValue(final String name) {
-    return (ExtraGolemsConfig.GOLEM_CONFIG.specials.get(this.getGolemContainer().specialContainers.get(name))).value;
+    return (ExtraGolemsConfig.GOLEM_CONFIG.specials.get(this.getGolemContainer().getSpecialContainer(name))).value;
   }
 
   public boolean getConfigBool(final String name) {
@@ -271,8 +261,9 @@ public abstract class GolemBase extends IronGolemEntity {
   @Override
   protected boolean processInteract(final PlayerEntity player, final Hand hand) {
     final ItemStack stack = player.getHeldItem(hand);
-    if (ExtraGolemsConfig.enableHealGolems() && this.getHealth() < this.getMaxHealth() && isHealingItem(stack)) {
-      heal(getHealAmount(stack));
+    float healAmount = getHealAmount(stack);
+    if (ExtraGolemsConfig.enableHealGolems() && this.getHealth() < this.getMaxHealth() && healAmount > 0) {
+      heal(healAmount);
       stack.shrink(1);
       // if currently attacking this player, stop
       if (this.getAttackTarget() == player) {
@@ -281,8 +272,8 @@ public abstract class GolemBase extends IronGolemEntity {
       }
       // spawn particles and play sound
       if (this.world.isRemote) {
-        ItemBedrockGolem.spawnParticles(this.world, this.posX, this.posY + this.getHeight() / 2.0D, this.posZ, 0.12D, ParticleTypes.HAPPY_VILLAGER,
-            20);
+        IParticleData particle = ParticleTypes.INSTANT_EFFECT;
+        ItemBedrockGolem.spawnParticles(this.world, this.posX, this.posY + this.getHeight() / 2.0D, this.posZ, 0.12D, particle, 20);
       }
       this.playSound(SoundEvents.BLOCK_STONE_PLACE, 0.85F, 1.1F + rand.nextFloat() * 0.2F);
       return true;
