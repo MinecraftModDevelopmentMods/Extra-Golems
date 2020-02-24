@@ -39,7 +39,10 @@ public class EntityEndstoneGolem extends GolemBase {
   /** Percent chance to teleport away when hurt by non-projectile. **/
   protected int chanceToTeleportWhenHurt;
 
-  /** Default constructor. **/
+  /**
+   * Default constructor.
+   * @param world the world
+   **/
   public EntityEndstoneGolem(final World world) {
     this(world, 32.0D, true);
     GolemConfigSet cfg = getConfig(this);
@@ -53,11 +56,8 @@ public class EntityEndstoneGolem extends GolemBase {
    * Flexible constructor to allow child classes to customize.
    *
    * @param world              the worldObj
-   * @param attack             base attack damage
-   * @param pick               Creative pick-block return
    * @param teleportRange      64.0 for enderman, 32.0 for endstone golem
-   * @param teleportingAllowed usually set by the config, checked here
-   * @param ambientParticles   whether always to display "portal" particles
+   * @param ambientParticles   true if entity should generate "portal" particles
    **/
   public EntityEndstoneGolem(final World world, final double teleportRange, final boolean ambientParticles) {
     super(world);

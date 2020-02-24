@@ -38,13 +38,13 @@ public abstract class GolemMultiTextured extends GolemBase {
   /**
    * This is a base class for golems that change texture when player interacts.
    * Pass Strings that will be used to construct a ResourceLocation array of
-   * textures as well as loot tables<br/>
-   * <b>Example call to this constructor:</b><br/>
-   * <br/>
+   * textures as well as loot tables<br>
+   * <b>Example call to this constructor:</b><br>
+   * <br>
    * <code>
-   * public EntityExampleGolem(World world) {<br/>
-   *	super(world, Blocks.AIR, "example", new String[] {"one","two","three"});<br/>
-   * }</code><br/>
+   * public EntityExampleGolem(World world) {<br>
+   *	super(world, Blocks.AIR, "example", new String[] {"one","two","three"});<br>
+   * }</code><br>
    * This will initialize textures for <code>golem_example_one.png</code>,
    * <code>golem_example_two.png</code> and <code>golem_example_three.png</code>,
    * as well as loot tables for the same names with the JSON suffix

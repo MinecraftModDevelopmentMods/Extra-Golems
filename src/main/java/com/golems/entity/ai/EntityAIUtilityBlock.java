@@ -30,7 +30,7 @@ public class EntityAIUtilityBlock extends EntityAIBase {
    * @param cfgAllows      whether this AI is enabled by the config
    * @param canReplacePred an optional BiPredicate to use when determining whether
    *                       to place a Block. Defaults to replacing air only.
-   * @see #getDefaultBiPred(GolemBase, IBlockState)
+   * @see #getDefaultBiPred(IBlockState)
    **/
   public EntityAIUtilityBlock(final GolemBase golemIn, final IBlockState stateIn, final int interval,
       final boolean cfgAllows, final BiPredicate<GolemBase, IBlockState> canReplacePred) {

@@ -30,17 +30,14 @@ public abstract class GolemColorized extends GolemBase {
 
   /**
    * Flexible constructor so child classes can "borrow" this class's behavior and
-   * customize. It is fine to pass 'null' for {@link rBase} or {@link rOverlay},
-   * and null textures will not be rendered. Args: world, attack, buildingBlock,
-   * initialColor, rBase, rOverlay.
+   * customize. It is fine to pass 'null' for {@code base} or {@code overlay},
+   * and null textures will not be rendered.
    *
-   * @param world
-   * @param attack
-   * @param building the Block to use to build this golem
+   * @param world    the world
    * @param initial  the (usually temporary) color to apply to this golem until it
    *                 is updated by some other method.
    * @param rBase    an optional texture that will not be recolored or rendered
-   *                 transparent, to render before {@link OVERLAY}
+   *                 transparent, to render before {@code overlay}
    * @param rOverlay a texture that will be recolored and optionally rendered as
    *                 transparent.
    **/
@@ -59,21 +56,21 @@ public abstract class GolemColorized extends GolemBase {
   }
 
   /**
-   * An optional texture to render as-is, without coloring.
+   * @return An optional texture to render as-is, without coloring.
    **/
   public ResourceLocation getTextureBase() {
     return base;
   }
 
   /**
-   * The (probably grayscaled) texture that will be colored.
+   * @return The (probably grayscaled) texture that will be colored.
    **/
   public ResourceLocation getTextureToColor() {
     return overlay;
   }
 
   /**
-   * Whether this golem has a sub-texture that should not be colored.
+   * @return Whether this golem has a sub-texture that should not be colored.
    **/
   public boolean hasBase() {
     return this.hasBase;

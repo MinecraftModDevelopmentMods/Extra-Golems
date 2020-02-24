@@ -84,7 +84,7 @@ public abstract class GolemBase extends EntityIronGolem {
   protected EntityAIBase wanderAvoidWater = null;
   protected EntityAIBase wander = null;
 
-  /////////////// CONSTRUCTORS /////////////////
+  /////////////// CONSTRUCTOR /////////////////
 
   /**
    * Initializes this golem with the given World. Also sets the following: <br>
@@ -92,10 +92,7 @@ public abstract class GolemBase extends EntityIronGolem {
    * {@code SharedMonsterAttributes.MAX_HEALTH} using the config <br>
    * {@code takesFallDamage} to false <br>
    * {@code canSwim} to false. <br>
-   * {@code creativeReturn} to the map result of {@code GolemLookup} with this
-   * golem. Defaults to the Golem Head if no block is found. Call
-   * {@link #setCreativeReturn(ItemStack)} if you want to return something
-   * different.
+   * {@code healItemMap} using the golem building blocks
    * 
    * @param world the entity world
    **/
@@ -373,7 +370,7 @@ public abstract class GolemBase extends EntityIronGolem {
    * Whether right-clicking on this entity triggers a texture change.
    *
    * @return True if this is a {@link GolemMultiTextured} or a
-   *         {@link GolemMultiColorized} AND the config option is enabled.
+   *         {@link GolemColorizedMultiTextured} AND the config option is enabled.
    **/
   public boolean doesInteractChangeTexture() {
     return Config.interactChangesTexture() && (GolemMultiTextured.class.isAssignableFrom(this.getClass())
@@ -383,6 +380,7 @@ public abstract class GolemBase extends EntityIronGolem {
   /**
    * Does not change behavior, but is required when the utility block checks for
    * valid golems
+   * @return true if the entity is currently providing light
    **/
   public boolean isProvidingLight() {
     return false;
@@ -391,6 +389,7 @@ public abstract class GolemBase extends EntityIronGolem {
   /**
    * Does not change behavior, but is required when the utility block checks for
    * valid golems
+   * @return true if the entity is currently providing redstone power
    **/
   public boolean isProvidingPower() {
     return false;
@@ -403,7 +402,8 @@ public abstract class GolemBase extends EntityIronGolem {
   }
 
   /**
-   * The GolemConfigSet associated with this golem, or the empty GCS if there is
+   * @param golem the golem
+   * @return The GolemConfigSet associated with this golem, or the empty GCS if there is
    * none
    **/
   @Nonnull
@@ -441,7 +441,7 @@ public abstract class GolemBase extends EntityIronGolem {
 
   /**
    * Helper method for translating text into local language using {@code I18n}
-   * 
+   * @return the translated string
    * @see addSpecialDesc
    **/
   protected static String trans(final String s, final Object... strings) {
@@ -453,6 +453,7 @@ public abstract class GolemBase extends EntityIronGolem {
   /**
    * Makes a ResourceLocation using the passed mod id and part of the texture
    * name. Texture should be at 'assets/[MODID]/textures/entity/[TEXTURE].png'
+   * @return a new ResourceLocation as specified
    **/
   public static ResourceLocation makeTexture(final String MODID, final String TEXTURE) {
     return new ResourceLocation(MODID + ":textures/entity/" + TEXTURE + ".png");
@@ -461,25 +462,29 @@ public abstract class GolemBase extends EntityIronGolem {
   ///////////////////// SOUND OVERRIDES ////////////////////
 
   @Override
+  /** @return the sound this mob makes intermittently **/
   protected SoundEvent getAmbientSound() {
     return getGolemSound();
   }
 
+  /** @return the sound this mob makes when it walks. **/
   protected SoundEvent getWalkingSound() {
     return getGolemSound();
   }
 
-  /** Returns the sound this mob makes when it attacks. **/
+  /** @return the sound this mob makes when it attacks. **/
   public SoundEvent getThrowSound() {
     return getGolemSound();
   }
 
   @Override
+  /** @return the sound this mob makes when it is hurt **/
   protected SoundEvent getHurtSound(final DamageSource ignored) {
     return getGolemSound();
   }
 
   @Override
+  /** @return the sound this mob makes when it dies **/
   protected SoundEvent getDeathSound() {
     return getGolemSound();
   }
@@ -507,15 +512,14 @@ public abstract class GolemBase extends EntityIronGolem {
    * implementation: texture is at 'assets/golems/textures/entity/golem_clay.png'
    *
    * <pre>
-   * {@code
    * protected ResourceLocation applyTexture() {
    * 	return this.makeGolemTexture("golems", "clay");
-   *}
+   * }
    * </pre>
    *
    * @return a ResourceLocation for this golem's texture
    * 
-   * @see #makeGolemTexture(String, String)
+   * @see #makeTexture(String, String)
    **/
   protected abstract ResourceLocation applyTexture();
 

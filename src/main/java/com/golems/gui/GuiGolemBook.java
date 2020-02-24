@@ -504,7 +504,7 @@ public class GuiGolemBook extends GuiScreen {
 
   /**
    * Called when a mouse button is pressed and the mouse is moved around.
-   * Parameters are : mouseX, mouseY, lastButtonClicked & timeSinceMouseClick.
+   * Parameters are : mouseX, mouseY, lastButtonClicked and timeSinceMouseClick.
    */
   @Override
   protected void mouseClickMove(final int mouseX, final int mouseY, final int clickedMouseButton,
