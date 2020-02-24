@@ -17,52 +17,51 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public final class BedrockGolem extends GolemBase {
 
-	public BedrockGolem(final EntityType<? extends GolemBase> entityType, final World world) {
-		super(entityType, world);
-		this.setInvulnerable(true);
-	}
+  public BedrockGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+    super(entityType, world);
+    this.setInvulnerable(true);
+  }
 
-	@Override
-	public boolean isInvulnerableTo(final DamageSource source) {
-		return true;
-	}
+  @Override
+  public boolean isInvulnerableTo(final DamageSource source) {
+    return true;
+  }
 
-	@Override
-	public boolean isImmuneToExplosions() {
-		return true;
-	}
+  @Override
+  public boolean isImmuneToExplosions() {
+    return true;
+  }
 
-	@OnlyIn(Dist.CLIENT)
-	@Override
-	public boolean canRenderOnFire() {
-		return false;
-	}
+  @OnlyIn(Dist.CLIENT)
+  @Override
+  public boolean canRenderOnFire() {
+    return false;
+  }
 
-	@Override
-	protected boolean processInteract(final PlayerEntity player, final Hand hand) {
-		// creative players can "despawn" by using spawnBedrockGolem on this entity
-		final ItemStack itemstack = player.getHeldItem(hand);
-		if ((player.abilities.isCreativeMode || !ExtraGolemsConfig.bedrockGolemCreativeOnly()) 
-				&& !itemstack.isEmpty() && itemstack.getItem() == GolemItems.SPAWN_BEDROCK_GOLEM) {
-			player.swingArm(hand);
-			if (!this.world.isRemote) {
-				this.remove();
-			} else {
-				ItemBedrockGolem.spawnParticles(this.world, this.posX - 0.5D, this.posY + 0.1D,
-					this.posZ - 0.5D, 0.12D);
-			}
-		}
+  @Override
+  protected boolean processInteract(final PlayerEntity player, final Hand hand) {
+    // creative players can "despawn" by using spawnBedrockGolem on this entity
+    final ItemStack itemstack = player.getHeldItem(hand);
+    if ((player.abilities.isCreativeMode || !ExtraGolemsConfig.bedrockGolemCreativeOnly()) && !itemstack.isEmpty()
+        && itemstack.getItem() == GolemItems.SPAWN_BEDROCK_GOLEM) {
+      player.swingArm(hand);
+      if (!this.world.isRemote) {
+        this.remove();
+      } else {
+        ItemBedrockGolem.spawnParticles(this.world, this.posX - 0.5D, this.posY + 0.1D, this.posZ - 0.5D, 0.12D);
+      }
+    }
 
-		return super.processInteract(player, hand);
-	}
+    return super.processInteract(player, hand);
+  }
 
-	@Override
-	protected void damageEntity(final DamageSource source, final float amount) {
-		//
-	}
+  @Override
+  protected void damageEntity(final DamageSource source, final float amount) {
+    //
+  }
 
-	@Override
-	public ItemStack getPickedResult(final RayTraceResult target) {
-		return new ItemStack(GolemItems.SPAWN_BEDROCK_GOLEM);
-	}
+  @Override
+  public ItemStack getPickedResult(final RayTraceResult target) {
+    return new ItemStack(GolemItems.SPAWN_BEDROCK_GOLEM);
+  }
 }

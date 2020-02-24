@@ -14,45 +14,43 @@ import net.minecraft.world.biome.Biome;
 
 public final class LeafGolem extends GolemColorized {
 
-	public static final String ALLOW_SPECIAL = "Allow Special: Regeneration";
+  public static final String ALLOW_SPECIAL = "Allow Special: Regeneration";
 
-	private static final ResourceLocation TEXTURE_BASE =
-		GolemBase.makeTexture(ExtraGolems.MODID, GolemNames.LEAF_GOLEM);
-	private static final ResourceLocation TEXTURE_OVERLAY = GolemBase
-			.makeTexture(ExtraGolems.MODID, GolemNames.LEAF_GOLEM + "_grayscale");
+  private static final ResourceLocation TEXTURE_BASE = GolemBase.makeTexture(ExtraGolems.MODID, GolemNames.LEAF_GOLEM);
+  private static final ResourceLocation TEXTURE_OVERLAY = GolemBase.makeTexture(ExtraGolems.MODID, GolemNames.LEAF_GOLEM + "_grayscale");
 
-	public LeafGolem(final EntityType<? extends GolemBase> entityType, final World world) {
-		super(entityType, world, 0x5F904A, TEXTURE_BASE, TEXTURE_OVERLAY);
-	}
-	
-	@Override
-	protected void registerGoals() {
-		super.registerGoals();
-		if(this.getConfigBool(ALLOW_SPECIAL)) {
-			this.goalSelector.addGoal(4, new PassiveEffectsGoal(this, Effects.REGENERATION, 200, 360, 0, 1, 
-					PassiveEffectsGoal.doesNotHaveEffect(Effects.REGENERATION)
-					.and(g -> g.getEntityWorld().getRandom().nextInt(40) == 0)));
-		}
-	}
+  public LeafGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+    super(entityType, world, 0x5F904A, TEXTURE_BASE, TEXTURE_OVERLAY);
+  }
 
-	/**
-	 * Called frequently so the entity can update its state every tick as required. For example,
-	 * zombies and skeletons use this to react to sunlight and start to burn.
-	 */
-	@Override
-	public void livingTick() {
-		super.livingTick();
+  @Override
+  protected void registerGoals() {
+    super.registerGoals();
+    if (this.getConfigBool(ALLOW_SPECIAL)) {
+      this.goalSelector.addGoal(4, new PassiveEffectsGoal(this, Effects.REGENERATION, 200, 360, 0, 1,
+          PassiveEffectsGoal.doesNotHaveEffect(Effects.REGENERATION).and(g -> g.getEntityWorld().getRandom().nextInt(40) == 0)));
+    }
+  }
 
-		// update color
-		if (this.ticksExisted % 10 == 2 && this.world.isRemote) {
-			Biome biome = this.world.getBiome(this.getPosition());
-			long color = biome.getFoliageColor(this.getPosition());
-			this.setColor(color);
-		}
+  /**
+   * Called frequently so the entity can update its state every tick as required.
+   * For example, zombies and skeletons use this to react to sunlight and start to
+   * burn.
+   */
+  @Override
+  public void livingTick() {
+    super.livingTick();
 
-		// slow falling for this entity
-		if (this.getMotion().y < -0.05D) {
-			this.setMotion(this.getMotion().mul(1.0D, 0.75D, 1.0D));
-		}
-	}
+    // update color
+    if (this.ticksExisted % 10 == 2 && this.world.isRemote) {
+      Biome biome = this.world.getBiome(this.getPosition());
+      long color = biome.getFoliageColor(this.getPosition());
+      this.setColor(color);
+    }
+
+    // slow falling for this entity
+    if (this.getMotion().y < -0.05D) {
+      this.setMotion(this.getMotion().mul(1.0D, 0.75D, 1.0D));
+    }
+  }
 }

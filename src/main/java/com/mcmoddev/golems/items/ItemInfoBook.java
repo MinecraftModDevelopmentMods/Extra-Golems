@@ -12,16 +12,16 @@ import net.minecraft.world.World;
 
 public class ItemInfoBook extends Item {
 
-	public ItemInfoBook() {
-		super(new Item.Properties().maxStackSize(1).group(ItemGroup.MISC));
-	}
+  public ItemInfoBook() {
+    super(new Item.Properties().maxStackSize(1).group(ItemGroup.MISC));
+  }
 
-	@Override
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-		ItemStack itemstack = playerIn.getHeldItem(handIn);
-		if (playerIn.getEntityWorld().isRemote) {
-			GuiLoader.loadBookGui(playerIn, itemstack);
-		}
-		return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
-	}
+  @Override
+  public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
+    ItemStack itemstack = playerIn.getHeldItem(handIn);
+    if (playerIn.getEntityWorld().isRemote) {
+      GuiLoader.loadBookGui(playerIn, itemstack);
+    }
+    return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
+  }
 }

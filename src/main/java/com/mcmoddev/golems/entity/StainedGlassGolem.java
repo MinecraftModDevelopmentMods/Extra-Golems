@@ -17,29 +17,27 @@ import net.minecraft.world.World;
 
 public final class StainedGlassGolem extends GolemMultiColorized {
 
-	public static final String PREFIX = "stained_glass";
+  public static final String PREFIX = "stained_glass";
 
-	private static final ResourceLocation TEXTURE_BASE = GolemBase
-			.makeTexture(ExtraGolems.MODID, GolemNames.STAINEDGLASS_GOLEM);
-	private static final ResourceLocation TEXTURE_OVERLAY = GolemBase
-			.makeTexture(ExtraGolems.MODID, GolemNames.STAINEDGLASS_GOLEM + "_grayscale");
+  private static final ResourceLocation TEXTURE_BASE = GolemBase.makeTexture(ExtraGolems.MODID, GolemNames.STAINEDGLASS_GOLEM);
+  private static final ResourceLocation TEXTURE_OVERLAY = GolemBase.makeTexture(ExtraGolems.MODID, GolemNames.STAINEDGLASS_GOLEM + "_grayscale");
 
-	public StainedGlassGolem(final EntityType<? extends GolemBase> entityType, final World world) {
-		super(entityType, world, ExtraGolems.MODID, TEXTURE_BASE, TEXTURE_OVERLAY, DYE_COLORS);
-	}
+  public StainedGlassGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+    super(entityType, world, ExtraGolems.MODID, TEXTURE_BASE, TEXTURE_OVERLAY, DYE_COLORS);
+  }
 
-	@Override
-	public boolean hasTransparency() {
-		return true;
-	}
-	
-	@Override
-	public ItemStack getCreativeReturn(final RayTraceResult target) {
-		return new ItemStack(GolemTextureBytes.getByByte(GolemTextureBytes.GLASS, (byte)this.getTextureNum()));
-	}
+  @Override
+  public boolean hasTransparency() {
+    return true;
+  }
 
-	@Override
-	public Map<Block, Byte> getTextureBytes() {
-		return GolemTextureBytes.GLASS;
-	}
+  @Override
+  public ItemStack getCreativeReturn(final RayTraceResult target) {
+    return new ItemStack(GolemTextureBytes.getByByte(GolemTextureBytes.GLASS, (byte) this.getTextureNum()));
+  }
+
+  @Override
+  public Map<Block, Byte> getTextureBytes() {
+    return GolemTextureBytes.GLASS;
+  }
 }

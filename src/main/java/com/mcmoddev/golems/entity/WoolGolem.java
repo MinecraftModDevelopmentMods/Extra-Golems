@@ -15,28 +15,27 @@ import net.minecraft.world.World;
 
 public final class WoolGolem extends GolemMultiTextured {
 
-	public static final String[] coloredWoolTypes = { "black", "orange", "magenta", "light_blue",
-		"yellow", "lime", "pink", "gray", "light_gray", "cyan", "purple", "blue", "brown", "green",
-		"red", "white" };
+  public static final String[] coloredWoolTypes = { "black", "orange", "magenta", "light_blue", "yellow", "lime", "pink", "gray", "light_gray",
+      "cyan", "purple", "blue", "brown", "green", "red", "white" };
 
-	public WoolGolem(final EntityType<? extends GolemBase> entityType, final World world) {
-		super(entityType, world, ExtraGolems.MODID, coloredWoolTypes);
-	}
+  public WoolGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+    super(entityType, world, ExtraGolems.MODID, coloredWoolTypes);
+  }
 
-	@Override
-	public void setTextureNum(byte toSet) {
-		//  note: skips texture for 'white'
-		toSet %= (byte) (coloredWoolTypes.length - 1);
-		super.setTextureNum(toSet);
-	}
+  @Override
+  public void setTextureNum(byte toSet) {
+    // note: skips texture for 'white'
+    toSet %= (byte) (coloredWoolTypes.length - 1);
+    super.setTextureNum(toSet);
+  }
 
-	@Override
-	public ItemStack getCreativeReturn(final RayTraceResult target) {
-		return new ItemStack(GolemTextureBytes.getByByte(GolemTextureBytes.WOOL, (byte)this.getTextureNum()));
-	}
+  @Override
+  public ItemStack getCreativeReturn(final RayTraceResult target) {
+    return new ItemStack(GolemTextureBytes.getByByte(GolemTextureBytes.WOOL, (byte) this.getTextureNum()));
+  }
 
-	@Override
-	public Map<Block, Byte> getTextureBytes() {
-		return GolemTextureBytes.WOOL;
-	}
+  @Override
+  public Map<Block, Byte> getTextureBytes() {
+    return GolemTextureBytes.WOOL;
+  }
 }

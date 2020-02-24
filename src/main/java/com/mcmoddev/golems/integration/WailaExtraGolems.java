@@ -20,25 +20,25 @@ import net.minecraft.util.text.ITextComponent;
 @WailaPlugin(ExtraGolems.MODID)
 public final class WailaExtraGolems extends GolemDescriptionManager implements IEntityComponentProvider, IWailaPlugin {
 
-	public static final WailaExtraGolems INSTANCE = new WailaExtraGolems();
-	
-	public WailaExtraGolems() {
-		super();
-		this.showFireproof = false;
-	}
+  public static final WailaExtraGolems INSTANCE = new WailaExtraGolems();
 
-	@Override
-	public void appendBody(List<ITextComponent> tooltip, IEntityAccessor accessor, IPluginConfig config) {
-		// settings:  hold shift to show attack damage
-		this.showAttack = isShiftDown();
-		if (accessor.getEntity() instanceof GolemBase) {
-			final GolemBase golem = (GolemBase) accessor.getEntity();
-			tooltip.addAll(this.getEntityDescription(golem));
-		}
-	}
+  public WailaExtraGolems() {
+    super();
+    this.showFireproof = false;
+  }
 
-	@Override
-	public void register(IRegistrar register) {
-		register.registerComponentProvider((IEntityComponentProvider)INSTANCE, TooltipPosition.BODY, GolemBase.class);
-	}
+  @Override
+  public void appendBody(List<ITextComponent> tooltip, IEntityAccessor accessor, IPluginConfig config) {
+    // settings: hold shift to show attack damage
+    this.showAttack = isShiftDown();
+    if (accessor.getEntity() instanceof GolemBase) {
+      final GolemBase golem = (GolemBase) accessor.getEntity();
+      tooltip.addAll(this.getEntityDescription(golem));
+    }
+  }
+
+  @Override
+  public void register(IRegistrar register) {
+    register.registerComponentProvider((IEntityComponentProvider) INSTANCE, TooltipPosition.BODY, GolemBase.class);
+  }
 }

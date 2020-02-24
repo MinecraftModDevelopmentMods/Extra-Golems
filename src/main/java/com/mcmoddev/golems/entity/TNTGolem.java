@@ -21,166 +21,162 @@ import net.minecraft.world.World;
 
 public class TNTGolem extends GolemBase {
 
-	protected static final DataParameter<Boolean> DATA_IGNITED = EntityDataManager
-		.<Boolean>createKey(TNTGolem.class, DataSerializers.BOOLEAN);
-	public static final String ALLOW_SPECIAL = "Allow Special: Explode";
+  protected static final DataParameter<Boolean> DATA_IGNITED = EntityDataManager.<Boolean>createKey(TNTGolem.class, DataSerializers.BOOLEAN);
+  public static final String ALLOW_SPECIAL = "Allow Special: Explode";
 
-	protected final int minExplosionRad;
-	protected final int maxExplosionRad;
-	protected final int fuseLen;
-	/**
-	 * Percent chance to explode while attacking a mob.
-	 **/
-	protected final int chanceToExplodeWhenAttacking;
-	protected boolean allowedToExplode = false;
+  protected final int minExplosionRad;
+  protected final int maxExplosionRad;
+  protected final int fuseLen;
+  /**
+   * Percent chance to explode while attacking a mob.
+   **/
+  protected final int chanceToExplodeWhenAttacking;
+  protected boolean allowedToExplode = false;
 
-	protected boolean willExplode;
-	protected int fuseTimer;
+  protected boolean willExplode;
+  protected int fuseTimer;
 
-	/** Default constructor for TNT golem. **/
-	public TNTGolem(final EntityType<? extends GolemBase> entityType, final World world) {
-		this(entityType, world, 6, 8, 50, 10);
-		this.allowedToExplode = this.getConfigBool(ALLOW_SPECIAL);
-	}
+  /** Default constructor for TNT golem. **/
+  public TNTGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+    this(entityType, world, 6, 8, 50, 10);
+    this.allowedToExplode = this.getConfigBool(ALLOW_SPECIAL);
+  }
 
-	/**
-	 * Flexible constructor to allow child classes to customize.
-	 *
-	 * @param entityType
-	 * @param world
-	 * @param minExplosionRange
-	 * @param maxExplosionRange
-	 * @param minFuseLength
-	 * @param randomExplosionChance
-	 */
-	public TNTGolem(final EntityType<? extends GolemBase> entityType, final World world, final int minExplosionRange,
-			      final int maxExplosionRange, final int minFuseLength, final int randomExplosionChance) {
-		super(entityType, world);
-		this.minExplosionRad = minExplosionRange;
-		this.maxExplosionRad = maxExplosionRange;
-		this.fuseLen = minFuseLength;
-		this.chanceToExplodeWhenAttacking = randomExplosionChance;
-		this.resetIgnite();
-	}
+  /**
+   * Flexible constructor to allow child classes to customize.
+   *
+   * @param entityType
+   * @param world
+   * @param minExplosionRange
+   * @param maxExplosionRange
+   * @param minFuseLength
+   * @param randomExplosionChance
+   */
+  public TNTGolem(final EntityType<? extends GolemBase> entityType, final World world, final int minExplosionRange, final int maxExplosionRange,
+      final int minFuseLength, final int randomExplosionChance) {
+    super(entityType, world);
+    this.minExplosionRad = minExplosionRange;
+    this.maxExplosionRad = maxExplosionRange;
+    this.fuseLen = minFuseLength;
+    this.chanceToExplodeWhenAttacking = randomExplosionChance;
+    this.resetIgnite();
+  }
 
-	@Override
-	protected void registerData() {
-		super.registerData();
-		this.dataManager.register(DATA_IGNITED, false);
-	}
+  @Override
+  protected void registerData() {
+    super.registerData();
+    this.dataManager.register(DATA_IGNITED, false);
+  }
 
-	/**
-	 * Called frequently so the entity can update its state every tick as required. For example,
-	 * zombies and skeletons use this to react to sunlight and start to burn.
-	 */
-	@Override
-	public void livingTick() {
-		super.livingTick();
+  /**
+   * Called frequently so the entity can update its state every tick as required.
+   * For example, zombies and skeletons use this to react to sunlight and start to
+   * burn.
+   */
+  @Override
+  public void livingTick() {
+    super.livingTick();
 
-		if (this.isBurning()) {
-			this.ignite();
-		}
+    if (this.isBurning()) {
+      this.ignite();
+    }
 
-		if (this.isWet() || (this.getAttackTarget() != null
-				&& this.getDistanceSq(this.getAttackTarget()) > this.minExplosionRad
-				* this.maxExplosionRad)) {
-			this.resetIgnite();
-		}
+    if (this.isWet()
+        || (this.getAttackTarget() != null && this.getDistanceSq(this.getAttackTarget()) > this.minExplosionRad * this.maxExplosionRad)) {
+      this.resetIgnite();
+    }
 
-		if (this.isIgnited()) {
-			this.setMotion(0.0D, this.getMotion().getY(), 0.0D);
-			this.fuseTimer--;
-			ItemBedrockGolem.spawnParticles(this.world, this.posX, this.posY + 1.0D,
-					this.posZ, 0.21D, ParticleTypes.SMOKE, 6);
-			if (this.fuseTimer <= 0) {
-				this.willExplode = true;
-			}
-		}
+    if (this.isIgnited()) {
+      this.setMotion(0.0D, this.getMotion().getY(), 0.0D);
+      this.fuseTimer--;
+      ItemBedrockGolem.spawnParticles(this.world, this.posX, this.posY + 1.0D, this.posZ, 0.21D, ParticleTypes.SMOKE, 6);
+      if (this.fuseTimer <= 0) {
+        this.willExplode = true;
+      }
+    }
 
-		if (this.willExplode) {
-			this.explode();
-		}
-	}
+    if (this.willExplode) {
+      this.explode();
+    }
+  }
 
-	@Override
-	public void onDeath(final DamageSource source) {
-		super.onDeath(source);
-		this.explode();
-	}
+  @Override
+  public void onDeath(final DamageSource source) {
+    super.onDeath(source);
+    this.explode();
+  }
 
-	@Override
-	public boolean attackEntityAsMob(final Entity entity) {
-		boolean flag = super.attackEntityAsMob(entity);
+  @Override
+  public boolean attackEntityAsMob(final Entity entity) {
+    boolean flag = super.attackEntityAsMob(entity);
 
-		if (flag && entity.isAlive() && rand.nextInt(100) < this.chanceToExplodeWhenAttacking
-				&& this.getDistanceSq(entity) <= this.minExplosionRad * this.minExplosionRad) {
-			this.ignite();
-		}
+    if (flag && entity.isAlive() && rand.nextInt(100) < this.chanceToExplodeWhenAttacking
+        && this.getDistanceSq(entity) <= this.minExplosionRad * this.minExplosionRad) {
+      this.ignite();
+    }
 
-		return flag;
-	}
+    return flag;
+  }
 
-	@Override
-	protected boolean processInteract(final PlayerEntity player, final Hand hand) {
-		final ItemStack itemstack = player.getHeldItem(hand);
-		if (!itemstack.isEmpty() && itemstack.getItem() == Items.FLINT_AND_STEEL) {
-			this.world.playSound(player, this.posX, this.posY, this.posZ,
-					SoundEvents.ITEM_FLINTANDSTEEL_USE, this.getSoundCategory(), 1.0F,
-					this.rand.nextFloat() * 0.4F + 0.8F);
-			player.swingArm(hand);
+  @Override
+  protected boolean processInteract(final PlayerEntity player, final Hand hand) {
+    final ItemStack itemstack = player.getHeldItem(hand);
+    if (!itemstack.isEmpty() && itemstack.getItem() == Items.FLINT_AND_STEEL) {
+      this.world.playSound(player, this.posX, this.posY, this.posZ, SoundEvents.ITEM_FLINTANDSTEEL_USE, this.getSoundCategory(), 1.0F,
+          this.rand.nextFloat() * 0.4F + 0.8F);
+      player.swingArm(hand);
 
-			if (!this.world.isRemote) {
-				this.setFire(Math.floorDiv(this.fuseLen, 20));
-				this.ignite();
-				itemstack.damageItem(1, player, c -> c.sendBreakAnimation(hand));
-			}
-		}
+      if (!this.world.isRemote) {
+        this.setFire(Math.floorDiv(this.fuseLen, 20));
+        this.ignite();
+        itemstack.damageItem(1, player, c -> c.sendBreakAnimation(hand));
+      }
+    }
 
-		return super.processInteract(player, hand);
-	}
+    return super.processInteract(player, hand);
+  }
 
-	protected void resetFuse() {
-		this.fuseTimer = this.fuseLen + rand.nextInt(Math.floorDiv(fuseLen, 2) + 1);
-	}
+  protected void resetFuse() {
+    this.fuseTimer = this.fuseLen + rand.nextInt(Math.floorDiv(fuseLen, 2) + 1);
+  }
 
-	protected void setIgnited(final boolean toSet) {
-		this.getDataManager().set(DATA_IGNITED, Boolean.valueOf(toSet));
-	}
+  protected void setIgnited(final boolean toSet) {
+    this.getDataManager().set(DATA_IGNITED, Boolean.valueOf(toSet));
+  }
 
-	protected boolean isIgnited() {
-		return this.getDataManager().get(DATA_IGNITED).booleanValue();
-	}
+  protected boolean isIgnited() {
+    return this.getDataManager().get(DATA_IGNITED).booleanValue();
+  }
 
-	protected void ignite() {
-		if (!this.isIgnited()) {
-			// update info
-			this.setIgnited(true);
-			this.resetFuse();
-			// play sounds
-			if (!this.isWet()) {
-				this.playSound(SoundEvents.ENTITY_CREEPER_PRIMED, 0.9F, rand.nextFloat());
-			}
-		}
-	}
+  protected void ignite() {
+    if (!this.isIgnited()) {
+      // update info
+      this.setIgnited(true);
+      this.resetFuse();
+      // play sounds
+      if (!this.isWet()) {
+        this.playSound(SoundEvents.ENTITY_CREEPER_PRIMED, 0.9F, rand.nextFloat());
+      }
+    }
+  }
 
-	protected void resetIgnite() {
-		this.setIgnited(false);
-		this.resetFuse();
-		this.willExplode = false;
-	}
+  protected void resetIgnite() {
+    this.setIgnited(false);
+    this.resetFuse();
+    this.willExplode = false;
+  }
 
-	protected void explode() {
-		if (this.allowedToExplode) {
-			if (!this.world.isRemote) {
-				final boolean flag = this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING);
-				final float range = this.maxExplosionRad > this.minExplosionRad
-						? (minExplosionRad + rand.nextInt(maxExplosionRad - minExplosionRad))
-						: this.minExplosionRad;
-				this.world.createExplosion(this, this.posX, this.posY, this.posZ, range, flag ? Mode.BREAK : Mode.NONE);
-				this.remove();
-			}
-		} else {
-			resetIgnite();
-		}
-	}
+  protected void explode() {
+    if (this.allowedToExplode) {
+      if (!this.world.isRemote) {
+        final boolean flag = this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING);
+        final float range = this.maxExplosionRad > this.minExplosionRad ? (minExplosionRad + rand.nextInt(maxExplosionRad - minExplosionRad))
+            : this.minExplosionRad;
+        this.world.createExplosion(this, this.posX, this.posY, this.posZ, range, flag ? Mode.BREAK : Mode.NONE);
+        this.remove();
+      }
+    } else {
+      resetIgnite();
+    }
+  }
 }

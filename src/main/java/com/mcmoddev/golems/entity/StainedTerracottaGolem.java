@@ -17,24 +17,22 @@ import net.minecraft.world.World;
 
 public final class StainedTerracottaGolem extends GolemMultiColorized {
 
-	public static final String PREFIX = "stained_clay";
+  public static final String PREFIX = "stained_clay";
 
-	private static final ResourceLocation TEXTURE_BASE = GolemBase
-			.makeTexture(ExtraGolems.MODID, GolemNames.STAINEDTERRACOTTA_GOLEM);
-	private static final ResourceLocation TEXTURE_OVERLAY = GolemBase
-			.makeTexture(ExtraGolems.MODID, GolemNames.STAINEDTERRACOTTA_GOLEM + "_grayscale");
+  private static final ResourceLocation TEXTURE_BASE = GolemBase.makeTexture(ExtraGolems.MODID, GolemNames.STAINEDTERRACOTTA_GOLEM);
+  private static final ResourceLocation TEXTURE_OVERLAY = GolemBase.makeTexture(ExtraGolems.MODID, GolemNames.STAINEDTERRACOTTA_GOLEM + "_grayscale");
 
-	public StainedTerracottaGolem(final EntityType<? extends GolemBase> entityType, final World world) {
-		super(entityType, world, ExtraGolems.MODID, TEXTURE_BASE, TEXTURE_OVERLAY, DYE_COLORS);
-	}
+  public StainedTerracottaGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+    super(entityType, world, ExtraGolems.MODID, TEXTURE_BASE, TEXTURE_OVERLAY, DYE_COLORS);
+  }
 
-	@Override
-	public ItemStack getCreativeReturn(final RayTraceResult target) {
-		return new ItemStack(GolemTextureBytes.getByByte(GolemTextureBytes.TERRACOTTA, (byte)this.getTextureNum()));
-	}
+  @Override
+  public ItemStack getCreativeReturn(final RayTraceResult target) {
+    return new ItemStack(GolemTextureBytes.getByByte(GolemTextureBytes.TERRACOTTA, (byte) this.getTextureNum()));
+  }
 
-	@Override
-	public Map<Block, Byte> getTextureBytes() {
-		return GolemTextureBytes.TERRACOTTA;
-	}
+  @Override
+  public Map<Block, Byte> getTextureBytes() {
+    return GolemTextureBytes.TERRACOTTA;
+  }
 }

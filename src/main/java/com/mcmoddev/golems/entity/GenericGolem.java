@@ -7,7 +7,7 @@ import net.minecraft.world.World;
 
 public final class GenericGolem extends GolemBase {
 
-	public GenericGolem(final EntityType<? extends GolemBase> entityType, final World world) {
-		super(entityType, world);
-	}
+  public GenericGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+    super(entityType, world);
+  }
 }

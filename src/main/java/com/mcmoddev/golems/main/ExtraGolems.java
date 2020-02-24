@@ -29,60 +29,59 @@ import org.apache.logging.log4j.Logger;
 @Mod.EventBusSubscriber(modid = ExtraGolems.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ExtraGolems {
 
-	public static final String MODID = "golems";
+  public static final String MODID = "golems";
 
-	@SuppressWarnings("Convert2MethodRef")
-	//DO NOT USE METHOD REFERENCES. THESE ARE BAD! (according to gigaherz)
-	public static final ProxyCommon PROXY = DistExecutor.runForDist(() -> () -> new ProxyClient(),
-			() -> () -> new ProxyServer());
+  @SuppressWarnings("Convert2MethodRef")
+  // DO NOT USE METHOD REFERENCES. THESE ARE BAD! (according to gigaherz)
+  public static final ProxyCommon PROXY = DistExecutor.runForDist(() -> () -> new ProxyClient(), () -> () -> new ProxyServer());
 
-	public static final Logger LOGGER = LogManager.getFormatterLogger(ExtraGolems.MODID);
+  public static final Logger LOGGER = LogManager.getFormatterLogger(ExtraGolems.MODID);
 
+  public ExtraGolems() {
+    FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+    FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
+    MinecraftForge.EVENT_BUS.register(new GolemCommonEventHandler());
+    ExtraGolems.PROXY.registerListeners();
+    BlockTagUtil.loadTags();
+    ExtraGolemsEntities.initEntityTypes();
+    ExtraGolemsConfig.setupConfig();
+    ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER /* world */, ExtraGolemsConfig.SERVER_CONFIG);
+  }
 
-	public ExtraGolems() {
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
-		MinecraftForge.EVENT_BUS.register(new GolemCommonEventHandler());
-		ExtraGolems.PROXY.registerListeners();
-		BlockTagUtil.loadTags();
-		ExtraGolemsEntities.initEntityTypes();
-		ExtraGolemsConfig.setupConfig();
-		ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER /*world*/, ExtraGolemsConfig.SERVER_CONFIG);
-	}
+  private void setup(final FMLCommonSetupEvent event) {
 
-	private void setup(final FMLCommonSetupEvent event) {
+  }
 
-	}
+  private void enqueueIMC(final InterModEnqueueEvent event) {
+    if (ModList.get().isLoaded(ModIds.TOP)) {
+      // InterModComms.sendTo(ModIds.TOP, "getTheOneProbe",
+      // TOPExtraGolems.GetTheOneProbe::new);
+    }
+  }
 
-	private void enqueueIMC(final InterModEnqueueEvent event) {
-		if (ModList.get().isLoaded(ModIds.TOP)) {
-			// InterModComms.sendTo(ModIds.TOP, "getTheOneProbe", TOPExtraGolems.GetTheOneProbe::new);
-		}
-	}
+  @SubscribeEvent
+  public static void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
+    ExtraGolems.LOGGER.info("registerEntities");
+    ExtraGolems.PROXY.registerEntities(event);
+    ExtraGolems.PROXY.registerEntityRenders();
+  }
 
-	@SubscribeEvent
-	public static void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
-		ExtraGolems.LOGGER.info("registerEntities");
-		ExtraGolems.PROXY.registerEntities(event);
-		ExtraGolems.PROXY.registerEntityRenders();
-	}
+  @SubscribeEvent
+  public static void registerItems(final RegistryEvent.Register<Item> event) {
+    ExtraGolems.LOGGER.info("registerItems");
+    ExtraGolems.PROXY.registerItems(event);
+  }
 
-	@SubscribeEvent
-	public static void registerItems(final RegistryEvent.Register<Item> event) {
-		ExtraGolems.LOGGER.info("registerItems");
-		ExtraGolems.PROXY.registerItems(event);
-	}
+  @SubscribeEvent
+  public static void registerBlocks(final RegistryEvent.Register<Block> event) {
+    ExtraGolems.LOGGER.info("registerBlocks");
+    ExtraGolems.PROXY.registerBlocks(event);
+  }
 
-	@SubscribeEvent
-	public static void registerBlocks(final RegistryEvent.Register<Block> event) {
-		ExtraGolems.LOGGER.info("registerBlocks");
-		ExtraGolems.PROXY.registerBlocks(event);
-	}
-	
-	@SubscribeEvent
-	public static void registerContainers(final RegistryEvent.Register<ContainerType<?>> event) {
-		ExtraGolems.LOGGER.info("registerContainers");
-		ExtraGolems.PROXY.registerContainers(event);
-		ExtraGolems.PROXY.registerContainerRenders();
-	}
+  @SubscribeEvent
+  public static void registerContainers(final RegistryEvent.Register<ContainerType<?>> event) {
+    ExtraGolems.LOGGER.info("registerContainers");
+    ExtraGolems.PROXY.registerContainers(event);
+    ExtraGolems.PROXY.registerContainerRenders();
+  }
 }

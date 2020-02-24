@@ -14,31 +14,28 @@ import net.minecraft.world.World;
 
 public final class NetherWartGolem extends GolemBase {
 
-	public static final String ALLOW_SPECIAL = "Allow Special: Plant Netherwart";
-	public static final String FREQUENCY = "Netherwart Frequency";
-	public static final String ALLOW_HEALING = "Allow Special: Random Healing";
-	private boolean allowHealing;
+  public static final String ALLOW_SPECIAL = "Allow Special: Plant Netherwart";
+  public static final String FREQUENCY = "Netherwart Frequency";
+  public static final String ALLOW_HEALING = "Allow Special: Random Healing";
+  private boolean allowHealing;
 
-	public NetherWartGolem(final EntityType<? extends GolemBase> entityType, final World world) {
-		super(entityType, world);
-		this.allowHealing = this.getConfigBool(ALLOW_HEALING);
-	}
+  public NetherWartGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+    super(entityType, world);
+    this.allowHealing = this.getConfigBool(ALLOW_HEALING);
+  }
 
-	@Override
-	protected void registerGoals() {
-		super.registerGoals();
-		final BlockState[] flowers = {
-				Blocks.NETHER_WART.getDefaultState().with(NetherWartBlock.AGE, 0),
-				Blocks.NETHER_WART.getDefaultState().with(NetherWartBlock.AGE, 1),
-				Blocks.NETHER_WART.getDefaultState().with(NetherWartBlock.AGE, 2) };
-		final Block[] soils = { Blocks.SOUL_SAND };
-		final boolean allow = this.getConfigBool(ALLOW_SPECIAL);
-		final int freq = this.getConfigInt(FREQUENCY);
-		this.goalSelector.addGoal(2, new PlaceBlocksGoal(this, freq, flowers, soils, allow));
-		if(allowHealing) {
-			this.goalSelector.addGoal(4, new PassiveEffectsGoal(this, Effects.REGENERATION, 50, 60, 1, 1, 
-					g -> (g.getEntityWorld().dimension.isNether() || !g.getEntityWorld().isDaytime()) 
-					&& g.getEntityWorld().getRandom().nextInt(450) == 0));
-		}
-	}
+  @Override
+  protected void registerGoals() {
+    super.registerGoals();
+    final BlockState[] flowers = { Blocks.NETHER_WART.getDefaultState().with(NetherWartBlock.AGE, 0),
+        Blocks.NETHER_WART.getDefaultState().with(NetherWartBlock.AGE, 1), Blocks.NETHER_WART.getDefaultState().with(NetherWartBlock.AGE, 2) };
+    final Block[] soils = { Blocks.SOUL_SAND };
+    final boolean allow = this.getConfigBool(ALLOW_SPECIAL);
+    final int freq = this.getConfigInt(FREQUENCY);
+    this.goalSelector.addGoal(2, new PlaceBlocksGoal(this, freq, flowers, soils, allow));
+    if (allowHealing) {
+      this.goalSelector.addGoal(4, new PassiveEffectsGoal(this, Effects.REGENERATION, 50, 60, 1, 1,
+          g -> (g.getEntityWorld().dimension.isNether() || !g.getEntityWorld().isDaytime()) && g.getEntityWorld().getRandom().nextInt(450) == 0));
+    }
+  }
 }

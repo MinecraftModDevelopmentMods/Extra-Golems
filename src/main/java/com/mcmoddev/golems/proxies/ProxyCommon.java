@@ -24,45 +24,40 @@ import net.minecraftforge.event.RegistryEvent;
 
 public class ProxyCommon {
 
-	public void registerListeners() {
-	}
+  public void registerListeners() {
+  }
 
-	public void registerEntityRenders() {
-	}
-	
-	public void registerContainerRenders() {
-	}
+  public void registerEntityRenders() {
+  }
 
-	public void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
-		// Register Golem EntityTypes by iterating through each registered GolemContainer
-		GolemRegistrar.getContainers().forEach(container -> event.getRegistry().register(container.getEntityType()));
-	}
+  public void registerContainerRenders() {
+  }
 
-	public void registerItems(final RegistryEvent.Register<Item> event) {
-		event.getRegistry().registerAll(
-				new BlockItem(GolemItems.GOLEM_HEAD, new Item.Properties().group(ItemGroup.MISC)) {
-					@Override
-					@OnlyIn(Dist.CLIENT)
-					public boolean hasEffect(final ItemStack stack) {
-						return true;
-					}
-				}.setRegistryName(GolemItems.GOLEM_HEAD.getRegistryName()),
-				new ItemBedrockGolem().setRegistryName(ExtraGolems.MODID, "spawn_bedrock_golem"),
-				new ItemGolemSpell().setRegistryName(ExtraGolems.MODID, "golem_paper"),
-				new ItemInfoBook().setRegistryName(ExtraGolems.MODID, "info_book"));
-	}
+  public void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
+    // Register Golem EntityTypes by iterating through each registered
+    // GolemContainer
+    GolemRegistrar.getContainers().forEach(container -> event.getRegistry().register(container.getEntityType()));
+  }
 
-	public void registerBlocks(final RegistryEvent.Register<Block> event) {
-		event.getRegistry().registerAll(
-				new BlockGolemHead().setRegistryName(ExtraGolems.MODID, "golem_head"),
-				new BlockUtilityGlow(Material.GLASS, 1.0F, BlockUtilityGlow.UPDATE_TICKS)
-						.setRegistryName(ExtraGolems.MODID, "light_provider_full"),
-				new BlockUtilityPower(15, BlockUtilityPower.UPDATE_TICKS)
-						.setRegistryName(ExtraGolems.MODID, "power_provider_all"));
-	}
-	
-	public void registerContainers(final RegistryEvent.Register<ContainerType<?>> event) {
-		event.getRegistry().register(GolemItems.CRAFTING_GOLEM.setRegistryName(ExtraGolems.MODID, "crafting_portable"));
-		event.getRegistry().register(GolemItems.DISPENSER_GOLEM.setRegistryName(ExtraGolems.MODID, "dispenser_portable"));
-	}
+  public void registerItems(final RegistryEvent.Register<Item> event) {
+    event.getRegistry().registerAll(new BlockItem(GolemItems.GOLEM_HEAD, new Item.Properties().group(ItemGroup.MISC)) {
+      @Override
+      @OnlyIn(Dist.CLIENT)
+      public boolean hasEffect(final ItemStack stack) {
+        return true;
+      }
+    }.setRegistryName(GolemItems.GOLEM_HEAD.getRegistryName()), new ItemBedrockGolem().setRegistryName(ExtraGolems.MODID, "spawn_bedrock_golem"),
+        new ItemGolemSpell().setRegistryName(ExtraGolems.MODID, "golem_paper"), new ItemInfoBook().setRegistryName(ExtraGolems.MODID, "info_book"));
+  }
+
+  public void registerBlocks(final RegistryEvent.Register<Block> event) {
+    event.getRegistry().registerAll(new BlockGolemHead().setRegistryName(ExtraGolems.MODID, "golem_head"),
+        new BlockUtilityGlow(Material.GLASS, 1.0F, BlockUtilityGlow.UPDATE_TICKS).setRegistryName(ExtraGolems.MODID, "light_provider_full"),
+        new BlockUtilityPower(15, BlockUtilityPower.UPDATE_TICKS).setRegistryName(ExtraGolems.MODID, "power_provider_all"));
+  }
+
+  public void registerContainers(final RegistryEvent.Register<ContainerType<?>> event) {
+    event.getRegistry().register(GolemItems.CRAFTING_GOLEM.setRegistryName(ExtraGolems.MODID, "crafting_portable"));
+    event.getRegistry().register(GolemItems.DISPENSER_GOLEM.setRegistryName(ExtraGolems.MODID, "dispenser_portable"));
+  }
 }

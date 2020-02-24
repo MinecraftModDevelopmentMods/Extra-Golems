@@ -23,50 +23,49 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public final class RedstoneLampGolem extends GolemMultiTextured {
 
-	public static final String ALLOW_SPECIAL = "Allow Special: Emit Light";
+  public static final String ALLOW_SPECIAL = "Allow Special: Emit Light";
 
-	public static final String[] VARIANTS = { "lit", "unlit" };
+  public static final String[] VARIANTS = { "lit", "unlit" };
 
-	public static final BiPredicate<GolemBase, BlockState> LIT_PRED =
-			(golem, toReplace) -> golem.isProvidingLight();
+  public static final BiPredicate<GolemBase, BlockState> LIT_PRED = (golem, toReplace) -> golem.isProvidingLight();
 
-	public RedstoneLampGolem(final EntityType<? extends GolemBase> entityType, final World world) {
-		super(entityType, world, ExtraGolems.MODID, VARIANTS);
-		final BlockState state = GolemItems.UTILITY_LIGHT.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, 15);
-		this.goalSelector.addGoal(9, new PlaceUtilityBlockGoal(this, state, BlockUtilityGlow.UPDATE_TICKS,
-				this.getConfigBool(ALLOW_SPECIAL), PlaceUtilityBlockGoal.getDefaultBiPred(state).and(LIT_PRED)));
-	}
+  public RedstoneLampGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+    super(entityType, world, ExtraGolems.MODID, VARIANTS);
+    final BlockState state = GolemItems.UTILITY_LIGHT.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, 15);
+    this.goalSelector.addGoal(9, new PlaceUtilityBlockGoal(this, state, BlockUtilityGlow.UPDATE_TICKS, this.getConfigBool(ALLOW_SPECIAL),
+        PlaceUtilityBlockGoal.getDefaultBiPred(state).and(LIT_PRED)));
+  }
 
-	@Override
-	public boolean canInteractChangeTexture() {
-		// always allow interact
-		return true;
-	}
+  @Override
+  public boolean canInteractChangeTexture() {
+    // always allow interact
+    return true;
+  }
 
-	@Override
-	public boolean isProvidingLight() {
-		// only allow light if correct texture data
-		return this.getTextureNum() == 0;
-	}
+  @Override
+  public boolean isProvidingLight() {
+    // only allow light if correct texture data
+    return this.getTextureNum() == 0;
+  }
 
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public int getBrightnessForRender() {
-		return isProvidingLight() ? 15728880 : super.getBrightnessForRender();
-	}
+  @Override
+  @OnlyIn(Dist.CLIENT)
+  public int getBrightnessForRender() {
+    return isProvidingLight() ? 15728880 : super.getBrightnessForRender();
+  }
 
-	@Override
-	public float getBrightness() {
-		return isProvidingLight() ? 1.0F : super.getBrightness();
-	}
-	
-	@Override
-	public ItemStack getCreativeReturn(final RayTraceResult target) {
-		return new ItemStack(Blocks.REDSTONE_LAMP);
-	}
+  @Override
+  public float getBrightness() {
+    return isProvidingLight() ? 1.0F : super.getBrightness();
+  }
 
-	@Override
-	public Map<Block, Byte> getTextureBytes() {
-		return new HashMap<>();
-	}
+  @Override
+  public ItemStack getCreativeReturn(final RayTraceResult target) {
+    return new ItemStack(Blocks.REDSTONE_LAMP);
+  }
+
+  @Override
+  public Map<Block, Byte> getTextureBytes() {
+    return new HashMap<>();
+  }
 }
