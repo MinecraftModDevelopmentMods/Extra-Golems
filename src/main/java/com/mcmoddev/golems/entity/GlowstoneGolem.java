@@ -11,28 +11,28 @@ import net.minecraft.world.World;
 
 public final class GlowstoneGolem extends GolemBase {
 
-	public static final String ALLOW_SPECIAL = "Allow Special: Emit Light";
+  public static final String ALLOW_SPECIAL = "Allow Special: Emit Light";
 
-	/**
-	 * Float value between 0.0F and 1.0F that determines light level
-	 **/
-	private final float brightness;
+  /**
+   * Float value between 0.0F and 1.0F that determines light level
+   **/
+  private final float brightness;
 
-	public GlowstoneGolem(final EntityType<? extends GolemBase> entityType, final World world) {
-		super(entityType, world);
-		int lightInt = 15;
-		this.brightness = 1.0F;
-		final BlockState state = GolemItems.UTILITY_LIGHT.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, lightInt);
-		this.goalSelector.addGoal(9, new PlaceUtilityBlockGoal(this, state, BlockUtilityGlow.UPDATE_TICKS, this.getConfigBool(ALLOW_SPECIAL)));
-	}
+  public GlowstoneGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+    super(entityType, world);
+    int lightInt = 15;
+    this.brightness = 1.0F;
+    final BlockState state = GolemItems.UTILITY_LIGHT.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, lightInt);
+    this.goalSelector.addGoal(9, new PlaceUtilityBlockGoal(this, state, BlockUtilityGlow.UPDATE_TICKS, this.getConfigBool(ALLOW_SPECIAL)));
+  }
 
-	@Override
-	public boolean isProvidingLight() {
-		return true;
-	}
+  @Override
+  public boolean isProvidingLight() {
+    return true;
+  }
 
-	@Override
-	public float getBrightness() {
-		return this.brightness;
-	}
+  @Override
+  public float getBrightness() {
+    return this.brightness;
+  }
 }

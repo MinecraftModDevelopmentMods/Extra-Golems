@@ -13,21 +13,21 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 public final class CraftingGolem extends GolemBase {
 
-	public static final String ALLOW_SPECIAL = "Allow Special: Crafting";
-	
-	public CraftingGolem(final EntityType<? extends GolemBase> entityType, final World world) {
-		super(entityType, world);
-	}
+  public static final String ALLOW_SPECIAL = "Allow Special: Crafting";
 
-	@Override
-	protected boolean processInteract(final PlayerEntity player, final Hand hand) {
-		if(!player.isCrouching() && player instanceof ServerPlayerEntity) {
-			// display crafting grid by sending request to server
-			NetworkHooks.openGui((ServerPlayerEntity)player, new ContainerPortableWorkbench.Provider());
-			player.addStat(Stats.INTERACT_WITH_CRAFTING_TABLE);
-			player.swingArm(hand);
-			return true;
-		}
-		return super.processInteract(player, hand);
-	}
+  public CraftingGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+    super(entityType, world);
+  }
+
+  @Override
+  protected boolean processInteract(final PlayerEntity player, final Hand hand) {
+    if (!player.isCrouching() && player instanceof ServerPlayerEntity) {
+      // display crafting grid by sending request to server
+      NetworkHooks.openGui((ServerPlayerEntity) player, new ContainerPortableWorkbench.Provider());
+      player.addStat(Stats.INTERACT_WITH_CRAFTING_TABLE);
+      player.swingArm(hand);
+      return true;
+    }
+    return super.processInteract(player, hand);
+  }
 }

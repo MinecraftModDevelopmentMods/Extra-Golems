@@ -11,36 +11,34 @@ import net.minecraftforge.registries.ObjectHolder;
 @ObjectHolder(ExtraGolems.MODID)
 public final class GolemItems {
 
-	private GolemItems() {
-		//
-	}
+  private GolemItems() {
+    //
+  }
 
-	////// ITEMS //////
-	@ObjectHolder("golem_paper")
-	public static final Item GOLEM_SPELL = null;
+  ////// ITEMS //////
+  @ObjectHolder("golem_paper")
+  public static final Item GOLEM_SPELL = null;
 
-	@ObjectHolder("spawn_bedrock_golem")
-	public static final Item SPAWN_BEDROCK_GOLEM = null;
+  @ObjectHolder("spawn_bedrock_golem")
+  public static final Item SPAWN_BEDROCK_GOLEM = null;
 
-	@ObjectHolder("info_book")
-	public static final Item GOLEM_BOOK = null;
+  @ObjectHolder("info_book")
+  public static final Item GOLEM_BOOK = null;
 
-	////// BLOCKS //////
-	@ObjectHolder("golem_head")
-	public static final Block GOLEM_HEAD = null;
+  ////// BLOCKS //////
+  @ObjectHolder("golem_head")
+  public static final Block GOLEM_HEAD = null;
 
-	@ObjectHolder("light_provider_full")
-	public static final Block UTILITY_LIGHT = null;
+  @ObjectHolder("light_provider_full")
+  public static final Block UTILITY_LIGHT = null;
 
-	@ObjectHolder("power_provider_all")
-	public static final Block UTILITY_POWER = null;
-	
-	////// OTHER //////
-	@ObjectHolder("crafting_portable")
-	public static final ContainerType<ContainerPortableWorkbench> CRAFTING_GOLEM = 
-		new ContainerType<>(ContainerPortableWorkbench::new);
-	
-	@ObjectHolder("dispenser_portable")
-	public static final ContainerType<ContainerDispenserGolem> DISPENSER_GOLEM = 
-		new ContainerType<>(ContainerDispenserGolem::new);
+  @ObjectHolder("power_provider_all")
+  public static final Block UTILITY_POWER = null;
+
+  ////// OTHER //////
+  @ObjectHolder("crafting_portable")
+  public static final ContainerType<ContainerPortableWorkbench> CRAFTING_GOLEM = new ContainerType<>(ContainerPortableWorkbench::new);
+
+  @ObjectHolder("dispenser_portable")
+  public static final ContainerType<ContainerDispenserGolem> DISPENSER_GOLEM = new ContainerType<>(ContainerDispenserGolem::new);
 }

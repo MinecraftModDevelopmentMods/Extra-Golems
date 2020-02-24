@@ -18,95 +18,94 @@ import net.minecraftforge.eventbus.api.Event;
 
 public final class IceGolem extends GolemBase {
 
-	public static final String AOE = "Area of Effect";
-	public static final String FROST = "Use Frosted Ice";
+  public static final String AOE = "Area of Effect";
+  public static final String FROST = "Use Frosted Ice";
 
-	public IceGolem(final EntityType<? extends GolemBase> entityType, final World world) {
-		super(entityType, world);	
-	}
-	
-	@Override
-	protected void registerGoals() {
-		super.registerGoals();
-		this.goalSelector.addGoal(2, new FreezeBlocksGoal(this, this.getConfigInt(AOE), this.getConfigBool(FROST)));
-	}
+  public IceGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+    super(entityType, world);
+  }
 
-	/**
-	 * Called frequently so the entity can update its state every tick as required. For example,
-	 * zombies and skeletons use this to react to sunlight and start to burn.
-	 */
-	@Override
-	public void livingTick() {
-		super.livingTick();
-		final BlockPos pos = this.getPosition();
-		// this.world.getBiomeManager().getBiome(BlockPos)
-		if (this.world.getBiome(pos).getTemperature(pos) > 1.0F) {
-			this.attackEntityFrom(DamageSource.ON_FIRE, 1.0F);
-		}
-	}
+  @Override
+  protected void registerGoals() {
+    super.registerGoals();
+    this.goalSelector.addGoal(2, new FreezeBlocksGoal(this, this.getConfigInt(AOE), this.getConfigBool(FROST)));
+  }
 
-	@Override
-	public boolean attackEntityAsMob(final Entity entity) {
-		if (super.attackEntityAsMob(entity)) {
-			if (entity.isBurning()) {
-				this.attackEntityFrom(DamageSource.GENERIC, 0.5F);
-			}
-			return true;
-		}
-		return false;
-	}
-	
-	public static class FreezeBlocksGoal extends Goal {
-		
-		protected final GolemBase golem;
-		protected final int range;
-		protected final boolean frosted;
-		
-		public FreezeBlocksGoal(final GolemBase golemIn, final int rangeIn, final boolean useFrost) {
-			golem = golemIn;
-			range = rangeIn;
-			frosted = useFrost;
-		}
-		
-		@Override
-		public boolean shouldExecute() {
-			return golem.ticksExisted % 2 == 0;
-		}
-		
-		@Override
-		public boolean shouldContinueExecuting() {
-			return false;
-		}
-		
-		@Override
-		public void startExecuting() {
-			final BlockPos below = this.golem.getBlockBelow();
+  /**
+   * Called frequently so the entity can update its state every tick as required.
+   * For example, zombies and skeletons use this to react to sunlight and start to
+   * burn.
+   */
+  @Override
+  public void livingTick() {
+    super.livingTick();
+    final BlockPos pos = this.getPosition();
+    // this.world.getBiomeManager().getBiome(BlockPos)
+    if (this.world.getBiome(pos).getTemperature(pos) > 1.0F) {
+      this.attackEntityFrom(DamageSource.ON_FIRE, 1.0F);
+    }
+  }
 
-			if (range > 0) {
-				final IceGolemFreezeEvent event = new IceGolemFreezeEvent(golem, below, range, frosted);
-				if (!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Event.Result.DENY) {
-					this.freezeBlocks(event.getAffectedPositions(), event.getFunction(),
-							event.updateFlag);
-				}
-			}
-		}
-		
-		/**
-		 * Usually called after creating and firing a {@link IceGolemFreezeEvent}. Iterates through the
-		 * list of positions and calls {@code apply(BlockState input)} on the passed
-		 * {@code Function<BlockState, BlockState>} .
-		 *
-		 * @return whether all setBlockState calls were successful.
-		 **/
-		public boolean freezeBlocks(final List<BlockPos> positions,
-				final Function<BlockState, BlockState> function, final int updateFlag) {
-			boolean flag = true;
-			for (BlockPos pos : positions) {
-				flag &= golem.getEntityWorld().setBlockState(pos, 
-						function.apply(golem.getEntityWorld().getBlockState(pos)), updateFlag);
-			}
-			return flag;
-		}
-		
-	}
+  @Override
+  public boolean attackEntityAsMob(final Entity entity) {
+    if (super.attackEntityAsMob(entity)) {
+      if (entity.isBurning()) {
+        this.attackEntityFrom(DamageSource.GENERIC, 0.5F);
+      }
+      return true;
+    }
+    return false;
+  }
+
+  public static class FreezeBlocksGoal extends Goal {
+
+    protected final GolemBase golem;
+    protected final int range;
+    protected final boolean frosted;
+
+    public FreezeBlocksGoal(final GolemBase golemIn, final int rangeIn, final boolean useFrost) {
+      golem = golemIn;
+      range = rangeIn;
+      frosted = useFrost;
+    }
+
+    @Override
+    public boolean shouldExecute() {
+      return golem.ticksExisted % 2 == 0;
+    }
+
+    @Override
+    public boolean shouldContinueExecuting() {
+      return false;
+    }
+
+    @Override
+    public void startExecuting() {
+      final BlockPos below = this.golem.getBlockBelow();
+
+      if (range > 0) {
+        final IceGolemFreezeEvent event = new IceGolemFreezeEvent(golem, below, range, frosted);
+        if (!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Event.Result.DENY) {
+          this.freezeBlocks(event.getAffectedPositions(), event.getFunction(), event.updateFlag);
+        }
+      }
+    }
+
+    /**
+     * Usually called after creating and firing a {@link IceGolemFreezeEvent}.
+     * Iterates through the list of positions and calls
+     * {@code apply(BlockState input)} on the passed
+     * {@code Function<BlockState, BlockState>} .
+     *
+     * @return whether all setBlockState calls were successful.
+     **/
+    public boolean freezeBlocks(final List<BlockPos> positions, final Function<BlockState, BlockState> function, final int updateFlag) {
+      boolean flag = true;
+      for (BlockPos pos : positions) {
+        flag &= golem.getEntityWorld().setBlockState(pos, function.apply(golem.getEntityWorld().getBlockState(pos)), updateFlag);
+      }
+      return flag;
+    }
+
+  }
 }
