@@ -76,7 +76,7 @@ public class GolemCommonEventHandler {
         // here is some code that was used in VillagerEntity
         final AxisAlignedBB aabb = villager.getBoundingBox().grow(10.0D);
         final List<VillagerEntity> nearbyVillagers = villager.getEntityWorld().getEntitiesWithinAABB(VillagerEntity.class, aabb,
-            v -> v.func_223350_a(time) && v.isAlive());
+            v -> v.canSpawnGolems(time) && v.isAlive());
         // also check if there are already nearby golems
         final List<IronGolemEntity> nearbyGolems = villager.getEntityWorld().getEntitiesWithinAABB(IronGolemEntity.class, aabb.grow(10.0D));
         if (nearbyVillagers.size() >= minNumVillagers && nearbyGolems.isEmpty()) {
