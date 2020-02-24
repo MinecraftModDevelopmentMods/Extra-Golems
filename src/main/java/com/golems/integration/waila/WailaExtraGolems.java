@@ -27,6 +27,7 @@ public final class WailaExtraGolems extends GolemDescriptionManager implements I
 	public static final String CONFIG_SHOW_KNOCKBACK_RESIST = "extragolems.show_knockback_resistance_tip";
 	public static final String CONFIG_SHOW_MULTI_TEXTURE = "extragolems.show_multitexture_tip";
 	public static final String CONFIG_SHOW_FIREPROOF = "extragolems.show_fireproof_tip";
+	public static final String CONFIG_SHOW_HEAL_ITEM = "extragolems.show_heal_item_tip";
 
 	public WailaExtraGolems() {
 		super();
@@ -44,6 +45,7 @@ public final class WailaExtraGolems extends GolemDescriptionManager implements I
 		register.addConfig(EXTRA_GOLEMS, CONFIG_SHOW_KNOCKBACK_RESIST, false);
 		register.addConfig(EXTRA_GOLEMS, CONFIG_SHOW_MULTI_TEXTURE, true);
 		register.addConfig(EXTRA_GOLEMS, CONFIG_SHOW_FIREPROOF, true);
+		register.addConfig(EXTRA_GOLEMS, CONFIG_SHOW_HEAL_ITEM, true);
 	}
 
 	@Override
@@ -71,6 +73,8 @@ public final class WailaExtraGolems extends GolemDescriptionManager implements I
 			this.showFireproof = config.getConfig(CONFIG_SHOW_FIREPROOF)
 				&& accessor.getPlayer().isSneaking();
 			this.showKnockbackResist = config.getConfig(CONFIG_SHOW_KNOCKBACK_RESIST);
+			this.showHealItems = config.getConfig(CONFIG_SHOW_HEAL_ITEM)
+				&& accessor.getPlayer().isSneaking();
 
 			tip.addAll(this.getEntityDescription(golem));
 		}

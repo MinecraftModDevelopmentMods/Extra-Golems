@@ -5,14 +5,17 @@ import com.golems.util.GolemConfigSet;
 import com.golems.util.GolemNames;
 
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.List;
 
@@ -29,6 +32,8 @@ public final class EntityLeafGolem extends GolemColorized {
 		super(world, 0x5F904A, TEXTURE_BASE, TEXTURE_OVERLAY);
 		this.setCanSwim(true);
 		this.setLootTableLoc(GolemNames.LEAF_GOLEM);
+		this.addHealItem(new ItemStack(Blocks.LEAVES, 1, OreDictionary.WILDCARD_VALUE), 0.75D);
+		this.addHealItem(new ItemStack(Blocks.LEAVES2, 1, OreDictionary.WILDCARD_VALUE), 0.75D);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.31D);
 	}
 
@@ -67,7 +72,8 @@ public final class EntityLeafGolem extends GolemColorized {
 	@Override
 	public List<String> addSpecialDesc(final List<String> list) {
 		if (getConfig(this).getBoolean(EntityLeafGolem.ALLOW_SPECIAL)) {
-			list.add(TextFormatting.DARK_GREEN + trans("effect.regeneration") + " " + trans("enchantment.level.1"));
+			list.add(TextFormatting.DARK_GREEN + trans("effect.regeneration") + " " 
+				   + TextFormatting.DARK_GREEN + trans("enchantment.level.1"));
 		}
 		return list;
 	}

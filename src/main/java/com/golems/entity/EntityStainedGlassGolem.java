@@ -5,11 +5,14 @@ import com.golems.util.GolemNames;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemDye;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.OreDictionary;
 
 public final class EntityStainedGlassGolem extends GolemColorizedMultiTextured {
 
@@ -25,6 +28,8 @@ public final class EntityStainedGlassGolem extends GolemColorizedMultiTextured {
 		super(world, TEXTURE_BASE, TEXTURE_OVERLAY, COLOR_ARRAY);
 		this.setCanTakeFallDamage(true);
 		this.setLootTableLoc(GolemNames.STAINEDGLASS_GOLEM);
+		this.addHealItem(new ItemStack(Blocks.STAINED_GLASS, 1, OreDictionary.WILDCARD_VALUE), 0.75D);
+		this.addHealItem(new ItemStack(Blocks.STAINED_GLASS_PANE, 1, OreDictionary.WILDCARD_VALUE), 0.1D);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
 	}
 

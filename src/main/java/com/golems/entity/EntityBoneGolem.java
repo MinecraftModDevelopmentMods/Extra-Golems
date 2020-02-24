@@ -20,11 +20,10 @@ public final class EntityBoneGolem extends GolemBase {
 		this.setLootTableLoc(GolemNames.BONE_GOLEM);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
 		this.addHealItem(new ItemStack(Items.BONE), 0.25D);
-		this.addHealItem(new ItemStack(Items.DYE, EnumDyeColor.WHITE.getDyeDamage()), 0.08D);
+		this.addHealItem(new ItemStack(Items.DYE, 1, EnumDyeColor.WHITE.getDyeDamage()), 0.08D);
 	}
 
 	protected ResourceLocation applyTexture() {
-		//return makeGolemTexture("bone");
 		return makeTexture(ExtraGolems.MODID, GolemNames.BONE_GOLEM + "_skeleton");
 	}
 

@@ -6,7 +6,9 @@ import com.golems.util.GolemConfigSet;
 import com.golems.util.GolemNames;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -16,6 +18,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.List;
 
@@ -30,6 +33,7 @@ public final class EntitySpongeGolem extends GolemBase {
 		super(world);
 		this.setCanSwim(true);
 		this.setLootTableLoc(GolemNames.SPONGE_GOLEM);
+		this.addHealItem(new ItemStack(Blocks.SPONGE, 1, 1), 0.75D);
 	}
 
 	@Override

@@ -7,13 +7,16 @@ import com.golems.util.GolemNames;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemDye;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.OreDictionary;
 
 public final class EntityConcreteGolem extends GolemColorizedMultiTextured {
 
@@ -28,6 +31,7 @@ public final class EntityConcreteGolem extends GolemColorizedMultiTextured {
 	
 	public EntityConcreteGolem(final World world) {
 		super(world, TEXTURE_BASE, TEXTURE_OVERLAY, COLOR_ARRAY);
+		this.addHealItem(new ItemStack(Blocks.CONCRETE, 1, OreDictionary.WILDCARD_VALUE), 0.75D);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26D);
 	}
 

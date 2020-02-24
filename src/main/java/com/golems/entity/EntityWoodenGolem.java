@@ -16,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.OreDictionary;
 
 public final class EntityWoodenGolem extends GolemMultiTextured {
 
@@ -26,6 +27,8 @@ public final class EntityWoodenGolem extends GolemMultiTextured {
 	public EntityWoodenGolem(final World world) {
 		super(world, WOOD_PREFIX, woodTypes);
 		this.setCanSwim(true);
+		this.addHealItem(new ItemStack(Blocks.LOG, 1, OreDictionary.WILDCARD_VALUE), 0.75D);
+		this.addHealItem(new ItemStack(Blocks.LOG2, 1, OreDictionary.WILDCARD_VALUE), 0.75D);
 		this.addHealItem(new ItemStack(Blocks.PLANKS), 0.25D);
 		this.addHealItem(new ItemStack(Items.STICK), 0.1D);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);

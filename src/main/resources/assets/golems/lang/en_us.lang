@@ -63,6 +63,7 @@ tooltip.to_remove_it=to remove it
 entitytip.name=Name
 entitytip.health=Health
 entitytip.attack=Attack
+entitytip.heal_items=Heal Items:
 entitytip.lights_area=Provides light
 entitytip.lights_area_toggle=Right click to toggle light
 entitytip.click_change_texture=Right click to change texture

@@ -16,6 +16,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.List;
 
@@ -27,8 +28,7 @@ public final class EntityCoalGolem extends GolemBase {
 		super(world);
 		this.setLootTableLoc(GolemNames.COAL_GOLEM);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.28D);
-		this.addHealItem(new ItemStack(Items.COAL, 1, 0), 0.25D);
-		this.addHealItem(new ItemStack(Items.COAL, 1, 1), 0.25D);
+		this.addHealItem(new ItemStack(Items.COAL, 1, OreDictionary.WILDCARD_VALUE), 0.25D);
 	}
 
 	@Override

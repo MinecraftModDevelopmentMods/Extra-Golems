@@ -16,6 +16,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.List;
 
@@ -32,7 +33,7 @@ public final class EntityBookshelfGolem extends GolemBase {
 		this.setLootTableLoc(GolemNames.BOOKSHELF_GOLEM);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.29D);
 		this.addHealItem(new ItemStack(Items.BOOK), 0.25D);
-		this.addHealItem(new ItemStack(Blocks.PLANKS), 0.25D);
+		this.addHealItem(new ItemStack(Blocks.PLANKS, 1, OreDictionary.WILDCARD_VALUE), 0.25D);
 	}
 
 	protected ResourceLocation applyTexture() {

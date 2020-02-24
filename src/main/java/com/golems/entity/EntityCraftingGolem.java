@@ -21,6 +21,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.OreDictionary;
 
 public final class EntityCraftingGolem extends GolemBase {
 
@@ -30,7 +31,7 @@ public final class EntityCraftingGolem extends GolemBase {
 		super(world);
 		this.setLootTableLoc(GolemNames.CRAFTING_GOLEM);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.29D);
-		this.addHealItem(new ItemStack(Blocks.PLANKS), 0.25D);
+		this.addHealItem(new ItemStack(Blocks.PLANKS, 1, OreDictionary.WILDCARD_VALUE), 0.25D);
 	}
 
 	@Override

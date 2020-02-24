@@ -15,6 +15,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.OreDictionary;
 
 public final class EntityWoolGolem extends GolemMultiTextured {
 
@@ -28,6 +29,7 @@ public final class EntityWoolGolem extends GolemMultiTextured {
 	public EntityWoolGolem(final World world) {
 		super(world, WOOL_PREFIX, coloredWoolTypes);
 		this.setCanSwim(true);
+		this.addHealItem(new ItemStack(Blocks.WOOL, 1, OreDictionary.WILDCARD_VALUE), 0.75D);
 		this.addHealItem(new ItemStack(Items.STRING), 0.1D);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.30D);
 	}

@@ -227,6 +227,12 @@ dependencies {
   deobfCompile ("mcp.mobius.waila:Hwyla:${hwyla_version}") {
     exclude group: 'mezz.jei'
   }
+  
+  //deobfProvided "mcjty.theoneprobe:TheOneProbe-${mc_version}:${mc_version}-${top_version}:api"
+
+  //deobfProvided ("mcp.mobius.waila:Hwyla:${hwyla_version}") {
+  //  exclude group: 'mezz.jei'
+  //}
 }
 
 processResources {

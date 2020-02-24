@@ -6,6 +6,7 @@ import com.golems.main.ExtraGolems;
 import com.golems.util.GolemNames;
 
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -13,12 +14,14 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.OreDictionary;
 
 public final class EntityPrismarineGolem extends GolemBase {
 
 	public EntityPrismarineGolem(final World world) {
 		super(world);
 		this.setLootTableLoc(GolemNames.PRISMARINE_GOLEM);
+		this.addHealItem(new ItemStack(Blocks.PRISMARINE, 1, OreDictionary.WILDCARD_VALUE), 0.75D);
 		this.addHealItem(new ItemStack(Items.PRISMARINE_SHARD), 0.25D);
 	}
 

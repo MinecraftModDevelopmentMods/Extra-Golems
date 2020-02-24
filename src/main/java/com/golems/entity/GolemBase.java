@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -51,6 +52,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.oredict.OreDictionary;
 
 /**
  * Base class for all golems in this mod.
@@ -356,6 +358,13 @@ public abstract class GolemBase extends EntityIronGolem {
 		healItemMap.put(s, multiplier);
 		return this;
 	}
+	
+	/**
+	 * @return a Set of ItemStacks that are valid healing items
+	 **/
+	public Set<ItemStack> getHealItems() {
+		return healItemMap.keySet();
+	}
 
 	/**
 	 * Whether right-clicking on this entity triggers a texture change.
@@ -405,13 +414,18 @@ public abstract class GolemBase extends EntityIronGolem {
 	 **/
 	public float getHealAmount(final ItemStack i) {
 		if(i != null && !i.isEmpty()) {
-			// check each entry in the map for matches (item AND metadata)
+			// check each entry in the map for matches
 			for(final Entry<ItemStack, Double> e : healItemMap.entrySet()) {
-				if(e.getKey().isItemEqual(i) && e.getKey().getMetadata() == i.getMetadata()) {
+				// make sure item and metadata are the same (or WILDCARD)
+				boolean itemMatches = e.getKey().getItem() == i.getItem();
+				boolean metaMatches = e.getKey().getMetadata() == OreDictionary.WILDCARD_VALUE || e.getKey().getMetadata() == i.getMetadata();
+				// if it's a match, use the mapped percentage to calculate health to restore
+				if(itemMatches && metaMatches) {
 					double h = this.getMaxHealth() * e.getValue();
 					if(this.isChild()) {
 						h *= 1.75D;
 					}
+					// maximum heal amount is 32, for no reason at all
 					return Math.min((float)h, 32.0F);
 				}
 			}
