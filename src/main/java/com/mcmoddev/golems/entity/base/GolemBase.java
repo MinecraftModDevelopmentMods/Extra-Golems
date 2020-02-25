@@ -154,27 +154,17 @@ public abstract class GolemBase extends IronGolemEntity {
   }
 
   /**
-   * @param i the ItemStack being applied to the golem
-   * @return true if the golem can be built using the given item-block
-   **/
-  public boolean isHealingItem(final ItemStack i) {
-    if (!i.isEmpty() && i.getItem() instanceof BlockItem) {
-      for (final Block b : container.getBuildingBlocks()) {
-        if (i.isItemEqual(new ItemStack(b))) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
-  /**
    * @param i the ItemStack being used to heal the golem
    * @return the amount by which this item should heal the golem, in half-hearts.
    *         Defaults to 25% of max health or 32.0, whichever is smaller
    **/
   public float getHealAmount(final ItemStack i) {
-    return Math.min(this.getMaxHealth() * (this.isChild() ? 0.5F : 0.25F), 32.0F);
+    float amount = (float) (this.getMaxHealth() * this.getGolemContainer().getHealAmount(i.getItem()));
+    if(this.isChild()) {
+      amount *= 1.75F;
+    }
+    // max heal amount is 32, for no reason at all
+    return Math.min(amount, 32.0F);
   }
 
   public BlockPos getBlockBelow() {
@@ -271,8 +261,9 @@ public abstract class GolemBase extends IronGolemEntity {
   @Override
   protected boolean processInteract(final PlayerEntity player, final Hand hand) {
     final ItemStack stack = player.getHeldItem(hand);
-    if (ExtraGolemsConfig.enableHealGolems() && this.getHealth() < this.getMaxHealth() && isHealingItem(stack)) {
-      heal(getHealAmount(stack));
+    float healAmount = getHealAmount(stack);
+    if (ExtraGolemsConfig.enableHealGolems() && this.getHealth() < this.getMaxHealth() && healAmount > 0) {
+      heal(healAmount);
       stack.shrink(1);
       // if currently attacking this player, stop
       if (this.getAttackTarget() == player) {
@@ -280,16 +271,15 @@ public abstract class GolemBase extends IronGolemEntity {
         this.setAttackTarget(null);
       }
       // spawn particles and play sound
-      if (this.world.isRemote) {
-        final Vec3d pos = this.getPositionVec();
-        ItemBedrockGolem.spawnParticles(this.world, pos.x, pos.y + this.getHeight() / 2.0D, pos.z, 0.12D, ParticleTypes.HAPPY_VILLAGER, 20);
-      }
+      final Vec3d pos = this.getPositionVec();
+      ItemBedrockGolem.spawnParticles(this.world, pos.x, pos.y + this.getHeight() / 2.0D, pos.z, 0.15D, ParticleTypes.INSTANT_EFFECT, 30);
       this.playSound(SoundEvents.BLOCK_STONE_PLACE, 0.85F, 1.1F + rand.nextFloat() * 0.2F);
       return true;
-    } else {
-      return super.processInteract(player, hand);
     }
+    return super.processInteract(player, hand);
   }
+  
+  ///////////////// CHILD LOGIC ///////////////////
 
   @Override
   public boolean isChild() {
@@ -303,6 +293,53 @@ public abstract class GolemBase extends IronGolemEntity {
       this.recalculateSize();
     }
   }
+  
+  @Override
+  public void notifyDataManagerChange(final DataParameter<?> key) {
+    super.notifyDataManagerChange(key);
+    if (CHILD.equals(key)) {
+      if (this.isChild()) {
+        // truncate these values to one decimal place after reducing them from base values
+        double childHealth = (Math.floor(getGolemContainer().getHealth() * 0.3D * 10D)) / 10D;
+        double childAttack = (Math.floor(getGolemContainer().getAttack() * 0.6D * 10D)) / 10D;
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(childHealth);
+        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(childAttack);
+        this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.0D);
+      } else {
+        // use full values for non-child golem
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(getGolemContainer().getHealth());
+        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(getGolemContainer().getAttack());
+        this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(getGolemContainer().getKnockbackResist());
+      }
+      // recalculate size
+      this.recalculateSize();
+    }
+  }
+  
+  /**
+   * Attempts to spawn the given number of "child" golems
+   * @param count the number of children to spawn
+   * @return whether child golems were spawned successfully
+   **/
+  protected boolean trySpawnChildren(final int count) {
+    if(!this.world.isRemote && !this.isChild()) {
+      for(int i = 0; i < count; i++) {
+        GolemBase child = this.getGolemContainer().getEntityType().create(this.world);
+        child.setChild(true);
+        if (this.getAttackTarget() != null) {
+          child.setAttackTarget(this.getAttackTarget());
+        }
+        // set location
+        child.copyLocationAndAnglesFrom(this);
+        // spawn the entity
+        this.getEntityWorld().addEntity(child);
+      }
+      return true;
+    }
+    return false;
+  }
+  
+  //////////////// NBT /////////////////
 
   @Override
   public void readAdditional(final CompoundNBT tag) {

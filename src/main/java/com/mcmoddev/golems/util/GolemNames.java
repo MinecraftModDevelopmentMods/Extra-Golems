@@ -22,7 +22,10 @@ public final class GolemNames {
   public static final String GLASS_GOLEM = "golem_glass";
   public static final String GLOWSTONE_GOLEM = "golem_glowstone";
   public static final String GOLD_GOLEM = "golem_gold";
+  public static final String HONEY_GOLEM = "golem_honey";
+  public static final String HONEYCOMB_GOLEM = "golem_honeycomb";
   public static final String ICE_GOLEM = "golem_ice";
+  public static final String KELP_GOLEM = "golem_kelp";
   public static final String LAPIS_GOLEM = "golem_lapis";
   public static final String LEAF_GOLEM = "golem_leaves";
   public static final String MAGMA_GOLEM = "golem_magma";

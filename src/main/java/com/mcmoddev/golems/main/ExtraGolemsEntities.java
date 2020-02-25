@@ -22,6 +22,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.Tags;
 
 public final class ExtraGolemsEntities {
+  
+  
 
   private ExtraGolemsEntities() {}
 
@@ -129,6 +131,25 @@ public final class ExtraGolemsEntities {
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.GOLD_GOLEM, GenericGolem.class, GenericGolem::new)
         .setHealth(80.0D).setAttack(8.0D).setSpeed(0.21D).setKnockback(1.0D).addBlocks(Blocks.GOLD_BLOCK).basicTexture()
         .addHealItem(Items.GOLD_INGOT, 0.25D).addHealItem(Items.GOLD_NUGGET, 0.025D).build());
+    
+    
+    // HONEY GOLEM
+    GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.HONEY_GOLEM, HoneyGolem.class, HoneyGolem::new)
+        .setHealth(42.0D).setAttack(1.0D).setSwimMode(SwimMode.FLOAT).setSound(SoundEvents.BLOCK_SLIME_BLOCK_STEP)
+        .addBlocks(Blocks.HONEY_BLOCK).addHealItem(Items.HONEY_BOTTLE, 0.25D).addHealItem(Items.HONEYCOMB, 0.25D)
+        .addSpecial(HoneyGolem.ALLOW_SPLITTING, Boolean.valueOf(true),
+            "Whether this golem can split into 2 mini-golems upon death", 
+            new TranslationTextComponent("entitytip.splits_upon_death").applyTextStyle(TextFormatting.GOLD))
+        .basicTexture().build());    
+    // HONEYCOMB GOLEM
+    GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.HONEYCOMB_GOLEM, HoneycombGolem.class, HoneycombGolem::new)
+        .setHealth(68.0D).setAttack(2.0D).setSpeed(0.27D).setSwimMode(SwimMode.FLOAT).setSound(SoundEvents.BLOCK_CORAL_BLOCK_STEP)
+        .addBlocks(Blocks.HONEYCOMB_BLOCK).addHealItem(Items.HONEYCOMB, 0.25D)
+        .addSpecial(HoneycombGolem.SUMMON_BEE_CHANCE, Integer.valueOf(20), "Percent chance to summon a bee when attacked")
+        // TODO add description
+        .basicTexture().build());
+    
+    
     // ICE GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.ICE_GOLEM, IceGolem.class, IceGolem::new)
         .setHealth(18.0D).setAttack(6.0D).setSpeed(0.27D).addBlocks(BlockTags.ICE).basicTexture()
@@ -137,6 +158,16 @@ public final class ExtraGolemsEntities {
         .addDesc(new GolemDescription(new TranslationTextComponent("entitytip.freezes_blocks").applyTextStyle(TextFormatting.AQUA), IceGolem.AOE,
             c -> (Integer) c.get() > 0))
         .setSwimMode(SwimMode.FLOAT).setSound(SoundEvents.BLOCK_GLASS_STEP).build());
+    
+    
+    // KELP GOLEM
+    GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.KELP_GOLEM, GenericGolem.class, GenericGolem::new)
+        .setHealth(34.0D).setAttack(2.0D).addBlocks(Blocks.DRIED_KELP_BLOCK).basicTexture()
+        .setSwimMode(SwimMode.FLOAT).setSound(SoundEvents.BLOCK_GRASS_STEP)
+        .addHealItem(Items.KELP, 0.35D).addHealItem(Items.DRIED_KELP, 0.25D)
+        .build());
+    
+    
     // LAPIS GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.LAPIS_GOLEM, LapisGolem.class, LapisGolem::new)
         .setHealth(50.0D).setAttack(1.5D).setSpeed(0.285D).basicTexture().addBlocks(Blocks.LAPIS_BLOCK)

@@ -9,7 +9,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.util.DamageSource;
@@ -71,22 +70,8 @@ public final class MagmaGolem extends GolemBase {
     // change stats if this is a child vs. an adult golem
     super.notifyDataManagerChange(key);
     if (CHILD.equals(key)) {
-      if (this.isChild()) {
-        // child golem can't use special abilities
-        this.allowMelting = false;
-        // truncate these values to one decimal place after reducing them from base
-        // values
-        double childHealth = (Math.floor(getGolemContainer().getHealth() * 0.3D * 10D)) / 10D;
-        double childAttack = (Math.floor(getGolemContainer().getAttack() * 0.6D * 10D)) / 10D;
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(childHealth);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(childAttack);
-      } else {
-        this.allowMelting = this.getConfigBool(ALLOW_LAVA_SPECIAL);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(getGolemContainer().getAttack());
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(getGolemContainer().getHealth());
-      }
-      // recalculate size just in case
-      this.recalculateSize();
+      // child golem can't use special abilities
+      this.allowMelting = !this.isChild() && this.getConfigBool(ALLOW_LAVA_SPECIAL);
     }
   }
 
@@ -150,24 +135,9 @@ public final class MagmaGolem extends GolemBase {
 
   @Override
   public void onDeath(final DamageSource source) {
-    if (!this.world.isRemote && !this.isChild() && this.getConfigBool(ALLOW_SPLITTING)) {
-      GolemBase child1 = this.getGolemContainer().getEntityType().create(this.world);
-      GolemBase child2 = this.getGolemContainer().getEntityType().create(this.world);
-      child1.setChild(true);
-      child2.setChild(true);
-      // copy attack target info
-      if (this.getAttackTarget() != null) {
-        child1.setAttackTarget(this.getAttackTarget());
-        child2.setAttackTarget(this.getAttackTarget());
-      }
-      // set location
-      child1.copyLocationAndAnglesFrom(this);
-      child2.copyLocationAndAnglesFrom(this);
-      // spawn the entities
-      this.getEntityWorld().addEntity(child1);
-      this.getEntityWorld().addEntity(child2);
+    if (this.getConfigBool(ALLOW_SPLITTING)) {
+      trySpawnChildren(2);
     }
-
     super.onDeath(source);
   }
 }
