@@ -137,6 +137,12 @@ public final class ExtraGolemsEntities {
         .addDesc(new GolemDescription(new TranslationTextComponent("entitytip.freezes_blocks").applyTextStyle(TextFormatting.AQUA), IceGolem.AOE,
             c -> (Integer) c.get() > 0))
         .setSwimMode(SwimMode.FLOAT).setSound(SoundEvents.BLOCK_GLASS_STEP).build());
+    // KELP GOLEM
+    GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.KELP_GOLEM, GenericGolem.class, GenericGolem::new)
+        .setHealth(34.0D).setAttack(2.0D).addBlocks(Blocks.DRIED_KELP_BLOCK).basicTexture()
+        .setSwimMode(SwimMode.FLOAT).setSound(SoundEvents.BLOCK_GRASS_STEP)
+        .addHealItem(Items.KELP, 0.35D).addHealItem(Items.DRIED_KELP, 0.25D)
+        .build());
     // LAPIS GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.LAPIS_GOLEM, LapisGolem.class, LapisGolem::new)
         .setHealth(50.0D).setAttack(1.5D).setSpeed(0.285D).basicTexture().addBlocks(Blocks.LAPIS_BLOCK)
