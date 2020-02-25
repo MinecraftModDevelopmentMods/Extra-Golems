@@ -21,6 +21,7 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 
@@ -35,6 +36,8 @@ public final class FurnaceGolem extends GolemBase {
   public static final String FUEL_FACTOR = "Burn Time";
   public static final int MAX_FUEL = 102400;
   public final int fuelBurnFactor;
+  // true if the golem has been inert for more than one tick
+  protected boolean inertLastTick = false;
 
   public FurnaceGolem(final EntityType<? extends GolemBase> entityType, final World world) {
     super(entityType, world);
@@ -58,14 +61,20 @@ public final class FurnaceGolem extends GolemBase {
   @Override
   public void livingTick() {
     super.livingTick();
-    if (this.world.isRemote && rand.nextInt(20) == 0) {
+    if (this.world.isRemote && rand.nextInt(10) == 0) {
       // particle effects
       final double pMotion = 0.03D;
       world.addParticle(this.hasFuel() ? ParticleTypes.FLAME : ParticleTypes.SMOKE,
           this.posX + world.rand.nextDouble() * 0.4D - 0.2D + this.getMotion().getX() * 8,
           this.posY + world.rand.nextDouble() * 0.5D + this.getHeight() / 2.0D,
-          this.posZ + world.rand.nextDouble() * 0.4D - 0.2D + this.getMotion().getZ() * 8, world.rand.nextDouble() * pMotion - pMotion * 0.5D,
-          world.rand.nextDouble() * pMotion * 0.75D, world.rand.nextDouble() * pMotion - pMotion * 0.5D);
+          this.posZ + world.rand.nextDouble() * 0.4D - 0.2D + this.getMotion().getZ() * 8, 
+          world.rand.nextGaussian() * pMotion,
+          world.rand.nextDouble() * pMotion, 
+          world.rand.nextGaussian() * pMotion);
+    }
+    // update inert tick
+    if(!inertLastTick && !hasFuel()) {
+      inertLastTick = true;
     }
   }
 
@@ -103,12 +112,12 @@ public final class FurnaceGolem extends GolemBase {
       // update the player's held item
       player.setHeldItem(hand, stack);
       // add particles
-      ItemBedrockGolem.spawnParticles(this.world, this.posX, this.posY + this.getHeight() / 2.0D, this.posZ, 0.03D, ParticleTypes.FLAME, 10);
+      ItemBedrockGolem.spawnParticles(this.world, this.posX, this.posY + this.getHeight() / 2.0D, this.posZ, 0.05D, ParticleTypes.FLAME, 10);
       return true;
     }
 
     // allow player to remove burn time by using a water bucket
-    if (stack.getItem() == Items.WATER_BUCKET) {
+    if (stack.getItem() == Items.WATER_BUCKET && stack.getCount() == 1) {
       this.setFuel(0);
       player.setHeldItem(hand, stack.getContainerItem());
       ItemBedrockGolem.spawnParticles(this.world, this.posX, this.posY + this.getHeight() / 2.0D, this.posZ, 0.1D, ParticleTypes.LARGE_SMOKE, 15);
@@ -178,11 +187,17 @@ public final class FurnaceGolem extends GolemBase {
   class InertGoal extends Goal {
 
     private final FurnaceGolem golem;
+    private Vec3d lookVec;
+    private float rotateYaw;
+    private float rotatePitch;
 
     protected InertGoal(final FurnaceGolem entity) {
       super();
       this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE, Flag.TARGET));
       golem = entity;
+      lookVec = golem.getLookVec();
+      rotateYaw = golem.rotationYaw;
+      rotatePitch = golem.rotationPitch;
     }
 
     @Override
@@ -202,7 +217,7 @@ public final class FurnaceGolem extends GolemBase {
 
     @Override
     public void tick() {
-      // freeze the golem and ai tasks
+      // freeze the golem and some AI tasks
       golem.setMotion(golem.getMotion().mul(0, 1.0D, 0));
       golem.setMoveForward(0F);
       golem.setMoveStrafing(0F);
@@ -211,13 +226,15 @@ public final class FurnaceGolem extends GolemBase {
       golem.setAttackTarget(null);
       golem.setRevengeTarget(null);
       golem.getNavigator().clearPath();
-      golem.prevRotationPitch = -15F;
-      golem.setRotation(prevRotationYaw, prevRotationPitch);
-      // set looking down
-      final double lookX = golem.getLookVec().getX();
-      final double lookY = Math.toRadians(-15D);
-      final double lookZ = golem.getLookVec().getZ();
-      golem.getLookController().setLookPosition(lookX, lookY, lookZ, golem.getHorizontalFaceSpeed(), golem.getVerticalFaceSpeed());
+      // update look vec if the golem just barely ran out of fuel
+      if(!golem.inertLastTick) {
+        lookVec = golem.getLookVec();//.rotateYaw(Math.toRadians(-15D));
+        rotateYaw = golem.rotationYaw;
+        rotatePitch = golem.rotationPitch;
+      }
+      // freeze look vec and turn direction
+      golem.getLookController().setLookPosition(lookVec);
+      golem.setRotation(rotateYaw, rotatePitch);
     }
   }
 }

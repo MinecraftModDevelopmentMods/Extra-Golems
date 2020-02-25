@@ -123,7 +123,7 @@ public final class CoralGolem extends GolemMultiTextured {
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(dryAttack);
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(drySpeed);
         // particle effects to show that the golem is "drying out"
-        ItemBedrockGolem.spawnParticles(this.world, this.posX, this.posY + 0.1D, this.posZ, 0.09D, ParticleTypes.SMOKE, 80);
+        ItemBedrockGolem.spawnParticles(this.world, this.posX, this.posY + 0.1D, this.posZ, 0.15D, ParticleTypes.SMOKE, 80);
       } else {
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(getGolemContainer().getHealth());
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(getGolemContainer().getAttack());

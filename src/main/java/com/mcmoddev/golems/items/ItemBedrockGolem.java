@@ -84,10 +84,14 @@ public final class ItemBedrockGolem extends Item {
   public static void spawnParticles(final World world, final double x, final double y, final double z, final double motion, final IParticleData type,
       final int num) {
     if (world.isRemote) {
-      for (int i = num + world.rand.nextInt(Math.max(1, num / 2)); i > 0; --i) {
-        world.addParticle(type, x + world.rand.nextDouble() - 0.5D, y + world.rand.nextDouble() - 0.5D, z + world.rand.nextDouble() - 0.5D,
-            world.rand.nextDouble() * motion - motion * 0.5D, world.rand.nextDouble() * motion * 0.5D,
-            world.rand.nextDouble() * motion - motion * 0.5D);
+      for (int i = num + world.rand.nextInt(Math.max(1, num / 2)); i > 0; i--) {
+        world.addParticle(type, 
+            x + world.rand.nextDouble() - 0.5D, 
+            y + world.rand.nextDouble() - 0.5D, 
+            z + world.rand.nextDouble() - 0.5D,
+            random.nextGaussian() * motion, 
+            world.rand.nextDouble() * motion,
+            random.nextGaussian() * motion);
       }
     }
   }

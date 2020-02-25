@@ -26,13 +26,13 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.pathfinding.SwimmerPathNavigator;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
@@ -271,10 +271,7 @@ public abstract class GolemBase extends IronGolemEntity {
         this.setAttackTarget(null);
       }
       // spawn particles and play sound
-      if (this.world.isRemote) {
-        IParticleData particle = ParticleTypes.INSTANT_EFFECT;
-        ItemBedrockGolem.spawnParticles(this.world, this.posX, this.posY + this.getHeight() / 2.0D, this.posZ, 0.12D, particle, 20);
-      }
+      ItemBedrockGolem.spawnParticles(world, this.posX, this.posY + this.getHeight() / 2, this.posZ, 0.15D, ParticleTypes.INSTANT_EFFECT, 30);
       this.playSound(SoundEvents.BLOCK_STONE_PLACE, 0.85F, 1.1F + rand.nextFloat() * 0.2F);
       return true;
     } else {
