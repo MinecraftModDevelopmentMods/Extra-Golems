@@ -269,11 +269,18 @@ public abstract class GolemBase extends IronGolemEntity {
 
   @Override
   protected boolean processInteract(final PlayerEntity player, final Hand hand) {
-    final ItemStack stack = player.getHeldItem(hand);
+    ItemStack stack = player.getHeldItem(hand);
     float healAmount = getHealAmount(stack);
     if (ExtraGolemsConfig.enableHealGolems() && this.getHealth() < this.getMaxHealth() && healAmount > 0) {
       heal(healAmount);
-      stack.shrink(1);
+      // update stack size/item
+      if (stack.getCount() > 1) {
+        stack.shrink(1);
+      } else {
+        stack = stack.getContainerItem();
+      }
+      // update the player's held item
+      player.setHeldItem(hand, stack);
       // if currently attacking this player, stop
       if (this.getAttackTarget() == player) {
         this.setRevengeTarget(null);

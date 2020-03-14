@@ -69,8 +69,8 @@ public final class HoneyGolem extends GolemBase {
    **/
   private boolean applyHoney(final LivingEntity entity) {
     if (!this.isChild() && allowHoney) {
-      final int len = 20 * (2 + rand.nextInt(2));
-      final int amp = 1 + rand.nextInt(2);
+      final int len = 20 * (3 + rand.nextInt(3));
+      final int amp = 3 + rand.nextInt(2);
       return entity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, len, amp));
     }
     return false;
