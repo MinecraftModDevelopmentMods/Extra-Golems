@@ -9,7 +9,6 @@ import com.mcmoddev.golems.blocks.BlockGolemHead;
 import com.mcmoddev.golems.entity.FurnaceGolem;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.IMultiTexturedGolem;
-import com.mcmoddev.golems.items.ItemBedrockGolem;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mcmoddev.golems.util.config.GolemContainer;
@@ -24,18 +23,13 @@ import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -66,32 +60,7 @@ public class GolemCommonEventHandler {
     if (event.getEntityLiving() instanceof MobEntity && event.getTarget() instanceof FurnaceGolem && !((FurnaceGolem) event.getTarget()).hasFuel()) {
       // clear the attack target
       ((MobEntity) event.getEntityLiving()).setAttackTarget(null);
-    }
-  }
-
-  /**
-   * Allow healing of Iron Golems
-   **/
-  @SubscribeEvent
-  public void onEntityInteract(final PlayerInteractEvent.EntityInteractSpecific event) {
-    if (ExtraGolemsConfig.enableHealGolems() && event.getTarget() instanceof IronGolemEntity
-        && new ItemStack(Blocks.IRON_BLOCK).isItemEqual(event.getItemStack())) {
-      // heal the golem and reduce the itemstack
-      final IronGolemEntity golem = (IronGolemEntity) event.getTarget();
-      if (golem.getHealth() < golem.getMaxHealth()) {
-        golem.heal(golem.getMaxHealth() * 0.25F);
-        event.getItemStack().shrink(1);
-        // if currently attacking this player, stop
-        if (golem.getAttackTarget() == event.getPlayer()) {
-          golem.setRevengeTarget(null);
-          golem.setAttackTarget(null);
-        }
-        // spawn particles and play sound
-        final Vec3d pos = golem.getPositionVec();
-        ItemBedrockGolem.spawnParticles(golem.getEntityWorld(), pos.x, pos.y + golem.getHeight() / 2.0D, pos.z, 0.12D, ParticleTypes.HAPPY_VILLAGER,
-            20);
-        golem.playSound(SoundEvents.BLOCK_STONE_PLACE, 0.85F, 1.1F + golem.getRNG().nextFloat() * 0.2F);
-      }
+      ((MobEntity) event.getEntityLiving()).setRevengeTarget(null);
     }
   }
 

@@ -22,8 +22,8 @@ public final class MagmaGolem extends GolemBase {
 
   public static final String ALLOW_FIRE_SPECIAL = "Allow Special: Burn Enemies";
   public static final String ALLOW_LAVA_SPECIAL = "Allow Special: Melt Cobblestone";
-  public static final String ALLOW_SPLITTING = "Allow Special: Split";
   public static final String ALLOW_WATER_DAMAGE = "Enable Water Damage";
+  public static final String SPLITTING_CHILDREN = "Splitting Factor";
   public static final String MELT_DELAY = "Melting Delay";
 
   private static final String TEXTURE_LOC = ExtraGolems.MODID + ":textures/entity/magma/" + GolemNames.MAGMA_GOLEM;
@@ -45,13 +45,15 @@ public final class MagmaGolem extends GolemBase {
    * Whether this golem is hurt by water
    */
   private boolean isHurtByWater;
-
+  
+  private boolean allowFire;
   private boolean allowMelting;
   private int meltDelay;
 
   public MagmaGolem(final EntityType<? extends GolemBase> entityType, final World world) {
     super(entityType, world);
     this.isHurtByWater = this.getConfigBool(ALLOW_WATER_DAMAGE);
+    this.allowFire = this.getConfigBool(ALLOW_FIRE_SPECIAL);
     this.allowMelting = this.getConfigBool(ALLOW_LAVA_SPECIAL);
     this.meltDelay = this.getConfigInt(MELT_DELAY);
     this.ticksStandingStill = 0;
@@ -64,14 +66,13 @@ public final class MagmaGolem extends GolemBase {
   public boolean canSwim() {
     return isHurtByWater;
   }
-
+  
   @Override
-  public void notifyDataManagerChange(DataParameter<?> key) {
-    // change stats if this is a child vs. an adult golem
-    super.notifyDataManagerChange(key);
-    if (CHILD.equals(key)) {
-      // child golem can't use special abilities
-      this.allowMelting = !this.isChild() && this.getConfigBool(ALLOW_LAVA_SPECIAL);
+  public void setChild(final boolean isChild) {
+    super.setChild(isChild);
+    if(isChild) {
+      allowMelting = false;
+      allowFire = false;
     }
   }
 
@@ -88,7 +89,7 @@ public final class MagmaGolem extends GolemBase {
   @Override
   public boolean attackEntityAsMob(final Entity entity) {
     if (super.attackEntityAsMob(entity)) {
-      if (!this.isChild() && this.getConfigBool(ALLOW_FIRE_SPECIAL)) {
+      if (!this.isChild() && allowFire) {
         entity.setFire(2 + rand.nextInt(5));
       }
       return true;
@@ -135,8 +136,9 @@ public final class MagmaGolem extends GolemBase {
 
   @Override
   public void onDeath(final DamageSource source) {
-    if (this.getConfigBool(ALLOW_SPLITTING)) {
-      trySpawnChildren(2);
+    int children = this.getConfigInt(SPLITTING_CHILDREN);
+    if (children > 0) {
+      trySpawnChildren(children);
     }
     super.onDeath(source);
   }

@@ -25,13 +25,8 @@ public final class HoneycombGolem extends GolemBase {
   @Override
   public void livingTick() {
     super.livingTick();
-    // TODO: getAttackTarget keeps returning null?
-    if(this.rand.nextInt(40) == 0 && this.getAttackTarget() != null) {
-      // find nearby bees and make them angry at this entity
-      List<BeeEntity> beeList = this.world.getEntitiesWithinAABB(BeeEntity.class, this.getBoundingBox().grow(10.0D));
-      for(final BeeEntity bee : beeList) {
-        bee.setAttackTarget(this.getAttackTarget());
-      }
+    if(this.rand.nextInt(60) == 0 && this.getRevengeTarget() != null) {
+      angerBees(this.getRevengeTarget(), 16.0D);
     }
   }
   
@@ -43,13 +38,25 @@ public final class HoneycombGolem extends GolemBase {
       if (!this.world.isRemote && this.rand.nextInt(100) < summonBeeChance && source.getImmediateSource() != null) {
         BeeEntity bee = EntityType.BEE.create(this.world);
         bee.copyLocationAndAnglesFrom(this);
-        if(this.getAttackTarget() != null) {
-          // TODO: getAttackTarget keeps returning null?
-          bee.setAttackTarget(this.getAttackTarget());
+        if(this.getRevengeTarget() != null) {
+          bee.setRevengeTarget(this.getRevengeTarget());
         }
         this.world.addEntity(bee);
       }
+      // sometimes anger nearby bees when attacked
+      if(this.rand.nextInt(4) == 0 && this.getRevengeTarget() != null) {
+        angerBees(this.getRevengeTarget(), 16.0D);
+      }
     }
+  }
+  
+  private boolean angerBees(final LivingEntity target, final double range) {
+    // find nearby bees and make them angry at this entity
+    List<BeeEntity> beeList = this.world.getEntitiesWithinAABB(BeeEntity.class, this.getBoundingBox().grow(range));
+    for(final BeeEntity bee : beeList) {
+      bee.setRevengeTarget(target);
+    }
+    return !beeList.isEmpty();
   }
   
 }

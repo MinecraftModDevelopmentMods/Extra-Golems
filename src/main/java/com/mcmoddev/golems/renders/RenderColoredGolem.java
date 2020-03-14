@@ -30,6 +30,7 @@ public class RenderColoredGolem extends RenderGolem<GolemColorized> {
     if (golem.hasBase()) {
       this.entityModel.resetColor();
       this.texture = golem.getTextureBase();
+      this.isAlphaLayer = false;
       super.render(golem, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }
 
@@ -38,7 +39,8 @@ public class RenderColoredGolem extends RenderGolem<GolemColorized> {
     // recolor
     this.entityModel.setColor(colorRed, colorGreen, colorBlue, colorAlpha);
     // enable transparency if needed
-    if (golem.hasTransparency()) {
+    this.isAlphaLayer = isAlphaLayer(golem);
+    if (isAlphaLayer) {
       RenderSystem.enableAlphaTest();
       RenderSystem.defaultAlphaFunc();
       RenderSystem.enableBlend();
@@ -51,7 +53,7 @@ public class RenderColoredGolem extends RenderGolem<GolemColorized> {
     }
 
     // return GL11 settings to normal
-    if (golem.hasTransparency()) {
+    if (isAlphaLayer) {
       RenderSystem.disableAlphaTest();
       RenderSystem.disableBlend();
     }

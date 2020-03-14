@@ -27,6 +27,8 @@ public class RenderGolem<T extends GolemBase> extends MobRenderer<T, GolemModel<
       ExtraGolemsEntities.makeTexture("damage/damaged_1"), ExtraGolemsEntities.makeTexture("damage/damaged_2") };
 
   protected static final float DAMAGE_ALPHA = 0.55F;
+  
+  protected boolean isAlphaLayer;
 
   public RenderGolem(final EntityRendererManager renderManagerIn) {
     super(renderManagerIn, new GolemModel<T>(), 0.5F);
@@ -38,8 +40,10 @@ public class RenderGolem<T extends GolemBase> extends MobRenderer<T, GolemModel<
     // render the golem
     this.bindGolemTexture(golem);
     this.resetColor();
+    isAlphaLayer = isAlphaLayer(golem);
     super.render(golem, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     // render damage indicator texture
+    isAlphaLayer = true;
     this.renderDamage(golem, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
   }
 
@@ -49,6 +53,15 @@ public class RenderGolem<T extends GolemBase> extends MobRenderer<T, GolemModel<
 
   protected void resetColor() {
     this.entityModel.resetColor();
+  }
+  
+  /**
+   * Called just before rendering the body layer
+   * @param golem the golem
+   * @return whether the golem should be rendered as translucent
+   **/
+  protected boolean isAlphaLayer(final T golem) {
+    return golem.hasTransparency();
   }
 
   protected void renderDamage(final T golem, final float entityYaw, final float partialTicks, final MatrixStack matrixStackIn,
@@ -85,10 +98,10 @@ public class RenderGolem<T extends GolemBase> extends MobRenderer<T, GolemModel<
   @Nullable
   protected RenderType func_230042_a_(final T golem, boolean isVisible, boolean isVisibleToPlayer) {
     ResourceLocation tex = this.getEntityTexture(golem);
-    if (isVisible || isVisibleToPlayer) {
+    if (isVisible || isVisibleToPlayer || golem.hasTransparency() || isAlphaLayer) {
       return RenderType.getEntityTranslucent(tex);
     } else {
-      return golem.isGlowing() ? RenderType.getOutline(tex) : null;
+      return golem.isGlowing() ? RenderType.getOutline(tex) : RenderType.getEntityCutout(tex);
     }
   }
 

@@ -4,11 +4,13 @@ import com.mcmoddev.golems.entity.ai.GoToWaterGoal;
 import com.mcmoddev.golems.entity.ai.SwimUpGoal;
 import com.mcmoddev.golems.entity.ai.SwimmingMovementController;
 import com.mcmoddev.golems.items.ItemBedrockGolem;
+import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.ExtraGolemsEntities;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mcmoddev.golems.util.config.GolemContainer;
 import com.mcmoddev.golems.util.config.GolemContainer.SwimMode;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
+import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -177,7 +179,14 @@ public abstract class GolemBase extends IronGolemEntity {
   /////////////// CONFIG HELPERS //////////////////
 
   public ForgeConfigSpec.ConfigValue getConfigValue(final String name) {
-    return (ExtraGolemsConfig.GOLEM_CONFIG.specials.get(this.getGolemContainer().getSpecialContainer(name))).value;
+    final GolemSpecialContainer cont = this.getGolemContainer().getSpecialContainer(name);
+    if(null == cont) {
+      ExtraGolems.LOGGER.error("Tried to access config value '" + name + "' in golem '" 
+          + this.getGolemContainer().getName() + "' but the config name wasn't registered!");
+    } else {
+      return (ExtraGolemsConfig.GOLEM_CONFIG.specials.get(cont)).value;
+    }
+    return null;
   }
 
   public boolean getConfigBool(final String name) {
@@ -317,7 +326,7 @@ public abstract class GolemBase extends IronGolemEntity {
   }
   
   /**
-   * Attempts to spawn the given number of "child" golems
+   * Attempts to spawn the given number of "mini" golems
    * @param count the number of children to spawn
    * @return whether child golems were spawned successfully
    **/

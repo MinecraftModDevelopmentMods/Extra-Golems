@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.mcmoddev.golems.entity.BedrockGolem;
+import com.mcmoddev.golems.entity.DispenserGolem;
 import com.mcmoddev.golems.entity.FurnaceGolem;
 import com.mcmoddev.golems.entity.RedstoneLampGolem;
 import com.mcmoddev.golems.entity.base.GolemBase;
@@ -65,24 +66,14 @@ public abstract class GolemDescriptionManager {
       list.add(new TranslationTextComponent("attribute.name.generic.knockbackResistance").applyTextStyle(TextFormatting.GRAY));
     }
 
-    // add fuel amount if this is a furnace golem
-    if (showSpecial && golem instanceof FurnaceGolem) {
-      final FurnaceGolem g = (FurnaceGolem) golem;
-      final int fuel = g.getFuel();
-      final int percentFuel = (int) Math.ceil(g.getFuelPercentage() * 100F);
-      final TextFormatting color;
-      if (percentFuel < 6) {
-        color = TextFormatting.RED;
-      } else if (percentFuel < 16) {
-        color = TextFormatting.YELLOW;
-      } else {
-        color = TextFormatting.WHITE;
+    if(showSpecial) {
+      // add fuel amount if this is a furnace golem
+      if (golem instanceof FurnaceGolem) {
+        addFurnaceGolemInfo((FurnaceGolem)golem, list);
       }
-      // if sneaking, show exact value, otherwise show percentage value
-      final String fuelString = isShiftDown() ? Integer.toString(fuel) : (Integer.toString(percentFuel) + "%");
-      // actually add the description
-      list.add(new TranslationTextComponent("entitytip.fuel").applyTextStyle(TextFormatting.GRAY).appendSibling(new StringTextComponent(": "))
-          .appendSibling(new StringTextComponent(fuelString).applyTextStyle(color)));
+      if(golem instanceof DispenserGolem) {
+        addDispenserGolemInfo((DispenserGolem)golem, list);
+      }
     }
 
     // add special information
@@ -90,6 +81,39 @@ public abstract class GolemDescriptionManager {
       golem.getGolemContainer().addDescription(list);
     }
     return list;
+  }
+  
+  protected void addFurnaceGolemInfo(final FurnaceGolem g, final List<ITextComponent> list) {
+    // add fuel amount if this is a furnace golem
+    final int fuel = g.getFuel();
+    final int percentFuel = (int) Math.ceil(g.getFuelPercentage() * 100F);
+    final TextFormatting color;
+    if (percentFuel < 6) {
+      color = TextFormatting.RED;
+    } else if (percentFuel < 16) {
+      color = TextFormatting.YELLOW;
+    } else {
+      color = TextFormatting.WHITE;
+    }
+    // if sneaking, show exact value, otherwise show percentage value
+    final String fuelString = isShiftDown() ? Integer.toString(fuel) : (Integer.toString(percentFuel) + "%");
+    // actually add the description
+    list.add(new TranslationTextComponent("entitytip.fuel").applyTextStyle(TextFormatting.GRAY).appendSibling(new StringTextComponent(": "))
+        .appendSibling(new StringTextComponent(fuelString).applyTextStyle(color)));
+  }
+  
+  protected void addDispenserGolemInfo(final DispenserGolem g, final List<ITextComponent> list) {
+    // add fuel amount if this is a furnace golem
+    final int arrows = g.countArrowsInInventory();
+    if(arrows > 0 && isShiftDown()) {
+       final TextFormatting color = TextFormatting.WHITE;
+      // if sneaking, show exact value, otherwise show percentage value
+      final String arrowString = Integer.toString(arrows);
+      // actually add the description
+      list.add(new TranslationTextComponent("entitytip.arrows").applyTextStyle(TextFormatting.GRAY).appendSibling(new StringTextComponent(": "))
+          .appendSibling(new StringTextComponent(arrowString).applyTextStyle(color)));
+    }
+   
   }
 
   /**
