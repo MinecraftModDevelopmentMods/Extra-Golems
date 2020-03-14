@@ -10,6 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.ai.goal.RangedAttackGoal;
@@ -30,6 +31,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.IndirectEntityDamageSource;
@@ -41,6 +45,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public final class DispenserGolem extends GolemBase implements IRangedAttackMob, IInventoryChangedListener {
+  private static final DataParameter<Integer> ARROWS = EntityDataManager.createKey(DispenserGolem.class, DataSerializers.VARINT);
+  
   public static final String ALLOW_SPECIAL = "Allow Special: Shoot Arrows";
   public static final String ARROW_DAMAGE = "Arrow Damage";
   public static final String ARROW_SPEED = "Arrow Speed";
@@ -66,8 +72,15 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
     // init combat AI
     aiArrowAttack = new RangedAttackGoal(this, 1.0D, arrowSpeed, 32.0F);
     aiMeleeAttack = new MeleeAttackGoal(this, 1.0D, true);
+    this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(32.0F);
     // init inventory
     this.initInventory();
+  }
+  
+  @Override
+  protected void registerData() {
+    super.registerData();
+    this.getDataManager().register(ARROWS, Integer.valueOf(0));
   }
 
   @Override
@@ -80,7 +93,7 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
   @Override
   protected void collideWithEntity(Entity entityIn) {
     super.collideWithEntity(entityIn);
-    this.updateCombatTask(entityIn != null && this.getAttackTarget() != null && entityIn == this.getAttackTarget());
+    this.updateCombatTask(entityIn != null && this.getRevengeTarget() != null && entityIn == this.getRevengeTarget());
   }
 
   @Override
@@ -88,7 +101,7 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
     super.livingTick();
     // update combat style every few seconds
     if (this.ticksExisted % 50 == 0) {
-      final boolean forceMelee = !allowArrows || (this.getAttackTarget() != null && this.getAttackTarget().getDistanceSq(this) < 4.5D);
+      final boolean forceMelee = !allowArrows || (this.getRevengeTarget() != null && this.getRevengeTarget().getDistanceSq(this) < 4.5D);
       this.updateCombatTask(forceMelee);
     }
     // pick up any arrow items that are nearby
@@ -103,10 +116,10 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
           e -> !e.cannotPickup() && e.getItem().getItem() instanceof ArrowItem);
       // if any dropped arrow itemstacks are found, try to add them to the inventory
       for (final ItemEntity i : droppedArrows) {
-        final int arrowCountBefore = this.countArrowsInInventory();
+        final int arrowCountBefore = this.getArrowsInInventory();
         final ItemStack item = i.getItem().copy();
         i.setItem(this.inventory.addItem(item));
-        final int arrowCountAfter = this.countArrowsInInventory();
+        final int arrowCountAfter = this.updateArrowsInInventory();
         this.onItemPickup(i, arrowCountAfter - arrowCountBefore);
       }
     }
@@ -146,6 +159,7 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
         this.inventory.setInventorySlotContents(i, ItemStack.EMPTY);
       }
     }
+    this.onInventoryChanged(inventory);
   }
 
   @Override
@@ -201,6 +215,7 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
   @Override
   public void onInventoryChanged(final IInventory inv) {
     if (this.isServerWorld()) {
+      this.updateArrowsInInventory();
       this.updateCombatTask();
     }
   }
@@ -216,15 +231,25 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
     return ItemStack.EMPTY;
   }
   
-  public int countArrowsInInventory() {
+  private int updateArrowsInInventory() {
     int arrowCount = 0;
+    // add up the size of each itemstack in inventory
     for (int i = 0, l = this.inventory.getSizeInventory(); i < l; i++) {
       final ItemStack stack = this.inventory.getStackInSlot(i);
       if (!stack.isEmpty() && stack.getItem() instanceof ArrowItem) {
         arrowCount += stack.getCount();
       }
     }
+    // update data manager if necessary
+    if(arrowCount != getArrowsInInventory()) {
+      this.getDataManager().set(ARROWS, arrowCount);
+    }
+    // return arrow count
     return arrowCount;
+  }
+  
+  public int getArrowsInInventory() {
+    return this.getDataManager().get(ARROWS).intValue();
   }
   
   public int getMaxArrowsInInventory() {
@@ -267,8 +292,7 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
       this.goalSelector.removeGoal(this.aiMeleeAttack);
       this.goalSelector.removeGoal(this.aiArrowAttack);
       // check if target is close enough to attack
-      final ItemStack ammo = findArrowsInInventory(this.inventory);
-      if (forceMelee || ammo.isEmpty()) {
+      if (forceMelee || this.getArrowsInInventory() == 0) {
         this.goalSelector.addGoal(0, this.aiMeleeAttack);
       } else {
         this.goalSelector.addGoal(0, aiArrowAttack);
@@ -287,7 +311,7 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
     @Override
     public boolean shouldExecute() {
       return DispenserGolem.this.allowArrows 
-          && DispenserGolem.this.countArrowsInInventory() < DispenserGolem.this.getMaxArrowsInInventory();
+          && DispenserGolem.this.getArrowsInInventory() < DispenserGolem.this.getMaxArrowsInInventory();
       }
     
     @Override
@@ -300,8 +324,9 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
       final List<ItemEntity> droppedArrows = DispenserGolem.this.getEntityWorld().getEntitiesWithinAABB(ItemEntity.class, 
           DispenserGolem.this.getBoundingBox().grow(range), 
           e -> !e.cannotPickup() && e.getItem().getItem() instanceof ArrowItem);
-      // move to dropped arrow items
+      // path toward the nearest dropped arrow item
       if (!droppedArrows.isEmpty()) {
+        droppedArrows.sort((e1, e2) -> (int)(DispenserGolem.this.getDistanceSq(e1) - DispenserGolem.this.getDistanceSq(e2)));
         DispenserGolem.this.getNavigator().tryMoveToEntityLiving(droppedArrows.get(0), 1.2D);
       }
     }

@@ -104,7 +104,7 @@ public abstract class GolemDescriptionManager {
   
   protected void addDispenserGolemInfo(final DispenserGolem g, final List<ITextComponent> list) {
     // add fuel amount if this is a furnace golem
-    final int arrows = g.countArrowsInInventory();
+    final int arrows = g.getArrowsInInventory();
     if(arrows > 0 && isShiftDown()) {
        final TextFormatting color = TextFormatting.WHITE;
       // if sneaking, show exact value, otherwise show percentage value
