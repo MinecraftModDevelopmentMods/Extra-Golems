@@ -32,6 +32,21 @@
 	  "rolls": 1,
 	  "entries": [
 		{
+		  "type": "item",
+		  "name": "minecraft:honey_bottle",
+		  "weight": 1
+		},
+		{
+		  "type": "empty",
+		  "weight": 2
+		}
+	  ]
+	},
+	{
+	  "name": "pool2",
+	  "rolls": 1,
+	  "entries": [
+		{
 		  "type": "loot_table",
 		  "name": "golems:entities/_golem_base"
 		}

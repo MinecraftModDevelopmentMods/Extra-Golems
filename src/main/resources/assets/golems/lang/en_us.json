@@ -87,6 +87,8 @@
   "entitytip.heals": "Slowly heals",
   "entitytip.grows_crops": "Grows nearby crops",
   "entitytip.splits_upon_death": "Splits in two!",
+  "entitytip.summons_bees": "May summon bees when attacked",
+  "entitytip.sticky": "Sticky!",
   "entitytip.use_fuel": "Consumes fuel",
   "entitytip.fuel": "Fuel",
   "entitytip.arrows": "Arrows",
