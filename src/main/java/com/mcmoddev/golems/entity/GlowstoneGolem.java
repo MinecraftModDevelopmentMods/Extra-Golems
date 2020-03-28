@@ -25,7 +25,8 @@ public final class GlowstoneGolem extends GolemBase {
     int lightInt = 15;
     this.brightness = 1.0F;
     final BlockState state = GolemItems.UTILITY_LIGHT.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, lightInt);
-    this.goalSelector.addGoal(9, new PlaceUtilityBlockGoal(this, state, BlockUtilityGlow.UPDATE_TICKS, this.getConfigBool(ALLOW_SPECIAL)));
+    this.goalSelector.addGoal(9, new PlaceUtilityBlockGoal(this, state, BlockUtilityGlow.UPDATE_TICKS, 
+        this.getConfigBool(ALLOW_SPECIAL), true, null));
   }
 
   @Override

@@ -5,6 +5,7 @@ import com.mcmoddev.golems.entity.ai.PlaceUtilityBlockGoal;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.GolemItems;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -25,10 +26,11 @@ public final class SeaLanternGolem extends GolemBase {
   @Override
   protected void registerGoals() {
     super.registerGoals();
+    final BlockState state = GolemItems.UTILITY_LIGHT.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, BRIGHTNESS_INT);
     final boolean allow = this.getConfigBool(ALLOW_SPECIAL);
     final int freq = BlockUtilityGlow.UPDATE_TICKS;
     this.goalSelector.addGoal(8,
-        new PlaceUtilityBlockGoal(this, GolemItems.UTILITY_LIGHT.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, BRIGHTNESS_INT), freq, allow));
+        new PlaceUtilityBlockGoal(this, state, freq, allow, true, null));
   }
 
   @Override

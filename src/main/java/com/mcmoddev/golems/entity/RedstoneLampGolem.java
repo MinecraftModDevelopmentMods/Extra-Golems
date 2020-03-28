@@ -16,6 +16,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -27,13 +28,13 @@ public final class RedstoneLampGolem extends GolemMultiTextured {
 
   public static final String[] VARIANTS = { "lit", "unlit" };
 
-  public static final BiPredicate<GolemBase, BlockState> LIT_PRED = (golem, toReplace) -> golem.isProvidingLight();
+  public static final BiPredicate<GolemBase, BlockPos> LIT_PRED = (golem, pos) -> golem.isProvidingLight();
 
   public RedstoneLampGolem(final EntityType<? extends GolemBase> entityType, final World world) {
     super(entityType, world, ExtraGolems.MODID, VARIANTS);
     final BlockState state = GolemItems.UTILITY_LIGHT.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, 15);
-    this.goalSelector.addGoal(9, new PlaceUtilityBlockGoal(this, state, BlockUtilityGlow.UPDATE_TICKS, this.getConfigBool(ALLOW_SPECIAL),
-        PlaceUtilityBlockGoal.getDefaultBiPred(state).and(LIT_PRED)));
+    this.goalSelector.addGoal(9, new PlaceUtilityBlockGoal(this, state, BlockUtilityGlow.UPDATE_TICKS, 
+        this.getConfigBool(ALLOW_SPECIAL), true, LIT_PRED));
   }
 
   @Override
