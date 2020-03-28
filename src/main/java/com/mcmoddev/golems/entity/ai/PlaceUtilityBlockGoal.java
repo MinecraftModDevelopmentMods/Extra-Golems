@@ -1,9 +1,6 @@
 package com.mcmoddev.golems.entity.ai;
 
-import java.util.function.BiPredicate;
-
 import com.mcmoddev.golems.entity.base.GolemBase;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FlowingFluidBlock;
@@ -11,6 +8,10 @@ import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+
+import java.util.function.BiPredicate;
+
+import javax.annotation.Nullable;
 
 /**
  * Places a single BlockState every {@code tickDelay} ticks with certain
@@ -22,7 +23,13 @@ public class PlaceUtilityBlockGoal extends Goal {
   public final BlockState stateToPlace;
   public final int tickDelay;
   public final boolean configAllows;
-  public final BiPredicate<GolemBase, BlockState> predicate;
+  public final BiPredicate<GolemBase, BlockPos> predicate;
+  
+  public static final BiPredicate<GolemBase, BlockPos> ABOVE_AIR_PRED = 
+      (g, pos) -> g.getEntityWorld().isAirBlock(pos.down());
+  public static final BiPredicate<GolemBase, BlockPos> ABOVE_WATER_PRED = 
+      (g, pos) -> g.getEntityWorld().getBlockState(pos.down()).getBlock() == Blocks.WATER;
+
 
   /**
    * @param golemIn        the GolemBase to use
@@ -30,18 +37,22 @@ public class PlaceUtilityBlockGoal extends Goal {
    *                       {@code interval} ticks
    * @param interval       ticks between placing block
    * @param cfgAllows      whether this AI is enabled by the config
+   * @param onlyAboveEmpty whether the utility block should not be placed directly on top of blocks
    * @param canReplacePred an optional BiPredicate to use when determining whether
    *                       to place a Block. Defaults to replacing air only.
    * @see #getDefaultBiPred(BlockState)
    **/
-  public PlaceUtilityBlockGoal(final GolemBase golemIn, final BlockState stateIn, final int interval, final boolean cfgAllows,
-      final BiPredicate<GolemBase, BlockState> canReplacePred) {
+  public PlaceUtilityBlockGoal(final GolemBase golemIn, final BlockState stateIn, 
+      final int interval, final boolean cfgAllows, final boolean onlyAboveEmpty,
+      @Nullable final BiPredicate<GolemBase, BlockPos> otherPredicate) {
     // this.setMutexFlags(EnumSet.of(Flag.MOVE));
     this.golem = golemIn;
     this.stateToPlace = stateIn;
     this.tickDelay = interval;
     this.configAllows = cfgAllows;
-    this.predicate = canReplacePred;
+    // build the predicate that will be used to verify block placement
+    final BiPredicate<GolemBase, BlockPos> pred = makeBiPred(stateIn, onlyAboveEmpty);
+    this.predicate = otherPredicate != null ? pred.and(otherPredicate) : pred;
   }
 
   /**
@@ -55,7 +66,7 @@ public class PlaceUtilityBlockGoal extends Goal {
    * @param configAllows whether this AI is enabled by the config
    **/
   public PlaceUtilityBlockGoal(final GolemBase golemIn, final BlockState stateIn, final int interval, boolean configAllows) {
-    this(golemIn, stateIn, interval, configAllows, getDefaultBiPred(stateIn));
+    this(golemIn, stateIn, interval, configAllows, false, null);
   }
 
   @Override
@@ -70,19 +81,19 @@ public class PlaceUtilityBlockGoal extends Goal {
   public void tick() {
     final int tickMod = this.golem.ticksExisted % this.tickDelay;
     if (this.configAllows && tickMod == 0) {
-      final BlockPos blockPosIn = golem.getBlockBelow();
+      final BlockPos blockPosIn = golem.getBlockBelow().up();
       // test the predicate against each BlockPos in a vertical column around this
       // golem
       // when it passes, place the block and return
-      for (int i = 0; i < 3; i++) {
-        BlockPos temp = blockPosIn.up(i);
-        final BlockState cur = golem.getEntityWorld().getBlockState(temp);
+      for (int i = 0; i < 4; i++) {
+        BlockPos pos = blockPosIn.up(i);
+        final BlockState cur = golem.getEntityWorld().getBlockState(pos);
         // if there's already a matching block, stop here
         if (cur.getBlock() == stateToPlace.getBlock()) {
           return;
         }
-        if (this.predicate.test(golem, cur)) {
-          this.golem.getEntityWorld().setBlockState(temp, getStateToPlace(cur), 2 | 4);
+        if (this.predicate.test(golem, pos)) {
+          this.golem.getEntityWorld().setBlockState(pos, getStateToPlace(cur), 2 | 4);
           return;
         }
       }
@@ -114,10 +125,23 @@ public class PlaceUtilityBlockGoal extends Goal {
    *
    * @param stateIn the state that will replace the given one if possible
    **/
-  public static BiPredicate<GolemBase, BlockState> getDefaultBiPred(final BlockState stateIn) {
+  public static BiPredicate<GolemBase, BlockPos> makeBiPred(final BlockState stateIn, final boolean onlyAboveEmpty) {
+    // whether or not the utility block can be waterlogged
     final boolean canBeWaterlogged = canBeWaterlogged(stateIn);
-    return (golem, toReplace) -> toReplace.getBlock() == Blocks.AIR
-        || (toReplace.getBlock() == Blocks.WATER && canBeWaterlogged && toReplace.get(FlowingFluidBlock.LEVEL) == 0);
+    // the main purpose of the predicate is to make sure the block can be replaced
+    BiPredicate<GolemBase, BlockPos> pred = (golem, pos) -> golem.getEntityWorld().isAirBlock(pos);
+    // if the utility block can be waterlogged, allow replacing water as well as air
+    if(canBeWaterlogged) {
+      pred = pred.or((golem, pos) -> {
+        final BlockState toReplace = golem.getEntityWorld().getBlockState(pos);
+        return toReplace.getBlock() == Blocks.WATER && toReplace.get(FlowingFluidBlock.LEVEL) == 0;
+      });
+    }
+    // if there must be an empty (air or water) block below the utility block, check for that
+    if(onlyAboveEmpty) {
+      pred = canBeWaterlogged ? pred.and(ABOVE_WATER_PRED.or(ABOVE_AIR_PRED)) : pred.and(ABOVE_AIR_PRED);
+    }
+    return pred;
   }
 
   protected BlockState getStateToPlace(final BlockState toReplace) {

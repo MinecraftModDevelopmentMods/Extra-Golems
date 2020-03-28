@@ -15,6 +15,11 @@ public final class RedstoneGolem extends GolemBase {
 
   public RedstoneGolem(final EntityType<? extends GolemBase> entityType, final World world) {
     super(entityType, world);
+  }
+  
+  @Override
+  protected void registerGoals() {
+    super.registerGoals();
     final BlockState state = GolemItems.UTILITY_POWER.getDefaultState().with(BlockUtilityPower.POWER_LEVEL, 15);
     final int freq = BlockUtilityPower.UPDATE_TICKS;
     final boolean allow = this.getConfigBool(ALLOW_SPECIAL);
