@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.BeeEntity;
@@ -21,42 +20,51 @@ public final class HoneycombGolem extends GolemBase {
     super(entityType, world);
     summonBeeChance = this.getConfigInt(SUMMON_BEE_CHANCE);
   }
-  
-  @Override
-  public void livingTick() {
-    super.livingTick();
-    if(this.rand.nextInt(60) == 0 && this.getRevengeTarget() != null) {
-      angerBees(this.getRevengeTarget(), 16.0D);
-    }
-  }
-  
+ 
   @Override
   protected void damageEntity(final DamageSource source, final float amount) {
     if (!this.isInvulnerableTo(source)) {
       super.damageEntity(source, amount);
       // summons a bee and makes it angry at the target
       if (!this.world.isRemote && this.rand.nextInt(100) < summonBeeChance && source.getImmediateSource() != null) {
-        BeeEntity bee = EntityType.BEE.create(this.world);
-        bee.copyLocationAndAnglesFrom(this);
-        if(this.getRevengeTarget() != null) {
-          bee.setRevengeTarget(this.getRevengeTarget());
-        }
-        this.world.addEntity(bee);
+        summonBees(1);
       }
-      // sometimes anger nearby bees when attacked
-      if(this.rand.nextInt(4) == 0 && this.getRevengeTarget() != null) {
-        angerBees(this.getRevengeTarget(), 16.0D);
-      }
+      // anger other nearby bees when attacked
+      angerBees(this.getRevengeTarget(), 16.0D);
     }
   }
   
+  @Override
+  public void onDeath(final DamageSource source) {
+    // summon bees upon death
+    summonBees(2 + rand.nextInt(4));
+    // anger nearby bees
+    final LivingEntity target = source.getTrueSource() instanceof LivingEntity 
+        ? (LivingEntity)source.getTrueSource() 
+        : this.getRevengeTarget();
+    angerBees(target, 16.0D);
+    super.onDeath(source);
+  }
+  
+  // summon a bee and makes it angry at the given entity
+  private void summonBees(final int number) {
+    for(int i = 0; i < number; i++) {
+      BeeEntity bee = EntityType.BEE.create(this.world);
+      bee.copyLocationAndAnglesFrom(this);
+      // sometimes summon a baby bee instead
+      if(this.rand.nextInt(3) == 0) {
+        bee.setGrowingAge(-24000);
+      }
+      this.world.addEntity(bee);
+    }
+  }
+  
+  // find nearby bees and make them angry at the given entity
   private boolean angerBees(final LivingEntity target, final double range) {
-    // find nearby bees and make them angry at this entity
     List<BeeEntity> beeList = this.world.getEntitiesWithinAABB(BeeEntity.class, this.getBoundingBox().grow(range));
     for(final BeeEntity bee : beeList) {
       bee.setRevengeTarget(target);
     }
     return !beeList.isEmpty();
-  }
-  
+  }  
 }
