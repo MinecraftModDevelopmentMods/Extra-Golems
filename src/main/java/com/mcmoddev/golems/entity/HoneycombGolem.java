@@ -22,16 +22,18 @@ public final class HoneycombGolem extends GolemBase {
   }
  
   @Override
-  protected void damageEntity(final DamageSource source, final float amount) {
-    if (!this.isInvulnerableTo(source)) {
-      super.damageEntity(source, amount);
-      // summons a bee and makes it angry at the target
-      if (!this.world.isRemote && this.rand.nextInt(100) < summonBeeChance && source.getImmediateSource() != null) {
+  public boolean attackEntityFrom(final DamageSource source, final float amount) {
+    boolean flag = super.attackEntityFrom(source, amount);
+    if (flag && source.getImmediateSource() instanceof LivingEntity) {
+      // chance to summon a bee when attacked
+      if (!this.world.isRemote && this.rand.nextInt(100) < summonBeeChance) {
         summonBees(1);
       }
-      // anger other nearby bees when attacked
-      angerBees(this.getRevengeTarget(), 16.0D);
+      // anger other nearby bees
+      angerBees((LivingEntity)source.getImmediateSource(), 16.0D);
     }
+
+    return flag;
   }
   
   @Override
@@ -61,10 +63,14 @@ public final class HoneycombGolem extends GolemBase {
   
   // find nearby bees and make them angry at the given entity
   private boolean angerBees(final LivingEntity target, final double range) {
-    List<BeeEntity> beeList = this.world.getEntitiesWithinAABB(BeeEntity.class, this.getBoundingBox().grow(range));
-    for(final BeeEntity bee : beeList) {
-      bee.setRevengeTarget(target);
+    if(target != null) {
+      List<BeeEntity> beeList = this.world.getEntitiesWithinAABB(BeeEntity.class, this.getBoundingBox().grow(range));
+      for(final BeeEntity bee : beeList) {
+        bee.setRevengeTarget(target);
+        bee.setAttackTarget(target);
+      }
+      return !beeList.isEmpty();
     }
-    return !beeList.isEmpty();
+    return false;
   }  
 }

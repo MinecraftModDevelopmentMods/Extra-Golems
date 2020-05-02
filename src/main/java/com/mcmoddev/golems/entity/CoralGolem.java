@@ -33,7 +33,7 @@ public final class CoralGolem extends GolemMultiTextured {
   private static final DataParameter<Boolean> DRY = EntityDataManager.createKey(CoralGolem.class, DataSerializers.BOOLEAN);
 
   // the amount of time since this golem started changing between "dry" and "wet"
-  private static final DataParameter<Byte> CHANGE_TIME = EntityDataManager.createKey(CoralGolem.class, DataSerializers.BYTE);
+  private static final DataParameter<Integer> CHANGE_TIME = EntityDataManager.createKey(CoralGolem.class, DataSerializers.VARINT);
 
   private static final String KEY_DRY = "isDry";
   private static final String KEY_CHANGE = "changeTime";
@@ -78,12 +78,12 @@ public final class CoralGolem extends GolemMultiTextured {
   /** Adds or removes time to the change timer **/
   public void addChangingTime(final int toAdd) {
     if (toAdd != 0) {
-      this.getDataManager().set(CHANGE_TIME, (byte) (getChangingTime() + toAdd));
+      this.getDataManager().set(CHANGE_TIME, getChangingTime() + toAdd);
     }
   }
 
   public void setChangingTime(final int toSet) {
-    this.getDataManager().set(CHANGE_TIME, (byte) toSet);
+    this.getDataManager().set(CHANGE_TIME, toSet);
   }
 
   @Override
@@ -99,7 +99,7 @@ public final class CoralGolem extends GolemMultiTextured {
   protected void registerData() {
     super.registerData();
     this.getDataManager().register(DRY, Boolean.valueOf(false));
-    this.getDataManager().register(CHANGE_TIME, Byte.valueOf((byte) 0));
+    this.getDataManager().register(CHANGE_TIME, Integer.valueOf(0));
   }
 
   @Override

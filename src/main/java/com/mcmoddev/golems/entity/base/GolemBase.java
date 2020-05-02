@@ -1,6 +1,10 @@
 package com.mcmoddev.golems.entity.base;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.mcmoddev.golems.entity.ai.GoToWaterGoal;
+import com.mcmoddev.golems.entity.ai.MoveThroughVillageGoalFixed;
 import com.mcmoddev.golems.entity.ai.SwimUpGoal;
 import com.mcmoddev.golems.entity.ai.SwimmingMovementController;
 import com.mcmoddev.golems.items.ItemBedrockGolem;
@@ -19,6 +23,8 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.entity.ai.goal.MoveThroughVillageGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -113,6 +119,27 @@ public abstract class GolemBase extends IronGolemEntity {
   protected void registerData() {
     super.registerData();
     this.getDataManager().register(CHILD, Boolean.valueOf(false));
+  }
+  
+  @Override
+  protected void registerGoals() {
+    super.registerGoals();
+    // find and list erroring goals that will be removed
+    final List<Goal> erroringGoals = new ArrayList<>();
+    this.goalSelector.goals.forEach(g -> {
+      if(g.getGoal().getClass() == MoveThroughVillageGoal.class) {
+        erroringGoals.add(g.getGoal());
+      }
+    });
+    // remove the erroring goals
+    erroringGoals.forEach(g -> {
+      this.goalSelector.removeGoal(g);
+      ExtraGolems.LOGGER.debug("Removed erroring goal inherited from IronGolemEntity");
+    });    
+    // add in custom implementation of erroring goal
+    this.goalSelector.addGoal(3, new MoveThroughVillageGoalFixed(this, 0.6D, false, 4, () -> {
+      return false;
+   }));
   }
 
   /////////////// GOLEM UTILITY METHODS //////////////////
