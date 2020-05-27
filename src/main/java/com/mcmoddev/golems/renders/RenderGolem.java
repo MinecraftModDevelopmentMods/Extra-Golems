@@ -23,8 +23,13 @@ public class RenderGolem<T extends GolemBase> extends MobRenderer<T, GolemModel<
   protected static final ResourceLocation fallbackTexture = ExtraGolemsEntities.makeTexture(GolemNames.CLAY_GOLEM);
   protected ResourceLocation texture;
 
-  protected static final ResourceLocation[] damageIndicators = { ExtraGolemsEntities.makeTexture("damage/damaged_0"),
-      ExtraGolemsEntities.makeTexture("damage/damaged_1"), ExtraGolemsEntities.makeTexture("damage/damaged_2") };
+  protected static final String damageTexture = "minecraft:textures/entity/iron_golem/iron_golem_crackiness";
+  protected static final ResourceLocation[] damageIndicators = { 
+      new ResourceLocation(damageTexture + "_low"),
+      new ResourceLocation(damageTexture + "_medium"),
+      new ResourceLocation(damageTexture + "_high")
+  };
+  // ExtraGolemsEntities.makeTexture("damage/damaged_1"),
 
   protected static final float DAMAGE_ALPHA = 0.55F;
   
