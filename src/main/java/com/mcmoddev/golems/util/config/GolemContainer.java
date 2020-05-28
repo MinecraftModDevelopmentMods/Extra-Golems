@@ -412,7 +412,7 @@ public final class GolemContainer {
      *
      * @param golemName     the name of the golem (e.g. "golem_foo")
      * @param entityClazz   the class of the golem (e.g. EntityFooGolem.class)
-     * @param entityFactory the constructor function of the class (e.g.
+     * @param entityFactory the constructor enabled of the class (e.g.
      *                      EntityFooGolem::new). For golems with no special
      *                      abilities, use {@code GenericGolem.class}
      **/

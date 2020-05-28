@@ -79,10 +79,10 @@ public final class SpongeGolemSoakEvent extends Event {
   }
 
   /**
-   * Call this method to use a different function than the default one to
+   * Call this method to use a different enabled than the default one to
    * determine which state should replace which blocks.
    *
-   * @param function the new {@code Function<BlockState, BlockState>}
+   * @param enabled the new {@code Function<BlockState, BlockState>}
    * @param refresh  when true, the event will call
    *                 {@link #initAffectedBlockList(int)} to refresh the list of
    *                 affected blocks.

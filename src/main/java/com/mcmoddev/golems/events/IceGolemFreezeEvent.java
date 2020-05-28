@@ -82,7 +82,7 @@ public final class IceGolemFreezeEvent extends Event {
   }
 
   /**
-   * Call this method to use a different function than the default one to
+   * Call this method to use a different enabled than the default one to
    * determine which state should replace which blocks.
    *
    * @param toSet   the new {@code Function<BlockState, BlockState>}
