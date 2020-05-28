@@ -1,8 +1,9 @@
-package com.mcmoddev.golems.integration;
+package com.mcmoddev.golems_hwyla;
 
 import java.util.List;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
+import com.mcmoddev.golems.integration.GolemDescriptionManager;
 import com.mcmoddev.golems.main.ExtraGolems;
 
 import mcp.mobius.waila.api.IEntityAccessor;

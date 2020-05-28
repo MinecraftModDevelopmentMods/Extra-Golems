@@ -23,3 +23,9 @@ issueTrackerURL="https://github.com/MinecraftModDevelopmentMods/Extra-Golems/iss
     versionRange="[31,)"
     ordering="NONE"
     side="BOTH"
+[[dependencies.golems]]
+    modId="quark"
+    mandatory=false
+    versionRange="[42.1-237,)"
+    ordering="AFTER"
+    side="BOTH"

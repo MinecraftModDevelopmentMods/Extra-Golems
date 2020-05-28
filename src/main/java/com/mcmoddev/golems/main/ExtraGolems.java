@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.mcmoddev.golems.events.handlers.GolemCommonEventHandler;
+import com.mcmoddev.golems.integration.AddonLoader;
 import com.mcmoddev.golems.proxies.ProxyClient;
 import com.mcmoddev.golems.proxies.ProxyCommon;
 import com.mcmoddev.golems.proxies.ProxyServer;
@@ -44,6 +45,7 @@ public class ExtraGolems {
     ExtraGolems.PROXY.registerListeners();
     BlockTagUtil.loadTags();
     ExtraGolemsEntities.initEntityTypes();
+    AddonLoader.initEntityTypes();
     ExtraGolemsConfig.setupConfig();
     ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER /* world */, ExtraGolemsConfig.SERVER_CONFIG);
   }
@@ -53,7 +55,7 @@ public class ExtraGolems {
   }
 
   private void enqueueIMC(final InterModEnqueueEvent event) {
-    // note: removed TheOneProbe support
+    AddonLoader.interModEnqueueEvent(event);
   }
 
   @SubscribeEvent
