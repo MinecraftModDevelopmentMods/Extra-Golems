@@ -85,7 +85,7 @@ public final class ExtraGolemsEntities {
         .addSpecial(CoralGolem.ALLOW_HEALING, true, "Whether this golem can occasionally heal when wet", descHeals)
         .addSpecial(CoralGolem.DRY_TIMER, 425, "Number of ticks golem can stay out of water before drying out").addBlocks(BlockTags.CORAL_BLOCKS)
         .addBlocks(BlockTagUtil.TAG_DEAD_CORAL_BLOCKS).build());
-    // CRAFTING_GOLEM GOLEM
+    // CRAFTING GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.CRAFTING_GOLEM, CraftingGolem.class, CraftingGolem::new)
         .setHealth(24.0D).setAttack(2.0D).setSpeed(0.29D).addBlocks(Blocks.CRAFTING_TABLE).basicTexture()
         .addSpecial(CraftingGolem.ALLOW_SPECIAL, true, "Whether this golem can open a crafting grid",

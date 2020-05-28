@@ -25,9 +25,9 @@ public class RenderGolem<T extends GolemBase> extends MobRenderer<T, GolemModel<
 
   protected static final String damageTexture = "minecraft:textures/entity/iron_golem/iron_golem_crackiness";
   protected static final ResourceLocation[] damageIndicators = { 
-      new ResourceLocation(damageTexture + "_low"),
-      new ResourceLocation(damageTexture + "_medium"),
-      new ResourceLocation(damageTexture + "_high")
+      new ResourceLocation(damageTexture + "_low.png"),
+      new ResourceLocation(damageTexture + "_medium.png"),
+      new ResourceLocation(damageTexture + "_high.png")
   };
   // ExtraGolemsEntities.makeTexture("damage/damaged_1"),
 

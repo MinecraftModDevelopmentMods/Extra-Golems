@@ -9,7 +9,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.world.World;
 
-public final class BlazeLanternGolem extends GolemBase {
+public final class GenericGlowingGolem extends GolemBase {
 
   public static final String ALLOW_SPECIAL = "Allow Special: Emit Light";
 
@@ -18,7 +18,7 @@ public final class BlazeLanternGolem extends GolemBase {
    **/
   private final float brightness;
 
-  public BlazeLanternGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+  public GenericGlowingGolem(final EntityType<? extends GolemBase> entityType, final World world) {
     super(entityType, world);
     this.brightness = 1.0F;
   }

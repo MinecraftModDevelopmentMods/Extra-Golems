@@ -35,7 +35,10 @@ public final class IronPlateGolem extends GolemMultiTextured {
   public ItemStack getCreativeReturn(final RayTraceResult target) {
     final Block plateNormal = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("quark", "iron_plate"));
     final Block plateRusty = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("quark", "rusty_iron_plate"));
-    return new ItemStack(this.getTextureNum() == 0 ? plateNormal : plateRusty);
+    if(plateNormal != null && plateRusty != null) {
+      return new ItemStack(this.getTextureNum() == 0 ? plateNormal : plateRusty);
+    }
+    return ItemStack.EMPTY;
   }
 
   @Override
