@@ -6,6 +6,7 @@ public final class GolemNames {
     //
   }
 
+  public static final String ANDESITE_GOLEM = "golem_andesite";
   public static final String BEDROCK_GOLEM = "golem_bedrock";
   public static final String BONE_GOLEM = "golem_bone";
   public static final String BOOKSHELF_GOLEM = "golem_bookshelf";
@@ -15,6 +16,7 @@ public final class GolemNames {
   public static final String CORAL_GOLEM = "golem_coral";
   public static final String CRAFTING_GOLEM = "golem_crafting";
   public static final String DIAMOND_GOLEM = "golem_diamond";
+  public static final String DIORITE_GOLEM = "golem_diorite";
   public static final String DISPENSER_GOLEM = "golem_dispenser";
   public static final String EMERALD_GOLEM = "golem_emerald";
   public static final String ENDSTONE_GOLEM = "golem_end_stone";
@@ -22,6 +24,7 @@ public final class GolemNames {
   public static final String GLASS_GOLEM = "golem_glass";
   public static final String GLOWSTONE_GOLEM = "golem_glowstone";
   public static final String GOLD_GOLEM = "golem_gold";
+  public static final String GRANITE_GOLEM = "golem_granite";
   public static final String HONEY_GOLEM = "golem_honey";
   public static final String HONEYCOMB_GOLEM = "golem_honeycomb";
   public static final String ICE_GOLEM = "golem_ice";
@@ -42,6 +45,7 @@ public final class GolemNames {
   public static final String SANDSTONE_GOLEM = "golem_sandstone";
   public static final String SEALANTERN_GOLEM = "golem_sea_lantern";
   public static final String SLIME_GOLEM = "golem_slime";
+  public static final String SMOOTHSTONE_GOLEM = "golem_smooth_stone";
   public static final String SPONGE_GOLEM = "golem_sponge";
   public static final String STAINEDTERRACOTTA_GOLEM = "golem_stained_clay";
   public static final String STAINEDGLASS_GOLEM = "golem_stained_glass";

@@ -41,6 +41,10 @@ public final class ExtraGolemsEntities {
       sRange[i] = String.valueOf(i);
     }
 
+    // ANDESITE GOLEM
+    GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.ANDESITE_GOLEM, GenericGolem.class, GenericGolem::new)
+        .setHealth(52.0D).setAttack(6.0D).setSpeed(0.26D).setKnockback(0.8D).addBlocks(Blocks.POLISHED_ANDESITE)
+        .basicTexture().build());
     // BEDROCK GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.BEDROCK_GOLEM, BedrockGolem.class, BedrockGolem::new)
         .setHealth(999.0D).setAttack(32.0D).setKnockback(1.0D).basicTexture()
@@ -92,6 +96,10 @@ public final class ExtraGolemsEntities {
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.DIAMOND_GOLEM, GenericGolem.class, GenericGolem::new)
         .setHealth(220.0D).setAttack(20.0D).setKnockback(0.8D).addBlocks(Blocks.DIAMOND_BLOCK).basicTexture()
         .addHealItem(Items.DIAMOND, 0.25D).build());
+    // DIORITE GOLEM
+    GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.DIORITE_GOLEM, GenericGolem.class, GenericGolem::new)
+        .setHealth(50.0D).setAttack(6.0D).setSpeed(0.25D).setKnockback(0.8D).addBlocks(Blocks.POLISHED_DIORITE)
+        .basicTexture().build());
     // DISPENSER GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.DISPENSER_GOLEM, DispenserGolem.class, DispenserGolem::new)
         .setHealth(68.0D).addSpecial(DispenserGolem.ALLOW_SPECIAL, true, "Whether the golem can shoot arrows",
@@ -133,6 +141,10 @@ public final class ExtraGolemsEntities {
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.GOLD_GOLEM, GenericGolem.class, GenericGolem::new)
         .setHealth(80.0D).setAttack(8.0D).setSpeed(0.21D).setKnockback(1.0D).addBlocks(Blocks.GOLD_BLOCK).basicTexture()
         .addHealItem(Items.GOLD_INGOT, 0.25D).addHealItem(Items.GOLD_NUGGET, 0.025D).build());
+    // GRANITE GOLEM
+    GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.GRANITE_GOLEM, GenericGolem.class, GenericGolem::new)
+        .setHealth(58.0D).setAttack(5.2D).setSpeed(0.25D).setKnockback(0.8D).addBlocks(Blocks.POLISHED_GRANITE)
+        .basicTexture().build());
     // HONEY GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.HONEY_GOLEM, HoneyGolem.class, HoneyGolem::new)
         .setHealth(42.0D).setAttack(1.0D).setSwimMode(SwimMode.FLOAT).setSound(SoundEvents.BLOCK_SLIME_BLOCK_STEP)
@@ -276,6 +288,10 @@ public final class ExtraGolemsEntities {
         .addDesc(new GolemDescription(descSplits.shallowCopy().applyTextStyle(TextFormatting.GREEN), 
             SlimeGolem.SPLITTING_CHILDREN, c -> (Integer) c.get() > 0))
         .setSwimMode(SwimMode.FLOAT).setSound(SoundEvents.ENTITY_SLIME_SQUISH).addHealItem(Items.SLIME_BALL, 0.25D).build());
+    // SMOOTH STONE GOLEM
+    GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.SMOOTHSTONE_GOLEM, GenericGolem.class, GenericGolem::new)
+        .setHealth(50.0D).setAttack(5.4D).setSpeed(0.27D).setKnockback(0.6D).addBlocks(Blocks.SMOOTH_STONE)
+        .basicTexture().build());
     // SPONGE GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.SPONGE_GOLEM, SpongeGolem.class, SpongeGolem::new)
         .setHealth(20.0D).setAttack(1.5D).basicTexture().addBlocks(Blocks.SPONGE, Blocks.WET_SPONGE)
