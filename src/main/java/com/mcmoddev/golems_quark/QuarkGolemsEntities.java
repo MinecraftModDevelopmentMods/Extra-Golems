@@ -127,7 +127,7 @@ public final class QuarkGolemsEntities {
         .basicTexture().build(),
         "duskbound_lantern");
     // ELDER PRIMSARINE GOLEM
-    softRegister(ElderPrismarineUndergroundBiomeModule.class, new GolemContainer.Builder(QuarkGolemNames.DUSKBOUND_GOLEM, GenericGolem.class, GenericGolem::new)
+    softRegister(ElderPrismarineUndergroundBiomeModule.class, new GolemContainer.Builder(QuarkGolemNames.ELDERPRISMARINE_GOLEM, GenericGolem.class, GenericGolem::new)
         .setModId(MODID).setHealth(38.0D).setAttack(7.0D).setKnockback(0.7D).basicTexture()
         .addDesc(descSwims).setSwimMode(SwimMode.SWIM).addHealItem(Items.PRISMARINE_SHARD, 0.25D).build(),
         "elder_prismarine", "elder_prismarine_bricks", "dark_elder_prismarine");
@@ -165,7 +165,7 @@ public final class QuarkGolemsEntities {
         .setModId(MODID).setHealth(32.0D).setAttack(3.0D).setSpeed(0.28D).setKnockback(0.6D).basicTexture().build(),
         "midori_block", "midori_pillar");
     // PERMAFROST GOLEM
-    softRegister(PermafrostUndergroundBiomeModule.class, new GolemContainer.Builder(QuarkGolemNames.PERMAFROST_GOLEM, GenericGolem.class, GenericGolem::new)
+    softRegister(PermafrostUndergroundBiomeModule.class, new GolemContainer.Builder(QuarkGolemNames.PERMAFROST_GOLEM, PermafrostGolem.class, PermafrostGolem::new)
         .setModId(MODID).setHealth(42.0D).setAttack(4.0D).setSpeed(0.28D).setKnockback(0.6D).basicTexture()
         .addSpecial(PermafrostGolem.ALLOW_SPECIAL, Boolean.valueOf(true), "Whether this golem can apply slowness when attacking", 
             new TranslationTextComponent("entitytip.slows_creatures").applyTextStyle(TextFormatting.AQUA))
