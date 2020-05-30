@@ -67,4 +67,13 @@ public class ExtraGolemsConfig {
   public static List<GolemContainer> getVillagerGolems() {
     return GOLEM_CONFIG != null ? GOLEM_CONFIG.loadVillagerGolemList() : new ArrayList<>();
   }
+  
+  public static boolean aprilFirst() {
+    return GOLEM_CONFIG != null && GOLEM_CONFIG.aprilFirst();
+  }
+  
+  public static boolean halloween() {
+    return GOLEM_CONFIG != null && GOLEM_CONFIG.halloween();
+  }
+  
 }

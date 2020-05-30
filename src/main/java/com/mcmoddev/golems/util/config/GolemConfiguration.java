@@ -1,5 +1,7 @@
 package com.mcmoddev.golems.util.config;
 
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +31,7 @@ public class GolemConfiguration {
   public final ForgeConfigSpec.BooleanValue enableTextureInteract;
   public final ForgeConfigSpec.BooleanValue enableUseItemSpell;
   public final ForgeConfigSpec.BooleanValue enableHealGolems;
+  public final ForgeConfigSpec.BooleanValue holidayTweaks;
   public final ForgeConfigSpec.IntValue villagerGolemSpawnChance;
   private final ConfigValue<List<? extends String>> villagerGolemSpawns;
   private static final String[] defaultVillagerGolemSpawns = { GolemNames.BOOKSHELF_GOLEM, GolemNames.CLAY_GOLEM,
@@ -37,6 +40,9 @@ public class GolemConfiguration {
       GolemNames.REDSANDSTONE_GOLEM, GolemNames.SANDSTONE_GOLEM, GolemNames.STAINEDGLASS_GOLEM,
       GolemNames.STAINEDTERRACOTTA_GOLEM, GolemNames.STRAW_GOLEM, GolemNames.TERRACOTTA_GOLEM, GolemNames.WOODEN_GOLEM,
       GolemNames.WOOL_GOLEM };
+  
+  private boolean aprilFirst;
+  private boolean halloween;
 
   public GolemConfiguration(ForgeConfigSpec.Builder builder) {
     // Global values
@@ -50,6 +56,8 @@ public class GolemConfiguration {
     this.enableUseItemSpell = builder
         .comment("When enabled, players can 'use' the spell item on a carved pumpkin to convert it to a golem head in-world")
         .define("use_spell", true);
+    this.holidayTweaks = builder
+        .comment("Super secret special days").define("holidays", true);
     this.villagerGolemSpawnChance = builder.comment("Percent chance for a villager to successfully summon an Extra Golems golem")
         .defineInRange("villager_summon_chance", 80, 0, 100);
     this.enableHealGolems = builder.comment("When enabled, giving blocks and items to golems can restore health").define("heal_golems", true);
@@ -86,6 +94,10 @@ public class GolemConfiguration {
         specialC.value = specials.get(specialC).value;
       }
     }
+    // also update the holiday configs
+    final LocalDateTime now = LocalDateTime.now();
+    aprilFirst = (now.getMonth() == Month.MARCH && now.getDayOfMonth() >= 30) || (now.getMonth() == Month.APRIL && now.getDayOfMonth() <= 2);
+    halloween = (now.getMonth() == Month.OCTOBER && now.getDayOfMonth() >= 28) || (now.getMonth() == Month.NOVEMBER && now.getDayOfMonth() <= 4);
   }
 
   private static List<String> initVillagerGolemList(final String[] names) {
@@ -107,5 +119,13 @@ public class GolemConfiguration {
       }
     }
     return list;
+  }
+  
+  public boolean aprilFirst() {
+    return holidayTweaks.get() && aprilFirst;
+  }
+  
+  public boolean halloween() {
+    return holidayTweaks.get() && halloween;
   }
 }

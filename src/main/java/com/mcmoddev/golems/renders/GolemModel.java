@@ -1,9 +1,11 @@
 package com.mcmoddev.golems.renders;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
+import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.entity.model.IronGolemModel;
 
 public class GolemModel<T extends GolemBase> extends IronGolemModel<T> {
@@ -21,6 +23,10 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> {
       float scaleChild = 0.5F;
       matrixStackIn.scale(scaleChild, scaleChild, scaleChild);
       matrixStackIn.translate(0.0F, 1.5F, 0.0F);
+    }
+    // check for holiday tweaks
+    if(ExtraGolemsConfig.aprilFirst()) {
+      matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(180.0F));
     }
     // render with custom colors
     super.render(matrixStackIn, vertexBuilder, i3, i4, red, green, blue, alpha);

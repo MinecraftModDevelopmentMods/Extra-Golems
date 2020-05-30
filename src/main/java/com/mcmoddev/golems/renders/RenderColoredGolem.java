@@ -1,6 +1,7 @@
 package com.mcmoddev.golems.renders;
 
 import com.mcmoddev.golems.entity.base.GolemColorized;
+import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
@@ -48,7 +49,11 @@ public class RenderColoredGolem extends RenderGolem<GolemColorized> {
 
     // render second pass of golem texture
     if (golem.hasOverlay()) {
-      this.texture = golem.getTextureToColor();
+      if(ExtraGolemsConfig.halloween() && isNightTime(golem)) {
+        texture = boneTexture;
+      } else {
+        texture = golem.getTextureToColor();
+      }
       super.render(golem, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }
 

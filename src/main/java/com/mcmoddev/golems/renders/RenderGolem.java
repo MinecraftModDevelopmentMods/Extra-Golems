@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolemsEntities;
 import com.mcmoddev.golems.util.GolemNames;
+import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
@@ -21,6 +22,7 @@ import net.minecraft.util.ResourceLocation;
 public class RenderGolem<T extends GolemBase> extends MobRenderer<T, GolemModel<T>> {
 
   protected static final ResourceLocation fallbackTexture = ExtraGolemsEntities.makeTexture(GolemNames.CLAY_GOLEM);
+  protected static final ResourceLocation boneTexture = ExtraGolemsEntities.makeTexture(GolemNames.BONE_GOLEM + "_skeleton");
   protected ResourceLocation texture;
 
   protected static final String damageTexture = "minecraft:textures/entity/iron_golem/iron_golem_crackiness";
@@ -53,7 +55,11 @@ public class RenderGolem<T extends GolemBase> extends MobRenderer<T, GolemModel<
   }
 
   protected void bindGolemTexture(final T golem) {
-    texture = golem.getTexture();
+    if(ExtraGolemsConfig.halloween() && isNightTime(golem)) {
+      texture = boneTexture;
+    } else {
+      texture = golem.getTexture();
+    }
   }
 
   protected void resetColor() {
@@ -117,5 +123,10 @@ public class RenderGolem<T extends GolemBase> extends MobRenderer<T, GolemModel<
   protected int getDamageTexture(final T golem) {
     final float percentHealth = golem.getHealth() / golem.getMaxHealth();
     return damageIndicators.length - (int) Math.ceil(percentHealth * 4.0F);
+  }
+  
+  protected boolean isNightTime(final T golem) {
+    final long time = golem.world.getDayTime() % 24000L;
+    return time > 13000L && time < 23000L;
   }
 }
