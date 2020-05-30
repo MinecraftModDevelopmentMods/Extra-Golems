@@ -290,7 +290,7 @@ public final class ExtraGolemsEntities {
         .setSwimMode(SwimMode.FLOAT).setSound(SoundEvents.ENTITY_SLIME_SQUISH).addHealItem(Items.SLIME_BALL, 0.25D).build());
     // SMOOTH STONE GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.SMOOTHSTONE_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setHealth(50.0D).setAttack(5.4D).setSpeed(0.27D).setKnockback(0.6D).addBlocks(Blocks.SMOOTH_STONE)
+        .setHealth(60.0D).setAttack(5.4D).setSpeed(0.27D).setKnockback(0.6D).addBlocks(Blocks.SMOOTH_STONE)
         .basicTexture().build());
     // SPONGE GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.SPONGE_GOLEM, SpongeGolem.class, SpongeGolem::new)

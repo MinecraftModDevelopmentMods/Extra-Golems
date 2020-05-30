@@ -31,15 +31,14 @@ public abstract class GolemMultiColorized extends GolemColorized implements IMul
 
   /**
    * Flexible constructor so child classes can "borrow" this class's behavior and
-   * customize. It is fine to pass 'null' for {@link base} or {@link overlay}, and
+   * customize. It is fine to pass 'null' for {@code base} or {@code overlay}, and
    * null textures will not be rendered.
    *
    * @param base    an optional texture that will not be recolored or rendered
-   *                transparent, to render before {@link overlay}
+   *                transparent, to render before {@code overlay}
    * @param overlay a texture that will be recolored and optionally rendered as
    *                transparent.
-   * @param lColors an int[] of color values to use for rendering -- interacting
-   *                with this golem will go to the next color
+   * @param lColors an int[] of color values to use for rendering
    **/
   public GolemMultiColorized(final EntityType<? extends GolemBase> entityType, final World world, final String modid,
       @Nullable final ResourceLocation base, @Nullable final ResourceLocation overlay, final Integer[] lColors) {
