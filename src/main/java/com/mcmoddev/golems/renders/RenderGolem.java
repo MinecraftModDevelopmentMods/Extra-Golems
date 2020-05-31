@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 
 /**
  * RenderGolem is the same as RenderIronGolem but with casting to GolemBase
@@ -23,6 +24,7 @@ public class RenderGolem<T extends GolemBase> extends MobRenderer<T, GolemModel<
 
   protected static final ResourceLocation fallbackTexture = ExtraGolemsEntities.makeTexture(GolemNames.CLAY_GOLEM);
   protected static final ResourceLocation boneTexture = ExtraGolemsEntities.makeTexture(GolemNames.BONE_GOLEM + "_skeleton");
+  protected static final ResourceLocation specialTexture = ExtraGolemsEntities.makeTexture("special");
   protected ResourceLocation texture;
 
   protected static final String damageTexture = "minecraft:textures/entity/iron_golem/iron_golem_crackiness";
@@ -31,7 +33,6 @@ public class RenderGolem<T extends GolemBase> extends MobRenderer<T, GolemModel<
       new ResourceLocation(damageTexture + "_medium.png"),
       new ResourceLocation(damageTexture + "_high.png")
   };
-  // ExtraGolemsEntities.makeTexture("damage/damaged_1"),
 
   protected static final float DAMAGE_ALPHA = 0.55F;
   
@@ -57,6 +58,11 @@ public class RenderGolem<T extends GolemBase> extends MobRenderer<T, GolemModel<
   protected void bindGolemTexture(final T golem) {
     if(ExtraGolemsConfig.halloween() && isNightTime(golem)) {
       texture = boneTexture;
+    } else if(golem.hasCustomName()) {
+      final String s = TextFormatting.getTextWithoutFormattingCodes(golem.getName().getString());
+      if("Ganondorf".equals(s)) {
+        texture = specialTexture;
+      }
     } else {
       texture = golem.getTexture();
     }
