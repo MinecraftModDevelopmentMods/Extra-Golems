@@ -6,14 +6,19 @@ import java.util.function.Predicate;
 
 import com.mcmoddev.golems.entity.CoalGolem;
 import com.mcmoddev.golems.entity.GenericGolem;
+import com.mcmoddev.golems.entity.MushroomGolem;
 import com.mcmoddev.golems.entity.NetherBrickGolem;
+import com.mcmoddev.golems.integration.AddonLoader;
 import com.mcmoddev.golems.main.ExtraGolems;
+import com.mcmoddev.golems.util.GolemNames;
 import com.mcmoddev.golems.util.config.GolemContainer;
 import com.mcmoddev.golems.util.config.GolemContainer.SwimMode;
 import com.mcmoddev.golems.util.config.GolemDescription;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
 import com.mcmoddev.golems_quark.entity.CaveCrystalGolem;
+import com.mcmoddev.golems_quark.entity.ColorSlimeGolem;
 import com.mcmoddev.golems_quark.entity.GenericGlowingGolem;
+import com.mcmoddev.golems_quark.entity.GlowshroomGolem;
 import com.mcmoddev.golems_quark.entity.IronPlateGolem;
 import com.mcmoddev.golems_quark.entity.PermafrostGolem;
 import com.mcmoddev.golems_quark.entity.QuiltedWoolGolem;
@@ -29,13 +34,17 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.registries.ForgeRegistries;
+import vazkii.quark.automation.module.ColorSlimeModule;
 import vazkii.quark.base.module.Module;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.building.module.CompressedBlocksModule;
 import vazkii.quark.building.module.DuskboundBlocksModule;
 import vazkii.quark.building.module.FramedGlassModule;
 import vazkii.quark.building.module.IronPlatesModule;
+import vazkii.quark.building.module.LitLampModule;
 import vazkii.quark.building.module.MidoriModule;
+import vazkii.quark.building.module.MoreBrickTypesModule;
+import vazkii.quark.building.module.MoreStoneVariantsModule;
 import vazkii.quark.building.module.QuiltedWoolModule;
 import vazkii.quark.building.module.SoulSandstoneModule;
 import vazkii.quark.building.module.SturdyStoneModule;
@@ -44,6 +53,7 @@ import vazkii.quark.world.module.NewStoneTypesModule;
 import vazkii.quark.world.module.underground.BrimstoneUndergroundBiomeModule;
 import vazkii.quark.world.module.underground.CaveCrystalUndergroundBiomeModule;
 import vazkii.quark.world.module.underground.ElderPrismarineUndergroundBiomeModule;
+import vazkii.quark.world.module.underground.GlowshroomUndergroundBiomeModule;
 import vazkii.quark.world.module.underground.PermafrostUndergroundBiomeModule;
 
 public final class QuarkGolemsEntities {
@@ -115,6 +125,17 @@ public final class QuarkGolemsEntities {
             new TranslationTextComponent("entitytip.blinds_creatures").applyTextStyle(TextFormatting.GRAY))
         .addHealItem(Items.COAL, 0.25D).addHealItem(Items.CHARCOAL, 0.25D).build(),
         "charcoal_block");
+    // COLOR SLIME GOLEM
+    softRegister(ColorSlimeModule.class, new GolemContainer.Builder(QuarkGolemNames.COLOR_SLIME_GOLEM, ColorSlimeGolem.class, ColorSlimeGolem::new)
+        .setModId(MODID).setHealth(58.0D).setAttack(2.5D).setSpeed(0.288D).setKnockback(0.35D).basicTexture()
+        .addSpecial(ColorSlimeGolem.SPLITTING_CHILDREN, Integer.valueOf(2), "The number of mini-golems to spawn when this golem dies")
+        .addSpecial(ColorSlimeGolem.ALLOW_SPECIAL, true, "Whether this golem can apply extra knockback when attacking",
+            new TranslationTextComponent("entitytip.has_knockback").applyTextStyle(TextFormatting.GREEN))
+        .addSpecial(ColorSlimeGolem.KNOCKBACK, Double.valueOf(1.0412D), "Slime Golem knockback power (Higher Value = Further Knockback)")
+        .addDesc(new GolemDescription(new TranslationTextComponent("entitytip.splits_upon_death").applyTextStyle(TextFormatting.GREEN), 
+            ColorSlimeGolem.SPLITTING_CHILDREN, c -> (Integer) c.get() > 0))
+        .setSwimMode(SwimMode.FLOAT).setSound(SoundEvents.ENTITY_SLIME_SQUISH).addHealItem(Items.SLIME_BALL, 0.25D).build(),
+        "red_slime_block", "blue_slime_block", "cyan_slime_block", "magenta_slime_block", "yellow_slime_block");
     // DUSKBOUND GOLEM
     softRegister(DuskboundBlocksModule.class, new GolemContainer.Builder(QuarkGolemNames.DUSKBOUND_GOLEM, GenericGolem.class, GenericGolem::new)
         .setModId(MODID).setHealth(84.0D).setAttack(6.6D).setSpeed(0.26D).setKnockback(0.6D).basicTexture().build(),
@@ -144,6 +165,18 @@ public final class QuarkGolemsEntities {
         .setModId(MODID).setHealth(16.0D).setAttack(8.5D).setSpeed(0.30D).basicTexture().enableFallDamage()
         .setSound(SoundEvents.BLOCK_GLASS_STEP).build(),
         "framed_glass");
+    // GLOWSHROOM GOLEM
+    softRegister(GlowshroomUndergroundBiomeModule.class, new GolemContainer.Builder(QuarkGolemNames.GLOWSHROOM_GOLEM, GlowshroomGolem.class, GlowshroomGolem::new)
+        .setModId(MODID).setHealth(30.0D).setAttack(3.0D).setSpeed(0.30D)
+        .addSpecial(GlowshroomGolem.FREQUENCY, Integer.valueOf(420), "Average number of ticks between planting glowshrooms")
+        .addSpecial(GlowshroomGolem.ALLOW_SPECIAL, true, "Whether this golem can plant glowshrooms randomly",
+            new TranslationTextComponent("entitytip.plants_shrooms").applyTextStyle(TextFormatting.DARK_AQUA))
+        .addSpecial(GlowshroomGolem.ALLOW_GLOWING, true, "Whether this golem can glow",
+            new TranslationTextComponent("entitytip.lights_area").applyTextStyle(TextFormatting.AQUA))
+        .addSpecial(GlowshroomGolem.ALLOW_HEALING, true, "Whether this golem can randomly heal (at night)", 
+            new TranslationTextComponent("entitytip.heals").applyTextStyle(TextFormatting.RED))
+        .basicTexture().build(),
+        "glowshroom_block", "glowshroom_stem");
     // IRON PLATE GOLEM
     softRegister(IronPlatesModule.class, new GolemContainer.Builder(QuarkGolemNames.IRONPLATE_GOLEM, IronPlateGolem.class, IronPlateGolem::new)
         .setModId(MODID).setHealth(40.0D).setAttack(7.0D).setSpeed(0.26D).setKnockback(1.0D).basicTexture().build(),
@@ -190,25 +223,70 @@ public final class QuarkGolemsEntities {
     softRegister(SturdyStoneModule.class, new GolemContainer.Builder(QuarkGolemNames.STURDYSTONE_GOLEM, GenericGolem.class, GenericGolem::new)
         .setModId(MODID).setHealth(70.0D).setAttack(4.0D).setSpeed(0.27D).setKnockback(1.0D).basicTexture().build(),
         "sturdy_stone");
+    // TALLOW GOLEM
+    softRegister(SturdyStoneModule.class, new GolemContainer.Builder(QuarkGolemNames.TALLOW_GOLEM, GenericGolem.class, GenericGolem::new)
+        .setModId(MODID).setHealth(48.0D).setAttack(2.0D).setSpeed(0.27D).basicTexture().build(),
+        "tallow_block");
   }
   
   /**
    * Called when the InterModEnqueueEvent is sent to the main mod file. 
    * Used here to update some values after the Quark mod and its Modules are fully loaded.
-   * @param event the event
+   * @param event the event, not actually used here
    **/
   public static void interModEnqueueEvent(final InterModEnqueueEvent event) {
+    // go through each deferred container and add the correct blocks to their GolemContainer
     for(final DeferredContainer d : QuarkGolemsEntities.deferred) {
       final boolean enabled = d.enabled.test(d.module);
       d.container.setEnabled(enabled);
-      // try to add the blocks
-      for(final String s : d.blocks) {
-        // see if the block exists
-        final Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("quark", s));
-        // add that block as a building block for the golem
-        if(block != null) {
-          d.container.addBlocks(block);
-        }
+      addBlocks(d.container, AddonLoader.QUARK_MODID, d.blocks);
+    }
+    // add some quark blocks to existing golems
+    // nether brick, magma brick, sandstone brick
+    if(ModuleLoader.INSTANCE.isModuleEnabled(MoreBrickTypesModule.class)) {
+      addBlocks(GolemRegistrar.getContainer(new ResourceLocation(ExtraGolems.MODID, GolemNames.NETHERBRICK_GOLEM)),
+          AddonLoader.QUARK_MODID, "charred_nether_bricks");
+      addBlocks(GolemRegistrar.getContainer(new ResourceLocation(ExtraGolems.MODID, GolemNames.MAGMA_GOLEM)),
+          AddonLoader.QUARK_MODID, "magma_bricks");
+      addBlocks(GolemRegistrar.getContainer(new ResourceLocation(ExtraGolems.MODID, GolemNames.SANDSTONE_GOLEM)),
+          AddonLoader.QUARK_MODID, "sandstone_bricks");
+      addBlocks(GolemRegistrar.getContainer(new ResourceLocation(ExtraGolems.MODID, GolemNames.REDSANDSTONE_GOLEM)),
+          AddonLoader.QUARK_MODID, "red_sandstone_bricks");
+    }
+    // andesite, diorite, granite variants
+    if(ModuleLoader.INSTANCE.isModuleEnabled(MoreStoneVariantsModule.class)) {
+      addBlocks(GolemRegistrar.getContainer(new ResourceLocation(ExtraGolems.MODID, GolemNames.ANDESITE_GOLEM)),
+          AddonLoader.QUARK_MODID, "chiseled_andesite_bricks", "andesite_pavement", "andesite_pillar");
+      addBlocks(GolemRegistrar.getContainer(new ResourceLocation(ExtraGolems.MODID, GolemNames.DIORITE_GOLEM)),
+          AddonLoader.QUARK_MODID, "chiseled_diorite_bricks", "diorite_pavement", "diorite_pillar");
+      addBlocks(GolemRegistrar.getContainer(new ResourceLocation(ExtraGolems.MODID, GolemNames.GRANITE_GOLEM)),
+          AddonLoader.QUARK_MODID, "chiseled_granite_bricks", "granite_pavement", "granite_pillar");
+    }
+    // lit redstone lamp
+    if(ModuleLoader.INSTANCE.isModuleEnabled(LitLampModule.class)) {
+      addBlocks(GolemRegistrar.getContainer(new ResourceLocation(ExtraGolems.MODID, GolemNames.REDSTONELAMP_GOLEM)),
+          AddonLoader.QUARK_MODID, "lit_lamp");
+    }
+  }
+  
+  
+  /**
+   * Given a GolemContainer and a collection of block names, this method
+   * adds those blocks as valid building material for the given golem.
+   * If the blocks do not exist, nothing happens.
+   * @param cont the GolemContainer to modify
+   * @param modid the mod id of the blocks
+   * @param blockNames all of the blocks to add
+   **/
+  public static void addBlocks(final GolemContainer cont, final String modid, final String... blockNames) {
+    if(null == cont) return;
+    // add each block from the list of given names
+    for(final String s : blockNames) {
+      // see if the block exists
+      final Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(modid, s));
+      // add that block as a building block for the golem
+      if(block != null) {
+        cont.addBlocks(block);
       }
     }
   }

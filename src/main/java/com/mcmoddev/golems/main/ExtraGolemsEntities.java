@@ -35,11 +35,6 @@ public final class ExtraGolemsEntities {
     final ITextComponent descHeals = new TranslationTextComponent("entitytip.heals").applyTextStyle(TextFormatting.LIGHT_PURPLE);
     final ITextComponent descSplits = new TranslationTextComponent("entitytip.splits_upon_death");
     final String comSplits = "The number of mini-golems to spawn when this golem dies";
-    // used for loot tables in multi-colored golems
-    final String[] sRange = new String[GolemMultiColorized.DYE_COLORS.length];
-    for (int i = 0, l = sRange.length; i < l; i++) {
-      sRange[i] = String.valueOf(i);
-    }
 
     // ANDESITE GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.ANDESITE_GOLEM, GenericGolem.class, GenericGolem::new)

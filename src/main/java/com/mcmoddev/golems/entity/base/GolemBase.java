@@ -363,7 +363,8 @@ public abstract class GolemBase extends IronGolemEntity {
    * @param count the number of children to spawn
    * @return whether child golems were spawned successfully
    **/
-  protected boolean trySpawnChildren(final int count) {
+  protected List<GolemBase> trySpawnChildren(final int count) {
+    final List<GolemBase> children = new ArrayList<>();
     if(!this.world.isRemote && !this.isChild()) {
       for(int i = 0; i < count; i++) {
         GolemBase child = this.getGolemContainer().getEntityType().create(this.world);
@@ -375,10 +376,11 @@ public abstract class GolemBase extends IronGolemEntity {
         child.copyLocationAndAnglesFrom(this);
         // spawn the entity
         this.getEntityWorld().addEntity(child);
+        // add to the list
+        children.add(child);
       }
-      return true;
     }
-    return false;
+    return children;
   }
   
   //////////////// NBT /////////////////

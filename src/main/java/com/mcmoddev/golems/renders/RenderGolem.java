@@ -58,11 +58,8 @@ public class RenderGolem<T extends GolemBase> extends MobRenderer<T, GolemModel<
   protected void bindGolemTexture(final T golem) {
     if(ExtraGolemsConfig.halloween() && isNightTime(golem)) {
       texture = boneTexture;
-    } else if(golem.hasCustomName()) {
-      final String s = TextFormatting.getTextWithoutFormattingCodes(golem.getName().getString());
-      if("Ganondorf".equals(s)) {
-        texture = specialTexture;
-      }
+    } else if(golem.hasCustomName() && "Ganondorf".equals(TextFormatting.getTextWithoutFormattingCodes(golem.getName().getString()))) {
+      texture = specialTexture;
     } else {
       texture = golem.getTexture();
     }
