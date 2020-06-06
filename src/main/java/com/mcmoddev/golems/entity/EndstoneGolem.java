@@ -35,7 +35,7 @@ public class EndstoneGolem extends GolemBase {
   /**
    * Percent chance to teleport away when hurt by non-projectile.
    **/
-  protected int chanceToTeleportWhenHurt = 15;
+  protected int chanceToTeleportWhenHurt = 25;
 
   /** Default constructor. **/
   public EndstoneGolem(final EntityType<? extends GolemBase> entityType, final World world) {
@@ -66,21 +66,25 @@ public class EndstoneGolem extends GolemBase {
   @Override
   public void updateAITasks() {
     super.updateAITasks();
+    // take damage from water
+    if (this.isHurtByWater && this.isInWaterRainOrBubbleColumn()) {
+      this.attackEntityFrom(DamageSource.DROWN, 1.0F);
+    }
     // try to teleport toward target entity
     if (this.getRevengeTarget() != null) {
       this.faceEntity(this.getRevengeTarget(), 100.0F, 100.0F);
-      if (this.getRevengeTarget().getDistanceSq(this) > 25.0D && (rand.nextInt(30) == 0 || this.getRevengeTarget().getRevengeTarget() == this)) {
+      if (this.getRevengeTarget().getDistanceSq(this) > 15.0D && (rand.nextInt(12) == 0 || this.getRevengeTarget().getRevengeTarget() == this)) {
         this.teleportToEntity(this.getRevengeTarget());
       }
     } else if (rand.nextInt(this.ticksBetweenIdleTeleports) == 0) {
       // or just teleport randomly
       this.teleportRandomly();
     }
-
   }
 
   @Override
   public void livingTick() {
+    // spawn particles around the golem
     if (this.world.isRemote && this.hasAmbientParticles) {
       final Vec3d pos = this.getPositionVec();
       for (int i = 0; i < 2; ++i) {
@@ -89,7 +93,7 @@ public class EndstoneGolem extends GolemBase {
             (this.rand.nextDouble() - 0.5D) * 2.0D, -this.rand.nextDouble(), (this.rand.nextDouble() - 0.5D) * 2.0D);
       }
     }
-
+    // turn off jumping flag
     this.isJumping = false;
     super.livingTick();
   }
@@ -103,9 +107,10 @@ public class EndstoneGolem extends GolemBase {
     // if it's an arrow or something...
     if (src instanceof IndirectEntityDamageSource) {
       // try to teleport to the attacker
-      if (src.getTrueSource() instanceof LivingEntity && this.teleportToEntity(src.getTrueSource())) {
+      if (src.getTrueSource() instanceof LivingEntity) {
         this.setRevengeTarget((LivingEntity) src.getTrueSource());
-        return super.attackEntityFrom(src, amnt);
+        this.teleportToEntity(src.getTrueSource());
+        return false;
       }
       // if teleporting to the attacker didn't work, golem teleports AWAY
       for (int i = 0; i < 32; ++i) {
@@ -116,7 +121,7 @@ public class EndstoneGolem extends GolemBase {
     } else {
       // if it's something else, golem MIGHT teleport away
       // if it passes a random chance OR has no attack target
-      if (rand.nextInt(this.chanceToTeleportWhenHurt) == 0 || (this.getRevengeTarget() == null && rand.nextBoolean())
+      if (rand.nextInt(100) < this.chanceToTeleportWhenHurt || (this.getRevengeTarget() == null && rand.nextBoolean())
           || (this.isHurtByWater && src == DamageSource.DROWN)) {
         // attempt teleport
         for (int i = 0; i < 16; ++i) {
@@ -141,15 +146,13 @@ public class EndstoneGolem extends GolemBase {
    * Teleport the golem to another entity.
    **/
   protected boolean teleportToEntity(final Entity entity) {
-    final Vec3d curPos = this.getPositionVec();
-    final Vec3d ePos = entity.getPositionVec();
-    Vec3d vec3d = new Vec3d(curPos.x - ePos.x,
-        this.getBoundingBox().minY + (double) (this.getHeight() / 2.0F) - ePos.y + (double) entity.getEyeHeight(), curPos.z - ePos.z);
+    Vec3d vec3d = new Vec3d(this.getPosX() - entity.getPosX(), this.getPosYHeight(0.5D) - entity.getPosYEye(), this.getPosZ() - entity.getPosZ());
     vec3d = vec3d.normalize();
-    final double d0 = 16.0D;
-    final double d1 = curPos.x + (this.rand.nextDouble() - 0.5D) * 8.0D - vec3d.x * d0;
-    final double d2 = curPos.y + (double) (this.rand.nextInt(16) - 8) - vec3d.y * d0;
-    final double d3 = curPos.z + (this.rand.nextDouble() - 0.5D) * 8.0D - vec3d.z * d0;
+    double d = this.range * 0.25D;
+    double d0 = this.range * 0.5D;
+    double d1 = this.getPosX() + (this.rand.nextDouble() - 0.5D) * d - vec3d.x * d0;
+    double d2 = this.getPosY() + (this.rand.nextDouble() - 0.5D) * d - vec3d.y * d0;
+    double d3 = this.getPosZ() + (this.rand.nextDouble() - 0.5D) * d - vec3d.z * d0;
     return this.teleportTo(d1, d2, d3);
   }
 
