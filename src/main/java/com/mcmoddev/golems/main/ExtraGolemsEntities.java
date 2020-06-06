@@ -1,7 +1,6 @@
 package com.mcmoddev.golems.main;
 
 import com.mcmoddev.golems.entity.*;
-import com.mcmoddev.golems.entity.base.GolemMultiColorized;
 import com.mcmoddev.golems.events.GolemRegistrarEvent;
 import com.mcmoddev.golems.util.BlockTagUtil;
 import com.mcmoddev.golems.util.GolemNames;
@@ -241,6 +240,12 @@ public final class ExtraGolemsEntities {
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.PRISMARINE_GOLEM, GenericGolem.class, GenericGolem::new)
         .setHealth(34.0D).setAttack(8.0D).setKnockback(0.7D).addBlocks(BlockTagUtil.TAG_PRISMARINE).basicTexture()
         .addDesc(descSwims).setSwimMode(SwimMode.SWIM).addHealItem(Items.PRISMARINE_SHARD, 0.25D).build());
+    // PURPUR GOLEM
+    GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.PURPUR_GOLEM, PurpurGolem.class, PurpurGolem::new)
+        .setHealth(82.0D).setAttack(3.0D).setSpeed(0.26D).setKnockback(0.3D).addBlocks(Blocks.PURPUR_BLOCK, Blocks.PURPUR_PILLAR)
+        .addSpecial(PurpurGolem.ALLOW_SPECIAL, true, "Whether this golem can teleport",
+            new TranslationTextComponent("entitytip.can_teleport").applyTextStyle(TextFormatting.LIGHT_PURPLE))
+        .basicTexture().build());
     // QUARTZ GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.QUARTZ_GOLEM, GenericGolem.class, GenericGolem::new)
         .setHealth(85.0D).setAttack(8.5D).setSpeed(0.28D).setKnockback(0.6D).addBlocks(BlockTagUtil.TAG_QUARTZ).basicTexture()

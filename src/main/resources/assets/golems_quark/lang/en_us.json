@@ -1,5 +1,4 @@
 {
-  "_comment": "Entity names",
   "entity.golems_quark.golem_basalt": "Polished Basalt Golem",
   "entity.golems_quark.golem_biotite": "Biotite Golem",
   "entity.golems_quark.golem_blaze_lantern": "Blaze Lantern Golem",
@@ -19,8 +18,10 @@
   "entity.golems_quark.golem_permafrost": "Permafrost Golem",
   "entity.golems_quark.golem_quilted_wool": "Quilted Wool Golem",
   "entity.golems_quark.golem_slate": "Polished Slate Golem",
+  "entity.golems_quark.golem_color_slime": "Colored Slime Golem",
   "entity.golems_quark.golem_soul_sandstone": "Soul Sandstone Golem",
   "entity.golems_quark.golem_sturdy_stone": "Sturdy Stone Golem",
+  "entity.golems_quark.golem_tallow": "Tallow Golem",
   "_comment": "Entity tooltip headings",
   "entitytip.slows_creatures": "Slows creatures"
   

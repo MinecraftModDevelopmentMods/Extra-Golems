@@ -15,6 +15,7 @@
 	}
   ],
   "result": {
-	"item": "golems:golem_paper"
+	"item": "golems:golem_paper",
+    "count": 3
   }
 }

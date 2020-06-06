@@ -3,6 +3,7 @@ package com.mcmoddev.golems.main;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.mcmoddev.golems.events.GolemRegistrarEvent;
 import com.mcmoddev.golems.events.handlers.GolemCommonEventHandler;
 import com.mcmoddev.golems.integration.AddonLoader;
 import com.mcmoddev.golems.proxies.ProxyClient;
@@ -46,6 +47,9 @@ public class ExtraGolems {
     BlockTagUtil.loadTags();
     ExtraGolemsEntities.initEntityTypes();
     AddonLoader.initEntityTypes();
+    // fire GolemRegistrar event for any listening child mods (addons)
+    MinecraftForge.EVENT_BUS.post(new GolemRegistrarEvent());
+    // set up config file
     ExtraGolemsConfig.setupConfig();
     ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER /* world */, ExtraGolemsConfig.SERVER_CONFIG);
   }
