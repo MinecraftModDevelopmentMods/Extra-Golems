@@ -9,12 +9,12 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 
 /**
- * RenderColoredGolem is the same as RenderGolem but applies multiple specially
+ * ColoredGolemRenderer is the same as GolemRenderer but applies multiple specially
  * rendered layers
  */
-public class RenderColoredGolem extends RenderGolem<GolemColorized> {
+public class ColoredGolemRenderer extends GolemRenderer<GolemColorized> {
 
-  public RenderColoredGolem(final EntityRendererManager renderManagerIn) {
+  public ColoredGolemRenderer(final EntityRendererManager renderManagerIn) {
     super(renderManagerIn);
   }
 

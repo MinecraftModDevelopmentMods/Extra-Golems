@@ -9,9 +9,9 @@ import javax.annotation.Nullable;
 
 import com.mcmoddev.golems.entity.base.GolemMultiColorized;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
-import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mcmoddev.golems.util.config.GolemContainer;
+import com.mcmoddev.golems.util.config.GolemContainer.SwimMode;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -21,6 +21,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 
 /**
  * This class will be used to easily connect golems and their blocks and other
@@ -28,39 +29,40 @@ import net.minecraft.util.text.TextFormatting;
  **/
 public class GolemBookEntry {
 
-  private final Block[] BLOCKS;
-  private final String GOLEM_NAME;
-  private ResourceLocation IMAGE = null;
-  private final boolean MULTI_TEXTURE;
-  private final boolean FIREPROOF = false; // TODO
-  private final int HEALTH;
-  private final float ATTACK;
-  private final List<ITextComponent> SPECIALS = new ArrayList<>();
+  private final Block[] buildingBlocks;
+  private final String golemName;
+  private ResourceLocation imageLoc = null;
+  private final boolean canInteractChangeTexture;
+  private final boolean canSwim;
+  private final boolean isFireproof;
+  private final int health;
+  private final float attack;
+  private final List<ITextComponent> specials = new ArrayList<>();
 
   public GolemBookEntry(@Nonnull GolemContainer container) {
     // initialize fields based on golem attributes
     final EntityType<?> golemType = container.getEntityType();
-    this.GOLEM_NAME = golemType.getTranslationKey();
-    this.MULTI_TEXTURE = ExtraGolemsConfig.enableTextureInteract() && (GolemMultiTextured.class.isAssignableFrom(container.getEntityClass())
+    this.golemName = golemType.getTranslationKey();
+    this.canInteractChangeTexture = ExtraGolemsConfig.enableTextureInteract() && (GolemMultiTextured.class.isAssignableFrom(container.getEntityClass())
         || GolemMultiColorized.class.isAssignableFrom(container.getEntityClass()));
-    // this.FIREPROOF = (container.isImmuneToFire() && !(golem instanceof
-    // EntityBedrockGolem));
-    this.HEALTH = (int) container.getHealth();
-    this.ATTACK = (float) container.getAttack();
-    container.addDescription(SPECIALS);
+    this.canSwim = container.getSwimMode() == SwimMode.SWIM;
+    this.isFireproof = golemType.isImmuneToFire();
+    this.health = (int) container.getHealth();
+    this.attack = (float) container.getAttack();
+    container.addDescription(specials);
 
     // set the block and block name if it exists
-    this.BLOCKS = container.getBuildingBlocks().toArray(new Block[0]);
+    this.buildingBlocks = container.getBuildingBlocks().toArray(new Block[0]);
 
     // find the image to add to the book
-    String img = (ExtraGolems.MODID + ":textures/gui/screenshots/").concat(golemType.getRegistryName().getPath()).concat(".png");
+    final String modid = container.getRegistryName().getNamespace();
+    final String name = container.getRegistryName().getPath();
+    String img = (modid + ":textures/gui/screenshots/").concat(name).concat(".png");
     try {
-      this.IMAGE = Minecraft.getInstance().getResourceManager().getResource(new ResourceLocation(img)).getLocation();
-      // System.out.println("Image found, yay! Loading " + img.toString() + " for " +
-      // this.GOLEM_NAME);
+      this.imageLoc = Minecraft.getInstance().getResourceManager().getResource(new ResourceLocation(img)).getLocation();
+      // System.out.println("Image found, yay! Loading " + img.toString() + " for " + this.GOLEM_NAME);
     } catch (IOException e) {
-      // System.out.println("No image found, skipping " + img.toString() + " for " +
-      // this.GOLEM_NAME);
+      // System.out.println("No image found, skipping " + img.toString() + " for " + this.GOLEM_NAME);
     }
   }
 
@@ -68,35 +70,35 @@ public class GolemBookEntry {
    * @return the localized version of this golem's name
    **/
   public String getGolemName() {
-    return trans(this.GOLEM_NAME);
+    return trans(this.golemName);
   }
 
   /**
    * @return the unlocalized version of this golem's name
    **/
   public String getGolemNameRaw() {
-    return this.GOLEM_NAME;
+    return this.golemName;
   }
 
   /**
    * @return true if building blocks were found for this golem
    **/
   public boolean hasBlocks() {
-    return this.BLOCKS != null && this.BLOCKS.length > 0;
+    return this.buildingBlocks != null && this.buildingBlocks.length > 0;
   }
 
   /**
    * @return the Block at [index % arrayLen] or Blocks.AIR if none is found.
    **/
   public Block getBlock(final int index) {
-    return hasBlocks() ? this.BLOCKS[index % this.BLOCKS.length] : Blocks.AIR;
+    return hasBlocks() ? this.buildingBlocks[index % this.buildingBlocks.length] : Blocks.AIR;
   }
 
   /**
    * @return the Blocks in this entry
    **/
   public Block[] getBlocks() {
-    return this.BLOCKS;
+    return this.buildingBlocks;
   }
 
   /**
@@ -110,14 +112,14 @@ public class GolemBookEntry {
    * @return the attack power of this golem
    **/
   public float getAttack() {
-    return this.ATTACK;
+    return this.attack;
   }
 
   /**
    * @return the number of special descriptions added by this golem
    **/
   public int getDescriptionSize() {
-    return SPECIALS.size();
+    return specials.size();
   }
 
   /**
@@ -132,7 +134,7 @@ public class GolemBookEntry {
    * @return Whether or not an image was found to add to the page
    **/
   public boolean hasImage() {
-    return this.IMAGE != null;
+    return this.imageLoc != null;
   }
 
   /**
@@ -141,7 +143,7 @@ public class GolemBookEntry {
    **/
   @Nullable
   public ResourceLocation getImageResource() {
-    return this.IMAGE;
+    return this.imageLoc;
   }
 
   /**
@@ -149,21 +151,25 @@ public class GolemBookEntry {
    **/
   private String makePage() {
     StringBuilder page = new StringBuilder();
-    // ADD (ROUNDED) HEALTH TIP
-    page.append("\n" + TextFormatting.GRAY + trans("entitytip.health") + ": " + TextFormatting.BLACK + this.HEALTH + TextFormatting.DARK_RED
+    // ADD (ROUNDED) health TIP
+    page.append("\n" + TextFormatting.GRAY + trans("entitytip.health") + ": " + TextFormatting.BLACK + this.health + TextFormatting.DARK_RED
         + " \u2764" + TextFormatting.BLACK);
     // ADD ATTACK POWER TIP
-    page.append("\n" + TextFormatting.GRAY + trans("entitytip.attack") + ": " + TextFormatting.BLACK + this.ATTACK + " \u2694" + "\n");
+    page.append("\n" + TextFormatting.GRAY + trans("entitytip.attack") + ": " + TextFormatting.BLACK + this.attack + " \u2694" + "\n");
     // ADD FIREPROOF TIP
-    if (this.FIREPROOF) {
+    if (this.isFireproof) {
       page.append("\n" + TextFormatting.GOLD + trans("entitytip.is_fireproof"));
     }
     // ADD INTERACT-TEXTURE TIP
-    if (this.MULTI_TEXTURE) {
+    if (this.canInteractChangeTexture) {
       page.append("\n" + TextFormatting.BLUE + trans("entitytip.click_change_texture"));
     }
+    // ADD SWIMMING TIP
+    if(this.canSwim) {
+      page.append("\n" + TextFormatting.AQUA + trans("entitytip.advanced_swim"));
+    }
     // ADD SPECIALS
-    for (ITextComponent s : this.SPECIALS) {
+    for (ITextComponent s : this.specials) {
       page.append("\n" + s.getFormattedText().replaceAll(TextFormatting.WHITE.toString(), TextFormatting.BLACK.toString()));
     }
 

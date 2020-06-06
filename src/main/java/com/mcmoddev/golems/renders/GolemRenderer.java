@@ -17,14 +17,15 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 
 /**
- * RenderGolem is the same as RenderIronGolem but with casting to GolemBase
+ * GolemRenderer is the same as RenderIronGolem but with casting to GolemBase
  * instead of EntityIronGolem.
  */
-public class RenderGolem<T extends GolemBase> extends MobRenderer<T, GolemModel<T>> {
+public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemModel<T>> {
 
   protected static final ResourceLocation fallbackTexture = ExtraGolemsEntities.makeTexture(GolemNames.CLAY_GOLEM);
   protected static final ResourceLocation boneTexture = ExtraGolemsEntities.makeTexture(GolemNames.BONE_GOLEM + "_skeleton");
   protected static final ResourceLocation specialTexture = ExtraGolemsEntities.makeTexture("special");
+  protected static final ResourceLocation specialTexture2 = ExtraGolemsEntities.makeTexture("special2");
   protected ResourceLocation texture;
 
   protected static final String damageTexture = "minecraft:textures/entity/iron_golem/iron_golem_crackiness";
@@ -38,8 +39,9 @@ public class RenderGolem<T extends GolemBase> extends MobRenderer<T, GolemModel<
   
   protected boolean isAlphaLayer;
 
-  public RenderGolem(final EntityRendererManager renderManagerIn) {
+  public GolemRenderer(final EntityRendererManager renderManagerIn) {
     super(renderManagerIn, new GolemModel<T>(), 0.5F);
+    this.addLayer(new GolemFlowerLayer<T>(this));
   }
 
   @Override
@@ -56,12 +58,18 @@ public class RenderGolem<T extends GolemBase> extends MobRenderer<T, GolemModel<
   }
 
   protected void bindGolemTexture(final T golem) {
+    texture = golem.getTexture();
+    // special cases
     if(ExtraGolemsConfig.halloween() && isNightTime(golem)) {
       texture = boneTexture;
-    } else if(golem.hasCustomName() && "Ganondorf".equals(TextFormatting.getTextWithoutFormattingCodes(golem.getName().getString()))) {
-      texture = specialTexture;
-    } else {
-      texture = golem.getTexture();
+    } else if(golem.hasCustomName()) {
+      final String s = TextFormatting.getTextWithoutFormattingCodes(golem.getName().getString());
+      if("Ganondorf".equals(s)) {
+        texture = specialTexture;
+      }
+      if("Cookie".equals(s)) {
+        texture = specialTexture2;
+      }
     }
   }
 

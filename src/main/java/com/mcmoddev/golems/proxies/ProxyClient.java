@@ -4,8 +4,8 @@ import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemColorized;
 import com.mcmoddev.golems.gui.GuiDispenserGolem;
 import com.mcmoddev.golems.main.GolemItems;
-import com.mcmoddev.golems.renders.RenderColoredGolem;
-import com.mcmoddev.golems.renders.RenderGolem;
+import com.mcmoddev.golems.renders.ColoredGolemRenderer;
+import com.mcmoddev.golems.renders.GolemRenderer;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
 
 import net.minecraft.client.gui.ScreenManager;
@@ -15,9 +15,9 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 public final class ProxyClient extends ProxyCommon {
 
-  public static final IRenderFactory<GolemBase> FACTORY_TEXTURED_GOLEM = RenderGolem::new;
+  public static final IRenderFactory<GolemBase> FACTORY_TEXTURED_GOLEM = GolemRenderer::new;
 
-  public static final IRenderFactory<GolemColorized> FACTORY_COLORED_GOLEM = RenderColoredGolem::new;
+  public static final IRenderFactory<GolemColorized> FACTORY_COLORED_GOLEM = ColoredGolemRenderer::new;
 
   @Override
   public void registerListeners() {
@@ -50,7 +50,7 @@ public final class ProxyClient extends ProxyCommon {
   }
 
   /**
-   * Registers an entity with the RenderGolem rendering class.
+   * Registers an entity with the GolemRenderer rendering class.
    * 
    * @param type the EntityType. Must be of type {@code EntityType<GolemBase>}
    */
@@ -59,7 +59,7 @@ public final class ProxyClient extends ProxyCommon {
   }
 
   /**
-   * Registers an entity with the RenderColoredGolem class
+   * Registers an entity with the ColoredGolemRenderer class
    * 
    * @param type the EntityType. Must be of type
    *             {@code EntityType<GolemColorized>}

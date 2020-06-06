@@ -1,7 +1,6 @@
 package com.mcmoddev.golems.main;
 
 import com.mcmoddev.golems.entity.*;
-import com.mcmoddev.golems.events.GolemRegistrarEvent;
 import com.mcmoddev.golems.util.BlockTagUtil;
 import com.mcmoddev.golems.util.GolemNames;
 import com.mcmoddev.golems.util.config.GolemContainer;
@@ -17,20 +16,14 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.Tags;
 
 public final class ExtraGolemsEntities {
   
-  
-
   private ExtraGolemsEntities() {}
 
   public static void initEntityTypes() {
     // Frequently-used GolemDescription components
-    final GolemDescription descFireproof = new GolemDescription(
-        new TranslationTextComponent("entitytip.is_fireproof").applyTextStyle(TextFormatting.GOLD));
-    final GolemDescription descSwims = new GolemDescription(new TranslationTextComponent("entitytip.advanced_swim").applyTextStyle(TextFormatting.AQUA));
     final ITextComponent descHeals = new TranslationTextComponent("entitytip.heals").applyTextStyle(TextFormatting.LIGHT_PURPLE);
     final ITextComponent descSplits = new TranslationTextComponent("entitytip.splits_upon_death");
     final String comSplits = "The number of mini-golems to spawn when this golem dies";
@@ -75,10 +68,10 @@ public final class ExtraGolemsEntities {
         .build());
     // CORAL GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.CORAL_GOLEM, CoralGolem.class, CoralGolem::new)
-        .setHealth(38.0D).setAttack(6.0D).setSpeed(0.29D).setSwimMode(SwimMode.SWIM).addDesc(descSwims).setSound(SoundEvents.BLOCK_CORAL_BLOCK_STEP)
+        .setHealth(38.0D).setAttack(6.0D).setSpeed(0.29D).setSwimMode(SwimMode.SWIM).setSound(SoundEvents.BLOCK_CORAL_BLOCK_STEP)
         .addSpecial(CoralGolem.ALLOW_HEALING, true, "Whether this golem can occasionally heal when wet", descHeals)
-        .addSpecial(CoralGolem.DRY_TIMER, 425, "Number of ticks golem can stay out of water before drying out").addBlocks(BlockTags.CORAL_BLOCKS)
-        .addBlocks(BlockTagUtil.TAG_DEAD_CORAL_BLOCKS).build());
+        .addSpecial(CoralGolem.DRY_TIMER, 425, "Number of ticks golem can stay out of water before drying out")
+        .addBlocks(BlockTags.CORAL_BLOCKS).addBlocks(BlockTagUtil.TAG_DEAD_CORAL_BLOCKS).build());
     // CRAFTING GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.CRAFTING_GOLEM, CraftingGolem.class, CraftingGolem::new)
         .setHealth(24.0D).setAttack(2.0D).setSpeed(0.29D).addBlocks(Blocks.CRAFTING_TABLE).basicTexture()
@@ -129,7 +122,7 @@ public final class ExtraGolemsEntities {
         .setHealth(8.0D).setAttack(12.0D).setSpeed(0.26D).enableFallDamage().addBlocks(Blocks.GLOWSTONE)
         .addSpecial(GlowstoneGolem.ALLOW_SPECIAL, true, "Whether this golem can glow",
             new TranslationTextComponent("entitytip.lights_area").applyTextStyle(TextFormatting.RED))
-        .immuneToFire().addDesc(descFireproof).setSound(SoundEvents.BLOCK_GLASS_STEP).basicTexture().setSwimMode(SwimMode.FLOAT)
+        .immuneToFire().setSound(SoundEvents.BLOCK_GLASS_STEP).basicTexture().setSwimMode(SwimMode.FLOAT)
         .addHealItem(Items.GLOWSTONE_DUST, 0.25D).build());
     // GOLD GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.GOLD_GOLEM, GenericGolem.class, GenericGolem::new)
@@ -198,7 +191,7 @@ public final class ExtraGolemsEntities {
         .addSpecial(MagmaGolem.SPLITTING_CHILDREN, Integer.valueOf(2), comSplits)
         .addDesc(new GolemDescription(descSplits.shallowCopy().applyTextStyle(TextFormatting.RED), 
             MagmaGolem.SPLITTING_CHILDREN, c -> (Integer) c.get() > 0))
-        .immuneToFire().addDesc(descFireproof).addHealItem(Items.MAGMA_CREAM, 0.25D).build());
+        .immuneToFire().addHealItem(Items.MAGMA_CREAM, 0.25D).build());
     // MELON GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.MELON_GOLEM, MelonGolem.class, MelonGolem::new)
         .setHealth(18.0D).setAttack(1.5D).setSpeed(0.265D).basicTexture().addBlocks(Blocks.MELON)
@@ -222,7 +215,7 @@ public final class ExtraGolemsEntities {
         .setHealth(25.0D).setAttack(6.5D).setSpeed(0.28D).setKnockback(0.2D).addBlocks(Blocks.NETHER_BRICKS, Blocks.RED_NETHER_BRICKS)
         .addSpecial(NetherBrickGolem.ALLOW_FIRE_SPECIAL, true, "Whether this golem can light creatures on fire",
             new TranslationTextComponent("entitytip.lights_mobs_on_fire").applyTextStyle(TextFormatting.RED))
-        .immuneToFire().addDesc(descFireproof).basicTexture().addHealItem(Items.NETHER_BRICK, 0.25D).build());
+        .immuneToFire().basicTexture().addHealItem(Items.NETHER_BRICK, 0.25D).build());
     // NETHER WART GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.NETHERWART_GOLEM, NetherWartGolem.class, NetherWartGolem::new)
         .setHealth(22.0D).setAttack(1.5D).setSpeed(0.26D).basicTexture().addBlocks(Blocks.NETHER_WART_BLOCK)
@@ -230,16 +223,16 @@ public final class ExtraGolemsEntities {
         .addSpecial(NetherWartGolem.ALLOW_HEALING, true, "Whether this golem can randomly heal (at night)", descHeals)
         .addSpecial(NetherWartGolem.ALLOW_SPECIAL, true, "Whether this golem can plant netherwart randomly",
             new TranslationTextComponent("entitytip.plants_warts").applyTextStyle(TextFormatting.RED))
-        .immuneToFire().addDesc(descFireproof).setSound(SoundEvents.BLOCK_WOOD_STEP).setSwimMode(SwimMode.FLOAT)
+        .immuneToFire().setSound(SoundEvents.BLOCK_WOOD_STEP).setSwimMode(SwimMode.FLOAT)
         .addHealItem(Items.NETHER_WART, 0.25D).build());
     // OBSIDIAN GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.OBSIDIAN_GOLEM, GenericGolem.class, GenericGolem::new)
         .setHealth(120.0D).setAttack(18.0D).setSpeed(0.23D).setKnockback(0.8D).addBlocks(Blocks.OBSIDIAN).basicTexture()
-        .immuneToFire().addDesc(descFireproof).build());
+        .immuneToFire().build());
     // PRISMARINE GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.PRISMARINE_GOLEM, GenericGolem.class, GenericGolem::new)
         .setHealth(34.0D).setAttack(8.0D).setKnockback(0.7D).addBlocks(BlockTagUtil.TAG_PRISMARINE).basicTexture()
-        .addDesc(descSwims).setSwimMode(SwimMode.SWIM).addHealItem(Items.PRISMARINE_SHARD, 0.25D).build());
+        .setSwimMode(SwimMode.SWIM).addHealItem(Items.PRISMARINE_SHARD, 0.25D).build());
     // PURPUR GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.PURPUR_GOLEM, PurpurGolem.class, PurpurGolem::new)
         .setHealth(82.0D).setAttack(3.0D).setSpeed(0.26D).setKnockback(0.3D).addBlocks(Blocks.PURPUR_BLOCK, Blocks.PURPUR_PILLAR)
@@ -276,7 +269,7 @@ public final class ExtraGolemsEntities {
         .setHealth(34.0D).setAttack(6.0D).setSpeed(0.26D).setKnockback(0.9D).addBlocks(Blocks.SEA_LANTERN).basicTexture()
         .addSpecial(SeaLanternGolem.ALLOW_SPECIAL, true, "Whether this golem lights up the area",
             new TranslationTextComponent("entitytip.lights_area").applyTextStyle(TextFormatting.GOLD))
-        .addDesc(descSwims).setSound(SoundEvents.BLOCK_GLASS_STEP).setSwimMode(SwimMode.SWIM)
+        .setSound(SoundEvents.BLOCK_GLASS_STEP).setSwimMode(SwimMode.SWIM)
         .addHealItem(Items.PRISMARINE_SHARD, 0.25D).addHealItem(Items.PRISMARINE_CRYSTALS, 0.25D).build());
     // SLIME GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.SLIME_GOLEM, SlimeGolem.class, SlimeGolem::new)
@@ -333,9 +326,6 @@ public final class ExtraGolemsEntities {
         .setHealth(10.0D).setAttack(1.0D).setSpeed(0.295D).setKnockback(0.2D).addBlocks(BlockTags.WOOL)
         .setSwimMode(SwimMode.FLOAT).setSound(SoundEvents.BLOCK_WOOL_STEP)
         .addHealItem(Items.STRING, 0.1D).build());
-
-    // fire GolemRegistrar event for any listening child mods (addons)
-    MinecraftForge.EVENT_BUS.post(new GolemRegistrarEvent());
   }
 
   /**
