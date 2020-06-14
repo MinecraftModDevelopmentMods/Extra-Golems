@@ -38,7 +38,7 @@ public final class GolemNames {
   public static final String NETHERWART_GOLEM = "golem_nether_wart";
   public static final String OBSIDIAN_GOLEM = "golem_obsidian";
   public static final String PRISMARINE_GOLEM = "golem_prismarine";
-  public static final String PURPUR_GOLEM = "golem_purpur"; // TODO
+  public static final String PURPUR_GOLEM = "golem_purpur";
   public static final String QUARTZ_GOLEM = "golem_quartz";
   public static final String REDSANDSTONE_GOLEM = "golem_red_sandstone";
   public static final String REDSTONE_GOLEM = "golem_redstone";

@@ -7,7 +7,6 @@ import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 
 import java.util.function.BiPredicate;
 
@@ -38,9 +37,9 @@ public class PlaceUtilityBlockGoal extends Goal {
    * @param interval       ticks between placing block
    * @param cfgAllows      whether this AI is enabled by the config
    * @param onlyAboveEmpty whether the utility block should not be placed directly on top of blocks
-   * @param canReplacePred an optional BiPredicate to use when determining whether
+   * @param otherPredicate an optional BiPredicate to use when determining whether
    *                       to place a Block. Defaults to replacing air only.
-   * @see #getDefaultBiPred(BlockState)
+   * @see #makeBiPred(BlockState, boolean)
    **/
   public PlaceUtilityBlockGoal(final GolemBase golemIn, final BlockState stateIn, 
       final int interval, final boolean cfgAllows, final boolean onlyAboveEmpty,
@@ -124,6 +123,9 @@ public class PlaceUtilityBlockGoal extends Goal {
    * Waterlogged
    *
    * @param stateIn the state that will replace the given one if possible
+   * @param onlyAboveEmpty if there should always be an air/water block underneath
+   * the placed block
+   * @return a new BiPredicate<GolemBase, BlockPos>
    **/
   public static BiPredicate<GolemBase, BlockPos> makeBiPred(final BlockState stateIn, final boolean onlyAboveEmpty) {
     // whether or not the utility block can be waterlogged
