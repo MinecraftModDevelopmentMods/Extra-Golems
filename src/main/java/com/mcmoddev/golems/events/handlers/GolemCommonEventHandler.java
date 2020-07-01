@@ -100,7 +100,7 @@ public class GolemCommonEventHandler {
   private static GolemBase summonGolem(@Nonnull VillagerEntity villager) {
     // This is copied from the VillagerEntity summonGolem code
     final World world = villager.getEntityWorld();
-    BlockPos blockpos = new BlockPos(villager);
+    BlockPos blockpos = villager.func_233580_cy_(); // getPosition
 
     for (int i = 0; i < 10; ++i) {
       double d0 = (double) (world.rand.nextInt(16) - 8);

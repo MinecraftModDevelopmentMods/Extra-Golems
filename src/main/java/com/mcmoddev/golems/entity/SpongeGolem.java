@@ -12,7 +12,7 @@ import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.particles.BasicParticleType;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
@@ -48,7 +48,7 @@ public final class SpongeGolem extends GolemBase {
       final double x = this.rand.nextDouble() - 0.5D * (double) this.getWidth() * 0.6D;
       final double y = this.rand.nextDouble() * (this.getHeight() - 0.75D);
       final double z = this.rand.nextDouble() - 0.5D * (double) this.getWidth();
-      final Vec3d pos = this.getPositionVec();
+      final Vector3d pos = this.getPositionVec();
       this.world.addParticle(particle, pos.x + x, pos.y + y, pos.z + z, (this.rand.nextDouble() - 0.5D) * 0.5D, this.rand.nextDouble() - 0.5D,
           (this.rand.nextDouble() - 0.5D) * 0.5D);
     }

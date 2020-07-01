@@ -8,10 +8,11 @@ import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -40,7 +41,7 @@ public final class BedrockGolem extends GolemBase {
   }
 
   @Override
-  protected boolean processInteract(final PlayerEntity player, final Hand hand) {
+  protected ActionResultType func_230254_b_(final PlayerEntity player, final Hand hand) { // processInteract
     // creative players can "despawn" by using spawnBedrockGolem on this entity
     final ItemStack itemstack = player.getHeldItem(hand);
     if ((player.abilities.isCreativeMode || !ExtraGolemsConfig.bedrockGolemCreativeOnly()) && !itemstack.isEmpty()
@@ -49,12 +50,12 @@ public final class BedrockGolem extends GolemBase {
       if (!this.world.isRemote) {
         this.remove();
       } else {
-        final Vec3d pos = this.getPositionVec().add(0, 0.2D, 0);
+        final Vector3d pos = this.getPositionVec().add(0, 0.2D, 0);
         ItemBedrockGolem.spawnParticles(this.world, pos.x, pos.y, pos.z, 0.12D);
       }
     }
 
-    return super.processInteract(player, hand);
+    return super.func_230254_b_(player, hand);
   }
 
   @Override

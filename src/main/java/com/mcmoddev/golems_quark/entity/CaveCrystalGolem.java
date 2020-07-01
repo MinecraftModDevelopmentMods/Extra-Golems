@@ -21,7 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.base.module.ModuleLoader;
@@ -65,7 +65,7 @@ public final class CaveCrystalGolem extends GolemMultiColorized {
   public void livingTick() {
     super.livingTick();
     if (this.world.isRemote && rand.nextInt(3) == 0) {
-      final Vec3d pos = this.getPositionVec();
+      final Vector3d pos = this.getPositionVec();
       double px = pos.x + (this.rand.nextDouble() - 0.5D) * (double) this.getWidth();
       double py = pos.y + this.rand.nextDouble() * (double) this.getHeight() - 0.25D;
       double pz = pos.z + (this.rand.nextDouble() - 0.5D) * (double) this.getWidth();
@@ -108,7 +108,7 @@ public final class CaveCrystalGolem extends GolemMultiColorized {
   
   private static void fillTextureBytes() {
     // fills a map with Block-Byte references to correctly build the golem
-    if(ModuleLoader.INSTANCE.isModuleEnabled(CaveCrystalUndergroundBiomeModule.class)) {
+    if(false /*TODO ModuleLoader.INSTANCE.isModuleEnabled(CaveCrystalUndergroundBiomeModule.class)*/) {
       textureBytes.put(ForgeRegistries.BLOCKS.getValue(new ResourceLocation("quark", "red_crystal")), (byte)0);
       textureBytes.put(ForgeRegistries.BLOCKS.getValue(new ResourceLocation("quark", "orange_crystal")), (byte)1);
       textureBytes.put(ForgeRegistries.BLOCKS.getValue(new ResourceLocation("quark", "yellow_crystal")), (byte)2);

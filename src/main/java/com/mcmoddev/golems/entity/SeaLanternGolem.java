@@ -7,7 +7,7 @@ import com.mcmoddev.golems.main.GolemItems;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 public final class SeaLanternGolem extends GolemBase {
@@ -46,7 +46,7 @@ public final class SeaLanternGolem extends GolemBase {
   }
 
   @Override
-  public boolean shouldMoveToWater(final Vec3d target) {
+  public boolean shouldMoveToWater(final Vector3d target) {
     // allowed to leave water at night to protect village, etc.
     return this.world.isDaytime();
   }

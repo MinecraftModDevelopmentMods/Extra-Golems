@@ -27,7 +27,7 @@ public final class HoneycombGolem extends GolemBase {
     if (flag && source.getImmediateSource() instanceof LivingEntity) {
       // chance to summon a bee when attacked
       if (!this.world.isRemote && this.rand.nextInt(100) < summonBeeChance) {
-        summonBees(1);
+        summonBees(1, (LivingEntity)source.getImmediateSource());
       }
       // anger other nearby bees
       angerBees((LivingEntity)source.getImmediateSource(), 16.0D);
@@ -38,24 +38,28 @@ public final class HoneycombGolem extends GolemBase {
   
   @Override
   public void onDeath(final DamageSource source) {
-    // summon bees upon death
-    summonBees(2 + rand.nextInt(4));
-    // anger nearby bees
+    // determine if the golem was killed by an entity
     final LivingEntity target = source.getTrueSource() instanceof LivingEntity 
         ? (LivingEntity)source.getTrueSource() 
         : this.getRevengeTarget();
+    // summon bees upon death
+    summonBees(2 + rand.nextInt(4), target);
     angerBees(target, 16.0D);
     super.onDeath(source);
   }
   
   // summon a bee and makes it angry at the given entity
-  private void summonBees(final int number) {
+  private void summonBees(final int number, final LivingEntity target) {
     for(int i = 0; i < number; i++) {
       BeeEntity bee = EntityType.BEE.create(this.world);
       bee.copyLocationAndAnglesFrom(this);
       // sometimes summon a baby bee instead
       if(this.rand.nextInt(3) == 0) {
         bee.setGrowingAge(-24000);
+      }
+      if(target != null) {
+        bee.setRevengeTarget(target);
+        bee.setAttackTarget(target);
       }
       this.world.addEntity(bee);
     }

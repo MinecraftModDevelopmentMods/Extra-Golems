@@ -22,7 +22,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MoverType;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.ai.controller.MovementController;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.MoveThroughVillageGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
@@ -37,6 +38,7 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.pathfinding.SwimmerPathNavigator;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
@@ -45,7 +47,7 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeConfigSpec;
 
@@ -106,13 +108,16 @@ public abstract class GolemBase extends IronGolemEntity {
 
   @Override
   protected void registerAttributes() {
+    
+    // See IronGolemEntity.func_234200_m_ and GlobalEntityTypeAttributes.FORGE_ATTRIBUTES
+    
     super.registerAttributes();
     // Called in super constructor; this.container == null
     GolemContainer golemContainer = GolemRegistrar.getContainer(this.getType());
-    this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(golemContainer.getAttack());
-    this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(golemContainer.getHealth());
-    this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(golemContainer.getSpeed());
-    this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(golemContainer.getKnockbackResist());
+    this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(golemContainer.getAttack());
+    this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(golemContainer.getHealth());
+    this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(golemContainer.getSpeed());
+    this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(golemContainer.getKnockbackResist());
   }
 
   @Override
@@ -196,10 +201,11 @@ public abstract class GolemBase extends IronGolemEntity {
   }
 
   public BlockPos getBlockBelow() {
-    int i = MathHelper.floor(this.getPosX());
-    int j = MathHelper.floor(this.getPosY() - 0.2D);
-    int k = MathHelper.floor(this.getPosZ());
-    return new BlockPos(i, j, k);
+//    int i = MathHelper.floor(this.getPosX());
+//    int j = MathHelper.floor(this.getPosY() - 0.2D);
+//    int k = MathHelper.floor(this.getPosZ());
+//    return new BlockPos(i, j, k);
+    return getPositionUnderneath();
   }
 
   /////////////// CONFIG HELPERS //////////////////
@@ -237,28 +243,26 @@ public abstract class GolemBase extends IronGolemEntity {
     }
 
     float[] ret = net.minecraftforge.common.ForgeHooks.onLivingFall(this, distance, damageMultiplier);
-    if (ret == null) {
-      return false;
-    }
+    if (ret == null) return false;
     distance = ret[0];
     damageMultiplier = ret[1];
 
     boolean flag = super.onLivingFall(distance, damageMultiplier);
-    int i = this.func_225508_e_(distance, damageMultiplier);
+    int i = this.calculateFallDamage(distance, damageMultiplier);
     if (i > 0) {
-      this.playSound(this.getFallSound(i), 1.0F, 1.0F);
-      this.playFallSound();
-      this.attackEntityFrom(DamageSource.FALL, (float) i);
-      return true;
+       this.playSound(this.getFallSound(i), 1.0F, 1.0F);
+       this.playFallSound();
+       this.attackEntityFrom(DamageSource.FALL, (float)i);
+       return true;
     } else {
-      return flag;
+       return flag;
     }
   }
 
   @Override
   public boolean attackEntityAsMob(final Entity entity) {
     // Copy Iron Golem behavior but allow for custom attack damage
-    double baseAttack = this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getValue();
+    double baseAttack = this.getAttribute(Attributes.ATTACK_DAMAGE).getValue();
 
     // Deal damage between 100% and 175% of current attack power
     double damage = baseAttack + (this.rand.nextDouble() * 0.75D) * baseAttack;
@@ -294,7 +298,7 @@ public abstract class GolemBase extends IronGolemEntity {
   }
 
   @Override
-  protected boolean processInteract(final PlayerEntity player, final Hand hand) {
+  protected ActionResultType func_230254_b_(final PlayerEntity player, final Hand hand) { // processInteract
     ItemStack stack = player.getHeldItem(hand);
     float healAmount = getHealAmount(stack);
     if (ExtraGolemsConfig.enableHealGolems() && this.getHealth() < this.getMaxHealth() && healAmount > 0) {
@@ -313,12 +317,12 @@ public abstract class GolemBase extends IronGolemEntity {
         this.setAttackTarget(null);
       }
       // spawn particles and play sound
-      final Vec3d pos = this.getPositionVec();
+      final Vector3d pos = this.getPositionVec();
       ItemBedrockGolem.spawnParticles(this.world, pos.x, pos.y + this.getHeight() / 2.0D, pos.z, 0.15D, ParticleTypes.INSTANT_EFFECT, 30);
       this.playSound(SoundEvents.BLOCK_STONE_PLACE, 0.85F, 1.1F + rand.nextFloat() * 0.2F);
-      return true;
+      return ActionResultType.CONSUME;
     }
-    return super.processInteract(player, hand);
+    return super.func_230254_b_(player, hand); // processInteract
   }
   
   ///////////////// CHILD LOGIC ///////////////////
@@ -344,14 +348,14 @@ public abstract class GolemBase extends IronGolemEntity {
         // truncate these values to one decimal place after reducing them from base values
         double childHealth = (Math.floor(getGolemContainer().getHealth() * 0.3D * 10D)) / 10D;
         double childAttack = (Math.floor(getGolemContainer().getAttack() * 0.6D * 10D)) / 10D;
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(childHealth);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(childAttack);
-        this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.0D);
+        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(childHealth);
+        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(childAttack);
+        this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(0.0D);
       } else {
         // use full values for non-child golem
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(getGolemContainer().getHealth());
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(getGolemContainer().getAttack());
-        this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(getGolemContainer().getKnockbackResist());
+        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(getGolemContainer().getHealth());
+        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(getGolemContainer().getAttack());
+        this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(getGolemContainer().getKnockbackResist());
       }
       // recalculate size
       this.recalculateSize();
@@ -471,7 +475,7 @@ public abstract class GolemBase extends IronGolemEntity {
   ///////////////////// SWIMMING BEHAVIOR ////////////////////////
 
   @Override
-  public void travel(final Vec3d vec) {
+  public void travel(final Vector3d vec) {
     if (isServerWorld() && isInWater() && isSwimmingUp()) {
       moveRelative(0.01F, vec);
       move(MoverType.SELF, getMotion());
@@ -533,7 +537,53 @@ public abstract class GolemBase extends IronGolemEntity {
    * @param target a location representing a water block
    * @return true if the golem should move towards the water
    **/
-  public boolean shouldMoveToWater(final Vec3d target) {
+  public boolean shouldMoveToWater(final Vector3d target) {
     return container.getSwimMode() == SwimMode.SWIM;
+  }
+  
+  static class SwimmingMovementController extends MovementController {
+    private final GolemBase golem;
+
+    public SwimmingMovementController(GolemBase golem) {
+      super(golem);
+      this.golem = golem;
+    }
+
+    @Override
+    public void tick() {
+      LivingEntity target = this.golem.getAttackTarget();
+      final Vector3d gPos = this.golem.getPositionVec();
+      final Vector3d tPos = target != null ? target.getPositionVec() : null;
+      if (GolemBase.isSwimmingUp(this.golem) && this.golem.isInWater()) {
+        if (target != null && tPos != null && (tPos.y > gPos.y || golem.isSwimmingUp())) {
+          this.golem.setMotion(this.golem.getMotion().add(0.0D, 0.002D, 0.0D));
+        }
+
+        if (this.action != MovementController.Action.MOVE_TO || this.golem.getNavigator().noPath()) {
+          this.golem.setAIMoveSpeed(0.0F);
+
+          return;
+        }
+        double x1 = this.posX - gPos.x;
+        double y1 = this.posY - gPos.y;
+        double z1 = this.posZ - gPos.z;
+        double dis = MathHelper.sqrt(x1 * x1 + y1 * y1 + z1 * z1);
+        y1 /= dis;
+
+        float f1 = (float) (MathHelper.atan2(z1, x1) * 57.2957763671875D) - 90.0F;
+        this.golem.rotationYaw = limitAngle(this.golem.rotationYaw, f1, 90.0F);
+        this.golem.renderYawOffset = this.golem.rotationYaw;
+
+        float moveSpeed2 = MathHelper.lerp(0.125F, this.golem.getAIMoveSpeed(), (float) this.speed);
+        this.golem.setAIMoveSpeed(moveSpeed2);
+        this.golem.setMotion(this.golem.getMotion().add(moveSpeed2 * x1 * 0.005D, moveSpeed2 * y1 * 0.1D, moveSpeed2 * z1 * 0.005D));
+
+      } else {
+        if (!this.golem.onGround) {
+          this.golem.setMotion(this.golem.getMotion().add(0.0D, -0.008D, 0.0D));
+        }
+        super.tick();
+      }
+    }
   }
 }

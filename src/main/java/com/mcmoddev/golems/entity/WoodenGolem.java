@@ -16,7 +16,6 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
 
 public final class WoodenGolem extends GolemMultiTextured {
 
@@ -46,7 +45,7 @@ public final class WoodenGolem extends GolemMultiTextured {
     } else if (b.isIn(BlockTags.DARK_OAK_LOGS)) {
       textureNum = 5;
     } else {
-      this.randomizeTexture(this.world, this.getPosition());
+      this.randomizeTexture(this.world, this.getPositionUnderneath());
       return;
     }
     // set the texture num based on above

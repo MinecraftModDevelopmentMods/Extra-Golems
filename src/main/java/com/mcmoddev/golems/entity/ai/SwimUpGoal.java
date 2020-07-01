@@ -7,6 +7,7 @@ import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.pathfinding.Path;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class SwimUpGoal extends Goal {
 
@@ -32,10 +33,10 @@ public class SwimUpGoal extends Goal {
 
   @Override
   public void tick() {
-    final Vec3d gPos = golem.getPositionVec();
+    final Vector3d gPos = golem.getPositionVec();
     if (gPos.y < (this.targetY - 1) && (this.golem.getNavigator().noPath() || isCloseToPathTarget())) {
 
-      Vec3d vec = RandomPositionGenerator.findRandomTargetBlockTowards(this.golem, 4, 8, new Vec3d(gPos.x, (this.targetY - 1), gPos.z));
+      Vector3d vec = RandomPositionGenerator.findRandomTargetBlockTowards(this.golem, 4, 8, new Vector3d(gPos.x, (this.targetY - 1), gPos.z));
       if (vec == null) {
         this.obstructed = true;
         return;
@@ -58,7 +59,7 @@ public class SwimUpGoal extends Goal {
   public boolean isCloseToPathTarget() {
     Path path = this.golem.getNavigator().getPath();
     if (path != null) {
-      BlockPos pos = path.func_224770_k();
+      BlockPos pos = path.func_224770_k(); // TODO
       if (pos != null) {
         double dis = this.golem.getDistanceSq(pos.getX(), pos.getY(), pos.getZ());
         if (dis < 4.0D) {

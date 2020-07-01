@@ -10,36 +10,33 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.ai.goal.RangedAttackGoal;
 import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.passive.FoxEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity.PickupStatus;
-import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
-import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.IInventoryChangedListener;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ArrowItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.IndirectEntityDamageSource;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -72,7 +69,7 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
     // init combat AI
     aiArrowAttack = new RangedAttackGoal(this, 1.0D, arrowSpeed, 32.0F);
     aiMeleeAttack = new MeleeAttackGoal(this, 1.0D, true);
-    this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(32.0F);
+    this.getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(32.0F);
     // init inventory
     this.initInventory();
   }
@@ -127,14 +124,14 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
   }
 
   @Override
-  protected boolean processInteract(final PlayerEntity player, final Hand hand) {
+  protected ActionResultType func_230254_b_(final PlayerEntity player, final Hand hand) { // processInteract
     if (!player.isCrouching() && player instanceof ServerPlayerEntity) {
       // open dispenser GUI by sending request to server
       NetworkHooks.openGui((ServerPlayerEntity) player, new ContainerDispenserGolem.Provider(inventory));
       player.swingArm(hand);
-      return true;
+      return ActionResultType.SUCCESS;
     }
-    return super.processInteract(player, hand);
+    return super.func_230254_b_(player, hand);
   }
 
   @Override
@@ -263,7 +260,7 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
       // make an arrow out of the inventory
       AbstractArrowEntity arrow = ProjectileHelper.fireArrow(this, itemstack, distanceFactor);
       // set the arrow position and velocity
-      final Vec3d myPos = this.getPositionVec();
+      final Vector3d myPos = this.getPositionVec();
       arrow.setPosition(myPos.x, myPos.y + this.getHeight() * 0.66666F, myPos.z);
       double d0 = target.getPosX() - this.getPosX();
       double d1 = target.getPosYHeight(1.0D / 3.0D) - arrow.getPosY();

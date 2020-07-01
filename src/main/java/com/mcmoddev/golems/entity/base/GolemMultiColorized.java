@@ -12,6 +12,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
@@ -58,15 +59,15 @@ public abstract class GolemMultiColorized extends GolemColorized implements IMul
   }
 
   @Override
-  public boolean processInteract(final PlayerEntity player, final Hand hand) {
+  public ActionResultType func_230254_b_(final PlayerEntity player, final Hand hand) { // processInteract
     // change texture when player clicks (if enabled)
     if (!player.isCrouching() && this.canInteractChangeTexture()) {
       final int incremented = (this.getTextureNum() + 1) % this.getTextureArray().length;
       this.setTextureNum((byte) incremented);
       player.swingArm(hand);
-      return true;
+      return ActionResultType.SUCCESS;
     } else {
-      return super.processInteract(player, hand);
+      return super.func_230254_b_(player, hand);
     }
   }
 

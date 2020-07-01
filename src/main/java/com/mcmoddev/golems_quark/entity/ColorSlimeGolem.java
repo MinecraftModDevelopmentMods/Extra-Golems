@@ -16,11 +16,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
-import vazkii.quark.automation.module.ColorSlimeModule;
-import vazkii.quark.base.module.ModuleLoader;
+//import vazkii.quark.automation.module.ColorSlimeModule;
+//import vazkii.quark.base.module.ModuleLoader;
 
 public class ColorSlimeGolem extends GolemMultiTextured {
 
@@ -107,8 +107,8 @@ public class ColorSlimeGolem extends GolemMultiTextured {
    * Adds extra velocity to the golem's knockback attack.
    **/
   private void applyKnockback(final Entity entity, final double knockbackFactor) {
-    final Vec3d myPos = this.getPositionVec();
-    final Vec3d ePos = entity.getPositionVec();
+    final Vector3d myPos = this.getPositionVec();
+    final Vector3d ePos = entity.getPositionVec();
     final double dX = Math.signum(ePos.x - myPos.x) * knockbackFactor;
     final double dZ = Math.signum(ePos.z - myPos.z) * knockbackFactor;
     entity.addVelocity(dX, knockbackFactor / 2, dZ);
@@ -117,7 +117,7 @@ public class ColorSlimeGolem extends GolemMultiTextured {
   
   private static void fillTextureBytes() {
     // fills a map with Block-Byte references to correctly build the golem
-    if(ModuleLoader.INSTANCE.isModuleEnabled(ColorSlimeModule.class)) {
+    if(false/*TODO ModuleLoader.INSTANCE.isModuleEnabled(ColorSlimeModule.class)*/) {
       for(int i = 0, l = SLIME_TYPES.length; i < l; i++) {
         final Block b = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("quark:" + SLIME_TYPES[i] + "_slime_block"));
         textureBytes.put(b, (byte) i);
