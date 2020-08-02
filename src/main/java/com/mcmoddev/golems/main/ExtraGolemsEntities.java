@@ -1,7 +1,6 @@
 package com.mcmoddev.golems.main;
 
 import com.mcmoddev.golems.entity.*;
-import com.mcmoddev.golems.util.BlockTagUtil;
 import com.mcmoddev.golems.util.GolemNames;
 import com.mcmoddev.golems.util.config.GolemContainer;
 import com.mcmoddev.golems.util.config.GolemContainer.SwimMode;

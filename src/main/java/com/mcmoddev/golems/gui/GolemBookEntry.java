@@ -18,7 +18,9 @@ import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 
@@ -68,7 +70,7 @@ public class GolemBookEntry {
   /**
    * @return the localized version of this golem's name
    **/
-  public String getGolemName() {
+  public IFormattableTextComponent getGolemName() {
     return trans(this.golemName);
   }
 
@@ -104,7 +106,7 @@ public class GolemBookEntry {
    * @return the Block in this entry
    **/
   public String getBlockName(final Block b) {
-    return trans(b.getTranslationKey());
+    return trans(b.getTranslationKey()).getString();
   }
 
   /**
@@ -124,7 +126,7 @@ public class GolemBookEntry {
   /**
    * @return all Golem Stats as one String
    **/
-  public String getDescriptionPage() {
+  public IFormattableTextComponent getDescriptionPage() {
     // re-make each time for real-time localization
     return makePage();
   }
@@ -148,37 +150,54 @@ public class GolemBookEntry {
   /**
    * Concatenates the golem's stats and specials into a single STring
    **/
-  private String makePage() {
-    StringBuilder page = new StringBuilder();
+  private IFormattableTextComponent makePage() {
+    // 1.16 mappings: 
+    // applyTextStyle -> func_240699_a_(TextFormatting) or func_240701_a_(TextFormatting...)
+    // appendSibling -> func_230529_a_(ITextComponent)
+    // appendText -> func_240702_b_(String)
+    StringTextComponent page = new StringTextComponent("");
     // ADD (ROUNDED) HEALTH TIP
-    page.append("\n" + TextFormatting.GRAY + trans("entitytip.health") + ": " + TextFormatting.BLACK + this.health + TextFormatting.DARK_RED
-        + " \u2764" + TextFormatting.BLACK);
+    page.func_240702_b_("\n")
+        .func_230529_a_(trans("entitytip.health").func_240702_b_(": ").func_240699_a_(TextFormatting.GRAY))
+        .func_230529_a_(wrap(String.valueOf(this.health)).func_240699_a_(TextFormatting.BLACK)) 
+        .func_230529_a_(wrap(" \u2764").func_240699_a_(TextFormatting.DARK_RED));
     // ADD ATTACK POWER TIP
-    page.append("\n" + TextFormatting.GRAY + trans("entitytip.attack") + ": " + TextFormatting.BLACK + this.attack + " \u2694" + "\n");
+    page.func_240702_b_("\n")
+        .func_230529_a_(trans("entitytip.attack").func_240702_b_(": ").func_240699_a_(TextFormatting.GRAY))
+        .func_230529_a_(wrap(String.valueOf(this.attack)).func_240699_a_(TextFormatting.BLACK)) 
+        .func_240702_b_(" \u2764").func_240702_b_("\n");
     // ADD FIREPROOF TIP
     if (this.isFireproof) {
-      page.append("\n" + TextFormatting.GOLD + trans("entitytip.is_fireproof"));
+      page.func_240702_b_("\n")
+          .func_230529_a_(trans("entitytip.is_fireproof").func_240699_a_(TextFormatting.GOLD));
     }
     // ADD INTERACT-TEXTURE TIP
     if (this.canInteractChangeTexture) {
-      page.append("\n" + TextFormatting.BLUE + trans("entitytip.click_change_texture"));
+      page.func_240702_b_("\n")
+          .func_230529_a_(trans("entitytip.click_change_texture").func_240699_a_(TextFormatting.BLUE));
     }
     // ADD SWIMMING TIP
     if(this.canSwim) {
-      page.append("\n" + TextFormatting.AQUA + trans("entitytip.advanced_swim"));
+      page.func_240702_b_("\n")
+          .func_230529_a_(trans("entitytip.advanced_swim").func_240699_a_(TextFormatting.AQUA));
     }
     // ADD SPECIALS
     for (ITextComponent s : this.specials) {
-      page.append("\n" + s.getString().replaceAll(TextFormatting.WHITE.toString(), TextFormatting.BLACK.toString()));
+      page.func_240702_b_("\n")
+          .func_230529_a_(wrap(s.getString().replaceAll(TextFormatting.WHITE.toString(), TextFormatting.BLACK.toString())));
     }
 
-    return page.toString();
+    return page;
   }
 
   /**
-   * Helper method for translating text into local language using {@code I18n}
+   * Helper method for translating text into local language
    **/
-  protected static String trans(final String s, final Object... strings) {
-    return new TranslationTextComponent(s, strings).getString();
+  protected static IFormattableTextComponent trans(final String s, final Object... strings) {
+    return new TranslationTextComponent(s, strings);
+  }
+  
+  protected static IFormattableTextComponent wrap(final String s) {
+    return new StringTextComponent(s);
   }
 }

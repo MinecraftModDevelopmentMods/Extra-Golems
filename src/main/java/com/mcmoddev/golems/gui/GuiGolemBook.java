@@ -22,8 +22,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 
 @SuppressWarnings("deprecation")
@@ -152,7 +152,6 @@ public class GuiGolemBook extends Screen {
     if (GOLEMS.isEmpty()) {
       initGolemBookEntries();
     }
-    // TODO this.setSize(BOOK_WIDTH, BOOK_HEIGHT);
     this.curPage = 0;
     this.totalPages = NUM_PAGES_INTRO + GOLEMS.size();
     this.currentScroll = 0;
@@ -177,7 +176,7 @@ public class GuiGolemBook extends Screen {
     // make and sort alphabetical list
     ALPHABETICAL.clear();
     ALPHABETICAL.addAll(GOLEMS);
-    Collections.sort(ALPHABETICAL, (g1, g2) -> g1.getGolemName().compareTo(g2.getGolemName()));
+    Collections.sort(ALPHABETICAL, (g1, g2) -> g1.getGolemName().getString().compareTo(g2.getGolemName().getString()));
   }
 
   @Override
@@ -253,11 +252,16 @@ public class GuiGolemBook extends Screen {
    * @param pageNum the page to draw
    **/
   private void drawPageAt(final MatrixStack matrix, final int cornerX, final int cornerY, final int pageNum, final float partialTicks) {
+    // 1.16 mappings: 
+    // applyTextStyle -> func_240699_a_(TextFormatting) or func_240701_a_(TextFormatting...)
+    // appendSibling -> func_230529_a_(ITextComponent)
+    // appendText -> func_240702_b_(String)
+    
     // draw the page number
     this.drawPageNum(matrix, cornerX, cornerY, pageNum + 1);
     // declare these for the following switch statement
-    String title;
-    String body;
+    IFormattableTextComponent title;
+    IFormattableTextComponent body;
     float scale;
     int startX;
     int startY;
@@ -266,13 +270,13 @@ public class GuiGolemBook extends Screen {
     case 0:
       // draw introduction
       title = trans("item.golems.info_book");
-      body = trans("golembook.intro1") + "\n" + trans("golembook.intro2");
+      body = trans("golembook.intro1").func_240702_b_("\n").func_230529_a_(trans("golembook.intro2"));
       drawBasicPage(matrix, cornerX, cornerY, title, body);
       return;
     case 1:
       // draw Table of Contents
       title = trans("golembook.contents.title");
-      drawBasicPage(matrix, cornerX, cornerY, title, "");
+      drawBasicPage(matrix, cornerX, cornerY, title, wrap(""));
 
       // draw background
       this.getMinecraft().getTextureManager().bindTexture(CONTENTS);
@@ -296,25 +300,26 @@ public class GuiGolemBook extends Screen {
       return;
     case 2:
       // draw Golem Spell instructions
-      title = TextFormatting.getTextWithoutFormattingCodes(trans("item.golems.golem_paper"));
-      body = "\n\n\n\n" + trans("golembook.recipe_spell.recipe", title, trans("item.minecraft.paper"), trans("item.minecraft.feather"),
-          trans("item.minecraft.ink_sac"), trans("item.minecraft.redstone"));
+      title = trans("item.golems.golem_paper");
+      body = wrap("\n\n\n\n").func_230529_a_(
+          trans("golembook.recipe_spell.recipe", title, trans("item.minecraft.paper"), trans("item.minecraft.feather"),
+          trans("item.minecraft.ink_sac"), trans("item.minecraft.redstone")));
       drawBasicPage(matrix, cornerX, cornerY, title, body);
       draw2x2GridAt(matrix, cornerX + MARGIN * 2, cornerY + MARGIN * 2, ingredientsSpell, outputSpell);
       return;
     case 3:
       // draw Golem Head instructions
       title = trans("block.golems.golem_head");
-      body = "\n\n\n\n" + TextFormatting.getTextWithoutFormattingCodes(
-          trans("golembook.recipe_head.recipe", title, trans("item.golems.golem_paper"), trans("block.minecraft.pumpkin")));
+      body = wrap("\n\n\n\n").func_230529_a_(trans("golembook.recipe_head.recipe", title, trans("item.golems.golem_paper"), trans("block.minecraft.pumpkin")));
       drawBasicPage(matrix, cornerX, cornerY, title, body);
       draw2x2GridAt(matrix, cornerX + MARGIN * 2, cornerY + MARGIN * 2, ingredientsHead, outputHead);
       return;
     case 4:
       // draw Make Golem instructions
       title = trans("golembook.build_golem.title");
-      body = trans("golembook.build_golem.howto1") + " " + trans("golembook.build_golem.howto2") + "\n\n"
-          + trans("golembook.build_golem.howto3", trans("block.golems.golem_head"));
+      body = trans("golembook.build_golem.howto1").func_230529_a_(wrap(" "))
+          .func_230529_a_(trans("golembook.build_golem.howto2")).func_230529_a_(wrap("\n\n"))
+          .func_230529_a_(trans("golembook.build_golem.howto3", trans("block.golems.golem_head")));
       drawBasicPage(matrix, cornerX, cornerY, title, body);
       return;
     case 5:
@@ -392,18 +397,14 @@ public class GuiGolemBook extends Screen {
     // 'golem name' text box
     int nameX = cornerX + MARGIN * 4;
     int nameY = cornerY + MARGIN;
-    String golemName = entry.getGolemName();
-    // TODO this.font.drawSplitString(golemName, nameX, nameY, (BOOK_WIDTH / 2) - MARGIN * 5, 0);
+    IFormattableTextComponent golemName = entry.getGolemName();
+    this.font.func_238418_a_(golemName, nameX, nameY, (BOOK_WIDTH / 2) - MARGIN * 5, 0);
 
     // 'golem stats' text box
     int statsX = cornerX + MARGIN;
     int statsY = nameY + MARGIN * 2;
-    String stats = entry.getDescriptionPage();
-    // TODO this.font.drawSplitString(stats, statsX, statsY, (BOOK_WIDTH / 2) - (MARGIN * 2), 0);
-
-    // 'golem block'
-    // this.drawBlock(entry.getBlock((int)(partialTicks * GOLEM_BLOCK_TIMER)),
-    // cornerX, cornerY, GOLEM_BLOCK_SCALE);
+    IFormattableTextComponent stats = entry.getDescriptionPage();
+    this.font.func_238418_a_(stats, statsX, statsY, (BOOK_WIDTH / 2) - (MARGIN * 2), 0);
 
     // 'screenshot' (supplemental image)
     if (entry.hasImage()) {
@@ -418,23 +419,24 @@ public class GuiGolemBook extends Screen {
     }
   }
 
-  private void drawBasicPage(final MatrixStack matrix, int cornerX, int cornerY, String title, String body) {
+  private void drawBasicPage(final MatrixStack matrix, int cornerX, int cornerY, 
+      IFormattableTextComponent title, IFormattableTextComponent body) {
     final int maxWidth = (BOOK_WIDTH / 2) - (MARGIN * 2);
 
     int titleX = cornerX + MARGIN + 4;
     int titleY = cornerY + MARGIN;
-    int sWidth = this.font.getStringWidth(title);
+    int sWidth = this.font.getStringWidth(title.getString());
     if (sWidth > maxWidth) {
       // draw title wrapped
-      // TODO this.font.drawSplitString(title, titleX, titleY, maxWidth, 0);
+      this.font.func_238418_a_(title, titleX, titleY, maxWidth, 0);
     } else {
       // draw title centered
-      this.font.drawString(matrix, title, titleX + ((maxWidth - sWidth) / 2), titleY, 0);
+      this.font.drawString(matrix, title.getString(), titleX + ((maxWidth - sWidth) / 2), titleY, 0);
     }
 
     int bodyX = titleX;
     int bodyY = titleY + MARGIN * 2;
-    // TODO this.font.drawSplitString(body, bodyX, bodyY, maxWidth, 0);
+    this.font.func_238418_a_(body, bodyX, bodyY, maxWidth, 0);
   }
 
   private void draw2x2GridAt(final MatrixStack matrix, final int startX, final int startY, final ItemStack[] ingredients, final ItemStack result) {
@@ -597,10 +599,13 @@ public class GuiGolemBook extends Screen {
   /**
    * Helper method for translating text into local language using TranslationTextComponent
    **/
-  protected static String trans(final String s, final Object... strings) {
-    return new TranslationTextComponent(s, strings).getString();
+  protected static IFormattableTextComponent trans(final String s, final Object... strings) {
+    return new TranslationTextComponent(s, strings);
   }
-
+  
+  protected static IFormattableTextComponent wrap(final String s) {
+    return new StringTextComponent(s);
+  }
 
   protected static class BlockButton extends Button {
 
@@ -697,19 +702,19 @@ public class GuiGolemBook extends Screen {
         // prepare to draw the golem's name
         RenderSystem.pushMatrix();
 
-        final String name = entry.getGolemName();
+        final IFormattableTextComponent name = entry.getGolemName();
         final int wrap = this.width - 20;
         float scale = 1.0F;
-        int nameH = gui.font.getWordWrappedHeight(name, wrap);
+        int nameH = gui.font.getWordWrappedHeight(name.getString(), wrap);
         if (nameH > this.height) {
           scale = 0.7F;
-          nameH = (int) (scale * gui.font.getWordWrappedHeight(name, (int) (wrap / scale)));
+          nameH = (int) (scale * gui.font.getWordWrappedHeight(name.getString(), (int) (wrap / scale)));
         }
         int nameX = this.x + 20;
         int nameY = this.y + ((this.height - nameH) / 2) + 1;
         // re-scale and draw the golem name
         RenderSystem.scalef(scale, scale, scale);
-        // TODO gui.font.drawSplitString(name, (int) ((nameX) / scale), (int) (nameY / scale), (int) (wrap / scale), 0);
+        gui.font.func_238418_a_(name, (int) ((nameX) / scale), (int) (nameY / scale), (int) (wrap / scale), 0);
         RenderSystem.popMatrix();
       }
     }
