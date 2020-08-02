@@ -20,8 +20,8 @@ public class BlockUtilityGlow extends BlockUtility {
   /* Default value for TICK_RATE. Not necessary to define through config. */
   public static final int UPDATE_TICKS = 6;
 
-  public BlockUtilityGlow(final Material m, final float defaultLight, final int tickRate) {
-    super(Properties.create(m).tickRandomly().setLightLevel(state -> state.get(LIGHT_LEVEL)), tickRate);
+  public BlockUtilityGlow(final Material m, final float defaultLight) {
+    super(Properties.create(m).tickRandomly().setLightLevel(state -> state.get(LIGHT_LEVEL)), UPDATE_TICKS);
     int light = (int) (defaultLight * 15.0F);
     this.setDefaultState(this.getDefaultState().with(LIGHT_LEVEL, light));
   }
@@ -37,7 +37,7 @@ public class BlockUtilityGlow extends BlockUtility {
 
     if (hasLightGolem) {
       // light golem is nearby, schedule another update
-      worldIn.getPendingBlockTicks().scheduleTick(pos, state.getBlock(), this.tickRate(worldIn));
+      worldIn.getPendingBlockTicks().scheduleTick(pos, state.getBlock(), this.tickRate);
     } else {
       this.remove(worldIn, state, pos, 3);
     }

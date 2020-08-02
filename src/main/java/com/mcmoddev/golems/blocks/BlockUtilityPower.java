@@ -21,8 +21,8 @@ public class BlockUtilityPower extends BlockUtility {
   /* Default value for TICK_RATE. Not necessary to define through config. */
   public static final int UPDATE_TICKS = 4;
 
-  public BlockUtilityPower(final int powerLevel, final int tickRate) {
-    super(Properties.create(Material.GLASS).tickRandomly(), tickRate);
+  public BlockUtilityPower(final int powerLevel) {
+    super(Properties.create(Material.GLASS).tickRandomly(), UPDATE_TICKS);
     this.setDefaultState(this.getDefaultState().with(POWER_LEVEL, powerLevel));
   }
 
@@ -31,11 +31,11 @@ public class BlockUtilityPower extends BlockUtility {
     // make a slightly expanded AABB to check for the golem
     AxisAlignedBB toCheck = new AxisAlignedBB(pos).grow(0.25D);
     List<GolemBase> list = worldIn.getEntitiesWithinAABB(GolemBase.class, toCheck);
-    boolean hasPowerGolem = list != null && !list.isEmpty() && hasPowerGolem(list);
+    boolean hasPowerGolem = !list.isEmpty() && hasPowerGolem(list);
 
     if (hasPowerGolem) {
-      // light golem is nearby, schedule another update
-      worldIn.getPendingBlockTicks().scheduleTick(pos, this, this.tickRate(worldIn));
+      // power golem is nearby, schedule another update
+      worldIn.getPendingBlockTicks().scheduleTick(pos, this, this.tickRate);
     } else {
       this.remove(worldIn, state, pos, 3);
     }

@@ -15,6 +15,7 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 
 public class ItemGolemSpell extends Item {
 
@@ -62,6 +63,6 @@ public class ItemGolemSpell extends Item {
 
   @Override
   public ITextComponent getDisplayName(ItemStack stack) {
-    return super.getDisplayName(stack).applyTextStyle(TextFormatting.RED);
+    return new TranslationTextComponent(this.getTranslationKey(stack)).func_240699_a_(TextFormatting.RED);
   }
 }

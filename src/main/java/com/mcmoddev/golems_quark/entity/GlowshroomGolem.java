@@ -9,12 +9,11 @@ import com.mcmoddev.golems.main.GolemItems;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -40,7 +39,7 @@ public class GlowshroomGolem extends GolemBase {
     super.livingTick();
     // particles
     if(this.world.isRemote && rand.nextInt(20) == 0) {
-      final Vec3d pos = this.getPositionVec();
+      final Vector3d pos = this.getPositionVec();
       this.world.addParticle(ParticleTypes.END_ROD, 
           pos.getX() + (rand.nextFloat() - 0.5F) * this.getWidth() * 0.8F, 
           pos.getY() + rand.nextFloat() * this.getHeight(), 

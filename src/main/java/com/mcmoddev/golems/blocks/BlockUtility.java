@@ -1,5 +1,7 @@
 package com.mcmoddev.golems.blocks;
 
+import java.util.Random;
+
 import javax.annotation.Nullable;
 
 import net.minecraft.block.Block;
@@ -12,28 +14,25 @@ import net.minecraft.entity.Entity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 public abstract class BlockUtility extends Block implements IBucketPickupHandler, ILiquidContainer {
-
-  private final int tickRate;
+  
+  protected final int tickRate;
 
   public BlockUtility(final Properties prop, final int tickrate) {
-    super(prop.hardnessAndResistance(-1F).doesNotBlockMovement());
+    super(prop.hardnessAndResistance(-1F).doesNotBlockMovement().tickRandomly());
     this.setDefaultState(this.stateContainer.getBaseState().with(BlockStateProperties.WATERLOGGED, false));
     this.tickRate = tickrate;
   }
@@ -87,20 +86,23 @@ public abstract class BlockUtility extends Block implements IBucketPickupHandler
   @Override
   public void onBlockAdded(final BlockState state, final World worldIn, final BlockPos pos, final BlockState oldState, final boolean isMoving) {
     if (this.ticksRandomly(state)) {
-      worldIn.getPendingBlockTicks().scheduleTick(pos, this, this.tickRate(worldIn));
-      worldIn.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
-      worldIn.notifyNeighbors(pos, this);
+      worldIn.getPendingBlockTicks().scheduleTick(pos, this, tickRate);
+      if(state.get(BlockStateProperties.WATERLOGGED)) {
+        worldIn.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+      }
+      worldIn.notifyNeighborsOfStateChange(pos, this);
     }
   }
-//
-//	@Override
-//	public void randomTick(final BlockState state, final World worldIn, final BlockPos pos, final Random rand) {
-//		this.tick(state, worldIn, pos, rand);
-//	}
 
   @Override
-  public int tickRate(final IWorldReader worldIn) {
-    return this.ticksRandomly ? tickRate : super.tickRate(worldIn);
+  public void tick(final BlockState state, final ServerWorld worldIn, final BlockPos pos, final Random rand) {
+    super.tick(state, worldIn, pos, rand);
+    if (this.ticksRandomly(state)) {
+      worldIn.getPendingBlockTicks().scheduleTick(pos, this, tickRate);
+      if(state.get(BlockStateProperties.WATERLOGGED)) {
+        worldIn.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+      }
+    }
   }
 
   @Override
@@ -123,25 +125,10 @@ public abstract class BlockUtility extends Block implements IBucketPickupHandler
     return VoxelShapes.empty();
   }
 
-//  @Override
-//  public boolean isNormalCube(final BlockState state, final IBlockReader worldIn, final BlockPos pos) {
-//    return false;
-//  }
-//	
-//	@Override
-//	public boolean isSolid(final BlockState state) {
-//		return false;
-//	}
-
   @Override
   public ItemStack getItem(final IBlockReader worldIn, final BlockPos pos, final BlockState state) {
     return ItemStack.EMPTY;
   }
-
-//	@Override
-//	public boolean isCollidable(BlockState state) {
-//		return false;
-//	}
 
   @Override
   public boolean isReplaceable(final BlockState state, final BlockItemUseContext useContext) {

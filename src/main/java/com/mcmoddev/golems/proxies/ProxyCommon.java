@@ -52,8 +52,8 @@ public class ProxyCommon {
 
   public void registerBlocks(final RegistryEvent.Register<Block> event) {
     event.getRegistry().registerAll(new BlockGolemHead().setRegistryName(ExtraGolems.MODID, "golem_head"),
-        new BlockUtilityGlow(Material.GLASS, 1.0F, BlockUtilityGlow.UPDATE_TICKS).setRegistryName(ExtraGolems.MODID, "light_provider"),
-        new BlockUtilityPower(15, BlockUtilityPower.UPDATE_TICKS).setRegistryName(ExtraGolems.MODID, "power_provider"));
+        new BlockUtilityGlow(Material.GLASS, 1.0F).setRegistryName(ExtraGolems.MODID, "light_provider"),
+        new BlockUtilityPower(15).setRegistryName(ExtraGolems.MODID, "power_provider"));
   }
 
   public void registerContainers(final RegistryEvent.Register<ContainerType<?>> event) {

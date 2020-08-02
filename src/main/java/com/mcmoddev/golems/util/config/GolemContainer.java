@@ -26,6 +26,8 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ITag;
+import net.minecraft.tags.ITag.INamedTag;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -136,7 +138,7 @@ public final class GolemContainer {
   public Set<Block> getBuildingBlocks() {
     // make set of all blocks including tags (run-time only)
     Set<Block> blocks = validBuildingBlocks.isEmpty() ? new HashSet<>() : validBuildingBlocks.stream().map(d -> d.get()).collect(Collectors.toSet());
-    for (final Tag<Block> tag : loadTags(validBuildingBlockTags)) {
+    for (final INamedTag<Block> tag : loadTags(validBuildingBlockTags)) {
       blocks.addAll(tag.getAllElements());
     }
     return blocks;
@@ -228,8 +230,8 @@ public final class GolemContainer {
    * @param additional Block Tag to register as "valid"
    * @return if the Block Tag was added successfully
    **/
-  public boolean addBlocks(@Nonnull final Tag<Block> additional) {
-    return this.validBuildingBlockTags.add(additional.getId());
+  public boolean addBlocks(@Nonnull final ITag.INamedTag<Block> additional) {
+    return this.validBuildingBlockTags.add(additional.getName());
   }
 
   /**
@@ -239,11 +241,11 @@ public final class GolemContainer {
    * @param rls a Collection of ResourceLocation IDs that represent Block Tags.
    * @return a current Collection of Block Tags
    **/
-  private static Collection<Tag<Block>> loadTags(final Collection<ResourceLocation> rls) {
-    final Collection<Tag<Block>> tags = new HashSet<>();
+  private static Collection<ITag.INamedTag<Block>> loadTags(final Collection<ResourceLocation> rls) {
+    final Collection<ITag.INamedTag<Block>> tags = new HashSet<>();
     for (final ResourceLocation rl : rls) {
       if (BlockTags.getCollection().get(rl) != null) {
-        tags.add(BlockTags.getCollection().get(rl));
+        tags.add((ITag.INamedTag<Block>) BlockTags.getCollection().get(rl));
       }
     }
     return tags;
@@ -573,8 +575,8 @@ public final class GolemContainer {
      * @return instance to allow chaining of methods
      * @see #addBlocks(Block[])
      **/
-    public Builder addBlocks(final Tag<Block> blockTag) {
-      this.validBuildingBlockTags.add(blockTag.getId());
+    public Builder addBlocks(final ITag.INamedTag<Block> blockTag) {
+      this.validBuildingBlockTags.add(blockTag.getName());
       return this;
     }
 
@@ -697,7 +699,7 @@ public final class GolemContainer {
    * {@code FLOAT} = the golem swims on top of water <br>
    * {@code SWIM} = the golem navigates up and down in the water
    **/
-  public enum SwimMode {
+  public static enum SwimMode {
     SINK, FLOAT, SWIM;
   }
 }

@@ -95,10 +95,13 @@ public final class ItemBedrockGolem extends Item {
   @Override
   @OnlyIn(Dist.CLIENT)
   public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-    final ITextComponent loreCreativeOnly = trans("tooltip.creative_only_item").applyTextStyle(TextFormatting.RED);
-    final ITextComponent lorePressShift = trans("tooltip.press").applyTextStyle(TextFormatting.GRAY).appendSibling(wrap(" "))
-        .appendSibling(trans("tooltip.shift").applyTextStyle(TextFormatting.YELLOW)).appendSibling(wrap(" "))
-        .appendSibling(trans("tooltip.for_more_details").applyTextStyle(TextFormatting.GRAY));
+    // 1.16 mappings: 
+    // applyTextStyle -> func_240699_a_(TextFormatting) or func_240701_a_(TextFormatting...)
+    // appendSibling -> func_230529_a_(ITextComponent)
+    final ITextComponent loreCreativeOnly = trans("tooltip.creative_only_item").func_240699_a_(TextFormatting.RED);
+    final ITextComponent lorePressShift = trans("tooltip.press").func_240699_a_(TextFormatting.GRAY).func_230529_a_(wrap(" "))
+        .func_230529_a_(trans("tooltip.shift").func_240699_a_(TextFormatting.YELLOW)).func_230529_a_(wrap(" "))
+        .func_230529_a_(trans("tooltip.for_more_details").func_240699_a_(TextFormatting.GRAY));
     // "Creative-Mode Only"
     tooltip.add(loreCreativeOnly);
     // "Use to spawn Bedrock Golem. Use on existing Bedrock Golem to remove it"

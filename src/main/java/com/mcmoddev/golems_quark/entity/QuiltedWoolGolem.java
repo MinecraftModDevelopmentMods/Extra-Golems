@@ -2,7 +2,6 @@ package com.mcmoddev.golems_quark.entity;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemMultiColorized;
@@ -52,7 +51,7 @@ public class QuiltedWoolGolem extends GolemMultiColorized {
     // fills a map with Block-Byte references to correctly build the golem
     if(ModuleLoader.INSTANCE.isModuleEnabled(QuiltedWoolModule.class)) {
       for(final DyeColor d : DyeColor.values()) {
-        final Block b = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("quark:" + d.getName() + "_quilted_wool"));
+        final Block b = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("quark:" + d.getTranslationKey() + "_quilted_wool"));
         textureBytes.put(b, (byte) d.getId());
       }
     }

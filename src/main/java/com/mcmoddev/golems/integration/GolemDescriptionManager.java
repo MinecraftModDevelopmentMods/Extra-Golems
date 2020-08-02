@@ -44,26 +44,31 @@ public abstract class GolemDescriptionManager {
    **/
   @SuppressWarnings("WeakerAccess")
   public List<ITextComponent> getEntityDescription(final GolemBase golem) {
+    // 1.16 mappings: 
+    // applyTextStyle -> func_240699_a_(TextFormatting) or func_240701_a_(TextFormatting...)
+    // appendSibling -> func_230529_a_(ITextComponent)
+    // appendText -> func_240702_b_(String)
+    
     List<ITextComponent> list = new LinkedList<>();
     if (showAttack) {
       double attack = (golem.getAttribute(Attributes.ATTACK_DAMAGE).getValue());
-      list.add(new TranslationTextComponent("entitytip.attack").applyTextStyle(TextFormatting.GRAY).appendSibling(new StringTextComponent(": "))
-          .appendSibling(new StringTextComponent(Double.toString(attack)).applyTextStyle(TextFormatting.WHITE)));
+      list.add(new TranslationTextComponent("entitytip.attack").func_240699_a_(TextFormatting.GRAY).func_230529_a_(new StringTextComponent(": "))
+          .func_230529_a_(new StringTextComponent(Double.toString(attack)).func_240699_a_(TextFormatting.WHITE)));
     }
 
     // add right-click-texture to tip if possible
     if (this.showMultiTexture && golem.canInteractChangeTexture() && !(golem instanceof RedstoneLampGolem)) {
-      list.add(new TranslationTextComponent("entitytip.click_change_texture").applyTextStyle(TextFormatting.BLUE));
+      list.add(new TranslationTextComponent("entitytip.click_change_texture").func_240699_a_(TextFormatting.BLUE));
     }
 
     // add fire immunity to tip if possible
     if (this.showFireproof && golem.getType().isImmuneToFire() && !(golem instanceof BedrockGolem)) {
-      list.add(new TranslationTextComponent("entitytip.is_fireproof").applyTextStyle(TextFormatting.GOLD));
+      list.add(new TranslationTextComponent("entitytip.is_fireproof").func_240699_a_(TextFormatting.GOLD));
     }
 
     // add knockback resist to tip if possible
     if (this.showKnockbackResist && golem.getAttribute(Attributes.KNOCKBACK_RESISTANCE).getBaseValue() > 0.8999D) {
-      list.add(new TranslationTextComponent("attribute.name.generic.knockbackResistance").applyTextStyle(TextFormatting.GRAY));
+      list.add(new TranslationTextComponent("attribute.name.generic.knockbackResistance").func_240699_a_(TextFormatting.GRAY));
     }
 
     if(showSpecial) {
@@ -71,6 +76,7 @@ public abstract class GolemDescriptionManager {
       if (golem instanceof FurnaceGolem) {
         addFurnaceGolemInfo((FurnaceGolem)golem, list);
       }
+      // add arrow amount if this is a dispenser golem
       if(golem instanceof DispenserGolem) {
         addDispenserGolemInfo((DispenserGolem)golem, list);
       }
@@ -98,8 +104,8 @@ public abstract class GolemDescriptionManager {
     // if sneaking, show exact value, otherwise show percentage value
     final String fuelString = isShiftDown() ? Integer.toString(fuel) : (Integer.toString(percentFuel) + "%");
     // actually add the description
-    list.add(new TranslationTextComponent("entitytip.fuel").applyTextStyle(TextFormatting.GRAY).appendSibling(new StringTextComponent(": "))
-        .appendSibling(new StringTextComponent(fuelString).applyTextStyle(color)));
+    list.add(new TranslationTextComponent("entitytip.fuel").func_240699_a_(TextFormatting.GRAY).func_230529_a_(new StringTextComponent(": "))
+        .func_230529_a_(new StringTextComponent(fuelString).func_240699_a_(color)));
   }
   
   protected void addDispenserGolemInfo(final DispenserGolem g, final List<ITextComponent> list) {
@@ -110,8 +116,8 @@ public abstract class GolemDescriptionManager {
       // if sneaking, show exact value, otherwise show percentage value
       final String arrowString = Integer.toString(arrows);
       // actually add the description
-      list.add(new TranslationTextComponent("entitytip.arrows").applyTextStyle(TextFormatting.GRAY).appendSibling(new StringTextComponent(": "))
-          .appendSibling(new StringTextComponent(arrowString).applyTextStyle(color)));
+      list.add(new TranslationTextComponent("entitytip.arrows").func_240699_a_(TextFormatting.GRAY).func_230529_a_(new StringTextComponent(": "))
+          .func_230529_a_(new StringTextComponent(arrowString).func_240699_a_(color)));
     }
    
   }

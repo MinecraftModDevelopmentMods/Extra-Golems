@@ -16,7 +16,6 @@ import com.mcmoddev.golems.util.config.GolemContainer.SwimMode;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -170,7 +169,7 @@ public class GolemBookEntry {
     }
     // ADD SPECIALS
     for (ITextComponent s : this.specials) {
-      page.append("\n" + s.getFormattedText().replaceAll(TextFormatting.WHITE.toString(), TextFormatting.BLACK.toString()));
+      page.append("\n" + s.getString().replaceAll(TextFormatting.WHITE.toString(), TextFormatting.BLACK.toString()));
     }
 
     return page.toString();
@@ -180,6 +179,6 @@ public class GolemBookEntry {
    * Helper method for translating text into local language using {@code I18n}
    **/
   protected static String trans(final String s, final Object... strings) {
-    return I18n.format(s, strings);
+    return new TranslationTextComponent(s, strings).getString();
   }
 }
