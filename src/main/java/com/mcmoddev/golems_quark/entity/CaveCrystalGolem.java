@@ -108,7 +108,7 @@ public final class CaveCrystalGolem extends GolemMultiColorized {
   
   private static void fillTextureBytes() {
     // fills a map with Block-Byte references to correctly build the golem
-    if(false /*TODO ModuleLoader.INSTANCE.isModuleEnabled(CaveCrystalUndergroundBiomeModule.class)*/) {
+    if(ModuleLoader.INSTANCE.isModuleEnabled(CaveCrystalUndergroundBiomeModule.class)) {
       textureBytes.put(ForgeRegistries.BLOCKS.getValue(new ResourceLocation("quark", "red_crystal")), (byte)0);
       textureBytes.put(ForgeRegistries.BLOCKS.getValue(new ResourceLocation("quark", "orange_crystal")), (byte)1);
       textureBytes.put(ForgeRegistries.BLOCKS.getValue(new ResourceLocation("quark", "yellow_crystal")), (byte)2);

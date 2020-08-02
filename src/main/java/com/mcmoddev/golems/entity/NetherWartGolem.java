@@ -10,6 +10,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.NetherWartBlock;
 import net.minecraft.entity.EntityType;
 import net.minecraft.potion.Effects;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 
 public final class NetherWartGolem extends GolemBase {
@@ -35,7 +36,9 @@ public final class NetherWartGolem extends GolemBase {
     this.goalSelector.addGoal(2, new PlaceBlocksGoal(this, freq, flowers, soils, allow));
     if (allowHealing) {
       this.goalSelector.addGoal(4, new PassiveEffectsGoal(this, Effects.REGENERATION, 50, 60, 1, 1,
-          g -> (g.getEntityWorld().getDimensionType().isNether() || !g.getEntityWorld().isDaytime()) && g.getEntityWorld().getRandom().nextInt(450) == 0));
+          // TODO make sure this is really checking if we're in the nether...
+          g -> (g.getEntityWorld().func_234922_V_() == DimensionType.field_236000_d_ 
+            || !g.getEntityWorld().isDaytime()) && g.getEntityWorld().getRandom().nextInt(450) == 0));
     }
   }
 }

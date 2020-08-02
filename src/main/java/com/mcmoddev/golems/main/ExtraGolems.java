@@ -44,7 +44,7 @@ public class ExtraGolems {
     FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
     MinecraftForge.EVENT_BUS.register(new GolemCommonEventHandler());
     ExtraGolems.PROXY.registerListeners();
-    BlockTagUtil.loadTags();
+    // BlockTagUtil.loadTags();
     ExtraGolemsEntities.initEntityTypes();
     AddonLoader.initEntityTypes();
     // fire GolemRegistrar event for any listening child mods (addons)

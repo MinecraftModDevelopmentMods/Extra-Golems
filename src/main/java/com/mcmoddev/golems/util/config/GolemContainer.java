@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
@@ -23,6 +24,9 @@ import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.tags.BlockTags;
@@ -61,6 +65,7 @@ public final class GolemContainer {
   private final ImmutableMap<String, GolemSpecialContainer> specialContainers;
   private final ImmutableList<GolemDescription> descContainers;
   private final ImmutableMap<IRegistryDelegate<Item>, Double> healItemMap;
+  private final Supplier<AttributeModifierMap.MutableAttribute> attributeSupplier;
 
   /**
    * Constructor for GolemContainer (use the Builder!)
@@ -79,6 +84,7 @@ public final class GolemContainer {
    * @param lSpecialContainers      any golem specials as a Map
    * @param lDesc                   any special descriptions for the golem
    * @param lHealItemMap            a map of items and their corresponding heal amounts
+   * @param lAttributeSupplier      a supplier for the attribute modifier map
    * @param lTexture                a ResourceLocation for a single default texture
    * @param lBasicSound             a default SoundEvent to use for the golem
    * @param lCustomRender           whether or not the golem will use the default renderer
@@ -88,8 +94,9 @@ public final class GolemContainer {
       final List<ResourceLocation> lValidBuildingBlockTags, final double lHealth, final double lAttack, final double lSpeed,
       final double lKnockbackResist, final boolean lFallDamage, final SwimMode lSwimMode,
       final HashMap<String, GolemSpecialContainer> lSpecialContainers, final List<GolemDescription> lDesc,
-      final Map<IRegistryDelegate<Item>, Double> lHealItemMap, final ResourceLocation lTexture, final SoundEvent lBasicSound,
-      final boolean lCustomRender) {
+      final Map<IRegistryDelegate<Item>, Double> lHealItemMap, 
+      final Supplier<AttributeModifierMap.MutableAttribute> lAttributeSupplier,
+      final ResourceLocation lTexture, final SoundEvent lBasicSound, final boolean lCustomRender) {
     this.entityType = lEntityType;
     this.entityClass = lEntityClass;
     this.validBuildingBlocks = lValidBuildingBlocks;
@@ -104,6 +111,7 @@ public final class GolemContainer {
     this.specialContainers = ImmutableMap.copyOf(lSpecialContainers);
     this.descContainers = ImmutableList.copyOf(lDesc);
     this.healItemMap = ImmutableMap.copyOf(lHealItemMap);
+    this.attributeSupplier = lAttributeSupplier;
     this.basicTexture = lTexture;
     this.basicSound = lBasicSound;
     this.hasCustomRender = lCustomRender;
@@ -138,7 +146,7 @@ public final class GolemContainer {
   public Set<Block> getBuildingBlocks() {
     // make set of all blocks including tags (run-time only)
     Set<Block> blocks = validBuildingBlocks.isEmpty() ? new HashSet<>() : validBuildingBlocks.stream().map(d -> d.get()).collect(Collectors.toSet());
-    for (final INamedTag<Block> tag : loadTags(validBuildingBlockTags)) {
+    for (final ITag<Block> tag : loadTags(validBuildingBlockTags)) {
       blocks.addAll(tag.getAllElements());
     }
     return blocks;
@@ -158,7 +166,7 @@ public final class GolemContainer {
   public GolemSpecialContainer getSpecialContainer(final String key) {
     return specialContainers.get(key);
   }
-  
+
   /**
    * @param item an item that could potentially heal the golem
    * @return a percentage of health to restore. May be zero.
@@ -241,11 +249,11 @@ public final class GolemContainer {
    * @param rls a Collection of ResourceLocation IDs that represent Block Tags.
    * @return a current Collection of Block Tags
    **/
-  private static Collection<ITag.INamedTag<Block>> loadTags(final Collection<ResourceLocation> rls) {
-    final Collection<ITag.INamedTag<Block>> tags = new HashSet<>();
+  private static Collection<ITag<Block>> loadTags(final Collection<ResourceLocation> rls) {
+    final Collection<ITag<Block>> tags = new HashSet<>();
     for (final ResourceLocation rl : rls) {
       if (BlockTags.getCollection().get(rl) != null) {
-        tags.add((ITag.INamedTag<Block>) BlockTags.getCollection().get(rl));
+        tags.add((ITag<Block>) BlockTags.getCollection().get(rl));
       }
     }
     return tags;
@@ -296,81 +304,52 @@ public final class GolemContainer {
   ////////// GETTERS //////////
 
   /** @return the base class used by the Golem. Not always unique. **/
-  public Class<? extends GolemBase> getEntityClass() {
-    return this.entityClass;
-  }
+  public Class<? extends GolemBase> getEntityClass() { return this.entityClass; }
 
   /** @return the EntityType of the Golem. Always unique. **/
-  public EntityType<? extends GolemBase> getEntityType() {
-    return this.entityType;
-  }
+  public EntityType<? extends GolemBase> getEntityType() { return this.entityType; }
 
   /** @return a unique ResourceLocation ID for the Golem. Always unique. **/
-  public ResourceLocation getRegistryName() {
-    return this.entityType.getRegistryName();
-  }
+  public ResourceLocation getRegistryName() { return this.entityType.getRegistryName(); }
+  
+  /** @return the attribute map supplier for the Golem **/
+  public Supplier<AttributeModifierMap.MutableAttribute> getAttributeSupplier() { return attributeSupplier; }
 
   /** @return a default texture for the Golem. May be null. **/
-  public ResourceLocation getTexture() {
-    return this.basicTexture;
-  }
+  public ResourceLocation getTexture() { return this.basicTexture; }
 
-  /**
-   * @return whether the golem should use the default IRenderFactory for rendering
-   **/
-  public boolean useDefaultRender() {
-    return !this.hasCustomRender;
-  }
+  /** @return whether the golem should use the default IRenderFactory for rendering **/
+  public boolean useDefaultRender() { return !this.hasCustomRender; }
 
   /** @return a default SoundEvent to play when the Golem moves or is attacked **/
-  public SoundEvent getSound() {
-    return this.basicSound;
-  }
+  public SoundEvent getSound() { return this.basicSound; }
 
   /** @return the name of the Golem as specified in the Builder **/
-  public String getName() {
-    return this.name;
-  }
+  public String getName() { return this.name; }
 
   /** @return the Golem's default health. Mutable. **/
-  public double getHealth() {
-    return this.health;
-  }
+  public double getHealth() { return this.health; }
 
   /** @return the Golem's default attack power. Mutable. **/
-  public double getAttack() {
-    return this.attack;
-  }
+  public double getAttack() { return this.attack; }
 
   /** @return the Golem's default move speed. Immutable. **/
-  public double getSpeed() {
-    return this.speed;
-  }
+  public double getSpeed() { return this.speed; }
 
   /** @return the Golem's default knockback resistance. Immutable. **/
-  public double getKnockbackResist() {
-    return this.knockbackResist;
-  }
+  public double getKnockbackResist() { return this.knockbackResist; }
 
   /** @return true if the Golem is enabled by the config settings. Mutable. **/
-  public boolean isEnabled() {
-    return this.enabled;
-  }
+  public boolean isEnabled() { return this.enabled; }
 
   /** @return true if the Golem takes damage upon falling from heights **/
-  public boolean takesFallDamage() {
-    return this.fallDamage;
-  }
+  public boolean takesFallDamage() { return this.fallDamage; }
 
   /** @return true if the Golem can swim on top of water **/
-  public boolean canSwim() {
-    return this.swimMode == SwimMode.FLOAT;
-  }
+  public boolean canSwim() { return this.swimMode == SwimMode.FLOAT; }
 
   /** @return the {@link SwimMode} of the Golem **/
-  public SwimMode getSwimMode() {
-    return this.swimMode;
-  }
+  public SwimMode getSwimMode() { return this.swimMode; }
 
   //////////////////////////////////////////////////////////////
   /////////////////// END OF GOLEM CONTAINER ///////////////////
@@ -429,8 +408,7 @@ public final class GolemContainer {
     /**
      * Sets the Mod ID of the golem for registry name
      *
-     * @param lModId the MODID to use to register the golem. <b>Defaults to
-     *               "golems"</b>
+     * @param lModId the MODID to use to register the golem. <b>Defaults to "golems"</b>
      * @return instance to allow chaining of methods
      **/
     public Builder setModId(final String lModId) {
@@ -441,8 +419,7 @@ public final class GolemContainer {
     /**
      * Sets the max health of a golem
      *
-     * @param lHealth The max health (in half hearts) of the golem. <b>Defaults to
-     *                100</b>
+     * @param lHealth The max health (in half hearts) of the golem. <b>Defaults to 100</b>
      * @return instance to allow chaining of methods
      **/
     public Builder setHealth(final double lHealth) {
@@ -453,8 +430,7 @@ public final class GolemContainer {
     /**
      * Sets the attack strength of a golem
      *
-     * @param lAttack The attack strength (in half hearts) of the golem. <b>Defaults
-     *                to 7</b>
+     * @param lAttack The attack strength (in half hearts) of the golem. <b>Defaults to 7</b>
      * @return instance to allow chaining of methods
      **/
     public Builder setAttack(final double lAttack) {
@@ -579,6 +555,20 @@ public final class GolemContainer {
       this.validBuildingBlockTags.add(blockTag.getName());
       return this;
     }
+    
+    /**
+     * Adds building blocks that may be used for creating the golem in the form of a
+     * Block Tag. If no blocks are added via this method or the Block[] version,
+     * this golem cannot be built in-world.
+     *
+     * @param blockTag the {@code Tag<Block>} to use
+     * @return instance to allow chaining of methods
+     * @see #addBlocks(Block[])
+     **/
+    public Builder addBlocks(final ResourceLocation blockTag) {
+      this.validBuildingBlockTags.add(blockTag);
+      return this;
+    }
 
     /**
      * Adds any {@link GolemSpecialContainer}s to be used by the golem
@@ -681,14 +671,23 @@ public final class GolemContainer {
      * @return a copy of the newly constructed GolemContainer
      **/
     public GolemContainer build() {
+      // build the entity type
       EntityType<? extends GolemBase> entityType = entityTypeBuilder.build(golemName);
       entityType.setRegistryName(modid, golemName);
+      // add specials to the container
       HashMap<String, GolemSpecialContainer> containerMap = new HashMap<>();
       for (GolemSpecialContainer c : specials) {
         containerMap.put(c.name, c);
       }
+      // make the attribute supplier
+      final Supplier<AttributeModifierMap.MutableAttribute> attributes = () -> MobEntity.func_233666_p_()
+            .func_233815_a_(Attributes.MAX_HEALTH, this.health)
+            .func_233815_a_(Attributes.MOVEMENT_SPEED, this.speed)
+            .func_233815_a_(Attributes.KNOCKBACK_RESISTANCE, this.knockBackResist)
+            .func_233815_a_(Attributes.ATTACK_DAMAGE, this.attack);
+      // build the golem container
       return new GolemContainer(entityType, entityClass, golemName, validBuildingBlocks, validBuildingBlockTags, health, attack, speed,
-          knockBackResist, fallDamage, swimMode, containerMap, descriptions, healItemMap, basicTexture, basicSound, customRender);
+          knockBackResist, fallDamage, swimMode, containerMap, descriptions, healItemMap, attributes, basicTexture, basicSound, customRender);
     }
   }
 

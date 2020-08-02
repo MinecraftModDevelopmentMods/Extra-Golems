@@ -13,6 +13,7 @@ import com.mcmoddev.golems.util.config.GolemRegistrar;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -34,9 +35,12 @@ public class ProxyCommon {
   }
 
   public void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
-    // Register Golem EntityTypes by iterating through each registered
-    // GolemContainer
-    GolemRegistrar.getContainers().forEach(container -> event.getRegistry().register(container.getEntityType()));
+    // Register EntityTypes by iterating through each registered GolemContainer
+    // Also register their attributes suppliers
+    GolemRegistrar.getContainers().forEach(container -> {
+      event.getRegistry().register(container.getEntityType());
+      GlobalEntityTypeAttributes.put(container.getEntityType(), container.getAttributeSupplier().get().func_233813_a_());
+    });
   }
 
   public void registerItems(final RegistryEvent.Register<Item> event) {

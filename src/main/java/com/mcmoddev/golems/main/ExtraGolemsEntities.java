@@ -32,6 +32,15 @@ public final class ExtraGolemsEntities {
     final IFormattableTextComponent descHeals = new TranslationTextComponent("entitytip.heals").func_240699_a_(TextFormatting.LIGHT_PURPLE);
     final IFormattableTextComponent descSplits = new TranslationTextComponent("entitytip.splits_upon_death");
     final String comSplits = "The number of mini-golems to spawn when this golem dies";
+    
+    // Block Tag resource locations
+    final ResourceLocation tagConcrete = new ResourceLocation(ExtraGolems.MODID, "concrete");
+    final ResourceLocation tagSandstone = new ResourceLocation(ExtraGolems.MODID, "sandstone");
+    final ResourceLocation tagRedSandstone = new ResourceLocation(ExtraGolems.MODID, "red_sandstone");
+    final ResourceLocation tagPrismarine = new ResourceLocation(ExtraGolems.MODID, "prismarine");
+    final ResourceLocation tagTerracotta = new ResourceLocation(ExtraGolems.MODID, "colored_terracotta");
+    final ResourceLocation tagQuartz = new ResourceLocation(ExtraGolems.MODID, "quartz");
+    final ResourceLocation tagDeadCoral = new ResourceLocation(ExtraGolems.MODID, "dead_coral_block");
 
     // ANDESITE GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.ANDESITE_GOLEM, GenericGolem.class, GenericGolem::new)
@@ -67,7 +76,7 @@ public final class ExtraGolemsEntities {
         .addHealItem(Items.COAL, 0.25D).addHealItem(Items.CHARCOAL, 0.25D).build());
     // CONCRETE GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.CONCRETE_GOLEM, ConcreteGolem.class, ConcreteGolem::new)
-        .setHealth(38.0D).setAttack(5.0D).setSpeed(0.26D).addBlocks(BlockTagUtil.TAG_CONCRETE)
+        .setHealth(38.0D).setAttack(5.0D).setSpeed(0.26D).addBlocks(tagConcrete)
         .addSpecial(ConcreteGolem.ALLOW_RESIST, true, "Whether this golem reduces damage it takes",
             new TranslationTextComponent("effect.minecraft.resistance").func_240699_a_(TextFormatting.DARK_GRAY))
         .build());
@@ -76,7 +85,7 @@ public final class ExtraGolemsEntities {
         .setHealth(38.0D).setAttack(6.0D).setSpeed(0.29D).setSwimMode(SwimMode.SWIM).setSound(SoundEvents.BLOCK_CORAL_BLOCK_STEP)
         .addSpecial(CoralGolem.ALLOW_HEALING, true, "Whether this golem can occasionally heal when wet", descHeals)
         .addSpecial(CoralGolem.DRY_TIMER, 425, "Number of ticks golem can stay out of water before drying out")
-        .addBlocks(BlockTags.CORAL_BLOCKS).addBlocks(BlockTagUtil.TAG_DEAD_CORAL_BLOCKS).build());
+        .addBlocks(BlockTags.CORAL_BLOCKS).addBlocks(tagDeadCoral).build());
     // CRAFTING GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.CRAFTING_GOLEM, CraftingGolem.class, CraftingGolem::new)
         .setHealth(24.0D).setAttack(2.0D).setSpeed(0.29D).addBlocks(Blocks.CRAFTING_TABLE).basicTexture()
@@ -236,7 +245,7 @@ public final class ExtraGolemsEntities {
         .immuneToFire().build());
     // PRISMARINE GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.PRISMARINE_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setHealth(34.0D).setAttack(8.0D).setKnockback(0.7D).addBlocks(BlockTagUtil.TAG_PRISMARINE).basicTexture()
+        .setHealth(34.0D).setAttack(8.0D).setKnockback(0.7D).addBlocks(tagPrismarine).basicTexture()
         .setSwimMode(SwimMode.SWIM).addHealItem(Items.PRISMARINE_SHARD, 0.25D).build());
     // PURPUR GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.PURPUR_GOLEM, PurpurGolem.class, PurpurGolem::new)
@@ -246,11 +255,11 @@ public final class ExtraGolemsEntities {
         .basicTexture().build());
     // QUARTZ GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.QUARTZ_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setHealth(85.0D).setAttack(8.5D).setSpeed(0.28D).setKnockback(0.6D).addBlocks(BlockTagUtil.TAG_QUARTZ).basicTexture()
+        .setHealth(85.0D).setAttack(8.5D).setSpeed(0.28D).setKnockback(0.6D).addBlocks(tagQuartz).basicTexture()
         .setSound(SoundEvents.BLOCK_GLASS_STEP).addHealItem(Items.QUARTZ, 0.25D).build());
     // RED SANDSTONE GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.REDSANDSTONE_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setHealth(22.0D).setAttack(4.0D).setSpeed(0.28D).setKnockback(0.6D).addBlocks(BlockTagUtil.TAG_RED_SANDSTONE)
+        .setHealth(22.0D).setAttack(4.0D).setSpeed(0.28D).setKnockback(0.6D).addBlocks(tagRedSandstone)
         .basicTexture().addHealItem(Items.RED_SAND, 0.25D).build());
     // REDSTONE GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.REDSTONE_GOLEM, RedstoneGolem.class, RedstoneGolem::new)
@@ -267,7 +276,7 @@ public final class ExtraGolemsEntities {
         .addHealItem(Items.GLOWSTONE_DUST, 0.25D).build());
     // SANDSTONE GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.SANDSTONE_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setHealth(22.0D).setAttack(4.0D).setSpeed(0.28D).setKnockback(0.6D).addBlocks(BlockTagUtil.TAG_SANDSTONE).basicTexture()
+        .setHealth(22.0D).setAttack(4.0D).setSpeed(0.28D).setKnockback(0.6D).addBlocks(tagSandstone).basicTexture()
         .addHealItem(Items.SAND, 0.25D).build());
     // SEA LANTERN GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.SEALANTERN_GOLEM, SeaLanternGolem.class, SeaLanternGolem::new)
@@ -304,7 +313,7 @@ public final class ExtraGolemsEntities {
         .setSound(SoundEvents.BLOCK_GLASS_STEP).build());
     // STAINED TERRACOTTA GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.STAINEDTERRACOTTA_GOLEM, StainedTerracottaGolem.class, StainedTerracottaGolem::new)
-        .setHealth(42.0D).setAttack(4.0D).setSpeed(0.22D).setKnockback(0.6D).addBlocks(BlockTagUtil.TAG_TERRACOTTA).build());
+        .setHealth(42.0D).setAttack(4.0D).setSpeed(0.22D).setKnockback(0.6D).addBlocks(tagTerracotta).build());
     // STRAW GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.STRAW_GOLEM, StrawGolem.class, StrawGolem::new)
         .setHealth(10.0D).setAttack(1.0D).setSpeed(0.32D).setKnockback(0.0D).addBlocks(Blocks.HAY_BLOCK).basicTexture()

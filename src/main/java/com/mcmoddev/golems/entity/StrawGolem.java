@@ -8,6 +8,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.IGrowable;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.item.BoneMealItem;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -76,9 +77,9 @@ public final class StrawGolem extends GolemBase {
             // grow the crop!
             crop.grow((ServerWorld) golem.getEntityWorld(), rand, blockpos, state);
             // spawn particles
-            // if (golem.getEntityWorld().isRemote) {
-            // BoneMealItem.spawnBonemealParticles(golem.getEntityWorld(), blockpos, 0);
-            // }
+             if (golem.getEntityWorld().isRemote()) {
+               BoneMealItem.spawnBonemealParticles(golem.getEntityWorld(), blockpos, 0);
+             }
             return true;
           }
         }

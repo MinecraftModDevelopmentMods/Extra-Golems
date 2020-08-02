@@ -393,13 +393,13 @@ public class GuiGolemBook extends Screen {
     int nameX = cornerX + MARGIN * 4;
     int nameY = cornerY + MARGIN;
     String golemName = entry.getGolemName();
-    this.font.drawSplitString(golemName, nameX, nameY, (BOOK_WIDTH / 2) - MARGIN * 5, 0);
+    // TODO this.font.drawSplitString(golemName, nameX, nameY, (BOOK_WIDTH / 2) - MARGIN * 5, 0);
 
     // 'golem stats' text box
     int statsX = cornerX + MARGIN;
     int statsY = nameY + MARGIN * 2;
     String stats = entry.getDescriptionPage();
-    this.font.drawSplitString(stats, statsX, statsY, (BOOK_WIDTH / 2) - (MARGIN * 2), 0);
+    // TODO this.font.drawSplitString(stats, statsX, statsY, (BOOK_WIDTH / 2) - (MARGIN * 2), 0);
 
     // 'golem block'
     // this.drawBlock(entry.getBlock((int)(partialTicks * GOLEM_BLOCK_TIMER)),
@@ -426,7 +426,7 @@ public class GuiGolemBook extends Screen {
     int sWidth = this.font.getStringWidth(title);
     if (sWidth > maxWidth) {
       // draw title wrapped
-      this.font.drawSplitString(title, titleX, titleY, maxWidth, 0);
+      // TODO this.font.drawSplitString(title, titleX, titleY, maxWidth, 0);
     } else {
       // draw title centered
       this.font.drawString(matrix, title, titleX + ((maxWidth - sWidth) / 2), titleY, 0);
@@ -434,7 +434,7 @@ public class GuiGolemBook extends Screen {
 
     int bodyX = titleX;
     int bodyY = titleY + MARGIN * 2;
-    this.font.drawSplitString(body, bodyX, bodyY, maxWidth, 0);
+    // TODO this.font.drawSplitString(body, bodyX, bodyY, maxWidth, 0);
   }
 
   private void draw2x2GridAt(final MatrixStack matrix, final int startX, final int startY, final ItemStack[] ingredients, final ItemStack result) {
@@ -709,7 +709,7 @@ public class GuiGolemBook extends Screen {
         int nameY = this.y + ((this.height - nameH) / 2) + 1;
         // re-scale and draw the golem name
         RenderSystem.scalef(scale, scale, scale);
-        gui.font.drawSplitString(name, (int) ((nameX) / scale), (int) (nameY / scale), (int) (wrap / scale), 0);
+        // TODO gui.font.drawSplitString(name, (int) ((nameX) / scale), (int) (nameY / scale), (int) (wrap / scale), 0);
         RenderSystem.popMatrix();
       }
     }

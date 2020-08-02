@@ -1,6 +1,7 @@
 package com.mcmoddev.golems.entity.base;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.mcmoddev.golems.entity.ai.GoToWaterGoal;
@@ -16,16 +17,11 @@ import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.MoverType;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.MovementController;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.goal.MoveThroughVillageGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -105,16 +101,6 @@ public abstract class GolemBase extends IronGolemEntity {
   public void onBuilt(final BlockState body, final BlockState legs, final BlockState arm1, final BlockState arm2) {
     // do nothing
   }
-  
-  public static AttributeModifierMap.MutableAttribute buildAttributes() {
-    // TODO how do we get the entity type to get the correct container?
-    GolemContainer cont = GolemRegistrar.getContainer(this.getType());
-    return MobEntity.func_233666_p_()
-        .func_233815_a_(Attributes.MAX_HEALTH, cont.getHealth())
-        .func_233815_a_(Attributes.MOVEMENT_SPEED, cont.getSpeed())
-        .func_233815_a_(Attributes.KNOCKBACK_RESISTANCE, cont.getKnockbackResist())
-        .func_233815_a_(Attributes.ATTACK_DAMAGE, cont.getAttack());
- }
 
   @Override
   protected void registerData() {
@@ -303,13 +289,15 @@ public abstract class GolemBase extends IronGolemEntity {
     if (ExtraGolemsConfig.enableHealGolems() && this.getHealth() < this.getMaxHealth() && healAmount > 0) {
       heal(healAmount);
       // update stack size/item
-      if (stack.getCount() > 1) {
-        stack.shrink(1);
-      } else {
-        stack = stack.getContainerItem();
+      if(!player.isCreative()) {
+        if (stack.getCount() > 1) {
+          stack.shrink(1);
+        } else {
+          stack = stack.getContainerItem();
+        }
+        // update the player's held item
+        player.setHeldItem(hand, stack);
       }
-      // update the player's held item
-      player.setHeldItem(hand, stack);
       // if currently attacking this player, stop
       if (this.getAttackTarget() == player) {
         this.setRevengeTarget(null);
@@ -364,9 +352,9 @@ public abstract class GolemBase extends IronGolemEntity {
   /**
    * Attempts to spawn the given number of "mini" golems
    * @param count the number of children to spawn
-   * @return whether child golems were spawned successfully
+   * @return a collection containing the entities that were spawned
    **/
-  protected List<GolemBase> trySpawnChildren(final int count) {
+  protected Collection<GolemBase> trySpawnChildren(final int count) {
     final List<GolemBase> children = new ArrayList<>();
     if(!this.world.isRemote && !this.isChild()) {
       for(int i = 0; i < count; i++) {

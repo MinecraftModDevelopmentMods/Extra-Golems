@@ -49,7 +49,7 @@ public class ItemGolemSpell extends Item {
     if (ExtraGolemsConfig.enableUseSpellItem() && cxt.getPos() != null && cxt.getItem() != null && !cxt.getItem().isEmpty()) {
       final Block b = cxt.getWorld().getBlockState(cxt.getPos()).getBlock();
       if (b == Blocks.CARVED_PUMPKIN || (b == Blocks.PUMPKIN && ExtraGolemsConfig.pumpkinBuildsGolems())) {
-        if (!cxt.getWorld().isRemote) {
+        if (!cxt.getWorld().isRemote()) {
           final Direction facing = cxt.getWorld().getBlockState(cxt.getPos()).get(HorizontalBlock.HORIZONTAL_FACING);
           cxt.getWorld().setBlockState(cxt.getPos(), GolemItems.GOLEM_HEAD.getDefaultState().with(HorizontalBlock.HORIZONTAL_FACING, facing), 3);
           BlockGolemHead.trySpawnGolem(cxt.getWorld(), cxt.getPos());
