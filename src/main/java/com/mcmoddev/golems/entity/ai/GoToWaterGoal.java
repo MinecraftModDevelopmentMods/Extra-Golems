@@ -8,7 +8,6 @@ import com.mcmoddev.golems.entity.base.GolemBase;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
@@ -36,7 +35,7 @@ public class GoToWaterGoal extends Goal {
       return false;
     }
 
-    Vec3d target = getNearbyWater();
+    Vector3d target = getNearbyWater();
     if (target == null || !this.golem.shouldMoveToWater(target)) {
       return false;
     }

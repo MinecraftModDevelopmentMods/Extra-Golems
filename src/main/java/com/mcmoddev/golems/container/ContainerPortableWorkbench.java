@@ -38,7 +38,7 @@ public class ContainerPortableWorkbench extends WorkbenchContainer {
       if (player.isSpectator()) {
         return null;
       } else {
-        return new ContainerPortableWorkbench(i, playerInv, IWorldPosCallable.of(player.world, new BlockPos(player)));
+        return new ContainerPortableWorkbench(i, playerInv, IWorldPosCallable.of(player.world, new BlockPos(player.getPositionVec())));
       }
     }
 

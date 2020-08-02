@@ -29,10 +29,10 @@ public final class GolemItems {
   @ObjectHolder("golem_head")
   public static final Block GOLEM_HEAD = null;
 
-  @ObjectHolder("light_provider_full")
+  @ObjectHolder("light_provider")
   public static final Block UTILITY_LIGHT = null;
 
-  @ObjectHolder("power_provider_all")
+  @ObjectHolder("power_provider")
   public static final Block UTILITY_POWER = null;
 
   ////// OTHER //////

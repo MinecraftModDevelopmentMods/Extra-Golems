@@ -151,7 +151,7 @@ public class GolemBookEntry {
    **/
   private String makePage() {
     StringBuilder page = new StringBuilder();
-    // ADD (ROUNDED) health TIP
+    // ADD (ROUNDED) HEALTH TIP
     page.append("\n" + TextFormatting.GRAY + trans("entitytip.health") + ": " + TextFormatting.BLACK + this.health + TextFormatting.DARK_RED
         + " \u2764" + TextFormatting.BLACK);
     // ADD ATTACK POWER TIP

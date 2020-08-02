@@ -21,7 +21,7 @@ public class BlockUtilityGlow extends BlockUtility {
   public static final int UPDATE_TICKS = 6;
 
   public BlockUtilityGlow(final Material m, final float defaultLight, final int tickRate) {
-    super(Properties.create(m).tickRandomly().lightValue((int) (defaultLight * 15.0F)), tickRate);
+    super(Properties.create(m).tickRandomly().setLightLevel(state -> state.get(LIGHT_LEVEL)), tickRate);
     int light = (int) (defaultLight * 15.0F);
     this.setDefaultState(this.getDefaultState().with(LIGHT_LEVEL, light));
   }
@@ -47,11 +47,6 @@ public class BlockUtilityGlow extends BlockUtility {
   protected void fillStateContainer(final StateContainer.Builder<Block, BlockState> builder) {
     super.fillStateContainer(builder);
     builder.add(LIGHT_LEVEL);
-  }
-
-  @Override
-  public int getLightValue(final BlockState state) {
-    return state.get(LIGHT_LEVEL);
   }
 
   /**

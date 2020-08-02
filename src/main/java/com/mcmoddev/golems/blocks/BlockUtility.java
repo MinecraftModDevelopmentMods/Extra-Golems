@@ -10,6 +10,7 @@ import net.minecraft.block.IBucketPickupHandler;
 import net.minecraft.block.ILiquidContainer;
 import net.minecraft.entity.Entity;
 import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.BlockItemUseContext;
@@ -61,7 +62,7 @@ public abstract class BlockUtility extends Block implements IBucketPickupHandler
   }
 
   @Override
-  public IFluidState getFluidState(final BlockState state) {
+  public FluidState getFluidState(final BlockState state) {
     return state.get(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
   }
 
@@ -71,7 +72,7 @@ public abstract class BlockUtility extends Block implements IBucketPickupHandler
   }
 
   @Override
-  public boolean receiveFluid(final IWorld worldIn, final BlockPos pos, final BlockState state, final IFluidState fluidStateIn) {
+  public boolean receiveFluid(final IWorld worldIn, final BlockPos pos, final BlockState state, final FluidState fluidStateIn) {
     if (!state.get(BlockStateProperties.WATERLOGGED) && fluidStateIn.getFluid() == Fluids.WATER) {
       if (!worldIn.isRemote()) {
         worldIn.setBlockState(pos, state.with(BlockStateProperties.WATERLOGGED, Boolean.valueOf(true)), 3);
@@ -122,10 +123,10 @@ public abstract class BlockUtility extends Block implements IBucketPickupHandler
     return VoxelShapes.empty();
   }
 
-  @Override
-  public boolean isNormalCube(final BlockState state, final IBlockReader worldIn, final BlockPos pos) {
-    return false;
-  }
+//  @Override
+//  public boolean isNormalCube(final BlockState state, final IBlockReader worldIn, final BlockPos pos) {
+//    return false;
+//  }
 //	
 //	@Override
 //	public boolean isSolid(final BlockState state) {
@@ -150,12 +151,6 @@ public abstract class BlockUtility extends Block implements IBucketPickupHandler
   @Nullable
   @Override
   public BlockState getStateForPlacement(final BlockItemUseContext context) {
-    return getDefaultState();
-  }
-
-  @Override
-  public BlockState getStateForPlacement(final BlockState state, final Direction facing, final BlockState state2, final IWorld world,
-      final BlockPos pos1, final BlockPos pos2, final Hand hand) {
     return getDefaultState();
   }
 

@@ -6,6 +6,7 @@ import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.ai.goal.MoveThroughVillageGoal;
 import net.minecraft.pathfinding.GroundPathNavigator;
 
+@Deprecated
 public class MoveThroughVillageGoalFixed extends MoveThroughVillageGoal {
 
   public MoveThroughVillageGoalFixed(final CreatureEntity entity, final double speedIn, 

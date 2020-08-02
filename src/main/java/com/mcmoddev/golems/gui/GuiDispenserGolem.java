@@ -1,6 +1,7 @@
 package com.mcmoddev.golems.gui;
 
 import com.mcmoddev.golems.container.ContainerDispenserGolem;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -11,32 +12,30 @@ import net.minecraft.util.text.ITextComponent;
 public class GuiDispenserGolem extends ContainerScreen<ContainerDispenserGolem> {
 
   public static final ResourceLocation BG_TEXTURE = new ResourceLocation("minecraft:textures/gui/container/dispenser.png");
-  public static final int START_Y = 20;
 
-  public GuiDispenserGolem(final ContainerDispenserGolem screenContainer, final PlayerInventory inv, final ITextComponent titleIn) {
-    super(screenContainer, inv, titleIn);
+  public GuiDispenserGolem(ContainerDispenserGolem cont, PlayerInventory pInv, ITextComponent title) {
+    super(cont, pInv, title);
   }
 
   @Override
-  public void render(final int mouseX, final int mouseY, final float partialTicks) {
-    renderBackground();
-    super.render(mouseX, mouseY, partialTicks);
-    renderHoveredToolTip(mouseX, mouseY);
+  protected void init() {
+    super.init();
+    this.field_238742_p_ = (this.xSize - this.font.func_238414_a_(this.title)) / 2;
   }
 
   @Override
-  protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+  public void render(MatrixStack matrix, int x, int y, float f) {
+    this.renderBackground(matrix);
+    super.render(matrix, x, y, f);
+    this.func_230459_a_(matrix, x, y);
+  }
+
+  @Override
+  protected void func_230450_a_(MatrixStack matrix, float f, int i1, int i2) {
     RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-    this.getMinecraft().getTextureManager().bindTexture(BG_TEXTURE);
-    int startX = (this.width - this.xSize) / 2;
-    int startY = (this.height - this.ySize) / 2;
-    this.blit(startX, startY, 0, 0, this.xSize, this.ySize);
+    this.minecraft.getTextureManager().bindTexture(BG_TEXTURE);
+    int i = (this.width - this.xSize) / 2;
+    int j = (this.height - this.ySize) / 2;
+    this.blit(matrix, i, j, 0, 0, this.xSize, this.ySize);
   }
-
-  @Override
-  protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-    this.font.drawString(this.title.getFormattedText(), 12.0F, 5.0F, 4210752);
-    this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F, (float) (this.ySize - 96 + 2), 4210752);
-  }
-
 }

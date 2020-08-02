@@ -90,18 +90,21 @@ dependencies {
 	
     minecraft "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
 	
+	compile fg.deobf(project.dependencies.create("vazkii.autoreglib:AutoRegLib:${project.autoreglib_version}") {
+        transitive = false
+    })
+	
+	compile fg.deobf(project.dependencies.create("vazkii.quark:Quark:${project.quark_version}") {
+        transitive = false
+    })
+
 //	compile fg.deobf(project.dependencies.create("mcp.mobius.waila:Hwyla:${hwyla_version}") {
 //        transitive = false
 //    })
-	
-	compileOnly fg.deobf("vazkii.autoreglib:AutoRegLib:${project.autoreglib_version}")
-	runtimeOnly fg.deobf("vazkii.autoreglib:AutoRegLib:${project.autoreglib_version}")
-	
-	compileOnly fg.deobf("vazkii.quark:Quark:${project.quark_version}")
-	runtimeOnly fg.deobf("vazkii.quark:Quark:${project.quark_version}")
-	
-	compileOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}:api")
-	runtimeOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}")
+
+//	compileOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}:api")
+//	runtimeOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}")
+
 }
 processResources {
     inputs.property "version", project.version

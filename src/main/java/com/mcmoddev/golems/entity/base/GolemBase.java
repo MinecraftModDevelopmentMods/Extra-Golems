@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mcmoddev.golems.entity.ai.GoToWaterGoal;
-import com.mcmoddev.golems.entity.ai.MoveThroughVillageGoalFixed;
 import com.mcmoddev.golems.entity.ai.SwimUpGoal;
-import com.mcmoddev.golems.entity.ai.SwimmingMovementController;
 import com.mcmoddev.golems.items.ItemBedrockGolem;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.ExtraGolemsEntities;
@@ -21,7 +19,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.MoverType;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.MovementController;
 import net.minecraft.entity.ai.goal.Goal;
@@ -105,20 +105,16 @@ public abstract class GolemBase extends IronGolemEntity {
   public void onBuilt(final BlockState body, final BlockState legs, final BlockState arm1, final BlockState arm2) {
     // do nothing
   }
-
-  @Override
-  protected void registerAttributes() {
-    
-    // See IronGolemEntity.func_234200_m_ and GlobalEntityTypeAttributes.FORGE_ATTRIBUTES
-    
-    super.registerAttributes();
-    // Called in super constructor; this.container == null
-    GolemContainer golemContainer = GolemRegistrar.getContainer(this.getType());
-    this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(golemContainer.getAttack());
-    this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(golemContainer.getHealth());
-    this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(golemContainer.getSpeed());
-    this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(golemContainer.getKnockbackResist());
-  }
+  
+  public static AttributeModifierMap.MutableAttribute buildAttributes() {
+    // TODO how do we get the entity type to get the correct container?
+    GolemContainer cont = GolemRegistrar.getContainer(this.getType());
+    return MobEntity.func_233666_p_()
+        .func_233815_a_(Attributes.MAX_HEALTH, cont.getHealth())
+        .func_233815_a_(Attributes.MOVEMENT_SPEED, cont.getSpeed())
+        .func_233815_a_(Attributes.KNOCKBACK_RESISTANCE, cont.getKnockbackResist())
+        .func_233815_a_(Attributes.ATTACK_DAMAGE, cont.getAttack());
+ }
 
   @Override
   protected void registerData() {
@@ -129,22 +125,24 @@ public abstract class GolemBase extends IronGolemEntity {
   @Override
   protected void registerGoals() {
     super.registerGoals();
-    // find and list erroring goals that will be removed
-    final List<Goal> erroringGoals = new ArrayList<>();
-    this.goalSelector.goals.forEach(g -> {
-      if(g.getGoal().getClass() == MoveThroughVillageGoal.class) {
-        erroringGoals.add(g.getGoal());
-      }
-    });
-    // remove the erroring goals
-    erroringGoals.forEach(g -> {
-      this.goalSelector.removeGoal(g);
-      ExtraGolems.LOGGER.debug("Removed erroring goal inherited from IronGolemEntity");
-    });    
-    // add in custom implementation of erroring goal
-    this.goalSelector.addGoal(3, new MoveThroughVillageGoalFixed(this, 0.6D, false, 4, () -> {
-      return false;
-   }));
+    
+// TODO IronGolemEntity now uses PatrolThroughVillageGoal and ReturnToVillageGoal
+//    // find and list erroring goals that will be removed
+//    final List<Goal> erroringGoals = new ArrayList<>();
+//    this.goalSelector.goals.forEach(g -> {
+//      if(g.getGoal().getClass() == MoveThroughVillageGoal.class) {
+//        erroringGoals.add(g.getGoal());
+//      }
+//    });
+//    // remove the erroring goals
+//    erroringGoals.forEach(g -> {
+//      this.goalSelector.removeGoal(g);
+//      ExtraGolems.LOGGER.debug("Removed erroring goal inherited from IronGolemEntity");
+//    });    
+//    // add in custom implementation of erroring goal
+//    this.goalSelector.addGoal(3, new MoveThroughVillageGoalFixed(this, 0.6D, false, 4, () -> {
+//      return false;
+//   }));
   }
 
   /////////////// GOLEM UTILITY METHODS //////////////////
@@ -259,26 +257,27 @@ public abstract class GolemBase extends IronGolemEntity {
     }
   }
 
-  @Override
-  public boolean attackEntityAsMob(final Entity entity) {
-    // Copy Iron Golem behavior but allow for custom attack damage
-    double baseAttack = this.getAttribute(Attributes.ATTACK_DAMAGE).getValue();
-
-    // Deal damage between 100% and 175% of current attack power
-    double damage = baseAttack + (this.rand.nextDouble() * 0.75D) * baseAttack;
-    final boolean flag = entity.attackEntityFrom(DamageSource.causeMobDamage(this), (float) damage);
-    if (flag) {
-      entity.setMotion(entity.getMotion().add(0.0D, 0.4D, 0.0D));
-      this.applyEnchantments(this, entity);
-    }
-
-    // Set fields and play sound so the client knows the golem is attacking an
-    // Entity
-    this.attackTimer = 10;
-    this.world.setEntityState(this, (byte) 4);
-    this.playSound(this.getGolemSound(), 1.0F, 0.9F + rand.nextFloat() * 0.2F);
-    return flag;
-  }
+// TODO IronGolemEntity has a private method for getting attack power, so do we need this?
+//  @Override
+//  public boolean attackEntityAsMob(final Entity entity) {
+//    // Copy Iron Golem behavior but allow for custom attack damage
+//    double baseAttack = this.getAttribute(Attributes.ATTACK_DAMAGE).getValue();
+//
+//    // Deal damage between 100% and 175% of current attack power
+//    double damage = baseAttack + (this.rand.nextDouble() * 0.75D) * baseAttack;
+//    final boolean flag = entity.attackEntityFrom(DamageSource.causeMobDamage(this), (float) damage);
+//    if (flag) {
+//      entity.setMotion(entity.getMotion().add(0.0D, 0.4D, 0.0D));
+//      this.applyEnchantments(this, entity);
+//    }
+//
+//    // Set fields and play sound so the client knows the golem is attacking an
+//    // Entity
+//    this.attackTimer = 10;
+//    this.world.setEntityState(this, (byte) 4);
+//    this.playSound(this.getGolemSound(), 1.0F, 0.9F + rand.nextFloat() * 0.2F);
+//    return flag;
+//  }
 
   @Override
   public boolean canAttack(final EntityType<?> type) {

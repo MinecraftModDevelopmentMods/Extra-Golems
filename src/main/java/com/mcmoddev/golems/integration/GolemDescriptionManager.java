@@ -10,7 +10,7 @@ import com.mcmoddev.golems.entity.RedstoneLampGolem;
 import com.mcmoddev.golems.entity.base.GolemBase;
 
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -46,7 +46,7 @@ public abstract class GolemDescriptionManager {
   public List<ITextComponent> getEntityDescription(final GolemBase golem) {
     List<ITextComponent> list = new LinkedList<>();
     if (showAttack) {
-      double attack = (golem.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getValue());
+      double attack = (golem.getAttribute(Attributes.ATTACK_DAMAGE).getValue());
       list.add(new TranslationTextComponent("entitytip.attack").applyTextStyle(TextFormatting.GRAY).appendSibling(new StringTextComponent(": "))
           .appendSibling(new StringTextComponent(Double.toString(attack)).applyTextStyle(TextFormatting.WHITE)));
     }
@@ -57,12 +57,12 @@ public abstract class GolemDescriptionManager {
     }
 
     // add fire immunity to tip if possible
-    if (this.showFireproof && golem.isImmuneToFire() && !(golem instanceof BedrockGolem)) {
+    if (this.showFireproof && golem.getType().isImmuneToFire() && !(golem instanceof BedrockGolem)) {
       list.add(new TranslationTextComponent("entitytip.is_fireproof").applyTextStyle(TextFormatting.GOLD));
     }
 
     // add knockback resist to tip if possible
-    if (this.showKnockbackResist && golem.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).getBaseValue() > 0.8999D) {
+    if (this.showKnockbackResist && golem.getAttribute(Attributes.KNOCKBACK_RESISTANCE).getBaseValue() > 0.8999D) {
       list.add(new TranslationTextComponent("attribute.name.generic.knockbackResistance").applyTextStyle(TextFormatting.GRAY));
     }
 

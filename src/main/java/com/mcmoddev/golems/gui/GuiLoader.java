@@ -3,6 +3,7 @@ package com.mcmoddev.golems.gui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 
 public final class GuiLoader {
 
@@ -12,7 +13,7 @@ public final class GuiLoader {
 
   public static void loadBookGui(final PlayerEntity playerIn, final ItemStack itemstack) {
     // only load client-side, of course
-    if (!playerIn.getEntityWorld().isRemote) {
+    if (!playerIn.getEntityWorld().isRemote()) {
       return;
     }
     // open the gui

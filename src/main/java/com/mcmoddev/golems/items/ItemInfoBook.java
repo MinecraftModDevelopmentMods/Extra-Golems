@@ -20,7 +20,7 @@ public class ItemInfoBook extends Item {
   @Override
   public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
     ItemStack itemstack = playerIn.getHeldItem(handIn);
-    if (playerIn.getEntityWorld().isRemote) {
+    if (playerIn.getEntityWorld().isRemote()) {
       GuiLoader.loadBookGui(playerIn, itemstack);
     }
     return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
