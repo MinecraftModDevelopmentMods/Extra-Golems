@@ -55,7 +55,7 @@ public final class StrawGolem extends GolemBase {
      * Checks random blocks in a radius until either a growable crop has been found
      * and boosted, or no crops were found in a limited number of attempts.
      *
-     * @return if a crop was grown
+     * @return always returns false...
      **/
     private boolean tryBoostCrop() {
       final Random rand = this.golem.getEntityWorld().getRandom();
@@ -77,10 +77,11 @@ public final class StrawGolem extends GolemBase {
             // grow the crop!
             crop.grow((ServerWorld) golem.getEntityWorld(), rand, blockpos, state);
             // spawn particles
-             if (golem.getEntityWorld().isRemote()) {
-               BoneMealItem.spawnBonemealParticles(golem.getEntityWorld(), blockpos, 0);
-             }
-            return true;
+            if (golem.getEntityWorld().isRemote()) {
+              BoneMealItem.spawnBonemealParticles(golem.getEntityWorld(), blockpos, 0);
+            }
+            // cap the attempts here so we exit the while loop safely
+            attempts = maxAttempts;
           }
         }
       }

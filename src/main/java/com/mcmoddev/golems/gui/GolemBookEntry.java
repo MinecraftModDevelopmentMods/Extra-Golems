@@ -152,39 +152,38 @@ public class GolemBookEntry {
    **/
   private IFormattableTextComponent makePage() {
     // 1.16 mappings: 
-    // applyTextStyle -> func_240699_a_(TextFormatting) or func_240701_a_(TextFormatting...)
-    // appendSibling -> func_230529_a_(ITextComponent)
-    // appendText -> func_240702_b_(String)
+    // applyTextStyle -> mergeStyle(TextFormatting) or func_240701_a_(TextFormatting...)
+    // appendSibling -> append(ITextComponent)
+    // appendText -> appendString(String)
     StringTextComponent page = new StringTextComponent("");
     // ADD (ROUNDED) HEALTH TIP
-    page.func_240702_b_("\n")
-        .func_230529_a_(trans("entitytip.health").func_240702_b_(": ").func_240699_a_(TextFormatting.GRAY))
-        .func_230529_a_(wrap(String.valueOf(this.health)).func_240699_a_(TextFormatting.BLACK)) 
-        .func_230529_a_(wrap(" \u2764").func_240699_a_(TextFormatting.DARK_RED));
+    page.appendString("\n")
+        .append(trans("entitytip.health").appendString(": ").mergeStyle(TextFormatting.GRAY))
+        .append(wrap(String.valueOf(this.health)).mergeStyle(TextFormatting.BLACK)) 
+        .append(wrap(" \u2764").mergeStyle(TextFormatting.DARK_RED));
     // ADD ATTACK POWER TIP
-    page.func_240702_b_("\n")
-        .func_230529_a_(trans("entitytip.attack").func_240702_b_(": ").func_240699_a_(TextFormatting.GRAY))
-        .func_230529_a_(wrap(String.valueOf(this.attack)).func_240699_a_(TextFormatting.BLACK)) 
-        .func_240702_b_(" \u2764").func_240702_b_("\n");
+    page.appendString("\n")
+        .append(trans("entitytip.attack").appendString(": ").mergeStyle(TextFormatting.GRAY))
+        .append(wrap(String.valueOf(this.attack)).mergeStyle(TextFormatting.BLACK)) 
+        .appendString(" \u2764").appendString("\n");
     // ADD FIREPROOF TIP
     if (this.isFireproof) {
-      page.func_240702_b_("\n")
-          .func_230529_a_(trans("entitytip.is_fireproof").func_240699_a_(TextFormatting.GOLD));
+      page.appendString("\n")
+          .append(trans("entitytip.is_fireproof").mergeStyle(TextFormatting.GOLD));
     }
     // ADD INTERACT-TEXTURE TIP
     if (this.canInteractChangeTexture) {
-      page.func_240702_b_("\n")
-          .func_230529_a_(trans("entitytip.click_change_texture").func_240699_a_(TextFormatting.BLUE));
+      page.appendString("\n")
+          .append(trans("entitytip.click_change_texture").mergeStyle(TextFormatting.BLUE));
     }
     // ADD SWIMMING TIP
     if(this.canSwim) {
-      page.func_240702_b_("\n")
-          .func_230529_a_(trans("entitytip.advanced_swim").func_240699_a_(TextFormatting.AQUA));
+      page.appendString("\n")
+          .append(trans("entitytip.advanced_swim").mergeStyle(TextFormatting.AQUA));
     }
     // ADD SPECIALS
     for (ITextComponent s : this.specials) {
-      page.func_240702_b_("\n")
-          .func_230529_a_(wrap(s.getString().replaceAll(TextFormatting.WHITE.toString(), TextFormatting.BLACK.toString())));
+      page.appendString("\n").append(s);
     }
 
     return page;

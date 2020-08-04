@@ -28,7 +28,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -95,13 +94,10 @@ public final class ItemBedrockGolem extends Item {
   @Override
   @OnlyIn(Dist.CLIENT)
   public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-    // 1.16 mappings: 
-    // applyTextStyle -> func_240699_a_(TextFormatting) or func_240701_a_(TextFormatting...)
-    // appendSibling -> func_230529_a_(ITextComponent)
-    final ITextComponent loreCreativeOnly = trans("tooltip.creative_only_item").func_240699_a_(TextFormatting.RED);
-    final ITextComponent lorePressShift = trans("tooltip.press").func_240699_a_(TextFormatting.GRAY).func_230529_a_(wrap(" "))
-        .func_230529_a_(trans("tooltip.shift").func_240699_a_(TextFormatting.YELLOW)).func_230529_a_(wrap(" "))
-        .func_230529_a_(trans("tooltip.for_more_details").func_240699_a_(TextFormatting.GRAY));
+    final ITextComponent loreCreativeOnly = trans("tooltip.creative_only_item").mergeStyle(TextFormatting.RED);
+    final ITextComponent lorePressShift = trans("tooltip.press").mergeStyle(TextFormatting.GRAY).appendString(" ")
+        .append(trans("tooltip.shift").mergeStyle(TextFormatting.YELLOW)).appendString(" ")
+        .append(trans("tooltip.for_more_details").mergeStyle(TextFormatting.GRAY));
     // "Creative-Mode Only"
     tooltip.add(loreCreativeOnly);
     // "Use to spawn Bedrock Golem. Use on existing Bedrock Golem to remove it"
@@ -118,9 +114,4 @@ public final class ItemBedrockGolem extends Item {
   private static TranslationTextComponent trans(final String s, final Object... param) {
     return new TranslationTextComponent(s, param);
   }
-
-  private static StringTextComponent wrap(final String s) {
-    return new StringTextComponent(s);
-  }
-
 }

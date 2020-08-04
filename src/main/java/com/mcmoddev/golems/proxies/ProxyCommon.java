@@ -25,21 +25,18 @@ import net.minecraftforge.event.RegistryEvent;
 
 public class ProxyCommon {
 
-  public void registerListeners() {
-  }
+  public void registerListeners() { }
 
-  public void registerEntityRenders() {
-  }
+  public void registerEntityRenders() { }
 
-  public void registerContainerRenders() {
-  }
+  public void registerContainerRenders() { }
 
   public void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
     // Register EntityTypes by iterating through each registered GolemContainer
     // Also register their attributes suppliers
     GolemRegistrar.getContainers().forEach(container -> {
       event.getRegistry().register(container.getEntityType());
-      GlobalEntityTypeAttributes.put(container.getEntityType(), container.getAttributeSupplier().get().func_233813_a_());
+      GlobalEntityTypeAttributes.put(container.getEntityType(), container.getAttributeSupplier().get().create());
     });
   }
 

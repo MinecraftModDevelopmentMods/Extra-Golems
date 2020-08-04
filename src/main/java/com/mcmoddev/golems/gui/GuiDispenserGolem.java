@@ -20,7 +20,7 @@ public class GuiDispenserGolem extends ContainerScreen<ContainerDispenserGolem> 
   @Override
   protected void init() {
     super.init();
-    this.field_238742_p_ = (this.xSize - this.font.func_238414_a_(this.title)) / 2;
+    this.titleX = (this.xSize - this.font.func_238414_a_(this.title)) / 2;
   }
 
   @Override
@@ -31,7 +31,7 @@ public class GuiDispenserGolem extends ContainerScreen<ContainerDispenserGolem> 
   }
 
   @Override
-  protected void func_230450_a_(MatrixStack matrix, float f, int i1, int i2) {
+  protected void drawGuiContainerBackgroundLayer(MatrixStack matrix, float f, int i1, int i2) {
     RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
     this.minecraft.getTextureManager().bindTexture(BG_TEXTURE);
     int i = (this.width - this.xSize) / 2;

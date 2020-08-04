@@ -31,7 +31,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
-import net.minecraft.tags.ITag.INamedTag;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -681,10 +680,10 @@ public final class GolemContainer {
       }
       // make the attribute supplier
       final Supplier<AttributeModifierMap.MutableAttribute> attributes = () -> MobEntity.func_233666_p_()
-            .func_233815_a_(Attributes.MAX_HEALTH, this.health)
-            .func_233815_a_(Attributes.MOVEMENT_SPEED, this.speed)
-            .func_233815_a_(Attributes.KNOCKBACK_RESISTANCE, this.knockBackResist)
-            .func_233815_a_(Attributes.ATTACK_DAMAGE, this.attack);
+            .createMutableAttribute(Attributes.MAX_HEALTH, this.health)
+            .createMutableAttribute(Attributes.MOVEMENT_SPEED, this.speed)
+            .createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, this.knockBackResist)
+            .createMutableAttribute(Attributes.ATTACK_DAMAGE, this.attack);
       // build the golem container
       return new GolemContainer(entityType, entityClass, golemName, validBuildingBlocks, validBuildingBlockTags, health, attack, speed,
           knockBackResist, fallDamage, swimMode, containerMap, descriptions, healItemMap, attributes, basicTexture, basicSound, customRender);

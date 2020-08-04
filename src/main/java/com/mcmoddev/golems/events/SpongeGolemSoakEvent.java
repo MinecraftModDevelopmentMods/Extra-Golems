@@ -37,7 +37,7 @@ public final class SpongeGolemSoakEvent extends Event {
 
   public SpongeGolemSoakEvent(final GolemBase golem, final BlockPos center, final int radius) {
     this(golem, center, radius,
-        (state) -> state.func_235901_b_(BlockStateProperties.WATERLOGGED) ? state.with(BlockStateProperties.WATERLOGGED, false)
+        (state) -> state.hasProperty(BlockStateProperties.WATERLOGGED) ? state.with(BlockStateProperties.WATERLOGGED, false)
             : (state.getMaterial() == Material.WATER || state.getBlock() == Blocks.KELP || state.getBlock() == Blocks.KELP_PLANT
                 || state.getBlock() == Blocks.SEAGRASS || state.getBlock() == Blocks.TALL_SEAGRASS ? Blocks.AIR.getDefaultState() : state));
   }

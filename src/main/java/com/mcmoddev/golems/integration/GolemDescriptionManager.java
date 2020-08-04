@@ -43,32 +43,28 @@ public abstract class GolemDescriptionManager {
    *         golem
    **/
   @SuppressWarnings("WeakerAccess")
-  public List<ITextComponent> getEntityDescription(final GolemBase golem) {
-    // 1.16 mappings: 
-    // applyTextStyle -> func_240699_a_(TextFormatting) or func_240701_a_(TextFormatting...)
-    // appendSibling -> func_230529_a_(ITextComponent)
-    // appendText -> func_240702_b_(String)
-    
+  public List<ITextComponent> getEntityDescription(final GolemBase golem) {    
     List<ITextComponent> list = new LinkedList<>();
+    // add attack damage to tip enabled (usually checks if sneaking)
     if (showAttack) {
       double attack = (golem.getAttribute(Attributes.ATTACK_DAMAGE).getValue());
-      list.add(new TranslationTextComponent("entitytip.attack").func_240699_a_(TextFormatting.GRAY).func_230529_a_(new StringTextComponent(": "))
-          .func_230529_a_(new StringTextComponent(Double.toString(attack)).func_240699_a_(TextFormatting.WHITE)));
+      list.add(new TranslationTextComponent("entitytip.attack").mergeStyle(TextFormatting.GRAY).append(new StringTextComponent(": "))
+          .append(new StringTextComponent(Double.toString(attack)).mergeStyle(TextFormatting.WHITE)));
     }
 
     // add right-click-texture to tip if possible
     if (this.showMultiTexture && golem.canInteractChangeTexture() && !(golem instanceof RedstoneLampGolem)) {
-      list.add(new TranslationTextComponent("entitytip.click_change_texture").func_240699_a_(TextFormatting.BLUE));
+      list.add(new TranslationTextComponent("entitytip.click_change_texture").mergeStyle(TextFormatting.BLUE));
     }
 
     // add fire immunity to tip if possible
     if (this.showFireproof && golem.getType().isImmuneToFire() && !(golem instanceof BedrockGolem)) {
-      list.add(new TranslationTextComponent("entitytip.is_fireproof").func_240699_a_(TextFormatting.GOLD));
+      list.add(new TranslationTextComponent("entitytip.is_fireproof").mergeStyle(TextFormatting.GOLD));
     }
 
     // add knockback resist to tip if possible
     if (this.showKnockbackResist && golem.getAttribute(Attributes.KNOCKBACK_RESISTANCE).getBaseValue() > 0.8999D) {
-      list.add(new TranslationTextComponent("attribute.name.generic.knockbackResistance").func_240699_a_(TextFormatting.GRAY));
+      list.add(new TranslationTextComponent("attribute.name.generic.knockbackResistance").mergeStyle(TextFormatting.GRAY));
     }
 
     if(showSpecial) {
@@ -104,8 +100,8 @@ public abstract class GolemDescriptionManager {
     // if sneaking, show exact value, otherwise show percentage value
     final String fuelString = isShiftDown() ? Integer.toString(fuel) : (Integer.toString(percentFuel) + "%");
     // actually add the description
-    list.add(new TranslationTextComponent("entitytip.fuel").func_240699_a_(TextFormatting.GRAY).func_230529_a_(new StringTextComponent(": "))
-        .func_230529_a_(new StringTextComponent(fuelString).func_240699_a_(color)));
+    list.add(new TranslationTextComponent("entitytip.fuel").mergeStyle(TextFormatting.GRAY).append(new StringTextComponent(": "))
+        .append(new StringTextComponent(fuelString).mergeStyle(color)));
   }
   
   protected void addDispenserGolemInfo(final DispenserGolem g, final List<ITextComponent> list) {
@@ -116,8 +112,8 @@ public abstract class GolemDescriptionManager {
       // if sneaking, show exact value, otherwise show percentage value
       final String arrowString = Integer.toString(arrows);
       // actually add the description
-      list.add(new TranslationTextComponent("entitytip.arrows").func_240699_a_(TextFormatting.GRAY).func_230529_a_(new StringTextComponent(": "))
-          .func_230529_a_(new StringTextComponent(arrowString).func_240699_a_(color)));
+      list.add(new TranslationTextComponent("entitytip.arrows").mergeStyle(TextFormatting.GRAY).append(new StringTextComponent(": "))
+          .append(new StringTextComponent(arrowString).mergeStyle(color)));
     }
    
   }

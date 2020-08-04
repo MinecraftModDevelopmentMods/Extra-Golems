@@ -26,7 +26,6 @@ import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
-@SuppressWarnings("deprecation")
 public class GuiGolemBook extends Screen {
 
   //////////// GUI GOLEM BOOK LAYOUT ////////////
@@ -254,7 +253,7 @@ public class GuiGolemBook extends Screen {
   private void drawPageAt(final MatrixStack matrix, final int cornerX, final int cornerY, final int pageNum, final float partialTicks) {
     // 1.16 mappings: 
     // applyTextStyle -> func_240699_a_(TextFormatting) or func_240701_a_(TextFormatting...)
-    // appendSibling -> func_230529_a_(ITextComponent)
+    // appendSibling -> append(ITextComponent)
     // appendText -> func_240702_b_(String)
     
     // draw the page number
@@ -270,7 +269,7 @@ public class GuiGolemBook extends Screen {
     case 0:
       // draw introduction
       title = trans("item.golems.info_book");
-      body = trans("golembook.intro1").func_240702_b_("\n").func_230529_a_(trans("golembook.intro2"));
+      body = trans("golembook.intro1").appendString("\n").append(trans("golembook.intro2"));
       drawBasicPage(matrix, cornerX, cornerY, title, body);
       return;
     case 1:
@@ -301,7 +300,7 @@ public class GuiGolemBook extends Screen {
     case 2:
       // draw Golem Spell instructions
       title = trans("item.golems.golem_paper");
-      body = wrap("\n\n\n\n").func_230529_a_(
+      body = wrap("\n\n\n\n").append(
           trans("golembook.recipe_spell.recipe", title, trans("item.minecraft.paper"), trans("item.minecraft.feather"),
           trans("item.minecraft.ink_sac"), trans("item.minecraft.redstone")));
       drawBasicPage(matrix, cornerX, cornerY, title, body);
@@ -310,16 +309,16 @@ public class GuiGolemBook extends Screen {
     case 3:
       // draw Golem Head instructions
       title = trans("block.golems.golem_head");
-      body = wrap("\n\n\n\n").func_230529_a_(trans("golembook.recipe_head.recipe", title, trans("item.golems.golem_paper"), trans("block.minecraft.pumpkin")));
+      body = wrap("\n\n\n\n").append(trans("golembook.recipe_head.recipe", title, trans("item.golems.golem_paper"), trans("block.minecraft.pumpkin")));
       drawBasicPage(matrix, cornerX, cornerY, title, body);
       draw2x2GridAt(matrix, cornerX + MARGIN * 2, cornerY + MARGIN * 2, ingredientsHead, outputHead);
       return;
     case 4:
       // draw Make Golem instructions
       title = trans("golembook.build_golem.title");
-      body = trans("golembook.build_golem.howto1").func_230529_a_(wrap(" "))
-          .func_230529_a_(trans("golembook.build_golem.howto2")).func_230529_a_(wrap("\n\n"))
-          .func_230529_a_(trans("golembook.build_golem.howto3", trans("block.golems.golem_head")));
+      body = trans("golembook.build_golem.howto1").append(wrap(" "))
+          .append(trans("golembook.build_golem.howto2")).append(wrap("\n\n"))
+          .append(trans("golembook.build_golem.howto3", trans("block.golems.golem_head")));
       drawBasicPage(matrix, cornerX, cornerY, title, body);
       return;
     case 5:

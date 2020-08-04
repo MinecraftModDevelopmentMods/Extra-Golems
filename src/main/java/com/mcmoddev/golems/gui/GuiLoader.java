@@ -3,7 +3,6 @@ package com.mcmoddev.golems.gui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 
 public final class GuiLoader {
 

@@ -63,6 +63,6 @@ public class ItemGolemSpell extends Item {
 
   @Override
   public ITextComponent getDisplayName(ItemStack stack) {
-    return new TranslationTextComponent(this.getTranslationKey(stack)).func_240699_a_(TextFormatting.RED);
+    return new TranslationTextComponent(this.getTranslationKey(stack)).mergeStyle(TextFormatting.RED);
   }
 }
