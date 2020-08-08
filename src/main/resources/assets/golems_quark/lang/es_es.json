@@ -1,5 +1,4 @@
 {
-  "entity.golems_quark.golem_basalt": "Gólem de Basalto pulido",
   "entity.golems_quark.golem_biotite": "Gólem de Biotita de ender",
   "entity.golems_quark.golem_blaze_lantern": "Gólem de Linterna de blaze",
   "entity.golems_quark.golem_brimstone": "Gólem de Azufre",
@@ -23,6 +22,7 @@
   "entity.golems_quark.golem_soul_sandstone": "Gólem de Arenisca de almas",
   "entity.golems_quark.golem_sturdy_stone": "Gólem de Piedra resistente",
   "entity.golems_quark.golem_tallow": "Gólem de Sebo",
+  "entity.golems_quark.golem_voidstone": "Gólem de Piedra de vacío",
   "_comment": "Entity tooltip headings",
   "entitytip.slows_creatures": "Inflige lentitud a las criaturas"
   

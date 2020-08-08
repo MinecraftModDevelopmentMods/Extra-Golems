@@ -242,28 +242,11 @@ public abstract class GolemBase extends IronGolemEntity {
        return flag;
     }
   }
-
-// TODO IronGolemEntity has a private method for getting attack power, so do we need this?
-//  @Override
-//  public boolean attackEntityAsMob(final Entity entity) {
-//    // Copy Iron Golem behavior but allow for custom attack damage
-//    double baseAttack = this.getAttribute(Attributes.ATTACK_DAMAGE).getValue();
-//
-//    // Deal damage between 100% and 175% of current attack power
-//    double damage = baseAttack + (this.rand.nextDouble() * 0.75D) * baseAttack;
-//    final boolean flag = entity.attackEntityFrom(DamageSource.causeMobDamage(this), (float) damage);
-//    if (flag) {
-//      entity.setMotion(entity.getMotion().add(0.0D, 0.4D, 0.0D));
-//      this.applyEnchantments(this, entity);
-//    }
-//
-//    // Set fields and play sound so the client knows the golem is attacking an
-//    // Entity
-//    this.attackTimer = 10;
-//    this.world.setEntityState(this, (byte) 4);
-//    this.playSound(this.getGolemSound(), 1.0F, 0.9F + rand.nextFloat() * 0.2F);
-//    return flag;
-//  }
+  
+  @Override
+  public boolean isImmuneToExplosions() {
+    return this.getGolemContainer().isImmuneToExplosions();
+  }
 
   @Override
   public boolean canAttack(final EntityType<?> type) {

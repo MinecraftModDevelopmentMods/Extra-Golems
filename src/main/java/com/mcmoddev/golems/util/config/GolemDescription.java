@@ -7,19 +7,19 @@ import javax.annotation.Nullable;
 
 import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
 
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 /**
- * Holds an {@link ITextComponent} and an optional {@link GolemSpecialContainer}
+ * Holds an {@link IFormattableTextComponent} and an optional {@link GolemSpecialContainer}
  * key to use when deciding whether to add the text to a given
- * {@code List<ITextComponent>}
+ * {@code List<IFormattableTextComponent>}
  *
  * @see com.mcmoddev.golems.integration.GolemDescriptionManager
  **/
 public class GolemDescription {
 
-  private final ITextComponent text;
+  private final IFormattableTextComponent text;
   private final String configKey;
   private final Predicate<ForgeConfigSpec.ConfigValue<?>> configValue;
 
@@ -33,7 +33,7 @@ public class GolemDescription {
    *                      acceptable in order to display this description. adding
    *                      this text to any description lists.
    **/
-  public GolemDescription(final ITextComponent textIn, final String configKeyIn,
+  public GolemDescription(final IFormattableTextComponent textIn, final String configKeyIn,
       @Nullable final Predicate<ForgeConfigSpec.ConfigValue<?>> configValueIn) {
     this.text = textIn;
     this.configKey = configKeyIn != null ? configKeyIn : "";
@@ -44,13 +44,13 @@ public class GolemDescription {
    * Creates a new {@link GolemDescription} with a text component and String key
    * to use in the config. Assumes that the key links to a
    * {@code ConfigValue<Boolean>} - if this is not the case, use
-   * {@link #GolemDescription(ITextComponent, String, Predicate)}
+   * {@link #GolemDescription(IFormattableTextComponent, String, Predicate)}
    *
    * @param textIn      a pre-formatted text component to display
    * @param configKeyIn an optional String to match against the config before
    *                    adding this text to any description lists.
    **/
-  public GolemDescription(final ITextComponent textIn, final String configKeyIn) {
+  public GolemDescription(final IFormattableTextComponent textIn, final String configKeyIn) {
     this(textIn, configKeyIn, c -> c != null && c.get() instanceof Boolean && (Boolean) c.get());
   }
 
@@ -60,7 +60,7 @@ public class GolemDescription {
    *
    * @param textIn a pre-formatted text component to display
    **/
-  public GolemDescription(final ITextComponent textIn) {
+  public GolemDescription(final IFormattableTextComponent textIn) {
     this(textIn, "", c -> true);
   }
 
@@ -72,7 +72,7 @@ public class GolemDescription {
    * @param list a list to which text will be added
    * @return True, as specified in interface {@code Collection<E>}
    **/
-  public boolean addDescription(final List<ITextComponent> list) {
+  public boolean addDescription(final List<IFormattableTextComponent> list) {
     return list.add(this.text);
   }
 
@@ -82,7 +82,7 @@ public class GolemDescription {
    * @return true if the description was added.
    * @see #addDescription(List)
    **/
-  public boolean addDescription(final List<ITextComponent> list, final GolemContainer container) {
+  public boolean addDescription(final List<IFormattableTextComponent> list, final GolemContainer container) {
     // check the config
     if (isEnabledFor(container)) {
       return addDescription(list);

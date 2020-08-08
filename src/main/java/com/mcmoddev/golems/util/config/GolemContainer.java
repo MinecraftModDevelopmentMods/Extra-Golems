@@ -18,6 +18,8 @@ import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.mcmoddev.golems.entity.base.GolemBase;
+import com.mcmoddev.golems.entity.base.GolemMultiColorized;
+import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
 
@@ -35,7 +37,9 @@ import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.registries.IRegistryDelegate;
 
 /**
@@ -52,8 +56,10 @@ public final class GolemContainer {
   private final ResourceLocation basicTexture;
   private final SoundEvent basicSound;
   private final boolean fallDamage;
+  private final boolean explosionImmunity;
   private final SwimMode swimMode;
   private final boolean hasCustomRender;
+  private final boolean canInteractChangeTexture;
 
   private double health;
   private double attack;
@@ -79,6 +85,7 @@ public final class GolemContainer {
    * @param lSpeed                  base speed value
    * @param lKnockbackResist        base knockback resistance
    * @param lFallDamage             whether or not the golem can take fall damage
+   * @param lExplosionImmunity      whether or not the golem can take explosion damage
    * @param lSwimMode               whether or not the golem floats in water
    * @param lSpecialContainers      any golem specials as a Map
    * @param lDesc                   any special descriptions for the golem
@@ -91,7 +98,7 @@ public final class GolemContainer {
   private GolemContainer(final EntityType<? extends GolemBase> lEntityType, final Class<? extends GolemBase> lEntityClass,
       final String lPath, final List<IRegistryDelegate<Block>> lValidBuildingBlocks,
       final List<ResourceLocation> lValidBuildingBlockTags, final double lHealth, final double lAttack, final double lSpeed,
-      final double lKnockbackResist, final boolean lFallDamage, final SwimMode lSwimMode,
+      final double lKnockbackResist, final boolean lFallDamage, final boolean lExplosionImmunity, final SwimMode lSwimMode,
       final HashMap<String, GolemSpecialContainer> lSpecialContainers, final List<GolemDescription> lDesc,
       final Map<IRegistryDelegate<Item>, Double> lHealItemMap, 
       final Supplier<AttributeModifierMap.MutableAttribute> lAttributeSupplier,
@@ -106,6 +113,7 @@ public final class GolemContainer {
     this.speed = lSpeed;
     this.knockbackResist = lKnockbackResist;
     this.fallDamage = lFallDamage;
+    this.explosionImmunity = lExplosionImmunity;
     this.swimMode = lSwimMode;
     this.specialContainers = ImmutableMap.copyOf(lSpecialContainers);
     this.descContainers = ImmutableList.copyOf(lDesc);
@@ -114,6 +122,9 @@ public final class GolemContainer {
     this.basicTexture = lTexture;
     this.basicSound = lBasicSound;
     this.hasCustomRender = lCustomRender;
+    
+    this.canInteractChangeTexture = ExtraGolemsConfig.enableTextureInteract() && (GolemMultiTextured.class.isAssignableFrom(lEntityClass)
+        || GolemMultiColorized.class.isAssignableFrom(lEntityClass));
   }
 
   /**
@@ -123,9 +134,27 @@ public final class GolemContainer {
    *
    * @param list a List that may or may not contain other descriptions already.
    **/
-  public void addDescription(final List<ITextComponent> list) {
-    for (final GolemDescription cont : descContainers) {
-      cont.addDescription(list, this);
+  public void addDescription(final List<IFormattableTextComponent> list) {
+    // ADD FIREPROOF TIP
+    if (this.entityType.isImmuneToFire()) {
+      list.add(new TranslationTextComponent("entitytip.is_fireproof").mergeStyle(TextFormatting.GOLD));
+    }
+    // ADD EXPLOSION-PROOF TIP
+    if (this.explosionImmunity) {
+      list.add(new TranslationTextComponent("entitytip.is_explosionproof").mergeStyle(TextFormatting.GRAY, TextFormatting.BOLD));
+    }
+    // ADD INTERACT-TEXTURE TIP
+    if (this.canInteractChangeTexture) {
+      list.add(new TranslationTextComponent("entitytip.click_change_texture").mergeStyle(TextFormatting.BLUE));
+    }
+    // ADD SWIMMING TIP
+    // TODO get advanced swimming working
+//    if(this.swimMode == SwimMode.SWIM) {
+//      list.add(new TranslationTextComponent("entitytip.advanced_swim").mergeStyle(TextFormatting.AQUA));
+//    }
+    // ADD ALL OTHER DESCRIPTIONS
+    for (final GolemDescription desc : descContainers) {
+      desc.addDescription(list, this);
     }
   }
 
@@ -343,6 +372,9 @@ public final class GolemContainer {
 
   /** @return true if the Golem takes damage upon falling from heights **/
   public boolean takesFallDamage() { return this.fallDamage; }
+  
+  /** @return true if the Golem takes damage from explosions **/
+  public boolean isImmuneToExplosions() { return this.explosionImmunity; }
 
   /** @return true if the Golem can swim on top of water **/
   public boolean canSwim() { return this.swimMode == SwimMode.FLOAT; }
@@ -377,6 +409,7 @@ public final class GolemContainer {
     private double knockBackResist = 0.4D;
     private boolean fallDamage = false;
     private boolean customRender = false;
+    private boolean explosionImmunity = false;
     private SwimMode swimMode = SwimMode.SINK;
     // This is a list to allow determining the "priority" of golem blocks. This
     // could be used to our
@@ -610,7 +643,7 @@ public final class GolemContainer {
      * @param desc    a fancier description to be used in-game
      * @return instance to allow chaining of methods
      **/
-    public Builder addSpecial(final String name, final Boolean value, final String comment, final ITextComponent desc) {
+    public Builder addSpecial(final String name, final Boolean value, final String comment, final IFormattableTextComponent desc) {
       addSpecial(name, value, comment);
       addDesc(new GolemDescription(desc, name));
       return this;
@@ -652,6 +685,16 @@ public final class GolemContainer {
       this.entityTypeBuilder = this.entityTypeBuilder.immuneToFire();
       return this;
     }
+    
+    /**
+     * Makes the golem immune to explosion damage.
+     *
+     * @return instance to allow chaining of methods
+     **/
+    public Builder immuneToExplosions() {
+      this.explosionImmunity = true;
+      return this;
+    }
 
     /**
      * Makes the golem vulnerable to fall damage.
@@ -686,7 +729,7 @@ public final class GolemContainer {
             .createMutableAttribute(Attributes.ATTACK_DAMAGE, this.attack);
       // build the golem container
       return new GolemContainer(entityType, entityClass, golemName, validBuildingBlocks, validBuildingBlockTags, health, attack, speed,
-          knockBackResist, fallDamage, swimMode, containerMap, descriptions, healItemMap, attributes, basicTexture, basicSound, customRender);
+          knockBackResist, fallDamage, explosionImmunity, swimMode, containerMap, descriptions, healItemMap, attributes, basicTexture, basicSound, customRender);
     }
   }
 

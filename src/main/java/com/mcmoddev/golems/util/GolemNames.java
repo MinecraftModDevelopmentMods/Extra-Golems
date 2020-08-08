@@ -7,7 +7,9 @@ public final class GolemNames {
   }
 
   public static final String ANDESITE_GOLEM = "golem_andesite";
+  public static final String BASALT_GOLEM = "golem_basalt";
   public static final String BEDROCK_GOLEM = "golem_bedrock";
+  public static final String BLACKSTONE_GOLEM = "golem_blackstone";
   public static final String BONE_GOLEM = "golem_bone";
   public static final String BOOKSHELF_GOLEM = "golem_bookshelf";
   public static final String CLAY_GOLEM = "golem_clay";
@@ -35,6 +37,7 @@ public final class GolemNames {
   public static final String MELON_GOLEM = "golem_melon";
   public static final String MUSHROOM_GOLEM = "golem_shroom";
   public static final String NETHERBRICK_GOLEM = "golem_nether_brick";
+  public static final String NETHERITE_GOLEM = "golem_netherite";
   public static final String NETHERWART_GOLEM = "golem_nether_wart";
   public static final String OBSIDIAN_GOLEM = "golem_obsidian";
   public static final String PRISMARINE_GOLEM = "golem_prismarine";

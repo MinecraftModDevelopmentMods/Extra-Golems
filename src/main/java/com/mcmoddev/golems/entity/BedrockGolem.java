@@ -28,12 +28,7 @@ public final class BedrockGolem extends GolemBase {
   public boolean isInvulnerableTo(final DamageSource source) {
     return true;
   }
-
-  @Override
-  public boolean isImmuneToExplosions() {
-    return true;
-  }
-
+  
   @OnlyIn(Dist.CLIENT)
   @Override
   public boolean canRenderOnFire() {

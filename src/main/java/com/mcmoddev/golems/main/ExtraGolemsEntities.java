@@ -25,6 +25,7 @@ public final class ExtraGolemsEntities {
     // Frequently-used GolemDescription components
     final IFormattableTextComponent descHeals = new TranslationTextComponent("entitytip.heals").mergeStyle(TextFormatting.LIGHT_PURPLE);
     final IFormattableTextComponent descSplits = new TranslationTextComponent("entitytip.splits_upon_death");
+    final IFormattableTextComponent descResist = new TranslationTextComponent("effect.minecraft.resistance").mergeStyle(TextFormatting.DARK_GRAY);
     final String comSplits = "The number of mini-golems to spawn when this golem dies";
     
     // Block Tag resource locations
@@ -40,13 +41,22 @@ public final class ExtraGolemsEntities {
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.ANDESITE_GOLEM, GenericGolem.class, GenericGolem::new)
         .setHealth(52.0D).setAttack(6.0D).setSpeed(0.26D).setKnockback(0.8D).addBlocks(Blocks.POLISHED_ANDESITE)
         .basicTexture().build());
+    // BASALT GOLEM
+    GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.BASALT_GOLEM, GenericGolem.class, GenericGolem::new)
+        .setHealth(58.0D).setAttack(6.8D).setKnockback(0.8D).addBlocks(Blocks.POLISHED_BASALT)
+        .immuneToFire().basicTexture().build());
     // BEDROCK GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.BEDROCK_GOLEM, BedrockGolem.class, BedrockGolem::new)
-        .setHealth(999.0D).setAttack(32.0D).setKnockback(1.0D).basicTexture()
+        .setHealth(999.0D).setAttack(32.0D).setKnockback(1.0D).basicTexture().immuneToExplosions()
         .addDesc(
-            new GolemDescription(new TranslationTextComponent("entitytip.indestructible").mergeStyle(TextFormatting.WHITE, TextFormatting.BOLD)),
+            new GolemDescription(new TranslationTextComponent("entitytip.indestructible").mergeStyle(TextFormatting.GRAY, TextFormatting.BOLD)),
             new GolemDescription(new TranslationTextComponent("tooltip.creative_only_item").mergeStyle(TextFormatting.DARK_RED)))
         .build());
+    // BLACKSTONE GOLEM
+    GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.BLACKSTONE_GOLEM, GenericGolem.class, GenericGolem::new)
+        .setHealth(58.0D).setAttack(6.8D).setKnockback(0.8D)
+        .addBlocks(Blocks.POLISHED_BLACKSTONE, Blocks.POLISHED_BLACKSTONE_BRICKS, Blocks.CHISELED_POLISHED_BLACKSTONE, Blocks.CRACKED_POLISHED_BLACKSTONE_BRICKS)
+        .immuneToFire().basicTexture().build());
     // BONE GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.BONE_GOLEM, GenericGolem.class, GenericGolem::new)
         .setHealth(40.0D).setAttack(9.5D).setSpeed(0.30D).addBlocks(Blocks.BONE_BLOCK).setTexture(makeTexture(GolemNames.BONE_GOLEM + "_skeleton"))
@@ -70,9 +80,8 @@ public final class ExtraGolemsEntities {
         .addHealItem(Items.COAL, 0.25D).addHealItem(Items.CHARCOAL, 0.25D).build());
     // CONCRETE GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.CONCRETE_GOLEM, ConcreteGolem.class, ConcreteGolem::new)
-        .setHealth(38.0D).setAttack(5.0D).setSpeed(0.26D).addBlocks(tagConcrete)
-        .addSpecial(ConcreteGolem.ALLOW_RESIST, true, "Whether this golem reduces damage it takes",
-            new TranslationTextComponent("effect.minecraft.resistance").mergeStyle(TextFormatting.DARK_GRAY))
+        .setHealth(47.0D).setAttack(5.0D).setSpeed(0.26D).addBlocks(tagConcrete)
+        .addSpecial(ConcreteGolem.ALLOW_RESIST, true, "Whether this golem reduces damage it takes", descResist)
         .build());
     // CORAL GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.CORAL_GOLEM, CoralGolem.class, CoralGolem::new)
@@ -220,10 +229,16 @@ public final class ExtraGolemsEntities {
         .addHealItem(Items.RED_MUSHROOM, 0.25D).addHealItem(Items.BROWN_MUSHROOM, 0.25D).build());
     // NETHER BRICK GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.NETHERBRICK_GOLEM, NetherBrickGolem.class, NetherBrickGolem::new)
-        .setHealth(25.0D).setAttack(6.5D).setSpeed(0.28D).setKnockback(0.2D).addBlocks(Blocks.NETHER_BRICKS, Blocks.RED_NETHER_BRICKS)
+        .setHealth(25.0D).setAttack(6.5D).setSpeed(0.28D).setKnockback(0.2D)
+        .addBlocks(Blocks.NETHER_BRICKS, Blocks.RED_NETHER_BRICKS, Blocks.CHISELED_NETHER_BRICKS, Blocks.CRACKED_NETHER_BRICKS)
         .addSpecial(NetherBrickGolem.ALLOW_FIRE_SPECIAL, true, "Whether this golem can light creatures on fire",
             new TranslationTextComponent("entitytip.lights_mobs_on_fire").mergeStyle(TextFormatting.RED))
         .immuneToFire().basicTexture().addHealItem(Items.NETHER_BRICK, 0.25D).build());
+    // NETHERITE GOLEM
+    GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.NETHERITE_GOLEM, GenericGolem.class, GenericGolem::new)
+        .setHealth(298.0D).setAttack(28.0D).setKnockback(1.0D).addBlocks(Blocks.NETHERITE_BLOCK)
+        .addDesc(new GolemDescription(descResist))
+        .immuneToFire().immuneToExplosions().basicTexture().addHealItem(Items.NETHERITE_INGOT, 0.25D).build());
     // NETHER WART GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.NETHERWART_GOLEM, NetherWartGolem.class, NetherWartGolem::new)
         .setHealth(22.0D).setAttack(1.5D).setSpeed(0.26D).basicTexture().addBlocks(Blocks.NETHER_WART_BLOCK)
@@ -236,7 +251,7 @@ public final class ExtraGolemsEntities {
     // OBSIDIAN GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.OBSIDIAN_GOLEM, GenericGolem.class, GenericGolem::new)
         .setHealth(120.0D).setAttack(18.0D).setSpeed(0.23D).setKnockback(0.8D).addBlocks(Blocks.OBSIDIAN).basicTexture()
-        .immuneToFire().build());
+        .immuneToFire().immuneToExplosions().build());
     // PRISMARINE GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.PRISMARINE_GOLEM, GenericGolem.class, GenericGolem::new)
         .setHealth(34.0D).setAttack(8.0D).setKnockback(0.7D).addBlocks(tagPrismarine).basicTexture()

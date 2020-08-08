@@ -81,11 +81,6 @@ public final class QuarkGolemsEntities {
       quiltedWoolTypes[i] = DyeColor.values()[i] + "_quilted_wool";
     }
     
-    // BASALT GOLEM
-    softRegister(NewStoneTypesModule.class, new GolemContainer.Builder(QuarkGolemNames.BASALT_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(52.0D).setAttack(5.8D).setSpeed(0.28D).setKnockback(0.8D)
-		.immuneToFire().basicTexture().build(),
-        "polished_basalt", "basalt_pillar", "chiseled_basalt_bricks", "basalt_pavement");
     // BIOTITE GOLEM
     softRegister(BiotiteModule.class, new GolemContainer.Builder(QuarkGolemNames.BIOTITE_GOLEM, GenericGolem.class, GenericGolem::new)
         .setModId(MODID).setHealth(116.0D).setAttack(8.5D).setSpeed(0.28D).setKnockback(0.6D).basicTexture().build(),
@@ -223,6 +218,11 @@ public final class QuarkGolemsEntities {
     softRegister(SturdyStoneModule.class, new GolemContainer.Builder(QuarkGolemNames.TALLOW_GOLEM, GenericGolem.class, GenericGolem::new)
         .setModId(MODID).setHealth(48.0D).setAttack(2.0D).setSpeed(0.27D).basicTexture().build(),
         "tallow_block");
+    // VOIDSTONE GOLEM
+    softRegister(NewStoneTypesModule.class, new GolemContainer.Builder(QuarkGolemNames.VOIDSTONE_GOLEM, GenericGolem.class, GenericGolem::new)
+        .setModId(MODID).setHealth(52.0D).setAttack(5.8D).setSpeed(0.28D).setKnockback(0.8D)
+    .immuneToFire().basicTexture().build(),
+        "polished_basalt", "basalt_pillar", "chiseled_basalt_bricks", "basalt_pavement");
   }
   
   /**

@@ -3,14 +3,13 @@ package com.mcmoddev.golems.integration;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.mcmoddev.golems.entity.BedrockGolem;
 import com.mcmoddev.golems.entity.DispenserGolem;
 import com.mcmoddev.golems.entity.FurnaceGolem;
-import com.mcmoddev.golems.entity.RedstoneLampGolem;
 import com.mcmoddev.golems.entity.base.GolemBase;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -43,30 +42,15 @@ public abstract class GolemDescriptionManager {
    *         golem
    **/
   @SuppressWarnings("WeakerAccess")
-  public List<ITextComponent> getEntityDescription(final GolemBase golem) {    
-    List<ITextComponent> list = new LinkedList<>();
+  public List<IFormattableTextComponent> getEntityDescription(final GolemBase golem) {    
+    List<IFormattableTextComponent> list = new LinkedList<>();
     // add attack damage to tip enabled (usually checks if sneaking)
     if (showAttack) {
       double attack = (golem.getAttribute(Attributes.ATTACK_DAMAGE).getValue());
       list.add(new TranslationTextComponent("entitytip.attack").mergeStyle(TextFormatting.GRAY).append(new StringTextComponent(": "))
           .append(new StringTextComponent(Double.toString(attack)).mergeStyle(TextFormatting.WHITE)));
     }
-
-    // add right-click-texture to tip if possible
-    if (this.showMultiTexture && golem.canInteractChangeTexture() && !(golem instanceof RedstoneLampGolem)) {
-      list.add(new TranslationTextComponent("entitytip.click_change_texture").mergeStyle(TextFormatting.BLUE));
-    }
-
-    // add fire immunity to tip if possible
-    if (this.showFireproof && golem.getType().isImmuneToFire() && !(golem instanceof BedrockGolem)) {
-      list.add(new TranslationTextComponent("entitytip.is_fireproof").mergeStyle(TextFormatting.GOLD));
-    }
-
-    // add knockback resist to tip if possible
-    if (this.showKnockbackResist && golem.getAttribute(Attributes.KNOCKBACK_RESISTANCE).getBaseValue() > 0.8999D) {
-      list.add(new TranslationTextComponent("attribute.name.generic.knockbackResistance").mergeStyle(TextFormatting.GRAY));
-    }
-
+    // add special descriptions
     if(showSpecial) {
       // add fuel amount if this is a furnace golem
       if (golem instanceof FurnaceGolem) {
@@ -85,7 +69,7 @@ public abstract class GolemDescriptionManager {
     return list;
   }
   
-  protected void addFurnaceGolemInfo(final FurnaceGolem g, final List<ITextComponent> list) {
+  protected void addFurnaceGolemInfo(final FurnaceGolem g, final List<IFormattableTextComponent> list) {
     // add fuel amount if this is a furnace golem
     final int fuel = g.getFuel();
     final int percentFuel = (int) Math.ceil(g.getFuelPercentage() * 100F);
@@ -104,7 +88,7 @@ public abstract class GolemDescriptionManager {
         .append(new StringTextComponent(fuelString).mergeStyle(color)));
   }
   
-  protected void addDispenserGolemInfo(final DispenserGolem g, final List<ITextComponent> list) {
+  protected void addDispenserGolemInfo(final DispenserGolem g, final List<IFormattableTextComponent> list) {
     // add fuel amount if this is a furnace golem
     final int arrows = g.getArrowsInInventory();
     if(arrows > 0 && isShiftDown()) {

@@ -7,11 +7,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.mcmoddev.golems.entity.base.GolemMultiColorized;
-import com.mcmoddev.golems.entity.base.GolemMultiTextured;
-import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mcmoddev.golems.util.config.GolemContainer;
-import com.mcmoddev.golems.util.config.GolemContainer.SwimMode;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -33,21 +29,14 @@ public class GolemBookEntry {
   private final Block[] buildingBlocks;
   private final String golemName;
   private ResourceLocation imageLoc = null;
-  private final boolean canInteractChangeTexture;
-  private final boolean canSwim;
-  private final boolean isFireproof;
   private final int health;
   private final float attack;
-  private final List<ITextComponent> specials = new ArrayList<>();
+  private final List<IFormattableTextComponent> specials = new ArrayList<>();
 
   public GolemBookEntry(@Nonnull GolemContainer container) {
     // initialize fields based on golem attributes
     final EntityType<?> golemType = container.getEntityType();
     this.golemName = golemType.getTranslationKey();
-    this.canInteractChangeTexture = ExtraGolemsConfig.enableTextureInteract() && (GolemMultiTextured.class.isAssignableFrom(container.getEntityClass())
-        || GolemMultiColorized.class.isAssignableFrom(container.getEntityClass()));
-    this.canSwim = container.getSwimMode() == SwimMode.SWIM;
-    this.isFireproof = golemType.isImmuneToFire();
     this.health = (int) container.getHealth();
     this.attack = (float) container.getAttack();
     container.addDescription(specials);
@@ -124,7 +113,7 @@ public class GolemBookEntry {
   }
 
   /**
-   * @return all Golem Stats as one String
+   * @return all Golem Stats as one StringTextComponent
    **/
   public IFormattableTextComponent getDescriptionPage() {
     // re-make each time for real-time localization
@@ -148,13 +137,9 @@ public class GolemBookEntry {
   }
 
   /**
-   * Concatenates the golem's stats and specials into a single STring
+   * Concatenates the golem's stats and specials into a single StringTextComponent
    **/
   private IFormattableTextComponent makePage() {
-    // 1.16 mappings: 
-    // applyTextStyle -> mergeStyle(TextFormatting) or func_240701_a_(TextFormatting...)
-    // appendSibling -> append(ITextComponent)
-    // appendText -> appendString(String)
     StringTextComponent page = new StringTextComponent("");
     // ADD (ROUNDED) HEALTH TIP
     page.appendString("\n")
@@ -166,21 +151,6 @@ public class GolemBookEntry {
         .append(trans("entitytip.attack").appendString(": ").mergeStyle(TextFormatting.GRAY))
         .append(wrap(String.valueOf(this.attack)).mergeStyle(TextFormatting.BLACK)) 
         .appendString(" \u2764").appendString("\n");
-    // ADD FIREPROOF TIP
-    if (this.isFireproof) {
-      page.appendString("\n")
-          .append(trans("entitytip.is_fireproof").mergeStyle(TextFormatting.GOLD));
-    }
-    // ADD INTERACT-TEXTURE TIP
-    if (this.canInteractChangeTexture) {
-      page.appendString("\n")
-          .append(trans("entitytip.click_change_texture").mergeStyle(TextFormatting.BLUE));
-    }
-    // ADD SWIMMING TIP
-    if(this.canSwim) {
-      page.appendString("\n")
-          .append(trans("entitytip.advanced_swim").mergeStyle(TextFormatting.AQUA));
-    }
     // ADD SPECIALS
     for (ITextComponent s : this.specials) {
       page.appendString("\n").append(s);
