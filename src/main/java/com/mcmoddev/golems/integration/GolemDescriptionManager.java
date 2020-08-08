@@ -25,10 +25,7 @@ public abstract class GolemDescriptionManager {
 
   protected boolean showSpecial = true;
   protected boolean showSpecialChild = false;
-  protected boolean showMultiTexture = true;
   protected boolean showAttack = true;
-  protected boolean showFireproof = true;
-  protected boolean showKnockbackResist = false;
 
   public GolemDescriptionManager() {
     // empty constructor
