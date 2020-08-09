@@ -37,6 +37,7 @@ import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -65,6 +66,8 @@ public final class GolemContainer {
   private double attack;
   private final double speed;
   private final double knockbackResist;
+  private final int lightLevel;
+  private final int powerLevel;
   private boolean enabled = true;
 
   private final ImmutableMap<String, GolemSpecialContainer> specialContainers;
@@ -84,6 +87,7 @@ public final class GolemContainer {
    * @param lAttack                 base attack value
    * @param lSpeed                  base speed value
    * @param lKnockbackResist        base knockback resistance
+   * @param lLightLevel             a static light level emitted by the golem, if any
    * @param lFallDamage             whether or not the golem can take fall damage
    * @param lExplosionImmunity      whether or not the golem can take explosion damage
    * @param lSwimMode               whether or not the golem floats in water
@@ -98,9 +102,9 @@ public final class GolemContainer {
   private GolemContainer(final EntityType<? extends GolemBase> lEntityType, final Class<? extends GolemBase> lEntityClass,
       final String lPath, final List<IRegistryDelegate<Block>> lValidBuildingBlocks,
       final List<ResourceLocation> lValidBuildingBlockTags, final double lHealth, final double lAttack, final double lSpeed,
-      final double lKnockbackResist, final boolean lFallDamage, final boolean lExplosionImmunity, final SwimMode lSwimMode,
-      final HashMap<String, GolemSpecialContainer> lSpecialContainers, final List<GolemDescription> lDesc,
-      final Map<IRegistryDelegate<Item>, Double> lHealItemMap, 
+      final double lKnockbackResist, final int lLightLevel, final int lPowerLevel, final boolean lFallDamage, 
+      final boolean lExplosionImmunity, final SwimMode lSwimMode, final HashMap<String, GolemSpecialContainer> lSpecialContainers, 
+      final List<GolemDescription> lDesc, final Map<IRegistryDelegate<Item>, Double> lHealItemMap, 
       final Supplier<AttributeModifierMap.MutableAttribute> lAttributeSupplier,
       final ResourceLocation lTexture, final SoundEvent lBasicSound, final boolean lCustomRender) {
     this.entityType = lEntityType;
@@ -112,6 +116,8 @@ public final class GolemContainer {
     this.attack = lAttack;
     this.speed = lSpeed;
     this.knockbackResist = lKnockbackResist;
+    this.lightLevel = lLightLevel;
+    this.powerLevel = lPowerLevel;
     this.fallDamage = lFallDamage;
     this.explosionImmunity = lExplosionImmunity;
     this.swimMode = lSwimMode;
@@ -366,6 +372,12 @@ public final class GolemContainer {
 
   /** @return the Golem's default knockback resistance. Immutable. **/
   public double getKnockbackResist() { return this.knockbackResist; }
+  
+  /** @return the Golem's light level. Immutable. **/
+  public int getLightLevel() { return this.lightLevel; }
+  
+  /** @return the Golem's redstone power level. Immutable. **/
+  public int getPowerLevel() { return this.powerLevel; }
 
   /** @return true if the Golem is enabled by the config settings. Mutable. **/
   public boolean isEnabled() { return this.enabled; }
@@ -407,13 +419,12 @@ public final class GolemContainer {
     private double attack = 7.0D;
     private double speed = 0.25D;
     private double knockBackResist = 0.4D;
+    private int lightLevel = 0;
+    private int powerLevel = 0;
     private boolean fallDamage = false;
     private boolean customRender = false;
     private boolean explosionImmunity = false;
     private SwimMode swimMode = SwimMode.SINK;
-    // This is a list to allow determining the "priority" of golem blocks. This
-    // could be used to our
-    // advantage in golem building logic for conflicts in the future.
     private List<IRegistryDelegate<Block>> validBuildingBlocks = new ArrayList<>();
     private List<ResourceLocation> validBuildingBlockTags = new ArrayList<>();
     private List<GolemSpecialContainer> specials = new ArrayList<>();
@@ -484,14 +495,35 @@ public final class GolemContainer {
     /**
      * Sets the knockback resistance (heaviness) of a golem
      *
-     * @param lKnockbackResist The knockback resistance of the golem. <b>Defaults to
-     *                         0.4D</b>
+     * @param lKnockbackResist The knockback resistance of the golem. <b>Defaults to 0.4D</b>
      * @return instance to allow chaining of methods
      **/
-    public Builder setKnockback(final double lKnockbackResist) {
+    public Builder setKnockbackResist(final double lKnockbackResist) {
       knockBackResist = lKnockbackResist;
       return this;
     }
+    
+    /**
+     * Sets a static light level to be emitted by a golem
+     *
+     * @param lLightLevel The light emitted by the golem from 0 to 15. <b>Defaults to 0</b>
+     * @return instance to allow chaining of methods
+     **/
+    public Builder setLightLevel(final int lLightLevel) {
+      lightLevel = MathHelper.clamp(lLightLevel, 0, 15);
+      return this;
+    }
+    
+   /**
+    * Sets a static redstone power level to be emitted by a golem
+    *
+    * @param lPowerLevel The power emitted by the golem from 0 to 15. <b>Defaults to 0</b>
+    * @return instance to allow chaining of methods
+    **/
+   public Builder setPowerLevel(final int lPowerLevel) {
+     powerLevel = MathHelper.clamp(lPowerLevel, 0, 15);
+     return this;
+   }
 
     /**
      * Sets a basic texture location of a golem. If this golem inherits from one of
@@ -729,7 +761,8 @@ public final class GolemContainer {
             .createMutableAttribute(Attributes.ATTACK_DAMAGE, this.attack);
       // build the golem container
       return new GolemContainer(entityType, entityClass, golemName, validBuildingBlocks, validBuildingBlockTags, health, attack, speed,
-          knockBackResist, fallDamage, explosionImmunity, swimMode, containerMap, descriptions, healItemMap, attributes, basicTexture, basicSound, customRender);
+          knockBackResist, lightLevel, powerLevel, fallDamage, explosionImmunity, swimMode, containerMap, descriptions, healItemMap, attributes, 
+          basicTexture, basicSound, customRender);
     }
   }
 

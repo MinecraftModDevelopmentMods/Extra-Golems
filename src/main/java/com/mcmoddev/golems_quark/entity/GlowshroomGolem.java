@@ -1,11 +1,8 @@
 package com.mcmoddev.golems_quark.entity;
 
-import com.mcmoddev.golems.blocks.BlockUtilityGlow;
 import com.mcmoddev.golems.entity.ai.PassiveEffectsGoal;
 import com.mcmoddev.golems.entity.ai.PlaceBlocksGoal;
-import com.mcmoddev.golems.entity.ai.PlaceUtilityBlockGoal;
 import com.mcmoddev.golems.entity.base.GolemBase;
-import com.mcmoddev.golems.main.GolemItems;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -19,7 +16,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class GlowshroomGolem extends GolemBase {
   
-  public static final String ALLOW_GLOWING = "Allow Special: Emit Light";
   public static final String ALLOW_SPECIAL = "Allow Special: Plant Glowshrooms";
   public static final String FREQUENCY = "Mushroom Frequency";
   public static final String ALLOW_HEALING = "Allow Special: Random Healing";
@@ -51,16 +47,11 @@ public class GlowshroomGolem extends GolemBase {
   @Override
   protected void registerGoals() {
     super.registerGoals();
-    // "place glow blocks" goal
-    int lightInt = 14;
-    final BlockState state = GolemItems.UTILITY_LIGHT.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, lightInt);
-    this.goalSelector.addGoal(9, new PlaceUtilityBlockGoal(this, state, BlockUtilityGlow.UPDATE_TICKS, 
-        this.getConfigBool(ALLOW_GLOWING), true, null));
     // "plant glowshrooms" goal
     final ResourceLocation rlGlowshroom = new ResourceLocation("quark", "glowshroom");
     final ResourceLocation rlGlowcelium = new ResourceLocation("quark", "glowcelium");
     if(ForgeRegistries.BLOCKS.containsKey(rlGlowshroom)) {
-      final boolean allowed = this.getConfigBool(ALLOW_GLOWING);
+      final boolean allowed = this.getConfigBool(ALLOW_SPECIAL);
       int freq = allowed ? this.getConfigInt(FREQUENCY) : -100;
       freq += this.rand.nextInt(Math.max(10, freq / 2));
       final Block glowshroom = ForgeRegistries.BLOCKS.getValue(rlGlowshroom);

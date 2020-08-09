@@ -3,19 +3,15 @@ package com.mcmoddev.golems_quark.entity;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.mcmoddev.golems.blocks.BlockUtilityGlow;
-import com.mcmoddev.golems.entity.ai.PlaceUtilityBlockGoal;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemMultiColorized;
 import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.util.GolemNames;
 import com.mcmoddev.golems.util.GolemTextureBytes;
 import com.mcmoddev.golems_quark.QuarkGolemsEntities;
 import com.mcmoddev.golems_quark.util.QuarkGolemNames;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
@@ -29,8 +25,6 @@ import vazkii.quark.world.module.underground.CaveCrystalUndergroundBiomeModule;
 
 public final class CaveCrystalGolem extends GolemMultiColorized {
   
-  public static final String ALLOW_SPECIAL = "Allow Special: Emit Light";
-
   private static final Integer[] CRYSTAL_COLORS = {
     0xff0000, // red
     0xff8000, // orange
@@ -55,10 +49,6 @@ public final class CaveCrystalGolem extends GolemMultiColorized {
   @Override
   protected void registerGoals() {
     super.registerGoals();
-    int lightInt = 11;
-    final BlockState state = GolemItems.UTILITY_LIGHT.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, lightInt);
-    this.goalSelector.addGoal(9, new PlaceUtilityBlockGoal(this, state, BlockUtilityGlow.UPDATE_TICKS, 
-        this.getConfigBool(ALLOW_SPECIAL), true, null));
   }
   
   @Override
@@ -70,27 +60,13 @@ public final class CaveCrystalGolem extends GolemMultiColorized {
       double py = pos.y + this.rand.nextDouble() * (double) this.getHeight() - 0.25D;
       double pz = pos.z + (this.rand.nextDouble() - 0.5D) * (double) this.getWidth();
       this.world.addParticle(ParticleTypes.AMBIENT_ENTITY_EFFECT, px, py, pz, this.colorRed, this.colorGreen, this.colorBlue);
-    /*this.world.addParticle(ParticleTypes.CRIT, 
-        pos.x + (this.rand.nextDouble() - 0.5D) * (double) this.getWidth(),
-        pos.y + this.rand.nextDouble() * (double) this.getHeight() - 0.25D, 
-        pos.z + (this.rand.nextDouble() - 0.5D) * (double) this.getWidth(),
-        (this.rand.nextDouble() - 0.5D), 
-        -this.rand.nextDouble() * 0.25D, 
-        (this.rand.nextDouble() - 0.5D));*/
     }    
   }
-  
-  @Override
-  public boolean isProvidingLight() {
-    return true;
-  }
-
+ 
   @Override
   public boolean hasTransparency() {
     return true;
-  }
-  
-  
+  }  
 
   @Override
   public ItemStack getCreativeReturn(final RayTraceResult target) {

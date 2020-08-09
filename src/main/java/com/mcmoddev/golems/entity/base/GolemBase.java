@@ -4,11 +4,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.mcmoddev.golems.blocks.BlockUtilityGlow;
+import com.mcmoddev.golems.blocks.BlockUtilityPower;
 import com.mcmoddev.golems.entity.ai.GoToWaterGoal;
+import com.mcmoddev.golems.entity.ai.PlaceUtilityBlockGoal;
 import com.mcmoddev.golems.entity.ai.SwimUpGoal;
 import com.mcmoddev.golems.items.ItemBedrockGolem;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.ExtraGolemsEntities;
+import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mcmoddev.golems.util.config.GolemContainer;
 import com.mcmoddev.golems.util.config.GolemContainer.SwimMode;
@@ -111,24 +115,21 @@ public abstract class GolemBase extends IronGolemEntity {
   @Override
   protected void registerGoals() {
     super.registerGoals();
-    
-// TODO IronGolemEntity now uses PatrolThroughVillageGoal and ReturnToVillageGoal
-//    // find and list erroring goals that will be removed
-//    final List<Goal> erroringGoals = new ArrayList<>();
-//    this.goalSelector.goals.forEach(g -> {
-//      if(g.getGoal().getClass() == MoveThroughVillageGoal.class) {
-//        erroringGoals.add(g.getGoal());
-//      }
-//    });
-//    // remove the erroring goals
-//    erroringGoals.forEach(g -> {
-//      this.goalSelector.removeGoal(g);
-//      ExtraGolems.LOGGER.debug("Removed erroring goal inherited from IronGolemEntity");
-//    });    
-//    // add in custom implementation of erroring goal
-//    this.goalSelector.addGoal(3, new MoveThroughVillageGoalFixed(this, 0.6D, false, 4, () -> {
-//      return false;
-//   }));
+    final GolemContainer cont = this.getGolemContainer();
+    // register light level AI if enabled
+    if(cont.getLightLevel() > 0) {
+      int lightInt = cont.getLightLevel();
+      final BlockState state = GolemItems.UTILITY_LIGHT.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, lightInt);
+      this.goalSelector.addGoal(9, new PlaceUtilityBlockGoal(this, state, BlockUtilityGlow.UPDATE_TICKS, 
+          true, true, null));
+    }
+    // register power level AI if enabled
+    if(cont.getPowerLevel() > 0) {
+      int powerInt = cont.getPowerLevel();
+      final BlockState state = GolemItems.UTILITY_POWER.getDefaultState().with(BlockUtilityPower.POWER_LEVEL, powerInt);
+      final int freq = BlockUtilityPower.UPDATE_TICKS;
+      this.goalSelector.addGoal(9, new PlaceUtilityBlockGoal(this, state, freq, true));
+    }
   }
 
   /////////////// GOLEM UTILITY METHODS //////////////////
@@ -151,7 +152,7 @@ public abstract class GolemBase extends IronGolemEntity {
    * @see com.mcmoddev.golems.blocks.BlockUtilityGlow
    **/
   public boolean isProvidingLight() {
-    return false;
+    return this.getGolemContainer().getLightLevel() > 0;
   }
 
   /**
@@ -162,7 +163,7 @@ public abstract class GolemBase extends IronGolemEntity {
    * @see com.mcmoddev.golems.blocks.BlockUtilityPower
    **/
   public boolean isProvidingPower() {
-    return false;
+    return this.getGolemContainer().getPowerLevel() > 0;
   }
 
   /** @return the Golem Container **/
@@ -180,8 +181,8 @@ public abstract class GolemBase extends IronGolemEntity {
     if(this.isChild()) {
       amount *= 1.75F;
     }
-    // max heal amount is 32, for no reason at all
-    return Math.min(amount, 32.0F);
+    // max heal amount is 64, for no reason at all
+    return Math.min(amount, 64.0F);
   }
 
   public BlockPos getBlockBelow() {
@@ -293,6 +294,11 @@ public abstract class GolemBase extends IronGolemEntity {
       return ActionResultType.CONSUME;
     }
     return super.func_230254_b_(player, hand); // processInteract
+  }
+  
+  @Override
+  public float getBrightness() {
+    return this.isProvidingLight() || this.isProvidingPower() ? 1.0F : super.getBrightness();
   }
   
   ///////////////// CHILD LOGIC ///////////////////

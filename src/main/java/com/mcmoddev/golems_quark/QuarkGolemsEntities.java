@@ -16,7 +16,6 @@ import com.mcmoddev.golems.util.config.GolemDescription;
 import com.mcmoddev.golems.util.config.GolemRegistrar;
 import com.mcmoddev.golems_quark.entity.CaveCrystalGolem;
 import com.mcmoddev.golems_quark.entity.ColorSlimeGolem;
-import com.mcmoddev.golems_quark.entity.GenericGlowingGolem;
 import com.mcmoddev.golems_quark.entity.GlowshroomGolem;
 import com.mcmoddev.golems_quark.entity.IronPlateGolem;
 import com.mcmoddev.golems_quark.entity.PermafrostGolem;
@@ -29,6 +28,7 @@ import net.minecraft.item.DyeColor;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
@@ -67,13 +67,10 @@ public final class QuarkGolemsEntities {
    * Called just after other Extra Golems entity types are registered.
    * Registers entity types that are only enabled when Quark is installed.
    **/
-  public static void initEntityTypes() {
-    // 1.16 mappings: 
-    // applyTextStyle -> mergeStyle(TextFormatting) or func_240701_a_(TextFormatting...)
-    // appendSibling -> append(ITextComponent)
-    // appendText -> appendString(String)
-    
+  public static void initEntityTypes() {   
     ExtraGolems.LOGGER.info("Extra Golems: Quark - initEntityTypes");
+    
+    final IFormattableTextComponent descLight = new TranslationTextComponent("entitytip.lights_area").mergeStyle(TextFormatting.GOLD);
         
     // quilted wool names
     final String[] quiltedWoolTypes = new String[DyeColor.values().length];
@@ -83,19 +80,18 @@ public final class QuarkGolemsEntities {
     
     // BIOTITE GOLEM
     softRegister(BiotiteModule.class, new GolemContainer.Builder(QuarkGolemNames.BIOTITE_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(116.0D).setAttack(8.5D).setSpeed(0.28D).setKnockback(0.6D).basicTexture().build(),
+        .setModId(MODID).setHealth(116.0D).setAttack(8.5D).setSpeed(0.28D).setKnockbackResist(0.6D).basicTexture().build(),
         "biotite_block", "chiseled_biotite_block", "smooth_biotite", "biotite_pillar");
     // BLAZE LANTERN GOLEM
     softRegister(CompressedBlocksModule.class, buildEnabledPredicate().and(m -> CompressedBlocksModule.enableBlazeLantern),
-        new GolemContainer.Builder(QuarkGolemNames.BLAZELANTERN_GOLEM, GenericGlowingGolem.class, GenericGlowingGolem::new)
+        new GolemContainer.Builder(QuarkGolemNames.BLAZELANTERN_GOLEM, GenericGolem.class, GenericGolem::new)
         .setModId(MODID).setHealth(34.0D).setAttack(7.6D).setSpeed(0.26D).immuneToFire()
-        .addSpecial(GenericGlowingGolem.ALLOW_SPECIAL, true, "Whether this golem can glow",
-            new TranslationTextComponent("entitytip.lights_area").mergeStyle(TextFormatting.GOLD))
+        .setLightLevel(15).addDesc(new GolemDescription(descLight))
         .setSwimMode(SwimMode.FLOAT).basicTexture().build(),
         "blaze_lantern");
     // BRIMSTONE GOLEM
     softRegister(BrimstoneUndergroundBiomeModule.class, new GolemContainer.Builder(QuarkGolemNames.BRIMSTONE_GOLEM, NetherBrickGolem.class, NetherBrickGolem::new)
-        .setModId(MODID).setHealth(25.0D).setAttack(6.5D).setSpeed(0.28D).setKnockback(0.2D)
+        .setModId(MODID).setHealth(25.0D).setAttack(6.5D).setSpeed(0.28D).setKnockbackResist(0.2D)
         .addSpecial(NetherBrickGolem.ALLOW_FIRE_SPECIAL, true, "Whether this golem can light creatures on fire",
             new TranslationTextComponent("entitytip.lights_mobs_on_fire").mergeStyle(TextFormatting.RED))
         .immuneToFire().basicTexture().build(),
@@ -103,22 +99,21 @@ public final class QuarkGolemsEntities {
     // CAVE CRYSTAL GOLEM
     softRegister(CaveCrystalUndergroundBiomeModule.class, new GolemContainer.Builder(QuarkGolemNames.CAVECRYSTAL_GOLEM, CaveCrystalGolem.class, CaveCrystalGolem::new)
         .setModId(MODID).setHealth(18.0D).setAttack(8.2D).setSpeed(0.29D).basicTexture().enableFallDamage()
-        .addSpecial(CaveCrystalGolem.ALLOW_SPECIAL, true, "Whether this golem can glow",
-            new TranslationTextComponent("entitytip.lights_area").mergeStyle(TextFormatting.LIGHT_PURPLE))
-        .build(),
+        .addDesc(new GolemDescription(descLight.copyRaw().mergeStyle(TextFormatting.LIGHT_PURPLE)))
+        .setLightLevel(11).build(),
         "red_crystal", "orange_crystal", "yellow_crystal", "green_crystal", "blue_crystal", 
         "indigo_crystal", "violet_crystal", "white_crystal", "black_crystal");
     // CHARCOAL GOLEM
     softRegister(CompressedBlocksModule.class, buildEnabledPredicate().and(m -> CompressedBlocksModule.enableCharcoalBlock),
         new GolemContainer.Builder(QuarkGolemNames.CHARCOAL_GOLEM, CoalGolem.class, CoalGolem::new)
-        .setModId(MODID).setHealth(24.0D).setAttack(2.5D).setSpeed(0.28D).setKnockback(0.2D).basicTexture()
+        .setModId(MODID).setHealth(24.0D).setAttack(2.5D).setSpeed(0.28D).setKnockbackResist(0.2D).basicTexture()
         .addSpecial(CoalGolem.ALLOW_SPECIAL, false, "Whether this golem can inflict blindness",
             new TranslationTextComponent("entitytip.blinds_creatures").mergeStyle(TextFormatting.GRAY))
         .addHealItem(Items.COAL, 0.25D).addHealItem(Items.CHARCOAL, 0.25D).build(),
         "charcoal_block");
     // COLOR SLIME GOLEM
     softRegister(ColorSlimeModule.class, new GolemContainer.Builder(QuarkGolemNames.COLOR_SLIME_GOLEM, ColorSlimeGolem.class, ColorSlimeGolem::new)
-        .setModId(MODID).setHealth(58.0D).setAttack(2.5D).setSpeed(0.288D).setKnockback(0.35D).basicTexture()
+        .setModId(MODID).setHealth(58.0D).setAttack(2.5D).setSpeed(0.288D).setKnockbackResist(0.35D).basicTexture()
         .addSpecial(ColorSlimeGolem.SPLITTING_CHILDREN, Integer.valueOf(2), "The number of mini-golems to spawn when this golem dies")
         .addSpecial(ColorSlimeGolem.ALLOW_SPECIAL, true, "Whether this golem can apply extra knockback when attacking",
             new TranslationTextComponent("entitytip.has_knockback").mergeStyle(TextFormatting.GREEN))
@@ -129,26 +124,24 @@ public final class QuarkGolemsEntities {
         "red_slime_block", "blue_slime_block", "cyan_slime_block", "magenta_slime_block", "yellow_slime_block");
     // DUSKBOUND GOLEM
     softRegister(DuskboundBlocksModule.class, new GolemContainer.Builder(QuarkGolemNames.DUSKBOUND_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(84.0D).setAttack(6.6D).setSpeed(0.26D).setKnockback(0.6D).basicTexture().build(),
+        .setModId(MODID).setHealth(84.0D).setAttack(6.6D).setSpeed(0.26D).setKnockbackResist(0.6D).basicTexture().build(),
         "duskbound_block");
     // DUSKBOUND LAMP GOLEM
-    softRegister(DuskboundBlocksModule.class, new GolemContainer.Builder(QuarkGolemNames.DUSKBOUNDLAMP_GOLEM, GenericGlowingGolem.class, GenericGlowingGolem::new)
+    softRegister(DuskboundBlocksModule.class, new GolemContainer.Builder(QuarkGolemNames.DUSKBOUNDLAMP_GOLEM, GenericGolem.class, GenericGolem::new)
         .setModId(MODID).setHealth(88.0D).setAttack(6.0D).setSpeed(0.26D)
-        .addSpecial(GenericGlowingGolem.ALLOW_SPECIAL, true, "Whether this golem can glow",
-            new TranslationTextComponent("entitytip.lights_area").mergeStyle(TextFormatting.LIGHT_PURPLE))
-        .basicTexture().build(),
+        .addDesc(new GolemDescription(descLight.copyRaw().mergeStyle(TextFormatting.LIGHT_PURPLE)))
+        .setLightLevel(15).basicTexture().build(),
         "duskbound_lantern");
     // ELDER PRIMSARINE GOLEM
     softRegister(ElderPrismarineUndergroundBiomeModule.class, new GolemContainer.Builder(QuarkGolemNames.ELDERPRISMARINE_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(38.0D).setAttack(7.0D).setKnockback(0.7D).basicTexture()
+        .setModId(MODID).setHealth(38.0D).setAttack(7.0D).setKnockbackResist(0.7D).basicTexture()
         .setSwimMode(SwimMode.SWIM).addHealItem(Items.PRISMARINE_SHARD, 0.25D).build(),
         "elder_prismarine", "elder_prismarine_bricks", "dark_elder_prismarine");
     // ELDER SEA LANTERN GOLEM
-    softRegister(ElderPrismarineUndergroundBiomeModule.class, new GolemContainer.Builder(QuarkGolemNames.ELDERSEALANTERN_GOLEM, GenericGlowingGolem.class, GenericGlowingGolem::new)
-        .setModId(MODID).setHealth(36.0D).setAttack(6.1D).setSpeed(0.26D).setKnockback(0.9D)
-        .addSpecial(GenericGlowingGolem.ALLOW_SPECIAL, true, "Whether this golem can glow",
-            new TranslationTextComponent("entitytip.lights_area").mergeStyle(TextFormatting.LIGHT_PURPLE))
-        .setSwimMode(SwimMode.SWIM).basicTexture()
+    softRegister(ElderPrismarineUndergroundBiomeModule.class, new GolemContainer.Builder(QuarkGolemNames.ELDERSEALANTERN_GOLEM, GenericGolem.class, GenericGolem::new)
+        .setModId(MODID).setHealth(36.0D).setAttack(6.1D).setSpeed(0.26D).setKnockbackResist(0.9D)
+        .addDesc(new GolemDescription(descLight.mergeStyle(TextFormatting.LIGHT_PURPLE)))
+        .setLightLevel(15).setSwimMode(SwimMode.SWIM).basicTexture()
         .addHealItem(Items.PRISMARINE_SHARD, 0.25D).build(),
         "elder_sea_lantern");
     // FRAMED GLASS GOLEM
@@ -162,46 +155,45 @@ public final class QuarkGolemsEntities {
         .addSpecial(GlowshroomGolem.FREQUENCY, Integer.valueOf(420), "Average number of ticks between planting glowshrooms")
         .addSpecial(GlowshroomGolem.ALLOW_SPECIAL, true, "Whether this golem can plant glowshrooms randomly",
             new TranslationTextComponent("entitytip.plants_shrooms").mergeStyle(TextFormatting.DARK_AQUA))
-        .addSpecial(GlowshroomGolem.ALLOW_GLOWING, true, "Whether this golem can glow",
-            new TranslationTextComponent("entitytip.lights_area").mergeStyle(TextFormatting.AQUA))
         .addSpecial(GlowshroomGolem.ALLOW_HEALING, true, "Whether this golem can randomly heal (at night)", 
             new TranslationTextComponent("entitytip.heals").mergeStyle(TextFormatting.RED))
-        .basicTexture().build(),
+        .addDesc(new GolemDescription(descLight.copyRaw().mergeStyle(TextFormatting.AQUA)))
+        .setLightLevel(14).basicTexture().build(),
         "glowshroom_block", "glowshroom_stem");
     // IRON PLATE GOLEM
     softRegister(IronPlatesModule.class, new GolemContainer.Builder(QuarkGolemNames.IRONPLATE_GOLEM, IronPlateGolem.class, IronPlateGolem::new)
-        .setModId(MODID).setHealth(40.0D).setAttack(7.0D).setSpeed(0.26D).setKnockback(1.0D).basicTexture().build(),
+        .setModId(MODID).setHealth(40.0D).setAttack(7.0D).setSpeed(0.26D).setKnockbackResist(1.0D).basicTexture().build(),
         "iron_plate", "rusty_iron_plate");
     // JASPER GOLEM
     softRegister(NewStoneTypesModule.class, new GolemContainer.Builder(QuarkGolemNames.JASPER_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(52.0D).setAttack(5.9D).setSpeed(0.28D).setKnockback(0.8D).basicTexture().build(),
+        .setModId(MODID).setHealth(52.0D).setAttack(5.9D).setSpeed(0.28D).setKnockbackResist(0.8D).basicTexture().build(),
         "polished_jasper", "jasper_pillar", "chiseled_jasper_bricks", "jasper_pavement");
     // LIMESTONE GOLEM
     softRegister(NewStoneTypesModule.class, new GolemContainer.Builder(QuarkGolemNames.LIMESTONE_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(49.0D).setAttack(5.0D).setSpeed(0.27D).setKnockback(0.8D).basicTexture().build(),
+        .setModId(MODID).setHealth(49.0D).setAttack(5.0D).setSpeed(0.27D).setKnockbackResist(0.8D).basicTexture().build(),
         "polished_limestone", "limestone_pillar", "chiseled_limestone_bricks", "limestone_pavement");
     // MARBLE GOLEM
     softRegister(NewStoneTypesModule.class, new GolemContainer.Builder(QuarkGolemNames.MARBLE_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(54.0D).setAttack(6.5D).setSpeed(0.28D).setKnockback(0.8D).basicTexture().build(),
+        .setModId(MODID).setHealth(54.0D).setAttack(6.5D).setSpeed(0.28D).setKnockbackResist(0.8D).basicTexture().build(),
         "polished_marble", "marble_pillar", "chiseled_marble_bricks", "marble_pavement");
     // MIDORI GOLEM
     softRegister(MidoriModule.class, new GolemContainer.Builder(QuarkGolemNames.MIDORI_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(32.0D).setAttack(3.0D).setSpeed(0.28D).setKnockback(0.6D).basicTexture().build(),
+        .setModId(MODID).setHealth(32.0D).setAttack(3.0D).setSpeed(0.28D).setKnockbackResist(0.6D).basicTexture().build(),
         "midori_block", "midori_pillar");
     // PERMAFROST GOLEM
     softRegister(PermafrostUndergroundBiomeModule.class, new GolemContainer.Builder(QuarkGolemNames.PERMAFROST_GOLEM, PermafrostGolem.class, PermafrostGolem::new)
-        .setModId(MODID).setHealth(42.0D).setAttack(4.0D).setSpeed(0.28D).setKnockback(0.6D).basicTexture()
+        .setModId(MODID).setHealth(42.0D).setAttack(4.0D).setSpeed(0.28D).setKnockbackResist(0.6D).basicTexture()
         .addSpecial(PermafrostGolem.ALLOW_SPECIAL, Boolean.valueOf(true), "Whether this golem can apply slowness when attacking", 
             new TranslationTextComponent("entitytip.slows_creatures").mergeStyle(TextFormatting.AQUA))
         .build(),
         "permafrost", "permafrost_bricks");
     // QUILTED WOOL GOLEM
     softRegister(QuiltedWoolModule.class, new GolemContainer.Builder(QuarkGolemNames.QUILTEDWOOL_GOLEM, QuiltedWoolGolem.class, QuiltedWoolGolem::new)
-        .setModId(MODID).setHealth(16.0D).setAttack(1.0D).setSpeed(0.295D).setKnockback(0.2D).basicTexture().build(),
+        .setModId(MODID).setHealth(16.0D).setAttack(1.0D).setSpeed(0.295D).setKnockbackResist(0.2D).basicTexture().build(),
         quiltedWoolTypes);
     // SLATE GOLEM
     softRegister(NewStoneTypesModule.class, new GolemContainer.Builder(QuarkGolemNames.SLATE_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(50.0D).setAttack(5.8D).setSpeed(0.28D).setKnockback(0.8D).basicTexture().build(),
+        .setModId(MODID).setHealth(50.0D).setAttack(5.8D).setSpeed(0.28D).setKnockbackResist(0.8D).basicTexture().build(),
         "polished_slate", "slate_pillar", "chiseled_slate_bricks", "slate_pavement");
     // SOUL SANDSTONE GOLEM
     softRegister(SoulSandstoneModule.class, new GolemContainer.Builder(QuarkGolemNames.SOULSANDSTONE_GOLEM, PermafrostGolem.class, PermafrostGolem::new)
@@ -212,7 +204,7 @@ public final class QuarkGolemsEntities {
         "soul_sandstone", "soul_sandstone_bricks", "chiseled_soul_sandstone", "cut_soul_sandstone");
     // STURDY STONE GOLEM
     softRegister(SturdyStoneModule.class, new GolemContainer.Builder(QuarkGolemNames.STURDYSTONE_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(70.0D).setAttack(4.0D).setSpeed(0.27D).setKnockback(1.0D).basicTexture().build(),
+        .setModId(MODID).setHealth(70.0D).setAttack(4.0D).setSpeed(0.27D).setKnockbackResist(1.0D).basicTexture().build(),
         "sturdy_stone");
     // TALLOW GOLEM
     softRegister(SturdyStoneModule.class, new GolemContainer.Builder(QuarkGolemNames.TALLOW_GOLEM, GenericGolem.class, GenericGolem::new)
@@ -220,7 +212,7 @@ public final class QuarkGolemsEntities {
         "tallow_block");
     // VOIDSTONE GOLEM
     softRegister(NewStoneTypesModule.class, new GolemContainer.Builder(QuarkGolemNames.VOIDSTONE_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(52.0D).setAttack(5.8D).setSpeed(0.28D).setKnockback(0.8D)
+        .setModId(MODID).setHealth(52.0D).setAttack(5.8D).setSpeed(0.28D).setKnockbackResist(0.8D)
     .immuneToFire().basicTexture().build(),
         "polished_basalt", "basalt_pillar", "chiseled_basalt_bricks", "basalt_pavement");
   }

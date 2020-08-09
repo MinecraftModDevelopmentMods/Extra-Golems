@@ -134,6 +134,11 @@ public class EndstoneGolem extends GolemBase {
     return super.attackEntityFrom(src, amnt);
   }
 
+  @Override
+  public boolean isWaterSensitive() {
+    return this.isHurtByWater;
+  }
+
   protected boolean teleportRandomly() {
     final Vector3d pos = this.getPositionVec();
     final double d0 = pos.x + (this.rand.nextDouble() - 0.5D) * range;
