@@ -143,11 +143,11 @@ public final class GolemContainer {
   public void addDescription(final List<IFormattableTextComponent> list) {
     // ADD FIREPROOF TIP
     if (this.entityType.isImmuneToFire()) {
-      list.add(new TranslationTextComponent("entitytip.is_fireproof").mergeStyle(TextFormatting.GOLD));
+      list.add(new TranslationTextComponent("enchantment.minecraft.fire_protection").mergeStyle(TextFormatting.GOLD));
     }
     // ADD EXPLOSION-PROOF TIP
     if (this.explosionImmunity) {
-      list.add(new TranslationTextComponent("entitytip.is_explosionproof").mergeStyle(TextFormatting.GRAY, TextFormatting.BOLD));
+      list.add(new TranslationTextComponent("enchantment.minecraft.blast_protection").mergeStyle(TextFormatting.GRAY, TextFormatting.BOLD));
     }
     // ADD INTERACT-TEXTURE TIP
     if (this.canInteractChangeTexture) {
