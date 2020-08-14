@@ -150,7 +150,7 @@ public class GolemBookEntry {
     page.appendString("\n")
         .append(trans("entitytip.attack").appendString(": ").mergeStyle(TextFormatting.GRAY))
         .append(wrap(String.valueOf(this.attack)).mergeStyle(TextFormatting.BLACK)) 
-        .appendString(" \u2764").appendString("\n");
+        .appendString(" \u2694").appendString("\n");
     // ADD SPECIALS
     for (ITextComponent s : this.specials) {
       page.appendString("\n").append(s);

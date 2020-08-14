@@ -25,10 +25,10 @@ public final class MagmaGolem extends GolemBase {
   public static final String SPLITTING_CHILDREN = "Splitting Factor";
   public static final String MELT_DELAY = "Melting Delay";
 
-  private static final String TEXTURE_LOC = ExtraGolems.MODID + ":textures/entity/magma/" + GolemNames.MAGMA_GOLEM;
+  private static final String TEXTURE_LOC = ExtraGolems.MODID + ":textures/entity/" + GolemNames.MAGMA_GOLEM + "/";
   private static final ResourceLocation[] TEXTURES = new ResourceLocation[] { new ResourceLocation(TEXTURE_LOC + "_0.png"),
-      new ResourceLocation(TEXTURE_LOC + "_1.png"), new ResourceLocation(TEXTURE_LOC + "_2.png"), new ResourceLocation(TEXTURE_LOC + "_3.png"),
-      new ResourceLocation(TEXTURE_LOC + "_2.png"), new ResourceLocation(TEXTURE_LOC + "_1.png") };
+      new ResourceLocation(TEXTURE_LOC + "1.png"), new ResourceLocation(TEXTURE_LOC + "2.png"), new ResourceLocation(TEXTURE_LOC + "3.png"),
+      new ResourceLocation(TEXTURE_LOC + "2.png"), new ResourceLocation(TEXTURE_LOC + "1.png") };
 
   /**
    * Golem should stand in one spot for number of ticks before affecting the block

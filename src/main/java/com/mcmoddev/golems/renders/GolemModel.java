@@ -6,14 +6,38 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
 import net.minecraft.client.renderer.entity.model.IronGolemModel;
+import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
 
 public class GolemModel<T extends GolemBase> extends IronGolemModel<T> {
+  
+  private final ModelRenderer tail;
+  private final ModelRenderer tail1;
+  private final ModelRenderer ears;
 
   private float red = 1.0f;
   private float green = 1.0f;
   private float blue = 1.0f;
   private float alpha = 1.0f;
+  
+  public GolemModel() {
+    super();
+    tail = new ModelRenderer(this, 0, 0).setTextureSize(32, 32);
+    tail.setRotationPoint(0.0F, 10.0F, 4.0F);
+    tail.rotateAngleX = -2.4435F;
+    tail.addBox(-2.0F, -8.0F, 0.0F, 4.0F, 8.0F, 4.0F, 0.0F, false);
+
+    tail1 = new ModelRenderer(this, 0, 16).setTextureSize(32, 32);
+    tail1.setRotationPoint(0.0F, -8.0F, 3.0F);
+    tail.addChild(tail1);
+    tail1.rotateAngleX = 0.2618F;
+    tail1.addBox(-1.0F, -8.0F, -2.0F, 2.0F, 10.0F, 2.0F, 0.0F, false);
+    
+    ears = new ModelRenderer(this).setTextureSize(32, 32);
+    ears.setRotationPoint(0.0F, 0.0F, 0.0F);
+    ears.setTextureOffset(9, 16).addBox(-5.0F, -16.0F, -2.0F, 10.0F, 5.0F, 0.0F, 0.0F, false);
+  }
 
   @Override
   public void render(final MatrixStack matrixStackIn, final IVertexBuilder vertexBuilder, final int i3, final int i4, final float redIn,
@@ -31,6 +55,8 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> {
     // render with custom colors
     super.render(matrixStackIn, vertexBuilder, i3, i4, red, green, blue, alpha);
   }
+  
+  // COLOR HELPERS
 
   public void setColor(final float r, final float g, final float b, final float a) {
     red = r;
@@ -39,27 +65,28 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> {
     alpha = a;
   }
 
-  public void setAlpha(final float a) {
-    alpha = a;
+  public void setAlpha(final float a) {  alpha = a; }
+  public void resetColor() { red = green = blue = alpha = 1.0F; }
+  public float red() { return red; }
+  public float green() {  return green; }
+  public float blue() { return blue;  }
+  public float alpha() { return alpha; }
+  
+  // KITTY LAYER HELPERS
+  
+  public void renderKittyEars(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn) {
+    this.ears.copyModelAngles(this.ironGolemHead);
+    this.ears.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn);
   }
-
-  public void resetColor() {
-    red = green = blue = alpha = 1.0F;
-  }
-
-  public float red() {
-    return red;
-  }
-
-  public float green() {
-    return green;
-  }
-
-  public float blue() {
-    return blue;
-  }
-
-  public float alpha() {
-    return alpha;
+ 
+  public void renderKittyTail(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn,
+      float limbSwing, float limbSwingAmount) {
+    this.tail.copyModelAngles(this.ironGolemBody);
+    this.tail.rotationPointY = 2.0F;
+    this.tail.rotationPointZ = 4.0F;
+    final float tailSwing = MathHelper.cos(limbSwing) * limbSwingAmount;
+    tail.rotateAngleX = -2.4435F + 0.58F * tailSwing;
+    tail1.rotateAngleX = 0.2618F + 0.78F * tailSwing;
+    this.tail.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn);
   }
 }

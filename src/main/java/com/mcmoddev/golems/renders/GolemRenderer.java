@@ -42,6 +42,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
   public GolemRenderer(final EntityRendererManager renderManagerIn) {
     super(renderManagerIn, new GolemModel<T>(), 0.5F);
     this.addLayer(new GolemFlowerLayer<T>(this));
+    this.addLayer(new GolemKittyLayer<T>(this));
   }
 
   @Override
