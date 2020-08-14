@@ -39,11 +39,11 @@ public class GolemKittyLayer<T extends GolemBase> extends LayerRenderer<T, Golem
       matrixStackIn.rotate(Vector3f.XP.rotationDegrees(pitch));
       matrixStackIn.rotate(Vector3f.XP.rotationDegrees(-pitch));
       matrixStackIn.rotate(Vector3f.YP.rotationDegrees(-yaw));
-      this.getEntityModel().renderKittyEars(matrixStackIn, vertexBuilder, packedLightIn, packedOverlay);
+      this.getEntityModel().renderKittyEars(golem, matrixStackIn, vertexBuilder, packedLightIn, packedOverlay);
       matrixStackIn.pop();
       
       // render tail
-      this.getEntityModel().renderKittyTail(matrixStackIn, vertexBuilder, packedLightIn, packedOverlay, limbSwing, limbSwingAmount);
+      this.getEntityModel().renderKittyTail(golem, matrixStackIn, vertexBuilder, packedLightIn, packedOverlay, limbSwing, limbSwingAmount);
     }
   }
 }

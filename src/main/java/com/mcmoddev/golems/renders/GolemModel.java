@@ -31,6 +31,7 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> {
     tail1 = new ModelRenderer(this, 0, 16).setTextureSize(32, 32);
     tail1.setRotationPoint(0.0F, -8.0F, 3.0F);
     tail.addChild(tail1);
+    tail1.mirror = true;
     tail1.rotateAngleX = 0.2618F;
     tail1.addBox(-1.0F, -8.0F, -2.0F, 2.0F, 10.0F, 2.0F, 0.0F, false);
     
@@ -74,19 +75,25 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> {
   
   // KITTY LAYER HELPERS
   
-  public void renderKittyEars(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn) {
+  public void renderKittyEars(T golem, MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, 
+      int packedOverlayIn) {
     this.ears.copyModelAngles(this.ironGolemHead);
     this.ears.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn);
   }
  
-  public void renderKittyTail(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn,
-      float limbSwing, float limbSwingAmount) {
+  public void renderKittyTail(T golem, MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, 
+      int packedOverlayIn, float limbSwing, float limbSwingAmount) {
+    // tail angles
     this.tail.copyModelAngles(this.ironGolemBody);
     this.tail.rotationPointY = 2.0F;
     this.tail.rotationPointZ = 4.0F;
-    final float tailSwing = MathHelper.cos(limbSwing) * limbSwingAmount;
-    tail.rotateAngleX = -2.4435F + 0.58F * tailSwing;
-    tail1.rotateAngleX = 0.2618F + 0.78F * tailSwing;
+    // tail animation
+    float idleSwing = MathHelper.cos((golem.ticksExisted) * 0.08F);
+    float tailSwing = MathHelper.cos(limbSwing) * limbSwingAmount;
+    tail.rotateAngleX = -2.4435F + 0.38F * tailSwing;
+    tail1.rotateAngleX = 0.2618F + 0.48F * tailSwing;
+    tail.rotateAngleZ = 0.1F * idleSwing;
+    tail1.rotateAngleZ = 0.18F * idleSwing;
     this.tail.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn);
   }
 }

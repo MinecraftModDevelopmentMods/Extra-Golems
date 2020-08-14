@@ -77,7 +77,6 @@ public abstract class GolemBase extends IronGolemEntity {
     case FLOAT:
       // basic swimming AI
       this.goalSelector.addGoal(0, new SwimGoal(this));
-      this.navigator.setCanSwim(true);
       break;
     case SWIM:
       // advanced swimming AI
@@ -527,33 +526,32 @@ public abstract class GolemBase extends IronGolemEntity {
 
     @Override
     public void tick() {
+      // All of this is copied from DrownedEntity#MoveHelperController
       LivingEntity target = this.golem.getAttackTarget();
-      final Vector3d gPos = this.golem.getPositionVec();
-      final Vector3d tPos = target != null ? target.getPositionVec() : null;
-      if (GolemBase.isSwimmingUp(this.golem) && this.golem.isInWater()) {
-        if (target != null && tPos != null && (tPos.y > gPos.y || golem.isSwimmingUp())) {
+      if (this.golem.isSwimmingUp() && this.golem.isInWater()) {
+        if ((target != null && target.getPosY() > this.golem.getPosY()) || this.golem.swimmingUp) {
           this.golem.setMotion(this.golem.getMotion().add(0.0D, 0.002D, 0.0D));
         }
 
         if (this.action != MovementController.Action.MOVE_TO || this.golem.getNavigator().noPath()) {
           this.golem.setAIMoveSpeed(0.0F);
-
           return;
         }
-        double x1 = this.posX - gPos.x;
-        double y1 = this.posY - gPos.y;
-        double z1 = this.posZ - gPos.z;
-        double dis = MathHelper.sqrt(x1 * x1 + y1 * y1 + z1 * z1);
-        y1 /= dis;
+        double dX = this.posX - this.golem.getPosX();
+        double dY = this.posY - this.golem.getPosY();
+        double dZ = this.posZ - this.golem.getPosZ();
+        double dTotal = MathHelper.sqrt(dX * dX + dY * dY + dZ * dZ);
+        dY /= dTotal;
 
-        float f1 = (float) (MathHelper.atan2(z1, x1) * 57.2957763671875D) - 90.0F;
-        this.golem.rotationYaw = limitAngle(this.golem.rotationYaw, f1, 90.0F);
+        float rot = (float) (MathHelper.atan2(dZ, dX) * 57.2957763671875D) - 90.0F;
+        this.golem.rotationYaw = limitAngle(this.golem.rotationYaw, rot, 90.0F);
         this.golem.renderYawOffset = this.golem.rotationYaw;
 
-        float moveSpeed2 = MathHelper.lerp(0.125F, this.golem.getAIMoveSpeed(), (float) this.speed);
-        this.golem.setAIMoveSpeed(moveSpeed2);
-        this.golem.setMotion(this.golem.getMotion().add(moveSpeed2 * x1 * 0.005D, moveSpeed2 * y1 * 0.1D, moveSpeed2 * z1 * 0.005D));
-
+        float moveSpeed = (float) (this.speed * this.golem.getAttributeValue(Attributes.MOVEMENT_SPEED));
+        float moveSpeedAdjusted = MathHelper.lerp(0.125F, this.golem.getAIMoveSpeed(), moveSpeed);
+        this.golem.setAIMoveSpeed(moveSpeedAdjusted);
+        this.golem.setMotion(this.golem.getMotion().add(moveSpeedAdjusted * dX * 0.005D, moveSpeedAdjusted * dY * 0.1D,
+            moveSpeedAdjusted * dZ * 0.005D));
       } else {
         if (!this.golem.onGround) {
           this.golem.setMotion(this.golem.getMotion().add(0.0D, -0.008D, 0.0D));
