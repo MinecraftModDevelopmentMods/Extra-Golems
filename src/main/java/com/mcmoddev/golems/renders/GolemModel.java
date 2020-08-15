@@ -31,7 +31,6 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> {
     tail1 = new ModelRenderer(this, 0, 16).setTextureSize(32, 32);
     tail1.setRotationPoint(0.0F, -8.0F, 3.0F);
     tail.addChild(tail1);
-    tail1.mirror = true;
     tail1.rotateAngleX = 0.2618F;
     tail1.addBox(-1.0F, -8.0F, -2.0F, 2.0F, 10.0F, 2.0F, 0.0F, false);
     

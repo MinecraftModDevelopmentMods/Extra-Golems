@@ -154,10 +154,9 @@ public final class GolemContainer {
       list.add(new TranslationTextComponent("entitytip.click_change_texture").mergeStyle(TextFormatting.BLUE));
     }
     // ADD SWIMMING TIP
-    // TODO get advanced swimming working
-//    if(this.swimMode == SwimMode.SWIM) {
-//      list.add(new TranslationTextComponent("entitytip.advanced_swim").mergeStyle(TextFormatting.AQUA));
-//    }
+    if(this.swimMode == SwimMode.SWIM) {
+      list.add(new TranslationTextComponent("entitytip.advanced_swim").mergeStyle(TextFormatting.AQUA));
+    }
     // ADD ALL OTHER DESCRIPTIONS
     for (final GolemDescription desc : descContainers) {
       desc.addDescription(list, this);

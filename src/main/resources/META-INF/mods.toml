@@ -3,15 +3,15 @@
 # The name of the mod loader type to load
 modLoader="javafml"
 # A version range to match for said mod loader
-loaderVersion="[26,)"
-# A URL to query for updates
-#updateJSONURL="http://myurl.me/"
+loaderVersion="[32,)"
+# The license for your mod. This is mandatory metadata and allows for easier comprehension of your redistributive properties.
+license="zlib License"
 # A URL to refer people to when problems occur with this mod
 issueTrackerURL="https://github.com/MinecraftModDevelopmentMods/Extra-Golems/issues"
 
 [[mods]]
     modId="golems"
-    version="11.0.0-beta"
+    version="11.0.1"
     displayName="Extra Golems"
     credits="TheGlitch76, jriwanek, and translators - Thanks!"
     authors="skyjay1 and the MMD Team"
