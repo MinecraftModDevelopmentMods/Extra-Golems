@@ -3,7 +3,7 @@
 # The name of the mod loader type to load
 modLoader="javafml"
 # A version range to match for said mod loader
-loaderVersion="[32,)"
+loaderVersion="[33,)"
 # The license for your mod. This is mandatory metadata and allows for easier comprehension of your redistributive properties.
 license="zlib License"
 # A URL to refer people to when problems occur with this mod
@@ -11,7 +11,7 @@ issueTrackerURL="https://github.com/MinecraftModDevelopmentMods/Extra-Golems/iss
 
 [[mods]]
     modId="golems"
-    version="11.0.1"
+    version="11.1.2"
     displayName="Extra Golems"
     credits="TheGlitch76, jriwanek, and translators - Thanks!"
     authors="skyjay1 and the MMD Team"
@@ -20,7 +20,7 @@ issueTrackerURL="https://github.com/MinecraftModDevelopmentMods/Extra-Golems/iss
 [[dependencies.golems]]
     modId="forge"
     mandatory=true
-    versionRange="[32,)"
+    versionRange="[33,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.golems]]

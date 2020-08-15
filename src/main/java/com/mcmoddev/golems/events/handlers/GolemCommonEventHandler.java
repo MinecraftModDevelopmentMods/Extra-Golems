@@ -18,6 +18,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.brain.memory.MemoryModuleType;
+import net.minecraft.entity.ai.brain.sensor.GolemLastSeenSensor;
 import net.minecraft.entity.merchant.villager.VillagerData;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
@@ -28,6 +29,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.world.BlockEvent;
@@ -87,10 +89,9 @@ public class GolemCommonEventHandler {
             GolemBase golem = summonGolem(villager);
             if (golem != null) {
               ExtraGolems.LOGGER.info("Villager summoned a golem! " + golem.toString());
+              nearbyVillagers.forEach(GolemLastSeenSensor::func_242313_b);
             }
           }
-          // reset brain
-          nearbyVillagers.forEach(v -> v.getBrain().setMemory(MemoryModuleType.GOLEM_LAST_SEEN_TIME, time));
         }
       }
     }
@@ -99,7 +100,7 @@ public class GolemCommonEventHandler {
   @Nullable
   private static GolemBase summonGolem(@Nonnull VillagerEntity villager) {
     // This is copied from the VillagerEntity summonGolem code
-    final World world = villager.getEntityWorld();
+    final ServerWorld world = (ServerWorld) villager.getEntityWorld();
     BlockPos blockpos = villager.getPosition();
 
     for (int i = 0; i < 10; ++i) {

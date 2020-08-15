@@ -31,6 +31,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -65,9 +66,9 @@ public final class ItemBedrockGolem extends Item {
       }
       // attempt to spawn a bedrock golem at this position
       EntityType<?> entitytype = container.getEntityType();
-      if (!worldIn.isRemote && entitytype != null) {
+      if (!worldIn.isRemote() && entitytype != null) {
         // spawn the golem!
-        entitytype.spawn(worldIn, stack, player, spawnPos, SpawnReason.SPAWN_EGG, true, !Objects.equals(pos, spawnPos) && facing == Direction.UP);
+        entitytype.spawn((ServerWorld)worldIn, stack, player, spawnPos, SpawnReason.SPAWN_EGG, true, !Objects.equals(pos, spawnPos) && facing == Direction.UP);
         stack.shrink(1);
       }
       spawnParticles(worldIn, spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), 0.12D);
