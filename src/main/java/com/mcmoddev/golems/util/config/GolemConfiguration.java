@@ -13,6 +13,7 @@ import com.mcmoddev.golems.util.GolemNames;
 import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
 import com.mcmoddev.golems.util.config.special.GolemSpecialSection;
 
+import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
@@ -25,14 +26,14 @@ public class GolemConfiguration {
   private final Map<GolemContainer, GolemConfigurationSection> sections = new HashMap<>();
   public final Map<GolemSpecialContainer, GolemSpecialSection> specials = new HashMap<>();
 
-  public final ForgeConfigSpec.BooleanValue bedrockGolemCreativeOnly;
-  public final ForgeConfigSpec.BooleanValue pumpkinBuildsGolem;
-  public final ForgeConfigSpec.BooleanValue enableFriendlyFire;
-  public final ForgeConfigSpec.BooleanValue enableTextureInteract;
-  public final ForgeConfigSpec.BooleanValue enableUseItemSpell;
-  public final ForgeConfigSpec.BooleanValue enableHealGolems;
-  public final ForgeConfigSpec.BooleanValue holidayTweaks;
-  public final ForgeConfigSpec.IntValue villagerGolemSpawnChance;
+  protected final ForgeConfigSpec.BooleanValue bedrockGolemCreativeOnly;
+  protected final ForgeConfigSpec.BooleanValue pumpkinBuildsGolem;
+  protected final ForgeConfigSpec.BooleanValue enableFriendlyFire;
+  protected final ForgeConfigSpec.BooleanValue enableTextureInteract;
+  protected final ForgeConfigSpec.BooleanValue enableUseItemSpell;
+  protected final ForgeConfigSpec.BooleanValue enableHealGolems;
+  protected final ForgeConfigSpec.BooleanValue holidayTweaks;
+  protected final ForgeConfigSpec.IntValue villagerGolemSpawnChance;
   private final ConfigValue<List<? extends String>> villagerGolemSpawns;
   private static final String[] defaultVillagerGolemSpawns = { GolemNames.BOOKSHELF_GOLEM, GolemNames.CLAY_GOLEM,
       GolemNames.COAL_GOLEM, GolemNames.CRAFTING_GOLEM, GolemNames.GLASS_GOLEM, GolemNames.GLOWSTONE_GOLEM, GolemNames.LEAF_GOLEM,
@@ -93,6 +94,9 @@ public class GolemConfiguration {
       for (GolemSpecialContainer specialC : c.getSpecialContainers()) {
         specialC.value = specials.get(specialC).value;
       }
+	  
+	  // moved from ProxyCommon to here to fix issue #56
+	  GlobalEntityTypeAttributes.put(c.getEntityType(), c.getAttributeSupplier().get().create());
     }
     // also update the holiday configs
     final LocalDateTime now = LocalDateTime.now();

@@ -64,6 +64,8 @@ public final class GolemContainer {
 
   private double health;
   private double attack;
+  private Supplier<AttributeModifierMap.MutableAttribute> attributeSupplier;
+
   private final double speed;
   private final double knockbackResist;
   private final int lightLevel;
@@ -73,7 +75,6 @@ public final class GolemContainer {
   private final ImmutableMap<String, GolemSpecialContainer> specialContainers;
   private final ImmutableList<GolemDescription> descContainers;
   private final ImmutableMap<IRegistryDelegate<Item>, Double> healItemMap;
-  private final Supplier<AttributeModifierMap.MutableAttribute> attributeSupplier;
 
   /**
    * Constructor for GolemContainer (use the Builder!)
@@ -94,7 +95,6 @@ public final class GolemContainer {
    * @param lSpecialContainers      any golem specials as a Map
    * @param lDesc                   any special descriptions for the golem
    * @param lHealItemMap            a map of items and their corresponding heal amounts
-   * @param lAttributeSupplier      a supplier for the attribute modifier map
    * @param lTexture                a ResourceLocation for a single default texture
    * @param lBasicSound             a default SoundEvent to use for the golem
    * @param lCustomRender           whether or not the golem will use the default renderer
@@ -104,8 +104,7 @@ public final class GolemContainer {
       final List<ResourceLocation> lValidBuildingBlockTags, final double lHealth, final double lAttack, final double lSpeed,
       final double lKnockbackResist, final int lLightLevel, final int lPowerLevel, final boolean lFallDamage, 
       final boolean lExplosionImmunity, final SwimMode lSwimMode, final HashMap<String, GolemSpecialContainer> lSpecialContainers, 
-      final List<GolemDescription> lDesc, final Map<IRegistryDelegate<Item>, Double> lHealItemMap, 
-      final Supplier<AttributeModifierMap.MutableAttribute> lAttributeSupplier,
+      final List<GolemDescription> lDesc, final Map<IRegistryDelegate<Item>, Double> lHealItemMap,
       final ResourceLocation lTexture, final SoundEvent lBasicSound, final boolean lCustomRender) {
     this.entityType = lEntityType;
     this.entityClass = lEntityClass;
@@ -124,13 +123,15 @@ public final class GolemContainer {
     this.specialContainers = ImmutableMap.copyOf(lSpecialContainers);
     this.descContainers = ImmutableList.copyOf(lDesc);
     this.healItemMap = ImmutableMap.copyOf(lHealItemMap);
-    this.attributeSupplier = lAttributeSupplier;
     this.basicTexture = lTexture;
     this.basicSound = lBasicSound;
     this.hasCustomRender = lCustomRender;
     
     this.canInteractChangeTexture = ExtraGolemsConfig.enableTextureInteract() && (GolemMultiTextured.class.isAssignableFrom(lEntityClass)
         || GolemMultiColorized.class.isAssignableFrom(lEntityClass));
+    
+    // initialize the MutableAttribute supplier
+    refreshSupplier();
   }
 
   /**
@@ -308,30 +309,43 @@ public final class GolemContainer {
   ////////// SETTERS //////////
 
   /**
-   * <b>DO NOT CALL</b> unless you are the config!
+   * <strong>DO NOT CALL</strong> unless you are the config!
    * 
    * @param pHealth new 'health' value
    **/
   public void setHealth(final double pHealth) {
     this.health = pHealth;
+    refreshSupplier();
   }
 
   /**
-   * <b>DO NOT CALL</b> unless you are the config!
+   * <strong>DO NOT CALL</strong> unless you are the config!
    * 
    * @param pAttack new 'attack' value
    **/
   public void setAttack(final double pAttack) {
     this.attack = pAttack;
+    refreshSupplier();
   }
 
   /**
-   * <b>DO NOT CALL</b> unless you are the config!
+   * <strong>DO NOT CALL</strong> unless you are the config!
    * 
    * @param pEnabled new 'enabled' value
    **/
   public void setEnabled(final boolean pEnabled) {
     this.enabled = pEnabled;
+  }
+  
+  /**
+   * Resets the MutableAttribute supplier for the golem using current values for health and attack strength.
+   **/
+  private void refreshSupplier() {
+    this.attributeSupplier = () -> MobEntity.func_233666_p_()
+        .createMutableAttribute(Attributes.MAX_HEALTH, this.health)
+        .createMutableAttribute(Attributes.MOVEMENT_SPEED, this.speed)
+        .createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, this.knockbackResist)
+        .createMutableAttribute(Attributes.ATTACK_DAMAGE, this.attack);
   }
 
   ////////// GETTERS //////////
@@ -450,7 +464,7 @@ public final class GolemContainer {
     /**
      * Sets the Mod ID of the golem for registry name
      *
-     * @param lModId the MODID to use to register the golem. <b>Defaults to "golems"</b>
+     * @param lModId the MODID to use to register the golem. <strong>Defaults to "golems"</strong>
      * @return instance to allow chaining of methods
      **/
     public Builder setModId(final String lModId) {
@@ -461,7 +475,7 @@ public final class GolemContainer {
     /**
      * Sets the max health of a golem
      *
-     * @param lHealth The max health (in half hearts) of the golem. <b>Defaults to 100</b>
+     * @param lHealth The max health (in half hearts) of the golem. <strong>Defaults to 100</strong>
      * @return instance to allow chaining of methods
      **/
     public Builder setHealth(final double lHealth) {
@@ -472,7 +486,7 @@ public final class GolemContainer {
     /**
      * Sets the attack strength of a golem
      *
-     * @param lAttack The attack strength (in half hearts) of the golem. <b>Defaults to 7</b>
+     * @param lAttack The attack strength (in half hearts) of the golem. <strong>Defaults to 7</strong>
      * @return instance to allow chaining of methods
      **/
     public Builder setAttack(final double lAttack) {
@@ -483,7 +497,7 @@ public final class GolemContainer {
     /**
      * Sets the movement speed of a golem
      *
-     * @param lMoveSpeed The move speed of the golem. <b>Defaults to 0.25D</b>
+     * @param lMoveSpeed The move speed of the golem. <strong>Defaults to 0.25D</strong>
      * @return instance to allow chaining of methods
      **/
     public Builder setSpeed(final double lMoveSpeed) {
@@ -494,7 +508,7 @@ public final class GolemContainer {
     /**
      * Sets the knockback resistance (heaviness) of a golem
      *
-     * @param lKnockbackResist The knockback resistance of the golem. <b>Defaults to 0.4D</b>
+     * @param lKnockbackResist The knockback resistance of the golem. <strong>Defaults to 0.4D</strong>
      * @return instance to allow chaining of methods
      **/
     public Builder setKnockbackResist(final double lKnockbackResist) {
@@ -505,7 +519,7 @@ public final class GolemContainer {
     /**
      * Sets a static light level to be emitted by a golem
      *
-     * @param lLightLevel The light emitted by the golem from 0 to 15. <b>Defaults to 0</b>
+     * @param lLightLevel The light emitted by the golem from 0 to 15. <strong>Defaults to 0</strong>
      * @return instance to allow chaining of methods
      **/
     public Builder setLightLevel(final int lLightLevel) {
@@ -516,7 +530,7 @@ public final class GolemContainer {
    /**
     * Sets a static redstone power level to be emitted by a golem
     *
-    * @param lPowerLevel The power emitted by the golem from 0 to 15. <b>Defaults to 0</b>
+    * @param lPowerLevel The power emitted by the golem from 0 to 15. <strong>Defaults to 0</strong>
     * @return instance to allow chaining of methods
     **/
    public Builder setPowerLevel(final int lPowerLevel) {
@@ -577,8 +591,8 @@ public final class GolemContainer {
     }
 
     /**
-     * Sets the Swim Mode of a golem: SINK, FLOAT, or SWIM. <b>Defaults to
-     * SwimMode.SINK</b>
+     * Sets the Swim Mode of a golem: SINK, FLOAT, or SWIM. <strong>Defaults to
+     * SwimMode.SINK</strong>
      *
      * @param mode the SwimMode to use for this golem
      * @return instance to allow chaining of methods
@@ -752,15 +766,9 @@ public final class GolemContainer {
       for (GolemSpecialContainer c : specials) {
         containerMap.put(c.name, c);
       }
-      // make the attribute supplier
-      final Supplier<AttributeModifierMap.MutableAttribute> attributes = () -> MobEntity.func_233666_p_()
-            .createMutableAttribute(Attributes.MAX_HEALTH, this.health)
-            .createMutableAttribute(Attributes.MOVEMENT_SPEED, this.speed)
-            .createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, this.knockBackResist)
-            .createMutableAttribute(Attributes.ATTACK_DAMAGE, this.attack);
       // build the golem container
       return new GolemContainer(entityType, entityClass, golemName, validBuildingBlocks, validBuildingBlockTags, health, attack, speed,
-          knockBackResist, lightLevel, powerLevel, fallDamage, explosionImmunity, swimMode, containerMap, descriptions, healItemMap, attributes, 
+          knockBackResist, lightLevel, powerLevel, fallDamage, explosionImmunity, swimMode, containerMap, descriptions, healItemMap, 
           basicTexture, basicSound, customRender);
     }
   }
