@@ -11,7 +11,7 @@ issueTrackerURL="https://github.com/MinecraftModDevelopmentMods/Extra-Golems/iss
 
 [[mods]]
     modId="golems"
-    version="11.1.3"
+    version="11.1.4"
     displayName="Extra Golems"
     credits="TheGlitch76, jriwanek, and translators - Thanks!"
     authors="skyjay1 and the MMD Team"
@@ -26,6 +26,6 @@ issueTrackerURL="https://github.com/MinecraftModDevelopmentMods/Extra-Golems/iss
 [[dependencies.golems]]
     modId="quark"
     mandatory=false
-    versionRange="[r2.2-259,)"
+    versionRange="[r2.2-261,)"
     ordering="AFTER"
     side="BOTH"

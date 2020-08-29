@@ -2,6 +2,7 @@ package com.mcmoddev.golems.entity;
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.function.Predicate;
 
 import com.mcmoddev.golems.container.ContainerDispenserGolem;
 import com.mcmoddev.golems.entity.base.GolemBase;
@@ -59,6 +60,21 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
 
   private final RangedAttackGoal aiArrowAttack;
   private final MeleeAttackGoal aiMeleeAttack;
+  
+  protected final Predicate<? super ItemEntity> pickUpItemstackPredicate = e -> {
+    // make sure the item is an arrow
+    if(!e.cannotPickup() && e.getItem().getItem() instanceof ArrowItem) {
+      // make sure the golem can pick up this stack
+      for (int i = 0, l = this.inventory.getSizeInventory(); i < l; i++) {
+        final ItemStack stack = this.inventory.getStackInSlot(i);
+        if (stack.isEmpty() || (stack.getItem() == e.getItem().getItem() && stack.getCount() + e.getItem().getCount() <= stack.getMaxStackSize())) {
+          return true;
+        }
+      }
+    }
+    
+    return false;
+  };
 
   public DispenserGolem(final EntityType<? extends GolemBase> entityType, final World world) {
     super(entityType, world);
@@ -299,7 +315,7 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
   
   public class FindArrowsGoal extends Goal {
     protected final double range;
-
+    
     public FindArrowsGoal(final double rangeIn) {
       this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE));
       range = rangeIn;
@@ -319,8 +335,7 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
     @Override
     public void tick() {
       final List<ItemEntity> droppedArrows = DispenserGolem.this.getEntityWorld().getEntitiesWithinAABB(ItemEntity.class, 
-          DispenserGolem.this.getBoundingBox().grow(range), 
-          e -> !e.cannotPickup() && e.getItem().getItem() instanceof ArrowItem);
+          DispenserGolem.this.getBoundingBox().grow(range), pickUpItemstackPredicate);
       // path toward the nearest dropped arrow item
       if (!droppedArrows.isEmpty()) {
         droppedArrows.sort((e1, e2) -> (int)(DispenserGolem.this.getDistanceSq(e1) - DispenserGolem.this.getDistanceSq(e2)));

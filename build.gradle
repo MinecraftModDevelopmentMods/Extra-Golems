@@ -65,10 +65,6 @@ minecraft {
 }
 
 repositories {
-    maven { // JEI
-        name 'DVS1 Maven FS'
-        url 'http://dvs1.progwml6.com/files/maven/'
-    }
     maven {
         name 'MMD'
         url 'https://maven.mcmoddev.com/'
