@@ -64,7 +64,6 @@ public final class GolemContainer {
 
   private double health;
   private double attack;
-  private Supplier<AttributeModifierMap.MutableAttribute> attributeSupplier;
 
   private final double speed;
   private final double knockbackResist;
@@ -127,11 +126,8 @@ public final class GolemContainer {
     this.basicSound = lBasicSound;
     this.hasCustomRender = lCustomRender;
     
-    this.canInteractChangeTexture = ExtraGolemsConfig.enableTextureInteract() && (GolemMultiTextured.class.isAssignableFrom(lEntityClass)
+    this.canInteractChangeTexture = (GolemMultiTextured.class.isAssignableFrom(lEntityClass)
         || GolemMultiColorized.class.isAssignableFrom(lEntityClass));
-    
-    // initialize the MutableAttribute supplier
-    refreshSupplier();
   }
 
   /**
@@ -151,7 +147,7 @@ public final class GolemContainer {
       list.add(new TranslationTextComponent("enchantment.minecraft.blast_protection").mergeStyle(TextFormatting.GRAY, TextFormatting.BOLD));
     }
     // ADD INTERACT-TEXTURE TIP
-    if (this.canInteractChangeTexture) {
+    if (ExtraGolemsConfig.enableTextureInteract() && this.canInteractChangeTexture) {
       list.add(new TranslationTextComponent("entitytip.click_change_texture").mergeStyle(TextFormatting.BLUE));
     }
     // ADD SWIMMING TIP
@@ -315,7 +311,6 @@ public final class GolemContainer {
    **/
   public void setHealth(final double pHealth) {
     this.health = pHealth;
-    refreshSupplier();
   }
 
   /**
@@ -325,7 +320,6 @@ public final class GolemContainer {
    **/
   public void setAttack(final double pAttack) {
     this.attack = pAttack;
-    refreshSupplier();
   }
 
   /**
@@ -337,17 +331,6 @@ public final class GolemContainer {
     this.enabled = pEnabled;
   }
   
-  /**
-   * Resets the MutableAttribute supplier for the golem using current values for health and attack strength.
-   **/
-  private void refreshSupplier() {
-    this.attributeSupplier = () -> MobEntity.func_233666_p_()
-        .createMutableAttribute(Attributes.MAX_HEALTH, this.health)
-        .createMutableAttribute(Attributes.MOVEMENT_SPEED, this.speed)
-        .createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, this.knockbackResist)
-        .createMutableAttribute(Attributes.ATTACK_DAMAGE, this.attack);
-  }
-
   ////////// GETTERS //////////
 
   /** @return the base class used by the Golem. Not always unique. **/
@@ -358,10 +341,7 @@ public final class GolemContainer {
 
   /** @return a unique ResourceLocation ID for the Golem. Always unique. **/
   public ResourceLocation getRegistryName() { return this.entityType.getRegistryName(); }
-  
-  /** @return the attribute map supplier for the Golem **/
-  public Supplier<AttributeModifierMap.MutableAttribute> getAttributeSupplier() { return attributeSupplier; }
-
+ 
   /** @return a default texture for the Golem. May be null. **/
   public ResourceLocation getTexture() { return this.basicTexture; }
 
@@ -406,6 +386,15 @@ public final class GolemContainer {
 
   /** @return the {@link SwimMode} of the Golem **/
   public SwimMode getSwimMode() { return this.swimMode; }
+  
+  /** @return a new attribute map supplier for the Golem **/
+  public Supplier<AttributeModifierMap.MutableAttribute> getAttributeSupplier() {
+    return () -> MobEntity.func_233666_p_()
+         .createMutableAttribute(Attributes.MAX_HEALTH, this.health)
+         .createMutableAttribute(Attributes.MOVEMENT_SPEED, this.speed)
+         .createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, this.knockbackResist)
+         .createMutableAttribute(Attributes.ATTACK_DAMAGE, this.attack);
+   }
 
   //////////////////////////////////////////////////////////////
   /////////////////// END OF GOLEM CONTAINER ///////////////////

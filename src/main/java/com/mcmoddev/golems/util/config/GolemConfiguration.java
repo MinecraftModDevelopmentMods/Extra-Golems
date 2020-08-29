@@ -60,7 +60,7 @@ public class GolemConfiguration {
     this.holidayTweaks = builder
         .comment("Super secret special days").define("holidays", true);
     this.villagerGolemSpawnChance = builder.comment("Percent chance for a villager to successfully summon an Extra Golems golem")
-        .defineInRange("villager_summon_chance", 80, 0, 100);
+        .defineInRange("villager_summon_chance", 60, 0, 100);
     this.enableHealGolems = builder.comment("When enabled, giving blocks and items to golems can restore health").define("heal_golems", true);
     this.villagerGolemSpawns = builder.comment("Golems that can be summoned by villagers", "(Duplicate entries increase chances)")
         .defineList("villager_summon_golems", initVillagerGolemList(defaultVillagerGolemSpawns), o -> o instanceof String);
@@ -87,16 +87,17 @@ public class GolemConfiguration {
     for (Entry<GolemContainer, GolemConfigurationSection> e : this.sections.entrySet()) {
       GolemContainer c = e.getKey();
       GolemConfigurationSection section = e.getValue();
+      // update attack, health, and spawn perms based on config
       c.setAttack(section.attack.get());
       c.setHealth(section.health.get());
       c.setEnabled(section.enabled.get());
-
+      // update specials based on config
       for (GolemSpecialContainer specialC : c.getSpecialContainers()) {
         specialC.value = specials.get(specialC).value;
       }
 	  
-	  // moved from ProxyCommon to here to fix issue #56
-	  GlobalEntityTypeAttributes.put(c.getEntityType(), c.getAttributeSupplier().get().create());
+      // moved from ProxyCommon to here to fix issue #56
+      GlobalEntityTypeAttributes.put(c.getEntityType(), c.getAttributeSupplier().get().create());
     }
     // also update the holiday configs
     final LocalDateTime now = LocalDateTime.now();
