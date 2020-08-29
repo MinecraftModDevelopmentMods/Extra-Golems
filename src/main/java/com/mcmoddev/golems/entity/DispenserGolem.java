@@ -60,19 +60,20 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
 
   private final RangedAttackGoal aiArrowAttack;
   private final MeleeAttackGoal aiMeleeAttack;
-  
-  protected final Predicate<? super ItemEntity> pickUpItemstackPredicate = e -> {
+    
+  protected final Predicate<ItemStack> pickUpItemstackPredicate = stack -> {
     // make sure the item is an arrow
-    if(!e.cannotPickup() && e.getItem().getItem() instanceof ArrowItem) {
+    if(stack != null && !stack.isEmpty() && stack.getItem() instanceof ArrowItem) {
       // make sure the golem can pick up this stack
       for (int i = 0, l = this.inventory.getSizeInventory(); i < l; i++) {
-        final ItemStack stack = this.inventory.getStackInSlot(i);
-        if (stack.isEmpty() || (stack.getItem() == e.getItem().getItem() && stack.getCount() + e.getItem().getCount() <= stack.getMaxStackSize())) {
+        final ItemStack invStack = this.inventory.getStackInSlot(i);
+        if (invStack.isEmpty() || (invStack.getItem() == stack.getItem()
+            && ItemStack.areItemStackTagsEqual(invStack, stack) 
+            && invStack.getCount() + stack.getCount() <= invStack.getMaxStackSize())) {
           return true;
         }
       }
     }
-    
     return false;
   };
 
@@ -99,7 +100,7 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
   @Override
   protected void registerGoals() {
     super.registerGoals();
-    this.goalSelector.addGoal(4, new FindArrowsGoal(10.0D));
+    this.goalSelector.addGoal(4, new MoveToArrowsGoal(this, 10.0D, 1.0D));
     // TODO make Goal so golem stays in place while player looks at inventory
   }
 
@@ -117,17 +118,16 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
       final boolean forceMelee = !allowArrows || (this.getRevengeTarget() != null && this.getRevengeTarget().getDistanceSq(this) < 4.5D);
       this.updateCombatTask(forceMelee);
     }
-    // pick up any arrow items that are nearby
-    // note: does not pick up arrow entities, only itemstacks for now
-    this.world.getProfiler().startSection("dispenserGolemLooting");
-    if (!this.world.isRemote && this.isAlive() && !this.dead 
+    // pick up nearby arrows
+    final List<ItemEntity> droppedArrows = this.getEntityWorld().getEntitiesWithinAABB(ItemEntity.class, 
+        this.getBoundingBox().grow(1.0D), e -> !e.cannotPickup() && pickUpItemstackPredicate.test(e.getItem()));
+   
+    // check a whole load of conditions to make sure we can pick up nearby arrows
+    if (!droppedArrows.isEmpty() && !this.world.isRemote() && this.isAlive() && !this.dead 
         && this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING)
         && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this)) {
-      // make a list of nearby itemstacks containing arrows
-      final List<ItemEntity> droppedArrows = DispenserGolem.this.getEntityWorld().getEntitiesWithinAABB(ItemEntity.class, 
-          DispenserGolem.this.getBoundingBox().grow(1.0, 0, 1.0), 
-          e -> !e.cannotPickup() && e.getItem().getItem() instanceof ArrowItem);
-      // if any dropped arrow itemstacks are found, try to add them to the inventory
+      // actually pick up the arrows
+      this.world.getProfiler().startSection("dispenserGolemLooting");
       for (final ItemEntity i : droppedArrows) {
         final int arrowCountBefore = this.getArrowsInInventory();
         final ItemStack item = i.getItem().copy();
@@ -135,8 +135,8 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
         final int arrowCountAfter = this.updateArrowsInInventory();
         this.onItemPickup(i, arrowCountAfter - arrowCountBefore);
       }
+      this.world.getProfiler().endSection();
     }
-    this.world.getProfiler().endSection();
   }
 
   @Override
@@ -264,10 +264,6 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
   public int getArrowsInInventory() {
     return this.getDataManager().get(ARROWS).intValue();
   }
-  
-  public int getMaxArrowsInInventory() {
-    return INVENTORY_SIZE * 64;
-  }
 
   @Override
   public void attackEntityWithRangedAttack(final LivingEntity target, final float distanceFactor) {
@@ -300,7 +296,7 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
   }
 
   public void updateCombatTask(final boolean forceMelee) {
-    if (this.world != null && !this.world.isRemote) {
+    if (!this.world.isRemote()) {
       // remove both goals (clean slate)
       this.goalSelector.removeGoal(this.aiMeleeAttack);
       this.goalSelector.removeGoal(this.aiArrowAttack);
@@ -313,18 +309,21 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
     }
   }
   
-  public class FindArrowsGoal extends Goal {
+  public class MoveToArrowsGoal extends Goal {
+    protected final DispenserGolem golem;
     protected final double range;
+    protected final double speed;
     
-    public FindArrowsGoal(final double rangeIn) {
+    public MoveToArrowsGoal(final DispenserGolem golemIn, final double rangeIn, final double speedIn) {
       this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE));
+      golem = golemIn;
       range = rangeIn;
+      speed = speedIn;
     }
 
     @Override
     public boolean shouldExecute() {
-      return DispenserGolem.this.allowArrows 
-          && DispenserGolem.this.getArrowsInInventory() < DispenserGolem.this.getMaxArrowsInInventory();
+      return golem.allowArrows;
       }
     
     @Override
@@ -334,12 +333,14 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
     
     @Override
     public void tick() {
-      final List<ItemEntity> droppedArrows = DispenserGolem.this.getEntityWorld().getEntitiesWithinAABB(ItemEntity.class, 
-          DispenserGolem.this.getBoundingBox().grow(range), pickUpItemstackPredicate);
-      // path toward the nearest dropped arrow item
+      // make a list of arrow itemstacks in nearby area
+      final List<ItemEntity> droppedArrows = golem.getEntityWorld().getEntitiesWithinAABB(ItemEntity.class, 
+          golem.getBoundingBox().grow(range), e -> !e.cannotPickup() && pickUpItemstackPredicate.test(e.getItem()));
+     
       if (!droppedArrows.isEmpty()) {
-        droppedArrows.sort((e1, e2) -> (int)(DispenserGolem.this.getDistanceSq(e1) - DispenserGolem.this.getDistanceSq(e2)));
-        DispenserGolem.this.getNavigator().tryMoveToEntityLiving(droppedArrows.get(0), 1.2D);
+        // path toward the nearest arrow itemstack
+        droppedArrows.sort((e1, e2) -> (int)(golem.getDistanceSq(e1) - golem.getDistanceSq(e2)));
+        golem.getNavigator().tryMoveToEntityLiving(droppedArrows.get(0), speed);
       }
     }
 

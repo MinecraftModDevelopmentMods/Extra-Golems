@@ -1,13 +1,19 @@
 package com.mcmoddev.golems.entity;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.items.ItemBedrockGolem;
 import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.entity.ai.goal.LookAtGoal;
+import net.minecraft.entity.ai.goal.LookRandomlyGoal;
 import net.minecraft.entity.ai.goal.TemptGoal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -52,9 +58,30 @@ public final class FurnaceGolem extends GolemBase {
   @Override
   protected void registerGoals() {
     super.registerGoals();
-    this.targetSelector.addGoal(0, new InertGoal(this));
-    this.goalSelector.addGoal(1, new UseFuelGoal(this));
+    removeGoal(LookAtGoal.class);
+    removeGoal(LookRandomlyGoal.class);
+    this.goalSelector.addGoal(0, new InertGoal());
+    this.goalSelector.addGoal(1, new UseFuelGoal());
     this.goalSelector.addGoal(1, new TemptGoal(this, 0.7D, Ingredient.fromTag(ItemTags.COALS), false));
+    this.goalSelector.addGoal(7, new LookAtWhenActiveGoal(this, PlayerEntity.class, 6.0F));
+    this.goalSelector.addGoal(8, new LookRandomlyWhenActiveGoal(this));
+  }
+  
+  /**
+   * Removes all instances of the given goal
+   * @param goalToRemove the goal class (must match exactly)
+   * @return true if any goals were removed
+   **/
+  private boolean removeGoal(final Class<? extends Goal> goalToRemove) {
+    final List<Goal> goalsToRemove = new ArrayList<>();
+    this.goalSelector.goals.forEach(g -> {
+      if(g.getGoal().getClass() == goalToRemove) {
+        goalsToRemove.add(g.getGoal());
+      }
+    });
+    // remove the erroring goals
+    goalsToRemove.forEach(g -> this.goalSelector.removeGoal(g) );    
+    return !goalsToRemove.isEmpty();
   }
 
   @Override
@@ -155,17 +182,15 @@ public final class FurnaceGolem extends GolemBase {
 
   class UseFuelGoal extends Goal {
 
-    private final FurnaceGolem golem;
-
-    protected UseFuelGoal(final FurnaceGolem entity) {
+    protected UseFuelGoal() {
       super();
-      golem = entity;
     }
 
     @Override
     public boolean shouldExecute() {
       // only uses fuel every X ticks
-      return golem.isServerWorld() && golem.getFuel() > 0 && golem.ticksExisted % golem.fuelBurnFactor == 0;
+      return FurnaceGolem.this.isServerWorld() && FurnaceGolem.this.getFuel() > 0 
+          && FurnaceGolem.this.ticksExisted % FurnaceGolem.this.fuelBurnFactor == 0;
     }
 
     @Override
@@ -175,23 +200,52 @@ public final class FurnaceGolem extends GolemBase {
 
     @Override
     public void startExecuting() {
-      golem.addFuel(-1);
+      FurnaceGolem.this.addFuel(-1);
+    }
+  }
+  
+  class LookAtWhenActiveGoal extends LookAtGoal {
+    public LookAtWhenActiveGoal(MobEntity entityIn, Class<? extends LivingEntity> watchTargetClass, float maxDistance) {
+      super(entityIn, watchTargetClass, maxDistance);
+    }
+    
+    @Override
+    public boolean shouldExecute() {
+      return FurnaceGolem.this.hasFuel() && super.shouldExecute();
+    }
+    
+    @Override
+    public boolean shouldContinueExecuting() {
+      return FurnaceGolem.this.hasFuel() && super.shouldContinueExecuting();
+    }
+  }
+  
+  class LookRandomlyWhenActiveGoal extends LookRandomlyGoal {
+    public LookRandomlyWhenActiveGoal(MobEntity entitylivingIn) {
+      super(entitylivingIn);
+    }
+
+    @Override
+    public boolean shouldExecute() {
+      return FurnaceGolem.this.hasFuel() && super.shouldExecute();
+    }
+    
+    @Override
+    public boolean shouldContinueExecuting() {
+      return FurnaceGolem.this.hasFuel() && super.shouldContinueExecuting();
     }
   }
 
   class InertGoal extends Goal {
 
-    private final FurnaceGolem golem;
-
-    protected InertGoal(final FurnaceGolem entity) {
+    protected InertGoal() {
       super();
-      this.setMutexFlags(EnumSet.of(Flag.JUMP, Flag.LOOK, Flag.MOVE, Flag.TARGET));
-      golem = entity;
+      this.setMutexFlags(EnumSet.allOf(Goal.Flag.class));
     }
 
     @Override
     public boolean shouldExecute() {
-      return !golem.hasFuel();
+      return !FurnaceGolem.this.hasFuel();
     }
 
     @Override
@@ -206,23 +260,23 @@ public final class FurnaceGolem extends GolemBase {
 
     @Override
     public void tick() {
-      // freeze the golem and ai tasks
-      final Vector3d pos = golem.getPositionVec();
-      golem.setMotion(golem.getMotion().mul(0, 1.0D, 0));
-      golem.setMoveForward(0F);
-      golem.setMoveStrafing(0F);
-      golem.moveController.setMoveTo(pos.x, pos.y, pos.z, 0.1D);
-      golem.setJumping(false);
-      golem.setAttackTarget(null);
-      golem.setRevengeTarget(null);
-      golem.getNavigator().clearPath();
-      golem.prevRotationPitch = -15F;
-      golem.setRotation(prevRotationYaw, prevRotationPitch);
+      // freeze the FurnaceGolem.this and ai tasks
+      final Vector3d pos = FurnaceGolem.this.getPositionVec();
+      FurnaceGolem.this.setMotion(FurnaceGolem.this.getMotion().mul(0, 1.0D, 0));
+      FurnaceGolem.this.setMoveForward(0F);
+      FurnaceGolem.this.setMoveStrafing(0F);
+      FurnaceGolem.this.moveController.setMoveTo(pos.x, pos.y, pos.z, 0.1D);
+      FurnaceGolem.this.setJumping(false);
+      FurnaceGolem.this.setAttackTarget(null);
+      FurnaceGolem.this.setRevengeTarget(null);
+      FurnaceGolem.this.getNavigator().clearPath();
+      FurnaceGolem.this.prevRotationPitch = -15F;
+      FurnaceGolem.this.setRotation(prevRotationYaw, prevRotationPitch);
       // set looking down
-      final double lookX = golem.getLookVec().getX();
+      final double lookX = FurnaceGolem.this.getLookVec().getX();
       final double lookY = Math.toRadians(-15D);
-      final double lookZ = golem.getLookVec().getZ();
-      golem.getLookController().setLookPosition(lookX, lookY, lookZ, golem.getHorizontalFaceSpeed(), golem.getVerticalFaceSpeed());
+      final double lookZ = FurnaceGolem.this.getLookVec().getZ();
+      FurnaceGolem.this.getLookController().setLookPosition(lookX, lookY, lookZ, FurnaceGolem.this.getHorizontalFaceSpeed(), FurnaceGolem.this.getVerticalFaceSpeed());
     }
   }
 }

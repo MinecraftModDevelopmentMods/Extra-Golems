@@ -122,7 +122,7 @@ public final class ExtraGolemsEntities {
         .setHealth(68.0D).addSpecial(DispenserGolem.ALLOW_SPECIAL, true, "Whether the golem can shoot arrows",
             new TranslationTextComponent("entitytip.shoots_arrows").mergeStyle(TextFormatting.LIGHT_PURPLE))
         .addSpecial(DispenserGolem.ARROW_DAMAGE, Double.valueOf(4.25D), "Base amount of damage dealt per arrow")
-        .addSpecial(DispenserGolem.ARROW_SPEED, 30, "Number of ticks between shooting arrows")
+        .addSpecial(DispenserGolem.ARROW_SPEED, 28, "Number of ticks between shooting arrows")
         .addDesc(new GolemDescription(new TranslationTextComponent("entitytip.click_refill").mergeStyle(TextFormatting.GRAY),
             DispenserGolem.ALLOW_SPECIAL))
         .basicTexture().addBlocks(Blocks.DISPENSER).addHealItem(Items.COBBLESTONE, 0.25D).build());
