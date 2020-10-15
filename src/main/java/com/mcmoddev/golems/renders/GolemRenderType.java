@@ -23,11 +23,15 @@ public class GolemRenderType extends RenderType {
     super(name, vertexFormat, glQuads, i2, b1, b2, r1, r2);
   }
   
+  public void clearDynamicTextureMap() {
+    dynamicTextureMap.clear();
+  }
+  
   private static TextureState getTextureState(final ResourceLocation texture, final boolean dynamic) {
     if(dynamic) {
       if(!dynamicTextureMap.containsKey(texture)) {
         // make a new texture state
-        dynamicTextureMap.put(texture, new DynamicTextureState(texture.toString(), 128, 128).state);
+        dynamicTextureMap.put(texture, new DynamicTextureState(texture.toString(), 8, 8).state);
       }
       return dynamicTextureMap.get(texture);
     } else {
@@ -65,8 +69,8 @@ public class GolemRenderType extends RenderType {
         .build(true));
   }
   
-  public static RenderType func_239265_a_(final ResourceLocation texture, final boolean dynamic) {
-    return makeType("outline", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, 256, 
+  public static RenderType getGolemOutline(final ResourceLocation texture, final boolean dynamic) {    
+    return makeType(ExtraGolems.MODID + ":golem_outline", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, 256, 
         State.getBuilder()
         .texture(getTextureState(texture, dynamic))
         .cull(CullState.CULL_DISABLED)
@@ -76,18 +80,5 @@ public class GolemRenderType extends RenderType {
         .fog(NO_FOG)
         .target(OUTLINE_TARGET)
         .func_230173_a_(RenderType.OutlineState.IS_OUTLINE));
-  }
-  
-  public static RenderType getGolemOutline(final ResourceLocation texture, final boolean dynamic) {    
-    return makeType(ExtraGolems.MODID + ":golem_transparent", DefaultVertexFormats.ENTITY, GL11.GL_QUADS, 256, true, true, 
-        RenderType.State.getBuilder()
-        .texture(getTextureState(texture, dynamic))
-        .transparency(TRANSLUCENT_TRANSPARENCY)
-        .diffuseLighting(DIFFUSE_LIGHTING_ENABLED)
-        .alpha(DEFAULT_ALPHA)
-        .cull(CULL_DISABLED)
-        .lightmap(LIGHTMAP_ENABLED)
-        .overlay(OVERLAY_ENABLED)
-        .build(true));
   }
 }

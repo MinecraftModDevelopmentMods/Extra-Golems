@@ -34,10 +34,6 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
   protected static final ResourceLocation boneTexture = ExtraGolemsEntities.makeTexture(GolemNames.BONE_GOLEM + "_skeleton");
   protected static final ResourceLocation specialTexture = ExtraGolemsEntities.makeTexture("special");
   protected static final ResourceLocation specialTexture2 = ExtraGolemsEntities.makeTexture("special2");
-//  protected ResourceLocation texture;
-  
-  
-//  protected RenderType renderType;
 
 //  protected static final String damageTexture = "minecraft:textures/entity/iron_golem/iron_golem_crackiness";
 //  protected static final ResourceLocation[] damageIndicators = { 
@@ -53,22 +49,21 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
   public GolemRenderer(final EntityRendererManager renderManagerIn) {
     super(renderManagerIn, new GolemModel<T>(), 0.5F);
     this.addLayer(new GolemEyesLayer<T>(this));
-    this.addLayer(new GolemFlowerLayer<T>(this));
     this.addLayer(new GolemVinesLayer<T>(this));
     this.addLayer(new GolemCracksLayer<T>(this));
+    this.addLayer(new GolemFlowerLayer<T>(this));
     this.addLayer(new GolemKittyLayer<T>(this));
   }
 
   @Override
   public void render(final T golem, final float entityYaw, final float partialTicks, final MatrixStack matrixStackIn,
       final IRenderTypeBuffer bufferIn, final int packedLightIn) {
+    if(golem.isInvisible()) {
+      return;
+    }
     // get render settings from the golem container
     final GolemRenderSettings settings = golem.getGolemContainer().getRenderSettings();
     matrixStackIn.push();
-//    // texture
-//    texture = getGolemTexture(golem, settings);
-//    // buffer
-//    final IRenderTypeBuffer buffer = bufferIn.getBuffer(renderType);
     // colors
     this.resetColor();
     if(settings.hasColor()) {

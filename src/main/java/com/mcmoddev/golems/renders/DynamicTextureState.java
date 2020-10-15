@@ -31,15 +31,18 @@ public class DynamicTextureState {
     this.name = name;
     location = new ResourceLocation(ExtraGolems.MODID, "dynamic/" + new ResourceLocation(name).getPath());
     TextureManager textureManager = Minecraft.getInstance().getTextureManager();
-    texture = new DynamicTexture(width, height, true);
+    int blockWidth = 16;
+    texture = new DynamicTexture(width * blockWidth, height * blockWidth, true);
     NativeImage img = texture.getTextureData();
     
     // attempt to read a texture from the given location
     try (IResource res = Minecraft.getInstance().getResourceManager().getResource(new ResourceLocation(name))) {
       NativeImage block = NativeImage.read(res.getInputStream());
+      blockWidth = block.getWidth();
+      texture = new DynamicTexture(width * blockWidth, height * blockWidth, true);
       for (int i = 0; i < width; ++i) {
         for (int j = 0; j < height; ++j) {
-          img.setPixelRGBA(i, j, block.getPixelRGBA(i % 16, j % 16));
+          img.setPixelRGBA(i, j, block.getPixelRGBA(i % blockWidth, j % blockWidth));
         }
       }
     } catch (IOException e) {
