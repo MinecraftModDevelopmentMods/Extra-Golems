@@ -6,7 +6,7 @@ import com.mcmoddev.golems.gui.GuiDispenserGolem;
 import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.renders.ColoredGolemRenderer;
 import com.mcmoddev.golems.renders.GolemRenderer;
-import com.mcmoddev.golems.util.config.GolemRegistrar;
+import com.mcmoddev.golems.util.GolemRegistrar;
 
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.entity.EntityType;

@@ -10,8 +10,8 @@ import com.mcmoddev.golems.entity.FurnaceGolem;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.IMultiTexturedGolem;
 import com.mcmoddev.golems.main.ExtraGolems;
+import com.mcmoddev.golems.util.GolemContainer;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
-import com.mcmoddev.golems.util.config.GolemContainer;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;

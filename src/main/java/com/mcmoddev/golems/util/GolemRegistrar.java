@@ -1,4 +1,4 @@
-package com.mcmoddev.golems.util.config;
+package com.mcmoddev.golems.util;
 
 import java.util.Collection;
 import java.util.HashMap;

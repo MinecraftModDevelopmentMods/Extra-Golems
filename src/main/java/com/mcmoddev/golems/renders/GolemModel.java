@@ -40,7 +40,7 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> {
   }
 
   @Override
-  public void render(final MatrixStack matrixStackIn, final IVertexBuilder vertexBuilder, final int i3, final int i4, final float redIn,
+  public void render(final MatrixStack matrixStackIn, final IVertexBuilder vertexBuilder, final int packedLightIn, final int packedOverlayIn, final float redIn,
       final float greenIn, final float blueIn, final float alphaIn) {
     // scale as necessary
     if (isChild) {
@@ -53,7 +53,7 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> {
       matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(180.0F));
     }
     // render with custom colors
-    super.render(matrixStackIn, vertexBuilder, i3, i4, red, green, blue, alpha);
+    super.render(matrixStackIn, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, alpha);
   }
   
   // COLOR HELPERS

@@ -2,7 +2,7 @@ package com.mcmoddev.golems_quark.util;
 
 import java.util.function.Predicate;
 
-import com.mcmoddev.golems.util.config.GolemContainer;
+import com.mcmoddev.golems.util.GolemContainer;
 
 import vazkii.quark.base.module.Module;
 

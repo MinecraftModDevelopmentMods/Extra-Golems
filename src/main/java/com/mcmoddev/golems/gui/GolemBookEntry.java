@@ -7,7 +7,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.mcmoddev.golems.util.config.GolemContainer;
+import com.mcmoddev.golems.util.GolemContainer;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;

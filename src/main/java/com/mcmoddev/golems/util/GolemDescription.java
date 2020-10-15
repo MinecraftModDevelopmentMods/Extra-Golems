@@ -1,10 +1,11 @@
-package com.mcmoddev.golems.util.config;
+package com.mcmoddev.golems.util;
 
 import java.util.List;
 import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
 
+import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
 
 import net.minecraft.util.text.IFormattableTextComponent;

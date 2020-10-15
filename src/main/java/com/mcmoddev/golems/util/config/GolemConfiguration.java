@@ -9,7 +9,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.mcmoddev.golems.main.ExtraGolems;
+import com.mcmoddev.golems.util.GolemContainer;
 import com.mcmoddev.golems.util.GolemNames;
+import com.mcmoddev.golems.util.GolemRegistrar;
 import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
 import com.mcmoddev.golems.util.config.special.GolemSpecialSection;
 

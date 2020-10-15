@@ -1,11 +1,11 @@
 package com.mcmoddev.golems.main;
 
 import com.mcmoddev.golems.entity.*;
+import com.mcmoddev.golems.util.GolemContainer;
+import com.mcmoddev.golems.util.GolemDescription;
 import com.mcmoddev.golems.util.GolemNames;
-import com.mcmoddev.golems.util.config.GolemContainer;
-import com.mcmoddev.golems.util.config.GolemContainer.SwimMode;
-import com.mcmoddev.golems.util.config.GolemDescription;
-import com.mcmoddev.golems.util.config.GolemRegistrar;
+import com.mcmoddev.golems.util.GolemRegistrar;
+import com.mcmoddev.golems.util.GolemContainer.SwimMode;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.item.Items;

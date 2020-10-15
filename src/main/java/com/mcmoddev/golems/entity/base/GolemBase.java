@@ -13,10 +13,10 @@ import com.mcmoddev.golems.items.ItemBedrockGolem;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.ExtraGolemsEntities;
 import com.mcmoddev.golems.main.GolemItems;
+import com.mcmoddev.golems.util.GolemContainer;
+import com.mcmoddev.golems.util.GolemRegistrar;
+import com.mcmoddev.golems.util.GolemContainer.SwimMode;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
-import com.mcmoddev.golems.util.config.GolemContainer;
-import com.mcmoddev.golems.util.config.GolemContainer.SwimMode;
-import com.mcmoddev.golems.util.config.GolemRegistrar;
 import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
 
 import net.minecraft.block.Block;
