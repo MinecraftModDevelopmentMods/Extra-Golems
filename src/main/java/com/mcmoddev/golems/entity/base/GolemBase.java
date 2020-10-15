@@ -379,17 +379,6 @@ public abstract class GolemBase extends IronGolemEntity {
   /////////////// TEXTURE HELPERS //////////////////
 
   /**
-   * This method is called from the golem Render code and should return the
-   * current texture (skin) of the golem. Defaults to querying the container for a
-   * texture.
-   * 
-   * @return a ResourceLocation to use for rendering
-   **/
-  public ResourceLocation getTexture() {
-    return this.getGolemContainer().getTexture();
-  }
-
-  /**
    * Calls {@link #makeTexture(String, String)} on the assumption that MODID is
    * 'golems'. Texture should be at 'assets/golems/textures/entity/[TEXTURE].png'
    * <br>

@@ -34,10 +34,10 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
   protected static final ResourceLocation boneTexture = ExtraGolemsEntities.makeTexture(GolemNames.BONE_GOLEM + "_skeleton");
   protected static final ResourceLocation specialTexture = ExtraGolemsEntities.makeTexture("special");
   protected static final ResourceLocation specialTexture2 = ExtraGolemsEntities.makeTexture("special2");
-  protected ResourceLocation texture;
+//  protected ResourceLocation texture;
   
   
-  protected RenderType renderType;
+//  protected RenderType renderType;
 
 //  protected static final String damageTexture = "minecraft:textures/entity/iron_golem/iron_golem_crackiness";
 //  protected static final ResourceLocation[] damageIndicators = { 
@@ -65,14 +65,16 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
     // get render settings from the golem container
     final GolemRenderSettings settings = golem.getGolemContainer().getRenderSettings();
     matrixStackIn.push();
+//    // texture
+//    texture = getGolemTexture(golem, settings);
+//    // buffer
+//    final IRenderTypeBuffer buffer = bufferIn.getBuffer(renderType);
     // colors
     this.resetColor();
     if(settings.hasColor()) {
       final Vector3f colors = GolemRenderSettings.unpackColor(settings.getBlockColorProvider().getColor(golem));
       this.getEntityModel().setColor(colors.getX(), colors.getY(), colors.getZ());
     }
-    // texture settings
-    this.bindGolemTexture(golem, settings);
     // transparency flag
     isAlphaLayer = settings.hasTransparency();
     if (isAlphaLayer) {
@@ -87,9 +89,13 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
     matrixStackIn.pop();
   }
 
-  protected void bindGolemTexture(final T golem, final GolemRenderSettings settings) {
-    // TODO
-    texture = settings.getPrefabTexture().getTexture(golem);
+  protected ResourceLocation getGolemTexture(final T golem, final GolemRenderSettings settings) {
+    ResourceLocation texture;
+    if(settings.hasPrefabTexture()) {
+      texture = settings.getPrefabTexture().getTexture(golem);
+    } else {
+      texture = settings.getBlockTexture().getTexture(golem);
+    }
     // special cases
     if(ExtraGolemsConfig.halloween() && isNightTime(golem)) {
       texture = boneTexture;
@@ -102,6 +108,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
         texture = specialTexture2;
       }
     }
+    return texture;
   }
 
   protected void resetColor() {
@@ -144,18 +151,21 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
    */
   @Override
   public ResourceLocation getEntityTexture(final T golem) {
-    return this.texture != null ? this.texture : fallbackTexture;
+    return fallbackTexture;
   }
 
   @Override
   @Nullable
   protected RenderType func_230496_a_(final T golem, boolean isVisible, boolean isVisibleToPlayer, boolean isGlowing) {
-    ResourceLocation tex = this.getEntityTexture(golem);
-    if (isVisible || isVisibleToPlayer || isAlphaLayer) {
-      return RenderType.getEntityTranslucent(tex);
-    } else {
-      return golem.isGlowing() ? RenderType.getOutline(tex) : RenderType.getEntityCutout(tex);
-    }
+    final GolemRenderSettings settings = golem.getGolemContainer().getRenderSettings();
+    ResourceLocation tex = this.getGolemTexture(golem, settings);
+    return GolemRenderType.getGolemCutout(tex, !settings.hasPrefabTexture());
+    
+//    if (isVisible || isVisibleToPlayer || isAlphaLayer) {
+//      return RenderType.getEntityTranslucent(tex);
+//    } else {
+//      return golem.isGlowing() ? RenderType.getOutline(tex) : RenderType.getEntityCutout(tex);
+//    }
   }
 //
 //  /**

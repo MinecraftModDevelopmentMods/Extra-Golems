@@ -89,7 +89,7 @@ public class GolemCommonEventHandler {
             GolemBase golem = summonGolem(villager);
             if (golem != null) {
               ExtraGolems.LOGGER.info("Villager summoned a golem! " + golem.toString());
-              nearbyVillagers.forEach(GolemLastSeenSensor::func_242313_b);
+              nearbyVillagers.forEach(GolemLastSeenSensor::update);
             }
           }
         }

@@ -436,6 +436,7 @@ public final class GolemContainer {
     private boolean hasVinesTexture = true;
     private boolean hasColor = false;
     private boolean hasVinesColor = false;
+    private boolean doVinesGlow = false;
     private boolean doEyesGlow = false;
     
     private ITextureProvider blockTextureProvider = g -> GolemRenderSettings.FALLBACK_BLOCK;
@@ -561,10 +562,11 @@ public final class GolemContainer {
     * @see #setTextureProvider(ITextureProvider)
     * @see #setTextureColor(IColorProvider)
     * @see #setVinesProvider(ITextureProvider)
+    * @see #vinesGlow()
     * @see #setVinesColor(IColorProvider)
-    * @see #setNoVines()
+    * @see #noVines()
     * @see #setEyesProvider(ITextureProvider)
-    * @see #doEyesGlow()
+    * @see #eyesGlow()
     **/
    public Builder setRenderSettings(final GolemRenderSettings renderSettings) {
      customSettings = renderSettings;
@@ -610,9 +612,15 @@ public final class GolemContainer {
       return this;
     }
     
-    public Builder setNoVines() {
+    public Builder transparent() {
+      hasTransparency = true;
+      return this;
+    }
+
+    public Builder noVines() {
       hasVinesTexture = false;
       hasVinesColor = false;
+      doVinesGlow = false;
       return this;
     }
     
@@ -625,6 +633,11 @@ public final class GolemContainer {
     public Builder setVinesColor(final GolemRenderSettings.IColorProvider vinesColorer) {
       hasVinesColor = true;
       vinesColorProvider = vinesColorer;
+      return this;
+    }
+    
+    public Builder vinesGlow() {
+      doVinesGlow = true;
       return this;
     }
     
@@ -828,7 +841,7 @@ public final class GolemContainer {
       }
       // build the render settings
       final GolemRenderSettings renderSettings = customSettings != null ? customSettings : new GolemRenderSettings(hasCustomRender, hasTransparency, blockTextureProvider, 
-          hasVinesTexture, vinesTextureProvider, doEyesGlow, eyesTextureProvider, hasPrefabTexture, prefabTextureProvider, hasColor, textureColorProvider, hasVinesColor, vinesColorProvider);
+          hasVinesTexture, doVinesGlow, vinesTextureProvider, doEyesGlow, eyesTextureProvider, hasPrefabTexture, prefabTextureProvider, hasColor, textureColorProvider, hasVinesColor, vinesColorProvider);
       // build the golem container
       return new GolemContainer(entityType, entityClass, golemName, renderSettings, validBuildingBlocks, validBuildingBlockTags, health, attack, speed,
           knockBackResist, lightLevel, powerLevel, fallDamage, explosionImmunity, swimMode, containerMap, descriptions, healItemMap, 

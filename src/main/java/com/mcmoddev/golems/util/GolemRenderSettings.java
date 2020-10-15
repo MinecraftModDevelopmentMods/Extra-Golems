@@ -20,6 +20,7 @@ public class GolemRenderSettings {
   private final boolean hasTransparency;
   private final ITextureProvider blockTexture;
   private final boolean hasVines;
+  private final boolean vinesGlow;
   private final ITextureProvider vinesTexture;
   private final boolean eyesGlow;
   private final ITextureProvider eyesTexture;
@@ -35,7 +36,7 @@ public class GolemRenderSettings {
   
   public GolemRenderSettings(boolean lHasCustomRender, boolean lHasTransparency,
       ITextureProvider lBlockTextureProvider, 
-      boolean lHasVines, ITextureProvider lVinesTextureProvider, 
+      boolean lHasVines, boolean lVinesGlow, ITextureProvider lVinesTextureProvider, 
       boolean lEyesGlow, ITextureProvider lEyesTextureProvider,
       boolean lHasPrefabTexture, ITextureProvider lPrefabTextureProvider, 
       boolean lHasColor, IColorProvider lTextureColorProvider, 
@@ -44,6 +45,7 @@ public class GolemRenderSettings {
     this.hasTransparency = lHasTransparency;
     this.blockTexture = lBlockTextureProvider;
     this.hasVines = lHasVines;
+    this.vinesGlow = lVinesGlow;
     this.vinesTexture = lVinesTextureProvider;
     this.eyesGlow = lEyesGlow;
     this.eyesTexture = lEyesTextureProvider;
@@ -63,6 +65,8 @@ public class GolemRenderSettings {
   public ITextureProvider getBlockTexture() { return blockTexture; }
   /** @return whether to render vines **/
   public boolean hasVines() { return hasVines; }
+  /** @return whether the eyes should be rendered with constant light **/
+  public boolean doVinesGlow() { return vinesGlow; }
   /** @return the vines texture provider **/
   public ITextureProvider getVinesTexture() { return vinesTexture; }
   /** @return whether the eyes should be rendered with constant light **/

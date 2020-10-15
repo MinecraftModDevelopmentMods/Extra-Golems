@@ -27,11 +27,6 @@ public final class StainedGlassGolem extends GolemMultiColorized {
   }
 
   @Override
-  public boolean hasTransparency() {
-    return true;
-  }
-
-  @Override
   public ItemStack getCreativeReturn(final RayTraceResult target) {
     return new ItemStack(GolemTextureBytes.getByByte(GolemTextureBytes.GLASS, (byte) this.getTextureNum()));
   }

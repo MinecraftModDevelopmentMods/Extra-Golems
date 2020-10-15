@@ -43,7 +43,7 @@ public abstract class GolemMultiColorized extends GolemColorized implements IMul
    **/
   public GolemMultiColorized(final EntityType<? extends GolemBase> entityType, final World world, final String modid,
       @Nullable final ResourceLocation base, @Nullable final ResourceLocation overlay, final Integer[] lColors) {
-    super(entityType, world, 0L, base, overlay);
+    super(entityType, world, 0, base, overlay);
     colors = lColors;
     lootTables = new ResourceLocation[colors.length];
     for (int n = 0, len = colors.length; n < len; n++) {

@@ -33,12 +33,12 @@ public class GolemKittyLayer<T extends GolemBase> extends LayerRenderer<T, Golem
       
       // render ears
       matrixStackIn.push();
-      float yaw = MathHelper.lerp(partialTicks, golem.prevRotationYaw, golem.rotationYaw) - MathHelper.lerp(partialTicks, golem.prevRenderYawOffset, golem.renderYawOffset);
-      float pitch = MathHelper.lerp(partialTicks, golem.prevRotationPitch, golem.rotationPitch);
-      matrixStackIn.rotate(Vector3f.YP.rotationDegrees(yaw));
-      matrixStackIn.rotate(Vector3f.XP.rotationDegrees(pitch));
-      matrixStackIn.rotate(Vector3f.XP.rotationDegrees(-pitch));
-      matrixStackIn.rotate(Vector3f.YP.rotationDegrees(-yaw));
+//      float yaw = MathHelper.lerp(partialTicks, golem.prevRotationYaw, golem.rotationYaw) - MathHelper.lerp(partialTicks, golem.prevRenderYawOffset, golem.renderYawOffset);
+//      float pitch = MathHelper.lerp(partialTicks, golem.prevRotationPitch, golem.rotationPitch);
+//      matrixStackIn.rotate(Vector3f.YP.rotationDegrees(yaw));
+//      matrixStackIn.rotate(Vector3f.XP.rotationDegrees(pitch));
+//      matrixStackIn.rotate(Vector3f.XP.rotationDegrees(-pitch));
+//      matrixStackIn.rotate(Vector3f.YP.rotationDegrees(-yaw));
       this.getEntityModel().renderKittyEars(golem, matrixStackIn, vertexBuilder, packedLightIn, packedOverlay);
       matrixStackIn.pop();
       

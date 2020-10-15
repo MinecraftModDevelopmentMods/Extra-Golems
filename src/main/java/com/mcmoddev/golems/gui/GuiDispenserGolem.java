@@ -20,14 +20,14 @@ public class GuiDispenserGolem extends ContainerScreen<ContainerDispenserGolem> 
   @Override
   protected void init() {
     super.init();
-    this.titleX = (this.xSize - this.font.func_238414_a_(this.title)) / 2;
+    this.titleX = (this.xSize - this.font.getStringPropertyWidth(this.title)) / 2;
   }
 
   @Override
   public void render(MatrixStack matrix, int x, int y, float f) {
     this.renderBackground(matrix);
     super.render(matrix, x, y, f);
-    this.func_230459_a_(matrix, x, y);
+    this.renderHoveredTooltip(matrix, x, y);
   }
 
   @Override

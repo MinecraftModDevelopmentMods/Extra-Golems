@@ -75,12 +75,12 @@ public final class MagmaGolem extends GolemBase {
     }
   }
 
-  @Override
-  public ResourceLocation getTexture() {
-    final int changeInterval = 5;
-    int textureNum = ((this.ticksExisted + this.getEntityId()) / changeInterval) % TEXTURES.length;
-    return TEXTURES[textureNum];
-  }
+//  @Override
+//  public ResourceLocation getTexture() {
+//    final int changeInterval = 5;
+//    int textureNum = ((this.ticksExisted + this.getEntityId()) / changeInterval) % TEXTURES.length;
+//    return TEXTURES[textureNum];
+//  }
 
   /**
    * Attack by lighting on fire as well.

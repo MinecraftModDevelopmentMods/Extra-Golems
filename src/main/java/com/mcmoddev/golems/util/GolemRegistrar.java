@@ -22,7 +22,7 @@ import net.minecraft.world.World;
  */
 public final class GolemRegistrar {
 
-  protected static HashMap<ResourceLocation, GolemContainer> golemList = new HashMap<>();
+  public static HashMap<ResourceLocation, GolemContainer> golemList = new HashMap<>();
 
   private GolemRegistrar() {
     //

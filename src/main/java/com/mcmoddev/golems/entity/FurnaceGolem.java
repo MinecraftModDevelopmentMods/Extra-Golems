@@ -149,7 +149,6 @@ public final class FurnaceGolem extends GolemBase {
     return super.func_230254_b_(player, hand);
   }
 
-  @Override
   public ResourceLocation getTexture() {
     return hasFuel() ? LIT : UNLIT;
   }

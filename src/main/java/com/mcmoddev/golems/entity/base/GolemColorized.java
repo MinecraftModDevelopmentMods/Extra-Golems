@@ -14,7 +14,7 @@ import net.minecraft.world.World;
  **/
 public abstract class GolemColorized extends GolemBase {
 
-  private long color;
+  private int color;
   protected float colorRed;
   protected float colorBlue;
   protected float colorGreen;
@@ -37,7 +37,7 @@ public abstract class GolemColorized extends GolemBase {
    * @param rOverlay   a texture that will be recolored and optionally rendered as
    *                   transparent.
    **/
-  public GolemColorized(final EntityType<? extends GolemBase> entityType, final World world, final long initial,
+  public GolemColorized(final EntityType<? extends GolemBase> entityType, final World world, final int initial,
       @Nullable final ResourceLocation rBase, @Nullable final ResourceLocation rOverlay) {
     super(entityType, world);
     this.setColor(initial);
@@ -78,7 +78,7 @@ public abstract class GolemColorized extends GolemBase {
    * color. Note: normal render class cannot handle an alpha value here, the
    * actual texture image must be saved with transparency instead.
    **/
-  public void setColor(final long toSet) {
+  public void setColor(final int toSet) {
     this.color = toSet;
     long tmpColor = toSet;
     if ((tmpColor & -67108864) == 0) {
@@ -98,7 +98,7 @@ public abstract class GolemColorized extends GolemBase {
    * @see #getColorBlue()
    * @see #getColorAlpha()
    **/
-  public long getColor() {
+  public int getColor() {
     return this.color;
   }
 
