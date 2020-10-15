@@ -394,7 +394,7 @@ public abstract class GolemBase extends IronGolemEntity {
    * 'golems'. Texture should be at 'assets/golems/textures/entity/[TEXTURE].png'
    * <br>
    * For most golems, set the texture when building the GolemContainer using
-   * {@link GolemContainer.Builder#setTexture(ResourceLocation)} or
+   * {@link GolemContainer.Builder#setTextureProvider(ResourceLocation)} or
    * {@link GolemContainer.Builder#basicTexture()}
    * 
    * @see ExtraGolemsEntities#makeTexture(String)
@@ -407,7 +407,7 @@ public abstract class GolemBase extends IronGolemEntity {
    * Makes a ResourceLocation using the passed mod id and the texture name.
    * Texture should be at 'assets/[MODID]/textures/entity/[TEXTURE].png' <br>
    * For most golems, set the texture when building the GolemContainer using
-   * {@link GolemContainer.Builder#setTexture(ResourceLocation)} or
+   * {@link GolemContainer.Builder#setTextureProvider(ResourceLocation)} or
    * {@link GolemContainer.Builder#basicTexture()}
    * 
    * @see #makeTexture(String)

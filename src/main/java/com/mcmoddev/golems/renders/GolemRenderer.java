@@ -41,6 +41,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
 
   public GolemRenderer(final EntityRendererManager renderManagerIn) {
     super(renderManagerIn, new GolemModel<T>(), 0.5F);
+    this.addLayer(new GolemCracksLayer<T>(this));
     this.addLayer(new GolemFlowerLayer<T>(this));
     this.addLayer(new GolemKittyLayer<T>(this));
   }
@@ -55,7 +56,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
     super.render(golem, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     // render damage indicator texture
     isAlphaLayer = true;
-    this.renderDamage(golem, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
+//    this.renderDamage(golem, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
   }
 
   protected void bindGolemTexture(final T golem) {
@@ -87,26 +88,26 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
     return golem.hasTransparency();
   }
 
-  protected void renderDamage(final T golem, final float entityYaw, final float partialTicks, final MatrixStack matrixStackIn,
-      final IRenderTypeBuffer bufferIn, final int packedLightIn) {
-    // render damage indicator if necessary
-    final int index = Math.min(getDamageTexture(golem), damageIndicators.length - 1);
-    if (index > -1) {
-      matrixStackIn.push();
-      RenderSystem.enableAlphaTest();
-      RenderSystem.defaultAlphaFunc();
-      RenderSystem.enableBlend();
-      // set alpha
-      this.entityModel.setAlpha(DAMAGE_ALPHA);
-      // actually render the damage texture
-      this.texture = damageIndicators[index];
-      super.render(golem, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
-      // return GL settings to normal
-      RenderSystem.disableAlphaTest();
-      RenderSystem.disableBlend();
-      matrixStackIn.pop();
-    }
-  }
+//  protected void renderDamage(final T golem, final float entityYaw, final float partialTicks, final MatrixStack matrixStackIn,
+//      final IRenderTypeBuffer bufferIn, final int packedLightIn) {
+//    // render damage indicator if necessary
+//    final int index = Math.min(getDamageTexture(golem), damageIndicators.length - 1);
+//    if (index > -1) {
+//      matrixStackIn.push();
+//      RenderSystem.enableAlphaTest();
+//      RenderSystem.defaultAlphaFunc();
+//      RenderSystem.enableBlend();
+//      // set alpha
+//      this.entityModel.setAlpha(DAMAGE_ALPHA);
+//      // actually render the damage texture
+//      this.texture = damageIndicators[index];
+//      super.render(golem, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
+//      // return GL settings to normal
+//      RenderSystem.disableAlphaTest();
+//      RenderSystem.disableBlend();
+//      matrixStackIn.pop();
+//    }
+//  }
 
   /**
    * Returns the location of an entity's texture. Doesn't seem to be called unless
@@ -127,16 +128,16 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
       return golem.isGlowing() ? RenderType.getOutline(tex) : RenderType.getEntityCutout(tex);
     }
   }
-
-  /**
-   * @return a value between {@code -1} and {@code damageIndicators.length-1},
-   *         inclusive
-   **/
-  protected int getDamageTexture(final T golem) {
-    final float percentHealth = golem.getHealth() / golem.getMaxHealth();
-    return damageIndicators.length - (int) Math.ceil(percentHealth * 4.0F);
-  }
-  
+//
+//  /**
+//   * @return a value between {@code -1} and {@code damageIndicators.length-1},
+//   *         inclusive
+//   **/
+//  protected int getDamageTexture(final T golem) {
+//    final float percentHealth = golem.getHealth() / golem.getMaxHealth();
+//    return damageIndicators.length - (int) Math.ceil(percentHealth * 4.0F);
+//  }
+//  
   protected boolean isNightTime(final T golem) {
     final long time = golem.world.getDayTime() % 24000L;
     return time > 13000L && time < 23000L;

@@ -61,7 +61,7 @@ public final class ExtraGolemsEntities {
         .immuneToFire().basicTexture().build());
     // BONE GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.BONE_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setHealth(40.0D).setAttack(9.5D).setSpeed(0.30D).addBlocks(Blocks.BONE_BLOCK).setTexture(makeTexture(GolemNames.BONE_GOLEM + "_skeleton"))
+        .setHealth(40.0D).setAttack(9.5D).setSpeed(0.30D).addBlocks(Blocks.BONE_BLOCK).setTextureProvider(makeTexture(GolemNames.BONE_GOLEM + "_skeleton"))
         .enableFallDamage().addHealItem(Items.BONE, 0.25D).addHealItem(Items.BONE_MEAL, 0.08D).build());
     // BOOKSHELF GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.BOOKSHELF_GOLEM, BookshelfGolem.class, BookshelfGolem::new)

@@ -21,6 +21,8 @@ import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemMultiColorized;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
+import com.mcmoddev.golems.util.GolemRenderSettings.IColorProvider;
+import com.mcmoddev.golems.util.GolemRenderSettings.ITextureProvider;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
 
@@ -55,12 +57,11 @@ public final class GolemContainer {
   private final List<ResourceLocation> validBuildingBlockTags;
   private final EntityType<? extends GolemBase> entityType;
   private final String name;
-  private final ResourceLocation basicTexture;
+  private final GolemRenderSettings renderSettings;
   private final SoundEvent basicSound;
   private final boolean fallDamage;
   private final boolean explosionImmunity;
   private final SwimMode swimMode;
-  private final boolean hasCustomRender;
   private final boolean canInteractChangeTexture;
 
   private double health;
@@ -95,19 +96,18 @@ public final class GolemContainer {
    * @param lSpecialContainers      any golem specials as a Map
    * @param lDesc                   any special descriptions for the golem
    * @param lHealItemMap            a map of items and their corresponding heal amounts
-   * @param lTexture                a ResourceLocation for a single default texture
    * @param lBasicSound             a default SoundEvent to use for the golem
-   * @param lCustomRender           whether or not the golem will use the default renderer
    **/
   private GolemContainer(final EntityType<? extends GolemBase> lEntityType, final Class<? extends GolemBase> lEntityClass,
-      final String lPath, final List<IRegistryDelegate<Block>> lValidBuildingBlocks,
+      final String lPath, final GolemRenderSettings lRenderSettings, final List<IRegistryDelegate<Block>> lValidBuildingBlocks,
       final List<ResourceLocation> lValidBuildingBlockTags, final double lHealth, final double lAttack, final double lSpeed,
       final double lKnockbackResist, final int lLightLevel, final int lPowerLevel, final boolean lFallDamage, 
       final boolean lExplosionImmunity, final SwimMode lSwimMode, final HashMap<String, GolemSpecialContainer> lSpecialContainers, 
       final List<GolemDescription> lDesc, final Map<IRegistryDelegate<Item>, Double> lHealItemMap,
-      final ResourceLocation lTexture, final SoundEvent lBasicSound, final boolean lCustomRender) {
+      final SoundEvent lBasicSound) {
     this.entityType = lEntityType;
     this.entityClass = lEntityClass;
+    this.renderSettings = lRenderSettings;
     this.validBuildingBlocks = lValidBuildingBlocks;
     this.validBuildingBlockTags = lValidBuildingBlockTags;
     this.name = lPath;
@@ -123,9 +123,7 @@ public final class GolemContainer {
     this.specialContainers = ImmutableMap.copyOf(lSpecialContainers);
     this.descContainers = ImmutableList.copyOf(lDesc);
     this.healItemMap = ImmutableMap.copyOf(lHealItemMap);
-    this.basicTexture = lTexture;
     this.basicSound = lBasicSound;
-    this.hasCustomRender = lCustomRender;
     
     this.canInteractChangeTexture = (GolemMultiTextured.class.isAssignableFrom(lEntityClass)
         || GolemMultiColorized.class.isAssignableFrom(lEntityClass));
@@ -342,13 +340,10 @@ public final class GolemContainer {
 
   /** @return a unique ResourceLocation ID for the Golem. Always unique. **/
   public ResourceLocation getRegistryName() { return this.entityType.getRegistryName(); }
+  
+  /** @return the render settings for this golem **/
+  public GolemRenderSettings getRenderSettings() { return this.renderSettings; }
  
-  /** @return a default texture for the Golem. May be null. **/
-  public ResourceLocation getTexture() { return this.basicTexture; }
-
-  /** @return whether the golem should use the default IRenderFactory for rendering **/
-  public boolean useDefaultRender() { return !this.hasCustomRender; }
-
   /** @return a default SoundEvent to play when the Golem moves or is attacked **/
   public SoundEvent getSound() { return this.basicSound; }
 
@@ -414,7 +409,6 @@ public final class GolemContainer {
     private final Class<? extends GolemBase> entityClass;
     private EntityType.Builder<? extends GolemBase> entityTypeBuilder;
 
-    private ResourceLocation basicTexture = null;
     private SoundEvent basicSound = SoundEvents.BLOCK_STONE_STEP;
 
     private String modid = ExtraGolems.MODID;
@@ -425,7 +419,6 @@ public final class GolemContainer {
     private int lightLevel = 0;
     private int powerLevel = 0;
     private boolean fallDamage = false;
-    private boolean customRender = false;
     private boolean explosionImmunity = false;
     private SwimMode swimMode = SwimMode.SINK;
     private List<IRegistryDelegate<Block>> validBuildingBlocks = new ArrayList<>();
@@ -433,6 +426,23 @@ public final class GolemContainer {
     private List<GolemSpecialContainer> specials = new ArrayList<>();
     private List<GolemDescription> descriptions = new ArrayList<>();
     private final Map<IRegistryDelegate<Item>, Double> healItemMap = new HashMap<>();
+    
+    // render settings
+    private GolemRenderSettings customSettings = null;
+    
+    private boolean customRender = false;
+    private boolean hasTransparency = false;
+    private boolean prefabTexture = false;
+    private boolean vinesTexture = true;
+    private boolean blockColor = false;
+    private boolean vinesColor = false;
+    
+    private ITextureProvider<? extends GolemBase> blockTextureProvider = g -> GolemRenderSettings.FALLBACK_BLOCK;
+    private ITextureProvider<? extends GolemBase> vinesTextureProvider = g -> GolemRenderSettings.FALLBACK_VINES;
+    private ITextureProvider<? extends GolemBase> prefabTextureProvider = g -> GolemRenderSettings.FALLBACK_PREFAB;
+
+    private IColorProvider<? extends GolemBase> blockColorProvider = g -> 0;
+    private IColorProvider<? extends GolemBase> vinesColorProvider = g -> 0;
 
     /**
      * Creates the builder
@@ -527,34 +537,73 @@ public final class GolemContainer {
      powerLevel = MathHelper.clamp(lPowerLevel, 0, 15);
      return this;
    }
+   
+   /**
+    * Sets a pre-made GolemRenderSettings to use. It is highly recommended to
+    * use the helper methods instead, but this method is here for flexibility.
+    *
+    * @param renderSettings A pre-built render settings class to use
+    * @return instance to allow chaining of methods
+    * @see #setTextureFromBlock(Block)
+    * @see #setTextureProvider(ITextureProvider)
+    * @see #setTextureColor(IColorProvider)
+    * @see #setVinesProvider(ITextureProvider)
+    * @see #setVinesColor(IColorProvider)
+    * @see #setNoVines()
+    **/
+   public Builder setRenderSettings(final GolemRenderSettings renderSettings) {
+     customSettings = renderSettings;
+     return this;
+   }
 
     /**
-     * Sets a basic texture location of a golem. If this golem inherits from one of
-     * the multi-texture golem classes, then this method of setting textures is
-     * ignored. Instead, pass the correct textures in the constructor of that golem
-     * class.
+     * Sets a prefabricated texture location for the golem.
      *
-     * @param lTexture The texture to apply to the golem
+     * @param prefab The texture provider to use for the golem
      * @return instance to allow chaining of methods
-     * @see #basicTexture()
      **/
-    public Builder setTexture(final ResourceLocation lTexture) {
-      basicTexture = lTexture;
+    public <T extends GolemBase> Builder setTextureProvider(final GolemRenderSettings.ITextureProvider<T> prefab) {
+      prefabTexture = true;
+      prefabTextureProvider = prefab;
       return this;
     }
-
+    
     /**
-     * Calls {@link #setTexture(ResourceLocation)} to set a single texture for the
-     * golem based on current values of {@code modid} and {@code golemName}. For
-     * example, if the modid is {@code "golems"} and the golemName is
-     * {@code "golem_clay"} then the texture location is assumed to be
-     * {@code assets/golems/textures/entity/golem_clay.png}
-     *
+     * Sets a dynamic (block-based) texture location for the golem.
+     * 
+     * @param block a block whose name will be used to set a texture location
      * @return instance to allow chaining of methods
-     * @see #setModId(String)
      **/
-    public Builder basicTexture() {
-      return setTexture(new ResourceLocation(modid + ":textures/entity/" + golemName + ".png"));
+    public Builder setTextureFromBlock(final Block block) {
+      prefabTexture = false;
+      final ResourceLocation blockName = block.getRegistryName();
+      final ResourceLocation blockTexture = new ResourceLocation(blockName.getNamespace(), "textures/block/" + blockName.getPath() + ".png");
+      blockTextureProvider = g -> blockTexture;
+      return this;
+    }
+    
+    public <T extends GolemBase> Builder setTextureColor(final GolemRenderSettings.IColorProvider<T> blockColorer) {
+      blockColor = true;
+      blockColorProvider = blockColorer;
+      return this;
+    }
+    
+    public Builder setNoVines() {
+      vinesTexture = false;
+      vinesColor = false;
+      return this;
+    }
+    
+    public <T extends GolemBase> Builder setVinesProvider(final GolemRenderSettings.ITextureProvider<T> vines) {
+      vinesTexture = true;
+      vinesTextureProvider = vines;
+      return this;
+    }
+    
+    public <T extends GolemBase> Builder setVinesColor(final GolemRenderSettings.IColorProvider<T> vinesColorer) {
+      vinesColor = true;
+      vinesColorProvider = vinesColorer;
+      return this;
     }
 
     /**
@@ -756,10 +805,13 @@ public final class GolemContainer {
       for (GolemSpecialContainer c : specials) {
         containerMap.put(c.name, c);
       }
+      // build the render settings
+      final GolemRenderSettings renderSettings = customSettings != null ? customSettings : new GolemRenderSettings(customRender, hasTransparency, blockTextureProvider, 
+          vinesTexture, vinesTextureProvider, prefabTexture, prefabTextureProvider, blockColor, blockColorProvider, vinesColor, vinesColorProvider);
       // build the golem container
-      return new GolemContainer(entityType, entityClass, golemName, validBuildingBlocks, validBuildingBlockTags, health, attack, speed,
+      return new GolemContainer(entityType, entityClass, golemName, renderSettings, validBuildingBlocks, validBuildingBlockTags, health, attack, speed,
           knockBackResist, lightLevel, powerLevel, fallDamage, explosionImmunity, swimMode, containerMap, descriptions, healItemMap, 
-          basicTexture, basicSound, customRender);
+          basicSound);
     }
   }
 
