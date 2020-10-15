@@ -1,4 +1,4 @@
-package com.mcmoddev.golems.renders;
+package com.mcmoddev.golems.renders.model;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mojang.blaze3d.matrix.MatrixStack;

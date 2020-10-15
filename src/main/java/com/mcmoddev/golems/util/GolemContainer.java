@@ -430,19 +430,21 @@ public final class GolemContainer {
     // render settings
     private GolemRenderSettings customSettings = null;
     
-    private boolean customRender = false;
+    private boolean hasCustomRender = false;
     private boolean hasTransparency = false;
-    private boolean prefabTexture = false;
-    private boolean vinesTexture = true;
-    private boolean blockColor = false;
-    private boolean vinesColor = false;
+    private boolean hasPrefabTexture = false;
+    private boolean hasVinesTexture = true;
+    private boolean hasColor = false;
+    private boolean hasVinesColor = false;
+    private boolean doEyesGlow = false;
     
-    private ITextureProvider<? extends GolemBase> blockTextureProvider = g -> GolemRenderSettings.FALLBACK_BLOCK;
-    private ITextureProvider<? extends GolemBase> vinesTextureProvider = g -> GolemRenderSettings.FALLBACK_VINES;
-    private ITextureProvider<? extends GolemBase> prefabTextureProvider = g -> GolemRenderSettings.FALLBACK_PREFAB;
+    private ITextureProvider blockTextureProvider = g -> GolemRenderSettings.FALLBACK_BLOCK;
+    private ITextureProvider prefabTextureProvider = g -> GolemRenderSettings.FALLBACK_PREFAB;
+    private ITextureProvider vinesTextureProvider = g -> GolemRenderSettings.FALLBACK_VINES;
+    private ITextureProvider eyesTextureProvider = g -> GolemRenderSettings.FALLBACK_EYES;
 
-    private IColorProvider<? extends GolemBase> blockColorProvider = g -> 0;
-    private IColorProvider<? extends GolemBase> vinesColorProvider = g -> 0;
+    private IColorProvider textureColorProvider = g -> 0;
+    private IColorProvider vinesColorProvider = g -> 0;
 
     /**
      * Creates the builder
@@ -537,6 +539,17 @@ public final class GolemContainer {
      powerLevel = MathHelper.clamp(lPowerLevel, 0, 15);
      return this;
    }
+
+   /**
+    * Prevents the golem from using the default render factory. If this is called,
+    * you must register your own {@code LivingRenderer}
+    * 
+    * @return instance to allow chaining of methods
+    **/
+   public Builder hasCustomRender() {
+     this.hasCustomRender = true;
+     return this;
+   }
    
    /**
     * Sets a pre-made GolemRenderSettings to use. It is highly recommended to
@@ -550,6 +563,8 @@ public final class GolemContainer {
     * @see #setVinesProvider(ITextureProvider)
     * @see #setVinesColor(IColorProvider)
     * @see #setNoVines()
+    * @see #setEyesProvider(ITextureProvider)
+    * @see #doEyesGlow()
     **/
    public Builder setRenderSettings(final GolemRenderSettings renderSettings) {
      customSettings = renderSettings;
@@ -562,11 +577,12 @@ public final class GolemContainer {
      * @param prefab The texture provider to use for the golem
      * @return instance to allow chaining of methods
      **/
-    public <T extends GolemBase> Builder setTextureProvider(final GolemRenderSettings.ITextureProvider<T> prefab) {
-      prefabTexture = true;
+    public Builder setTextureProvider(final GolemRenderSettings.ITextureProvider prefab) {
+      hasPrefabTexture = true;
       prefabTextureProvider = prefab;
       return this;
     }
+
     
     /**
      * Sets a dynamic (block-based) texture location for the golem.
@@ -575,45 +591,50 @@ public final class GolemContainer {
      * @return instance to allow chaining of methods
      **/
     public Builder setTextureFromBlock(final Block block) {
-      prefabTexture = false;
+      hasPrefabTexture = false;
       final ResourceLocation blockName = block.getRegistryName();
       final ResourceLocation blockTexture = new ResourceLocation(blockName.getNamespace(), "textures/block/" + blockName.getPath() + ".png");
       blockTextureProvider = g -> blockTexture;
       return this;
     }
     
-    public <T extends GolemBase> Builder setTextureColor(final GolemRenderSettings.IColorProvider<T> blockColorer) {
-      blockColor = true;
-      blockColorProvider = blockColorer;
+    /**
+     * Sets a color provider for the golem texture.
+     *
+     * @param textureColorer The color provider to use
+     * @return instance to allow chaining of methods
+     **/
+    public Builder setTextureColor(final GolemRenderSettings.IColorProvider textureColorer) {
+      hasColor = true;
+      textureColorProvider = textureColorer;
       return this;
     }
     
     public Builder setNoVines() {
-      vinesTexture = false;
-      vinesColor = false;
+      hasVinesTexture = false;
+      hasVinesColor = false;
       return this;
     }
     
-    public <T extends GolemBase> Builder setVinesProvider(final GolemRenderSettings.ITextureProvider<T> vines) {
-      vinesTexture = true;
+    public Builder setVinesProvider(final GolemRenderSettings.ITextureProvider vines) {
+      hasVinesTexture = true;
       vinesTextureProvider = vines;
       return this;
     }
     
-    public <T extends GolemBase> Builder setVinesColor(final GolemRenderSettings.IColorProvider<T> vinesColorer) {
-      vinesColor = true;
+    public Builder setVinesColor(final GolemRenderSettings.IColorProvider vinesColorer) {
+      hasVinesColor = true;
       vinesColorProvider = vinesColorer;
       return this;
     }
-
-    /**
-     * Prevents the golem from using the default render factory. If this is called,
-     * you must register your own {@code LivingRenderer}
-     * 
-     * @return instance to allow chaining of methods
-     **/
-    public Builder hasCustomRender() {
-      this.customRender = true;
+    
+    public Builder eyesGlow() {
+      doEyesGlow = true;
+      return this;
+    }
+    
+    public Builder setEyesProvider(final GolemRenderSettings.ITextureProvider eyes) {
+      eyesTextureProvider = eyes;
       return this;
     }
 
@@ -806,8 +827,8 @@ public final class GolemContainer {
         containerMap.put(c.name, c);
       }
       // build the render settings
-      final GolemRenderSettings renderSettings = customSettings != null ? customSettings : new GolemRenderSettings(customRender, hasTransparency, blockTextureProvider, 
-          vinesTexture, vinesTextureProvider, prefabTexture, prefabTextureProvider, blockColor, blockColorProvider, vinesColor, vinesColorProvider);
+      final GolemRenderSettings renderSettings = customSettings != null ? customSettings : new GolemRenderSettings(hasCustomRender, hasTransparency, blockTextureProvider, 
+          hasVinesTexture, vinesTextureProvider, doEyesGlow, eyesTextureProvider, hasPrefabTexture, prefabTextureProvider, hasColor, textureColorProvider, hasVinesColor, vinesColorProvider);
       // build the golem container
       return new GolemContainer(entityType, entityClass, golemName, renderSettings, validBuildingBlocks, validBuildingBlockTags, health, attack, speed,
           knockBackResist, lightLevel, powerLevel, fallDamage, explosionImmunity, swimMode, containerMap, descriptions, healItemMap, 

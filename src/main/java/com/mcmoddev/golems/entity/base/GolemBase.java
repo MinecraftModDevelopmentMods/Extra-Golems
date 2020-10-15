@@ -417,11 +417,6 @@ public abstract class GolemBase extends IronGolemEntity {
     return ExtraGolemsEntities.makeTexture(MODID, TEXTURE);
   }
 
-  /** @return Whether the texture should be rendered as translucent **/
-  public boolean hasTransparency() {
-    return false;
-  }
-
   ///////////////////// SOUND OVERRIDES ////////////////////
 
   @Override

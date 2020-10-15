@@ -38,12 +38,13 @@ public final class ProxyClient extends ProxyCommon {
   @Override
   public void registerEntityRenders() {
     GolemRegistrar.getContainers().forEach(container -> {
-      if (container.useDefaultRender()) {
-        if (GolemColorized.class.isAssignableFrom(container.getEntityClass())) {
-          registerColorized((EntityType<? extends GolemColorized>) container.getEntityType());
-        } else {
-          registerTextured(container.getEntityType());
-        }
+      if (!container.getRenderSettings().hasCustomRender()) {
+        RenderingRegistry.registerEntityRenderingHandler(container.getEntityType(), GolemRenderer::new);
+//        if (GolemColorized.class.isAssignableFrom(container.getEntityClass())) {
+//          registerColorized((EntityType<? extends GolemColorized>) container.getEntityType());
+//        } else {
+//          registerTextured(container.getEntityType());
+//        }
 
       }
     });

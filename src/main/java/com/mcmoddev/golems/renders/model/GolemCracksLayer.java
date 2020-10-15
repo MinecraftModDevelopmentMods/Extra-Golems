@@ -1,4 +1,4 @@
-package com.mcmoddev.golems.renders;
+package com.mcmoddev.golems.renders.model;
 
 import java.util.Map;
 

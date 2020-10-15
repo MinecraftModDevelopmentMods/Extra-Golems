@@ -1,4 +1,4 @@
-package com.mcmoddev.golems.renders;
+package com.mcmoddev.golems.renders.model;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
@@ -19,7 +19,6 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> {
   private float red = 1.0f;
   private float green = 1.0f;
   private float blue = 1.0f;
-  private float alpha = 1.0f;
   
   public GolemModel() {
     super();
@@ -53,24 +52,21 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> {
       matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(180.0F));
     }
     // render with custom colors
-    super.render(matrixStackIn, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+    super.render(matrixStackIn, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, 1.0F);
   }
   
   // COLOR HELPERS
 
-  public void setColor(final float r, final float g, final float b, final float a) {
+  public void setColor(final float r, final float g, final float b) {
     red = r;
     green = g;
     blue = b;
-    alpha = a;
   }
 
-  public void setAlpha(final float a) {  alpha = a; }
-  public void resetColor() { red = green = blue = alpha = 1.0F; }
+  public void resetColor() { red = green = blue = 1.0F; }
   public float red() { return red; }
   public float green() {  return green; }
   public float blue() { return blue;  }
-  public float alpha() { return alpha; }
   
   // KITTY LAYER HELPERS
   

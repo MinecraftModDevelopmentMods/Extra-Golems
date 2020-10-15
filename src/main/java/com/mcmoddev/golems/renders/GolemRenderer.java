@@ -4,7 +4,14 @@ import javax.annotation.Nullable;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolemsEntities;
+import com.mcmoddev.golems.renders.model.GolemCracksLayer;
+import com.mcmoddev.golems.renders.model.GolemEyesLayer;
+import com.mcmoddev.golems.renders.model.GolemFlowerLayer;
+import com.mcmoddev.golems.renders.model.GolemKittyLayer;
+import com.mcmoddev.golems.renders.model.GolemModel;
+import com.mcmoddev.golems.renders.model.GolemVinesLayer;
 import com.mcmoddev.golems.util.GolemNames;
+import com.mcmoddev.golems.util.GolemRenderSettings;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -14,6 +21,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.TextFormatting;
 
 /**
@@ -27,40 +35,61 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
   protected static final ResourceLocation specialTexture = ExtraGolemsEntities.makeTexture("special");
   protected static final ResourceLocation specialTexture2 = ExtraGolemsEntities.makeTexture("special2");
   protected ResourceLocation texture;
+  
+  
+  protected RenderType renderType;
 
-  protected static final String damageTexture = "minecraft:textures/entity/iron_golem/iron_golem_crackiness";
-  protected static final ResourceLocation[] damageIndicators = { 
-      new ResourceLocation(damageTexture + "_low.png"),
-      new ResourceLocation(damageTexture + "_medium.png"),
-      new ResourceLocation(damageTexture + "_high.png")
-  };
+//  protected static final String damageTexture = "minecraft:textures/entity/iron_golem/iron_golem_crackiness";
+//  protected static final ResourceLocation[] damageIndicators = { 
+//      new ResourceLocation(damageTexture + "_low.png"),
+//      new ResourceLocation(damageTexture + "_medium.png"),
+//      new ResourceLocation(damageTexture + "_high.png")
+//  };
 
-  protected static final float DAMAGE_ALPHA = 0.55F;
+//  protected static final float DAMAGE_ALPHA = 0.55F;
   
   protected boolean isAlphaLayer;
 
   public GolemRenderer(final EntityRendererManager renderManagerIn) {
     super(renderManagerIn, new GolemModel<T>(), 0.5F);
-    this.addLayer(new GolemCracksLayer<T>(this));
+    this.addLayer(new GolemEyesLayer<T>(this));
     this.addLayer(new GolemFlowerLayer<T>(this));
+    this.addLayer(new GolemVinesLayer<T>(this));
+    this.addLayer(new GolemCracksLayer<T>(this));
     this.addLayer(new GolemKittyLayer<T>(this));
   }
 
   @Override
   public void render(final T golem, final float entityYaw, final float partialTicks, final MatrixStack matrixStackIn,
       final IRenderTypeBuffer bufferIn, final int packedLightIn) {
-    // render the golem
-    this.bindGolemTexture(golem);
+    // get render settings from the golem container
+    final GolemRenderSettings settings = golem.getGolemContainer().getRenderSettings();
+    matrixStackIn.push();
+    // colors
     this.resetColor();
-    isAlphaLayer = isAlphaLayer(golem);
+    if(settings.hasColor()) {
+      final Vector3f colors = GolemRenderSettings.unpackColor(settings.getBlockColorProvider().getColor(golem));
+      this.getEntityModel().setColor(colors.getX(), colors.getY(), colors.getZ());
+    }
+    // texture settings
+    this.bindGolemTexture(golem, settings);
+    // transparency flag
+    isAlphaLayer = settings.hasTransparency();
+    if (isAlphaLayer) {
+      RenderSystem.defaultAlphaFunc();
+      RenderSystem.enableBlend();
+    }
+    // render the golem
     super.render(golem, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
-    // render damage indicator texture
-    isAlphaLayer = true;
-//    this.renderDamage(golem, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
+    if (isAlphaLayer) {
+      RenderSystem.disableBlend();
+    }
+    matrixStackIn.pop();
   }
 
-  protected void bindGolemTexture(final T golem) {
-    texture = golem.getTexture();
+  protected void bindGolemTexture(final T golem, final GolemRenderSettings settings) {
+    // TODO
+    texture = settings.getPrefabTexture().getTexture(golem);
     // special cases
     if(ExtraGolemsConfig.halloween() && isNightTime(golem)) {
       texture = boneTexture;
@@ -78,15 +107,15 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
   protected void resetColor() {
     this.entityModel.resetColor();
   }
-  
-  /**
-   * Called just before rendering the body layer
-   * @param golem the golem
-   * @return whether the golem should be rendered as translucent
-   **/
-  protected boolean isAlphaLayer(final T golem) {
-    return golem.hasTransparency();
-  }
+//  
+//  /**
+//   * Called just before rendering the body layer
+//   * @param golem the golem
+//   * @return whether the golem should be rendered as translucent
+//   **/
+//  protected boolean isAlphaLayer(final T golem) {
+//    return golem.getGolemContainer().getRenderSettings().hasTransparency();
+//  }
 
 //  protected void renderDamage(final T golem, final float entityYaw, final float partialTicks, final MatrixStack matrixStackIn,
 //      final IRenderTypeBuffer bufferIn, final int packedLightIn) {
@@ -122,7 +151,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
   @Nullable
   protected RenderType func_230496_a_(final T golem, boolean isVisible, boolean isVisibleToPlayer, boolean isGlowing) {
     ResourceLocation tex = this.getEntityTexture(golem);
-    if (isVisible || isVisibleToPlayer || golem.hasTransparency() || isAlphaLayer) {
+    if (isVisible || isVisibleToPlayer || isAlphaLayer) {
       return RenderType.getEntityTranslucent(tex);
     } else {
       return golem.isGlowing() ? RenderType.getOutline(tex) : RenderType.getEntityCutout(tex);
@@ -142,4 +171,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
     final long time = golem.world.getDayTime() % 24000L;
     return time > 13000L && time < 23000L;
   }
+  
+  
+  
 }
