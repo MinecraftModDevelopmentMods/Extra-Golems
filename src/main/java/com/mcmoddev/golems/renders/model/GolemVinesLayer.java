@@ -27,17 +27,13 @@ public class GolemVinesLayer<T extends GolemBase> extends LayerRenderer<T, Golem
       // vines texture
       final ResourceLocation vines = settings.getVinesTexture().getTexture(golem);
       // vines color
-      this.getEntityModel().resetColor();
-      if(settings.hasColor()) {
-        final Vector3f colors = GolemRenderSettings.unpackColor(settings.getVinesColorProvider().getColor(golem));
-        this.getEntityModel().setColor(colors.getX(), colors.getY(), colors.getZ());
-      }
+      final Vector3f colors = GolemRenderSettings.unpackColor(settings.getVinesColorProvider().getColor(golem));
       // get packed light and a vertex builder bound to the correct texture
       final int packedLight = settings.doVinesGlow() ? 15728880 : packedLightIn;
       final int packedOverlay = LivingRenderer.getPackedOverlay(golem, 0.0F);
       final IVertexBuilder vertexBuilder = bufferIn.getBuffer(RenderType.getEntityCutoutNoCull(vines));
-      
       // render vines
+      this.getEntityModel().setColor(colors.getX(), colors.getY(), colors.getZ());
       this.getEntityModel().render(matrixStackIn, vertexBuilder, packedLight, packedOverlay, 1.0F, 1.0F, 1.0F, 1.0F);
     }
   }

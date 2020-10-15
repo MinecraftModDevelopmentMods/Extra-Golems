@@ -39,24 +39,53 @@ public class GolemRenderType extends RenderType {
     }
   }
   
-  public static RenderType getGolemCutout(final ResourceLocation texture, final boolean dynamic) {    
-    return makeType(ExtraGolems.MODID + ":golem_cutout", DefaultVertexFormats.ENTITY, GL11.GL_QUADS, 65536,
+  public static RenderType getGolemCutout(final ResourceLocation texture, final boolean dynamic) {        
+    return makeType(ExtraGolems.MODID + ":golem_cutout", DefaultVertexFormats.ENTITY, GL11.GL_QUADS, 256, true, false,
         RenderType.State.getBuilder()
-        .diffuseLighting(DiffuseLightingState.DIFFUSE_LIGHTING_ENABLED)
+        .transparency(NO_TRANSPARENCY)
+        .diffuseLighting(DIFFUSE_LIGHTING_ENABLED)
+        .alpha(DEFAULT_ALPHA)
+        .cull(CULL_DISABLED)
         .lightmap(LIGHTMAP_ENABLED)
-        .cull(CullState.CULL_DISABLED)
+        .overlay(OVERLAY_ENABLED)
         .texture(getTextureState(texture, dynamic))
-        .overlay(OverlayState.OVERLAY_DISABLED)
-        .build(false));
+        .build(true));
   }
   
   public static RenderType getGolemTransparent(final ResourceLocation texture, final boolean dynamic) {    
-    return makeType(ExtraGolems.MODID + ":golem_transparent", DefaultVertexFormats.ENTITY, 7, 256, true, true, 
+    return makeType(ExtraGolems.MODID + ":golem_transparent", DefaultVertexFormats.ENTITY, GL11.GL_QUADS, 256, true, true, 
         RenderType.State.getBuilder()
         .texture(getTextureState(texture, dynamic))
         .transparency(TRANSLUCENT_TRANSPARENCY)
         .diffuseLighting(DIFFUSE_LIGHTING_ENABLED)
-        .alpha(DEFAULT_ALPHA).cull(CULL_DISABLED)
+        .alpha(DEFAULT_ALPHA)
+        .cull(CULL_DISABLED)
+        .lightmap(LIGHTMAP_ENABLED)
+        .overlay(OVERLAY_ENABLED)
+        .build(true));
+  }
+  
+  public static RenderType func_239265_a_(final ResourceLocation texture, final boolean dynamic) {
+    return makeType("outline", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, 256, 
+        State.getBuilder()
+        .texture(getTextureState(texture, dynamic))
+        .cull(CullState.CULL_DISABLED)
+        .depthTest(DEPTH_ALWAYS)
+        .alpha(DEFAULT_ALPHA)
+        .texturing(OUTLINE_TEXTURING)
+        .fog(NO_FOG)
+        .target(OUTLINE_TARGET)
+        .func_230173_a_(RenderType.OutlineState.IS_OUTLINE));
+  }
+  
+  public static RenderType getGolemOutline(final ResourceLocation texture, final boolean dynamic) {    
+    return makeType(ExtraGolems.MODID + ":golem_transparent", DefaultVertexFormats.ENTITY, GL11.GL_QUADS, 256, true, true, 
+        RenderType.State.getBuilder()
+        .texture(getTextureState(texture, dynamic))
+        .transparency(TRANSLUCENT_TRANSPARENCY)
+        .diffuseLighting(DIFFUSE_LIGHTING_ENABLED)
+        .alpha(DEFAULT_ALPHA)
+        .cull(CULL_DISABLED)
         .lightmap(LIGHTMAP_ENABLED)
         .overlay(OVERLAY_ENABLED)
         .build(true));

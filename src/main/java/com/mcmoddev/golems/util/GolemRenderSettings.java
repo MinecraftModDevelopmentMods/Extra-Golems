@@ -13,6 +13,8 @@ public class GolemRenderSettings {
   public static final ResourceLocation FALLBACK_VINES = new ResourceLocation(ExtraGolems.MODID, "textures/entity/layer/vines.png");
   public static final ResourceLocation FALLBACK_EYES = new ResourceLocation(ExtraGolems.MODID, "textures/entity/layer/eyes.png");
 
+  public static final int VINES_COLOR = 0x83a05a;
+  
   /** When false, none of this class is used **/
   private final boolean hasCustomRender;
   
@@ -31,7 +33,6 @@ public class GolemRenderSettings {
 
   private final boolean hasColor;
   private final IColorProvider textureColorProvider;
-  private final boolean hasVinesColor;
   private final IColorProvider vinesColorProvider;
   
   public GolemRenderSettings(boolean lHasCustomRender, boolean lHasTransparency,
@@ -40,7 +41,7 @@ public class GolemRenderSettings {
       boolean lEyesGlow, ITextureProvider lEyesTextureProvider,
       boolean lHasPrefabTexture, ITextureProvider lPrefabTextureProvider, 
       boolean lHasColor, IColorProvider lTextureColorProvider, 
-      boolean lHasVinesColor, IColorProvider lVinesColorProvider) {
+      IColorProvider lVinesColorProvider) {
     this.hasCustomRender = lHasCustomRender;
     this.hasTransparency = lHasTransparency;
     this.blockTexture = lBlockTextureProvider;
@@ -53,7 +54,6 @@ public class GolemRenderSettings {
     this.prefabTexture = lPrefabTextureProvider;
     this.hasColor = lHasColor;
     this.textureColorProvider = lTextureColorProvider;
-    this.hasVinesColor = lHasVinesColor;
     this.vinesColorProvider = lVinesColorProvider;
   }
   
@@ -81,8 +81,6 @@ public class GolemRenderSettings {
   public boolean hasColor() { return hasColor; }
   /** @return the texture color provider **/
   public IColorProvider getBlockColorProvider() { return textureColorProvider; }
-  /** @return whether the vines texture should be colored **/
-  public boolean hasVinesColor() { return hasVinesColor; }
   /** @return the vines color provider **/
   public IColorProvider getVinesColorProvider() { return vinesColorProvider; }
   
@@ -91,10 +89,10 @@ public class GolemRenderSettings {
     if ((tmpColor & -67108864) == 0) {
       tmpColor |= -16777216;
     }
+    float colorRed = (float) (tmpColor >> 16 & 255) / 255.0F;
     float colorGreen = (float) (tmpColor >> 8 & 255) / 255.0F;
     float colorBlue = (float) (tmpColor & 255) / 255.0F;
-    float colorAlpha = (float) (tmpColor >> 24 & 255) / 255.0F;
-    return new Vector3f(colorGreen, colorBlue, colorAlpha);
+    return new Vector3f(colorRed, colorGreen, colorBlue);
   }
   
   // Functional interfaces

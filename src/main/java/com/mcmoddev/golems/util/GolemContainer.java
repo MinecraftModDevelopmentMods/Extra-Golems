@@ -435,7 +435,6 @@ public final class GolemContainer {
     private boolean hasPrefabTexture = false;
     private boolean hasVinesTexture = true;
     private boolean hasColor = false;
-    private boolean hasVinesColor = false;
     private boolean doVinesGlow = false;
     private boolean doEyesGlow = false;
     
@@ -445,7 +444,7 @@ public final class GolemContainer {
     private ITextureProvider eyesTextureProvider = g -> GolemRenderSettings.FALLBACK_EYES;
 
     private IColorProvider textureColorProvider = g -> 0;
-    private IColorProvider vinesColorProvider = g -> 0;
+    private IColorProvider vinesColorProvider = g -> GolemRenderSettings.VINES_COLOR;
 
     /**
      * Creates the builder
@@ -558,7 +557,7 @@ public final class GolemContainer {
     *
     * @param renderSettings A pre-built render settings class to use
     * @return instance to allow chaining of methods
-    * @see #setTextureFromBlock(Block)
+    * @see #setDynamicTexture(Block)
     * @see #setTextureProvider(ITextureProvider)
     * @see #setTextureColor(IColorProvider)
     * @see #setVinesProvider(ITextureProvider)
@@ -585,6 +584,13 @@ public final class GolemContainer {
       return this;
     }
 
+    public Builder setDynamicTexture(final String blockTexture) {
+      return setDynamicTexture("minecraft", blockTexture);
+    }
+    
+    public Builder setDynamicTexture(final String modid, final String blockTexture) {
+      return setDynamicTexture(new ResourceLocation(modid, "textures/block/" + blockTexture + ".png"));
+    }
     
     /**
      * Sets a dynamic (block-based) texture location for the golem.
@@ -592,10 +598,8 @@ public final class GolemContainer {
      * @param block a block whose name will be used to set a texture location
      * @return instance to allow chaining of methods
      **/
-    public Builder setTextureFromBlock(final Block block) {
+    public Builder setDynamicTexture(final ResourceLocation blockTexture) {
       hasPrefabTexture = false;
-      final ResourceLocation blockName = block.getRegistryName();
-      final ResourceLocation blockTexture = new ResourceLocation(blockName.getNamespace(), "textures/block/" + blockName.getPath() + ".png");
       blockTextureProvider = g -> blockTexture;
       return this;
     }
@@ -619,7 +623,6 @@ public final class GolemContainer {
 
     public Builder noVines() {
       hasVinesTexture = false;
-      hasVinesColor = false;
       doVinesGlow = false;
       return this;
     }
@@ -631,7 +634,6 @@ public final class GolemContainer {
     }
     
     public Builder setVinesColor(final GolemRenderSettings.IColorProvider vinesColorer) {
-      hasVinesColor = true;
       vinesColorProvider = vinesColorer;
       return this;
     }
@@ -841,7 +843,7 @@ public final class GolemContainer {
       }
       // build the render settings
       final GolemRenderSettings renderSettings = customSettings != null ? customSettings : new GolemRenderSettings(hasCustomRender, hasTransparency, blockTextureProvider, 
-          hasVinesTexture, doVinesGlow, vinesTextureProvider, doEyesGlow, eyesTextureProvider, hasPrefabTexture, prefabTextureProvider, hasColor, textureColorProvider, hasVinesColor, vinesColorProvider);
+          hasVinesTexture, doVinesGlow, vinesTextureProvider, doEyesGlow, eyesTextureProvider, hasPrefabTexture, prefabTextureProvider, hasColor, textureColorProvider, vinesColorProvider);
       // build the golem container
       return new GolemContainer(entityType, entityClass, golemName, renderSettings, validBuildingBlocks, validBuildingBlockTags, health, attack, speed,
           knockBackResist, lightLevel, powerLevel, fallDamage, explosionImmunity, swimMode, containerMap, descriptions, healItemMap, 

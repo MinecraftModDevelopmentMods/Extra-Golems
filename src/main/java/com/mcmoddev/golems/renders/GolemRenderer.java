@@ -158,14 +158,14 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
   @Nullable
   protected RenderType func_230496_a_(final T golem, boolean isVisible, boolean isVisibleToPlayer, boolean isGlowing) {
     final GolemRenderSettings settings = golem.getGolemContainer().getRenderSettings();
-    ResourceLocation tex = this.getGolemTexture(golem, settings);
-    return GolemRenderType.getGolemCutout(tex, !settings.hasPrefabTexture());
-    
-//    if (isVisible || isVisibleToPlayer || isAlphaLayer) {
-//      return RenderType.getEntityTranslucent(tex);
-//    } else {
-//      return golem.isGlowing() ? RenderType.getOutline(tex) : RenderType.getEntityCutout(tex);
-//    }
+    ResourceLocation texture = this.getGolemTexture(golem, settings);
+    if (isVisible || isVisibleToPlayer || isAlphaLayer) {
+      return GolemRenderType.getGolemTransparent(texture, !settings.hasPrefabTexture());
+    } else if(golem.isGlowing()) {
+      return GolemRenderType.getGolemOutline(texture, !settings.hasPrefabTexture());
+    } else {
+      return GolemRenderType.getGolemCutout(texture, !settings.hasPrefabTexture());
+    }
   }
 //
 //  /**
