@@ -12,11 +12,8 @@ import com.mcmoddev.golems.util.GolemRegistrar;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.model.ModelBakery;
 import net.minecraft.client.resources.ReloadListener;
-import net.minecraft.entity.EntityType;
 import net.minecraft.profiler.IProfiler;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManager;
@@ -36,10 +33,9 @@ public final class ProxyClient extends ProxyCommon {
     IResourceManager manager = Minecraft.getInstance().getResourceManager();
     if (manager instanceof IReloadableResourceManager) {
       ((IReloadableResourceManager)manager).addReloadListener(new ReloadListener<ModelBakery>() {
-
         @Override
         protected void apply(ModelBakery arg0, IResourceManager arg1, IProfiler arg2) {
-          GolemRenderType.clearDynamicTextureMap();
+          GolemRenderType.reloadDynamicTextureMap();
         }
 
         @Override

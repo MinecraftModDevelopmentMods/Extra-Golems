@@ -8,6 +8,7 @@ import com.mcmoddev.golems.entity.ai.PlaceBlocksGoal;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
+import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -31,7 +32,7 @@ public final class MushroomGolem extends GolemMultiTextured {
     super(entityType, world, ExtraGolems.MODID, SHROOM_TYPES, SHROOM_TYPES);
     for (int n = 0, len = SHROOM_TYPES.length; n < len; n++) {
       // initialize textures
-      this.textures[n] = new ResourceLocation(ExtraGolems.MODID, this.getGolemContainer().getName() + "/" + SHROOM_TYPES[n] + ".png");
+      this.textures[n] = new ResourceLocation(ExtraGolems.MODID, "textures/entity/" + GolemNames.MUSHROOM_GOLEM + "/" + SHROOM_TYPES[n] + ".png");
     }
   }
 

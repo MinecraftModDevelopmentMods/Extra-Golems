@@ -7,7 +7,6 @@ import javax.annotation.Nullable;
 import com.google.common.collect.ImmutableMap;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.main.ExtraGolemsEntities;
 import com.mcmoddev.golems.renders.model.GolemFlowerLayer;
 import com.mcmoddev.golems.renders.model.GolemKittyLayer;
 import com.mcmoddev.golems.renders.model.GolemModel;
@@ -39,12 +38,8 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
   protected static final ResourceLocation specialTexture2 = new ResourceLocation(ExtraGolems.MODID, "textures/entity/special2.png");
   
   private static final Map<IronGolemEntity.Cracks, ResourceLocation> cracksToTextureMap = ImmutableMap.of(IronGolemEntity.Cracks.LOW, new ResourceLocation("textures/entity/iron_golem/iron_golem_crackiness_low.png"), IronGolemEntity.Cracks.MEDIUM, new ResourceLocation("textures/entity/iron_golem/iron_golem_crackiness_medium.png"), IronGolemEntity.Cracks.HIGH, new ResourceLocation("textures/entity/iron_golem/iron_golem_crackiness_high.png"));
-
-//  protected static final GolemRenderSettings.ITextureProvider CRACKS_TEXTURE_PROVIDER = g -> {
-//    IronGolemEntity.Cracks cracks = g.func_226512_l_();
-//    return cracks == IronGolemEntity.Cracks.NONE ? null : cracksToTextureMap.get(cracks);
-//  };
   
+  protected boolean hideVines;
   protected boolean isAlphaLayer;
 
   /**
@@ -76,8 +71,10 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
         g -> 0xFFFFFF, g -> g.getGolemContainer().getRenderSettings().getEyesLighting().disableLighting(g), 1.0F));
     // Vines layer
     this.addLayer(new SimpleTextureLayer<T>(this, 
-        g -> g.getGolemContainer().getRenderSettings().getEyesTexture().getTexture(g),
-        g -> g.getGolemContainer().getRenderSettings().getVinesColorProvider().getColor(g), 
+        g -> {
+          final GolemRenderSettings settings = g.getGolemContainer().getRenderSettings();
+          return settings.hasVines() && !this.hideVines ? settings.getVinesTexture().getTexture(g) : null;
+        }, g -> g.getGolemContainer().getRenderSettings().getVinesColorProvider().getColor(g), 
         g -> g.getGolemContainer().getRenderSettings().getVinesLighting().disableLighting(g), 1.0F));
     // Cracks layer
     this.addLayer(new SimpleTextureLayer<T>(this, g -> cracksToTextureMap.get(g.func_226512_l_()), g -> 0xFFFFFF, g -> false, 0.55F));
@@ -96,10 +93,11 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
     final GolemRenderSettings settings = golem.getGolemContainer().getRenderSettings();
     matrixStackIn.push();
     // colors
-    this.resetColor();
     if(settings.hasColor()) {
       final Vector3f colors = GolemRenderSettings.unpackColor(settings.getBlockColorProvider().getColor(golem));
       this.getEntityModel().setColor(colors.getX(), colors.getY(), colors.getZ());
+    } else {
+      this.entityModel.resetColor();
     }
     // transparency flag
     isAlphaLayer = settings.hasTransparency();
@@ -114,10 +112,6 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
     }
     matrixStackIn.pop();
   }
-
-  protected void resetColor() {
-    this.entityModel.resetColor();
-  }
   
   /**
    * Returns the location of an entity's texture. Doesn't seem to be called unless
@@ -127,6 +121,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
   public ResourceLocation getEntityTexture(final T golem) {
     final GolemRenderSettings settings = golem.getGolemContainer().getRenderSettings();
     ResourceLocation texture;
+    hideVines = false;
     if(settings.hasPrefabTexture()) {
       texture = settings.getPrefabTexture().getTexture(golem);
     } else {
@@ -135,13 +130,16 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
     // special cases
     if(ExtraGolemsConfig.halloween() && isNightTime(golem)) {
       texture = boneTexture;
+      hideVines = true;
     } else if(golem.hasCustomName()) {
       final String s = TextFormatting.getTextWithoutFormattingCodes(golem.getName().getString());
       if("Ganondorf".equals(s)) {
         texture = specialTexture;
+        hideVines = true;
       }
       if("Cookie".equals(s)) {
         texture = specialTexture2;
+        hideVines = true;
       }
     }
     return texture;
@@ -152,16 +150,21 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
   protected RenderType func_230496_a_(final T golem, boolean isVisible, boolean isVisibleToPlayer, boolean isGlowing) {
     final GolemRenderSettings settings = golem.getGolemContainer().getRenderSettings();
     ResourceLocation texture = this.getEntityTexture(golem);
+    boolean dynamic = isDynamic(texture, settings);
     if (isVisible || isVisibleToPlayer || isAlphaLayer) {
-      return GolemRenderType.getGolemTransparent(texture, !settings.hasPrefabTexture());
+      return GolemRenderType.getGolemTransparent(texture, dynamic);
     } else if(golem.isGlowing()) {
-      return GolemRenderType.getGolemOutline(texture, !settings.hasPrefabTexture());
+      return GolemRenderType.getGolemOutline(texture, dynamic);
     } else {
-      return GolemRenderType.getGolemCutout(texture, !settings.hasPrefabTexture());
+      return GolemRenderType.getGolemCutout(texture, dynamic);
     }
   }
   
-  protected boolean isNightTime(final T golem) {
+  protected boolean isDynamic(final ResourceLocation texture, final GolemRenderSettings settings) {
+    return texture != boneTexture && texture != specialTexture && texture != specialTexture2 && !settings.hasPrefabTexture();
+  }
+
+  public static boolean isNightTime(final GolemBase golem) {
     final long time = golem.world.getDayTime() % 24000L;
     return time > 13000L && time < 23000L;
   }

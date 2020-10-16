@@ -23,15 +23,16 @@ public class GolemRenderType extends RenderType {
     super(name, vertexFormat, glQuads, i2, b1, b2, r1, r2);
   }
   
-  public static void clearDynamicTextureMap() {
-    dynamicTextureMap.clear();
+  public static void reloadDynamicTextureMap() {
+    final Map<ResourceLocation, TextureState> copy = new HashMap<>(dynamicTextureMap);
+    copy.keySet().forEach(id -> dynamicTextureMap.put(id, new DynamicTextureState(id.toString()).state));
   }
   
   private static TextureState getTextureState(final ResourceLocation texture, final boolean dynamic) {
     if(dynamic) {
       if(!dynamicTextureMap.containsKey(texture)) {
         // make a new texture state
-        dynamicTextureMap.put(texture, new DynamicTextureState(texture.toString(), 8, 8).state);
+        dynamicTextureMap.put(texture, new DynamicTextureState(texture.toString()).state);
       }
       return dynamicTextureMap.get(texture);
     } else {
@@ -44,7 +45,7 @@ public class GolemRenderType extends RenderType {
   }
   
   public static RenderType getGolemCutout(final ResourceLocation texture, final boolean dynamic) {        
-    return makeType(ExtraGolems.MODID + ":golem_cutout", DefaultVertexFormats.ENTITY, GL11.GL_QUADS, 256, true, false,
+    return makeType("golem_cutout", DefaultVertexFormats.ENTITY, GL11.GL_QUADS, 256, true, false,
         RenderType.State.getBuilder()
         .transparency(NO_TRANSPARENCY)
         .diffuseLighting(DIFFUSE_LIGHTING_ENABLED)
@@ -57,7 +58,7 @@ public class GolemRenderType extends RenderType {
   }
   
   public static RenderType getGolemTransparent(final ResourceLocation texture, final boolean dynamic) {    
-    return makeType(ExtraGolems.MODID + ":golem_transparent", DefaultVertexFormats.ENTITY, GL11.GL_QUADS, 256, true, true, 
+    return makeType("golem_transparent", DefaultVertexFormats.ENTITY, GL11.GL_QUADS, 256, true, true, 
         RenderType.State.getBuilder()
         .texture(getTextureState(texture, dynamic))
         .transparency(TRANSLUCENT_TRANSPARENCY)
@@ -70,7 +71,7 @@ public class GolemRenderType extends RenderType {
   }
   
   public static RenderType getGolemOutline(final ResourceLocation texture, final boolean dynamic) {    
-    return makeType(ExtraGolems.MODID + ":golem_outline", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, 256, 
+    return makeType("golem_outline", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, 256, 
         State.getBuilder()
         .texture(getTextureState(texture, dynamic))
         .cull(CullState.CULL_DISABLED)

@@ -67,7 +67,7 @@ public abstract class GolemMultiTextured extends GolemBase implements IMultiText
     this.lootTables = new ResourceLocation[lootTableNames.length];
     for (int n = 0, len = textureNames.length; n < len; n++) {
       // initialize textures
-      this.textures[n] = new ResourceLocation(modid, "textures/block/" + textureNames[n] + ".png");
+      this.textures[n] = new ResourceLocation("minecraft", "textures/block/" + textureNames[n] + ".png");
       // initialize loot tables
       this.lootTables[n] = new ResourceLocation(modid, "entities/" + this.getGolemContainer().getName() + "/" + lootTableNames[n]);
     }

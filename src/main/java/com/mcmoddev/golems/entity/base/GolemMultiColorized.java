@@ -45,7 +45,7 @@ public abstract class GolemMultiColorized extends GolemBase implements IMultiTex
     lootTables = new ResourceLocation[colors.length];
     for (int n = 0, len = colors.length; n < len; n++) {
       // initialize loot tables
-      this.lootTables[n] = new ResourceLocation(modid, "entities/" + this.getEntityString().replaceAll(modid + ":", "") + "/" + n);
+      this.lootTables[n] =  new ResourceLocation(modid, "entities/" + this.getGolemContainer().getName() + "/" + n);
     }
   }
 

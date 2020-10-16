@@ -254,7 +254,7 @@ public final class ExtraGolemsEntities {
             new TranslationTextComponent("entitytip.plants_shrooms").mergeStyle(TextFormatting.DARK_GREEN))
         .setSwimMode(SwimMode.FLOAT).setSound(SoundEvents.BLOCK_GRASS_STEP)
         .addHealItem(Items.RED_MUSHROOM, 0.25D).addHealItem(Items.BROWN_MUSHROOM, 0.25D)
-        .setTextureProvider(g -> ((MushroomGolem)g).getTexture()).build());
+        .setTextureProvider(g -> ((MushroomGolem)g).getTexture()).noVines().build());
     // NETHER BRICK GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.NETHERBRICK_GOLEM, NetherBrickGolem.class, NetherBrickGolem::new)
         .setHealth(25.0D).setAttack(6.5D).setSpeed(0.28D).setKnockbackResist(0.2D)

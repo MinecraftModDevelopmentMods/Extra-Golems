@@ -5,6 +5,7 @@ import java.util.Map;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
+import com.mcmoddev.golems.util.GolemNames;
 import com.mcmoddev.golems.util.GolemTextureBytes;
 
 import net.minecraft.block.Block;
@@ -23,7 +24,7 @@ public final class WoolGolem extends GolemMultiTextured {
     super(entityType, world, ExtraGolems.MODID, WOOL_COLORS, WOOL_COLORS);
     for (int n = 0, len = WOOL_COLORS.length; n < len; n++) {
       // initialize textures
-      this.textures[n] = new ResourceLocation(ExtraGolems.MODID, this.getGolemContainer().getName() + "/" + WOOL_COLORS[n] + ".png");
+      this.textures[n] = new ResourceLocation(ExtraGolems.MODID, "textures/entity/" + GolemNames.WOOL_GOLEM + "/" + WOOL_COLORS[n] + ".png");
     }
   }
 

@@ -4,10 +4,14 @@ import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.util.GolemRenderSettings;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
+import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3f;
 
@@ -36,19 +40,23 @@ public class SimpleTextureLayer<T extends GolemBase> extends LayerRenderer<T, Go
       float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
     final ResourceLocation texture = textureProvider.getTexture(golem);
     if(!golem.isInvisible() && texture != null) {
+//      matrixStackIn.push();
       final Vector3f colors = GolemRenderSettings.unpackColor(colorProvider.getColor(golem));
       // get packed light and a vertex builder bound to the correct texture
       final int packedLight = lightingProvider.disableLighting(golem) ? 15728880 : packedLightIn;
-//      final int packedOverlay = LivingRenderer.getPackedOverlay(golem, 0.0F);
-//      final IVertexBuilder vertexBuilder = bufferIn.getBuffer(RenderType.getEntityCutoutNoCull(texture));
+      //final int packedOverlay = LivingRenderer.getPackedOverlay(golem, 0.0F);
+      final IVertexBuilder vertexBuilder = bufferIn.getBuffer(RenderType.getEntityCutoutNoCull(texture));
       if(alphaColor < 1.0F) {
         RenderSystem.defaultAlphaFunc();
         RenderSystem.enableBlend();
       }
       this.getEntityModel().setColor(colors.getX(), colors.getY(), colors.getZ());
-      renderCutoutModel(this.getEntityModel(), texture, matrixStackIn, bufferIn, packedLight, golem, 1.0F, 1.0F, 1.0F);
-//      this.getEntityModel().render(matrixStackIn, vertexBuilder, packedLight, packedOverlay, 1.0F, 1.0F, 1.0F, alphaColor);
-      RenderSystem.disableBlend();
+//      renderCutoutModel(this.getEntityModel(), texture, matrixStackIn, bufferIn, packedLight, golem, 1.0F, 1.0F, 1.0F);
+      this.getEntityModel().render(matrixStackIn, vertexBuilder, packedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, alphaColor);
+      if(alphaColor < 1.0F) {
+        RenderSystem.disableBlend();
+      }
+//      matrixStackIn.pop();
     }
   }
   
