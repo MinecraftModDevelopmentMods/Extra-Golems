@@ -40,6 +40,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
   private static final Map<IronGolemEntity.Cracks, ResourceLocation> cracksToTextureMap = ImmutableMap.of(IronGolemEntity.Cracks.LOW, new ResourceLocation("textures/entity/iron_golem/iron_golem_crackiness_low.png"), IronGolemEntity.Cracks.MEDIUM, new ResourceLocation("textures/entity/iron_golem/iron_golem_crackiness_medium.png"), IronGolemEntity.Cracks.HIGH, new ResourceLocation("textures/entity/iron_golem/iron_golem_crackiness_high.png"));
   
   protected boolean hideVines;
+  protected boolean hideEyes;
   protected boolean isAlphaLayer;
 
   /**
@@ -67,7 +68,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
   public GolemRenderer<T> withAllLayers() {
     // Eyes layer
     this.addLayer(new SimpleTextureLayer<T>(this, 
-        g -> g.getGolemContainer().getRenderSettings().getEyesTexture().getTexture(g),
+        g -> this.hideEyes ? null : g.getGolemContainer().getRenderSettings().getEyesTexture().getTexture(g),
         g -> 0xFFFFFF, g -> g.getGolemContainer().getRenderSettings().getEyesLighting().disableLighting(g), 1.0F));
     // Vines layer
     this.addLayer(new SimpleTextureLayer<T>(this, 
@@ -122,6 +123,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
     final GolemRenderSettings settings = golem.getGolemContainer().getRenderSettings();
     ResourceLocation texture;
     hideVines = false;
+    hideEyes = false;
     if(settings.hasPrefabTexture()) {
       texture = settings.getPrefabTexture().getTexture(golem);
     } else {
@@ -136,10 +138,12 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
       if("Ganondorf".equals(s)) {
         texture = specialTexture;
         hideVines = true;
+        hideEyes = true;
       }
       if("Cookie".equals(s)) {
         texture = specialTexture2;
         hideVines = true;
+        hideEyes = true;
       }
     }
     return texture;

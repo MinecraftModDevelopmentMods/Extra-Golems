@@ -25,17 +25,17 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> {
     tail = new ModelRenderer(this, 0, 0).setTextureSize(32, 32);
     tail.setRotationPoint(0.0F, 10.0F, 4.0F);
     tail.rotateAngleX = -2.4435F;
-    tail.addBox(-2.0F, -8.0F, 0.0F, 4.0F, 8.0F, 4.0F, 0.0F, false);
+    tail.addBox(-2.0F, -8.0F, 0.0F, 4.0F, 8.0F, 4.0F, 0.0F);
 
     tail1 = new ModelRenderer(this, 0, 16).setTextureSize(32, 32);
     tail1.setRotationPoint(0.0F, -8.0F, 3.0F);
     tail.addChild(tail1);
     tail1.rotateAngleX = 0.2618F;
-    tail1.addBox(-1.0F, -8.0F, -2.0F, 2.0F, 10.0F, 2.0F, 0.0F, false);
+    tail1.addBox(-1.0F, -8.0F, -2.0F, 2.0F, 10.0F, 2.0F, 0.0F);
     
     ears = new ModelRenderer(this).setTextureSize(32, 32);
     ears.setRotationPoint(0.0F, 0.0F, 0.0F);
-    ears.setTextureOffset(9, 16).addBox(-5.0F, -16.0F, -2.0F, 10.0F, 5.0F, 0.0F, 0.0F, false);
+    ears.setTextureOffset(9, 16).addBox(-5.0F, -16.0F, -4.0F, 10.0F, 6.0F, 1.0F, 0.0F);
   }
 
   @Override
