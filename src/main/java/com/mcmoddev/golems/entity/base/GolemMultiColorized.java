@@ -1,7 +1,5 @@
 package com.mcmoddev.golems.entity.base;
 
-import javax.annotation.Nullable;
-
 import com.mcmoddev.golems.util.GolemTextureBytes;
 
 import net.minecraft.block.BlockState;
@@ -19,7 +17,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 @SuppressWarnings("EntityConstructor")
-public abstract class GolemMultiColorized extends GolemColorized implements IMultiTexturedGolem<Integer> {
+public abstract class GolemMultiColorized extends GolemBase implements IMultiTexturedGolem<Integer> {
 
   protected static final DataParameter<Byte> DATA_TEXTURE = EntityDataManager.<Byte>createKey(GolemMultiColorized.class, DataSerializers.BYTE);
   protected static final String NBT_TEXTURE = "GolemTextureData";
@@ -41,9 +39,8 @@ public abstract class GolemMultiColorized extends GolemColorized implements IMul
    *                transparent.
    * @param lColors an int[] of color values to use for rendering
    **/
-  public GolemMultiColorized(final EntityType<? extends GolemBase> entityType, final World world, final String modid,
-      @Nullable final ResourceLocation base, @Nullable final ResourceLocation overlay, final Integer[] lColors) {
-    super(entityType, world, 0, base, overlay);
+  public GolemMultiColorized(final EntityType<? extends GolemBase> entityType, final World world, final String modid, final Integer[] lColors) {
+    super(entityType, world);
     colors = lColors;
     lootTables = new ResourceLocation[colors.length];
     for (int n = 0, len = colors.length; n < len; n++) {
@@ -62,32 +59,29 @@ public abstract class GolemMultiColorized extends GolemColorized implements IMul
   public ActionResultType func_230254_b_(final PlayerEntity player, final Hand hand) { // processInteract
     // change texture when player clicks (if enabled)
     if (!player.isCrouching() && this.canInteractChangeTexture()) {
-      final int incremented = (this.getTextureNum() + 1) % this.getTextureArray().length;
-      this.setTextureNum((byte) incremented);
-      player.swingArm(hand);
-      return ActionResultType.SUCCESS;
+      return handlePlayerInteract(player, hand);
     } else {
       return super.func_230254_b_(player, hand);
     }
   }
 
-  @Override
-  public void notifyDataManagerChange(DataParameter<?> key) {
-    super.notifyDataManagerChange(key);
-    // attempt to sync texture from client -> server -> other clients
-    if (DATA_TEXTURE.equals(key)) {
-      this.updateTextureByData(this.getTextureNum());
-    }
-  }
-
-  @Override
-  public void livingTick() {
-    super.livingTick();
-    // since textureNum is correct, update texture AFTER loading from NBT and init
-    if (this.ticksExisted == 2) {
-      this.updateTextureByData(this.getTextureNum());
-    }
-  }
+//  @Override
+//  public void notifyDataManagerChange(DataParameter<?> key) {
+//    super.notifyDataManagerChange(key);
+//    // attempt to sync texture from client -> server -> other clients
+//    if (DATA_TEXTURE.equals(key)) {
+//      this.updateTextureByData(this.getTextureNum());
+//    }
+//  }
+//
+//  @Override
+//  public void livingTick() {
+//    super.livingTick();
+//    // since textureNum is correct, update texture AFTER loading from NBT and init
+//    if (this.ticksExisted == 2) {
+//      this.updateTextureByData(this.getTextureNum());
+//    }
+//  }
 
   @Override
   public void onBuilt(final BlockState body, final BlockState legs, final BlockState arm1, final BlockState arm2) {
@@ -132,7 +126,10 @@ public abstract class GolemMultiColorized extends GolemColorized implements IMul
     return this.colors;
   }
 
-  protected void updateTextureByData(final int data) {
-    this.setColor(this.colors[data]);
+  /**
+   * @return the full color number currently applied.
+   **/
+  public int getColor() {
+    return this.colors[getTextureNum()];
   }
 }

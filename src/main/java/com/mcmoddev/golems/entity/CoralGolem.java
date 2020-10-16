@@ -40,19 +40,23 @@ public final class CoralGolem extends GolemMultiTextured {
 
   public static final String ALLOW_HEALING = "Allow Special: Healing";
   public static final String DRY_TIMER = "Max Wet Time";
-  public static final String[] VARIANTS = { "tube", "brain", "bubble", "fire", "horn" };
-  public final ResourceLocation[] variantsDry;
+  public static final String[] TEXTURE_NAMES = { "tube_coral_block", "brain_coral_block", "bubble_coral_block", "fire_coral_block", "horn_coral_block" };
+  public static final String[] LOOT_TABLES = { "tube", "brain", "bubble", "fire", "horn" };
+  public final ResourceLocation[] texturesDry;
+  public final ResourceLocation[] lootTablesDry;
   private final boolean allowHealing;
 
   // the minimum amount of time before golem will change between "dry" and "wet"
   private final int maxChangingTime;
 
   public CoralGolem(final EntityType<? extends GolemBase> entityType, final World world) {
-    super(entityType, world, ExtraGolems.MODID, VARIANTS);
-    this.variantsDry = new ResourceLocation[VARIANTS.length];
-    for (int n = 0, len = VARIANTS.length; n < len; n++) {
+    super(entityType, world, ExtraGolems.MODID, TEXTURE_NAMES, LOOT_TABLES);
+    this.texturesDry = new ResourceLocation[TEXTURE_NAMES.length];
+    this.lootTablesDry = new ResourceLocation[LOOT_TABLES.length];
+    for (int n = 0, len = TEXTURE_NAMES.length; n < len; n++) {
       // initialize "dead" textures
-      this.variantsDry[n] = makeTexture(ExtraGolems.MODID, this.getGolemContainer().getName() + "/" + VARIANTS[n] + "_dead");
+      this.lootTablesDry[n] = new ResourceLocation(ExtraGolems.MODID, "textures/block/dead_" + TEXTURE_NAMES[n] + ".png");
+      this.lootTablesDry[n] = new ResourceLocation(ExtraGolems.MODID, "entities/" + this.getGolemContainer().getName() + "/dead_" + LOOT_TABLES[n]);
     }
     allowHealing = this.getConfigBool(ALLOW_HEALING);
     maxChangingTime = this.getConfigInt(DRY_TIMER);
@@ -177,7 +181,7 @@ public final class CoralGolem extends GolemMultiTextured {
 
   @Override
   public ResourceLocation[] getTextureArray() {
-    return this.isDry() ? this.variantsDry : super.getTextureArray();
+    return this.isDry() ? this.lootTablesDry : super.getTextureArray();
   }
 
   @Override

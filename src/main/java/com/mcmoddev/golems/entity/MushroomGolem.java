@@ -15,6 +15,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effects;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
@@ -27,7 +28,11 @@ public final class MushroomGolem extends GolemMultiTextured {
   public static final String[] SHROOM_TYPES = { "red", "brown" };
 
   public MushroomGolem(final EntityType<? extends GolemBase> entityType, final World world) {
-    super(entityType, world, ExtraGolems.MODID, SHROOM_TYPES);
+    super(entityType, world, ExtraGolems.MODID, SHROOM_TYPES, SHROOM_TYPES);
+    for (int n = 0, len = SHROOM_TYPES.length; n < len; n++) {
+      // initialize textures
+      this.textures[n] = new ResourceLocation(ExtraGolems.MODID, this.getGolemContainer().getName() + "/" + SHROOM_TYPES[n] + ".png");
+    }
   }
 
   @Override
@@ -47,8 +52,7 @@ public final class MushroomGolem extends GolemMultiTextured {
 
   @Override
   public void onBuilt(BlockState body, BlockState legs, BlockState arm1, BlockState arm2) {
-    // use block type to give this golem the right texture (defaults to brown
-    // mushroom)
+    // use block to give this golem the right texture (defaults to brown mushroom)
     byte textureNum = body.getBlock() == Blocks.RED_MUSHROOM_BLOCK ? (byte) 0 : (byte) 1;
     textureNum %= this.getNumTextures();
     this.setTextureNum(textureNum);

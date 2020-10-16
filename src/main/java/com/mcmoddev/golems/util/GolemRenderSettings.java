@@ -22,9 +22,9 @@ public class GolemRenderSettings {
   private final boolean hasTransparency;
   private final ITextureProvider blockTexture;
   private final boolean hasVines;
-  private final boolean vinesGlow;
+  private final ILightingProvider vinesGlow;
   private final ITextureProvider vinesTexture;
-  private final boolean eyesGlow;
+  private final ILightingProvider eyesGlow;
   private final ITextureProvider eyesTexture;
   
   // This is used when a texture is already made
@@ -46,9 +46,9 @@ public class GolemRenderSettings {
     this.hasTransparency = lHasTransparency;
     this.blockTexture = lBlockTextureProvider;
     this.hasVines = lHasVines;
-    this.vinesGlow = lVinesGlow;
+    this.vinesGlow = g -> lVinesGlow;
     this.vinesTexture = lVinesTextureProvider;
-    this.eyesGlow = lEyesGlow;
+    this.eyesGlow = g -> lEyesGlow;
     this.eyesTexture = lEyesTextureProvider;
     this.hasPrefabTexture = lHasPrefabTexture;
     this.prefabTexture = lPrefabTextureProvider;
@@ -66,11 +66,11 @@ public class GolemRenderSettings {
   /** @return whether to render vines **/
   public boolean hasVines() { return hasVines; }
   /** @return whether the eyes should be rendered with constant light **/
-  public boolean doVinesGlow() { return vinesGlow; }
+  public ILightingProvider getVinesLighting() { return vinesGlow; }
   /** @return the vines texture provider **/
   public ITextureProvider getVinesTexture() { return vinesTexture; }
   /** @return whether the eyes should be rendered with constant light **/
-  public boolean doEyesGlow() { return eyesGlow; }
+  public ILightingProvider getEyesLighting() { return eyesGlow; }
   /** @return the vines texture provider **/
   public ITextureProvider getEyesTexture() { return eyesTexture; }
   /** @return whether a prefabricated texture should be used **/
@@ -105,6 +105,11 @@ public class GolemRenderSettings {
   @FunctionalInterface
   public static interface IColorProvider {
     int getColor(final GolemBase entity);
+  }
+  
+  @FunctionalInterface
+  public static interface ILightingProvider {
+    boolean disableLighting(final GolemBase entity);
   }
 
 }

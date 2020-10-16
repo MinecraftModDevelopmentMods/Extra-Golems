@@ -23,7 +23,7 @@ public class GolemRenderType extends RenderType {
     super(name, vertexFormat, glQuads, i2, b1, b2, r1, r2);
   }
   
-  public void clearDynamicTextureMap() {
+  public static void clearDynamicTextureMap() {
     dynamicTextureMap.clear();
   }
   

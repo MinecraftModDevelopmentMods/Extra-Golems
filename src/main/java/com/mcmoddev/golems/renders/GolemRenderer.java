@@ -1,15 +1,17 @@
 package com.mcmoddev.golems.renders;
 
+import java.util.Map;
+
 import javax.annotation.Nullable;
 
+import com.google.common.collect.ImmutableMap;
 import com.mcmoddev.golems.entity.base.GolemBase;
+import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.ExtraGolemsEntities;
-import com.mcmoddev.golems.renders.model.GolemCracksLayer;
-import com.mcmoddev.golems.renders.model.GolemEyesLayer;
 import com.mcmoddev.golems.renders.model.GolemFlowerLayer;
 import com.mcmoddev.golems.renders.model.GolemKittyLayer;
 import com.mcmoddev.golems.renders.model.GolemModel;
-import com.mcmoddev.golems.renders.model.GolemVinesLayer;
+import com.mcmoddev.golems.renders.model.SimpleTextureLayer;
 import com.mcmoddev.golems.util.GolemNames;
 import com.mcmoddev.golems.util.GolemRenderSettings;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
@@ -20,6 +22,8 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.client.renderer.entity.layers.LayerRenderer;
+import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.TextFormatting;
@@ -30,29 +34,56 @@ import net.minecraft.util.text.TextFormatting;
  */
 public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemModel<T>> {
 
-  protected static final ResourceLocation fallbackTexture = ExtraGolemsEntities.makeTexture(GolemNames.CLAY_GOLEM);
-  protected static final ResourceLocation boneTexture = ExtraGolemsEntities.makeTexture(GolemNames.BONE_GOLEM + "_skeleton");
-  protected static final ResourceLocation specialTexture = ExtraGolemsEntities.makeTexture("special");
-  protected static final ResourceLocation specialTexture2 = ExtraGolemsEntities.makeTexture("special2");
+  protected static final ResourceLocation boneTexture = new ResourceLocation(ExtraGolems.MODID, "textures/entity/" + GolemNames.BONE_GOLEM + "_skeleton.png");
+  protected static final ResourceLocation specialTexture = new ResourceLocation(ExtraGolems.MODID, "textures/entity/special.png");
+  protected static final ResourceLocation specialTexture2 = new ResourceLocation(ExtraGolems.MODID, "textures/entity/special2.png");
+  
+  private static final Map<IronGolemEntity.Cracks, ResourceLocation> cracksToTextureMap = ImmutableMap.of(IronGolemEntity.Cracks.LOW, new ResourceLocation("textures/entity/iron_golem/iron_golem_crackiness_low.png"), IronGolemEntity.Cracks.MEDIUM, new ResourceLocation("textures/entity/iron_golem/iron_golem_crackiness_medium.png"), IronGolemEntity.Cracks.HIGH, new ResourceLocation("textures/entity/iron_golem/iron_golem_crackiness_high.png"));
 
-//  protected static final String damageTexture = "minecraft:textures/entity/iron_golem/iron_golem_crackiness";
-//  protected static final ResourceLocation[] damageIndicators = { 
-//      new ResourceLocation(damageTexture + "_low.png"),
-//      new ResourceLocation(damageTexture + "_medium.png"),
-//      new ResourceLocation(damageTexture + "_high.png")
+//  protected static final GolemRenderSettings.ITextureProvider CRACKS_TEXTURE_PROVIDER = g -> {
+//    IronGolemEntity.Cracks cracks = g.func_226512_l_();
+//    return cracks == IronGolemEntity.Cracks.NONE ? null : cracksToTextureMap.get(cracks);
 //  };
-
-//  protected static final float DAMAGE_ALPHA = 0.55F;
   
   protected boolean isAlphaLayer;
 
+  /**
+   * @param renderManagerIn the entity render manager
+   **/
   public GolemRenderer(final EntityRendererManager renderManagerIn) {
     super(renderManagerIn, new GolemModel<T>(), 0.5F);
-    this.addLayer(new GolemEyesLayer<T>(this));
-    this.addLayer(new GolemVinesLayer<T>(this));
-    this.addLayer(new GolemCracksLayer<T>(this));
+  }
+  
+  /**
+   * Used to add a single layer to the renderer
+   * @param layer the layer renderer
+   * @return instance to allow chaining
+   **/
+  public GolemRenderer<T> withLayer(final LayerRenderer<T, GolemModel<T>> layer) {
+    this.addLayer(layer);
+    return this;
+  }
+  
+  /**
+   * Used to add all the default layers, in this order:
+   * Eyes, Vines, Cracks, Flower, Kitty
+   * @return instance to allow chaining
+   **/
+  public GolemRenderer<T> withAllLayers() {
+    // Eyes layer
+    this.addLayer(new SimpleTextureLayer<T>(this, 
+        g -> g.getGolemContainer().getRenderSettings().getEyesTexture().getTexture(g),
+        g -> 0xFFFFFF, g -> g.getGolemContainer().getRenderSettings().getEyesLighting().disableLighting(g), 1.0F));
+    // Vines layer
+    this.addLayer(new SimpleTextureLayer<T>(this, 
+        g -> g.getGolemContainer().getRenderSettings().getEyesTexture().getTexture(g),
+        g -> g.getGolemContainer().getRenderSettings().getVinesColorProvider().getColor(g), 
+        g -> g.getGolemContainer().getRenderSettings().getVinesLighting().disableLighting(g), 1.0F));
+    // Cracks layer
+    this.addLayer(new SimpleTextureLayer<T>(this, g -> cracksToTextureMap.get(g.func_226512_l_()), g -> 0xFFFFFF, g -> false, 0.55F));
     this.addLayer(new GolemFlowerLayer<T>(this));
     this.addLayer(new GolemKittyLayer<T>(this));
+    return this;
   }
 
   @Override
@@ -84,7 +115,17 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
     matrixStackIn.pop();
   }
 
-  protected ResourceLocation getGolemTexture(final T golem, final GolemRenderSettings settings) {
+  protected void resetColor() {
+    this.entityModel.resetColor();
+  }
+  
+  /**
+   * Returns the location of an entity's texture. Doesn't seem to be called unless
+   * you call Render.bindEntityTexture.
+   */
+  @Override
+  public ResourceLocation getEntityTexture(final T golem) {
+    final GolemRenderSettings settings = golem.getGolemContainer().getRenderSettings();
     ResourceLocation texture;
     if(settings.hasPrefabTexture()) {
       texture = settings.getPrefabTexture().getTexture(golem);
@@ -106,54 +147,11 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
     return texture;
   }
 
-  protected void resetColor() {
-    this.entityModel.resetColor();
-  }
-//  
-//  /**
-//   * Called just before rendering the body layer
-//   * @param golem the golem
-//   * @return whether the golem should be rendered as translucent
-//   **/
-//  protected boolean isAlphaLayer(final T golem) {
-//    return golem.getGolemContainer().getRenderSettings().hasTransparency();
-//  }
-
-//  protected void renderDamage(final T golem, final float entityYaw, final float partialTicks, final MatrixStack matrixStackIn,
-//      final IRenderTypeBuffer bufferIn, final int packedLightIn) {
-//    // render damage indicator if necessary
-//    final int index = Math.min(getDamageTexture(golem), damageIndicators.length - 1);
-//    if (index > -1) {
-//      matrixStackIn.push();
-//      RenderSystem.enableAlphaTest();
-//      RenderSystem.defaultAlphaFunc();
-//      RenderSystem.enableBlend();
-//      // set alpha
-//      this.entityModel.setAlpha(DAMAGE_ALPHA);
-//      // actually render the damage texture
-//      this.texture = damageIndicators[index];
-//      super.render(golem, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
-//      // return GL settings to normal
-//      RenderSystem.disableAlphaTest();
-//      RenderSystem.disableBlend();
-//      matrixStackIn.pop();
-//    }
-//  }
-
-  /**
-   * Returns the location of an entity's texture. Doesn't seem to be called unless
-   * you call Render.bindEntityTexture.
-   */
-  @Override
-  public ResourceLocation getEntityTexture(final T golem) {
-    return fallbackTexture;
-  }
-
   @Override
   @Nullable
   protected RenderType func_230496_a_(final T golem, boolean isVisible, boolean isVisibleToPlayer, boolean isGlowing) {
     final GolemRenderSettings settings = golem.getGolemContainer().getRenderSettings();
-    ResourceLocation texture = this.getGolemTexture(golem, settings);
+    ResourceLocation texture = this.getEntityTexture(golem);
     if (isVisible || isVisibleToPlayer || isAlphaLayer) {
       return GolemRenderType.getGolemTransparent(texture, !settings.hasPrefabTexture());
     } else if(golem.isGlowing()) {
@@ -162,21 +160,9 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
       return GolemRenderType.getGolemCutout(texture, !settings.hasPrefabTexture());
     }
   }
-//
-//  /**
-//   * @return a value between {@code -1} and {@code damageIndicators.length-1},
-//   *         inclusive
-//   **/
-//  protected int getDamageTexture(final T golem) {
-//    final float percentHealth = golem.getHealth() / golem.getMaxHealth();
-//    return damageIndicators.length - (int) Math.ceil(percentHealth * 4.0F);
-//  }
-//  
+  
   protected boolean isNightTime(final T golem) {
     final long time = golem.world.getDayTime() % 24000L;
     return time > 13000L && time < 23000L;
   }
-  
-  
-  
 }

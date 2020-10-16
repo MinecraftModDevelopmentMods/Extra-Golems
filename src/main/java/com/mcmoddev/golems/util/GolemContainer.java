@@ -438,7 +438,7 @@ public final class GolemContainer {
     private boolean doVinesGlow = false;
     private boolean doEyesGlow = false;
     
-    private ITextureProvider blockTextureProvider = g -> GolemRenderSettings.FALLBACK_BLOCK;
+    private ITextureProvider dynamicTextureProvider = g -> GolemRenderSettings.FALLBACK_BLOCK;
     private ITextureProvider prefabTextureProvider = g -> GolemRenderSettings.FALLBACK_PREFAB;
     private ITextureProvider vinesTextureProvider = g -> GolemRenderSettings.FALLBACK_VINES;
     private ITextureProvider eyesTextureProvider = g -> GolemRenderSettings.FALLBACK_EYES;
@@ -589,18 +589,19 @@ public final class GolemContainer {
     }
     
     public Builder setDynamicTexture(final String modid, final String blockTexture) {
-      return setDynamicTexture(new ResourceLocation(modid, "textures/block/" + blockTexture + ".png"));
+      final ResourceLocation texture = new ResourceLocation(modid, "textures/block/" + blockTexture + ".png");
+      return setDynamicTexture(g -> texture);
     }
-    
+
     /**
      * Sets a dynamic (block-based) texture location for the golem.
      * 
-     * @param block a block whose name will be used to set a texture location
+     * @param texture the dynamic texture provider
      * @return instance to allow chaining of methods
      **/
-    public Builder setDynamicTexture(final ResourceLocation blockTexture) {
+    public Builder setDynamicTexture(final GolemRenderSettings.ITextureProvider texture) {
       hasPrefabTexture = false;
-      blockTextureProvider = g -> blockTexture;
+      dynamicTextureProvider = texture;
       return this;
     }
     
@@ -842,7 +843,7 @@ public final class GolemContainer {
         containerMap.put(c.name, c);
       }
       // build the render settings
-      final GolemRenderSettings renderSettings = customSettings != null ? customSettings : new GolemRenderSettings(hasCustomRender, hasTransparency, blockTextureProvider, 
+      final GolemRenderSettings renderSettings = customSettings != null ? customSettings : new GolemRenderSettings(hasCustomRender, hasTransparency, dynamicTextureProvider, 
           hasVinesTexture, doVinesGlow, vinesTextureProvider, doEyesGlow, eyesTextureProvider, hasPrefabTexture, prefabTextureProvider, hasColor, textureColorProvider, vinesColorProvider);
       // build the golem container
       return new GolemContainer(entityType, entityClass, golemName, renderSettings, validBuildingBlocks, validBuildingBlockTags, health, attack, speed,

@@ -13,7 +13,7 @@ import net.minecraft.resources.IResource;
 import net.minecraft.util.ResourceLocation;
 
 /**
- * Adapted from Amber (was Ashe)#5285 from Discord. Used with permission
+ * Adapted from AtelierAmber [Amber (was Ashe)#5285]. Used with permission.
  **/
 public class DynamicTextureState {
 

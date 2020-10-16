@@ -24,12 +24,13 @@ public final class RedstoneLampGolem extends GolemMultiTextured {
 
   public static final String ALLOW_SPECIAL = "Allow Special: Emit Light";
 
-  public static final String[] VARIANTS = { "lit", "unlit" };
+  public static final String[] TEXTURE_NAMES = { "redstone_lamp_on", "redstone_lamp" };
+  public static final String[] LOOT_TABLE_NAMES = { "lit", "unlit" };
 
   public static final BiPredicate<GolemBase, BlockPos> LIT_PRED = (golem, pos) -> golem.isProvidingLight();
 
   public RedstoneLampGolem(final EntityType<? extends GolemBase> entityType, final World world) {
-    super(entityType, world, ExtraGolems.MODID, VARIANTS);
+    super(entityType, world, ExtraGolems.MODID, TEXTURE_NAMES, LOOT_TABLE_NAMES);
   }
   
   @Override
