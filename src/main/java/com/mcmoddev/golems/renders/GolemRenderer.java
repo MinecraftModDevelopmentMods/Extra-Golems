@@ -106,8 +106,10 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
       RenderSystem.defaultAlphaFunc();
       RenderSystem.enableBlend();
     }
+    // lighting
+    final int packedLight = settings.getTextureLighting().disableLighting(golem) ? 15728880 : packedLightIn;
     // render the golem
-    super.render(golem, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
+    super.render(golem, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLight);
     if (isAlphaLayer) {
       RenderSystem.disableBlend();
     }

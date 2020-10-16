@@ -22,6 +22,7 @@ import com.mcmoddev.golems.entity.base.GolemMultiColorized;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemRenderSettings.IColorProvider;
+import com.mcmoddev.golems.util.GolemRenderSettings.ILightingProvider;
 import com.mcmoddev.golems.util.GolemRenderSettings.ITextureProvider;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
@@ -445,6 +446,8 @@ public final class GolemContainer {
 
     private IColorProvider textureColorProvider = g -> 0;
     private IColorProvider vinesColorProvider = g -> GolemRenderSettings.VINES_COLOR;
+    
+    private ILightingProvider textureGlowProvider = g -> g.isProvidingLight();
 
     /**
      * Creates the builder
@@ -614,6 +617,15 @@ public final class GolemContainer {
     public Builder setTextureColor(final GolemRenderSettings.IColorProvider textureColorer) {
       hasColor = true;
       textureColorProvider = textureColorer;
+      return this;
+    }
+    
+    public Builder textureGlow() {
+      return textureGlow(g -> true);
+    }
+    
+    public Builder textureGlow(final GolemRenderSettings.ILightingProvider glow) {
+      textureGlowProvider = glow;
       return this;
     }
     
@@ -843,7 +855,7 @@ public final class GolemContainer {
         containerMap.put(c.name, c);
       }
       // build the render settings
-      final GolemRenderSettings renderSettings = customSettings != null ? customSettings : new GolemRenderSettings(hasCustomRender, hasTransparency, dynamicTextureProvider, 
+      final GolemRenderSettings renderSettings = customSettings != null ? customSettings : new GolemRenderSettings(hasCustomRender, hasTransparency, textureGlowProvider, dynamicTextureProvider, 
           hasVinesTexture, doVinesGlow, vinesTextureProvider, doEyesGlow, eyesTextureProvider, hasPrefabTexture, prefabTextureProvider, hasColor, textureColorProvider, vinesColorProvider);
       // build the golem container
       return new GolemContainer(entityType, entityClass, golemName, renderSettings, validBuildingBlocks, validBuildingBlockTags, health, attack, speed,

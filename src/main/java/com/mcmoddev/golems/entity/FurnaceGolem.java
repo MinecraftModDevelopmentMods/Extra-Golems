@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.items.ItemBedrockGolem;
+import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.entity.EntityType;
@@ -37,8 +38,8 @@ public final class FurnaceGolem extends GolemBase {
   private static final DataParameter<Integer> FUEL = EntityDataManager.createKey(FurnaceGolem.class, DataSerializers.VARINT);
   private static final String KEY_FUEL = "FuelRemaining";
 
-  private static final ResourceLocation LIT = makeTexture(GolemNames.FURNACE_GOLEM + "/lit");
-  private static final ResourceLocation UNLIT = makeTexture(GolemNames.FURNACE_GOLEM + "/unlit");
+  private static final ResourceLocation LIT = new ResourceLocation(ExtraGolems.MODID, "textures/entity/" + GolemNames.FURNACE_GOLEM + "/lit.png");
+  private static final ResourceLocation UNLIT = new ResourceLocation(ExtraGolems.MODID, "textures/entity/" + GolemNames.FURNACE_GOLEM + "/unlit.png");
 
   public static final String FUEL_FACTOR = "Burn Time";
   public static final int MAX_FUEL = 102400;

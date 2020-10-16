@@ -18,7 +18,6 @@ import net.minecraft.util.ResourceLocation;
 public class DynamicTextureState {
   
   public static final int TILES = 8;
-
   public ResourceLocation location;
   public RenderState.TextureState state;
   public DynamicTexture texture;
@@ -37,7 +36,6 @@ public class DynamicTextureState {
       int height = TILES * blockWidth;
       texture = new DynamicTexture(width, height, true);
       NativeImage img = texture.getTextureData();
-      ExtraGolems.LOGGER.debug("Stitching entity texture from " + name + " [width=" + blockWidth + "]");
       for (int i = 0; i < width; ++i) {
         for (int j = 0; j < height; ++j) {
           img.setPixelRGBA(i, j, block.getPixelRGBA(i % blockWidth, j % blockWidth));

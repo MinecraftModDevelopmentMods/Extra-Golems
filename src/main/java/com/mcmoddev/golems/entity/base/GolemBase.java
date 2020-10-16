@@ -11,11 +11,10 @@ import com.mcmoddev.golems.entity.ai.PlaceUtilityBlockGoal;
 import com.mcmoddev.golems.entity.ai.SwimUpGoal;
 import com.mcmoddev.golems.items.ItemBedrockGolem;
 import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.main.ExtraGolemsEntities;
 import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.util.GolemContainer;
-import com.mcmoddev.golems.util.GolemRegistrar;
 import com.mcmoddev.golems.util.GolemContainer.SwimMode;
+import com.mcmoddev.golems.util.GolemRegistrar;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
 
@@ -41,7 +40,6 @@ import net.minecraft.pathfinding.SwimmerPathNavigator;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -374,36 +372,6 @@ public abstract class GolemBase extends IronGolemEntity {
   public void writeAdditional(final CompoundNBT tag) {
     super.writeAdditional(tag);
     tag.putBoolean(KEY_CHILD, this.isChild());
-  }
-
-  /////////////// TEXTURE HELPERS //////////////////
-
-  /**
-   * Calls {@link #makeTexture(String, String)} on the assumption that MODID is
-   * 'golems'. Texture should be at 'assets/golems/textures/entity/[TEXTURE].png'
-   * <br>
-   * For most golems, set the texture when building the GolemContainer using
-   * {@link GolemContainer.Builder#setTextureProvider(ResourceLocation)} or
-   * {@link GolemContainer.Builder#basicTexture()}
-   * 
-   * @see ExtraGolemsEntities#makeTexture(String)
-   **/
-  protected static ResourceLocation makeTexture(final String TEXTURE) {
-    return ExtraGolemsEntities.makeTexture(TEXTURE);
-  }
-
-  /**
-   * Makes a ResourceLocation using the passed mod id and the texture name.
-   * Texture should be at 'assets/[MODID]/textures/entity/[TEXTURE].png' <br>
-   * For most golems, set the texture when building the GolemContainer using
-   * {@link GolemContainer.Builder#setTextureProvider(ResourceLocation)} or
-   * {@link GolemContainer.Builder#basicTexture()}
-   * 
-   * @see #makeTexture(String)
-   * @see ExtraGolemsEntities#makeTexture(String, String)
-   **/
-  protected static ResourceLocation makeTexture(final String MODID, final String TEXTURE) {
-    return ExtraGolemsEntities.makeTexture(MODID, TEXTURE);
   }
 
   ///////////////////// SOUND OVERRIDES ////////////////////

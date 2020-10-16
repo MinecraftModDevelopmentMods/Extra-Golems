@@ -63,12 +63,23 @@ public final class ProxyClient extends ProxyCommon {
     });
     // Custom renders
     registerLapisGolemRenders();
+    registerBlackstoneGolemRenders();
   }
   
   private void registerLapisGolemRenders() {
     final ResourceLocation GOLD = new ResourceLocation(ExtraGolems.MODID, "textures/entity/layer/gold_edging.png");
     RenderingRegistry.registerEntityRenderingHandler(
         GolemRegistrar.getContainer(new ResourceLocation(ExtraGolems.MODID, GolemNames.LAPIS_GOLEM)).getEntityType(), 
+        m -> {
+          GolemRenderer<GolemBase> r = new GolemRenderer<>(m);
+          return r.withLayer(new SimpleTextureLayer<>(r, g -> GOLD, g -> 0xFFFFFF, g -> false, 1.0F)).withAllLayers();
+        });
+  }
+  
+  private void registerBlackstoneGolemRenders() {
+    final ResourceLocation GOLD = new ResourceLocation(ExtraGolems.MODID, "textures/entity/layer/gold_nuggets.png");
+    RenderingRegistry.registerEntityRenderingHandler(
+        GolemRegistrar.getContainer(new ResourceLocation(ExtraGolems.MODID, GolemNames.BLACKSTONE_GOLEM)).getEntityType(), 
         m -> {
           GolemRenderer<GolemBase> r = new GolemRenderer<>(m);
           return r.withLayer(new SimpleTextureLayer<>(r, g -> GOLD, g -> 0xFFFFFF, g -> false, 1.0F)).withAllLayers();

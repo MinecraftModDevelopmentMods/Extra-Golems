@@ -20,6 +20,7 @@ public class GolemRenderSettings {
   
   // These are used when a texture is auto-generated
   private final boolean hasTransparency;
+  private final ILightingProvider textureGlow;
   private final ITextureProvider blockTexture;
   private final boolean hasVines;
   private final ILightingProvider vinesGlow;
@@ -36,7 +37,7 @@ public class GolemRenderSettings {
   private final IColorProvider vinesColorProvider;
   
   public GolemRenderSettings(boolean lHasCustomRender, boolean lHasTransparency,
-      ITextureProvider lBlockTextureProvider, 
+      ILightingProvider lTextureGlow, ITextureProvider lBlockTextureProvider, 
       boolean lHasVines, boolean lVinesGlow, ITextureProvider lVinesTextureProvider, 
       boolean lEyesGlow, ITextureProvider lEyesTextureProvider,
       boolean lHasPrefabTexture, ITextureProvider lPrefabTextureProvider, 
@@ -44,6 +45,7 @@ public class GolemRenderSettings {
       IColorProvider lVinesColorProvider) {
     this.hasCustomRender = lHasCustomRender;
     this.hasTransparency = lHasTransparency;
+    this.textureGlow = lTextureGlow;
     this.blockTexture = lBlockTextureProvider;
     this.hasVines = lHasVines;
     this.vinesGlow = g -> lVinesGlow;
@@ -61,6 +63,8 @@ public class GolemRenderSettings {
   public boolean hasCustomRender() { return hasCustomRender; }
   /** @return whether the texture should be rendered transparent **/
   public boolean hasTransparency() { return hasTransparency; }
+  /** @return whether the eyes should be rendered with constant light **/
+  public ILightingProvider getTextureLighting() { return textureGlow; }
   /** @return the block texture provider **/
   public ITextureProvider getBlockTexture() { return blockTexture; }
   /** @return whether to render vines **/
