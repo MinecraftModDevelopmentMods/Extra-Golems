@@ -8,7 +8,7 @@ import com.mcmoddev.golems.entity.base.GolemBase;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 public class GoToWaterGoal extends Goal {
@@ -35,7 +35,7 @@ public class GoToWaterGoal extends Goal {
       return false;
     }
 
-    Vec3d target = getNearbyWater();
+    Vector3d target = getNearbyWater();
     if (target == null || !this.golem.shouldMoveToWater(target)) {
       return false;
     }
@@ -56,7 +56,7 @@ public class GoToWaterGoal extends Goal {
     this.golem.getNavigator().tryMoveToXYZ(this.targetX, this.targetY, this.targetZ, this.speed);
   }
 
-  private Vec3d getNearbyWater() {
+  private Vector3d getNearbyWater() {
     Random rand = this.golem.getRNG();
 
     BlockPos pos1 = this.golem.getBlockBelow();
@@ -66,7 +66,7 @@ public class GoToWaterGoal extends Goal {
           rand.nextInt(detectWaterRadius * 2) - detectWaterRadius);
 
       if (this.world.getBlockState(pos2).getBlock() == Blocks.WATER) {
-        return new Vec3d(pos2.getX(), pos2.getY(), pos2.getZ());
+        return new Vector3d(pos2.getX(), pos2.getY(), pos2.getZ());
       }
     }
     return null;

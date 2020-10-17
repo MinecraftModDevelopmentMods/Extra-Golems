@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.mcmoddev.golems.main.ExtraGolems;
+import com.mcmoddev.golems.util.GolemContainer;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

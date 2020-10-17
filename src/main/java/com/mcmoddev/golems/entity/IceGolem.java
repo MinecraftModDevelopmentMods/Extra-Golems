@@ -39,8 +39,7 @@ public final class IceGolem extends GolemBase {
   @Override
   public void livingTick() {
     super.livingTick();
-    final BlockPos pos = this.getPosition();
-    // this.world.getBiomeManager().getBiome(BlockPos)
+    final BlockPos pos = this.getPositionUnderneath().up(2);
     if (this.world.getBiome(pos).getTemperature(pos) > 1.0F) {
       this.attackEntityFrom(DamageSource.ON_FIRE, 1.0F);
     }

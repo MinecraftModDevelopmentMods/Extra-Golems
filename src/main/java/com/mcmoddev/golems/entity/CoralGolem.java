@@ -12,7 +12,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CoralBlock;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
@@ -24,7 +24,7 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 public final class CoralGolem extends GolemMultiTextured {
@@ -40,19 +40,23 @@ public final class CoralGolem extends GolemMultiTextured {
 
   public static final String ALLOW_HEALING = "Allow Special: Healing";
   public static final String DRY_TIMER = "Max Wet Time";
-  public static final String[] VARIANTS = { "tube", "brain", "bubble", "fire", "horn" };
-  public final ResourceLocation[] variantsDry;
+  public static final String[] TEXTURE_NAMES = { "tube_coral_block", "brain_coral_block", "bubble_coral_block", "fire_coral_block", "horn_coral_block" };
+  public static final String[] LOOT_TABLES = { "tube", "brain", "bubble", "fire", "horn" };
+  public final ResourceLocation[] texturesDry;
+  public final ResourceLocation[] lootTablesDry;
   private final boolean allowHealing;
 
   // the minimum amount of time before golem will change between "dry" and "wet"
   private final int maxChangingTime;
 
   public CoralGolem(final EntityType<? extends GolemBase> entityType, final World world) {
-    super(entityType, world, ExtraGolems.MODID, VARIANTS);
-    this.variantsDry = new ResourceLocation[VARIANTS.length];
-    for (int n = 0, len = VARIANTS.length; n < len; n++) {
+    super(entityType, world, "minecraft", TEXTURE_NAMES, ExtraGolems.MODID, LOOT_TABLES);
+    this.texturesDry = new ResourceLocation[TEXTURE_NAMES.length];
+    this.lootTablesDry = new ResourceLocation[LOOT_TABLES.length];
+    for (int n = 0, len = TEXTURE_NAMES.length; n < len; n++) {
       // initialize "dead" textures
-      this.variantsDry[n] = makeTexture(ExtraGolems.MODID, this.getGolemContainer().getName() + "/" + VARIANTS[n] + "_dead");
+      this.lootTablesDry[n] = new ResourceLocation("minecraft", "textures/block/dead_" + TEXTURE_NAMES[n] + ".png");
+      this.lootTablesDry[n] = new ResourceLocation(ExtraGolems.MODID, "entities/" + this.getGolemContainer().getName() + "/dead_" + LOOT_TABLES[n]);
     }
     allowHealing = this.getConfigBool(ALLOW_HEALING);
     maxChangingTime = this.getConfigInt(DRY_TIMER);
@@ -147,16 +151,16 @@ public final class CoralGolem extends GolemMultiTextured {
         double dryHealth = Math.floor(getGolemContainer().getHealth() * 0.7D * 10D) / 10D;
         double dryAttack = Math.floor(getGolemContainer().getAttack() * 1.45D * 10D) / 10D;
         double drySpeed = Math.floor(getGolemContainer().getSpeed() * 0.7D * 100D) / 100D;
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(dryHealth);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(dryAttack);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(drySpeed);
+        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(dryHealth);
+        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(dryAttack);
+        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(drySpeed);
         // particle effects to show that the golem is "drying out"
-        final Vec3d pos = this.getPositionVec().add(0, 0.2D, 0);
+        final Vector3d pos = this.getPositionVec().add(0, 0.2D, 0);
         ItemBedrockGolem.spawnParticles(this.world, pos.x, pos.y, pos.z, 0.09D, ParticleTypes.SMOKE, 80);
       } else {
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(getGolemContainer().getHealth());
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(getGolemContainer().getAttack());
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(getGolemContainer().getSpeed());
+        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(getGolemContainer().getHealth());
+        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(getGolemContainer().getAttack());
+        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(getGolemContainer().getSpeed());
       }
     }
   }
@@ -177,7 +181,7 @@ public final class CoralGolem extends GolemMultiTextured {
 
   @Override
   public ResourceLocation[] getTextureArray() {
-    return this.isDry() ? this.variantsDry : super.getTextureArray();
+    return this.isDry() ? this.lootTablesDry : super.getTextureArray();
   }
 
   @Override
@@ -193,7 +197,7 @@ public final class CoralGolem extends GolemMultiTextured {
   }
 
   @Override
-  public boolean shouldMoveToWater(final Vec3d target) {
+  public boolean shouldMoveToWater(final Vector3d target) {
     // allowed to leave water if NOT dry and NOT too far away
     if (this.isDry()) {
       return true;

@@ -6,7 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.monster.SlimeEntity;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 public final class SlimeGolem extends GolemBase {
@@ -68,8 +68,8 @@ public final class SlimeGolem extends GolemBase {
    * Adds extra velocity to the golem's knockback attack.
    **/
   private void applyKnockback(final Entity entity, final double knockbackFactor) {
-    final Vec3d myPos = this.getPositionVec();
-    final Vec3d ePos = entity.getPositionVec();
+    final Vector3d myPos = this.getPositionVec();
+    final Vector3d ePos = entity.getPositionVec();
     final double dX = Math.signum(ePos.x - myPos.x) * knockbackFactor;
     final double dZ = Math.signum(ePos.z - myPos.z) * knockbackFactor;
     entity.addVelocity(dX, knockbackFactor / 2, dZ);

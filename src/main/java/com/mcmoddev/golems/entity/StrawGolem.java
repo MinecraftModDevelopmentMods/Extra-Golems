@@ -5,11 +5,10 @@ import java.util.Random;
 import com.mcmoddev.golems.entity.base.GolemBase;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.CropsBlock;
 import net.minecraft.block.IGrowable;
-import net.minecraft.block.StemBlock;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.item.BoneMealItem;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -56,34 +55,33 @@ public final class StrawGolem extends GolemBase {
      * Checks random blocks in a radius until either a growable crop has been found
      * and boosted, or no crops were found in a limited number of attempts.
      *
-     * @return if a crop was grown
+     * @return always returns false...
      **/
     private boolean tryBoostCrop() {
       final Random rand = this.golem.getEntityWorld().getRandom();
       final int maxAttempts = 25;
       final int variationY = 2;
       int attempts = 0;
-      while (attempts <= maxAttempts) {
-        // increment attempts
-        ++attempts;
+      while (attempts++ <= maxAttempts) {
         // get random block in radius
         final int x1 = rand.nextInt(this.range * 2) - this.range;
         final int y1 = rand.nextInt(variationY * 2) - variationY;
         final int z1 = rand.nextInt(this.range * 2) - this.range;
-        final BlockPos blockpos = this.golem.getPosition().add(x1, y1, z1);
+        final BlockPos blockpos = this.golem.getBlockBelow().add(x1, y1, z1);
         final BlockState state = golem.getEntityWorld().getBlockState(blockpos);
         // if the block can be grown, grow it and return
-        if (state.getBlock() instanceof CropsBlock || state.getBlock() instanceof StemBlock) {
+        if (state.getBlock() instanceof IGrowable) {
           IGrowable crop = (IGrowable) state.getBlock();
           if (golem.getEntityWorld() instanceof ServerWorld
               && crop.canGrow(golem.getEntityWorld(), blockpos, state, golem.getEntityWorld().isRemote)) {
             // grow the crop!
             crop.grow((ServerWorld) golem.getEntityWorld(), rand, blockpos, state);
             // spawn particles
-            // if (golem.getEntityWorld().isRemote) {
-            // BoneMealItem.spawnBonemealParticles(golem.getEntityWorld(), blockpos, 0);
-            // }
-            return true;
+            if (golem.getEntityWorld().isRemote()) {
+              BoneMealItem.spawnBonemealParticles(golem.getEntityWorld(), blockpos, 0);
+            }
+            // cap the attempts here so we exit the while loop safely
+            attempts = maxAttempts;
           }
         }
       }

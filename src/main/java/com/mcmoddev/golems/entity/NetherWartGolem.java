@@ -35,7 +35,7 @@ public final class NetherWartGolem extends GolemBase {
     this.goalSelector.addGoal(2, new PlaceBlocksGoal(this, freq, flowers, soils, allow));
     if (allowHealing) {
       this.goalSelector.addGoal(4, new PassiveEffectsGoal(this, Effects.REGENERATION, 50, 60, 1, 1,
-          g -> (g.getEntityWorld().dimension.isNether() || !g.getEntityWorld().isDaytime()) && g.getEntityWorld().getRandom().nextInt(450) == 0));
+          g -> !g.getEntityWorld().isDaytime() && g.getEntityWorld().getRandom().nextInt(450) == 0));
     }
   }
 }

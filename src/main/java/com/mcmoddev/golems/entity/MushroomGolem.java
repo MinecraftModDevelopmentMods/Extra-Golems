@@ -24,10 +24,11 @@ public final class MushroomGolem extends GolemMultiTextured {
   public static final String FREQUENCY = "Mushroom Frequency";
   public static final String ALLOW_HEALING = "Allow Special: Random Healing";
 
-  public static final String[] SHROOM_TYPES = { "red", "brown" };
+  public static final String[] TEXTURE_NAMES = { "red_mushroom_block", "brown_mushroom_block" };
+  public static final String[] LOOT_TABLE_NAMES = { "red", "brown" };
 
   public MushroomGolem(final EntityType<? extends GolemBase> entityType, final World world) {
-    super(entityType, world, ExtraGolems.MODID, SHROOM_TYPES);
+    super(entityType, world, "minecraft", TEXTURE_NAMES, ExtraGolems.MODID, LOOT_TABLE_NAMES);
   }
 
   @Override
@@ -47,8 +48,7 @@ public final class MushroomGolem extends GolemMultiTextured {
 
   @Override
   public void onBuilt(BlockState body, BlockState legs, BlockState arm1, BlockState arm2) {
-    // use block type to give this golem the right texture (defaults to brown
-    // mushroom)
+    // use block to give this golem the right texture (defaults to brown mushroom)
     byte textureNum = body.getBlock() == Blocks.RED_MUSHROOM_BLOCK ? (byte) 0 : (byte) 1;
     textureNum %= this.getNumTextures();
     this.setTextureNum(textureNum);

@@ -6,10 +6,9 @@ import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.pathfinding.Path;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class SwimUpGoal extends Goal {
-
   private final GolemBase golem;
   private final double speed;
   private final int targetY;
@@ -22,7 +21,7 @@ public class SwimUpGoal extends Goal {
   }
 
   public boolean shouldExecute() {
-    return (this.golem.isInWater() && this.golem.getPositionVec().y < (this.targetY - 2));
+    return (!golem.world.isDaytime() && golem.isInWater() && golem.getPosY() < (this.targetY - 2.5D));
   }
 
   @Override
@@ -32,35 +31,36 @@ public class SwimUpGoal extends Goal {
 
   @Override
   public void tick() {
-    final Vec3d gPos = golem.getPositionVec();
-    if (gPos.y < (this.targetY - 1) && (this.golem.getNavigator().noPath() || isCloseToPathTarget())) {
+    if (golem.getPosY() < (this.targetY - 1) && (golem.getNavigator().noPath() || isCloseToPathTarget())) {
 
-      Vec3d vec = RandomPositionGenerator.findRandomTargetBlockTowards(this.golem, 4, 8, new Vec3d(gPos.x, (this.targetY - 1), gPos.z));
+      Vector3d vec = RandomPositionGenerator.findRandomTargetBlockTowards(golem, 4, 8,
+          new Vector3d(golem.getPosX(), (this.targetY - 1), golem.getPosZ()));
+
       if (vec == null) {
         this.obstructed = true;
         return;
       }
-      this.golem.getNavigator().tryMoveToXYZ(vec.x, vec.y, vec.z, this.speed);
+      golem.getNavigator().tryMoveToXYZ(vec.x, vec.y, vec.z, this.speed);
     }
   }
 
   @Override
   public void startExecuting() {
-    this.golem.setSwimmingUp(true);
+    golem.setSwimmingUp(true);
     this.obstructed = false;
   }
 
   @Override
   public void resetTask() {
-    this.golem.setSwimmingUp(false);
+    golem.setSwimmingUp(false);
   }
 
-  public boolean isCloseToPathTarget() {
-    Path path = this.golem.getNavigator().getPath();
+  private boolean isCloseToPathTarget() {
+    Path path = golem.getNavigator().getPath();
     if (path != null) {
-      BlockPos pos = path.func_224770_k();
+      BlockPos pos = path.getTarget();
       if (pos != null) {
-        double dis = this.golem.getDistanceSq(pos.getX(), pos.getY(), pos.getZ());
+        double dis = golem.getDistanceSq(pos.getX(), pos.getY(), pos.getZ());
         if (dis < 4.0D) {
           return true;
         }

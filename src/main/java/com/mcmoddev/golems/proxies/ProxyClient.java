@@ -1,23 +1,30 @@
 package com.mcmoddev.golems.proxies;
 
+import com.mcmoddev.golems.entity.MushroomGolem;
+import com.mcmoddev.golems.entity.WoolGolem;
 import com.mcmoddev.golems.entity.base.GolemBase;
-import com.mcmoddev.golems.entity.base.GolemColorized;
 import com.mcmoddev.golems.gui.GuiDispenserGolem;
+import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
-import com.mcmoddev.golems.renders.ColoredGolemRenderer;
+import com.mcmoddev.golems.renders.GolemRenderType;
 import com.mcmoddev.golems.renders.GolemRenderer;
-import com.mcmoddev.golems.util.config.GolemRegistrar;
+import com.mcmoddev.golems.renders.model.SimpleTextureLayer;
+import com.mcmoddev.golems.util.GolemNames;
+import com.mcmoddev.golems.util.GolemRegistrar;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.model.ModelBakery;
+import net.minecraft.client.resources.ReloadListener;
 import net.minecraft.entity.EntityType;
-import net.minecraftforge.fml.client.registry.IRenderFactory;
+import net.minecraft.profiler.IProfiler;
+import net.minecraft.resources.IReloadableResourceManager;
+import net.minecraft.resources.IResourceManager;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 public final class ProxyClient extends ProxyCommon {
-
-  public static final IRenderFactory<GolemBase> FACTORY_TEXTURED_GOLEM = GolemRenderer::new;
-
-  public static final IRenderFactory<GolemColorized> FACTORY_COLORED_GOLEM = ColoredGolemRenderer::new;
 
   @Override
   public void registerListeners() {
@@ -26,6 +33,22 @@ public final class ProxyClient extends ProxyCommon {
 //		if(irr instanceof IReloadableResourceManager) {
 //			((IReloadableResourceManager) irr).addReloadListener(l -> BlockTagUtil.loadTags());
 //		}
+    // TODO add a listener to refresh golem textures
+    IResourceManager manager = Minecraft.getInstance().getResourceManager();
+    if (manager instanceof IReloadableResourceManager) {
+      ((IReloadableResourceManager)manager).addReloadListener(new ReloadListener<ModelBakery>() {
+        @Override
+        protected void apply(ModelBakery arg0, IResourceManager arg1, IProfiler arg2) {
+          GolemRenderType.reloadDynamicTextureMap();
+        }
+
+        @Override
+        protected ModelBakery prepare(IResourceManager arg0, IProfiler arg1) {
+          return null;
+        }
+        
+      });
+    }
   }
 
   @Override
@@ -38,33 +61,52 @@ public final class ProxyClient extends ProxyCommon {
   @Override
   public void registerEntityRenders() {
     GolemRegistrar.getContainers().forEach(container -> {
-      if (container.useDefaultRender()) {
-        if (GolemColorized.class.isAssignableFrom(container.getEntityClass())) {
-          registerColorized((EntityType<? extends GolemColorized>) container.getEntityType());
-        } else {
-          registerTextured(container.getEntityType());
-        }
-
+      if (!container.getRenderSettings().hasCustomRender()) {
+        RenderingRegistry.registerEntityRenderingHandler(container.getEntityType(), m -> (new GolemRenderer<GolemBase>(m).withAllLayers()));
       }
     });
+    // Custom renders
+    registerWithSimpleLayer(
+        GolemRegistrar.getContainer(new ResourceLocation(ExtraGolems.MODID, GolemNames.LAPIS_GOLEM)).getEntityType(),
+        new ResourceLocation(ExtraGolems.MODID, "textures/entity/layer/gold_edging.png"));
+    registerWithSimpleLayer(
+        GolemRegistrar.getContainer(new ResourceLocation(ExtraGolems.MODID, GolemNames.BLACKSTONE_GOLEM)).getEntityType(),
+        new ResourceLocation(ExtraGolems.MODID, "textures/entity/layer/gold_nuggets.png"));
+    // Wool and Mushroom golems
+    registerWoolGolemRenders();
+    registerMushroomGolemRenders();
+  }
+  
+  private void registerWithSimpleLayer(final EntityType<? extends GolemBase> entityType, final ResourceLocation layer) {
+    RenderingRegistry.registerEntityRenderingHandler(entityType, 
+      m -> {
+        GolemRenderer<GolemBase> r = new GolemRenderer<>(m);
+        return r.withLayer(new SimpleTextureLayer<>(r, g -> layer, g -> 0xFFFFFF, g -> false, 1.0F)).withAllLayers();
+      });
+  }
+  
+  private void registerWoolGolemRenders() {
+    RenderingRegistry.registerEntityRenderingHandler(
+      GolemRegistrar.getContainer(new ResourceLocation(ExtraGolems.MODID, GolemNames.WOOL_GOLEM)).getEntityType(), 
+      m -> {
+        GolemRenderer<GolemBase> r = new GolemRenderer<>(m);
+        return r.withLayer(new SimpleTextureLayer<GolemBase>(r, g -> ((WoolGolem)g).getTexture(), g -> 0xFFFFFF, g -> false, 1.0F) {
+          @Override
+          protected RenderType getRenderType(final ResourceLocation texture) { return GolemRenderType.getGolemCutout(texture, GolemRenderType.WOOL_TEMPLATE, true); }
+        }).withAllLayers();
+      });
+  }
+  
+  private void registerMushroomGolemRenders() {
+    RenderingRegistry.registerEntityRenderingHandler(
+      GolemRegistrar.getContainer(new ResourceLocation(ExtraGolems.MODID, GolemNames.MUSHROOM_GOLEM)).getEntityType(), 
+      m -> {
+        GolemRenderer<GolemBase> r = new GolemRenderer<>(m);
+        return r.withLayer(new SimpleTextureLayer<GolemBase>(r, g -> ((MushroomGolem)g).getTexture(), g -> 0xFFFFFF, g -> false, 1.0F) {
+          @Override
+          protected RenderType getRenderType(final ResourceLocation texture) { return GolemRenderType.getGolemCutout(texture, GolemRenderType.MUSHROOM_TEMPLATE, true); }
+        }).withAllLayers();
+      });
   }
 
-  /**
-   * Registers an entity with the GolemRenderer rendering class.
-   * 
-   * @param type the EntityType. Must be of type {@code EntityType<GolemBase>}
-   */
-  public static void registerTextured(final EntityType<? extends GolemBase> type) {
-    RenderingRegistry.registerEntityRenderingHandler(type, FACTORY_TEXTURED_GOLEM);
-  }
-
-  /**
-   * Registers an entity with the ColoredGolemRenderer class
-   * 
-   * @param type the EntityType. Must be of type
-   *             {@code EntityType<GolemColorized>}
-   **/
-  public static void registerColorized(final EntityType<? extends GolemColorized> type) {
-    RenderingRegistry.registerEntityRenderingHandler(type, FACTORY_COLORED_GOLEM);
-  }
 }

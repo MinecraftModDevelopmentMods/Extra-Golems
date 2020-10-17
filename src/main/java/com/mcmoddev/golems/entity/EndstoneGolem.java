@@ -13,7 +13,7 @@ import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.IndirectEntityDamageSource;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -86,7 +86,7 @@ public class EndstoneGolem extends GolemBase {
   public void livingTick() {
     // spawn particles around the golem
     if (this.world.isRemote && this.hasAmbientParticles) {
-      final Vec3d pos = this.getPositionVec();
+      final Vector3d pos = this.getPositionVec();
       for (int i = 0; i < 2; ++i) {
         this.world.addParticle(ParticleTypes.PORTAL, pos.x + (this.rand.nextDouble() - 0.5D) * (double) this.getWidth(),
             pos.y + this.rand.nextDouble() * (double) this.getHeight() - 0.25D, pos.z + (this.rand.nextDouble() - 0.5D) * (double) this.getWidth(),
@@ -134,8 +134,13 @@ public class EndstoneGolem extends GolemBase {
     return super.attackEntityFrom(src, amnt);
   }
 
+  @Override
+  public boolean isWaterSensitive() {
+    return this.isHurtByWater;
+  }
+
   protected boolean teleportRandomly() {
-    final Vec3d pos = this.getPositionVec();
+    final Vector3d pos = this.getPositionVec();
     final double d0 = pos.x + (this.rand.nextDouble() - 0.5D) * range;
     final double d1 = pos.y + (this.rand.nextDouble() - 0.5D) * range * 0.5D;
     final double d2 = pos.z + (this.rand.nextDouble() - 0.5D) * range;
@@ -146,7 +151,7 @@ public class EndstoneGolem extends GolemBase {
    * Teleport the golem to another entity.
    **/
   protected boolean teleportToEntity(final Entity entity) {
-    Vec3d vec3d = new Vec3d(this.getPosX() - entity.getPosX(), this.getPosYHeight(0.5D) - entity.getPosYEye(), this.getPosZ() - entity.getPosZ());
+    Vector3d vec3d = new Vector3d(this.getPosX() - entity.getPosX(), this.getPosYHeight(0.5D) - entity.getPosYEye(), this.getPosZ() - entity.getPosZ());
     vec3d = vec3d.normalize();
     double d = this.range * 0.25D;
     double d0 = this.range * 0.5D;

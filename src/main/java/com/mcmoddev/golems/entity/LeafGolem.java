@@ -2,25 +2,20 @@ package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.entity.ai.PassiveEffectsGoal;
 import com.mcmoddev.golems.entity.base.GolemBase;
-import com.mcmoddev.golems.entity.base.GolemColorized;
-import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.potion.Effects;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 
-public final class LeafGolem extends GolemColorized {
+public final class LeafGolem extends GolemBase {
+  
+  private int color = 0x5F904A;
 
   public static final String ALLOW_SPECIAL = "Allow Special: Regeneration";
 
-  private static final ResourceLocation TEXTURE_BASE = GolemBase.makeTexture(ExtraGolems.MODID, GolemNames.LEAF_GOLEM);
-  private static final ResourceLocation TEXTURE_OVERLAY = GolemBase.makeTexture(ExtraGolems.MODID, GolemNames.LEAF_GOLEM + "_grayscale");
-
   public LeafGolem(final EntityType<? extends GolemBase> entityType, final World world) {
-    super(entityType, world, 0x5F904A, TEXTURE_BASE, TEXTURE_OVERLAY);
+    super(entityType, world);
   }
 
   @Override
@@ -44,8 +39,8 @@ public final class LeafGolem extends GolemColorized {
     // update color
     if (this.ticksExisted % 10 == 2 && this.world.isRemote && !this.isServerWorld()) {
       // this.world.getBiomeManager().getBiome(BlockPos)
-      Biome biome = this.world.getBiome(this.getPosition());
-      long color = biome.getFoliageColor();
+      Biome biome = this.world.getBiome(this.getPositionUnderneath().up(2));
+      int color = biome.getFoliageColor();
       this.setColor(color);
     }
 
@@ -53,5 +48,21 @@ public final class LeafGolem extends GolemColorized {
     if (this.getMotion().y < -0.05D) {
       this.setMotion(this.getMotion().mul(1.0D, 0.75D, 1.0D));
     }
+  }
+  
+  /**
+   * Updates {@code #color} 
+   * Note: normal render class cannot handle an alpha value here, the
+   * actual texture image must be saved with transparency instead.
+   **/
+  public void setColor(final int toSet) {
+    this.color = toSet;
+  }
+
+  /**
+   * @return the full color number currently applied.
+   **/
+  public int getColor() {
+    return this.color;
   }
 }

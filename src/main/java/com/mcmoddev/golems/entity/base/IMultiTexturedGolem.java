@@ -3,7 +3,10 @@ package com.mcmoddev.golems.entity.base;
 import java.util.Map;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
@@ -67,5 +70,13 @@ public interface IMultiTexturedGolem<T> {
   default void randomizeTexture(final World world, final BlockPos pos) {
     final byte texture = (byte) world.getRandom().nextInt(Math.max(1, getNumTextures()));
     setTextureNum(texture);
+  }
+  
+  default ActionResultType handlePlayerInteract(final PlayerEntity player, final Hand hand) {
+    // change texture when player clicks
+    final int incremented = (this.getTextureNum() + 1) % this.getNumTextures();
+    this.setTextureNum((byte) incremented);
+    player.swingArm(hand);
+    return ActionResultType.SUCCESS;
   }
 }

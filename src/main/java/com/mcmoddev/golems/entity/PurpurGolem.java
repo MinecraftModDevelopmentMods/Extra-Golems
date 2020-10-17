@@ -11,7 +11,5 @@ public final class PurpurGolem extends EndstoneGolem {
     super(entityType, world, 16.0D, true);
     this.isHurtByWater = false;
     this.allowTeleport = this.getConfigBool(ALLOW_SPECIAL);
-  }
-
-  
+  }  
 }

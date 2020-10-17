@@ -9,10 +9,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.mcmoddev.golems.main.ExtraGolems;
+import com.mcmoddev.golems.util.GolemContainer;
 import com.mcmoddev.golems.util.GolemNames;
+import com.mcmoddev.golems.util.GolemRegistrar;
 import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
 import com.mcmoddev.golems.util.config.special.GolemSpecialSection;
 
+import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
@@ -25,14 +28,14 @@ public class GolemConfiguration {
   private final Map<GolemContainer, GolemConfigurationSection> sections = new HashMap<>();
   public final Map<GolemSpecialContainer, GolemSpecialSection> specials = new HashMap<>();
 
-  public final ForgeConfigSpec.BooleanValue bedrockGolemCreativeOnly;
-  public final ForgeConfigSpec.BooleanValue pumpkinBuildsGolem;
-  public final ForgeConfigSpec.BooleanValue enableFriendlyFire;
-  public final ForgeConfigSpec.BooleanValue enableTextureInteract;
-  public final ForgeConfigSpec.BooleanValue enableUseItemSpell;
-  public final ForgeConfigSpec.BooleanValue enableHealGolems;
-  public final ForgeConfigSpec.BooleanValue holidayTweaks;
-  public final ForgeConfigSpec.IntValue villagerGolemSpawnChance;
+  protected final ForgeConfigSpec.BooleanValue bedrockGolemCreativeOnly;
+  protected final ForgeConfigSpec.BooleanValue pumpkinBuildsGolem;
+  protected final ForgeConfigSpec.BooleanValue enableFriendlyFire;
+  protected final ForgeConfigSpec.BooleanValue enableTextureInteract;
+  protected final ForgeConfigSpec.BooleanValue enableUseItemSpell;
+  protected final ForgeConfigSpec.BooleanValue enableHealGolems;
+  protected final ForgeConfigSpec.BooleanValue holidayTweaks;
+  protected final ForgeConfigSpec.IntValue villagerGolemSpawnChance;
   private final ConfigValue<List<? extends String>> villagerGolemSpawns;
   private static final String[] defaultVillagerGolemSpawns = { GolemNames.BOOKSHELF_GOLEM, GolemNames.CLAY_GOLEM,
       GolemNames.COAL_GOLEM, GolemNames.CRAFTING_GOLEM, GolemNames.GLASS_GOLEM, GolemNames.GLOWSTONE_GOLEM, GolemNames.LEAF_GOLEM,
@@ -59,7 +62,7 @@ public class GolemConfiguration {
     this.holidayTweaks = builder
         .comment("Super secret special days").define("holidays", true);
     this.villagerGolemSpawnChance = builder.comment("Percent chance for a villager to successfully summon an Extra Golems golem")
-        .defineInRange("villager_summon_chance", 80, 0, 100);
+        .defineInRange("villager_summon_chance", 60, 0, 100);
     this.enableHealGolems = builder.comment("When enabled, giving blocks and items to golems can restore health").define("heal_golems", true);
     this.villagerGolemSpawns = builder.comment("Golems that can be summoned by villagers", "(Duplicate entries increase chances)")
         .defineList("villager_summon_golems", initVillagerGolemList(defaultVillagerGolemSpawns), o -> o instanceof String);
@@ -86,13 +89,17 @@ public class GolemConfiguration {
     for (Entry<GolemContainer, GolemConfigurationSection> e : this.sections.entrySet()) {
       GolemContainer c = e.getKey();
       GolemConfigurationSection section = e.getValue();
+      // update attack, health, and spawn perms based on config
       c.setAttack(section.attack.get());
       c.setHealth(section.health.get());
       c.setEnabled(section.enabled.get());
-
+      // update specials based on config
       for (GolemSpecialContainer specialC : c.getSpecialContainers()) {
         specialC.value = specials.get(specialC).value;
       }
+	  
+      // moved from ProxyCommon to here to fix issue #56
+      GlobalEntityTypeAttributes.put(c.getEntityType(), c.getAttributeSupplier().get().create());
     }
     // also update the holiday configs
     final LocalDateTime now = LocalDateTime.now();

@@ -1,5 +1,7 @@
 package com.mcmoddev.golems.util.config;
 
+import com.mcmoddev.golems.util.GolemContainer;
+
 import net.minecraftforge.common.ForgeConfigSpec;
 
 /**

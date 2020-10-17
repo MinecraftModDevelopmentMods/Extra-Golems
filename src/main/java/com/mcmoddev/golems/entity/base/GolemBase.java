@@ -1,19 +1,22 @@
 package com.mcmoddev.golems.entity.base;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import com.mcmoddev.golems.blocks.BlockUtilityGlow;
+import com.mcmoddev.golems.blocks.BlockUtilityPower;
 import com.mcmoddev.golems.entity.ai.GoToWaterGoal;
 import com.mcmoddev.golems.entity.ai.MoveThroughVillageGoalFixed;
+import com.mcmoddev.golems.entity.ai.PlaceUtilityBlockGoal;
 import com.mcmoddev.golems.entity.ai.SwimUpGoal;
-import com.mcmoddev.golems.entity.ai.SwimmingMovementController;
 import com.mcmoddev.golems.items.ItemBedrockGolem;
 import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.main.ExtraGolemsEntities;
+import com.mcmoddev.golems.main.GolemItems;
+import com.mcmoddev.golems.util.GolemContainer;
+import com.mcmoddev.golems.util.GolemContainer.SwimMode;
+import com.mcmoddev.golems.util.GolemRegistrar;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
-import com.mcmoddev.golems.util.config.GolemContainer;
-import com.mcmoddev.golems.util.config.GolemContainer.SwimMode;
-import com.mcmoddev.golems.util.config.GolemRegistrar;
 import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
 
 import net.minecraft.block.Block;
@@ -23,6 +26,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.controller.MovementController;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.MoveThroughVillageGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
@@ -39,7 +43,6 @@ import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.pathfinding.SwimmerPathNavigator;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -75,7 +78,6 @@ public abstract class GolemBase extends IronGolemEntity {
     case FLOAT:
       // basic swimming AI
       this.goalSelector.addGoal(0, new SwimGoal(this));
-      this.navigator.setCanSwim(true);
       break;
     case SWIM:
       // advanced swimming AI
@@ -91,6 +93,17 @@ public abstract class GolemBase extends IronGolemEntity {
       break;
     }
   }
+  
+  @Override
+  protected void registerAttributes() {
+    super.registerAttributes();
+    // Called in super constructor; this.container == null
+    GolemContainer golemContainer = GolemRegistrar.getContainer(this.getType());
+    this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(golemContainer.getAttack());
+    this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(golemContainer.getHealth());
+    this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(golemContainer.getSpeed());
+    this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(golemContainer.getKnockbackResist());
+  }
 
   /**
    * Called after construction when a golem is built by a player
@@ -102,17 +115,6 @@ public abstract class GolemBase extends IronGolemEntity {
    */
   public void onBuilt(final BlockState body, final BlockState legs, final BlockState arm1, final BlockState arm2) {
     // do nothing
-  }
-
-  @Override
-  protected void registerAttributes() {
-    super.registerAttributes();
-    // Called in super constructor; this.container == null
-    GolemContainer golemContainer = GolemRegistrar.getContainer(this.getType());
-    this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(golemContainer.getAttack());
-    this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(golemContainer.getHealth());
-    this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(golemContainer.getSpeed());
-    this.getAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(golemContainer.getKnockbackResist());
   }
 
   @Override
@@ -140,6 +142,21 @@ public abstract class GolemBase extends IronGolemEntity {
     this.goalSelector.addGoal(3, new MoveThroughVillageGoalFixed(this, 0.6D, false, 4, () -> {
       return false;
    }));
+    final GolemContainer cont = this.getGolemContainer();
+    // register light level AI if enabled
+    if(cont.getLightLevel() > 0) {
+      int lightInt = cont.getLightLevel();
+      final BlockState state = GolemItems.UTILITY_LIGHT.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, lightInt);
+      this.goalSelector.addGoal(9, new PlaceUtilityBlockGoal(this, state, BlockUtilityGlow.UPDATE_TICKS, 
+          true, true, null));
+    }
+    // register power level AI if enabled
+    if(cont.getPowerLevel() > 0) {
+      int powerInt = cont.getPowerLevel();
+      final BlockState state = GolemItems.UTILITY_POWER.getDefaultState().with(BlockUtilityPower.POWER_LEVEL, powerInt);
+      final int freq = BlockUtilityPower.UPDATE_TICKS;
+      this.goalSelector.addGoal(9, new PlaceUtilityBlockGoal(this, state, freq, true));
+    }
   }
 
   /////////////// GOLEM UTILITY METHODS //////////////////
@@ -162,7 +179,7 @@ public abstract class GolemBase extends IronGolemEntity {
    * @see com.mcmoddev.golems.blocks.BlockUtilityGlow
    **/
   public boolean isProvidingLight() {
-    return false;
+    return this.getGolemContainer().getLightLevel() > 0;
   }
 
   /**
@@ -173,7 +190,7 @@ public abstract class GolemBase extends IronGolemEntity {
    * @see com.mcmoddev.golems.blocks.BlockUtilityPower
    **/
   public boolean isProvidingPower() {
-    return false;
+    return this.getGolemContainer().getPowerLevel() > 0;
   }
 
   /** @return the Golem Container **/
@@ -191,15 +208,16 @@ public abstract class GolemBase extends IronGolemEntity {
     if(this.isChild()) {
       amount *= 1.75F;
     }
-    // max heal amount is 32, for no reason at all
-    return Math.min(amount, 32.0F);
+    // max heal amount is 64, for no reason at all
+    return Math.min(amount, 64.0F);
   }
 
   public BlockPos getBlockBelow() {
-    int i = MathHelper.floor(this.getPosX());
-    int j = MathHelper.floor(this.getPosY() - 0.2D);
-    int k = MathHelper.floor(this.getPosZ());
-    return new BlockPos(i, j, k);
+//    int i = MathHelper.floor(this.getPosX());
+//    int j = MathHelper.floor(this.getPosY() - 0.2D);
+//    int k = MathHelper.floor(this.getPosZ());
+//    return new BlockPos(i, j, k);
+    return getPositionUnderneath();
   }
 
   /////////////// CONFIG HELPERS //////////////////
@@ -237,24 +255,22 @@ public abstract class GolemBase extends IronGolemEntity {
     }
 
     float[] ret = net.minecraftforge.common.ForgeHooks.onLivingFall(this, distance, damageMultiplier);
-    if (ret == null) {
-      return false;
-    }
+    if (ret == null) return false;
     distance = ret[0];
     damageMultiplier = ret[1];
 
     boolean flag = super.onLivingFall(distance, damageMultiplier);
     int i = this.func_225508_e_(distance, damageMultiplier);
     if (i > 0) {
-      this.playSound(this.getFallSound(i), 1.0F, 1.0F);
-      this.playFallSound();
-      this.attackEntityFrom(DamageSource.FALL, (float) i);
-      return true;
+       this.playSound(this.getFallSound(i), 1.0F, 1.0F);
+       this.playFallSound();
+       this.attackEntityFrom(DamageSource.FALL, (float)i);
+       return true;
     } else {
-      return flag;
+       return flag;
     }
   }
-
+  
   @Override
   public boolean attackEntityAsMob(final Entity entity) {
     // Copy Iron Golem behavior but allow for custom attack damage
@@ -274,6 +290,11 @@ public abstract class GolemBase extends IronGolemEntity {
     this.world.setEntityState(this, (byte) 4);
     this.playSound(this.getGolemSound(), 1.0F, 0.9F + rand.nextFloat() * 0.2F);
     return flag;
+  }
+  
+  @Override
+  public boolean isImmuneToExplosions() {
+    return this.getGolemContainer().isImmuneToExplosions();
   }
 
   @Override
@@ -300,13 +321,15 @@ public abstract class GolemBase extends IronGolemEntity {
     if (ExtraGolemsConfig.enableHealGolems() && this.getHealth() < this.getMaxHealth() && healAmount > 0) {
       heal(healAmount);
       // update stack size/item
-      if (stack.getCount() > 1) {
-        stack.shrink(1);
-      } else {
-        stack = stack.getContainerItem();
+      if(!player.isCreative()) {
+        if (stack.getCount() > 1) {
+          stack.shrink(1);
+        } else {
+          stack = stack.getContainerItem();
+        }
+        // update the player's held item
+        player.setHeldItem(hand, stack);
       }
-      // update the player's held item
-      player.setHeldItem(hand, stack);
       // if currently attacking this player, stop
       if (this.getAttackTarget() == player) {
         this.setRevengeTarget(null);
@@ -318,7 +341,12 @@ public abstract class GolemBase extends IronGolemEntity {
       this.playSound(SoundEvents.BLOCK_STONE_PLACE, 0.85F, 1.1F + rand.nextFloat() * 0.2F);
       return true;
     }
-    return super.processInteract(player, hand);
+    return false;
+  }
+  
+  @Override
+  public float getBrightness() {
+    return this.isProvidingLight() || this.isProvidingPower() ? 1.0F : super.getBrightness();
   }
   
   ///////////////// CHILD LOGIC ///////////////////
@@ -361,9 +389,9 @@ public abstract class GolemBase extends IronGolemEntity {
   /**
    * Attempts to spawn the given number of "mini" golems
    * @param count the number of children to spawn
-   * @return whether child golems were spawned successfully
+   * @return a collection containing the entities that were spawned
    **/
-  protected List<GolemBase> trySpawnChildren(final int count) {
+  protected Collection<GolemBase> trySpawnChildren(final int count) {
     final List<GolemBase> children = new ArrayList<>();
     if(!this.world.isRemote && !this.isChild()) {
       for(int i = 0; i < count; i++) {
@@ -395,52 +423,6 @@ public abstract class GolemBase extends IronGolemEntity {
   public void writeAdditional(final CompoundNBT tag) {
     super.writeAdditional(tag);
     tag.putBoolean(KEY_CHILD, this.isChild());
-  }
-
-  /////////////// TEXTURE HELPERS //////////////////
-
-  /**
-   * This method is called from the golem Render code and should return the
-   * current texture (skin) of the golem. Defaults to querying the container for a
-   * texture.
-   * 
-   * @return a ResourceLocation to use for rendering
-   **/
-  public ResourceLocation getTexture() {
-    return this.getGolemContainer().getTexture();
-  }
-
-  /**
-   * Calls {@link #makeTexture(String, String)} on the assumption that MODID is
-   * 'golems'. Texture should be at 'assets/golems/textures/entity/[TEXTURE].png'
-   * <br>
-   * For most golems, set the texture when building the GolemContainer using
-   * {@link GolemContainer.Builder#setTexture(ResourceLocation)} or
-   * {@link GolemContainer.Builder#basicTexture()}
-   * 
-   * @see ExtraGolemsEntities#makeTexture(String)
-   **/
-  protected static ResourceLocation makeTexture(final String TEXTURE) {
-    return ExtraGolemsEntities.makeTexture(TEXTURE);
-  }
-
-  /**
-   * Makes a ResourceLocation using the passed mod id and the texture name.
-   * Texture should be at 'assets/[MODID]/textures/entity/[TEXTURE].png' <br>
-   * For most golems, set the texture when building the GolemContainer using
-   * {@link GolemContainer.Builder#setTexture(ResourceLocation)} or
-   * {@link GolemContainer.Builder#basicTexture()}
-   * 
-   * @see #makeTexture(String)
-   * @see ExtraGolemsEntities#makeTexture(String, String)
-   **/
-  protected static ResourceLocation makeTexture(final String MODID, final String TEXTURE) {
-    return ExtraGolemsEntities.makeTexture(MODID, TEXTURE);
-  }
-
-  /** @return Whether the texture should be rendered as translucent **/
-  public boolean hasTransparency() {
-    return false;
   }
 
   ///////////////////// SOUND OVERRIDES ////////////////////
@@ -535,5 +517,50 @@ public abstract class GolemBase extends IronGolemEntity {
    **/
   public boolean shouldMoveToWater(final Vec3d target) {
     return container.getSwimMode() == SwimMode.SWIM;
+  }
+  
+  static class SwimmingMovementController extends MovementController {
+    private final GolemBase golem;
+
+    public SwimmingMovementController(GolemBase golem) {
+      super(golem);
+      this.golem = golem;
+    }
+
+    @Override
+    public void tick() {
+      // All of this is copied from DrownedEntity#MoveHelperController
+      LivingEntity target = this.golem.getAttackTarget();
+      if (this.golem.isSwimmingUp() && this.golem.isInWater()) {
+        if ((target != null && target.getPosY() > this.golem.getPosY()) || this.golem.swimmingUp) {
+          this.golem.setMotion(this.golem.getMotion().add(0.0D, 0.002D, 0.0D));
+        }
+
+        if (this.action != MovementController.Action.MOVE_TO || this.golem.getNavigator().noPath()) {
+          this.golem.setAIMoveSpeed(0.0F);
+          return;
+        }
+        double dX = this.posX - this.golem.getPosX();
+        double dY = this.posY - this.golem.getPosY();
+        double dZ = this.posZ - this.golem.getPosZ();
+        double dTotal = MathHelper.sqrt(dX * dX + dY * dY + dZ * dZ);
+        dY /= dTotal;
+
+        float rot = (float) (MathHelper.atan2(dZ, dX) * 57.2957763671875D) - 90.0F;
+        this.golem.rotationYaw = limitAngle(this.golem.rotationYaw, rot, 90.0F);
+        this.golem.renderYawOffset = this.golem.rotationYaw;
+
+        float moveSpeed = (float) (this.speed * this.golem.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getValue());
+        float moveSpeedAdjusted = MathHelper.lerp(0.125F, this.golem.getAIMoveSpeed(), moveSpeed);
+        this.golem.setAIMoveSpeed(moveSpeedAdjusted);
+        this.golem.setMotion(this.golem.getMotion().add(moveSpeedAdjusted * dX * 0.005D, moveSpeedAdjusted * dY * 0.1D,
+            moveSpeedAdjusted * dZ * 0.005D));
+      } else {
+        if (!this.golem.onGround) {
+          this.golem.setMotion(this.golem.getMotion().add(0.0D, -0.008D, 0.0D));
+        }
+        super.tick();
+      }
+    }
   }
 }

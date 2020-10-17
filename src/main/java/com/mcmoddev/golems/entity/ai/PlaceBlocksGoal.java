@@ -24,7 +24,6 @@ public class PlaceBlocksGoal extends Goal {
 
   public PlaceBlocksGoal(final GolemBase golemBase, final int ticksBetweenPlanting, final BlockState[] plants, final Block[] soils,
       final Predicate<PlaceBlocksGoal> pred) {
-    // this.setMutexFlags(EnumSet.of(Flag.MOVE));
     this.golem = golemBase;
     this.tickDelay = Math.max(1, ticksBetweenPlanting);
     this.plantables = plants;

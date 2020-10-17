@@ -7,6 +7,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.stats.Stats;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -20,14 +21,14 @@ public final class CraftingGolem extends GolemBase {
   }
 
   @Override
-  protected boolean processInteract(final PlayerEntity player, final Hand hand) {
+  protected ActionResultType func_230254_b_(final PlayerEntity player, final Hand hand) { // processInteract
     if (!player.isCrouching() && player instanceof ServerPlayerEntity) {
       // display crafting grid by sending request to server
       NetworkHooks.openGui((ServerPlayerEntity) player, new ContainerPortableWorkbench.Provider());
       player.addStat(Stats.INTERACT_WITH_CRAFTING_TABLE);
       player.swingArm(hand);
-      return true;
+      return ActionResultType.SUCCESS;
     }
-    return super.processInteract(player, hand);
+    return super.func_230254_b_(player, hand);
   }
 }

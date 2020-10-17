@@ -105,7 +105,7 @@ public class PlaceUtilityBlockGoal extends Goal {
   }
 
   public static boolean canBeWaterlogged(final BlockState stateIn) {
-    return stateIn.getProperties().contains(BlockStateProperties.WATERLOGGED);
+    return stateIn.get(BlockStateProperties.WATERLOGGED);
   }
 
   /**

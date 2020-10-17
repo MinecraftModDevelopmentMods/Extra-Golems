@@ -13,6 +13,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
@@ -31,13 +32,13 @@ public abstract class GolemMultiTextured extends GolemBase implements IMultiText
    * ResourceLocation array of textures to loop through when the player interacts
    * with this golem. Max size is Byte.MAX_VALUE
    **/
-  public final ResourceLocation[] textures;
+  protected final ResourceLocation[] textures;
 
   /**
    * Loot Table array to match texture array. If you don't want this, override
    * {@link getLootTable}
    **/
-  public final ResourceLocation[] lootTables;
+  protected final ResourceLocation[] lootTables;
 
   /**
    * This is a base class for golems that change texture when player interacts.
@@ -59,16 +60,16 @@ public abstract class GolemMultiTextured extends GolemBase implements IMultiText
    * <code>golems/textures/entity/golem_example/three.png</code> <br>
    * as well as loot tables for the same names with the JSON suffix
    **/
-  public GolemMultiTextured(final EntityType<? extends GolemBase> entityType, final World world, final String modid, final String[] textureNames) {
+  public GolemMultiTextured(final EntityType<? extends GolemBase> entityType, final World world, final String textureModId, 
+      final String[] textureNames, final String lootTableModId, final String[] lootTableNames) {
     super(entityType, world);
     this.textures = new ResourceLocation[textureNames.length];
-    this.lootTables = new ResourceLocation[textureNames.length];
+    this.lootTables = new ResourceLocation[lootTableNames.length];
     for (int n = 0, len = textureNames.length; n < len; n++) {
       // initialize textures
-      final String s = textureNames[n];
-      this.textures[n] = makeTexture(modid, this.getGolemContainer().getName() + "/" + s);
+      this.textures[n] = new ResourceLocation(textureModId, "textures/block/" + textureNames[n] + ".png");
       // initialize loot tables
-      this.lootTables[n] = new ResourceLocation(modid, "entities/" + this.getGolemContainer().getName() + "/" + s);
+      this.lootTables[n] = new ResourceLocation(lootTableModId, "entities/" + this.getGolemContainer().getName() + "/" + lootTableNames[n]);
     }
   }
 
@@ -79,15 +80,12 @@ public abstract class GolemMultiTextured extends GolemBase implements IMultiText
   }
 
   @Override
-  public boolean processInteract(final PlayerEntity player, final Hand hand) {
+  public ActionResultType func_230254_b_(final PlayerEntity player, final Hand hand) { // processInteract
     // change texture when player clicks (if enabled)
     if (!player.isCrouching() && this.canInteractChangeTexture()) {
-      final int incremented = (this.getTextureNum() + 1) % this.textures.length;
-      this.setTextureNum((byte) incremented);
-      player.swingArm(hand);
-      return true;
+      return handlePlayerInteract(player, hand);
     } else {
-      return super.processInteract(player, hand);
+      return super.func_230254_b_(player, hand);
     }
   }
 
@@ -157,7 +155,6 @@ public abstract class GolemMultiTextured extends GolemBase implements IMultiText
     return getTextureArray()[index % this.textures.length];
   }
 
-  @Override
   public ResourceLocation getTexture() {
     return getTextureFromArray(getTextureNum());
   }
