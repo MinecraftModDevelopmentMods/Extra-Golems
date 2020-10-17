@@ -28,7 +28,8 @@ public class ColorSlimeGolem extends GolemMultiTextured {
   public static final String SPLITTING_CHILDREN = "Splitting Factor";
   public static final String KNOCKBACK = "Knockback Factor";
   
-  public static final String[] SLIME_TYPES = { "red", "blue", "cyan", "magenta", "yellow" };
+  public static final String[] TEXTURE_NAMES = { "red_slime_block", "blue_slime_block", "cyan_slime_block", "magenta_slime_block", "yellow_slime_block" };
+  public static final String[] LOOT_TABLE_NAMES = { "red", "blue", "cyan", "magenta", "yellow" };
   
   private static final Map<Block, Byte> textureBytes = new HashMap<>();
   
@@ -36,7 +37,7 @@ public class ColorSlimeGolem extends GolemMultiTextured {
   private double knockbackAmount;
 
   public ColorSlimeGolem(final EntityType<? extends GolemBase> entityType, final World world) {
-    super(entityType, world, QuarkGolemsEntities.MODID, SLIME_TYPES);
+    super(entityType, world, QuarkGolemsEntities.QUARK, TEXTURE_NAMES, QuarkGolemsEntities.MODID, LOOT_TABLE_NAMES);
     allowKnockback = this.getConfigBool(ALLOW_SPECIAL);
     knockbackAmount = this.getConfigDouble(KNOCKBACK);
   }
@@ -98,11 +99,6 @@ public class ColorSlimeGolem extends GolemMultiTextured {
     return textureBytes;
   }
   
-  @Override
-  public boolean hasTransparency() {
-    return true;
-  }
-  
   /**
    * Adds extra velocity to the golem's knockback attack.
    **/
@@ -118,8 +114,8 @@ public class ColorSlimeGolem extends GolemMultiTextured {
   private static void fillTextureBytes() {
     // fills a map with Block-Byte references to correctly build the golem
     if(ModuleLoader.INSTANCE.isModuleEnabled(ColorSlimeModule.class)) {
-      for(int i = 0, l = SLIME_TYPES.length; i < l; i++) {
-        final Block b = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("quark:" + SLIME_TYPES[i] + "_slime_block"));
+      for(int i = 0, l = LOOT_TABLE_NAMES.length; i < l; i++) {
+        final Block b = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("quark:" + LOOT_TABLE_NAMES[i] + "_slime_block"));
         textureBytes.put(b, (byte) i);
       }
     }

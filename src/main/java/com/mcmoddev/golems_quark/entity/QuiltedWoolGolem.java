@@ -2,15 +2,11 @@ package com.mcmoddev.golems_quark.entity;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
-import com.mcmoddev.golems.entity.base.GolemMultiColorized;
-import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.util.GolemNames;
+import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.util.GolemTextureBytes;
 import com.mcmoddev.golems_quark.QuarkGolemsEntities;
-import com.mcmoddev.golems_quark.util.QuarkGolemNames;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
@@ -23,15 +19,20 @@ import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.base.module.ModuleLoader;
 import vazkii.quark.building.module.QuiltedWoolModule;
 
-public class QuiltedWoolGolem extends GolemMultiColorized {
+public class QuiltedWoolGolem extends GolemMultiTextured {
   
   private static final Map<Block, Byte> textureBytes = new HashMap<>();
+  
+  public static final String[] TEXTURE_NAMES = { "black_quilted_wool", "orange_quilted_wool", "magenta_quilted_wool", "light_blue_quilted_wool", 
+      "yellow_quilted_wool", "lime_quilted_wool", "pink_quilted_wool", "gray_quilted_wool", "light_gray_quilted_wool", "cyan_quilted_wool", "purple_quilted_wool", 
+      "blue_quilted_wool", "brown_quilted_wool", "green_quilted_wool", "red_quilted_wool", "white_quilted_wool" };
+  
+  public static final String[] LOOT_TABLE_NAMES = { "black", "orange", "magenta", "light_blue", "yellow", "lime", "pink", "gray", "light_gray",
+      "cyan", "purple", "blue", "brown", "green", "red", "white" };
 
-  private static final ResourceLocation TEXTURE_BASE = GolemBase.makeTexture(ExtraGolems.MODID, GolemNames.STAINEDGLASS_GOLEM);
-  private static final ResourceLocation TEXTURE_OVERLAY = GolemBase.makeTexture(QuarkGolemsEntities.MODID, QuarkGolemNames.QUILTEDWOOL_GOLEM + "_white");
 
   public QuiltedWoolGolem(final EntityType<? extends GolemBase> entityType, final World world) {
-    super(entityType, world, QuarkGolemsEntities.MODID, TEXTURE_BASE, TEXTURE_OVERLAY, DYE_COLORS);
+    super(entityType, world, QuarkGolemsEntities.MODID, TEXTURE_NAMES, QuarkGolemsEntities.MODID, LOOT_TABLE_NAMES);
   }
 
   @Override

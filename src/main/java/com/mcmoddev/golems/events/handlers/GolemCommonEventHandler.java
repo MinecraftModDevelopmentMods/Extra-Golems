@@ -86,7 +86,7 @@ public class GolemCommonEventHandler {
             // summon a golem
             GolemBase golem = summonGolem(villager);
             if (golem != null) {
-              ExtraGolems.LOGGER.info("Villager summoned a golem! " + golem.toString());
+              ExtraGolems.LOGGER.debug("Villager summoned a golem! " + golem.toString());
             }
           }
           // reset brain

@@ -17,11 +17,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public final class IronPlateGolem extends GolemMultiTextured {
-
-  public static final String[] PLATE_TYPES = { "normal", "rusty" };
+  
+  public static final String[] TEXTURE_NAMES = { "iron_plate", "rusty_iron_plate" };
+  public static final String[] LOOT_TABLE_NAMES = { "normal", "rusty" };
 
   public IronPlateGolem(final EntityType<? extends GolemBase> entityType, final World world) {
-    super(entityType, world, QuarkGolemsEntities.MODID, PLATE_TYPES);
+    super(entityType, world, QuarkGolemsEntities.QUARK, TEXTURE_NAMES, QuarkGolemsEntities.MODID, LOOT_TABLE_NAMES);
   }
 
   @Override

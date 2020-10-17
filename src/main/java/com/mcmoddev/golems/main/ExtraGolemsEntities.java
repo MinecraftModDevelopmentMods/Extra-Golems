@@ -40,7 +40,6 @@ public final class ExtraGolemsEntities {
     final ResourceLocation tagDeadCoral = new ResourceLocation(ExtraGolems.MODID, "dead_coral_block");
     
     // vines colors
-    final int blue = 0x005a75;
     final int red = 0xb02525;
     final int aqua = 0x1f986e;
     final int brown = 0x4e3d24;

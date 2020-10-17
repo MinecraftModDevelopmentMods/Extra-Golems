@@ -62,26 +62,26 @@ public class ExtraGolems {
 
   @SubscribeEvent
   public static void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
-    ExtraGolems.LOGGER.info("registerEntities");
+    ExtraGolems.LOGGER.debug("registerEntities");
     ExtraGolems.PROXY.registerEntities(event);
     ExtraGolems.PROXY.registerEntityRenders();
   }
 
   @SubscribeEvent
   public static void registerItems(final RegistryEvent.Register<Item> event) {
-    ExtraGolems.LOGGER.info("registerItems");
+    ExtraGolems.LOGGER.debug("registerItems");
     ExtraGolems.PROXY.registerItems(event);
   }
 
   @SubscribeEvent
   public static void registerBlocks(final RegistryEvent.Register<Block> event) {
-    ExtraGolems.LOGGER.info("registerBlocks");
+    ExtraGolems.LOGGER.debug("registerBlocks");
     ExtraGolems.PROXY.registerBlocks(event);
   }
 
   @SubscribeEvent
   public static void registerContainers(final RegistryEvent.Register<ContainerType<?>> event) {
-    ExtraGolems.LOGGER.info("registerContainers");
+    ExtraGolems.LOGGER.debug("registerContainers");
     ExtraGolems.PROXY.registerContainers(event);
     ExtraGolems.PROXY.registerContainerRenders();
   }
