@@ -698,7 +698,7 @@ public final class GolemContainer {
      *
      * @param additionalBlocks blocks that may be used for building
      * @return instance to allow chaining of methods
-     * @see #addBlocks(Tag)
+     * @see #addBlocks(net.minecraft.tags.ITag.INamedTag)
      **/
     public Builder addBlocks(final Block... additionalBlocks) {
       if (additionalBlocks != null && additionalBlocks.length > 0) {
@@ -714,7 +714,7 @@ public final class GolemContainer {
      *
      * @param blockTag the {@code Tag<Block>} to use
      * @return instance to allow chaining of methods
-     * @see #addBlocks(Block[])
+     * @see #addBlocks(Block...)
      **/
     public Builder addBlocks(final ITag.INamedTag<Block> blockTag) {
       this.validBuildingBlockTags.add(blockTag.getName());
@@ -750,7 +750,7 @@ public final class GolemContainer {
     /**
      * Adds any GolemSpecialContainers to be used by the golem. If this option
      * should be toggled (ie, a {@code Boolean}) and you want an in-game
-     * description, use {@link #addSpecial(String, Boolean, String, ITextComponent)}
+     * description, use {@link #addSpecial(String, Boolean, String, IFormattableTextComponent)}
      *
      * @param name    a name unique to this golem's set of config options
      * @param value   the initial (default) value for this config option

@@ -8,7 +8,6 @@ import com.mcmoddev.golems.entity.ai.PlaceBlocksGoal;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -16,7 +15,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effects;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
@@ -26,14 +24,11 @@ public final class MushroomGolem extends GolemMultiTextured {
   public static final String FREQUENCY = "Mushroom Frequency";
   public static final String ALLOW_HEALING = "Allow Special: Random Healing";
 
-  public static final String[] SHROOM_TYPES = { "red", "brown" };
+  public static final String[] TEXTURE_NAMES = { "red_mushroom_block", "brown_mushroom_block" };
+  public static final String[] LOOT_TABLE_NAMES = { "red", "brown" };
 
   public MushroomGolem(final EntityType<? extends GolemBase> entityType, final World world) {
-    super(entityType, world, ExtraGolems.MODID, SHROOM_TYPES, SHROOM_TYPES);
-    for (int n = 0, len = SHROOM_TYPES.length; n < len; n++) {
-      // initialize textures
-      this.textures[n] = new ResourceLocation(ExtraGolems.MODID, "textures/entity/" + GolemNames.MUSHROOM_GOLEM + "/" + SHROOM_TYPES[n] + ".png");
-    }
+    super(entityType, world, "minecraft", TEXTURE_NAMES, ExtraGolems.MODID, LOOT_TABLE_NAMES);
   }
 
   @Override

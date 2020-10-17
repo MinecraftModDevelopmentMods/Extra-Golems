@@ -39,12 +39,6 @@ public final class ExtraGolemsEntities {
     final ResourceLocation tagQuartz = new ResourceLocation(ExtraGolems.MODID, "quartz");
     final ResourceLocation tagDeadCoral = new ResourceLocation(ExtraGolems.MODID, "dead_coral_block");
     
-    // texture resource locations
-    final ResourceLocation skeleton = new ResourceLocation(ExtraGolems.MODID, "textures/entity/" + GolemNames.BONE_GOLEM + "_skeleton.png");
-    final ResourceLocation glass = new ResourceLocation(ExtraGolems.MODID, "textures/entity/" + GolemNames.GLASS_GOLEM + ".png");
-    final ResourceLocation eyesEnder = new ResourceLocation(ExtraGolems.MODID, "textures/entity/layer/ender_eyes.png");
-    final ResourceLocation eyesCreeper = new ResourceLocation(ExtraGolems.MODID, "textures/entity/layer/creeper_eyes.png");
-
     // vines colors
     final int blue = 0x005a75;
     final int red = 0xb02525;
@@ -72,18 +66,20 @@ public final class ExtraGolemsEntities {
         .addBlocks(Blocks.POLISHED_BLACKSTONE, Blocks.POLISHED_BLACKSTONE_BRICKS, Blocks.CHISELED_POLISHED_BLACKSTONE, Blocks.CRACKED_POLISHED_BLACKSTONE_BRICKS)
         .immuneToFire().setDynamicTexture("polished_blackstone").setVinesColor(g -> blue).hasCustomRender().build());
     // BONE GOLEM
+    final ResourceLocation skeleton = new ResourceLocation(ExtraGolems.MODID, "textures/entity/" + GolemNames.BONE_GOLEM + "_skeleton.png");
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.BONE_GOLEM, GenericGolem.class, GenericGolem::new)
         .setHealth(40.0D).setAttack(9.5D).setSpeed(0.30D).addBlocks(Blocks.BONE_BLOCK)
         .setTextureProvider(g -> skeleton).noVines()
         .enableFallDamage().addHealItem(Items.BONE, 0.25D).addHealItem(Items.BONE_MEAL, 0.08D).build());
     // BOOKSHELF GOLEM
+    final ResourceLocation eyesGlasses = new ResourceLocation(ExtraGolems.MODID, "textures/entity/layer/eyes/glasses.png");
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.BOOKSHELF_GOLEM, BookshelfGolem.class, BookshelfGolem::new)
         .setHealth(28.0D).setAttack(1.5D).setSpeed(0.29D).addBlocks(Blocks.BOOKSHELF)
         .addSpecial(BookshelfGolem.ALLOW_SPECIAL, true, "Whether this golem can give itself potion effects",
             new TranslationTextComponent("entitytip.grants_self_potion_effects").mergeStyle(TextFormatting.LIGHT_PURPLE))
         .setSwimMode(SwimMode.FLOAT).setSound(SoundEvents.BLOCK_WOOD_STEP)
         .addHealItem(Items.BOOK, 0.25D).addHealItem(Items.OAK_PLANKS, 0.25D)
-        .setDynamicTexture("bookshelf").build());
+        .setDynamicTexture("bookshelf").setEyesProvider(g -> eyesGlasses).build());
     // CLAY GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.CLAY_GOLEM, GenericGolem.class, GenericGolem::new)
         .setHealth(20.0D).setAttack(2.0D).addBlocks(Blocks.CLAY).setSound(SoundEvents.BLOCK_GRAVEL_STEP)
@@ -134,6 +130,7 @@ public final class ExtraGolemsEntities {
         .setHealth(50.0D).setAttack(6.0D).setSpeed(0.25D).setKnockbackResist(0.8D).addBlocks(Blocks.POLISHED_DIORITE)
         .setDynamicTexture("polished_diorite").build());
     // DISPENSER GOLEM
+    final ResourceLocation dispenser = new ResourceLocation(ExtraGolems.MODID, "textures/entity/" + GolemNames.DISPENSER_GOLEM + ".png");
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.DISPENSER_GOLEM, DispenserGolem.class, DispenserGolem::new)
         .setHealth(68.0D).addSpecial(DispenserGolem.ALLOW_SPECIAL, true, "Whether the golem can shoot arrows",
             new TranslationTextComponent("entitytip.shoots_arrows").mergeStyle(TextFormatting.LIGHT_PURPLE))
@@ -141,12 +138,13 @@ public final class ExtraGolemsEntities {
         .addSpecial(DispenserGolem.ARROW_SPEED, 28, "Number of ticks between shooting arrows")
         .addDesc(new GolemDescription(new TranslationTextComponent("entitytip.click_refill").mergeStyle(TextFormatting.GRAY),
             DispenserGolem.ALLOW_SPECIAL))
-        .addBlocks(Blocks.DISPENSER).addHealItem(Items.COBBLESTONE, 0.25D).setDynamicTexture("dispenser_front").build());
+        .addBlocks(Blocks.DISPENSER).addHealItem(Items.COBBLESTONE, 0.25D).setTextureProvider(g -> dispenser).build());
     // EMERALD GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.EMERALD_GOLEM, GenericGolem.class, GenericGolem::new)
         .setHealth(190.0D).setAttack(18.0D).setKnockbackResist(0.8D).addBlocks(Blocks.EMERALD_BLOCK)
         .addHealItem(Items.EMERALD, 0.25D).setDynamicTexture("emerald_block").build());
     // ENDSTONE GOLEM
+    final ResourceLocation eyesEnder = new ResourceLocation(ExtraGolems.MODID, "textures/entity/layer/eyes/ender.png");
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.ENDSTONE_GOLEM, EndstoneGolem.class, EndstoneGolem::new)
         .setHealth(50.0D).setAttack(8.0D).setSpeed(0.26D).setKnockbackResist(0.3D).addBlocks(Blocks.END_STONE, Blocks.END_STONE_BRICKS)
         .addSpecial(EndstoneGolem.ALLOW_WATER_HURT, true, "Whether the Endstone Golem takes damage from water")
@@ -161,6 +159,7 @@ public final class ExtraGolemsEntities {
         .addHealItem(Items.COBBLESTONE, 0.25D).setTextureProvider(g -> ((FurnaceGolem)g).getTexture())
         .textureGlow(g -> ((FurnaceGolem)g).hasFuel()).build());
     // GLASS GOLEM
+    final ResourceLocation glass = new ResourceLocation(ExtraGolems.MODID, "textures/entity/" + GolemNames.GLASS_GOLEM + ".png");
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.GLASS_GOLEM, GenericGolem.class, GenericGolem::new)
         .setHealth(8.0D).setAttack(13.0D).setSpeed(0.30D).addBlocks(Blocks.GLASS).enableFallDamage()
         .setSound(SoundEvents.BLOCK_GLASS_STEP).setTextureProvider(g -> glass).noVines().build());
@@ -263,7 +262,7 @@ public final class ExtraGolemsEntities {
             new TranslationTextComponent("entitytip.plants_shrooms").mergeStyle(TextFormatting.DARK_GREEN))
         .setSwimMode(SwimMode.FLOAT).setSound(SoundEvents.BLOCK_GRASS_STEP)
         .addHealItem(Items.RED_MUSHROOM, 0.25D).addHealItem(Items.BROWN_MUSHROOM, 0.25D)
-        .setTextureProvider(g -> ((MushroomGolem)g).getTexture()).noVines().build());
+        .setDynamicTexture("mushroom_stem").hasCustomRender().build());
     // NETHER BRICK GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.NETHERBRICK_GOLEM, NetherBrickGolem.class, NetherBrickGolem::new)
         .setHealth(25.0D).setAttack(6.5D).setSpeed(0.28D).setKnockbackResist(0.2D)
@@ -384,12 +383,13 @@ public final class ExtraGolemsEntities {
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.TERRACOTTA_GOLEM, GenericGolem.class, GenericGolem::new)
         .setHealth(42.0D).setAttack(4.0D).setSpeed(0.208D).setKnockbackResist(0.6D).addBlocks(Blocks.TERRACOTTA).setDynamicTexture("terracotta").build());
     // TNT GOLEM
+    final ResourceLocation eyesCreeper = new ResourceLocation(ExtraGolems.MODID, "textures/entity/layer/eyes/creeper.png");
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.TNT_GOLEM, TNTGolem.class, TNTGolem::new)
         .setHealth(14.0D).setAttack(2.5D).setSpeed(0.26D).addBlocks(Blocks.TNT)
         .addSpecial(TNTGolem.ALLOW_SPECIAL, true, "Whether this golem can explode when fighting or dying",
             new TranslationTextComponent("entitytip.explodes").mergeStyle(TextFormatting.RED))
         .setSwimMode(SwimMode.FLOAT).setSound(SoundEvents.BLOCK_GRAVEL_STEP).addHealItem(Items.GUNPOWDER, 0.25D)
-        .addHealItem(Items.SAND, 0.25D).setDynamicTexture("tnt_side").setEyesProvider(g -> eyesCreeper).build());
+        .addHealItem(Items.SAND, 0.25D).setDynamicTexture("tnt_side").setEyesProvider(g -> eyesCreeper).eyesGlow().build());
     // WARPED STEM GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.WARPEDSTEM_GOLEM, WarpedStemGolem.class, WarpedStemGolem::new)
         .setHealth(24.0D).setAttack(3.0D).setSpeed(0.289D).setKnockbackResist(0.2D).addBlocks(BlockTags.WARPED_STEMS)
@@ -406,6 +406,6 @@ public final class ExtraGolemsEntities {
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.WOOL_GOLEM, WoolGolem.class, WoolGolem::new)
         .setHealth(10.0D).setAttack(1.0D).setSpeed(0.295D).setKnockbackResist(0.2D).addBlocks(BlockTags.WOOL)
         .setSwimMode(SwimMode.FLOAT).setSound(SoundEvents.BLOCK_WOOL_STEP)
-        .addHealItem(Items.STRING, 0.1D).setTextureProvider(g -> ((WoolGolem)g).getTexture()).noVines().build());
+        .addHealItem(Items.STRING, 0.1D).setDynamicTexture("white_wool").noVines().hasCustomRender().build());
   }
 }

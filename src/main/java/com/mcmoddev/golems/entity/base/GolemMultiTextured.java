@@ -60,16 +60,16 @@ public abstract class GolemMultiTextured extends GolemBase implements IMultiText
    * <code>golems/textures/entity/golem_example/three.png</code> <br>
    * as well as loot tables for the same names with the JSON suffix
    **/
-  public GolemMultiTextured(final EntityType<? extends GolemBase> entityType, final World world, final String modid, 
-      final String[] textureNames, final String[] lootTableNames) {
+  public GolemMultiTextured(final EntityType<? extends GolemBase> entityType, final World world, final String textureModId, 
+      final String[] textureNames, final String lootTableModId, final String[] lootTableNames) {
     super(entityType, world);
     this.textures = new ResourceLocation[textureNames.length];
     this.lootTables = new ResourceLocation[lootTableNames.length];
     for (int n = 0, len = textureNames.length; n < len; n++) {
       // initialize textures
-      this.textures[n] = new ResourceLocation("minecraft", "textures/block/" + textureNames[n] + ".png");
+      this.textures[n] = new ResourceLocation(textureModId, "textures/block/" + textureNames[n] + ".png");
       // initialize loot tables
-      this.lootTables[n] = new ResourceLocation(modid, "entities/" + this.getGolemContainer().getName() + "/" + lootTableNames[n]);
+      this.lootTables[n] = new ResourceLocation(lootTableModId, "entities/" + this.getGolemContainer().getName() + "/" + lootTableNames[n]);
     }
   }
 

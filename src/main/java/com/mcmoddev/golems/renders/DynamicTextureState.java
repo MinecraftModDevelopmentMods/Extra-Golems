@@ -19,30 +19,41 @@ public class DynamicTextureState {
   
   public static final int TILES = 8;
   public ResourceLocation location;
+  public ResourceLocation templateImage;
   public RenderState.TextureState state;
   public DynamicTexture texture;
 
   /**
-   * @param name a ResourceLocation string of the image file to use
+   * @param blockName a ResourceLocation of a block image file
+   * @param templateName a ResourceLocation of a template image file
    **/
-  public DynamicTextureState(String name) {
-    location = new ResourceLocation(ExtraGolems.MODID, "dynamic/" + new ResourceLocation(name).getPath());
+  public DynamicTextureState(ResourceLocation blockName, ResourceLocation templateName) {
+    location = new ResourceLocation(ExtraGolems.MODID, "dynamic/" + blockName.getPath());
+    templateImage = templateName;
     
-    // attempt to read a texture from the given location
-    try (IResource res = Minecraft.getInstance().getResourceManager().getResource(new ResourceLocation(name))) {
-      NativeImage block = NativeImage.read(res.getInputStream());
-      int blockWidth = block.getWidth();
-      int width = TILES * blockWidth;
-      int height = TILES * blockWidth;
-      texture = new DynamicTexture(width, height, true);
-      NativeImage img = texture.getTextureData();
-      for (int i = 0; i < width; ++i) {
-        for (int j = 0; j < height; ++j) {
-          img.setPixelRGBA(i, j, block.getPixelRGBA(i % blockWidth, j % blockWidth));
+    try {
+      // attempt to read the block and template textures
+      IResource blockResource = Minecraft.getInstance().getResourceManager().getResource(blockName);
+      IResource templateResource = Minecraft.getInstance().getResourceManager().getResource(templateName);
+      NativeImage block = NativeImage.read(blockResource.getInputStream());
+      NativeImage template = NativeImage.read(templateResource.getInputStream());
+      final int blockWidth = block.getWidth();
+      final int outputWidth = TILES * blockWidth;
+      final int outputHeight = TILES * blockWidth;
+      final int templateWidth = template.getWidth();
+      final int templateHeight = template.getHeight();
+      final float scale = outputWidth / templateWidth;
+      // create a new texture and write each pixel
+      texture = new DynamicTexture(outputWidth, outputHeight, true);
+      NativeImage outputImg = texture.getTextureData();
+      for (int j = 0; j < outputHeight; ++j) {
+        for (int i = 0; i < outputWidth; ++i) {
+          int alpha = template.getPixelLuminanceOrAlpha((int)(i / scale) % templateWidth, (int)(j / scale) % templateHeight);
+          outputImg.setPixelRGBA(i, j, block.getPixelRGBA(i % blockWidth, j % blockWidth) & alpha);
         }
       }
     } catch (IOException e) {
-      ExtraGolems.LOGGER.error("Error trying to make dynamic texture for " + name);
+      ExtraGolems.LOGGER.error("Error trying to make dynamic texture for " + blockName + " with template " + templateName);
       texture = new DynamicTexture(16 * TILES, 16 * TILES, true);
       texture.getTextureData().fillAreaRGBA(0, 0, 16 * TILES, 16 * TILES, 0xffffffff);
       e.printStackTrace();

@@ -30,7 +30,7 @@ public final class RedstoneLampGolem extends GolemMultiTextured {
   public static final BiPredicate<GolemBase, BlockPos> LIT_PRED = (golem, pos) -> golem.isProvidingLight();
 
   public RedstoneLampGolem(final EntityType<? extends GolemBase> entityType, final World world) {
-    super(entityType, world, ExtraGolems.MODID, TEXTURE_NAMES, LOOT_TABLE_NAMES);
+    super(entityType, world, "minecraft", TEXTURE_NAMES, ExtraGolems.MODID, LOOT_TABLE_NAMES);
   }
   
   @Override

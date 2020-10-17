@@ -29,7 +29,7 @@ public final class WoodenGolem extends GolemMultiTextured {
   public static final String[] LOOT_TABLE_NAMES = { "oak", "spruce", "birch", "jungle", "acacia", "dark_oak" };
 
   public WoodenGolem(final EntityType<? extends GolemBase> entityType, final World world) {
-    super(entityType, world, ExtraGolems.MODID, TEXTURE_NAMES, LOOT_TABLE_NAMES);
+    super(entityType, world, "minecraft", TEXTURE_NAMES, ExtraGolems.MODID, LOOT_TABLE_NAMES);
   }
 
   @Override

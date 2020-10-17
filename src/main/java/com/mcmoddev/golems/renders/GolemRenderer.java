@@ -93,6 +93,12 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
     // get render settings from the golem container
     final GolemRenderSettings settings = golem.getGolemContainer().getRenderSettings();
     matrixStackIn.push();
+    // scale
+    if (golem.isChild()) {
+      float scaleChild = 0.5F;
+      matrixStackIn.scale(scaleChild, scaleChild, scaleChild);
+      //matrixStackIn.translate(0.0F, 1.5F, 0.0F);
+    }
     // colors
     if(settings.hasColor()) {
       final Vector3f colors = GolemRenderSettings.unpackColor(settings.getBlockColorProvider().getColor(golem));

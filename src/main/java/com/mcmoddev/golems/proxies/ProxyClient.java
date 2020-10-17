@@ -1,5 +1,7 @@
 package com.mcmoddev.golems.proxies;
 
+import com.mcmoddev.golems.entity.MushroomGolem;
+import com.mcmoddev.golems.entity.WoolGolem;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.gui.GuiDispenserGolem;
 import com.mcmoddev.golems.main.ExtraGolems;
@@ -12,8 +14,10 @@ import com.mcmoddev.golems.util.GolemRegistrar;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.ModelBakery;
 import net.minecraft.client.resources.ReloadListener;
+import net.minecraft.entity.EntityType;
 import net.minecraft.profiler.IProfiler;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManager;
@@ -62,28 +66,47 @@ public final class ProxyClient extends ProxyCommon {
       }
     });
     // Custom renders
-    registerLapisGolemRenders();
-    registerBlackstoneGolemRenders();
+    registerWithSimpleLayer(
+        GolemRegistrar.getContainer(new ResourceLocation(ExtraGolems.MODID, GolemNames.LAPIS_GOLEM)).getEntityType(),
+        new ResourceLocation(ExtraGolems.MODID, "textures/entity/layer/gold_edging.png"));
+    registerWithSimpleLayer(
+        GolemRegistrar.getContainer(new ResourceLocation(ExtraGolems.MODID, GolemNames.BLACKSTONE_GOLEM)).getEntityType(),
+        new ResourceLocation(ExtraGolems.MODID, "textures/entity/layer/gold_nuggets.png"));
+    // Wool and Mushroom golems
+    registerWoolGolemRenders();
+    registerMushroomGolemRenders();
   }
   
-  private void registerLapisGolemRenders() {
-    final ResourceLocation GOLD = new ResourceLocation(ExtraGolems.MODID, "textures/entity/layer/gold_edging.png");
-    RenderingRegistry.registerEntityRenderingHandler(
-        GolemRegistrar.getContainer(new ResourceLocation(ExtraGolems.MODID, GolemNames.LAPIS_GOLEM)).getEntityType(), 
-        m -> {
-          GolemRenderer<GolemBase> r = new GolemRenderer<>(m);
-          return r.withLayer(new SimpleTextureLayer<>(r, g -> GOLD, g -> 0xFFFFFF, g -> false, 1.0F)).withAllLayers();
-        });
+  private void registerWithSimpleLayer(final EntityType<? extends GolemBase> entityType, final ResourceLocation layer) {
+    RenderingRegistry.registerEntityRenderingHandler(entityType, 
+      m -> {
+        GolemRenderer<GolemBase> r = new GolemRenderer<>(m);
+        return r.withLayer(new SimpleTextureLayer<>(r, g -> layer, g -> 0xFFFFFF, g -> false, 1.0F)).withAllLayers();
+      });
   }
   
-  private void registerBlackstoneGolemRenders() {
-    final ResourceLocation GOLD = new ResourceLocation(ExtraGolems.MODID, "textures/entity/layer/gold_nuggets.png");
+  private void registerWoolGolemRenders() {
     RenderingRegistry.registerEntityRenderingHandler(
-        GolemRegistrar.getContainer(new ResourceLocation(ExtraGolems.MODID, GolemNames.BLACKSTONE_GOLEM)).getEntityType(), 
-        m -> {
-          GolemRenderer<GolemBase> r = new GolemRenderer<>(m);
-          return r.withLayer(new SimpleTextureLayer<>(r, g -> GOLD, g -> 0xFFFFFF, g -> false, 1.0F)).withAllLayers();
-        });
+      GolemRegistrar.getContainer(new ResourceLocation(ExtraGolems.MODID, GolemNames.WOOL_GOLEM)).getEntityType(), 
+      m -> {
+        GolemRenderer<GolemBase> r = new GolemRenderer<>(m);
+        return r.withLayer(new SimpleTextureLayer<GolemBase>(r, g -> ((WoolGolem)g).getTexture(), g -> 0xFFFFFF, g -> false, 1.0F) {
+          @Override
+          protected RenderType getRenderType(final ResourceLocation texture) { return GolemRenderType.getGolemCutout(texture, GolemRenderType.WOOL_TEMPLATE, true); }
+        }).withAllLayers();
+      });
+  }
+  
+  private void registerMushroomGolemRenders() {
+    RenderingRegistry.registerEntityRenderingHandler(
+      GolemRegistrar.getContainer(new ResourceLocation(ExtraGolems.MODID, GolemNames.MUSHROOM_GOLEM)).getEntityType(), 
+      m -> {
+        GolemRenderer<GolemBase> r = new GolemRenderer<>(m);
+        return r.withLayer(new SimpleTextureLayer<GolemBase>(r, g -> ((MushroomGolem)g).getTexture(), g -> 0xFFFFFF, g -> false, 1.0F) {
+          @Override
+          protected RenderType getRenderType(final ResourceLocation texture) { return GolemRenderType.getGolemCutout(texture, GolemRenderType.MUSHROOM_TEMPLATE, true); }
+        }).withAllLayers();
+      });
   }
 
 }

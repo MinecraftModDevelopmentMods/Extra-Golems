@@ -42,11 +42,11 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> {
   public void render(final MatrixStack matrixStackIn, final IVertexBuilder vertexBuilder, final int packedLightIn, final int packedOverlayIn, final float redIn,
       final float greenIn, final float blueIn, final float alphaIn) {
     // scale as necessary
-    if (isChild) {
-      float scaleChild = 0.5F;
-      matrixStackIn.scale(scaleChild, scaleChild, scaleChild);
-      matrixStackIn.translate(0.0F, 1.5F, 0.0F);
-    }
+//    if (isChild) {
+//      float scaleChild = 0.5F;
+//      matrixStackIn.scale(scaleChild, scaleChild, scaleChild);
+//      matrixStackIn.translate(0.0F, 1.5F, 0.0F);
+//    }
     // check for holiday tweaks
     if(ExtraGolemsConfig.aprilFirst()) {
       matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(180.0F));

@@ -50,12 +50,12 @@ public final class CoralGolem extends GolemMultiTextured {
   private final int maxChangingTime;
 
   public CoralGolem(final EntityType<? extends GolemBase> entityType, final World world) {
-    super(entityType, world, ExtraGolems.MODID, TEXTURE_NAMES, LOOT_TABLES);
+    super(entityType, world, "minecraft", TEXTURE_NAMES, ExtraGolems.MODID, LOOT_TABLES);
     this.texturesDry = new ResourceLocation[TEXTURE_NAMES.length];
     this.lootTablesDry = new ResourceLocation[LOOT_TABLES.length];
     for (int n = 0, len = TEXTURE_NAMES.length; n < len; n++) {
       // initialize "dead" textures
-      this.lootTablesDry[n] = new ResourceLocation(ExtraGolems.MODID, "textures/block/dead_" + TEXTURE_NAMES[n] + ".png");
+      this.lootTablesDry[n] = new ResourceLocation("minecraft", "textures/block/dead_" + TEXTURE_NAMES[n] + ".png");
       this.lootTablesDry[n] = new ResourceLocation(ExtraGolems.MODID, "entities/" + this.getGolemContainer().getName() + "/dead_" + LOOT_TABLES[n]);
     }
     allowHealing = this.getConfigBool(ALLOW_HEALING);
