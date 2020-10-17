@@ -10,7 +10,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.NetherWartBlock;
 import net.minecraft.entity.EntityType;
 import net.minecraft.potion.Effects;
-import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 
 public final class NetherWartGolem extends GolemBase {

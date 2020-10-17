@@ -97,7 +97,6 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
     if (golem.isChild()) {
       float scaleChild = 0.5F;
       matrixStackIn.scale(scaleChild, scaleChild, scaleChild);
-      //matrixStackIn.translate(0.0F, 1.5F, 0.0F);
     }
     // colors
     if(settings.hasColor()) {

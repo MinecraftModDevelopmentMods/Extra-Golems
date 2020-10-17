@@ -48,8 +48,12 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.registries.IRegistryDelegate;
 
 /**
+ * This class stores characteristics and other vital information
+ * about a single golem. These attributes are then referenced from
+ * {@link GolemBase} as needed.
+ * Must be created using the {@link GolemContainer.Builder}.
  * Adapted from BetterAnimalsPlus by its_meow. Used with permission.
- */
+ **/
 @SuppressWarnings("rawtypes")
 public final class GolemContainer {
 
@@ -84,6 +88,7 @@ public final class GolemContainer {
    * @param lEntityType             a constructed EntityType for the golem
    * @param lEntityClass            the class that will handle the golem behavior
    * @param lPath                   the golem name
+   * @param lRenderSettings         a GolemRenderSettings instance
    * @param lValidBuildingBlocks    a List of block delegates to build the golem
    * @param lValidBuildingBlockTags a List of Block Tags to build the golem
    * @param lHealth                 base health value
@@ -545,7 +550,7 @@ public final class GolemContainer {
 
    /**
     * Prevents the golem from using the default render factory. If this is called,
-    * you must register your own {@code LivingRenderer}
+    * you must register your own {@code LivingRenderer}. <strong>Defaults to false</strong>
     * 
     * @return instance to allow chaining of methods
     **/
@@ -555,20 +560,21 @@ public final class GolemContainer {
    }
    
    /**
-    * Sets a pre-made GolemRenderSettings to use. It is highly recommended to
-    * use the helper methods instead, but this method is here for flexibility.
+    * Sets a pre-made GolemRenderSettings to use. <strong>It is highly recommended to
+    * use the helper methods instead</strong>, but this method is here for flexibility.
     *
     * @param renderSettings A pre-built render settings class to use
     * @return instance to allow chaining of methods
-    * @see #setDynamicTexture(Block)
-    * @see #setTextureProvider(ITextureProvider)
+    * @see #setDynamicTexture(ITextureProvider)
+    * @see #setStaticTexture(ITextureProvider)
     * @see #setTextureColor(IColorProvider)
+    * @see #noLighting()
     * @see #setVinesProvider(ITextureProvider)
-    * @see #vinesGlow()
+    * @see #noVinesLighting()
     * @see #setVinesColor(IColorProvider)
     * @see #noVines()
     * @see #setEyesProvider(ITextureProvider)
-    * @see #eyesGlow()
+    * @see #noEyesLighting()
     **/
    public Builder setRenderSettings(final GolemRenderSettings renderSettings) {
      customSettings = renderSettings;
@@ -577,30 +583,53 @@ public final class GolemContainer {
 
     /**
      * Sets a prefabricated texture location for the golem.
+     * The vines layer will still render unless it is
+     * specifically disabled using {@link #noVines()}.
+     * Prefabricated textures can still be colored using
+     * {@link #setTextureColor(IColorProvider)}.
      *
      * @param prefab The texture provider to use for the golem
      * @return instance to allow chaining of methods
      **/
-    public Builder setTextureProvider(final GolemRenderSettings.ITextureProvider prefab) {
+    public Builder setStaticTexture(final GolemRenderSettings.ITextureProvider prefab) {
       hasPrefabTexture = true;
       prefabTextureProvider = prefab;
       return this;
     }
 
+    /**
+     * Defines a dynamic (block-based) texture location for the golem by
+     * wrapping the given modid and block texture name into a ResourceLocation at
+     * {@code minecraft:textures/block/blockTexture.png}
+     * @param blockTexture the name of the texture file, not including .png extension
+     * @return instance to allow chaining of methods
+     * @see #setDynamicTexture(String, String)
+     **/
     public Builder setDynamicTexture(final String blockTexture) {
       return setDynamicTexture("minecraft", blockTexture);
     }
     
+    /**
+     * Defines a dynamic (block-based) texture location for the golem by
+     * wrapping the given modid and block texture name into a ResourceLocation at
+     * {@code modid:textures/block/blockTexture.png}
+     * @param modid the namespace of the texture file
+     * @param blockTexture the name of the texture file, not including .png extension
+     * @return instance to allow chaining of methods
+     * @see #setDynamicTexture(ITextureProvider)
+     **/
     public Builder setDynamicTexture(final String modid, final String blockTexture) {
       final ResourceLocation texture = new ResourceLocation(modid, "textures/block/" + blockTexture + ".png");
       return setDynamicTexture(g -> texture);
     }
 
     /**
-     * Sets a dynamic (block-based) texture location for the golem.
+     * Defines a dynamic (block-based) texture location for the golem.
      * 
      * @param texture the dynamic texture provider
      * @return instance to allow chaining of methods
+     * @see #setDynamicTexture(String)
+     * @see #setDynamicTexture(String, String)
      **/
     public Builder setDynamicTexture(final GolemRenderSettings.ITextureProvider texture) {
       hasPrefabTexture = false;
@@ -609,7 +638,7 @@ public final class GolemContainer {
     }
     
     /**
-     * Sets a color provider for the golem texture.
+     * Defines a color provider for the golem texture.
      *
      * @param textureColorer The color provider to use
      * @return instance to allow chaining of methods
@@ -620,49 +649,94 @@ public final class GolemContainer {
       return this;
     }
     
-    public Builder textureGlow() {
-      return textureGlow(g -> true);
-    }
-    
-    public Builder textureGlow(final GolemRenderSettings.ILightingProvider glow) {
-      textureGlowProvider = glow;
-      return this;
-    }
-    
+    /**
+     * Indicates that the texture should be rendered
+     * with transparency enabled.
+     * @return instance to allow chaining of methods
+     **/
     public Builder transparent() {
       hasTransparency = true;
       return this;
     }
 
+    /**
+     * Disables the vines layer on the texture.
+     * @return instance to allow chaining of methods
+     **/
     public Builder noVines() {
       hasVinesTexture = false;
       doVinesGlow = false;
       return this;
     }
     
+    /**
+     * Defines a texture provider for the vines layer.
+     * @param vines the texture provider
+     * @return instance to allow chaining of methods
+     **/
     public Builder setVinesProvider(final GolemRenderSettings.ITextureProvider vines) {
       hasVinesTexture = true;
       vinesTextureProvider = vines;
       return this;
     }
     
+    /**
+     * Defines a color provider for the vines layer.
+     * Vines are grayscale but use color {@code 0x83a05a} by default.
+     * @param vinesColorer the color provider
+     * @return instance to allow chaining of methods
+     **/
     public Builder setVinesColor(final GolemRenderSettings.IColorProvider vinesColorer) {
       vinesColorProvider = vinesColorer;
       return this;
     }
+
+    /**
+     * Defines a texture provider for the eyes layer.
+     * @param eyes the texture provider
+     * @return instance to allow chaining of methods
+     **/
+    public Builder setEyesProvider(final GolemRenderSettings.ITextureProvider eyes) {
+      eyesTextureProvider = eyes;
+      return this;
+    }
     
-    public Builder vinesGlow() {
+    /**
+     * Disables lighting for the vines layer.
+     * @return instance to allow chaining of methods
+     **/
+    public Builder noVinesLighting() {
       doVinesGlow = true;
       return this;
     }
     
-    public Builder eyesGlow() {
+    /**
+     * Disables lighting on the eyes layer.
+     * @return instance to allow chaining of methods
+     **/
+    public Builder noEyesLighting() {
       doEyesGlow = true;
       return this;
     }
+     
+    /**
+     * Disables lighting for the base texture. This is applied
+     * for dynamic as well as prefabricated textures.
+     * @return instance to allow chaining of methods
+     * @see #noLighting(ILightingProvider)
+     **/
+    public Builder noLighting() {
+      return noLighting(g -> true);
+    }
     
-    public Builder setEyesProvider(final GolemRenderSettings.ITextureProvider eyes) {
-      eyesTextureProvider = eyes;
+    /**
+     * Sets the lighting for the base texture. This is applied
+     * for dynamic as well as prefabricated textures.
+     * @param noLighting the lighting provider to apply
+     * @return instance to allow chaining of methods
+     **/
+    public Builder noLighting(final GolemRenderSettings.ILightingProvider noLighting) {
+      textureGlowProvider = noLighting;
       return this;
     }
 

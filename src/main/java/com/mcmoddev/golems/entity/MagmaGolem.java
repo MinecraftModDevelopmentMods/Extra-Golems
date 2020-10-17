@@ -1,8 +1,6 @@
 package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
-import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -11,7 +9,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -24,11 +21,6 @@ public final class MagmaGolem extends GolemBase {
   public static final String ALLOW_WATER_DAMAGE = "Enable Water Damage";
   public static final String SPLITTING_CHILDREN = "Splitting Factor";
   public static final String MELT_DELAY = "Melting Delay";
-
-  private static final String TEXTURE_LOC = ExtraGolems.MODID + ":textures/entity/" + GolemNames.MAGMA_GOLEM + "/";
-  private static final ResourceLocation[] TEXTURES = new ResourceLocation[] { new ResourceLocation(TEXTURE_LOC + "_0.png"),
-      new ResourceLocation(TEXTURE_LOC + "1.png"), new ResourceLocation(TEXTURE_LOC + "2.png"), new ResourceLocation(TEXTURE_LOC + "3.png"),
-      new ResourceLocation(TEXTURE_LOC + "2.png"), new ResourceLocation(TEXTURE_LOC + "1.png") };
 
   /**
    * Golem should stand in one spot for number of ticks before affecting the block
@@ -74,13 +66,6 @@ public final class MagmaGolem extends GolemBase {
       allowFire = false;
     }
   }
-
-//  @Override
-//  public ResourceLocation getTexture() {
-//    final int changeInterval = 5;
-//    int textureNum = ((this.ticksExisted + this.getEntityId()) / changeInterval) % TEXTURES.length;
-//    return TEXTURES[textureNum];
-//  }
 
   /**
    * Attack by lighting on fire as well.

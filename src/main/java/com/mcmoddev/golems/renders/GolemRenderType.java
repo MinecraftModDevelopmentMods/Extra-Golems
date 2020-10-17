@@ -39,16 +39,13 @@ public class GolemRenderType extends RenderType {
     return dynamicTextureMap.get(texture).state;
   }
   
-  
-  
   public static RenderType getGolemCutout(final ResourceLocation texture, final boolean dynamic) {
     return getGolemCutout(texture, TEMPLATE, dynamic);
   }
   
-
   public static RenderType getGolemCutout(final ResourceLocation texture, final ResourceLocation template, final boolean dynamic) {        
     if(!dynamic) {
-      RenderType.getEntityCutoutNoCull(texture);
+      return RenderType.getEntityCutoutNoCull(texture);
     }
     // make dynamic cutout type
     return makeType("golem_cutout", DefaultVertexFormats.ENTITY, GL11.GL_QUADS, 256, true, false,
@@ -65,7 +62,7 @@ public class GolemRenderType extends RenderType {
   
   public static RenderType getGolemTransparent(final ResourceLocation texture, final boolean dynamic) {
     if(!dynamic) {
-      RenderType.getEntityTranslucent(texture);
+      return RenderType.getEntityTranslucent(texture);
     }
     // make dynamic translucent type
     return makeType("golem_transparent", DefaultVertexFormats.ENTITY, GL11.GL_QUADS, 256, true, true, 
@@ -82,7 +79,7 @@ public class GolemRenderType extends RenderType {
   
   public static RenderType getGolemOutline(final ResourceLocation texture, final boolean dynamic) {
     if(!dynamic) {
-      RenderType.getOutline(texture);
+      return RenderType.getOutline(texture);
     }
     // make dynamic outline type
     return makeType("golem_outline", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, 256, 
