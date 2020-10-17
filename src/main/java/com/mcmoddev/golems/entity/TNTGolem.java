@@ -12,11 +12,10 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Explosion.Mode;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
@@ -91,7 +90,7 @@ public class TNTGolem extends GolemBase {
     if (this.isIgnited()) {
       this.setMotion(0.0D, this.getMotion().getY(), 0.0D);
       this.fuseTimer--;
-      final Vector3d pos = this.getPositionVec();
+      final Vec3d pos = this.getPositionVec();
       ItemBedrockGolem.spawnParticles(this.world, pos.x, pos.y + 1.0D, pos.z, 0.21D, ParticleTypes.SMOKE, 6);
       if (this.fuseTimer <= 0) {
         this.willExplode = true;
@@ -122,10 +121,10 @@ public class TNTGolem extends GolemBase {
   }
 
   @Override
-  protected ActionResultType func_230254_b_(final PlayerEntity player, final Hand hand) { // processInteract
+  protected boolean processInteract(final PlayerEntity player, final Hand hand) {
     final ItemStack itemstack = player.getHeldItem(hand);
     if (!itemstack.isEmpty() && itemstack.getItem() == Items.FLINT_AND_STEEL) {
-      final Vector3d pos = this.getPositionVec();
+      final Vec3d pos = this.getPositionVec();
       this.world.playSound(player, pos.x, pos.y, pos.z, SoundEvents.ITEM_FLINTANDSTEEL_USE, this.getSoundCategory(), 1.0F,
           this.rand.nextFloat() * 0.4F + 0.8F);
       player.swingArm(hand);
@@ -135,10 +134,10 @@ public class TNTGolem extends GolemBase {
         this.ignite();
         itemstack.damageItem(1, player, c -> c.sendBreakAnimation(hand));
       }
-      return ActionResultType.SUCCESS;
+      return true;
     }
 
-    return super.func_230254_b_(player, hand);
+    return super.processInteract(player, hand);
   }
 
   protected void resetFuse() {
@@ -177,7 +176,7 @@ public class TNTGolem extends GolemBase {
         final boolean flag = this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING);
         final float range = this.maxExplosionRad > this.minExplosionRad ? (minExplosionRad + rand.nextInt(maxExplosionRad - minExplosionRad))
             : this.minExplosionRad;
-        final Vector3d pos = this.getPositionVec();
+        final Vec3d pos = this.getPositionVec();
         this.world.createExplosion(this, pos.x, pos.y, pos.z, range, flag ? Mode.BREAK : Mode.NONE);
         this.remove();
       }

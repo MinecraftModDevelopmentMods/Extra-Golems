@@ -1,6 +1,6 @@
 package com.mcmoddev.golems.events;
 
-import com.mcmoddev.golems.util.config.GolemContainer;
+import com.mcmoddev.golems.util.GolemContainer;
 
 import net.minecraftforge.eventbus.api.Event;
 

@@ -9,7 +9,6 @@ import com.mcmoddev.golems.integration.AddonLoader;
 import com.mcmoddev.golems.proxies.ProxyClient;
 import com.mcmoddev.golems.proxies.ProxyCommon;
 import com.mcmoddev.golems.proxies.ProxyServer;
-import com.mcmoddev.golems.util.BlockTagUtil;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 
 import net.minecraft.block.Block;
@@ -44,7 +43,6 @@ public class ExtraGolems {
     FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
     MinecraftForge.EVENT_BUS.register(new GolemCommonEventHandler());
     ExtraGolems.PROXY.registerListeners();
-    BlockTagUtil.loadTags();
     ExtraGolemsEntities.initEntityTypes();
     AddonLoader.initEntityTypes();
     // fire GolemRegistrar event for any listening child mods (addons)

@@ -2,7 +2,6 @@ package com.mcmoddev.golems.entity;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
@@ -14,7 +13,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.RegistryKey;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
@@ -23,7 +21,7 @@ import net.minecraft.world.biome.Biomes;
 
 public final class WoodenGolem extends GolemMultiTextured {
   
-  private static final Map<RegistryKey<Biome>, Integer> BIOME_TO_TEXTURE_MAP = new HashMap<>();
+  private static final Map<Biome, Integer> BIOME_TO_TEXTURE_MAP = new HashMap<>();
   
   public static final String[] TEXTURE_NAMES = { "oak_log", "spruce_log", "birch_log", "jungle_log", "acacia_log", "dark_oak_log" };
   public static final String[] LOOT_TABLE_NAMES = { "oak", "spruce", "birch", "jungle", "acacia", "dark_oak" };
@@ -83,8 +81,8 @@ public final class WoodenGolem extends GolemMultiTextured {
   public void randomizeTexture(final World world, final BlockPos pos) {
     // use the location to select a biome-appropriate texture
     final boolean useBiome = world.getRandom().nextBoolean();
-    if (useBiome) {
-      final Optional<RegistryKey<Biome>> biome = world.func_242406_i(pos);
+    final Biome biome = world.getBiome(pos);
+    if (useBiome && biome != null) {
       byte texture = (byte)getTextureForBiome(biome);
       setTextureNum(texture);
       return;
@@ -97,11 +95,11 @@ public final class WoodenGolem extends GolemMultiTextured {
     return new HashMap<>();
   }
   
-  public static int getTextureForBiome(final Optional<RegistryKey<Biome>> biome) {
+  public static int getTextureForBiome(final Biome biome) {
     if(BIOME_TO_TEXTURE_MAP.isEmpty()) {
       initLogMap();
     }
-    return (biome.flatMap(b -> Optional.ofNullable(BIOME_TO_TEXTURE_MAP.get(b))).orElse(0));
+    return BIOME_TO_TEXTURE_MAP.getOrDefault(biome, 0);
   }
   
   private static void initLogMap() {

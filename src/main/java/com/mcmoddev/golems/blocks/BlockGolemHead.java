@@ -4,7 +4,7 @@ import javax.annotation.Nullable;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.util.config.GolemRegistrar;
+import com.mcmoddev.golems.util.GolemRegistrar;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

@@ -6,10 +6,10 @@ import java.util.Objects;
 import javax.annotation.Nullable;
 
 import com.mcmoddev.golems.main.ExtraGolems;
+import com.mcmoddev.golems.util.GolemContainer;
 import com.mcmoddev.golems.util.GolemNames;
+import com.mcmoddev.golems.util.GolemRegistrar;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
-import com.mcmoddev.golems.util.config.GolemContainer;
-import com.mcmoddev.golems.util.config.GolemRegistrar;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.screen.Screen;

@@ -26,10 +26,9 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 
@@ -91,7 +90,7 @@ public final class FurnaceGolem extends GolemBase {
     if (this.world.isRemote && rand.nextInt(20) == 0) {
       // particle effects
       final double pMotion = 0.03D;
-      final Vector3d pos = this.getPositionVec();
+      final Vec3d pos = this.getPositionVec();
       world.addParticle(this.hasFuel() ? ParticleTypes.FLAME : ParticleTypes.SMOKE,
           pos.x + world.rand.nextDouble() * 0.4D - 0.2D + this.getMotion().getX() * 8,
           pos.y + world.rand.nextDouble() * 0.5D + this.getHeight() / 2.0D,
@@ -113,9 +112,9 @@ public final class FurnaceGolem extends GolemBase {
   }
 
   @Override
-  protected ActionResultType func_230254_b_(final PlayerEntity player, final Hand hand) { // processInteract
+  protected boolean processInteract(final PlayerEntity player, final Hand hand) {
     // allow player to add fuel to the golem by clicking on them with a fuel item
-    final Vector3d pos = this.getPositionVec();
+    final Vec3d pos = this.getPositionVec();
     ItemStack stack = player.getHeldItem(hand);
     int burnTime = ForgeHooks.getBurnTime(stack) * (player.isCrouching() ? stack.getCount() : 1);
     if (burnTime > 0 && (getFuel() + burnTime) <= MAX_FUEL) {
@@ -136,7 +135,7 @@ public final class FurnaceGolem extends GolemBase {
       player.setHeldItem(hand, stack);
       // add particles
       ItemBedrockGolem.spawnParticles(this.world, pos.x, pos.y + this.getHeight() / 2.0D, pos.z, 0.03D, ParticleTypes.FLAME, 10);
-      return ActionResultType.CONSUME;
+      return true;
     }
 
     // allow player to remove burn time by using a water bucket
@@ -144,10 +143,10 @@ public final class FurnaceGolem extends GolemBase {
       this.setFuel(0);
       player.setHeldItem(hand, stack.getContainerItem());
       ItemBedrockGolem.spawnParticles(this.world, pos.x, pos.y + this.getHeight() / 2.0D, pos.z, 0.1D, ParticleTypes.LARGE_SMOKE, 15);
-      return ActionResultType.CONSUME;
+      return true;
     }
 
-    return super.func_230254_b_(player, hand);
+    return super.processInteract(player, hand);
   }
 
   public ResourceLocation getTexture() {
@@ -261,7 +260,7 @@ public final class FurnaceGolem extends GolemBase {
     @Override
     public void tick() {
       // freeze the FurnaceGolem.this and ai tasks
-      final Vector3d pos = FurnaceGolem.this.getPositionVec();
+      final Vec3d pos = FurnaceGolem.this.getPositionVec();
       FurnaceGolem.this.setMotion(FurnaceGolem.this.getMotion().mul(0, 1.0D, 0));
       FurnaceGolem.this.setMoveForward(0F);
       FurnaceGolem.this.setMoveStrafing(0F);

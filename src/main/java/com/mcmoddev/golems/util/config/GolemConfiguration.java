@@ -15,7 +15,6 @@ import com.mcmoddev.golems.util.GolemRegistrar;
 import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
 import com.mcmoddev.golems.util.config.special.GolemSpecialSection;
 
-import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
@@ -97,9 +96,6 @@ public class GolemConfiguration {
       for (GolemSpecialContainer specialC : c.getSpecialContainers()) {
         specialC.value = specials.get(specialC).value;
       }
-	  
-      // moved from ProxyCommon to here to fix issue #56
-      GlobalEntityTypeAttributes.put(c.getEntityType(), c.getAttributeSupplier().get().create());
     }
     // also update the holiday configs
     final LocalDateTime now = LocalDateTime.now();

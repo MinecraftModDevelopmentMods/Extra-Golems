@@ -6,7 +6,7 @@ import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.pathfinding.Path;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.Vec3d;
 
 public class SwimUpGoal extends Goal {
   private final GolemBase golem;
@@ -33,8 +33,8 @@ public class SwimUpGoal extends Goal {
   public void tick() {
     if (golem.getPosY() < (this.targetY - 1) && (golem.getNavigator().noPath() || isCloseToPathTarget())) {
 
-      Vector3d vec = RandomPositionGenerator.findRandomTargetBlockTowards(golem, 4, 8,
-          new Vector3d(golem.getPosX(), (this.targetY - 1), golem.getPosZ()));
+      Vec3d vec = RandomPositionGenerator.findRandomTargetBlockTowards(golem, 4, 8,
+          new Vec3d(golem.getPosX(), (this.targetY - 1), golem.getPosZ()));
 
       if (vec == null) {
         this.obstructed = true;

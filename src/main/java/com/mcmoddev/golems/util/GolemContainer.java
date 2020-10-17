@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
@@ -30,19 +29,14 @@ import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ITag;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -146,19 +140,19 @@ public final class GolemContainer {
   public void addDescription(final List<ITextComponent> list) {
     // ADD FIREPROOF TIP
     if (this.entityType.isImmuneToFire()) {
-      list.add(new TranslationTextComponent("enchantment.minecraft.fire_protection").mergeStyle(TextFormatting.GOLD));
+      list.add(new TranslationTextComponent("enchantment.minecraft.fire_protection").applyTextStyle(TextFormatting.GOLD));
     }
     // ADD EXPLOSION-PROOF TIP
     if (this.explosionImmunity) {
-      list.add(new TranslationTextComponent("enchantment.minecraft.blast_protection").mergeStyle(TextFormatting.GRAY, TextFormatting.BOLD));
+      list.add(new TranslationTextComponent("enchantment.minecraft.blast_protection").applyTextStyles(TextFormatting.GRAY, TextFormatting.BOLD));
     }
     // ADD INTERACT-TEXTURE TIP
     if (ExtraGolemsConfig.enableTextureInteract() && this.canInteractChangeTexture) {
-      list.add(new TranslationTextComponent("entitytip.click_change_texture").mergeStyle(TextFormatting.BLUE));
+      list.add(new TranslationTextComponent("entitytip.click_change_texture").applyTextStyle(TextFormatting.BLUE));
     }
     // ADD SWIMMING TIP
     if(this.swimMode == SwimMode.SWIM) {
-      list.add(new TranslationTextComponent("entitytip.advanced_swim").mergeStyle(TextFormatting.AQUA));
+      list.add(new TranslationTextComponent("entitytip.advanced_swim").applyTextStyle(TextFormatting.AQUA));
     }
     // ADD ALL OTHER DESCRIPTIONS
     for (final GolemDescription desc : descContainers) {
@@ -182,7 +176,7 @@ public final class GolemContainer {
   public Set<Block> getBuildingBlocks() {
     // make set of all blocks including tags (run-time only)
     Set<Block> blocks = validBuildingBlocks.isEmpty() ? new HashSet<>() : validBuildingBlocks.stream().map(d -> d.get()).collect(Collectors.toSet());
-    for (final ITag<Block> tag : loadTags(validBuildingBlockTags)) {
+    for (final Tag<Block> tag : loadTags(validBuildingBlockTags)) {
       blocks.addAll(tag.getAllElements());
     }
     return blocks;
@@ -274,8 +268,8 @@ public final class GolemContainer {
    * @param additional Block Tag to register as "valid"
    * @return if the Block Tag was added successfully
    **/
-  public boolean addBlocks(@Nonnull final ITag.INamedTag<Block> additional) {
-    return this.validBuildingBlockTags.add(additional.getName());
+  public boolean addBlocks(@Nonnull final Tag<Block> additional) {
+    return this.validBuildingBlockTags.add(additional.getId());
   }
 
   /**
@@ -285,11 +279,11 @@ public final class GolemContainer {
    * @param rls a Collection of ResourceLocation IDs that represent Block Tags.
    * @return a current Collection of Block Tags
    **/
-  private static Collection<ITag<Block>> loadTags(final Collection<ResourceLocation> rls) {
-    final Collection<ITag<Block>> tags = new HashSet<>();
+  private static Collection<Tag<Block>> loadTags(final Collection<ResourceLocation> rls) {
+    final Collection<Tag<Block>> tags = new HashSet<>();
     for (final ResourceLocation rl : rls) {
       if (BlockTags.getCollection().get(rl) != null) {
-        tags.add((ITag<Block>) BlockTags.getCollection().get(rl));
+        tags.add(BlockTags.getCollection().get(rl));
       }
     }
     return tags;
@@ -389,15 +383,6 @@ public final class GolemContainer {
 
   /** @return the {@link SwimMode} of the Golem **/
   public SwimMode getSwimMode() { return this.swimMode; }
-  
-  /** @return a new attribute map supplier for the Golem **/
-  public Supplier<AttributeModifierMap.MutableAttribute> getAttributeSupplier() {
-    return () -> MobEntity.func_233666_p_()
-         .createMutableAttribute(Attributes.MAX_HEALTH, this.health)
-         .createMutableAttribute(Attributes.MOVEMENT_SPEED, this.speed)
-         .createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, this.knockbackResist)
-         .createMutableAttribute(Attributes.ATTACK_DAMAGE, this.attack);
-   }
 
   //////////////////////////////////////////////////////////////
   /////////////////// END OF GOLEM CONTAINER ///////////////////

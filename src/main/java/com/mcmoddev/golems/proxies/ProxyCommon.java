@@ -8,7 +8,7 @@ import com.mcmoddev.golems.items.ItemGolemSpell;
 import com.mcmoddev.golems.items.ItemInfoBook;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
-import com.mcmoddev.golems.util.config.GolemRegistrar;
+import com.mcmoddev.golems.util.GolemRegistrar;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;

@@ -9,9 +9,9 @@ import javax.annotation.Nullable;
 
 import com.mcmoddev.golems.entity.base.GolemMultiColorized;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
+import com.mcmoddev.golems.util.GolemContainer;
+import com.mcmoddev.golems.util.GolemContainer.SwimMode;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
-import com.mcmoddev.golems.util.config.GolemContainer;
-import com.mcmoddev.golems.util.config.GolemContainer.SwimMode;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -21,7 +21,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
 
 /**
  * This class will be used to easily connect golems and their blocks and other

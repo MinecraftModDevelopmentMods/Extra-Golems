@@ -3,8 +3,8 @@ package com.mcmoddev.golems.util;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3f;
 
 public class GolemRenderSettings {
   
