@@ -9,7 +9,6 @@ public final class GolemNames {
   public static final String ANDESITE_GOLEM = "golem_andesite";
   public static final String BASALT_GOLEM = "golem_basalt";
   public static final String BEDROCK_GOLEM = "golem_bedrock";
-  public static final String BLACKSTONE_GOLEM = "golem_blackstone";
   public static final String BONE_GOLEM = "golem_bone";
   public static final String BOOKSHELF_GOLEM = "golem_bookshelf";
   public static final String CLAY_GOLEM = "golem_clay";
@@ -17,8 +16,6 @@ public final class GolemNames {
   public static final String CONCRETE_GOLEM = "golem_concrete";
   public static final String CORAL_GOLEM = "golem_coral";
   public static final String CRAFTING_GOLEM = "golem_crafting";
-  public static final String CRIMSONSTEM_GOLEM = "golem_crimson_stem";
-  public static final String CRYINGOBSIDIAN_GOLEM = "golem_crying_obsidian";
   public static final String DIAMOND_GOLEM = "golem_diamond";
   public static final String DIORITE_GOLEM = "golem_diorite";
   public static final String DISPENSER_GOLEM = "golem_dispenser";
@@ -39,7 +36,6 @@ public final class GolemNames {
   public static final String MELON_GOLEM = "golem_melon";
   public static final String MUSHROOM_GOLEM = "golem_mushroom";
   public static final String NETHERBRICK_GOLEM = "golem_nether_brick";
-  public static final String NETHERITE_GOLEM = "golem_netherite";
   public static final String NETHERWART_GOLEM = "golem_nether_wart";
   public static final String OBSIDIAN_GOLEM = "golem_obsidian";
   public static final String PRISMARINE_GOLEM = "golem_prismarine";
@@ -59,7 +55,6 @@ public final class GolemNames {
   public static final String STRAW_GOLEM = "golem_straw";
   public static final String TERRACOTTA_GOLEM = "golem_hardened_clay";
   public static final String TNT_GOLEM = "golem_tnt";
-  public static final String WARPEDSTEM_GOLEM = "golem_warped_stem";
   public static final String WOODEN_GOLEM = "golem_wooden";
   public static final String WOOL_GOLEM = "golem_wool";
 

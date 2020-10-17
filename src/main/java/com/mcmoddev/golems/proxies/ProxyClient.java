@@ -1,9 +1,10 @@
 package com.mcmoddev.golems.proxies;
 
-import com.mcmoddev.golems.entity.MushroomGolem;
 import com.mcmoddev.golems.entity.WoolGolem;
 import com.mcmoddev.golems.entity.base.GolemBase;
+import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.gui.GuiDispenserGolem;
+import com.mcmoddev.golems.integration.AddonLoader;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.renders.GolemRenderType;
@@ -11,6 +12,7 @@ import com.mcmoddev.golems.renders.GolemRenderer;
 import com.mcmoddev.golems.renders.model.SimpleTextureLayer;
 import com.mcmoddev.golems.util.GolemNames;
 import com.mcmoddev.golems.util.GolemRegistrar;
+import com.mcmoddev.golems_quark.util.QuarkGolemNames;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
@@ -69,20 +71,22 @@ public final class ProxyClient extends ProxyCommon {
     registerWithSimpleLayer(
         GolemRegistrar.getContainer(new ResourceLocation(ExtraGolems.MODID, GolemNames.LAPIS_GOLEM)).getEntityType(),
         new ResourceLocation(ExtraGolems.MODID, "textures/entity/layer/gold_edging.png"));
-    registerWithSimpleLayer(
-        GolemRegistrar.getContainer(new ResourceLocation(ExtraGolems.MODID, GolemNames.BLACKSTONE_GOLEM)).getEntityType(),
-        new ResourceLocation(ExtraGolems.MODID, "textures/entity/layer/gold_nuggets.png"));
     // Wool and Mushroom golems
     registerWoolGolemRenders();
     registerMushroomGolemRenders();
+    if(AddonLoader.isQuarkLoaded()) {
+      registerGlowshroomGolemRenders();
+    }
   }
   
   private void registerWithSimpleLayer(final EntityType<? extends GolemBase> entityType, final ResourceLocation layer) {
-    RenderingRegistry.registerEntityRenderingHandler(entityType, 
+    if(entityType != null) {
+      RenderingRegistry.registerEntityRenderingHandler(entityType, 
       m -> {
         GolemRenderer<GolemBase> r = new GolemRenderer<>(m);
         return r.withLayer(new SimpleTextureLayer<>(r, g -> layer, g -> 0xFFFFFF, g -> false, 1.0F)).withAllLayers();
       });
+    }
   }
   
   private void registerWoolGolemRenders() {
@@ -102,7 +106,20 @@ public final class ProxyClient extends ProxyCommon {
       GolemRegistrar.getContainer(new ResourceLocation(ExtraGolems.MODID, GolemNames.MUSHROOM_GOLEM)).getEntityType(), 
       m -> {
         GolemRenderer<GolemBase> r = new GolemRenderer<>(m);
-        return r.withLayer(new SimpleTextureLayer<GolemBase>(r, g -> ((MushroomGolem)g).getTexture(), g -> 0xFFFFFF, g -> false, 1.0F) {
+        return r.withLayer(new SimpleTextureLayer<GolemBase>(r, g -> ((GolemMultiTextured)g).getTexture(), g -> 0xFFFFFF, g -> false, 1.0F) {
+          @Override
+          protected RenderType getRenderType(final ResourceLocation texture) { return GolemRenderType.getGolemCutout(texture, GolemRenderType.MUSHROOM_TEMPLATE, true); }
+        }).withAllLayers();
+      });
+  }
+  
+  private void registerGlowshroomGolemRenders() {
+    final ResourceLocation glowshroom = new ResourceLocation(AddonLoader.QUARK_MODID, "textures/block/glowshroom_block.png");
+    RenderingRegistry.registerEntityRenderingHandler(
+      GolemRegistrar.getContainer(new ResourceLocation(AddonLoader.QUARK_GOLEMS_MODID, QuarkGolemNames.GLOWSHROOM_GOLEM)).getEntityType(), 
+      m -> {
+        GolemRenderer<GolemBase> r = new GolemRenderer<>(m);
+        return r.withLayer(new SimpleTextureLayer<GolemBase>(r, g -> glowshroom, g -> 0xFFFFFF, g -> true, 1.0F) {
           @Override
           protected RenderType getRenderType(final ResourceLocation texture) { return GolemRenderType.getGolemCutout(texture, GolemRenderType.MUSHROOM_TEMPLATE, true); }
         }).withAllLayers();

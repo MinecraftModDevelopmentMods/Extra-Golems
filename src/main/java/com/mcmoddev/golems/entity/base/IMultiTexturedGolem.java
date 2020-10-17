@@ -7,6 +7,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
@@ -29,6 +30,11 @@ public interface IMultiTexturedGolem<T> {
    * @return an array representing possible textures
    **/
   T[] getTextureArray();
+  
+  /**
+   * @return an array with loot tables corresponding to each texture
+   **/
+  ResourceLocation[] getLootTableArray();
 
   /**
    * @return a Map that relates specific blocks to specific texture indices, to
@@ -58,6 +64,11 @@ public interface IMultiTexturedGolem<T> {
    **/
   default int getMaxTextureNum() {
     return getNumTextures() - 1;
+  }
+  
+  default ResourceLocation getCurrentLootTable() {
+    final ResourceLocation[] array = getLootTableArray();
+    return array[getTextureNum() % array.length];
   }
 
   /**

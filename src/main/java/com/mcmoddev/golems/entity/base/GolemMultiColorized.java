@@ -10,7 +10,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
@@ -56,12 +55,13 @@ public abstract class GolemMultiColorized extends GolemBase implements IMultiTex
   }
 
   @Override
-  public ActionResultType func_230254_b_(final PlayerEntity player, final Hand hand) { // processInteract
+  public boolean processInteract(final PlayerEntity player, final Hand hand) {
     // change texture when player clicks (if enabled)
     if (!player.isCrouching() && this.canInteractChangeTexture()) {
-      return handlePlayerInteract(player, hand);
+      handlePlayerInteract(player, hand);
+      return true;
     } else {
-      return super.func_230254_b_(player, hand);
+      return super.processInteract(player, hand);
     }
   }
 
@@ -103,7 +103,7 @@ public abstract class GolemMultiColorized extends GolemBase implements IMultiTex
 
   @Override
   protected ResourceLocation getLootTable() {
-    return this.lootTables[this.getTextureNum() % this.lootTables.length];
+    return getCurrentLootTable();
   }
 
   @Override
@@ -125,6 +125,12 @@ public abstract class GolemMultiColorized extends GolemBase implements IMultiTex
   public Integer[] getTextureArray() {
     return this.colors;
   }
+  
+  @Override
+  public ResourceLocation[] getLootTableArray() {
+    return this.lootTables;
+  }
+
 
   /**
    * @return the full color number currently applied.

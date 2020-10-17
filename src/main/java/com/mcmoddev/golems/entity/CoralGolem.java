@@ -55,7 +55,7 @@ public final class CoralGolem extends GolemMultiTextured {
     this.lootTablesDry = new ResourceLocation[LOOT_TABLES.length];
     for (int n = 0, len = TEXTURE_NAMES.length; n < len; n++) {
       // initialize "dead" textures
-      this.lootTablesDry[n] = new ResourceLocation("minecraft", "textures/block/dead_" + TEXTURE_NAMES[n] + ".png");
+      this.texturesDry[n] = new ResourceLocation("minecraft", "textures/block/dead_" + TEXTURE_NAMES[n] + ".png");
       this.lootTablesDry[n] = new ResourceLocation(ExtraGolems.MODID, "entities/" + this.getGolemContainer().getName() + "/dead_" + LOOT_TABLES[n]);
     }
     allowHealing = this.getConfigBool(ALLOW_HEALING);
@@ -181,7 +181,7 @@ public final class CoralGolem extends GolemMultiTextured {
 
   @Override
   public ResourceLocation[] getTextureArray() {
-    return this.isDry() ? this.lootTablesDry : super.getTextureArray();
+    return this.isDry() ? this.texturesDry : super.getTextureArray();
   }
 
   @Override
@@ -210,6 +210,11 @@ public final class CoralGolem extends GolemMultiTextured {
   @Override
   public Map<Block, Byte> getTextureBytes() {
     return this.isDry() ? GolemTextureBytes.CORAL_DEAD : GolemTextureBytes.CORAL;
+  }
+  
+  @Override
+  public ResourceLocation[] getLootTableArray() {
+    return this.isDry() ? this.lootTablesDry : super.getLootTableArray();
   }
 
   public int getTimeUntilChange() {

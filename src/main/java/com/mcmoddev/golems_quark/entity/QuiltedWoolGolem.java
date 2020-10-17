@@ -32,7 +32,7 @@ public class QuiltedWoolGolem extends GolemMultiTextured {
 
 
   public QuiltedWoolGolem(final EntityType<? extends GolemBase> entityType, final World world) {
-    super(entityType, world, QuarkGolemsEntities.MODID, TEXTURE_NAMES, QuarkGolemsEntities.MODID, LOOT_TABLE_NAMES);
+    super(entityType, world, QuarkGolemsEntities.QUARK, TEXTURE_NAMES, QuarkGolemsEntities.MODID, LOOT_TABLE_NAMES);
   }
 
   @Override

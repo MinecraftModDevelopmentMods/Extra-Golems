@@ -12,7 +12,7 @@ public final class GuiLoader {
 
   public static void loadBookGui(final PlayerEntity playerIn, final ItemStack itemstack) {
     // only load client-side, of course
-    if (!playerIn.getEntityWorld().isRemote) {
+    if (playerIn.isServerWorld()) {
       return;
     }
     // open the gui

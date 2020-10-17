@@ -9,7 +9,6 @@ import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
 
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 /**

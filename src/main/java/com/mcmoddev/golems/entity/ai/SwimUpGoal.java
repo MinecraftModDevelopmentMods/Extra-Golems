@@ -21,7 +21,7 @@ public class SwimUpGoal extends Goal {
   }
 
   public boolean shouldExecute() {
-    return (!golem.world.isDaytime() && golem.isInWater() && golem.getPosY() < (this.targetY - 2.5D));
+    return (golem.isInWater() && golem.getPosY() < (this.targetY - 2.5D));
   }
 
   @Override
@@ -58,7 +58,7 @@ public class SwimUpGoal extends Goal {
   private boolean isCloseToPathTarget() {
     Path path = golem.getNavigator().getPath();
     if (path != null) {
-      BlockPos pos = path.getTarget();
+      BlockPos pos = path.func_224770_k(); // Path#getTarget
       if (pos != null) {
         double dis = golem.getDistanceSq(pos.getX(), pos.getY(), pos.getZ());
         if (dis < 4.0D) {

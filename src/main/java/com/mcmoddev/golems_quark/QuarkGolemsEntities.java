@@ -16,7 +16,6 @@ import com.mcmoddev.golems.util.GolemNames;
 import com.mcmoddev.golems.util.GolemRegistrar;
 import com.mcmoddev.golems_quark.entity.CaveCrystalGolem;
 import com.mcmoddev.golems_quark.entity.ColorSlimeGolem;
-import com.mcmoddev.golems_quark.entity.GenericGlowingGolem;
 import com.mcmoddev.golems_quark.entity.GlowshroomGolem;
 import com.mcmoddev.golems_quark.entity.IronPlateGolem;
 import com.mcmoddev.golems_quark.entity.PermafrostGolem;
@@ -59,7 +58,7 @@ import vazkii.quark.world.module.underground.PermafrostUndergroundBiomeModule;
 public final class QuarkGolemsEntities {
   
   public static final String QUARK = AddonLoader.QUARK_MODID;
-  public static final String MODID = "golems_quark";
+  public static final String MODID = AddonLoader.QUARK_GOLEMS_MODID;
   
   private static final List<DeferredContainer> deferred = new ArrayList<>();
   
@@ -82,7 +81,7 @@ public final class QuarkGolemsEntities {
     
     final int red = 0xb02525;
     final int purple = 0x4e276e;
-    final int gold = 0xffdc4f;
+    final int gold = 0xc4452b;
     final int darkBlue = 0x1f986e;
     
     // BASALT GOLEM
@@ -166,9 +165,10 @@ public final class QuarkGolemsEntities {
         .setDynamicTexture(QUARK, "elder_sea_lantern").build(),
         "elder_sea_lantern");
     // FRAMED GLASS GOLEM
+    final ResourceLocation framedGlass = new ResourceLocation(MODID, "textures/entity/" + QuarkGolemNames.FRAMEDGLASS_GOLEM + ".png");
     softRegister(FramedGlassModule.class, new GolemContainer.Builder(QuarkGolemNames.FRAMEDGLASS_GOLEM, GenericGolem.class, GenericGolem::new)
         .setModId(MODID).setHealth(16.0D).setAttack(8.5D).setSpeed(0.30D).enableFallDamage().setSound(SoundEvents.BLOCK_GLASS_STEP)
-        .addHealItem(Items.GLASS, 0.25D).setDynamicTexture(QUARK, "framed_glass").noVines().build(),
+        .addHealItem(Items.GLASS, 0.25D).setStaticTexture(g -> framedGlass).noVines().build(),
         "framed_glass");
     // GLOWSHROOM GOLEM
     softRegister(GlowshroomUndergroundBiomeModule.class, new GolemContainer.Builder(QuarkGolemNames.GLOWSHROOM_GOLEM, GlowshroomGolem.class, GlowshroomGolem::new)
@@ -234,7 +234,7 @@ public final class QuarkGolemsEntities {
     // STURDY STONE GOLEM
     softRegister(SturdyStoneModule.class, new GolemContainer.Builder(QuarkGolemNames.STURDYSTONE_GOLEM, GenericGolem.class, GenericGolem::new)
         .setModId(MODID).setHealth(70.0D).setAttack(4.0D).setSpeed(0.27D).setKnockbackResist(1.0D)
-        .setDynamicTexture(QUARK, "sturdy_stone").build(),
+        .setDynamicTexture("furnace_top").build(),
         "sturdy_stone");
     // TALLOW GOLEM
     softRegister(SturdyStoneModule.class, new GolemContainer.Builder(QuarkGolemNames.TALLOW_GOLEM, GenericGolem.class, GenericGolem::new)
