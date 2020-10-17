@@ -11,9 +11,9 @@ issueTrackerURL="https://github.com/MinecraftModDevelopmentMods/Extra-Golems/iss
 
 [[mods]]
     modId="golems"
-    version="10.2.1"
+    version="10.2.2"
     displayName="Extra Golems"
-    credits="TheGlitch76, jriwanek, and translators - Thanks!"
+    credits="TheGlitch76, jriwanek, AtelierAmber, and translators - Thanks!"
     authors="skyjay1 and the MMD Team"
     description='''Adds dozens of golems to the minecraft universe, each with unique textures and abilities!'''
     logoFile="golem_logo.png"
