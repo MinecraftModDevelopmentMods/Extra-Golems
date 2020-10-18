@@ -25,6 +25,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.MovementController;
+import net.minecraft.entity.ai.goal.RandomSwimmingGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -82,7 +83,8 @@ public abstract class GolemBase extends IronGolemEntity {
       this.moveController = new SwimmingMovementController(this);
       this.setPathPriority(PathNodeType.WATER, 0.0F);
       this.goalSelector.addGoal(1, new GoToWaterGoal(this, 14, 1.0D));
-      this.goalSelector.addGoal(2, new SwimUpGoal(this, 1.0D, this.world.getSeaLevel()));
+      this.goalSelector.addGoal(4, new RandomSwimmingGoal(this, 0.8F, 200));
+      this.goalSelector.addGoal(5, new SwimUpGoal(this, 1.0D, this.world.getSeaLevel()));
       break;
     case SINK:
     default:

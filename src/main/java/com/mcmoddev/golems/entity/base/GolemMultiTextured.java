@@ -158,4 +158,9 @@ public abstract class GolemMultiTextured extends GolemBase implements IMultiText
   public ResourceLocation getTexture() {
     return getTextureFromArray(getTextureNum());
   }
+  
+  @Override
+  public ResourceLocation[] getLootTableArray() {
+    return this.lootTables;
+  }
 }

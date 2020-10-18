@@ -16,7 +16,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
-@SuppressWarnings("EntityConstructor")
+@Deprecated
 public abstract class GolemMultiColorized extends GolemBase implements IMultiTexturedGolem<Integer> {
 
   protected static final DataParameter<Byte> DATA_TEXTURE = EntityDataManager.<Byte>createKey(GolemMultiColorized.class, DataSerializers.BYTE);
@@ -64,24 +64,6 @@ public abstract class GolemMultiColorized extends GolemBase implements IMultiTex
       return super.func_230254_b_(player, hand);
     }
   }
-
-//  @Override
-//  public void notifyDataManagerChange(DataParameter<?> key) {
-//    super.notifyDataManagerChange(key);
-//    // attempt to sync texture from client -> server -> other clients
-//    if (DATA_TEXTURE.equals(key)) {
-//      this.updateTextureByData(this.getTextureNum());
-//    }
-//  }
-//
-//  @Override
-//  public void livingTick() {
-//    super.livingTick();
-//    // since textureNum is correct, update texture AFTER loading from NBT and init
-//    if (this.ticksExisted == 2) {
-//      this.updateTextureByData(this.getTextureNum());
-//    }
-//  }
 
   @Override
   public void onBuilt(final BlockState body, final BlockState legs, final BlockState arm1, final BlockState arm2) {
@@ -131,5 +113,10 @@ public abstract class GolemMultiColorized extends GolemBase implements IMultiTex
    **/
   public int getColor() {
     return this.colors[getTextureNum()];
+  }
+  
+  @Override
+  public ResourceLocation[] getLootTableArray() {
+    return this.lootTables;
   }
 }

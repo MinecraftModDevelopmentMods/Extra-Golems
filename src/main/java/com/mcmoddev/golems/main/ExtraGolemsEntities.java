@@ -95,7 +95,7 @@ public final class ExtraGolemsEntities {
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.CONCRETE_GOLEM, ConcreteGolem.class, ConcreteGolem::new)
         .setHealth(47.0D).setAttack(5.0D).setSpeed(0.26D).addBlocks(tagConcrete)
         .addSpecial(ConcreteGolem.ALLOW_RESIST, true, "Whether this golem reduces damage it takes", descResist)
-        .setDynamicTexture("white_concrete").setTextureColor(g -> ((ConcreteGolem)g).getColor()).build());
+        .setDynamicTexture(g -> ((ConcreteGolem)g).getTexture()).build());
     // CORAL GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.CORAL_GOLEM, CoralGolem.class, CoralGolem::new)
         .setHealth(38.0D).setAttack(6.0D).setSpeed(0.29D).setSwimMode(SwimMode.SWIM).setSound(SoundEvents.BLOCK_CORAL_BLOCK_STEP)
@@ -365,12 +365,12 @@ public final class ExtraGolemsEntities {
     // STAINED GLASS GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.STAINEDGLASS_GOLEM, StainedGlassGolem.class, StainedGlassGolem::new)
         .setHealth(9.0D).setAttack(12.0D).setSpeed(0.29D).addBlocks(Tags.Blocks.STAINED_GLASS).enableFallDamage()
-        .setSound(SoundEvents.BLOCK_GLASS_STEP).setDynamicTexture("white_stained_glass")
-        .setTextureColor(g -> ((StainedGlassGolem)g).getColor()).transparent().noVines().build());
+        .setSound(SoundEvents.BLOCK_GLASS_STEP).setDynamicTexture(g -> ((StainedGlassGolem)g).getTexture())
+        .transparent().noVines().build());
     // STAINED TERRACOTTA GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.STAINEDTERRACOTTA_GOLEM, StainedTerracottaGolem.class, StainedTerracottaGolem::new)
         .setHealth(42.0D).setAttack(4.0D).setSpeed(0.22D).setKnockbackResist(0.6D).addBlocks(tagTerracotta)
-        .setDynamicTexture("white_terracotta").setTextureColor(g -> ((StainedTerracottaGolem)g).getColor()).build());
+        .setDynamicTexture(g -> ((StainedTerracottaGolem)g).getTexture()).build());
     // STRAW GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.STRAW_GOLEM, StrawGolem.class, StrawGolem::new)
         .setHealth(10.0D).setAttack(1.0D).setSpeed(0.32D).setKnockbackResist(0.0D).addBlocks(Blocks.HAY_BLOCK)

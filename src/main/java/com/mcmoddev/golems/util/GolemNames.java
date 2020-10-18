@@ -54,10 +54,10 @@ public final class GolemNames {
   public static final String SLIME_GOLEM = "golem_slime";
   public static final String SMOOTHSTONE_GOLEM = "golem_smooth_stone";
   public static final String SPONGE_GOLEM = "golem_sponge";
-  public static final String STAINEDTERRACOTTA_GOLEM = "golem_stained_clay";
+  public static final String STAINEDTERRACOTTA_GOLEM = "golem_colored_terracotta";
   public static final String STAINEDGLASS_GOLEM = "golem_stained_glass";
   public static final String STRAW_GOLEM = "golem_straw";
-  public static final String TERRACOTTA_GOLEM = "golem_hardened_clay";
+  public static final String TERRACOTTA_GOLEM = "golem_terracotta";
   public static final String TNT_GOLEM = "golem_tnt";
   public static final String WARPEDSTEM_GOLEM = "golem_warped_stem";
   public static final String WOODEN_GOLEM = "golem_wooden";

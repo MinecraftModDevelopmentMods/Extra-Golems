@@ -18,7 +18,6 @@ import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.mcmoddev.golems.entity.base.GolemBase;
-import com.mcmoddev.golems.entity.base.GolemMultiColorized;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemRenderSettings.IColorProvider;
@@ -131,8 +130,7 @@ public final class GolemContainer {
     this.healItemMap = ImmutableMap.copyOf(lHealItemMap);
     this.basicSound = lBasicSound;
     
-    this.canInteractChangeTexture = (GolemMultiTextured.class.isAssignableFrom(lEntityClass)
-        || GolemMultiColorized.class.isAssignableFrom(lEntityClass));
+    this.canInteractChangeTexture = (GolemMultiTextured.class.isAssignableFrom(lEntityClass));
   }
 
   /**

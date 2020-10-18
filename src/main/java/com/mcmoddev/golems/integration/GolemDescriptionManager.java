@@ -10,7 +10,6 @@ import com.mcmoddev.golems.entity.base.GolemBase;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
