@@ -1,6 +1,7 @@
 package com.mcmoddev.golems.main;
 
 import com.mcmoddev.golems.entity.*;
+import com.mcmoddev.golems.entity.base.DefinedTextureGolem;
 import com.mcmoddev.golems.util.GolemContainer;
 import com.mcmoddev.golems.util.GolemDescription;
 import com.mcmoddev.golems.util.GolemNames;
@@ -382,6 +383,12 @@ public final class ExtraGolemsEntities {
     // TERRACOTTA GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.TERRACOTTA_GOLEM, GenericGolem.class, GenericGolem::new)
         .setHealth(42.0D).setAttack(4.0D).setSpeed(0.208D).setKnockbackResist(0.6D).addBlocks(Blocks.TERRACOTTA).setDynamicTexture("terracotta").build());
+    // TEXTURED GOLEM
+    GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.TEXTURED_GOLEM, DefinedTextureGolem.class, DefinedTextureGolem::new)
+        .setHealth(76.0D).setAttack(6.0D).noGolemBookEntry()
+        .setDynamicTexture(g -> ((DefinedTextureGolem)g).getTexture())
+        .setVinesProvider(g -> ((DefinedTextureGolem)g).getVines())
+        .setVinesColor(g -> ((DefinedTextureGolem)g).getVinesColor()).build());
     // TNT GOLEM
     final ResourceLocation eyesCreeper = new ResourceLocation(ExtraGolems.MODID, "textures/entity/layer/eyes/creeper.png");
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.TNT_GOLEM, TNTGolem.class, TNTGolem::new)

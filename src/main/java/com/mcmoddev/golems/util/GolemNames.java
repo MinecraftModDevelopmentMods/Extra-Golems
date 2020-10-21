@@ -58,6 +58,7 @@ public final class GolemNames {
   public static final String STAINEDGLASS_GOLEM = "golem_stained_glass";
   public static final String STRAW_GOLEM = "golem_straw";
   public static final String TERRACOTTA_GOLEM = "golem_terracotta";
+  public static final String TEXTURED_GOLEM = "golem_textured";
   public static final String TNT_GOLEM = "golem_tnt";
   public static final String WARPEDSTEM_GOLEM = "golem_warped_stem";
   public static final String WOODEN_GOLEM = "golem_wooden";

@@ -67,6 +67,7 @@ public final class GolemContainer {
   private final boolean explosionImmunity;
   private final SwimMode swimMode;
   private final boolean canInteractChangeTexture;
+  private final boolean noGolemBookEntry;
 
   private double health;
   private double attack;
@@ -109,7 +110,7 @@ public final class GolemContainer {
       final double lKnockbackResist, final int lLightLevel, final int lPowerLevel, final boolean lFallDamage, 
       final boolean lExplosionImmunity, final SwimMode lSwimMode, final HashMap<String, GolemSpecialContainer> lSpecialContainers, 
       final List<GolemDescription> lDesc, final Map<IRegistryDelegate<Item>, Double> lHealItemMap,
-      final SoundEvent lBasicSound) {
+      final SoundEvent lBasicSound, final boolean lNoGolemBookEntry) {
     this.entityType = lEntityType;
     this.entityClass = lEntityClass;
     this.renderSettings = lRenderSettings;
@@ -129,6 +130,7 @@ public final class GolemContainer {
     this.descContainers = ImmutableList.copyOf(lDesc);
     this.healItemMap = ImmutableMap.copyOf(lHealItemMap);
     this.basicSound = lBasicSound;
+    this.noGolemBookEntry = lNoGolemBookEntry;
     
     this.canInteractChangeTexture = (GolemMultiTextured.class.isAssignableFrom(lEntityClass));
   }
@@ -387,6 +389,9 @@ public final class GolemContainer {
   /** @return the {@link SwimMode} of the Golem **/
   public SwimMode getSwimMode() { return this.swimMode; }
   
+  /** @return true if the Golem should not appear in the golem guide book **/
+  public boolean noGolemBookEntry() { return this.noGolemBookEntry; }
+  
   /** @return a new attribute map supplier for the Golem **/
   public Supplier<AttributeModifierMap.MutableAttribute> getAttributeSupplier() {
     return () -> MobEntity.func_233666_p_()
@@ -424,6 +429,7 @@ public final class GolemContainer {
     private int powerLevel = 0;
     private boolean fallDamage = false;
     private boolean explosionImmunity = false;
+    private boolean noGolemBookEntry = false;
     private SwimMode swimMode = SwimMode.SINK;
     private List<IRegistryDelegate<Block>> validBuildingBlocks = new ArrayList<>();
     private List<ResourceLocation> validBuildingBlockTags = new ArrayList<>();
@@ -910,6 +916,17 @@ public final class GolemContainer {
       this.fallDamage = true;
       return this;
     }
+    
+    /**
+     * Prevents this golem from contributing an entry
+     * to the golem guide book
+     *
+     * @return instance to allow chaining of methods
+     **/
+    public Builder noGolemBookEntry() {
+      this.noGolemBookEntry = true;
+      return this;
+    }
 
     /**
      * Builds the container according to values that have been set inside this
@@ -932,7 +949,7 @@ public final class GolemContainer {
       // build the golem container
       return new GolemContainer(entityType, entityClass, golemName, renderSettings, validBuildingBlocks, validBuildingBlockTags, health, attack, speed,
           knockBackResist, lightLevel, powerLevel, fallDamage, explosionImmunity, swimMode, containerMap, descriptions, healItemMap, 
-          basicSound);
+          basicSound, noGolemBookEntry);
     }
   }
 

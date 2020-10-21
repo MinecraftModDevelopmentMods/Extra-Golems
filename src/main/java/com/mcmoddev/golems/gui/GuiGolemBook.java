@@ -121,7 +121,7 @@ public class GuiGolemBook extends Screen {
   private static final void initGolemBookEntries() {
     GOLEMS.clear();
     for (GolemContainer container : GolemRegistrar.getContainers()) {
-      if (container.isEnabled()) {
+      if (container.isEnabled() && !container.noGolemBookEntry()) {
         GOLEMS.add(new GolemBookEntry(container));
       }
     }
