@@ -14,7 +14,7 @@ public class GolemRenderSettings {
   public static final ResourceLocation FALLBACK_EYES = new ResourceLocation(ExtraGolems.MODID, "textures/entity/layer/eyes/eyes.png");
 
   /** Default value to use when coloring the vines layer **/
-  public static final int VINES_COLOR = 0x83a05a;
+  public static final int VINES_COLOR = 0x83a05a; // 8626266
   
   /** When false, none of this class is used **/
   private final boolean hasCustomRender;

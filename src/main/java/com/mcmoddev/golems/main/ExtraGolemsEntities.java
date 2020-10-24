@@ -41,10 +41,10 @@ public final class ExtraGolemsEntities {
     final ResourceLocation tagDeadCoral = new ResourceLocation(ExtraGolems.MODID, "dead_coral_block");
     
     // vines colors
-    final int blue = 0x005a75;
-    final int red = 0xb02525;
-    final int aqua = 0x1f986e;
-    final int brown = 0x4e3d24;
+    final int blue = 0x005a75; // 23157
+    final int red = 0xb02525; // 11543845
+    final int aqua = 0x1f986e; // 2070638
+    final int brown = 0x4e3d24; // 5127460
     
     // ANDESITE GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.ANDESITE_GOLEM, GenericGolem.class, GenericGolem::new)

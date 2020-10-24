@@ -83,7 +83,7 @@ public final class BlockGolemHead extends HorizontalBlock {
    * @return if the golem was built and spawned
    */
   public static boolean trySpawnGolem(final World world, final BlockPos headPos) {
-    if (world.isRemote) {
+    if (world.isRemote()) {
       return false;
     }
 
@@ -158,7 +158,7 @@ public final class BlockGolemHead extends HorizontalBlock {
       removeAllGolemBlocks(world, headPos, flagX);
       golem.setPlayerCreated(true);
       golem.setLocationAndAngles(spawnX, spawnY, spawnZ, 0.0F, 0.0F);
-      ExtraGolems.LOGGER.info("[Extra Golems]: Building golem " + golem.toString());
+      ExtraGolems.LOGGER.debug("[Extra Golems]: Building golem " + golem.toString());
       world.addEntity(golem);
       golem.onBuilt(stateBelow1, stateBelow2, flagX ? stateArmEast : stateArmWest, flagX ? stateArmNorth : stateArmSouth);
       return true;

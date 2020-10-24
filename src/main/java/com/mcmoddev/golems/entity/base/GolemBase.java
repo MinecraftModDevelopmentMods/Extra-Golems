@@ -31,6 +31,7 @@ import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -49,6 +50,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 /**
  * Base class for all golems in this mod.
@@ -374,6 +376,11 @@ public abstract class GolemBase extends IronGolemEntity {
   public void writeAdditional(final CompoundNBT tag) {
     super.writeAdditional(tag);
     tag.putBoolean(KEY_CHILD, this.isChild());
+  }
+
+  @Override
+  public IPacket<?> createSpawnPacket() {
+    return NetworkHooks.getEntitySpawningPacket(this);
   }
 
   ///////////////////// SOUND OVERRIDES ////////////////////

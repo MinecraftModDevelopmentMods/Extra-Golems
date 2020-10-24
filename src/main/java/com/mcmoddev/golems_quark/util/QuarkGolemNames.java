@@ -4,6 +4,7 @@ public final class QuarkGolemNames {
   
   private QuarkGolemNames() {}
   
+  public static final String BASALT_GOLEM = "golem_basalt";
   public static final String BIOTITE_GOLEM = "golem_biotite";
   public static final String BLAZELANTERN_GOLEM = "golem_blaze_lantern";
   public static final String BRIMSTONE_GOLEM = "golem_brimstone";
@@ -27,5 +28,4 @@ public final class QuarkGolemNames {
   public static final String SOULSANDSTONE_GOLEM = "golem_soul_sandstone";
   public static final String STURDYSTONE_GOLEM = "golem_sturdy_stone";
   public static final String TALLOW_GOLEM = "golem_tallow";
-  public static final String VOIDSTONE_GOLEM = "golem_voidstone";
 }
