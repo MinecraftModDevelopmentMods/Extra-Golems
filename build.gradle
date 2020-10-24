@@ -3,9 +3,11 @@ buildscript {
         maven { url = 'https://files.minecraftforge.net/maven' }
         jcenter()
         mavenCentral()
+		maven {url='https://dist.creeper.host/Sponge/maven'}
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+		classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
@@ -31,6 +33,7 @@ minecraft {
     // These can be tweaked, removed, or duplicated as needed.
     runs {
         client {
+            property 'mixin.env.disableRefMap', 'true'
             workingDirectory project.file('run')
 
             // Recommended logging data for a userdev environment
@@ -47,6 +50,7 @@ minecraft {
         }
 
         server {
+            property 'mixin.env.disableRefMap', 'true'
             workingDirectory project.file('run')
 
             // Recommended logging data for a userdev environment
@@ -76,7 +80,9 @@ repositories {
 	maven { // QUARK
 		name 'blamejared'
 		url 'https://maven.blamejared.com/'
-	}
+	} 
+	jcenter()
+    mavenCentral()
 }
 
 dependencies {
@@ -85,7 +91,7 @@ dependencies {
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
 	
     minecraft "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
-	
+		
 	compile fg.deobf(project.dependencies.create("vazkii.autoreglib:AutoRegLib:${project.autoreglib_version}") {
         transitive = false
     })
@@ -147,6 +153,8 @@ publishing {
         }
     }
 }
+
+apply plugin: 'org.spongepowered.mixin'
 
 javadoc {
   failOnError = false
