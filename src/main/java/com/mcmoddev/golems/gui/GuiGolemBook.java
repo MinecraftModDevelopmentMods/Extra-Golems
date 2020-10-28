@@ -175,7 +175,7 @@ public class GuiGolemBook extends Screen {
     // make and sort alphabetical list
     ALPHABETICAL.clear();
     ALPHABETICAL.addAll(GOLEMS);
-    Collections.sort(ALPHABETICAL, (g1, g2) -> g1.getGolemName().compareTo(g2.getGolemName()));
+    Collections.sort(ALPHABETICAL, (g1, g2) -> g1.getGolemName().getFormattedText().compareTo(g2.getGolemName().getFormattedText()));
   }
 
   @Override
@@ -389,13 +389,13 @@ public class GuiGolemBook extends Screen {
     // 'golem name' text box
     int nameX = cornerX + MARGIN * 4;
     int nameY = cornerY + MARGIN;
-    String golemName = entry.getGolemName();
+    String golemName = entry.getGolemName().getFormattedText();
     this.font.drawSplitString(golemName, nameX, nameY, (BOOK_WIDTH / 2) - MARGIN * 5, 0);
 
     // 'golem stats' text box
     int statsX = cornerX + MARGIN;
     int statsY = nameY + MARGIN * 2;
-    String stats = entry.getDescriptionPage();
+    String stats = entry.getDescriptionPage().getFormattedText();
     this.font.drawSplitString(stats, statsX, statsY, (BOOK_WIDTH / 2) - (MARGIN * 2), 0);
 
     // 'golem block'
@@ -693,7 +693,7 @@ public class GuiGolemBook extends Screen {
         // prepare to draw the golem's name
         RenderSystem.pushMatrix();
 
-        final String name = entry.getGolemName();
+        final String name = entry.getGolemName().getFormattedText();
         final int wrap = this.width - 20;
         float scale = 1.0F;
         int nameH = gui.font.getWordWrappedHeight(name, wrap);
