@@ -22,17 +22,17 @@ public class ExtraGolemsConfig {
 
   public static GolemConfiguration GOLEM_CONFIG = null;
 
-  public static ForgeConfigSpec SERVER_CONFIG = null;
+  public static ForgeConfigSpec COMMON_CONFIG = null;
 
   public static void setupConfig() {
     final Pair<GolemConfiguration, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(GolemConfiguration::new);
-    SERVER_CONFIG = specPair.getRight();
+    COMMON_CONFIG = specPair.getRight();
     GOLEM_CONFIG = specPair.getLeft();
   }
 
   @SubscribeEvent
   public static void onLoad(final ModConfig.Loading configEvent) {
-    if (configEvent.getConfig().getSpec() == SERVER_CONFIG) {
+    if (configEvent.getConfig().getSpec() == COMMON_CONFIG) {
       GOLEM_CONFIG.loadData();
     }
   }
