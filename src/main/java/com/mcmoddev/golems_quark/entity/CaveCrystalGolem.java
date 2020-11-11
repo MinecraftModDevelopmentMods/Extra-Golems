@@ -54,10 +54,12 @@ public final class CaveCrystalGolem extends GolemMultiTextured {
   @Override
   protected void registerGoals() {
     super.registerGoals();
-    int lightInt = 11;
-    final BlockState state = GolemItems.UTILITY_LIGHT.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, lightInt);
-    this.goalSelector.addGoal(9, new PlaceUtilityBlockGoal(this, state, BlockUtilityGlow.UPDATE_TICKS, 
-        this.getConfigBool(ALLOW_SPECIAL), true, null));
+    if(this.getConfigBool(ALLOW_SPECIAL)) {
+      int lightInt = 11;
+      final BlockState state = GolemItems.UTILITY_LIGHT.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, lightInt);
+      this.goalSelector.addGoal(9, new PlaceUtilityBlockGoal(this, state, BlockUtilityGlow.UPDATE_TICKS, 
+          true, null));
+    }
   }
   
   @Override

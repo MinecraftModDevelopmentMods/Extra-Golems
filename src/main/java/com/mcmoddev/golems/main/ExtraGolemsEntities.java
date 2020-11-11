@@ -60,7 +60,7 @@ public final class ExtraGolemsEntities {
         .addDesc(
             new GolemDescription(new TranslationTextComponent("entitytip.indestructible").mergeStyle(TextFormatting.GRAY, TextFormatting.BOLD)),
             new GolemDescription(new TranslationTextComponent("tooltip.creative_only_item").mergeStyle(TextFormatting.DARK_RED)))
-        .setDynamicTexture("bedrock").build());
+        .setDynamicTexture("bedrock").noGolemBookEntry().build());
     // BLACKSTONE GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.BLACKSTONE_GOLEM, GenericGolem.class, GenericGolem::new)
         .setHealth(58.0D).setAttack(6.8D).setKnockbackResist(0.8D)

@@ -22,6 +22,14 @@ public class SimpleTextureLayer<T extends GolemBase> extends LayerRenderer<T, Go
   
   final float alphaColor;
   
+  /**
+   * Create a simple texture with the following settings:
+   * @param ientityrenderer the parent renderer
+   * @param texture a texture provider
+   * @param color a color provider
+   * @param lighting a lighting provider
+   * @param alpha the alpha level of the layer
+   **/
   public SimpleTextureLayer(IEntityRenderer<T, GolemModel<T>> ientityrenderer, 
       GolemRenderSettings.ITextureProvider texture,
       GolemRenderSettings.IColorProvider color,

@@ -28,12 +28,7 @@ public final class ProxyClient extends ProxyCommon {
 
   @Override
   public void registerListeners() {
-    // TODO this was supposed to help with block tags...
-//		final IResourceManager irr = Minecraft.getInstance().getResourceManager();
-//		if(irr instanceof IReloadableResourceManager) {
-//			((IReloadableResourceManager) irr).addReloadListener(l -> BlockTagUtil.loadTags());
-//		}
-    // TODO add a listener to refresh golem textures
+    // add a listener to refresh golem textures
     IResourceManager manager = Minecraft.getInstance().getResourceManager();
     if (manager instanceof IReloadableResourceManager) {
       ((IReloadableResourceManager)manager).addReloadListener(new ReloadListener<ModelBakery>() {
@@ -53,35 +48,41 @@ public final class ProxyClient extends ProxyCommon {
 
   @Override
   public void registerContainerRenders() {
-    // ScreenManager.registerFactory(p_216911_0_, p_216911_1_);
     ScreenManager.registerFactory(GolemItems.DISPENSER_GOLEM, GuiDispenserGolem::new);
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public void registerEntityRenders() {
+    // Simple renders
     GolemRegistrar.getContainers().forEach(container -> {
       if (!container.getRenderSettings().hasCustomRender()) {
         RenderingRegistry.registerEntityRenderingHandler(container.getEntityType(), m -> (new GolemRenderer<GolemBase>(m).withAllLayers()));
       }
     });
     // Custom renders
-    registerWithSimpleLayer(
+    // Lapis Golem
+    registerWithSimpleLayers(
         GolemRegistrar.getContainer(new ResourceLocation(ExtraGolems.MODID, GolemNames.LAPIS_GOLEM)).getEntityType(),
         new ResourceLocation(ExtraGolems.MODID, "textures/entity/layer/gold_edging.png"));
-    registerWithSimpleLayer(
+    // Blackstone Golem
+    registerWithSimpleLayers(
         GolemRegistrar.getContainer(new ResourceLocation(ExtraGolems.MODID, GolemNames.BLACKSTONE_GOLEM)).getEntityType(),
         new ResourceLocation(ExtraGolems.MODID, "textures/entity/layer/gold_nuggets.png"));
-    // Wool and Mushroom golems
+    // Wool Golem
     registerWoolGolemRenders();
+    // Mushroom Golem
     registerMushroomGolemRenders();
   }
   
-  private void registerWithSimpleLayer(final EntityType<? extends GolemBase> entityType, final ResourceLocation layer) {
+  private void registerWithSimpleLayers(final EntityType<? extends GolemBase> entityType, final ResourceLocation... layers) {
     RenderingRegistry.registerEntityRenderingHandler(entityType, 
       m -> {
         GolemRenderer<GolemBase> r = new GolemRenderer<>(m);
-        return r.withLayer(new SimpleTextureLayer<>(r, g -> layer, g -> 0xFFFFFF, g -> false, 1.0F)).withAllLayers();
+        for(final ResourceLocation l : layers) {
+          r = r.withLayer(new SimpleTextureLayer<>(r, g -> l, g -> 0xFFFFFF, g -> false, 1.0F));
+        }
+        return r.withAllLayers();
       });
   }
   

@@ -538,6 +538,9 @@ public final class GolemContainer {
      **/
     public Builder setLightLevel(final int lLightLevel) {
       lightLevel = MathHelper.clamp(lLightLevel, 0, 15);
+      if(lightLevel > 0) {
+        addSpecial(GolemBase.ALLOW_LIGHT, true, "Whether the golem can emit light");
+      }
       return this;
     }
     
@@ -549,6 +552,9 @@ public final class GolemContainer {
     **/
    public Builder setPowerLevel(final int lPowerLevel) {
      powerLevel = MathHelper.clamp(lPowerLevel, 0, 15);
+     if(powerLevel > 0) {
+       addSpecial(GolemBase.ALLOW_POWER, true, "Whether the golem can emit power");
+     }
      return this;
    }
 

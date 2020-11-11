@@ -21,7 +21,6 @@ public class PlaceUtilityBlockGoal extends Goal {
   public final GolemBase golem;
   public final BlockState stateToPlace;
   public final int tickDelay;
-  public final boolean configAllows;
   public final BiPredicate<GolemBase, BlockPos> predicate;
   
   public static final BiPredicate<GolemBase, BlockPos> ABOVE_AIR_PRED = 
@@ -42,13 +41,12 @@ public class PlaceUtilityBlockGoal extends Goal {
    * @see #makeBiPred(BlockState, boolean)
    **/
   public PlaceUtilityBlockGoal(final GolemBase golemIn, final BlockState stateIn, 
-      final int interval, final boolean cfgAllows, final boolean onlyAboveEmpty,
+      final int interval, final boolean onlyAboveEmpty,
       @Nullable final BiPredicate<GolemBase, BlockPos> otherPredicate) {
     // this.setMutexFlags(EnumSet.of(Flag.MOVE));
     this.golem = golemIn;
     this.stateToPlace = stateIn;
     this.tickDelay = interval;
-    this.configAllows = cfgAllows;
     // build the predicate that will be used to verify block placement
     final BiPredicate<GolemBase, BlockPos> pred = makeBiPred(stateIn, onlyAboveEmpty);
     this.predicate = otherPredicate != null ? pred.and(otherPredicate) : pred;
@@ -64,13 +62,13 @@ public class PlaceUtilityBlockGoal extends Goal {
    * @param interval     ticks between placing block
    * @param configAllows whether this AI is enabled by the config
    **/
-  public PlaceUtilityBlockGoal(final GolemBase golemIn, final BlockState stateIn, final int interval, boolean configAllows) {
-    this(golemIn, stateIn, interval, configAllows, false, null);
+  public PlaceUtilityBlockGoal(final GolemBase golemIn, final BlockState stateIn, final int interval) {
+    this(golemIn, stateIn, interval, false, null);
   }
 
   @Override
   public boolean shouldExecute() {
-    return this.configAllows;
+    return true;
   }
 
   /**
@@ -78,11 +76,9 @@ public class PlaceUtilityBlockGoal extends Goal {
    */
   @Override
   public void tick() {
-    final int tickMod = this.golem.ticksExisted % this.tickDelay;
-    if (this.configAllows && tickMod == 0) {
+    if ((this.golem.ticksExisted % this.tickDelay) == 0) {
       final BlockPos blockPosIn = golem.getBlockBelow().up();
-      // test the predicate against each BlockPos in a vertical column around this
-      // golem
+      // test the predicate against each BlockPos in a vertical column
       // when it passes, place the block and return
       for (int i = 0; i < 4; i++) {
         BlockPos pos = blockPosIn.up(i);
@@ -105,7 +101,7 @@ public class PlaceUtilityBlockGoal extends Goal {
   }
 
   public static boolean canBeWaterlogged(final BlockState stateIn) {
-    return stateIn.get(BlockStateProperties.WATERLOGGED);
+    return stateIn.hasProperty(BlockStateProperties.WATERLOGGED);
   }
 
   /**

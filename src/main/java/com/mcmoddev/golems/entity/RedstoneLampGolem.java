@@ -36,9 +36,11 @@ public final class RedstoneLampGolem extends GolemMultiTextured {
   @Override
   protected void registerGoals() {
     super.registerGoals();
-    final BlockState state = GolemItems.UTILITY_LIGHT.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, 15);
-    this.goalSelector.addGoal(9, new PlaceUtilityBlockGoal(this, state, BlockUtilityGlow.UPDATE_TICKS, 
-        this.getConfigBool(ALLOW_SPECIAL), true, LIT_PRED));
+    if(this.getConfigBool(ALLOW_SPECIAL)) {
+      final BlockState state = GolemItems.UTILITY_LIGHT.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, 15);
+      this.goalSelector.addGoal(9, new PlaceUtilityBlockGoal(this, state, BlockUtilityGlow.UPDATE_TICKS, 
+          true, LIT_PRED));
+    }
   }
 
   @Override

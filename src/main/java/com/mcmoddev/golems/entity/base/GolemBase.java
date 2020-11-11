@@ -59,6 +59,9 @@ public abstract class GolemBase extends IronGolemEntity {
 
   protected static final DataParameter<Boolean> CHILD = EntityDataManager.createKey(GolemBase.class, DataSerializers.BOOLEAN);
   protected static final String KEY_CHILD = "isChild";
+  
+  public static final String ALLOW_LIGHT = "Allow Special: Light";
+  public static final String ALLOW_POWER = "Allow Special: Power";
 
   private final GolemContainer container;
 
@@ -118,18 +121,18 @@ public abstract class GolemBase extends IronGolemEntity {
     super.registerGoals();
     final GolemContainer cont = this.getGolemContainer();
     // register light level AI if enabled
-    if(cont.getLightLevel() > 0) {
+    if(cont.getLightLevel() > 0 && getConfigBool(ALLOW_LIGHT)) {
       int lightInt = cont.getLightLevel();
       final BlockState state = GolemItems.UTILITY_LIGHT.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, lightInt);
       this.goalSelector.addGoal(9, new PlaceUtilityBlockGoal(this, state, BlockUtilityGlow.UPDATE_TICKS, 
-          true, true, null));
+          true, null));
     }
     // register power level AI if enabled
-    if(cont.getPowerLevel() > 0) {
+    if(cont.getPowerLevel() > 0 && getConfigBool(ALLOW_POWER)) {
       int powerInt = cont.getPowerLevel();
       final BlockState state = GolemItems.UTILITY_POWER.getDefaultState().with(BlockUtilityPower.POWER_LEVEL, powerInt);
       final int freq = BlockUtilityPower.UPDATE_TICKS;
-      this.goalSelector.addGoal(9, new PlaceUtilityBlockGoal(this, state, freq, true));
+      this.goalSelector.addGoal(9, new PlaceUtilityBlockGoal(this, state, freq));
     }
   }
 
@@ -196,27 +199,59 @@ public abstract class GolemBase extends IronGolemEntity {
 
   /////////////// CONFIG HELPERS //////////////////
 
+  /**
+   * @param name the name of the config value
+   * @return the config value, or null if none is found
+   **/
   public ForgeConfigSpec.ConfigValue getConfigValue(final String name) {
-    final GolemSpecialContainer cont = this.getGolemContainer().getSpecialContainer(name);
-    if(null == cont) {
+    final GolemContainer cont = this.getGolemContainer();
+    final GolemSpecialContainer special = cont.getSpecialContainer(name);
+    if(null == special) {
       ExtraGolems.LOGGER.error("Tried to access config value '" + name + "' in golem '" 
-          + this.getGolemContainer().getName() + "' but the config name wasn't registered!");
-    } else {
-      return (ExtraGolemsConfig.GOLEM_CONFIG.specials.get(cont)).value;
+          + cont.getName() + "' but no config container was found!");
+      return null;
+    } else if(!ExtraGolemsConfig.GOLEM_CONFIG.specials.containsKey(special)) {
+      ExtraGolems.LOGGER.error("Tried to access config value '" + name + "' in golem '"
+          + cont.getName() + "' but the config value was not registered!");
+      return null;
     }
-    return null;
+    return (ExtraGolemsConfig.GOLEM_CONFIG.specials.get(special)).value;
   }
-
+  
+  /**
+   * @param name the name of the config value
+   * @return the config value, or false if none is found
+   **/
   public boolean getConfigBool(final String name) {
-    return (Boolean) getConfigValue(name).get();
+    ForgeConfigSpec.ConfigValue v = getConfigValue(name);
+    if(null == v) {
+      return false;
+    }
+    return (Boolean) v.get();
   }
 
+  /**
+   * @param name the name of the config value
+   * @return the config value, or 0 if none is found
+   **/
   public int getConfigInt(final String name) {
-    return (Integer) getConfigValue(name).get();
+    ForgeConfigSpec.ConfigValue v = getConfigValue(name);
+    if(null == v) {
+      return 0;
+    }
+    return (Integer) v.get();
   }
 
+  /**
+   * @param name the name of the config value
+   * @return the config value, or 0 if none is found
+   **/
   public double getConfigDouble(final String name) {
-    return (Double) getConfigValue(name).get();
+    ForgeConfigSpec.ConfigValue v = getConfigValue(name);
+    if(null == v) {
+      return 0.0D;
+    }
+    return (Double) v.get();
   }
 
   /////////////// OVERRIDEN BEHAVIOR //////////////////
