@@ -66,7 +66,7 @@ public class ExtraGolems {
   }
 
   private void setup(final FMLCommonSetupEvent event) {
-
+    AddonLoader.setupEvent(event);
   }
 
   private void enqueueIMC(final InterModEnqueueEvent event) {

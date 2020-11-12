@@ -472,9 +472,11 @@ public class GuiGolemBook extends Screen {
   }
 
   @Override
-  public boolean mouseScrolled(double d1, double d2, double d3) {
-    this.currentScroll = getScrollFloat(getScrollY(this.currentScroll + (float) d3));
-    return super.mouseScrolled(d1, d2, d3);
+  public boolean mouseScrolled(double mouseX, double mouseY, double scrollAmount) {
+    final float scrollMultiplier = 3.0F / GOLEMS.size();
+    this.isScrolling = true;
+    this.currentScroll = getScrollFloat(getScrollY(this.currentScroll - (float) scrollAmount * scrollMultiplier));
+    return super.mouseScrolled(mouseX, mouseY, scrollAmount);
   }
 
   @Override

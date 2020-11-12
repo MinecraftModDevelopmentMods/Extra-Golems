@@ -42,16 +42,10 @@ public final class WailaExtraGolems extends GolemDescriptionManager implements I
   public void appendTail(List<ITextComponent> tooltip, IEntityAccessor accessor, IPluginConfig config) {
     // Fix the mod name displayed in Waila tooltip
     for(int i = 0, l = tooltip.size(); i < l; i++) {
-      ITextComponent old = tooltip.get(i);
-      String s = old.getUnformattedComponentText();
-      if(s.contains("golems_quark")) {
-        // replace the raw text with a mod name
-        s = s.replaceFirst("golems_quark", "Extra Golems: Quark");
-        ITextComponent replace = new StringTextComponent(s);
-        // copy siblings
-        replace.getSiblings().addAll(old.getSiblings());
-        tooltip.set(i, replace);
-        // finish up
+      if(replaceFirst(tooltip, i, "golems_quark", "Extra Golems: Quark")) {
+        return;
+      }
+      if(replaceFirst(tooltip, i, "golems_thermal", "Extra Golems: Thermal")) {
         return;
       }
     }
@@ -61,5 +55,21 @@ public final class WailaExtraGolems extends GolemDescriptionManager implements I
   public void register(IRegistrar register) {
     register.registerComponentProvider((IEntityComponentProvider) INSTANCE, TooltipPosition.BODY, GolemBase.class);
     register.registerComponentProvider((IEntityComponentProvider) INSTANCE, TooltipPosition.TAIL, GolemBase.class);
+  }
+  
+  protected boolean replaceFirst(final List<ITextComponent> list, final int index, 
+      final String key, final String replacement) {
+    // replace the raw text with a mod name
+    ITextComponent old = list.get(index);
+    String s = old.getUnformattedComponentText();
+    if(s.contains(key)) {
+      s = s.replaceFirst(key, replacement);
+      ITextComponent replace = new StringTextComponent(s);
+      // copy siblings
+      replace.getSiblings().addAll(old.getSiblings());
+      list.set(index, replace);
+      return true;
+    }
+    return false;
   }
 }

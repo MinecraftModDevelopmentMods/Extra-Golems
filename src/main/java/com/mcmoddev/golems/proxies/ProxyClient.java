@@ -4,6 +4,7 @@ import com.mcmoddev.golems.entity.MushroomGolem;
 import com.mcmoddev.golems.entity.WoolGolem;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.gui.GuiDispenserGolem;
+import com.mcmoddev.golems.integration.AddonLoader;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.renders.GolemRenderType;
@@ -11,6 +12,7 @@ import com.mcmoddev.golems.renders.GolemRenderer;
 import com.mcmoddev.golems.renders.model.SimpleTextureLayer;
 import com.mcmoddev.golems.util.GolemNames;
 import com.mcmoddev.golems.util.GolemRegistrar;
+import com.mcmoddev.golems_thermal.ThermalGolemNames;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
@@ -73,6 +75,11 @@ public final class ProxyClient extends ProxyCommon {
     registerWoolGolemRenders();
     // Mushroom Golem
     registerMushroomGolemRenders();
+    // Thermal Series custom renders
+    if(AddonLoader.isThermalLoaded()) {
+      // Rockwool Golem
+      registerRockwoolGolemRenders();
+    }
   }
   
   private void registerWithSimpleLayers(final EntityType<? extends GolemBase> entityType, final ResourceLocation... layers) {
@@ -106,6 +113,18 @@ public final class ProxyClient extends ProxyCommon {
         return r.withLayer(new SimpleTextureLayer<GolemBase>(r, g -> ((MushroomGolem)g).getTexture(), g -> 0xFFFFFF, g -> false, 1.0F) {
           @Override
           protected RenderType getRenderType(final ResourceLocation texture) { return GolemRenderType.getGolemCutout(texture, GolemRenderType.MUSHROOM_TEMPLATE, true); }
+        }).withAllLayers();
+      });
+  }
+  
+  private void registerRockwoolGolemRenders() {
+    RenderingRegistry.registerEntityRenderingHandler(
+      GolemRegistrar.getContainer(new ResourceLocation(AddonLoader.THERMAL_GOLEMS_MODID, ThermalGolemNames.ROCKWOOL_GOLEM)).getEntityType(), 
+      m -> {
+        GolemRenderer<GolemBase> r = new GolemRenderer<>(m);
+        return r.withLayer(new SimpleTextureLayer<GolemBase>(r, g -> ((com.mcmoddev.golems_thermal.entity.RockwoolGolem)g).getTexture(), g -> 0xFFFFFF, g -> false, 1.0F) {
+          @Override
+          protected RenderType getRenderType(final ResourceLocation texture) { return GolemRenderType.getGolemCutout(texture, GolemRenderType.WOOL_TEMPLATE, true); }
         }).withAllLayers();
       });
   }

@@ -610,7 +610,7 @@ public final class GolemContainer {
     /**
      * Defines a dynamic (block-based) texture location for the golem by
      * wrapping the given modid and block texture name into a ResourceLocation at
-     * {@code minecraft:textures/block/blockTexture.png}
+     * {@code minecraft:textures/block/[blockTexture].png}
      * @param blockTexture the name of the texture file, not including .png extension
      * @return instance to allow chaining of methods
      * @see #setDynamicTexture(String, String)
@@ -622,7 +622,7 @@ public final class GolemContainer {
     /**
      * Defines a dynamic (block-based) texture location for the golem by
      * wrapping the given modid and block texture name into a ResourceLocation at
-     * {@code modid:textures/block/blockTexture.png}
+     * {@code [modid]:textures/block/[blockTexture].png}
      * @param modid the namespace of the texture file
      * @param blockTexture the name of the texture file, not including .png extension
      * @return instance to allow chaining of methods

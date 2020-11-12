@@ -20,8 +20,6 @@ import com.mcmoddev.golems_quark.entity.GlowshroomGolem;
 import com.mcmoddev.golems_quark.entity.IronPlateGolem;
 import com.mcmoddev.golems_quark.entity.PermafrostGolem;
 import com.mcmoddev.golems_quark.entity.QuiltedWoolGolem;
-import com.mcmoddev.golems_quark.util.DeferredContainer;
-import com.mcmoddev.golems_quark.util.QuarkGolemNames;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.DyeColor;
@@ -31,6 +29,7 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.automation.module.ColorSlimeModule;
@@ -60,7 +59,7 @@ public final class QuarkGolemsEntities {
   public static final String QUARK = AddonLoader.QUARK_MODID;
   public static final String MODID = AddonLoader.QUARK_GOLEMS_MODID;
   
-  private static final List<DeferredContainer> deferred = new ArrayList<>();
+  private static final List<QuarkDeferredContainer> deferred = new ArrayList<>();
   
   private QuarkGolemsEntities() {}
   
@@ -123,7 +122,7 @@ public final class QuarkGolemsEntities {
     softRegister(CompressedBlocksModule.class, buildEnabledPredicate().and(m -> CompressedBlocksModule.enableCharcoalBlock),
         new GolemContainer.Builder(QuarkGolemNames.CHARCOAL_GOLEM, CoalGolem.class, CoalGolem::new)
         .setModId(MODID).setHealth(24.0D).setAttack(2.5D).setSpeed(0.28D).setKnockbackResist(0.2D)
-        .addSpecial(CoalGolem.ALLOW_SPECIAL, false, "Whether this golem can inflict blindness",
+        .addSpecial(CoalGolem.ALLOW_SPECIAL, true, "Whether this golem can inflict blindness",
             new TranslationTextComponent("entitytip.blinds_creatures").mergeStyle(TextFormatting.GRAY))
         .addHealItem(Items.COAL, 0.25D).addHealItem(Items.CHARCOAL, 0.25D)
         .setDynamicTexture(QUARK, "charcoal_block").build(),
@@ -243,16 +242,24 @@ public final class QuarkGolemsEntities {
   }
   
   /**
+   * Called when the FMLCommonSetupEvent is sent to the main mod file. 
+   * Used here to update some values after the Quark mod and its Modules are fully loaded.
+   * @param event the event, not actually used here
+   **/
+  public static void setupEvent(FMLCommonSetupEvent event) { }
+  
+  /**
    * Called when the InterModEnqueueEvent is sent to the main mod file. 
    * Used here to update some values after the Quark mod and its Modules are fully loaded.
    * @param event the event, not actually used here
    **/
   public static void interModEnqueueEvent(final InterModEnqueueEvent event) {
+    ExtraGolems.LOGGER.debug("Extra Golems: Quark - InterModEnqueueEvent");
     // go through each deferred container and add the correct blocks to their GolemContainer
-    for(final DeferredContainer d : QuarkGolemsEntities.deferred) {
+    for(final QuarkDeferredContainer d : QuarkGolemsEntities.deferred) {
       final boolean enabled = d.enabled.test(d.module);
-      d.container.setEnabled(enabled);
-      addBlocks(d.container, AddonLoader.QUARK_MODID, d.blocks);
+      d.getContainer().setEnabled(enabled);
+      d.addBlocks();
     }
     // add some quark blocks to existing golems
     // nether brick, magma brick, sandstone brick
@@ -281,8 +288,7 @@ public final class QuarkGolemsEntities {
           AddonLoader.QUARK_MODID, "lit_lamp");
     }
   }
-  
-  
+ 
   /**
    * Given a GolemContainer and a collection of block names, this method
    * adds those blocks as valid building material for the given golem.
@@ -291,7 +297,7 @@ public final class QuarkGolemsEntities {
    * @param modid the mod id of the blocks
    * @param blockNames all of the blocks to add
    **/
-  public static void addBlocks(final GolemContainer cont, final String modid, final String... blockNames) {
+  protected static void addBlocks(final GolemContainer cont, final String modid, final String... blockNames) {
     if(null == cont) return;
     // add each block from the list of given names
     for(final String s : blockNames) {
@@ -313,25 +319,25 @@ public final class QuarkGolemsEntities {
    * It is assumed that they are all in the "quark" namespace
    * @see #buildEnabledPredicate()
    **/
-  public static void softRegister(final Class<? extends Module> module, final GolemContainer cont, 
+  protected static void softRegister(final Class<? extends Module> module, final GolemContainer cont, 
       final String... blockNames) {
     softRegister(module, buildEnabledPredicate(), cont, blockNames);
   }  
   
   /**
    * Registers the GolemContainer to the GolemRegistrar.
-   * Creates a DeferredContainer to update with blocks and config options later.
+   * Creates a QuarkDeferredContainer to update with blocks and config options later.
    * @param module the Quark Module that uses the blocks associated with this golem
    * @param pred a Predicate to determine whether the golem will be enabled
    * @param cont the fully-built GolemContainer
    * @param blockNames names of blocks to use to build this golem. 
    * It is assumed that they are all in the "quark" namespace
    **/
-  public static void softRegister(final Class<? extends Module> module, 
+  protected static void softRegister(final Class<? extends Module> module, 
       final Predicate<Class<? extends Module>> pred,
       final GolemContainer cont, final String... blockNames) {
     // store the container for updating config later
-    deferred.add(new DeferredContainer(cont, module, blockNames, pred));
+    deferred.add(new QuarkDeferredContainer(cont, module, blockNames, pred));
     // actually register the container
     GolemRegistrar.registerGolem(cont);
   }
@@ -341,7 +347,7 @@ public final class QuarkGolemsEntities {
    * property is updated later.
    * @return {@code m -> ModuleLoader.INSTANCE.isModuleEnabled(m)}
    **/
-  private static Predicate<Class<? extends Module>> buildEnabledPredicate() {
+  protected static Predicate<Class<? extends Module>> buildEnabledPredicate() {
     return m -> ModuleLoader.INSTANCE.isModuleEnabled(m);
   }
 }

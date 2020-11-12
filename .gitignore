@@ -37,3 +37,4 @@ libs/*
 # Thumbnails
 ._*
 /.apt_generated/
+/Users/

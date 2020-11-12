@@ -88,7 +88,7 @@ public final class ExtraGolemsEntities {
     // COAL GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.COAL_GOLEM, CoalGolem.class, CoalGolem::new)
         .setHealth(24.0D).setAttack(2.5D).setSpeed(0.28D).setKnockbackResist(0.2D).addBlocks(Blocks.COAL_BLOCK)
-        .addSpecial(CoalGolem.ALLOW_SPECIAL, false, "Whether this golem can inflict blindness",
+        .addSpecial(CoalGolem.ALLOW_SPECIAL, true, "Whether this golem can inflict blindness",
             new TranslationTextComponent("entitytip.blinds_creatures").mergeStyle(TextFormatting.GRAY))
         .addHealItem(Items.COAL, 0.25D).addHealItem(Items.CHARCOAL, 0.25D)
         .setDynamicTexture("coal_block").build());
@@ -387,6 +387,7 @@ public final class ExtraGolemsEntities {
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.TEXTURED_GOLEM, DefinedTextureGolem.class, DefinedTextureGolem::new)
         .setHealth(76.0D).setAttack(6.0D).noGolemBookEntry()
         .setDynamicTexture(g -> ((DefinedTextureGolem)g).getTexture())
+        .setTextureColor(g -> ((DefinedTextureGolem)g).getColor())
         .setVinesProvider(g -> ((DefinedTextureGolem)g).getVines())
         .setVinesColor(g -> ((DefinedTextureGolem)g).getVinesColor()).build());
     // TNT GOLEM

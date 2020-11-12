@@ -80,26 +80,35 @@ repositories {
 	maven { // QUARK
 		name 'blamejared'
 		url 'https://maven.blamejared.com/'
-	} 
+	}
+	maven { // CURSE
+		name 'CurseMaven'
+		url 'https://www.cursemaven.com/'
+	}
 	jcenter()
     mavenCentral()
 }
 
 dependencies {
-    // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
-    // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
-    // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-	
+	// Forge
     minecraft "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
-		
+	// AutoRegLib
 	compile fg.deobf(project.dependencies.create("vazkii.autoreglib:AutoRegLib:${project.autoreglib_version}") {
         transitive = false
     })
-	
+	// Quark
 	compile fg.deobf(project.dependencies.create("vazkii.quark:Quark:${project.quark_version}") {
         transitive = false
     })
-
+	// CoFHCore
+	compile fg.deobf("curse.maven:cofh-core:${project.cofhcore_file}") {
+		transitive = false
+	}
+	// Thermal Foundation
+	compile fg.deobf("curse.maven:thermal-foundation:${project.thermalfoundation_file}") {
+		transitive = false
+	}
+	// HWYLA
 	compileOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}:api")
 	runtimeOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}")
 

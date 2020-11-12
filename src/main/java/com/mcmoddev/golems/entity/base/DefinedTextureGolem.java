@@ -15,11 +15,14 @@ import net.minecraft.world.World;
 public class DefinedTextureGolem extends GolemBase {
   
   protected static final DataParameter<String> DATA_TEXTURE = EntityDataManager.createKey(DefinedTextureGolem.class, DataSerializers.STRING);
+  protected static final DataParameter<Integer> DATA_COLOR = EntityDataManager.createKey(DefinedTextureGolem.class, DataSerializers.VARINT);
   protected static final DataParameter<Integer> DATA_VINES = EntityDataManager.createKey(DefinedTextureGolem.class, DataSerializers.VARINT);
   protected static final String KEY_TEXTURE = "Texture";
+  protected static final String KEY_COLOR = "Color";
   protected static final String KEY_VINES = "Vines";
   
   protected ResourceLocation texture = GolemRenderSettings.FALLBACK_BLOCK;
+  protected int color = 0xFFFFFF;
   protected ResourceLocation vines = null;
   protected int vinesColor = 0;
 
@@ -28,9 +31,18 @@ public class DefinedTextureGolem extends GolemBase {
   }
   
   @Override
+  public void livingTick() {
+    super.livingTick();
+    if(color <= 0) {
+      color = 0xFFFFFF;
+    }
+  }
+  
+  @Override
   protected void registerData() {
     super.registerData();
     this.getDataManager().register(DATA_TEXTURE, GolemRenderSettings.FALLBACK_BLOCK.toString());
+    this.getDataManager().register(DATA_COLOR, Integer.valueOf(0xFFFFFF));
     this.getDataManager().register(DATA_VINES, Integer.valueOf(0));
   }
   
@@ -43,6 +55,8 @@ public class DefinedTextureGolem extends GolemBase {
       if(!textureString.isEmpty()) {
         texture = new ResourceLocation(textureString);
       }
+    } else if(DATA_COLOR.equals(key)) {
+      color = this.getColorData();
     } else if(DATA_VINES.equals(key)) {
       vinesColor = this.getVinesColorData();
       vines = vinesColor > 0 ? GolemRenderSettings.FALLBACK_VINES : null;
@@ -53,6 +67,7 @@ public class DefinedTextureGolem extends GolemBase {
   public void writeAdditional(final CompoundNBT nbt) {
     super.writeAdditional(nbt);
     nbt.putString(KEY_TEXTURE, this.getTextureString());
+    nbt.putInt(KEY_COLOR, this.getColorData());
     nbt.putInt(KEY_VINES, this.getVinesColorData());
   }
 
@@ -60,6 +75,7 @@ public class DefinedTextureGolem extends GolemBase {
   public void readAdditional(final CompoundNBT nbt) {
     super.readAdditional(nbt);
     this.setTexture(nbt.getString(KEY_TEXTURE));
+    this.setColorData(nbt.getInt(KEY_COLOR));
     this.setVinesColorData(nbt.getInt(KEY_VINES));
   }
 
@@ -76,6 +92,19 @@ public class DefinedTextureGolem extends GolemBase {
   
   public ResourceLocation getTexture() {
     return texture;
+  }
+  
+  public void setColorData(final int colorData) {
+    this.getDataManager().set(DATA_COLOR, Integer.valueOf(colorData));
+    color = colorData;
+  }
+  
+  public int getColorData() {
+    return this.getDataManager().get(DATA_COLOR).intValue();
+  }
+  
+  public int getColor() {
+    return 0xFFFFFF; // TODO color;
   }
   
   public void setVinesColorData(final int vinesColorData) {

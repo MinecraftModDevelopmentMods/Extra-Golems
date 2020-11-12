@@ -1,4 +1,4 @@
-package com.mcmoddev.golems_quark.util;
+package com.mcmoddev.golems_quark;
 
 public final class QuarkGolemNames {
   
