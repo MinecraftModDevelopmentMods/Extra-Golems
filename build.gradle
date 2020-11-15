@@ -92,26 +92,27 @@ repositories {
 dependencies {
 	// Forge
     minecraft "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
+	
 	// AutoRegLib
-	compile fg.deobf(project.dependencies.create("vazkii.autoreglib:AutoRegLib:${project.autoreglib_version}") {
-        transitive = false
-    })
+	compile fg.deobf("vazkii.autoreglib:AutoRegLib:${project.arl_version}") { transitive = false }
 	// Quark
-	compile fg.deobf(project.dependencies.create("vazkii.quark:Quark:${project.quark_version}") {
-        transitive = false
-    })
+	compile fg.deobf("vazkii.quark:Quark:${project.quark_version}") { transitive = false }
 	// CoFHCore
-	compile fg.deobf("curse.maven:cofh-core:${project.cofhcore_file}") {
-		transitive = false
-	}
+	compile fg.deobf("curse.maven:cofh-core:${project.cofhcore_file}") { transitive = false }
 	// Thermal Foundation
-	compile fg.deobf("curse.maven:thermal-foundation:${project.thermalfoundation_file}") {
-		transitive = false
-	}
+	compile fg.deobf("curse.maven:thermal-foundation:${project.thermalfoundation_file}") { transitive = false }
+	// CLib
+	compile fg.deobf("curse.maven:clib:${project.clib_file}") { transitive = false }
+	// Mekanism
+	compile fg.deobf("curse.maven:mekanism:${project.mekanism_file}") { transitive = false }
+	// Immersive Engineering
+	compile fg.deobf("curse.maven:immersive-engineering:${project.ie_file}") { transitive = false }
+	// Never Needed or Wanted
+	compile fg.deobf("curse.maven:never-needed-or-wanted:${project.nnow_file}") { transitive = false }
+	
 	// HWYLA
-	compileOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}:api")
-	runtimeOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}")
-
+	compileOnly fg.deobf("mcp.mobius.waila:Hwyla:${project.hwyla_version}:api")
+	runtimeOnly fg.deobf("mcp.mobius.waila:Hwyla:${project.hwyla_version}")
 }
 processResources {
     inputs.property "version", project.version

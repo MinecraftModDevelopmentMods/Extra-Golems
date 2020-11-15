@@ -147,8 +147,8 @@ public class ThermalGolemsEntities {
         .build(), "invar_block");
     // LEAD GOLEM
     register(new GolemContainer.Builder(ThermalGolemNames.LEAD_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(66.0D).setAttack(4.5D).setSound(SoundEvents.BLOCK_METAL_STEP)
-        .setDynamicTexture(THERMAL, "storage/lead_block")
+        .setModId(MODID).setHealth(66.0D).setAttack(4.5D).setKnockbackResist(1.0D)
+        .setSound(SoundEvents.BLOCK_METAL_STEP).setDynamicTexture(THERMAL, "storage/lead_block")
         .build(), "lead_block");
     // LUMIUM GOLEM
     register(new GolemContainer.Builder(ThermalGolemNames.LUMIUM_GOLEM, GenericGolem.class, GenericGolem::new)

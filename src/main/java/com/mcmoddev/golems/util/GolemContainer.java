@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
+import com.mcmoddev.golems.events.GolemContainerBuildEvent;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemRenderSettings.IColorProvider;
 import com.mcmoddev.golems.util.GolemRenderSettings.ILightingProvider;
@@ -44,6 +45,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.registries.IRegistryDelegate;
 
 /**
@@ -842,8 +844,8 @@ public final class GolemContainer {
      * @return instance to allow chaining of methods
      * @see #addSpecials(GolemSpecialContainer...)
      **/
-    public Builder addSpecial(final String name, final Object value, final String comment) {
-      specials.add(new GolemSpecialContainer.Builder(name, value, comment).build());
+    public <T> Builder addSpecial(final String name, final T value, final String comment) {
+      specials.add(new GolemSpecialContainer.Builder<T>(name, value, comment).build());
       return this;
     }
 
@@ -941,9 +943,13 @@ public final class GolemContainer {
      * @return a copy of the newly constructed GolemContainer
      **/
     public GolemContainer build() {
+      // post event in case listeners want to change anything
+      final ResourceLocation name = new ResourceLocation(modid, golemName);
+      final GolemContainerBuildEvent event = new GolemContainerBuildEvent(name, this, validBuildingBlocks, validBuildingBlockTags);
+      MinecraftForge.EVENT_BUS.post(event);
       // build the entity type
       EntityType<? extends GolemBase> entityType = entityTypeBuilder.build(golemName);
-      entityType.setRegistryName(modid, golemName);
+      entityType.setRegistryName(name);
       // add specials to the container
       HashMap<String, GolemSpecialContainer> containerMap = new HashMap<>();
       for (GolemSpecialContainer c : specials) {
