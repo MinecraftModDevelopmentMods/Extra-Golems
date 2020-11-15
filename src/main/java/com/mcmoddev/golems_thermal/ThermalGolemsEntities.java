@@ -4,15 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mcmoddev.golems.entity.CoalGolem;
+import com.mcmoddev.golems.entity.ConcreteGolem;
 import com.mcmoddev.golems.entity.GenericGolem;
 import com.mcmoddev.golems.integration.AddonLoader;
 import com.mcmoddev.golems.integration.DeferredContainer;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemContainer;
+import com.mcmoddev.golems.util.GolemNames;
 import com.mcmoddev.golems.util.GolemContainer.SwimMode;
 import com.mcmoddev.golems.util.GolemRegistrar;
 import com.mcmoddev.golems_thermal.entity.ElectrumGolem;
 import com.mcmoddev.golems_thermal.entity.EnderiumGolem;
+import com.mcmoddev.golems_thermal.entity.GunpowderGolem;
+import com.mcmoddev.golems_thermal.entity.HardenedGlassGolem;
 import com.mcmoddev.golems_thermal.entity.RockwoolGolem;
 import com.mcmoddev.golems_thermal.entity.RubberGolem;
 
@@ -44,6 +48,7 @@ public class ThermalGolemsEntities {
   public static void initEntityTypes() {
     ExtraGolems.LOGGER.debug("Extra Golems: Thermal - initEntityTypes");
     
+    
     // quilted wool names
     final String[] rockwoolTypes = new String[DyeColor.values().length];
     for(int i = 0, l = rockwoolTypes.length; i < l; i++) {
@@ -52,12 +57,12 @@ public class ThermalGolemsEntities {
     
     // APATITE GOLEM
     register(new GolemContainer.Builder(ThermalGolemNames.APATITE_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(90.0D).setSound(SoundEvents.BLOCK_METAL_STEP)
+        .setModId(MODID).setHealth(44.0D).setAttack(2.9D).setSpeed(0.26D)
         .setDynamicTexture(THERMAL, "storage/apatite_block")
         .build(), "apatite_block");
     // BRONZE GOLEM
     register(new GolemContainer.Builder(ThermalGolemNames.BRONZE_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(90.0D).setSound(SoundEvents.BLOCK_METAL_STEP)
+        .setModId(MODID).setHealth(104.0D).setAttack(7.25D).setSound(SoundEvents.BLOCK_METAL_STEP)
         .setDynamicTexture(THERMAL, "storage/bronze_block")
         .build(), "bronze_block");
     // CHARCOAL GOLEM
@@ -70,108 +75,117 @@ public class ThermalGolemsEntities {
         .build(), "charcoal_block");
     // CINNABAR GOLEM
     register(new GolemContainer.Builder(ThermalGolemNames.CINNABAR_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(90.0D).setSound(SoundEvents.BLOCK_METAL_STEP)
+        .setModId(MODID).setHealth(72.0D).setAttack(4.25D).setSound(SoundEvents.BLOCK_METAL_STEP)
         .setDynamicTexture(THERMAL, "storage/cinnabar_block")
         .build(), "cinnabar_block");
     // COAL COKE GOLEM
     register(new GolemContainer.Builder(ThermalGolemNames.COALCOKE_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(90.0D)
+        .setModId(MODID).setHealth(28.0D).setAttack(3.25D).setSpeed(0.28D)
         .setDynamicTexture(THERMAL, "storage/coal_coke_block")
         .build(), "coal_coke_block");
     // CONSTANTAN GOLEM
     register(new GolemContainer.Builder(ThermalGolemNames.CONSTANTAN_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(90.0D).setSound(SoundEvents.BLOCK_METAL_STEP)
+        .setModId(MODID).setHealth(96.0D).setAttack(6.0D).setSound(SoundEvents.BLOCK_METAL_STEP)
         .setDynamicTexture(THERMAL, "storage/constantan_block")
         .build(), "constantan_block");
     // COPPER GOLEM
     register(new GolemContainer.Builder(ThermalGolemNames.COPPER_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(90.0D).setSound(SoundEvents.BLOCK_METAL_STEP)
+        .setModId(MODID).setHealth(82.0D).setAttack(5.25D).setSound(SoundEvents.BLOCK_METAL_STEP)
         .setDynamicTexture(THERMAL, "storage/copper_block")
         .build(), "copper_block");
     // CURED RUBBER GOLEM
     register(new GolemContainer.Builder(ThermalGolemNames.CUREDRUBBER_GOLEM, RubberGolem.class, RubberGolem::new)
-        .setModId(MODID).setHealth(58.0D).setAttack(2.5D).setSpeed(0.288D).setKnockbackResist(0.35D)
+        .setModId(MODID).setHealth(68.0D).setAttack(2.5D).setSpeed(0.288D).setKnockbackResist(0.35D)
         .addSpecial(RubberGolem.ALLOW_SPECIAL, true, "Whether this golem can apply extra knockback when attacking",
             new TranslationTextComponent("entitytip.has_knockback").mergeStyle(TextFormatting.GREEN))
-        .addSpecial(RubberGolem.KNOCKBACK, Double.valueOf(1.026D), "Rubber Golem knockback power (Higher Value = Further Knockback)")
+        .addSpecial(RubberGolem.KNOCKBACK, Double.valueOf(0.5D), "Cured Rubber Golem knockback power (Higher Value = Bigger Knockback)")
         .setSwimMode(SwimMode.FLOAT).setSound(SoundEvents.BLOCK_HONEY_BLOCK_STEP)
         .setDynamicTexture(THERMAL, "storage/cured_rubber_block")
         .build(), "cured_rubber_block");
     // ELECTRUM GOLEM
     register(new GolemContainer.Builder(ThermalGolemNames.ELECTRUM_GOLEM, ElectrumGolem.class, ElectrumGolem::new)
-        .setModId(MODID).setHealth(90.0D).setSound(SoundEvents.BLOCK_METAL_STEP)
+        .setModId(MODID).setHealth(88.0D).setAttack(5.7D).setSpeed(0.32D).setSound(SoundEvents.BLOCK_METAL_STEP)
         .addSpecial(ElectrumGolem.IMMUNE_TO_MAGIC, true, "Whether the golem is immune to magic damage", 
             new TranslationTextComponent("entitytip.immune_to_magic").mergeStyle(TextFormatting.AQUA))
         .setDynamicTexture(THERMAL, "storage/electrum_block")
         .build(), "electrum_block");
     // ENDERIUM GOLEM
     register(new GolemContainer.Builder(ThermalGolemNames.ENDERIUM_GOLEM, EnderiumGolem.class, EnderiumGolem::new)
-        .setModId(MODID).setHealth(90.0D).setSound(SoundEvents.BLOCK_METAL_STEP)
+        .setModId(MODID).setHealth(134.0D).setAttack(8.5D).setSound(SoundEvents.BLOCK_METAL_STEP)
         .addSpecial(EnderiumGolem.ALLOW_SPECIAL, true, "Whether this golem can teleport",
             new TranslationTextComponent("entitytip.can_teleport").mergeStyle(TextFormatting.DARK_AQUA))
         .setDynamicTexture(THERMAL, "storage/enderium_block")
         .build(), "enderium_block");
     // ENDERIUM GLASS GOLEM
+    final ResourceLocation enderiumGlassTex = new ResourceLocation(MODID, "textures/entity/" + ThermalGolemNames.ENDERIUMGLASS_GOLEM + ".png");
     register(new GolemContainer.Builder(ThermalGolemNames.ENDERIUMGLASS_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(90.0D)
+        .setModId(MODID).setHealth(14.0D).setAttack(10.0D).setSpeed(0.29D)
         .enableFallDamage().setSound(SoundEvents.BLOCK_GLASS_STEP)
-        .setDynamicTexture(THERMAL, "glass/enderium_glass").noVines() // TODO static texture
+        .setStaticTexture(g -> enderiumGlassTex).noVines()
         .build(), "enderium_glass");
     // GUNPOWDER GOLEM
-    register(new GolemContainer.Builder(ThermalGolemNames.GUNPOWDER_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(90.0D)
+    register(new GolemContainer.Builder(ThermalGolemNames.GUNPOWDER_GOLEM, GunpowderGolem.class, GunpowderGolem::new)
+        .setModId(MODID).setHealth(90.0D).setAttack(2.25D).setSpeed(0.27D)
+        .addSpecial(GunpowderGolem.ALLOW_SPECIAL, true, "Whether this golem can explode when fighting or dying",
+            new TranslationTextComponent("entitytip.explodes").mergeStyle(TextFormatting.GRAY))
+        .setSwimMode(SwimMode.FLOAT).setSound(SoundEvents.BLOCK_GRAVEL_STEP).addHealItem(Items.GUNPOWDER, 0.25D)
         .setDynamicTexture(THERMAL, "storage/gunpowder_block")
         .build(), "gunpowder_block");
     // HARDENED GLASS GOLEM (obsidian_glass)
-    register(new GolemContainer.Builder(ThermalGolemNames.HARDENEDGLASS_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(90.0D).setSound(SoundEvents.BLOCK_GLASS_STEP)
-        .setDynamicTexture(THERMAL, "glass/obsidian_glass").noVines() // TODO static texture
+    final ResourceLocation hardenedGlassTex = new ResourceLocation(MODID, "textures/entity/" + ThermalGolemNames.HARDENEDGLASS_GOLEM + ".png");
+    register(new GolemContainer.Builder(ThermalGolemNames.HARDENEDGLASS_GOLEM, HardenedGlassGolem.class, HardenedGlassGolem::new)
+        .setModId(MODID).setHealth(24.0D).setAttack(11.5D).setSpeed(0.29D)
+        .setSound(SoundEvents.BLOCK_GLASS_STEP).immuneToExplosions()
+        .addSpecial(ConcreteGolem.ALLOW_RESIST, true, "Whether this golem reduces damage it takes", 
+            new TranslationTextComponent("effect.minecraft.resistance").mergeStyle(TextFormatting.DARK_GRAY))
+        .setStaticTexture(g -> hardenedGlassTex).noVines()
         .build(), "obsidian_glass");
     // INVAR GOLEM
     register(new GolemContainer.Builder(ThermalGolemNames.INVAR_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(90.0D).setSound(SoundEvents.BLOCK_METAL_STEP)
+        .setModId(MODID).setHealth(94.0D).setAttack(6.75D).setSound(SoundEvents.BLOCK_METAL_STEP)
         .setDynamicTexture(THERMAL, "storage/invar_block")
         .build(), "invar_block");
     // LEAD GOLEM
     register(new GolemContainer.Builder(ThermalGolemNames.LEAD_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(90.0D).setSound(SoundEvents.BLOCK_METAL_STEP)
+        .setModId(MODID).setHealth(66.0D).setAttack(4.5D).setSound(SoundEvents.BLOCK_METAL_STEP)
         .setDynamicTexture(THERMAL, "storage/lead_block")
         .build(), "lead_block");
     // LUMIUM GOLEM
     register(new GolemContainer.Builder(ThermalGolemNames.LUMIUM_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(90.0D).setSound(SoundEvents.BLOCK_METAL_STEP).setLightLevel(15)
+        .setModId(MODID).setHealth(102.0D).setAttack(5.0D).setSound(SoundEvents.BLOCK_METAL_STEP).setLightLevel(15)
         .setDynamicTexture(THERMAL, "storage/lumium_block")
         .build(), "lumium_block");
     // LUMIUM GLASS GOLEM
+    final ResourceLocation lumiumGlassTex = new ResourceLocation(MODID, "textures/entity/" + ThermalGolemNames.LUMIUMGLASS_GOLEM + ".png");
     register(new GolemContainer.Builder(ThermalGolemNames.LUMIUMGLASS_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(90.0D).enableFallDamage()
+        .setModId(MODID).setHealth(14.0D).setAttack(10.5D).setSpeed(0.28D).enableFallDamage()
         .setLightLevel(15).setSound(SoundEvents.BLOCK_GLASS_STEP)
-        .setDynamicTexture(THERMAL, "glass/lumium_glass").noVines() // TODO static texture
+        .setStaticTexture(g -> lumiumGlassTex).noVines()
         .build(), "lumium_glass");
     // NICKEL GOLEM
     register(new GolemContainer.Builder(ThermalGolemNames.NICKEL_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(90.0D).setSound(SoundEvents.BLOCK_METAL_STEP)
+        .setModId(MODID).setHealth(86.0D).setAttack(6.0D).setSound(SoundEvents.BLOCK_METAL_STEP)
         .setDynamicTexture(THERMAL, "storage/nickel_block")
         .build(), "nickel_block");
     // NITER GOLEM
     register(new GolemContainer.Builder(ThermalGolemNames.NITER_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(90.0D).setSound(SoundEvents.BLOCK_METAL_STEP)
+        .setModId(MODID).setHealth(56.0D).setAttack(3.5D).setSpeed(0.29D).setSound(SoundEvents.BLOCK_METAL_STEP)
         .setDynamicTexture(THERMAL, "storage/niter_block")
         .build(), "niter_block");
     // RICH SLAG GOLEM
     register(new GolemContainer.Builder(ThermalGolemNames.RICHSLAG_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(90.0D)
+        .setModId(MODID).setHealth(52.0D).setAttack(3.0D).setSpeed(0.265D)
         .setDynamicTexture(THERMAL, "storage/rich_slag_block")
         .build(), "rich_slag_block");
     // ROCKWOOL GOLEM
     register(new GolemContainer.Builder(ThermalGolemNames.ROCKWOOL_GOLEM, RockwoolGolem.class, RockwoolGolem::new)
-        .setModId(MODID).setHealth(28.0D).setAttack(1.5D).setSpeed(0.285D).setKnockbackResist(0.2D)
+        .setModId(MODID).setHealth(28.0D).setAttack(1.75D).setSpeed(0.285D).setKnockbackResist(0.2D)
         .immuneToFire().immuneToExplosions().setSwimMode(SwimMode.FLOAT).setSound(SoundEvents.BLOCK_WOOL_STEP)
         .addHealItem(Items.STRING, 0.1D).setDynamicTexture("white_wool").noVines().hasCustomRender()
         .build(), rockwoolTypes);
     // ROSIN GOLEM
     register(new GolemContainer.Builder(ThermalGolemNames.ROSIN_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(90.0D).setSound(SoundEvents.BLOCK_METAL_STEP)
+        .setModId(MODID).setHealth(40.0D).setAttack(2.5D).setSpeed(0.27D)
         .setDynamicTexture(THERMAL, "storage/rosin_block_side")
         .build(), "rosin_block");
     // RUBBER GOLEM
@@ -179,39 +193,40 @@ public class ThermalGolemsEntities {
         .setModId(MODID).setHealth(58.0D).setAttack(2.5D).setSpeed(0.288D).setKnockbackResist(0.35D)
         .addSpecial(RubberGolem.ALLOW_SPECIAL, true, "Whether this golem can apply extra knockback when attacking",
             new TranslationTextComponent("entitytip.has_knockback").mergeStyle(TextFormatting.GREEN))
-        .addSpecial(RubberGolem.KNOCKBACK, Double.valueOf(1.016D), "Rubber Golem knockback power (Higher Value = Further Knockback)")
+        .addSpecial(RubberGolem.KNOCKBACK, Double.valueOf(0.44D), "Rubber Golem knockback power (Higher Value = Bigger Knockback)")
         .setSwimMode(SwimMode.FLOAT).setSound(SoundEvents.BLOCK_HONEY_BLOCK_STEP)
         .setDynamicTexture(THERMAL, "storage/rubber_block")
         .build(), "rubber_block");
     // SAWDUST GOLEM
     register(new GolemContainer.Builder(ThermalGolemNames.SAWDUST_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(90.0D).setSound(SoundEvents.BLOCK_METAL_STEP)
+        .setModId(MODID).setHealth(16.0D).setAttack(2.0D).setSpeed(0.28D).setSound(SoundEvents.BLOCK_WOOD_STEP)
         .setDynamicTexture(THERMAL, "storage/sawdust_block")
         .build(), "sawdust_block");
     // SIGNALUM GOLEM
     register(new GolemContainer.Builder(ThermalGolemNames.SIGNALUM_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(90.0D).setSound(SoundEvents.BLOCK_METAL_STEP)
+        .setModId(MODID).setHealth(124.0D).setAttack(7.5D).setSound(SoundEvents.BLOCK_METAL_STEP)
         .setDynamicTexture(THERMAL, "storage/signalum_block")
         .build(), "signalum_block");
     // SIGNALUM GLASS GOLEM
+    final ResourceLocation signalumGlassTex = new ResourceLocation(MODID, "textures/entity/" + ThermalGolemNames.SIGNALUMGLASS_GOLEM + ".png");
     register(new GolemContainer.Builder(ThermalGolemNames.SIGNALUMGLASS_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(90.0D)
+        .setModId(MODID).setHealth(14.0D).setAttack(10.5D).setSpeed(0.285D)
         .enableFallDamage().setSound(SoundEvents.BLOCK_GLASS_STEP)
-        .setDynamicTexture(THERMAL, "glass/signalum_glass").noVines() // TODO static texture
+        .setStaticTexture(g -> signalumGlassTex).noVines()
         .build(), "signalum_glass");
     // SLAG GOLEM
     register(new GolemContainer.Builder(ThermalGolemNames.SLAG_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(90.0D)
+        .setModId(MODID).setHealth(38.0D).setAttack(3.25D).setSpeed(0.27D)
         .setDynamicTexture(THERMAL, "storage/slag_block")
         .build(), "slag_block");
     // SULFUR GOLEM
     register(new GolemContainer.Builder(ThermalGolemNames.SULFUR_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(90.0D)
+        .setModId(MODID).setHealth(54.0D).setAttack(4.0D).setSpeed(0.265D)
         .setDynamicTexture(THERMAL, "storage/sulfur_block")
         .build(), "sulfur_block");
     // TIN GOLEM
     register(new GolemContainer.Builder(ThermalGolemNames.TIN_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(90.0D).setSound(SoundEvents.BLOCK_METAL_STEP)
+        .setModId(MODID).setHealth(72.0D).setAttack(5.75D).setSpeed(0.255D).setSound(SoundEvents.BLOCK_METAL_STEP)
         .setDynamicTexture(THERMAL, "storage/tin_block")
         .build(), "tin_block");
   }
@@ -228,9 +243,7 @@ public class ThermalGolemsEntities {
    * Called when the InterModEnqueueEvent is sent to the main mod file. 
    * @param event the event, not actually used here
    **/
-  public static void interModEnqueueEvent(final InterModEnqueueEvent event) {
-    
-  }
+  public static void interModEnqueueEvent(final InterModEnqueueEvent event) { }
 
   /**
    * Called when the FMLCommonSetupEvent is sent to the main mod file. 

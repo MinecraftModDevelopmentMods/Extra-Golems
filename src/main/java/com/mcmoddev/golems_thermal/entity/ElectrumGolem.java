@@ -17,6 +17,7 @@ public class ElectrumGolem extends GolemBase {
     immuneToMagic = getConfigBool(IMMUNE_TO_MAGIC);
   }
   
+  @Override
   public boolean isInvulnerableTo(DamageSource source) {
     return (immuneToMagic && source.isMagicDamage()) || super.isInvulnerableTo(source);
   }

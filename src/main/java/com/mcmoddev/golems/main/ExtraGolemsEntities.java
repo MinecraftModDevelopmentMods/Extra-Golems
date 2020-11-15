@@ -114,7 +114,7 @@ public final class ExtraGolemsEntities {
     // CRIMSON STEM GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.CRIMSONSTEM_GOLEM, CrimsonStemGolem.class, CrimsonStemGolem::new)
         .setHealth(24.0D).setAttack(3.0D).setSpeed(0.289D).setKnockbackResist(0.2D).addBlocks(BlockTags.CRIMSON_STEMS)
-        .addSpecial(CrimsonStemGolem.FREQUENCY, Integer.valueOf(420), "Average number of ticks between planting fungus")
+        .addSpecial(CrimsonStemGolem.FREQUENCY, Integer.valueOf(520), "Average number of ticks between planting fungus")
         .addSpecial(CrimsonStemGolem.ALLOW_SPECIAL, true, "Whether this golem can plant crimson fungus", 
             new TranslationTextComponent("entitytip.plants_x", new TranslationTextComponent("block.minecraft.crimson_fungus")).mergeStyle(TextFormatting.DARK_RED))
         .setDynamicTexture("crimson_stem").setVinesColor(g -> blue).immuneToFire().build());
@@ -251,13 +251,13 @@ public final class ExtraGolemsEntities {
         .addSpecial(MelonGolem.ALLOW_SPECIAL, true, "Whether this golem can plant flowers randomly",
             new TranslationTextComponent("entitytip.plants_flowers", new TranslationTextComponent("tile.flower1.name"))
                 .mergeStyle(TextFormatting.GREEN))
-        .addSpecial(MelonGolem.FREQUENCY, Integer.valueOf(240), "Average number of ticks between planting flowers")
+        .addSpecial(MelonGolem.FREQUENCY, Integer.valueOf(440), "Average number of ticks between planting flowers")
         .setSwimMode(SwimMode.FLOAT).addHealItem(Items.MELON_SLICE, 0.25D).addHealItem(Items.GLISTERING_MELON_SLICE, 0.35D)
         .setDynamicTexture("melon_side").build());
     // MUSHROOM GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.MUSHROOM_GOLEM, MushroomGolem.class, MushroomGolem::new)
         .setHealth(30.0D).setAttack(3.0D).setSpeed(0.30D).addBlocks(Blocks.RED_MUSHROOM_BLOCK, Blocks.BROWN_MUSHROOM_BLOCK)
-        .addSpecial(MushroomGolem.FREQUENCY, Integer.valueOf(420), "Average number of ticks between planting mushrooms")
+        .addSpecial(MushroomGolem.FREQUENCY, Integer.valueOf(620), "Average number of ticks between planting mushrooms")
         .addSpecial(MushroomGolem.ALLOW_HEALING, true, "Whether this golem can randomly heal (at night)", descHeals)
         .addSpecial(MushroomGolem.ALLOW_SPECIAL, true, "Whether this golem can plant mushrooms randomly",
             new TranslationTextComponent("entitytip.plants_shrooms").mergeStyle(TextFormatting.DARK_GREEN))
@@ -345,7 +345,7 @@ public final class ExtraGolemsEntities {
         .addSpecial(SlimeGolem.SPLITTING_CHILDREN, Integer.valueOf(2), comSplits)
         .addSpecial(SlimeGolem.ALLOW_SPECIAL, true, "Whether this golem can apply extra knockback when attacking",
             new TranslationTextComponent("entitytip.has_knockback").mergeStyle(TextFormatting.GREEN))
-        .addSpecial(SlimeGolem.KNOCKBACK, Double.valueOf(1.0412D), "Slime Golem knockback power (Higher Value = Further Knockback)")
+        .addSpecial(SlimeGolem.KNOCKBACK, Double.valueOf(0.92D), "Slime Golem knockback power (Higher Value = Bigger Knockback)")
         .addDesc(new GolemDescription(descSplits.copyRaw().mergeStyle(TextFormatting.GREEN), 
             SlimeGolem.SPLITTING_CHILDREN, c -> (Integer) c.get() > 0))
         .setSwimMode(SwimMode.FLOAT).setSound(SoundEvents.ENTITY_SLIME_SQUISH).addHealItem(Items.SLIME_BALL, 0.25D)
@@ -401,7 +401,7 @@ public final class ExtraGolemsEntities {
     // WARPED STEM GOLEM
     GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.WARPEDSTEM_GOLEM, WarpedStemGolem.class, WarpedStemGolem::new)
         .setHealth(24.0D).setAttack(3.0D).setSpeed(0.289D).setKnockbackResist(0.2D).addBlocks(BlockTags.WARPED_STEMS)
-        .addSpecial(WarpedStemGolem.FREQUENCY, Integer.valueOf(420), "Average number of ticks between planting fungus")
+        .addSpecial(WarpedStemGolem.FREQUENCY, Integer.valueOf(520), "Average number of ticks between planting fungus")
         .addSpecial(WarpedStemGolem.ALLOW_SPECIAL, true, "Whether this golem can plant warped fungus", 
             new TranslationTextComponent("entitytip.plants_x", new TranslationTextComponent("block.minecraft.warped_fungus")).mergeStyle(TextFormatting.BLUE))
         .immuneToFire().setDynamicTexture("warped_stem").setVinesColor(g -> blue).build());

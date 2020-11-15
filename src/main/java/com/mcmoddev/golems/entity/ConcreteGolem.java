@@ -26,15 +26,17 @@ public final class ConcreteGolem extends GolemMultiTextured {
   public static final String[] LOOT_TABLE_NAMES = { "black", "orange", "magenta", "light_blue", "yellow", "lime", "pink", "gray", "light_gray",
       "cyan", "purple", "blue", "brown", "green", "red", "white" };
 
+  private boolean resist;
   
   public ConcreteGolem(final EntityType<? extends GolemBase> entityType, final World world) {
     super(entityType, world, "minecraft", TEXTURE_NAMES, ExtraGolems.MODID, LOOT_TABLE_NAMES);
     this.setPathPriority(PathNodeType.WATER, -0.8F);
+    resist = getConfigBool(ALLOW_RESIST);
   }
 
   @Override
   protected void damageEntity(DamageSource source, float amount) {
-    if (this.getConfigBool(ALLOW_RESIST) && !source.isDamageAbsolute()) {
+    if (resist && !source.isDamageAbsolute()) {
       amount *= 0.6F;
       if (source.isFireDamage()) {
         // additional fire resistance
