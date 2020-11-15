@@ -34,9 +34,6 @@ import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-/**
- * Handles events added specifically from this mod.
- **/
 public class GolemCommonEventHandler {
 
   /**

@@ -6,7 +6,6 @@ import java.util.HashMap;
 import javax.annotation.Nullable;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
-import com.mcmoddev.golems.main.ExtraGolems;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
@@ -36,7 +35,6 @@ public final class GolemRegistrar {
    **/
   public static void registerGolem(final GolemContainer container) {
     if (golemList.containsKey(container.getRegistryName())) {
-      ExtraGolems.LOGGER.error("Tried to register duplicate GolemContainer for key " + container.getRegistryName() + ", skipping.");
       return;
     }
     golemList.put(container.getRegistryName(), container);
@@ -62,6 +60,14 @@ public final class GolemRegistrar {
   @Nullable
   public static GolemContainer getContainer(final ResourceLocation name) {
     return golemList.get(name);
+  }
+  
+  /**
+   * @param name a ResourceLocation key
+   * @return if the GolemContainer has been registered under this name
+   **/
+  public static boolean hasContainer(final ResourceLocation name) {
+    return golemList.containsKey(name);
   }
 
   /**

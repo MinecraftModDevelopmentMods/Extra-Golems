@@ -1,6 +1,5 @@
 package com.mcmoddev.golems.events;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.mcmoddev.golems.util.GolemContainer;

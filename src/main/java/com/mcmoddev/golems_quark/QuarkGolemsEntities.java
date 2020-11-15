@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-import com.mcmoddev.golems.entity.CoalGolem;
 import com.mcmoddev.golems.entity.GenericGolem;
 import com.mcmoddev.golems.entity.NetherBrickGolem;
 import com.mcmoddev.golems.integration.AddonLoader;
 import com.mcmoddev.golems.main.ExtraGolems;
+import com.mcmoddev.golems.util.GolemBuilders;
 import com.mcmoddev.golems.util.GolemContainer;
 import com.mcmoddev.golems.util.GolemContainer.SwimMode;
 import com.mcmoddev.golems.util.GolemDescription;
@@ -120,12 +120,7 @@ public final class QuarkGolemsEntities {
         "indigo_crystal", "violet_crystal", "white_crystal", "black_crystal");
     // CHARCOAL GOLEM
     softRegister(CompressedBlocksModule.class, buildEnabledPredicate().and(m -> CompressedBlocksModule.enableCharcoalBlock),
-        new GolemContainer.Builder(QuarkGolemNames.CHARCOAL_GOLEM, CoalGolem.class, CoalGolem::new)
-        .setModId(MODID).setHealth(24.0D).setAttack(2.5D).setSpeed(0.28D).setKnockbackResist(0.2D)
-        .addSpecial(CoalGolem.ALLOW_SPECIAL, true, "Whether this golem can inflict blindness",
-            new TranslationTextComponent("entitytip.blinds_creatures").mergeStyle(TextFormatting.GRAY))
-        .addHealItem(Items.COAL, 0.25D).addHealItem(Items.CHARCOAL, 0.25D)
-        .setDynamicTexture(QUARK, "charcoal_block").build(),
+        GolemBuilders.charcoalGolem().setDynamicTexture(QUARK, "charcoal_block").build(),
         "charcoal_block");
     // COLOR SLIME GOLEM
     softRegister(ColorSlimeModule.class, new GolemContainer.Builder(QuarkGolemNames.COLOR_SLIME_GOLEM, ColorSlimeGolem.class, ColorSlimeGolem::new)

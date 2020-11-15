@@ -1,6 +1,7 @@
 package com.mcmoddev.golems.integration;
 
 import com.mcmoddev.golems.util.GolemContainer;
+import com.mcmoddev.golems.util.GolemRegistrar;
 
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
@@ -36,14 +37,16 @@ public class DeferredContainer {
    * Finalizes the blocks to be added to the golem container
    **/
   public void addBlocks() {
-    if(null == container) return;
+    GolemContainer cont = GolemRegistrar.hasContainer(container.getRegistryName())
+        ? GolemRegistrar.getContainer(container.getRegistryName()) : null;
+    if(null == cont) return;
     // add each block from the list of given names
     for(final ResourceLocation r : blocks) {
       // see if the block exists
       final Block block = ForgeRegistries.BLOCKS.getValue(r);
       // add that block as a building block for the golem
       if(block != null) {
-        container.addBlocks(block);
+        cont.addBlocks(block);
       }
     }
   }

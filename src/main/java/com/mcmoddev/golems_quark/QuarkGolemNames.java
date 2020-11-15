@@ -9,7 +9,6 @@ public final class QuarkGolemNames {
   public static final String BLAZELANTERN_GOLEM = "golem_blaze_lantern";
   public static final String BRIMSTONE_GOLEM = "golem_brimstone";
   public static final String CAVECRYSTAL_GOLEM = "golem_cave_crystal";
-  public static final String CHARCOAL_GOLEM = "golem_charcoal";
   public static final String COLOR_SLIME_GOLEM = "golem_color_slime";
   public static final String DUSKBOUND_GOLEM = "golem_duskbound";
   public static final String DUSKBOUNDLAMP_GOLEM = "golem_duskbound_lamp";

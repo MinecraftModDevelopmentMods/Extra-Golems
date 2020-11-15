@@ -1,4 +1,4 @@
-package com.mcmoddev.golems_thermal.entity;
+package com.mcmoddev.golems.entity.modded;
 
 import com.mcmoddev.golems.entity.EndstoneGolem;
 import com.mcmoddev.golems.entity.base.GolemBase;

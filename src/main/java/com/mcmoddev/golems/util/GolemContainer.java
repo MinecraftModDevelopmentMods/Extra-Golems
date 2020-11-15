@@ -290,7 +290,10 @@ public final class GolemContainer {
     final Collection<ITag<Block>> tags = new HashSet<>();
     for (final ResourceLocation rl : rls) {
       if (BlockTags.getCollection().get(rl) != null) {
-        tags.add((ITag<Block>) BlockTags.getCollection().get(rl));
+        ITag<Block> tag = BlockTags.getCollection().get(rl);
+        if(tag != null) {
+          tags.add(tag);
+        }
       }
     }
     return tags;
