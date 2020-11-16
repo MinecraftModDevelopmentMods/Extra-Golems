@@ -6,7 +6,7 @@
 	  "entries": [
 		{
 		  "type": "minecraft:tag",
-		  "name": "forge:ingots/enderium",
+		  "name": "forge:ingots/bronze",
           "expand": true,
 		  "functions": [
 			{

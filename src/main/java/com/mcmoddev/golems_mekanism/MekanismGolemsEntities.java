@@ -60,7 +60,7 @@ public final class MekanismGolemsEntities {
     register(new GolemContainer.Builder(MekanismGolemNames.REFINED_OBSIDIAN_GOLEM, NetheriteGolem.class, NetheriteGolem::new)
         .setModId(MODID).setHealth(120.0D).setAttack(18.0D).setSpeed(0.23D).setKnockbackResist(0.8D)
         .addSpecial(NetheriteGolem.ALLOW_RESIST, true, "Whether this golem reduces incoming damage", descResist)
-        .immuneToFire().immuneToExplosions()
+        .immuneToFire().immuneToExplosions().setLightLevel(8)
         .setDynamicTexture(MEK, "block_refined_obsidian")
         .build(), "block_refined_obsidian");
     // SALT GOLEM
