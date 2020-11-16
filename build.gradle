@@ -107,8 +107,6 @@ dependencies {
 	compile fg.deobf("curse.maven:mekanism:${project.mekanism_file}") { transitive = false }
 	// Immersive Engineering
 	compile fg.deobf("curse.maven:immersive-engineering:${project.ie_file}") { transitive = false }
-	// Never Needed or Wanted
-	compile fg.deobf("curse.maven:never-needed-or-wanted:${project.nnow_file}") { transitive = false }
 	
 	// HWYLA
 	compileOnly fg.deobf("mcp.mobius.waila:Hwyla:${project.hwyla_version}:api")

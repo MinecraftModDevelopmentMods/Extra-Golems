@@ -3,6 +3,7 @@ package com.mcmoddev.golems_mekanism;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mcmoddev.golems.entity.GenericGolem;
 import com.mcmoddev.golems.integration.AddonLoader;
 import com.mcmoddev.golems.integration.DeferredContainer;
 import com.mcmoddev.golems.main.ExtraGolems;
@@ -10,6 +11,7 @@ import com.mcmoddev.golems.util.GolemBuilders;
 import com.mcmoddev.golems.util.GolemContainer;
 import com.mcmoddev.golems.util.GolemRegistrar;
 
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 
@@ -59,7 +61,11 @@ public final class MekanismGolemsEntities {
     // REFINED OBSIDIAN TODO
     
     // SALT GOLEM TODO
-    
+    register(new GolemContainer.Builder(MekanismGolemNames.SALT_GOLEM, GenericGolem.class, GenericGolem::new)
+        .setModId(MODID).setHealth(48.0D).setAttack(2.6D).setKnockbackResist(0.6D)
+        .addBlocks(new ResourceLocation("forge", "storage_blocks/salt"))
+        .setDynamicTexture(MEK, "block_salt")
+        .build(), "block_salt");
     // STEEL GOLEM
     register(GolemBuilders.steelGolem().setDynamicTexture(MEK, "block_steel")
         .build(), "block_steel");

@@ -15,6 +15,7 @@ public final class ThermalGolemNames {
   public static final String RICHSLAG_GOLEM = "golem_rich_slag";
   public static final String ROCKWOOL_GOLEM = "golem_rockwool";
   public static final String ROSIN_GOLEM = "golem_rosin";
+  public static final String RUBBER_GOLEM = "golem_rubber";
   public static final String SAWDUST_GOLEM = "golem_sawdust";
   public static final String SIGNALUMGLASS_GOLEM = "golem_signalum_glass";
   public static final String SLAG_GOLEM = "golem_slag";

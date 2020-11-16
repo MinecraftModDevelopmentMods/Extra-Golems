@@ -37,8 +37,7 @@ public class DeferredContainer {
    * Finalizes the blocks to be added to the golem container
    **/
   public void addBlocks() {
-    GolemContainer cont = GolemRegistrar.hasContainer(container.getRegistryName())
-        ? GolemRegistrar.getContainer(container.getRegistryName()) : null;
+    GolemContainer cont = GolemRegistrar.getContainer(container.getRegistryName());
     if(null == cont) return;
     // add each block from the list of given names
     for(final ResourceLocation r : blocks) {

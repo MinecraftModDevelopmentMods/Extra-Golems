@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.mcmoddev.golems.entity.ConcreteGolem;
 import com.mcmoddev.golems.entity.GenericGolem;
-import com.mcmoddev.golems.entity.modded.RubberGolem;
 import com.mcmoddev.golems.integration.AddonLoader;
 import com.mcmoddev.golems.integration.DeferredContainer;
 import com.mcmoddev.golems.main.ExtraGolems;
@@ -16,6 +15,7 @@ import com.mcmoddev.golems.util.GolemRegistrar;
 import com.mcmoddev.golems_thermal.entity.GunpowderGolem;
 import com.mcmoddev.golems_thermal.entity.HardenedGlassGolem;
 import com.mcmoddev.golems_thermal.entity.RockwoolGolem;
+import com.mcmoddev.golems_thermal.entity.RubberGolem;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.DyeColor;
@@ -53,6 +53,7 @@ public final class ThermalGolemsEntities {
     // APATITE GOLEM
     register(new GolemContainer.Builder(ThermalGolemNames.APATITE_GOLEM, GenericGolem.class, GenericGolem::new)
         .setModId(MODID).setHealth(44.0D).setAttack(2.9D).setSpeed(0.26D)
+        .addBlocks(new ResourceLocation("forge", "storage_blocks/apatite"))
         .setDynamicTexture(THERMAL, "storage/apatite_block")
         .build(), "apatite_block");
     // BRONZE GOLEM
@@ -64,6 +65,7 @@ public final class ThermalGolemsEntities {
     // CINNABAR GOLEM
     register(new GolemContainer.Builder(ThermalGolemNames.CINNABAR_GOLEM, GenericGolem.class, GenericGolem::new)
         .setModId(MODID).setHealth(72.0D).setAttack(4.25D).setSound(SoundEvents.BLOCK_METAL_STEP)
+        .addBlocks(new ResourceLocation("forge", "storage_blocks/cinnabar"))
         .setDynamicTexture(THERMAL, "storage/cinnabar_block")
         .build(), "cinnabar_block");
     // COAL COKE GOLEM
@@ -103,6 +105,7 @@ public final class ThermalGolemsEntities {
         .addSpecial(GunpowderGolem.ALLOW_SPECIAL, true, "Whether this golem can explode when fighting or dying",
             new TranslationTextComponent("entitytip.explodes").mergeStyle(TextFormatting.GRAY))
         .setSwimMode(SwimMode.FLOAT).setSound(SoundEvents.BLOCK_GRAVEL_STEP).addHealItem(Items.GUNPOWDER, 0.25D)
+        .addBlocks(new ResourceLocation("forge", "storage_blocks/gunpowder"))
         .setDynamicTexture(THERMAL, "storage/gunpowder_block")
         .build(), "gunpowder_block");
     // HARDENED GLASS GOLEM (obsidian_glass)
@@ -136,6 +139,7 @@ public final class ThermalGolemsEntities {
     // NITER GOLEM
     register(new GolemContainer.Builder(ThermalGolemNames.NITER_GOLEM, GenericGolem.class, GenericGolem::new)
         .setModId(MODID).setHealth(56.0D).setAttack(3.5D).setSpeed(0.29D).setSound(SoundEvents.BLOCK_METAL_STEP)
+        .addBlocks(new ResourceLocation("forge", "storage_blocks/niter"))
         .setDynamicTexture(THERMAL, "storage/niter_block")
         .build(), "niter_block");
     // RICH SLAG GOLEM
@@ -155,7 +159,13 @@ public final class ThermalGolemsEntities {
         .setDynamicTexture(THERMAL, "storage/rosin_block_side")
         .build(), "rosin_block");
     // RUBBER GOLEM
-    register(GolemBuilders.rubberGolem().setDynamicTexture(THERMAL, "storage/rubber_block")
+    register(new GolemContainer.Builder(ThermalGolemNames.RUBBER_GOLEM, RubberGolem.class, RubberGolem::new)
+        .setHealth(58.0D).setAttack(2.5D).setSpeed(0.288D).setKnockbackResist(0.35D)
+        .addSpecial(RubberGolem.ALLOW_SPECIAL, true, "Whether this golem can apply extra knockback when attacking",
+            new TranslationTextComponent("entitytip.has_knockback").mergeStyle(TextFormatting.GREEN))
+        .addSpecial(RubberGolem.KNOCKBACK, Double.valueOf(0.44D), "Rubber Golem knockback power (Higher Value = Bigger Knockback)")
+        .setSwimMode(SwimMode.FLOAT).setSound(SoundEvents.BLOCK_HONEY_BLOCK_STEP)
+        .setDynamicTexture(THERMAL, "storage/rubber_block")
         .build(), "rubber_block");
     // SAWDUST GOLEM
     register(new GolemContainer.Builder(ThermalGolemNames.SAWDUST_GOLEM, GenericGolem.class, GenericGolem::new)
@@ -178,9 +188,7 @@ public final class ThermalGolemsEntities {
         .setDynamicTexture(THERMAL, "storage/slag_block")
         .build(), "slag_block");
     // SULFUR GOLEM
-    register(new GolemContainer.Builder(ThermalGolemNames.SULFUR_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(54.0D).setAttack(4.0D).setSpeed(0.265D)
-        .setDynamicTexture(THERMAL, "storage/sulfur_block")
+    register(GolemBuilders.sulfurGolem().setDynamicTexture(THERMAL, "storage/sulfur_block")
         .build(), "sulfur_block");
     // TIN GOLEM
     register(GolemBuilders.tinGolem().setDynamicTexture(THERMAL, "storage/tin_block")

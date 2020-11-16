@@ -4,13 +4,13 @@ public final class MekanismGolemNames {
   
   private MekanismGolemNames() { }
   
-  public static final String GOLEM_COMPRESSED_CARBON = "golem_compressed_carbon";
-  public static final String GOLEM_COMPRESSED_DIAMOND = "golem_compressed_carbon";
-  public static final String GOLEM_COMPRESSED_OBSIDIAN = "golem_compressed_carbon";
-  public static final String GOLEM_COMPRESSED_REDSTONE = "golem_compressed_carbon";
-  public static final String GOLEM_FLOURITE = "golem_compressed_carbon";
-  public static final String GOLEM_PLASTIC = "golem_compressed_carbon";
-  public static final String GOLEM_REFINED_GLOWSTONE = "golem_compressed_carbon";
-  public static final String GOLEM_REFINED_OBSIDIAN = "golem_compressed_carbon";
-  public static final String GOLEM_SALT = "golem_compressed_carbon";
+  public static final String COMPRESSED_CARBON_GOLEM = "golem_compressed_carbon";
+  public static final String COMPRESSED_DIAMOND_GOLEM = "golem_compressed_carbon";
+  public static final String COMPRESSED_OBSIDIAN_GOLEM = "golem_compressed_carbon";
+  public static final String COMPRESSED_REDSTONE_GOLEM = "golem_compressed_carbon";
+  public static final String FLOURITE_GOLEM = "golem_compressed_carbon";
+  public static final String PLASTIC_GOLEM = "golem_compressed_carbon";
+  public static final String REFINED_GLOWSTONE_GOLEM = "golem_compressed_carbon";
+  public static final String REFINED_OBSIDIAN_GOLEM = "golem_compressed_carbon";
+  public static final String SALT_GOLEM = "golem_compressed_carbon";
 }

@@ -49,9 +49,6 @@ public final class AddonLoader {
     if(isClibLoaded()) {
       com.mcmoddev.golems_clib.ClibGolemsEntities.initEntityTypes();
     }
-    if(isNNOWLoaded()) {
-      com.mcmoddev.golems_nnow.NnowGolemsEntities.initEntityTypes();
-    }
   }
   
   public static void interModEnqueueEvent(final InterModEnqueueEvent event) {
@@ -70,9 +67,6 @@ public final class AddonLoader {
     if(isClibLoaded()) {
       com.mcmoddev.golems_clib.ClibGolemsEntities.interModEnqueueEvent(event);
     }
-    if(isNNOWLoaded()) {
-      com.mcmoddev.golems_nnow.NnowGolemsEntities.interModEnqueueEvent(event);
-    }
   }
   
   public static void setupEvent(final FMLCommonSetupEvent event) {
@@ -90,9 +84,6 @@ public final class AddonLoader {
     }
     if(isClibLoaded()) {
       com.mcmoddev.golems_clib.ClibGolemsEntities.setupEvent(event);
-    }
-    if(isNNOWLoaded()) {
-      com.mcmoddev.golems_nnow.NnowGolemsEntities.setupEvent(event);
     }
   }
   

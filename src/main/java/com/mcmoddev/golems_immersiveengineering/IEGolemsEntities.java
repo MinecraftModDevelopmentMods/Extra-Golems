@@ -29,34 +29,48 @@ public final class IEGolemsEntities {
     
     // ALUMINUM GOLEM
     register(GolemBuilders.aluminumGolem().setDynamicTexture(IE, "metal/storage_aluminum")
-        .build(), "aluminum_block");
+        .build(), "storage_aluminum");
     // COAL COKE
     register(GolemBuilders.coalCokeGolem().setDynamicTexture(IE, "stone_decoration/coke")
-        .build(), "coal_coke_block");
+        .build(), "coke");
+    // CONCRETE GOLEM TODO
+    
     // CONSTANTAN GOLEM
     register(GolemBuilders.constantanGolem().setDynamicTexture(IE, "metal/storage_constantan")
-        .build(), "constantan_block");
+        .build(), "storage_constantan");
     // COPPER GOLEM
     register(GolemBuilders.copperGolem().setDynamicTexture(IE, "metal/storage_copper")
-        .build(), "copper_block");
+        .build(), "storage_copper");
+    // COPPER COIL GOLEM TODO
+    
+    // CUSHION GOLEM TODO
+    
     // ELECTRUM GOLEM
     register(GolemBuilders.electrumGolem().setDynamicTexture(IE, "metal/storage_electrum")
-        .build(), "electrum_block");
+        .build(), "storage_electrum");
+    // ELECTRUM COIL GOLEM TODO
+   
+    // HV COIL GOLEM TODO
+    
+    // INSULATING GLASS GOLEM TODO
+    
     // LEAD GOLEM
     register(GolemBuilders.leadGolem().setDynamicTexture(IE, "metal/storage_lead")
-        .build(), "lead_block");
+        .build(), "storage_lead");
+    // LEADED CONCRETE GOLEM TODO
+    
     // NICKEL GOLEM
     register(GolemBuilders.nickelGolem().setDynamicTexture(IE, "metal/storage_nickel")
-        .build(), "nickel_block");
+        .build(), "storage_nickel");
     // SILVER GOLEM
     register(GolemBuilders.silverGolem().setDynamicTexture(IE, "metal/storage_silver")
-        .build(), "silver_block");
+        .build(), "storage_silver");
     // STEEL GOLEM
     register(GolemBuilders.steelGolem().setDynamicTexture(IE, "metal/storage_steel")
-        .build(), "steel_block");
+        .build(), "storage_steel");
     // URANIUM GOLEM
     register(GolemBuilders.uraniumGolem().setDynamicTexture(IE, "metal/storage_uranium_side")
-        .build(), "uranium_block");
+        .build(), "storage_uranium");
   }
   
   protected static void register(final GolemContainer cont, final String... blockNames) {

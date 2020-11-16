@@ -1,6 +1,6 @@
 package com.mcmoddev.golems.events;
 
-import java.util.List;
+import java.util.Set;
 
 import com.mcmoddev.golems.util.GolemContainer;
 
@@ -23,17 +23,17 @@ import net.minecraftforge.registries.IRegistryDelegate;
  **/
 public class GolemContainerBuildEvent extends Event {
   private final ResourceLocation registryName;
-  private final List<IRegistryDelegate<Block>> validBuildingBlocks;
-  private final List<ResourceLocation> validBuildingBlockTags;
+  private final Set<IRegistryDelegate<Block>> validBuildingBlocks;
+  private final Set<ResourceLocation> validBuildingBlockTags;
   
   private GolemContainer.Builder builder;
   
   public GolemContainerBuildEvent(final ResourceLocation name, final GolemContainer.Builder builderIn,
-      final List<IRegistryDelegate<Block>> buildingBlocks, final List<ResourceLocation> buildingBlockTags) {
+      final Set<IRegistryDelegate<Block>> validBuildingBlocks2, final Set<ResourceLocation> validBuildingBlockTags2) {
     registryName = name;
     builder = builderIn;
-    validBuildingBlocks = buildingBlocks;
-    validBuildingBlockTags = buildingBlockTags;
+    validBuildingBlocks = validBuildingBlocks2;
+    validBuildingBlockTags = validBuildingBlockTags2;
   }
   
   /** @return a ResourceLocation containing the modid and golemName of the container to be built **/
@@ -47,12 +47,12 @@ public class GolemContainerBuildEvent extends Event {
   }
 
   /** @return the list of valid building blocks **/
-  public List<IRegistryDelegate<Block>> getBlocks() {
+  public Set<IRegistryDelegate<Block>> getBlocks() {
     return validBuildingBlocks;
   }
 
   /** @return the list of building block tags **/
-  public List<ResourceLocation> getBlockTags() {
+  public Set<ResourceLocation> getBlockTags() {
     return validBuildingBlockTags;
   }
 }

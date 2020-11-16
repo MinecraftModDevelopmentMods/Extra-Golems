@@ -59,8 +59,8 @@ import net.minecraftforge.registries.IRegistryDelegate;
 public final class GolemContainer {
 
   private final Class<? extends GolemBase> entityClass;
-  private final List<IRegistryDelegate<Block>> validBuildingBlocks;
-  private final List<ResourceLocation> validBuildingBlockTags;
+  private final Set<IRegistryDelegate<Block>> validBuildingBlocks;
+  private final Set<ResourceLocation> validBuildingBlockTags;
   private final EntityType<? extends GolemBase> entityType;
   private final String name;
   private final GolemRenderSettings renderSettings;
@@ -107,8 +107,8 @@ public final class GolemContainer {
    * @param lBasicSound             a default SoundEvent to use for the golem
    **/
   private GolemContainer(final EntityType<? extends GolemBase> lEntityType, final Class<? extends GolemBase> lEntityClass,
-      final String lPath, final GolemRenderSettings lRenderSettings, final List<IRegistryDelegate<Block>> lValidBuildingBlocks,
-      final List<ResourceLocation> lValidBuildingBlockTags, final double lHealth, final double lAttack, final double lSpeed,
+      final String lPath, final GolemRenderSettings lRenderSettings, final Set<IRegistryDelegate<Block>> lValidBuildingBlocks,
+      final Set<ResourceLocation> lValidBuildingBlockTags, final double lHealth, final double lAttack, final double lSpeed,
       final double lKnockbackResist, final int lLightLevel, final int lPowerLevel, final boolean lFallDamage, 
       final boolean lExplosionImmunity, final SwimMode lSwimMode, final HashMap<String, GolemSpecialContainer> lSpecialContainers, 
       final List<GolemDescription> lDesc, final Map<IRegistryDelegate<Item>, Double> lHealItemMap,
@@ -436,8 +436,8 @@ public final class GolemContainer {
     private boolean explosionImmunity = false;
     private boolean noGolemBookEntry = false;
     private SwimMode swimMode = SwimMode.SINK;
-    private List<IRegistryDelegate<Block>> validBuildingBlocks = new ArrayList<>();
-    private List<ResourceLocation> validBuildingBlockTags = new ArrayList<>();
+    private Set<IRegistryDelegate<Block>> validBuildingBlocks = new HashSet<>();
+    private Set<ResourceLocation> validBuildingBlockTags = new HashSet<>();
     private List<GolemSpecialContainer> specials = new ArrayList<>();
     private List<GolemDescription> descriptions = new ArrayList<>();
     private final Map<IRegistryDelegate<Item>, Double> healItemMap = new HashMap<>();
@@ -791,7 +791,7 @@ public final class GolemContainer {
      **/
     public Builder addBlocks(final Block... additionalBlocks) {
       if (additionalBlocks != null && additionalBlocks.length > 0) {
-        this.validBuildingBlocks.addAll(Arrays.asList(additionalBlocks).stream().map(b -> b.delegate).collect(Collectors.toList()));
+        this.validBuildingBlocks.addAll(Arrays.asList(additionalBlocks).stream().map(b -> b.delegate).collect(Collectors.toSet()));
       }
       return this;
     }
