@@ -179,7 +179,7 @@ public final class GolemBuilders {
         .setModId(MODID).setHealth(72.0D).setAttack(5.75D).setSound(SoundEvents.BLOCK_METAL_STEP)
         .addSpecial(UraniumGolem.ALLOW_POISON, true, "Whether this golem can poison nearby creatures",
             new TranslationTextComponent("entitytip.poisons_mobs").mergeStyle(TextFormatting.DARK_GREEN))
-        .addSpecial(UraniumGolem.AOE, 1.75F, "Poison effect radius")
+        .addSpecial(UraniumGolem.AOE, 1.75D, "Poison effect radius")
         .addSpecial(UraniumGolem.DURATION, 42, "Poison effect length (in ticks)")
         .addSpecial(UraniumGolem.AMPLIFIER, 2, "Poison effect amplifier")
         .addBlocks(new ResourceLocation("forge", "storage_blocks/uranium"));
