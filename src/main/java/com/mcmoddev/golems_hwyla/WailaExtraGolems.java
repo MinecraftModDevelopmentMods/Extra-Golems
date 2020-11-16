@@ -48,6 +48,18 @@ public final class WailaExtraGolems extends GolemDescriptionManager implements I
       if(replaceFirst(tooltip, i, "golems_thermal", "Extra Golems: Thermal")) {
         return;
       }
+      if(replaceFirst(tooltip, i, "golems_ie", "Extra Golems: Imm. Engineering")) {
+        return;
+      }
+      if(replaceFirst(tooltip, i, "golems_clib", "Extra Golems: CLib")) {
+        return;
+      }
+      if(replaceFirst(tooltip, i, "golems_mekanism", "Extra Golems: Mekanism")) {
+        return;
+      }
+      if(replaceFirst(tooltip, i, "golems_misc", "Extra Golems: Etc")) {
+        return;
+      }
     }
   }
 

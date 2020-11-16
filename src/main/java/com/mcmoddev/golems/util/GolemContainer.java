@@ -28,6 +28,7 @@ import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
@@ -186,6 +187,7 @@ public final class GolemContainer {
     for (final ITag<Block> tag : loadTags(validBuildingBlockTags)) {
       blocks.addAll(tag.getAllElements());
     }
+    blocks.remove(Blocks.AIR);
     return blocks;
   }
 

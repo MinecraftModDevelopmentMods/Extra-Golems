@@ -34,13 +34,14 @@ public final class ClibGolemsEntities {
     register(GolemBuilders.aluminumGolem().setDynamicTexture(CLIB, "aluminum_block")
         .build(), "aluminum_block");
     // AMETHYST GOLEM
-    register(new GolemContainer.Builder(ClibGolemNames.BRASS_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(98.0D).setAttack(7.25D).setSound(SoundEvents.BLOCK_METAL_STEP)
-        .addBlocks(new ResourceLocation("forge", "storage_blocks/brass"))
-        .build(), "brass_block");
+    register(new GolemContainer.Builder(ClibGolemNames.AMETHYST_GOLEM, GenericGolem.class, GenericGolem::new)
+        .setModId(MODID).setHealth(85.0D).setAttack(6.75D).setSpeed(0.28D).setKnockbackResist(0.6D)
+        .addBlocks(new ResourceLocation("forge", "storage_blocks/amethyst"))
+        .setDynamicTexture(CLIB, "amethyst_block")
+        .build(), "amethyst_block");
     // BRASS GOLEM
     register(new GolemContainer.Builder(ClibGolemNames.BRASS_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(85.0D).setAttack(6.75D).setSpeed(0.28D).setKnockbackResist(0.6D)
+        .setModId(MODID).setHealth(98.0D).setAttack(7.25D).setKnockbackResist(0.6D)
         .setSound(SoundEvents.BLOCK_METAL_STEP).setDynamicTexture(CLIB, "brass_block")
         .addBlocks(new ResourceLocation("forge", "storage_blocks/brass"))
         .build(), "brass_block");
@@ -87,28 +88,13 @@ public final class ClibGolemsEntities {
         .addBlocks(new ResourceLocation("forge", "storage_blocks/opal"))
         .build(), "opal_block");
     // PLATINUM GOLEM
-    register(new GolemContainer.Builder(ClibGolemNames.PLATINUM_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(86.0D).setAttack(6.0D).setSound(SoundEvents.BLOCK_METAL_STEP)
-        .addBlocks(new ResourceLocation("forge", "storage_blocks/platinum"))
-        .setDynamicTexture(CLIB, "platinum_block")
+    register(GolemBuilders.platinumGolem().setDynamicTexture(CLIB, "platinum_block")
         .build(), "platinum_block");
     // RUBY GOLEM
-    register(new GolemContainer.Builder(ClibGolemNames.RUBY_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(76.0D).setAttack(6.25D).setSpeed(0.28D).setKnockbackResist(0.6D)
-        .setSound(SoundEvents.BLOCK_GLASS_STEP).setDynamicTexture(CLIB, "ruby_block")
-        .addBlocks(new ResourceLocation("forge", "storage_blocks/ruby"))
+    register(GolemBuilders.rubyGolem().setDynamicTexture(CLIB, "ruby_block")
         .build(), "ruby_block");
-    // SALTPETRE GOLEM TODO
-    register(new GolemContainer.Builder(ClibGolemNames.SALTPETRE_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(48.0D).setAttack(2.6D).setKnockbackResist(0.6D)
-        .addBlocks(new ResourceLocation("forge", "storage_blocks/saltpetre"))
-        .setDynamicTexture(CLIB, "saltpetre_block")
-        .build(), "saltpetre_block");
-    // SAPPHIRE GOLEM TODO
-    register(new GolemContainer.Builder(ClibGolemNames.SAPPHIRE_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(70.0D).setAttack(6.5D).setSpeed(0.28D).setKnockbackResist(0.6D)
-        .setSound(SoundEvents.BLOCK_GLASS_STEP).setDynamicTexture(CLIB, "sapphire_block")
-        .addBlocks(new ResourceLocation("forge", "storage_blocks/sapphire"))
+    // SAPPHIRE GOLEM
+    register(GolemBuilders.sapphireGolem().setDynamicTexture(CLIB, "sapphire_block")
         .build(), "sapphire_block");
     // SIGNALUM GOLEM
     register(GolemBuilders.signalumGolem().setDynamicTexture(CLIB, "signalum_block")
@@ -119,9 +105,6 @@ public final class ClibGolemsEntities {
     // STEEL GOLEM
     register(GolemBuilders.steelGolem().setDynamicTexture(CLIB, "steel_block")
         .build(), "steel_block");
-    // SULFUR GOLEM
-    register(GolemBuilders.sulfurGolem().setDynamicTexture(CLIB, "sulfur_block")
-        .build(), "sulfur_block");
     // TIN GOLEM
     register(GolemBuilders.tinGolem().setDynamicTexture(CLIB, "tin_block")
         .build(), "tin_block");

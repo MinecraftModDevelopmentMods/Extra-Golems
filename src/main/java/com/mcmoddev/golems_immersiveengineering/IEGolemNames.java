@@ -10,5 +10,5 @@ public final class IEGolemNames {
   public static final String ELECTRUMCOIL_GOLEM = "golem_electrum_coil";
   public static final String HVCOIL_GOLEM = "golem_hv_coil";
   public static final String INSULATINGGLASS_GOLEM = "golem_insulating_glass";
-  public static final String LEADED_GOLEM = "golem_leaded_concrete";
+  public static final String LEADEDCONCRETE_GOLEM = "golem_leaded_concrete";
 }

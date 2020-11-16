@@ -1,0 +1,24 @@
+{
+  "pools": [
+	{
+	  "name": "main",
+	  "rolls": 1,
+	  "entries": [
+		{
+		  "type": "loot_table",
+		  "name": "golems:entities/golem_obsidian"
+		}
+	  ]
+	},
+	{
+	  "name": "pool1",
+	  "rolls": 1,
+	  "entries": [
+		{
+		  "type": "loot_table",
+		  "name": "golems:entities/_golem_base"
+		}
+	  ]
+	}
+  ]
+}

@@ -81,7 +81,7 @@ public final class ThermalGolemsEntities {
     register(new GolemContainer.Builder(ThermalGolemNames.CUREDRUBBER_GOLEM, RubberGolem.class, RubberGolem::new)
         .setModId(MODID).setHealth(68.0D).setAttack(2.5D).setSpeed(0.288D).setKnockbackResist(0.35D)
         .addSpecial(RubberGolem.ALLOW_SPECIAL, true, "Whether this golem can apply extra knockback when attacking",
-            new TranslationTextComponent("entitytip.has_knockback").mergeStyle(TextFormatting.GREEN))
+            new TranslationTextComponent("entitytip.has_knockback").mergeStyle(TextFormatting.DARK_GRAY))
         .addSpecial(RubberGolem.KNOCKBACK, Double.valueOf(0.5D), "Cured Rubber Golem knockback power (Higher Value = Bigger Knockback)")
         .setSwimMode(SwimMode.FLOAT).setSound(SoundEvents.BLOCK_HONEY_BLOCK_STEP)
         .setDynamicTexture(THERMAL, "storage/cured_rubber_block")
@@ -142,6 +142,9 @@ public final class ThermalGolemsEntities {
         .addBlocks(new ResourceLocation("forge", "storage_blocks/niter"))
         .setDynamicTexture(THERMAL, "storage/niter_block")
         .build(), "niter_block");
+    // PLATINUM GOLEM
+//    register(GolemBuilders.platinumGolem().setDynamicTexture(THERMAL, "storage/platinum_block")
+//        .build(), "platinum_block");
     // RICH SLAG GOLEM
     register(new GolemContainer.Builder(ThermalGolemNames.RICHSLAG_GOLEM, GenericGolem.class, GenericGolem::new)
         .setModId(MODID).setHealth(52.0D).setAttack(3.0D).setSpeed(0.265D)
@@ -160,13 +163,19 @@ public final class ThermalGolemsEntities {
         .build(), "rosin_block");
     // RUBBER GOLEM
     register(new GolemContainer.Builder(ThermalGolemNames.RUBBER_GOLEM, RubberGolem.class, RubberGolem::new)
-        .setHealth(58.0D).setAttack(2.5D).setSpeed(0.288D).setKnockbackResist(0.35D)
+        .setModId(MODID).setHealth(58.0D).setAttack(2.5D).setSpeed(0.288D).setKnockbackResist(0.35D)
         .addSpecial(RubberGolem.ALLOW_SPECIAL, true, "Whether this golem can apply extra knockback when attacking",
-            new TranslationTextComponent("entitytip.has_knockback").mergeStyle(TextFormatting.GREEN))
+            new TranslationTextComponent("entitytip.has_knockback").mergeStyle(TextFormatting.GRAY))
         .addSpecial(RubberGolem.KNOCKBACK, Double.valueOf(0.44D), "Rubber Golem knockback power (Higher Value = Bigger Knockback)")
         .setSwimMode(SwimMode.FLOAT).setSound(SoundEvents.BLOCK_HONEY_BLOCK_STEP)
         .setDynamicTexture(THERMAL, "storage/rubber_block")
         .build(), "rubber_block");
+    // RUBY GOLEM
+    register(GolemBuilders.rubyGolem().setDynamicTexture(THERMAL, "storage/ruby_block")
+        .build(), "ruby_block");
+    // SAPPHIRE GOLEM
+    register(GolemBuilders.sapphireGolem().setDynamicTexture(THERMAL, "storage/sapphire_block")
+        .build(), "sapphire_block");
     // SAWDUST GOLEM
     register(new GolemContainer.Builder(ThermalGolemNames.SAWDUST_GOLEM, GenericGolem.class, GenericGolem::new)
         .setModId(MODID).setHealth(16.0D).setAttack(2.0D).setSpeed(0.28D).setSound(SoundEvents.BLOCK_WOOD_STEP)

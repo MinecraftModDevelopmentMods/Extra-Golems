@@ -5,9 +5,9 @@
 	  "rolls": 1,
 	  "entries": [
 		{
-		  "type": "item",
-		  "name": "thermal:copper_ingot",
-		  "weight": 1,
+		  "type": "tag",
+		  "name": "forge:gems/ruby",
+		  "expand": true,
 		  "functions": [
 			{
 			  "function": "set_count",

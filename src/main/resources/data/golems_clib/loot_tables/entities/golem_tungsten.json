@@ -6,7 +6,7 @@
 	  "entries": [
 		{
 		  "type": "item",
-		  "name": "thermal:electrum_ingot",
+		  "name": "clib:tungsten_ingot",
 		  "weight": 1,
 		  "functions": [
 			{

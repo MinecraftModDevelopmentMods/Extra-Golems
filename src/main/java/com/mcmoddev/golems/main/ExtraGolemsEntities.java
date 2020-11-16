@@ -273,9 +273,9 @@ public final class ExtraGolemsEntities {
         .immuneToFire().addHealItem(Items.NETHER_BRICK, 0.25D)
         .setDynamicTexture("nether_bricks").setVinesColor(g -> red).noVinesLighting().build());
     // NETHERITE GOLEM
-    GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.NETHERITE_GOLEM, GenericGolem.class, GenericGolem::new)
+    GolemRegistrar.registerGolem(new GolemContainer.Builder(GolemNames.NETHERITE_GOLEM, NetheriteGolem.class, NetheriteGolem::new)
         .setHealth(298.0D).setAttack(28.0D).setKnockbackResist(1.0D).addBlocks(Blocks.NETHERITE_BLOCK)
-        .addDesc(new GolemDescription(descResist))
+        .addSpecial(NetheriteGolem.ALLOW_RESIST, true, "Whether this golem reduces damage it takes", descResist)
         .immuneToFire().immuneToExplosions().addHealItem(Items.NETHERITE_INGOT, 0.25D)
         .setDynamicTexture("netherite_block").noVines().build());
     // NETHER WART GOLEM

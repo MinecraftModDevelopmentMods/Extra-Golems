@@ -5,8 +5,9 @@
 	  "rolls": 1,
 	  "entries": [
 		{
-		  "type": "item",
-		  "name": "thermal:nickel_ingot",
+		  "type": "minecraft:tag",
+		  "name": "forge:dusts/sulfur",
+          "expand": true,
 		  "functions": [
 			{
 			  "function": "set_count",

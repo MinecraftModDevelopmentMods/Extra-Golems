@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mcmoddev.golems.entity.GenericGolem;
+import com.mcmoddev.golems.entity.NetheriteGolem;
 import com.mcmoddev.golems.integration.AddonLoader;
 import com.mcmoddev.golems.integration.DeferredContainer;
 import com.mcmoddev.golems.main.ExtraGolems;
@@ -12,6 +13,9 @@ import com.mcmoddev.golems.util.GolemContainer;
 import com.mcmoddev.golems.util.GolemRegistrar;
 
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 
@@ -29,38 +33,37 @@ public final class MekanismGolemsEntities {
   public static void initEntityTypes() {
     ExtraGolems.LOGGER.debug("Extra Golems: Mekanism - initEntityTypes");
     
+    final IFormattableTextComponent descResist = new TranslationTextComponent("effect.minecraft.resistance").mergeStyle(TextFormatting.DARK_GRAY);
+    
     // BRONZE GOLEM
     register(GolemBuilders.bronzeGolem().setDynamicTexture(MEK, "block_bronze")
         .build(), "block_bronze");
     // CHARCOAL GOLEM
     register(GolemBuilders.charcoalGolem().setDynamicTexture(MEK, "block_charcoal")
         .build(), "block_charcoal");
-    // COMPRESSED CARBON TODO
-    
-    // COMPRESSED DIAMOND TODO
-    
-    // COMPRESSED OBSIDIAN TODO
-    
-    // COMPRESSED REDSTONE TODO
-    
     // COPPER GOLEM
     register(GolemBuilders.copperGolem().setDynamicTexture(MEK, "block_copper")
         .build(), "block_copper");
-    // FLOURITE GOLEM TODO
-    
     // LEAD GOLEM
     register(GolemBuilders.leadGolem().setDynamicTexture(MEK, "block_lead")
         .build(), "block_lead");
     // OSMIUM GOLEM
     register(GolemBuilders.osmiumGolem().setDynamicTexture(MEK, "block_osmium")
         .build(), "block_osmium");
-    // PLASTIC GOLEM TODO
-    
-    // REFINED GLOWSTONE TODO
-    
-    // REFINED OBSIDIAN TODO
-    
-    // SALT GOLEM TODO
+    // REFINED GLOWSTONE
+    register(new GolemContainer.Builder(MekanismGolemNames.REFINED_GLOWSTONE_GOLEM, NetheriteGolem.class, NetheriteGolem::new)
+        .setModId(MODID).setHealth(48.0D).setAttack(2.6D).setLightLevel(15).immuneToFire()
+        .addSpecial(NetheriteGolem.ALLOW_RESIST, true, "Whether this golem reduces incoming damage", descResist)
+        .setDynamicTexture(MEK, "block_refined_glowstone")
+        .build(), "block_refined_glowstone");
+    // REFINED OBSIDIAN
+    register(new GolemContainer.Builder(MekanismGolemNames.REFINED_OBSIDIAN_GOLEM, NetheriteGolem.class, NetheriteGolem::new)
+        .setModId(MODID).setHealth(120.0D).setAttack(18.0D).setSpeed(0.23D).setKnockbackResist(0.8D)
+        .addSpecial(NetheriteGolem.ALLOW_RESIST, true, "Whether this golem reduces incoming damage", descResist)
+        .immuneToFire().immuneToExplosions()
+        .setDynamicTexture(MEK, "block_refined_obsidian")
+        .build(), "block_refined_obsidian");
+    // SALT GOLEM
     register(new GolemContainer.Builder(MekanismGolemNames.SALT_GOLEM, GenericGolem.class, GenericGolem::new)
         .setModId(MODID).setHealth(48.0D).setAttack(2.6D).setKnockbackResist(0.6D)
         .addBlocks(new ResourceLocation("forge", "storage_blocks/salt"))

@@ -6,20 +6,21 @@
 	  "entries": [
 		{
 		  "type": "item",
-		  "name": "thermal:signalum_ingot",
+		  "name": "immersiveengineering:concrete_leaded",
+		  "weight": 1,
 		  "functions": [
 			{
 			  "function": "set_count",
 			  "count": {
-				"min": 8,
-				"max": 16
+				"min": 1,
+				"max": 2
 			  }
 			},
 			{
 			  "function": "looting_enchant",
 			  "count": {
-				"min": 2,
-				"max": 6
+				"min": 1,
+				"max": 2
 			  }
 			}
 		  ]

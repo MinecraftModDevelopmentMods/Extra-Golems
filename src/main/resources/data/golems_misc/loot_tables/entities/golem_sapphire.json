@@ -5,9 +5,9 @@
 	  "rolls": 1,
 	  "entries": [
 		{
-		  "type": "item",
-		  "name": "minecraft:charcoal",
-		  "weight": 1,
+		  "type": "tag",
+		  "name": "forge:gems/sapphire",
+		  "expand": true,
 		  "functions": [
 			{
 			  "function": "set_count",
