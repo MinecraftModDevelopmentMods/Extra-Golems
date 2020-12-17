@@ -98,15 +98,15 @@ dependencies {
 	// Quark
 	compile fg.deobf("vazkii.quark:Quark:${project.quark_version}") { transitive = false }
 	// CoFHCore
-	compile fg.deobf("curse.maven:cofh-core:${project.cofhcore_file}") { transitive = false }
+	compile fg.deobf("curse.maven:cofh-core-${project.cofhcore_proj}:${project.cofhcore_file}") { transitive = false }
 	// Thermal Foundation
-	compile fg.deobf("curse.maven:thermal-foundation:${project.thermalfoundation_file}") { transitive = false }
+	compile fg.deobf("curse.maven:thermal-foundation-${project.thermalfoundation_proj}:${project.thermalfoundation_file}") { transitive = false }
 	// CLib
-	compile fg.deobf("curse.maven:clib:${project.clib_file}") { transitive = false }
+	compile fg.deobf("curse.maven:clib-${project.clib_proj}:${project.clib_file}") { transitive = false }
 	// Mekanism
-	compile fg.deobf("curse.maven:mekanism:${project.mekanism_file}") { transitive = false }
+	compile fg.deobf("curse.maven:mekanism-${project.mekanism_proj}:${project.mekanism_file}") { transitive = false }
 	// Immersive Engineering
-	compile fg.deobf("curse.maven:immersive-engineering:${project.ie_file}") { transitive = false }
+	compile fg.deobf("curse.maven:immersive-engineering-${project.ie_proj}:${project.ie_file}") { transitive = false }
 	
 	// HWYLA
 	compileOnly fg.deobf("mcp.mobius.waila:Hwyla:${project.hwyla_version}:api")

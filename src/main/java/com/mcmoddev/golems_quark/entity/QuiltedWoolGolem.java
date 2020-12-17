@@ -17,7 +17,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.base.module.ModuleLoader;
-import vazkii.quark.building.module.QuiltedWoolModule;
+import vazkii.quark.content.building.module.QuiltedWoolModule;
 
 public class QuiltedWoolGolem extends GolemMultiTextured {
   

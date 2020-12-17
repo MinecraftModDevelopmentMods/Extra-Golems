@@ -24,7 +24,7 @@ import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.quark.base.module.ModuleLoader;
-import vazkii.quark.world.module.underground.CaveCrystalUndergroundBiomeModule;
+import vazkii.quark.content.world.module.underground.CaveCrystalUndergroundBiomeModule;
 
 public final class CaveCrystalGolem extends GolemMultiTextured {
   

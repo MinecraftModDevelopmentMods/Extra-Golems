@@ -32,27 +32,27 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.registries.ForgeRegistries;
-import vazkii.quark.automation.module.ColorSlimeModule;
-import vazkii.quark.base.module.Module;
 import vazkii.quark.base.module.ModuleLoader;
-import vazkii.quark.building.module.CompressedBlocksModule;
-import vazkii.quark.building.module.DuskboundBlocksModule;
-import vazkii.quark.building.module.FramedGlassModule;
-import vazkii.quark.building.module.IronPlatesModule;
-import vazkii.quark.building.module.LitLampModule;
-import vazkii.quark.building.module.MidoriModule;
-import vazkii.quark.building.module.MoreBrickTypesModule;
-import vazkii.quark.building.module.MoreStoneVariantsModule;
-import vazkii.quark.building.module.QuiltedWoolModule;
-import vazkii.quark.building.module.SoulSandstoneModule;
-import vazkii.quark.building.module.SturdyStoneModule;
-import vazkii.quark.world.module.BiotiteModule;
-import vazkii.quark.world.module.NewStoneTypesModule;
-import vazkii.quark.world.module.underground.BrimstoneUndergroundBiomeModule;
-import vazkii.quark.world.module.underground.CaveCrystalUndergroundBiomeModule;
-import vazkii.quark.world.module.underground.ElderPrismarineUndergroundBiomeModule;
-import vazkii.quark.world.module.underground.GlowshroomUndergroundBiomeModule;
-import vazkii.quark.world.module.underground.PermafrostUndergroundBiomeModule;
+import vazkii.quark.base.module.QuarkModule;
+import vazkii.quark.content.automation.module.ColorSlimeModule;
+import vazkii.quark.content.building.module.CompressedBlocksModule;
+import vazkii.quark.content.building.module.DuskboundBlocksModule;
+import vazkii.quark.content.building.module.FramedGlassModule;
+import vazkii.quark.content.building.module.IronPlatesModule;
+import vazkii.quark.content.building.module.LitLampModule;
+import vazkii.quark.content.building.module.MidoriModule;
+import vazkii.quark.content.building.module.MoreBrickTypesModule;
+import vazkii.quark.content.building.module.MoreStoneVariantsModule;
+import vazkii.quark.content.building.module.QuiltedWoolModule;
+import vazkii.quark.content.building.module.SoulSandstoneModule;
+import vazkii.quark.content.building.module.SturdyStoneModule;
+import vazkii.quark.content.world.module.BiotiteModule;
+import vazkii.quark.content.world.module.NewStoneTypesModule;
+import vazkii.quark.content.world.module.underground.BrimstoneUndergroundBiomeModule;
+import vazkii.quark.content.world.module.underground.CaveCrystalUndergroundBiomeModule;
+import vazkii.quark.content.world.module.underground.ElderPrismarineUndergroundBiomeModule;
+import vazkii.quark.content.world.module.underground.GlowshroomUndergroundBiomeModule;
+import vazkii.quark.content.world.module.underground.PermafrostUndergroundBiomeModule;
 
 public final class QuarkGolemsEntities {
   
@@ -314,7 +314,7 @@ public final class QuarkGolemsEntities {
    * It is assumed that they are all in the "quark" namespace
    * @see #buildEnabledPredicate()
    **/
-  protected static void softRegister(final Class<? extends Module> module, final GolemContainer cont, 
+  protected static void softRegister(final Class<? extends QuarkModule> module, final GolemContainer cont, 
       final String... blockNames) {
     softRegister(module, buildEnabledPredicate(), cont, blockNames);
   }  
@@ -328,8 +328,8 @@ public final class QuarkGolemsEntities {
    * @param blockNames names of blocks to use to build this golem. 
    * It is assumed that they are all in the "quark" namespace
    **/
-  protected static void softRegister(final Class<? extends Module> module, 
-      final Predicate<Class<? extends Module>> pred,
+  protected static void softRegister(final Class<? extends QuarkModule> module, 
+      final Predicate<Class<? extends QuarkModule>> pred,
       final GolemContainer cont, final String... blockNames) {
     // store the container for updating config later
     deferred.add(new QuarkDeferredContainer(cont, module, blockNames, pred));
@@ -342,7 +342,7 @@ public final class QuarkGolemsEntities {
    * property is updated later.
    * @return {@code m -> ModuleLoader.INSTANCE.isModuleEnabled(m)}
    **/
-  protected static Predicate<Class<? extends Module>> buildEnabledPredicate() {
+  protected static Predicate<Class<? extends QuarkModule>> buildEnabledPredicate() {
     return m -> ModuleLoader.INSTANCE.isModuleEnabled(m);
   }
 }

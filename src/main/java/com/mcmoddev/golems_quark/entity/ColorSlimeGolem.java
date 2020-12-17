@@ -19,8 +19,8 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
-import vazkii.quark.automation.module.ColorSlimeModule;
 import vazkii.quark.base.module.ModuleLoader;
+import vazkii.quark.content.automation.module.ColorSlimeModule;
 
 public class ColorSlimeGolem extends GolemMultiTextured {
 
