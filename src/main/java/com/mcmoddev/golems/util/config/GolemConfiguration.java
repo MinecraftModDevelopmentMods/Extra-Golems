@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.google.common.collect.Lists;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemContainer;
 import com.mcmoddev.golems.util.GolemNames;

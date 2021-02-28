@@ -5,12 +5,14 @@ import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
+import net.minecraft.client.renderer.entity.model.IHasArm;
 import net.minecraft.client.renderer.entity.model.IronGolemModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.util.HandSide;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
 
-public class GolemModel<T extends GolemBase> extends IronGolemModel<T> {
+public class GolemModel<T extends GolemBase> extends IronGolemModel<T> implements IHasArm {
   
   private final ModelRenderer tail;
   private final ModelRenderer tail1;
@@ -84,5 +86,17 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> {
     tail.rotateAngleZ = 0.1F * idleSwing;
     tail1.rotateAngleZ = 0.18F * idleSwing;
     this.tail.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn);
+  }
+
+  @Override
+  public void translateHand(HandSide hand, MatrixStack matrixStack) {
+    getArmForSide(hand).translateRotate(matrixStack);
+  }
+  
+  protected ModelRenderer getArmForSide(HandSide side) {
+    if (side == HandSide.LEFT) {
+      return this.ironGolemLeftArm;
+    }
+    return this.ironGolemRightArm;
   }
 }

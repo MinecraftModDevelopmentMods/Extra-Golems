@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 import com.google.common.collect.ImmutableMap;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
+import com.mcmoddev.golems.renders.model.GolemBannerLayer;
 import com.mcmoddev.golems.renders.model.GolemFlowerLayer;
 import com.mcmoddev.golems.renders.model.GolemKittyLayer;
 import com.mcmoddev.golems.renders.model.GolemModel;
@@ -81,6 +82,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
     this.addLayer(new SimpleTextureLayer<T>(this, g -> cracksToTextureMap.get(g.func_226512_l_()), g -> 0xFFFFFF, g -> false, 0.55F));
     this.addLayer(new GolemFlowerLayer<T>(this));
     this.addLayer(new GolemKittyLayer<T>(this));
+    this.addLayer(new GolemBannerLayer<T>(this));
     return this;
   }
 

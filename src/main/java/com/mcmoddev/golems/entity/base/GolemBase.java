@@ -29,7 +29,10 @@ import net.minecraft.entity.ai.goal.RandomSwimmingGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.BannerItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ShearsItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
@@ -59,6 +62,7 @@ public abstract class GolemBase extends IronGolemEntity {
 
   protected static final DataParameter<Boolean> CHILD = EntityDataManager.createKey(GolemBase.class, DataSerializers.BOOLEAN);
   protected static final String KEY_CHILD = "isChild";
+  protected static final String KEY_BANNER = "Banner";
   
   public static final String ALLOW_LIGHT = "Allow Special: Light";
   public static final String ALLOW_POWER = "Allow Special: Power";
@@ -69,7 +73,7 @@ public abstract class GolemBase extends IronGolemEntity {
   protected final SwimmerPathNavigator waterNavigator;
   protected final GroundPathNavigator groundNavigator;
   protected boolean swimmingUp;
-
+  
   public GolemBase(EntityType<? extends GolemBase> type, World world) {
     super(type, world);
     this.container = GolemRegistrar.getContainer(type);
@@ -196,6 +200,15 @@ public abstract class GolemBase extends IronGolemEntity {
 //    return new BlockPos(i, j, k);
     return getPositionUnderneath();
   }
+  
+  public ItemStack getBanner() { return this.getItemStackFromSlot(EquipmentSlotType.CHEST); }
+  
+  public void setBanner(final ItemStack bannerItem) { 
+    this.setItemStackToSlot(EquipmentSlotType.CHEST, bannerItem);
+    if(bannerItem.getItem() instanceof BannerItem) {
+      this.setDropChance(EquipmentSlotType.CHEST, 1.0F);
+    }
+  }
 
   /////////////// CONFIG HELPERS //////////////////
 
@@ -305,18 +318,58 @@ public abstract class GolemBase extends IronGolemEntity {
   @Override
   protected ActionResultType func_230254_b_(final PlayerEntity player, final Hand hand) { // processInteract
     ItemStack stack = player.getHeldItem(hand);
-    float healAmount = getHealAmount(stack);
-    if (ExtraGolemsConfig.enableHealGolems() && this.getHealth() < this.getMaxHealth() && healAmount > 0) {
+    // Attempt to remove banner from the golem
+    if(!this.getBanner().isEmpty() && stack.getItem() instanceof ShearsItem) {
+      this.entityDropItem(this.getBanner(), this.isChild() ? 0.9F : 1.4F);
+      this.setBanner(ItemStack.EMPTY);
+    }
+    // Attempt to place a banner on the golem
+    if(stack.getItem() instanceof BannerItem && processInteractBanner(player, hand, stack)) {
+      return ActionResultType.CONSUME;
+    }
+    // Attempt to heal the golem
+    final float healAmount = getHealAmount(stack);
+    if (healAmount > 0 && processInteractHeal(player, hand, stack, healAmount)) {
+      return ActionResultType.CONSUME;
+    }
+    return super.func_230254_b_(player, hand); // processInteract
+  }
+  
+  /**
+   * Called when the player uses an item that might be a banner
+   * @param player the player using the item
+   * @param hand the player hand
+   * @param stack the item being used
+   * @param healAmount the amount of health this item will restore
+   * @return true if the item was consumed
+   */
+  protected boolean processInteractBanner(final PlayerEntity player, final Hand hand, final ItemStack stack) {
+    if(!this.getBanner().isEmpty()) {
+      this.entityDropItem(this.getBanner(), this.isChild() ? 0.9F : 1.4F);
+    }
+    setBanner(stack.split(1));
+    return true;
+  }
+  
+  /**
+   * Called when the player uses an item that can heal this golem
+   * @param player the player using the item
+   * @param hand the player hand
+   * @param stack the item being used
+   * @param healAmount the amount of health this item will restore
+   * @return true if the item was consumed
+   */
+  protected boolean processInteractHeal(final PlayerEntity player, final Hand hand, final ItemStack stack, final float healAmount) {
+    if (ExtraGolemsConfig.enableHealGolems() && this.getHealth() < this.getMaxHealth()) {
       heal(healAmount);
       // update stack size/item
       if(!player.isCreative()) {
         if (stack.getCount() > 1) {
           stack.shrink(1);
         } else {
-          stack = stack.getContainerItem();
+          // update the player's held item
+          player.setHeldItem(hand, stack.getContainerItem());
         }
-        // update the player's held item
-        player.setHeldItem(hand, stack);
       }
       // if currently attacking this player, stop
       if (this.getAttackTarget() == player) {
@@ -327,9 +380,9 @@ public abstract class GolemBase extends IronGolemEntity {
       final Vector3d pos = this.getPositionVec();
       ItemBedrockGolem.spawnParticles(this.world, pos.x, pos.y + this.getHeight() / 2.0D, pos.z, 0.15D, ParticleTypes.INSTANT_EFFECT, 30);
       this.playSound(SoundEvents.BLOCK_STONE_PLACE, 0.85F, 1.1F + rand.nextFloat() * 0.2F);
-      return ActionResultType.CONSUME;
+      return true;
     }
-    return super.func_230254_b_(player, hand); // processInteract
+    return false;
   }
   
   @Override

@@ -10,13 +10,8 @@ import com.mcmoddev.golems.integration.DeferredContainer;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemBuilders;
 import com.mcmoddev.golems.util.GolemContainer;
-import com.mcmoddev.golems.util.GolemDescription;
-import com.mcmoddev.golems.util.GolemNames;
 import com.mcmoddev.golems.util.GolemRegistrar;
-import com.mcmoddev.golems_clib.ClibGolemNames;
 
-import net.minecraft.block.Blocks;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.TextFormatting;
