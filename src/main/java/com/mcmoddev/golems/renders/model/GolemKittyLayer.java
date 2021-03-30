@@ -2,6 +2,7 @@ package com.mcmoddev.golems.renders.model;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
+import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
@@ -11,6 +12,7 @@ import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.vector.Vector3f;
 
 public class GolemKittyLayer<T extends GolemBase> extends LayerRenderer<T, GolemModel<T>> {
   
@@ -27,20 +29,17 @@ public class GolemKittyLayer<T extends GolemBase> extends LayerRenderer<T, Golem
       // get packed light and a vertex builder bound to the correct texture
       int packedOverlay = LivingRenderer.getPackedOverlay(golem, 0.0F);
       IVertexBuilder vertexBuilder = bufferIn.getBuffer(RenderType.getEntityCutoutNoCull(kittyTexture));
-      
+      // check for holiday tweaks
+      if(ExtraGolemsConfig.aprilFirst()) {
+        matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(180.0F));
+      }
       // render ears
       matrixStackIn.push();
-//      float yaw = MathHelper.lerp(partialTicks, golem.prevRotationYaw, golem.rotationYaw) - MathHelper.lerp(partialTicks, golem.prevRenderYawOffset, golem.renderYawOffset);
-//      float pitch = MathHelper.lerp(partialTicks, golem.prevRotationPitch, golem.rotationPitch);
-//      matrixStackIn.rotate(Vector3f.YP.rotationDegrees(yaw));
-//      matrixStackIn.rotate(Vector3f.XP.rotationDegrees(pitch));
-//      matrixStackIn.rotate(Vector3f.XP.rotationDegrees(-pitch));
-//      matrixStackIn.rotate(Vector3f.YP.rotationDegrees(-yaw));
       this.getEntityModel().renderKittyEars(golem, matrixStackIn, vertexBuilder, packedLightIn, packedOverlay);
-      matrixStackIn.pop();
       
       // render tail
       this.getEntityModel().renderKittyTail(golem, matrixStackIn, vertexBuilder, packedLightIn, packedOverlay, limbSwing, limbSwingAmount);
+      matrixStackIn.pop();
     }
   }
 }

@@ -1,6 +1,7 @@
 package com.mcmoddev.golems.renders.model;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
+import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.Minecraft;
@@ -23,6 +24,10 @@ public class GolemBannerLayer<T extends GolemBase> extends LayerRenderer<T, Gole
   public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, T entity,
       float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
     if (!entity.isInvisible() && entity.getBanner().getItem() instanceof BannerItem) {
+      // check for holiday tweaks
+      if(ExtraGolemsConfig.aprilFirst()) {
+        matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(180.0F));
+      }
       matrixStackIn.push();
       // position the banner
       matrixStackIn.translate(-0.09375D, -0.075D, 0.3525D);

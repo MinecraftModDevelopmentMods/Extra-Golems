@@ -43,12 +43,14 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> implement
   @Override
   public void render(final MatrixStack matrixStackIn, final IVertexBuilder vertexBuilder, final int packedLightIn, final int packedOverlayIn, final float redIn,
       final float greenIn, final float blueIn, final float alphaIn) {
+    matrixStackIn.push();
     // check for holiday tweaks
     if(ExtraGolemsConfig.aprilFirst()) {
       matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(180.0F));
     }
     // render with custom colors
     super.render(matrixStackIn, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, 1.0F);
+    matrixStackIn.pop();
   }
   
   // COLOR HELPERS
@@ -79,12 +81,12 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> implement
     this.tail.rotationPointY = 2.0F;
     this.tail.rotationPointZ = 4.0F;
     // tail animation
-    float idleSwing = MathHelper.cos((golem.ticksExisted) * 0.08F);
+    float idleSwing = MathHelper.cos((golem.ticksExisted) * 0.058F);
     float tailSwing = MathHelper.cos(limbSwing) * limbSwingAmount;
     tail.rotateAngleX = -2.4435F + 0.38F * tailSwing;
     tail1.rotateAngleX = 0.2618F + 0.48F * tailSwing;
-    tail.rotateAngleZ = 0.1F * idleSwing;
-    tail1.rotateAngleZ = 0.18F * idleSwing;
+    tail.rotateAngleZ = 0.06F * idleSwing;
+    tail1.rotateAngleZ = -0.05F * idleSwing;
     this.tail.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn);
   }
 
