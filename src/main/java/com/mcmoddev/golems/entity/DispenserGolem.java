@@ -140,14 +140,14 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
   }
 
   @Override
-  protected ActionResultType func_230254_b_(final PlayerEntity player, final Hand hand) { // processInteract
+  protected ActionResultType getEntityInteractionResult(final PlayerEntity player, final Hand hand) {
     if (!player.isCrouching() && player instanceof ServerPlayerEntity) {
       // open dispenser GUI by sending request to server
       NetworkHooks.openGui((ServerPlayerEntity) player, new ContainerDispenserGolem.Provider(inventory));
       player.swingArm(hand);
       return ActionResultType.SUCCESS;
     }
-    return super.func_230254_b_(player, hand);
+    return super.getEntityInteractionResult(player, hand);
   }
 
   @Override

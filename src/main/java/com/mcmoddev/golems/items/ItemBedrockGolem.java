@@ -97,8 +97,8 @@ public final class ItemBedrockGolem extends Item {
   public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
     final ITextComponent loreCreativeOnly = trans("tooltip.creative_only_item").mergeStyle(TextFormatting.RED);
     final ITextComponent lorePressShift = trans("tooltip.press").mergeStyle(TextFormatting.GRAY).appendString(" ")
-        .append(trans("tooltip.shift").mergeStyle(TextFormatting.YELLOW)).appendString(" ")
-        .append(trans("tooltip.for_more_details").mergeStyle(TextFormatting.GRAY));
+        .appendSibling(trans("tooltip.shift").mergeStyle(TextFormatting.YELLOW)).appendString(" ")
+        .appendSibling(trans("tooltip.for_more_details").mergeStyle(TextFormatting.GRAY));
     // "Creative-Mode Only"
     tooltip.add(loreCreativeOnly);
     // "Use to spawn Bedrock Golem. Use on existing Bedrock Golem to remove it"

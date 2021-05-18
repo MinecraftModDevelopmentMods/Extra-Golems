@@ -99,12 +99,12 @@ public class GolemConfiguration {
       }
 	  
       // moved from ProxyCommon to here to fix issue #56
-      GlobalEntityTypeAttributes.put(c.getEntityType(), c.getAttributeSupplier().get().create());
+      // GlobalEntityTypeAttributes.put(c.getEntityType(), c.getAttributeSupplier().get().create());
     }
     // also update the holiday configs
     final LocalDateTime now = LocalDateTime.now();
-    aprilFirst = (now.getMonth() == Month.MARCH && now.getDayOfMonth() >= 30) || (now.getMonth() == Month.APRIL && now.getDayOfMonth() <= 2);
-    halloween = (now.getMonth() == Month.OCTOBER && now.getDayOfMonth() >= 28) || (now.getMonth() == Month.NOVEMBER && now.getDayOfMonth() <= 4);
+    aprilFirst = (now.getMonth() == Month.MARCH && now.getDayOfMonth() >= 31) || (now.getMonth() == Month.APRIL && now.getDayOfMonth() <= 2);
+    halloween = (now.getMonth() == Month.OCTOBER && now.getDayOfMonth() >= 30) || (now.getMonth() == Month.NOVEMBER && now.getDayOfMonth() <= 2);
   }
 
   private static List<String> initVillagerGolemList(final String[] names) {

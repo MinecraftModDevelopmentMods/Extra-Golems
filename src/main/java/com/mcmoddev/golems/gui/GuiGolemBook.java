@@ -218,7 +218,7 @@ public class GuiGolemBook extends Screen {
     case 0:
       // draw introduction
       title = trans("item.golems.info_book");
-      body = trans("golembook.intro1").appendString("\n").append(trans("golembook.intro2"));
+      body = trans("golembook.intro1").appendString("\n").appendSibling(trans("golembook.intro2"));
       drawBasicPage(matrix, cornerX, cornerY, title, body);
       return;
     case 1:
@@ -229,7 +229,7 @@ public class GuiGolemBook extends Screen {
     case 2:
       // draw Golem Spell instructions
       title = trans("item.golems.golem_paper");
-      body = wrap("\n\n\n\n").append(
+      body = wrap("\n\n\n\n").appendSibling(
           trans("golembook.recipe_spell.recipe", title, trans("item.minecraft.paper"), trans("item.minecraft.feather"),
           trans("item.minecraft.ink_sac"), trans("item.minecraft.redstone")));
       drawBasicPage(matrix, cornerX, cornerY, title, body);
@@ -238,7 +238,7 @@ public class GuiGolemBook extends Screen {
     case 3:
       // draw Golem Head instructions
       title = trans("block.golems.golem_head");
-      body = wrap("\n\n\n\n").append(trans("golembook.recipe_head.recipe", title, trans("item.golems.golem_paper"), trans("block.minecraft.pumpkin")));
+      body = wrap("\n\n\n\n").appendSibling(trans("golembook.recipe_head.recipe", title, trans("item.golems.golem_paper"), trans("block.minecraft.pumpkin")));
       drawBasicPage(matrix, cornerX, cornerY, title, body);
       draw2x2Grid(matrix, cornerX + MARGIN * 2, cornerY + MARGIN * 2, ingredientsHead, outputHead);
       return;
@@ -246,8 +246,8 @@ public class GuiGolemBook extends Screen {
       // draw Make Golem instructions
       title = trans("golembook.build_golem.title");
       body = trans("golembook.build_golem.howto1").appendString(" ")
-          .append(trans("golembook.build_golem.howto2")).appendString("\n\n")
-          .append(trans("golembook.build_golem.howto3", trans("block.golems.golem_head")));
+          .appendSibling(trans("golembook.build_golem.howto2")).appendString("\n\n")
+          .appendSibling(trans("golembook.build_golem.howto3", trans("block.golems.golem_head")));
       drawBasicPage(matrix, cornerX, cornerY, title, body);
       return;
     case 5:

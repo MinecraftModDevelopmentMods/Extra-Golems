@@ -1,5 +1,7 @@
 package com.mcmoddev.golems.main;
 
+import java.util.Map.Entry;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,12 +17,16 @@ import com.mcmoddev.golems.items.ItemInfoBook;
 import com.mcmoddev.golems.proxies.ProxyClient;
 import com.mcmoddev.golems.proxies.ProxyCommon;
 import com.mcmoddev.golems.proxies.ProxyServer;
+import com.mcmoddev.golems.util.GolemContainer;
 import com.mcmoddev.golems.util.GolemRegistrar;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
+import com.mcmoddev.golems.util.config.GolemConfigurationSection;
+import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -30,6 +36,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -64,7 +71,7 @@ public class ExtraGolems {
     ExtraGolemsConfig.setupConfig();
     ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ExtraGolemsConfig.COMMON_CONFIG);
   }
-
+  
   private void setup(final FMLCommonSetupEvent event) {
     AddonLoader.setupEvent(event);
   }
@@ -81,6 +88,15 @@ public class ExtraGolems {
       event.getRegistry().register(container.getEntityType());
     });
     ExtraGolems.PROXY.registerEntityRenders();
+  }
+  
+  @SubscribeEvent
+  public static void registerEntityAttributes(final EntityAttributeCreationEvent event) {
+    ExtraGolems.LOGGER.info("registerEntityAttributes");
+    // Register Entity Attributes by iterating through each registered GolemContainer
+    GolemRegistrar.getContainers().forEach(container -> {
+      event.put(container.getEntityType(), container.getAttributeSupplier().get().create());
+    });
   }
 
   @SubscribeEvent

@@ -122,7 +122,7 @@ public class TNTGolem extends GolemBase {
   }
 
   @Override
-  protected ActionResultType func_230254_b_(final PlayerEntity player, final Hand hand) { // processInteract
+  protected ActionResultType getEntityInteractionResult(final PlayerEntity player, final Hand hand) {
     final ItemStack itemstack = player.getHeldItem(hand);
     if (!itemstack.isEmpty() && itemstack.getItem() == Items.FLINT_AND_STEEL) {
       final Vector3d pos = this.getPositionVec();
@@ -138,7 +138,7 @@ public class TNTGolem extends GolemBase {
       return ActionResultType.SUCCESS;
     }
 
-    return super.func_230254_b_(player, hand);
+    return super.getEntityInteractionResult(player, hand);
   }
 
   protected void resetFuse() {

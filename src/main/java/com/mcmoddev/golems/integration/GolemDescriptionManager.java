@@ -43,8 +43,8 @@ public abstract class GolemDescriptionManager {
     // add attack damage to tip enabled (usually checks if sneaking)
     if (showAttack) {
       double attack = (golem.getAttribute(Attributes.ATTACK_DAMAGE).getValue());
-      list.add(new TranslationTextComponent("entitytip.attack").mergeStyle(TextFormatting.GRAY).append(new StringTextComponent(": "))
-          .append(new StringTextComponent(Double.toString(attack)).mergeStyle(TextFormatting.WHITE)));
+      list.add(new TranslationTextComponent("entitytip.attack").mergeStyle(TextFormatting.GRAY).appendString(": ")
+          .appendSibling(new StringTextComponent(Double.toString(attack)).mergeStyle(TextFormatting.WHITE)));
     }
     // add special descriptions
     if(showSpecial) {
@@ -80,8 +80,8 @@ public abstract class GolemDescriptionManager {
     // if sneaking, show exact value, otherwise show percentage value
     final String fuelString = isShiftDown() ? Integer.toString(fuel) : (Integer.toString(percentFuel) + "%");
     // actually add the description
-    list.add(new TranslationTextComponent("entitytip.fuel").mergeStyle(TextFormatting.GRAY).append(new StringTextComponent(": "))
-        .append(new StringTextComponent(fuelString).mergeStyle(color)));
+    list.add(new TranslationTextComponent("entitytip.fuel").mergeStyle(TextFormatting.GRAY).appendString(": ")
+        .appendSibling(new StringTextComponent(fuelString).mergeStyle(color)));
   }
   
   protected void addDispenserGolemInfo(final DispenserGolem g, final List<IFormattableTextComponent> list) {
@@ -92,8 +92,8 @@ public abstract class GolemDescriptionManager {
       // if sneaking, show exact value, otherwise show percentage value
       final String arrowString = Integer.toString(arrows);
       // actually add the description
-      list.add(new TranslationTextComponent("entitytip.arrows").mergeStyle(TextFormatting.GRAY).append(new StringTextComponent(": "))
-          .append(new StringTextComponent(arrowString).mergeStyle(color)));
+      list.add(new TranslationTextComponent("entitytip.arrows").mergeStyle(TextFormatting.GRAY).appendString(": ")
+          .appendSibling(new StringTextComponent(arrowString).mergeStyle(color)));
     }
    
   }

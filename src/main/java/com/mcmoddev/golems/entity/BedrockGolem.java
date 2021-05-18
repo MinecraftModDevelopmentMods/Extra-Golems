@@ -36,7 +36,7 @@ public final class BedrockGolem extends GolemBase {
   }
 
   @Override
-  protected ActionResultType func_230254_b_(final PlayerEntity player, final Hand hand) { // processInteract
+  protected ActionResultType getEntityInteractionResult(final PlayerEntity player, final Hand hand) {
     // creative players can "despawn" by using spawnBedrockGolem on this entity
     final ItemStack itemstack = player.getHeldItem(hand);
     if ((player.abilities.isCreativeMode || !ExtraGolemsConfig.bedrockGolemCreativeOnly()) && !itemstack.isEmpty()
@@ -50,7 +50,7 @@ public final class BedrockGolem extends GolemBase {
       }
     }
 
-    return super.func_230254_b_(player, hand);
+    return super.getEntityInteractionResult(player, hand);
   }
 
   @Override

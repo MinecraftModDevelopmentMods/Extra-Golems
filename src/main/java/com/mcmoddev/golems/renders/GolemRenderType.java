@@ -91,6 +91,6 @@ public class GolemRenderType extends RenderType {
         .texturing(OUTLINE_TEXTURING)
         .fog(NO_FOG)
         .target(OUTLINE_TARGET)
-        .func_230173_a_(RenderType.OutlineState.IS_OUTLINE));
+        .build(RenderType.OutlineState.IS_OUTLINE));
   }
 }

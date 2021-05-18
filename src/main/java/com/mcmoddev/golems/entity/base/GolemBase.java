@@ -316,7 +316,7 @@ public abstract class GolemBase extends IronGolemEntity {
   }
 
   @Override
-  protected ActionResultType func_230254_b_(final PlayerEntity player, final Hand hand) { // processInteract
+  protected ActionResultType getEntityInteractionResult(final PlayerEntity player, final Hand hand) {
     ItemStack stack = player.getHeldItem(hand);
     // Attempt to remove banner from the golem
     if(!this.getBanner().isEmpty() && stack.getItem() instanceof ShearsItem) {
@@ -332,7 +332,7 @@ public abstract class GolemBase extends IronGolemEntity {
     if (healAmount > 0 && processInteractHeal(player, hand, stack, healAmount)) {
       return ActionResultType.CONSUME;
     }
-    return super.func_230254_b_(player, hand); // processInteract
+    return super.getEntityInteractionResult(player, hand);
   }
   
   /**

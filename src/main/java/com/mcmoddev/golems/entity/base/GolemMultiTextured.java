@@ -80,12 +80,12 @@ public abstract class GolemMultiTextured extends GolemBase implements IMultiText
   }
 
   @Override
-  public ActionResultType func_230254_b_(final PlayerEntity player, final Hand hand) { // processInteract
+  public ActionResultType getEntityInteractionResult(final PlayerEntity player, final Hand hand) {
     // change texture when player clicks (if enabled)
     if (!player.isCrouching() && this.canInteractChangeTexture()) {
       return handlePlayerInteract(player, hand);
     } else {
-      return super.func_230254_b_(player, hand);
+      return super.getEntityInteractionResult(player, hand);
     }
   }
 

@@ -224,7 +224,7 @@ public final class ExtraGolemsEntities {
         .setHealth(6.0D).setAttack(0.5D).setSpeed(0.31D).setKnockbackResist(0.0D).addBlocks(BlockTags.LEAVES)
         .addSpecial(LeafGolem.ALLOW_SPECIAL, true, "Whether this golem can heal itself",
             new TranslationTextComponent("effect.minecraft.regeneration").mergeStyle(TextFormatting.DARK_GREEN).appendString(" ")
-                .append(new TranslationTextComponent("enchantment.level.1").mergeStyle(TextFormatting.DARK_GREEN)))
+                .appendSibling(new TranslationTextComponent("enchantment.level.1").mergeStyle(TextFormatting.DARK_GREEN)))
         .setSwimMode(SwimMode.FLOAT).setSound(SoundEvents.BLOCK_GRASS_STEP)
         .setDynamicTexture("oak_leaves").setTextureColor(g -> ((LeafGolem)g).getColor())
         .setVinesColor(g -> brown).build());

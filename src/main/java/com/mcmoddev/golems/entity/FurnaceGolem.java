@@ -113,7 +113,7 @@ public final class FurnaceGolem extends GolemBase {
   }
 
   @Override
-  protected ActionResultType func_230254_b_(final PlayerEntity player, final Hand hand) { // processInteract
+  protected ActionResultType getEntityInteractionResult(final PlayerEntity player, final Hand hand) {
     // allow player to add fuel to the golem by clicking on them with a fuel item
     final Vector3d pos = this.getPositionVec();
     ItemStack stack = player.getHeldItem(hand);
@@ -147,7 +147,7 @@ public final class FurnaceGolem extends GolemBase {
       return ActionResultType.CONSUME;
     }
 
-    return super.func_230254_b_(player, hand);
+    return super.getEntityInteractionResult(player, hand);
   }
 
   public ResourceLocation getTexture() {

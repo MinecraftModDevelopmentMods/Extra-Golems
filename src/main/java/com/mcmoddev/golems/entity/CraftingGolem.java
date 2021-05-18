@@ -21,7 +21,7 @@ public final class CraftingGolem extends GolemBase {
   }
 
   @Override
-  protected ActionResultType func_230254_b_(final PlayerEntity player, final Hand hand) { // processInteract
+  protected ActionResultType getEntityInteractionResult(final PlayerEntity player, final Hand hand) {
     if (!player.isCrouching() && player instanceof ServerPlayerEntity) {
       // display crafting grid by sending request to server
       NetworkHooks.openGui((ServerPlayerEntity) player, new ContainerPortableWorkbench.Provider());
@@ -29,6 +29,6 @@ public final class CraftingGolem extends GolemBase {
       player.swingArm(hand);
       return ActionResultType.SUCCESS;
     }
-    return super.func_230254_b_(player, hand);
+    return super.getEntityInteractionResult(player, hand);
   }
 }

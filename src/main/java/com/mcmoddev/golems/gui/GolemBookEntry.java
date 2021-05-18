@@ -143,17 +143,17 @@ public class GolemBookEntry {
     StringTextComponent page = new StringTextComponent("");
     // ADD (ROUNDED) HEALTH TIP
     page.appendString("\n")
-        .append(trans("entitytip.health").appendString(": ").mergeStyle(TextFormatting.GRAY))
-        .append(wrap(String.valueOf(this.health)).mergeStyle(TextFormatting.BLACK)) 
-        .append(wrap(" \u2764").mergeStyle(TextFormatting.DARK_RED));
+        .appendSibling(trans("entitytip.health").appendString(": ").mergeStyle(TextFormatting.GRAY))
+        .appendSibling(wrap(String.valueOf(this.health)).mergeStyle(TextFormatting.BLACK)) 
+        .appendSibling(wrap(" \u2764").mergeStyle(TextFormatting.DARK_RED));
     // ADD ATTACK POWER TIP
     page.appendString("\n")
-        .append(trans("entitytip.attack").appendString(": ").mergeStyle(TextFormatting.GRAY))
-        .append(wrap(String.valueOf(this.attack)).mergeStyle(TextFormatting.BLACK)) 
+        .appendSibling(trans("entitytip.attack").appendString(": ").mergeStyle(TextFormatting.GRAY))
+        .appendSibling(wrap(String.valueOf(this.attack)).mergeStyle(TextFormatting.BLACK)) 
         .appendString(" \u2694").appendString("\n");
     // ADD SPECIALS
     for (ITextComponent s : this.specials) {
-      page.appendString("\n").append(s);
+      page.appendString("\n").appendSibling(s);
     }
 
     return page;
