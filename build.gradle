@@ -3,16 +3,13 @@ buildscript {
 		maven { url = 'https://files.minecraftforge.net/maven' }
         jcenter()
         mavenCentral()
-        maven { url = 'https://repo.spongepowered.org/maven' }
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
-		classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
@@ -21,6 +18,9 @@ group = project.maven_group // http://maven.apache.org/guides/mini/guide-naming-
 archivesBaseName = project.archives_base_name
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+
+def remapRefmap = 'mixin_remap_refmap'
+def remapRefmapFile = "${projectDir}/build/createSrgToMcp/output.srg"
 
 minecraft {
    
@@ -34,7 +34,6 @@ minecraft {
     // These can be tweaked, removed, or duplicated as needed.
     runs {
         client {
-            property 'mixin.env.disableRefMap', 'true'
             workingDirectory project.file('run')
 
             // Recommended logging data for a userdev environment
@@ -42,6 +41,10 @@ minecraft {
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
+			
+			// Enable mixins for dependencies that use them
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', remapRefmapFile
 
             mods {
                 golems {
@@ -51,7 +54,6 @@ minecraft {
         }
 
         server {
-            property 'mixin.env.disableRefMap', 'true'
             workingDirectory project.file('run')
 
             // Recommended logging data for a userdev environment
@@ -59,6 +61,10 @@ minecraft {
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
+			
+			// Enable mixins for dependencies that use them
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', remapRefmapFile
 
             mods {
                 golems {
@@ -94,10 +100,13 @@ dependencies {
 	// Forge
     minecraft "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
 	
+	// Mixins
+	// annotationProcessor "org.spongepowered:mixin:${project.mixin_version}:processor"
+	
 	// AutoRegLib
-	compile fg.deobf("vazkii.autoreglib:AutoRegLib:${project.arl_version}") { transitive = false }
+	implementation fg.deobf("vazkii.autoreglib:AutoRegLib:${project.arl_version}")
 	// Quark
-	compile fg.deobf("vazkii.quark:Quark:${project.quark_version}") { transitive = false }
+	implementation fg.deobf("vazkii.quark:Quark:${project.quark_version}")
 	// CoFHCore
 	compile fg.deobf("curse.maven:cofh-core-${project.cofhcore_proj}:${project.cofhcore_file}") { transitive = false }
 	// Thermal Foundation
@@ -162,8 +171,6 @@ publishing {
         }
     }
 }
-
-apply plugin: 'org.spongepowered.mixin'
 
 javadoc {
   failOnError = false
