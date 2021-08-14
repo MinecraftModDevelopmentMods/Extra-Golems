@@ -8,32 +8,32 @@ import com.mcmoddev.golems.items.ItemBedrockGolem;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemTextureBytes;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.CoralBlock;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.CoralBlock;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 
 public final class CoralGolem extends GolemMultiTextured {
 
   // whether or not this golem is "dry"
-  private static final DataParameter<Boolean> DRY = EntityDataManager.createKey(CoralGolem.class, DataSerializers.BOOLEAN);
+  private static final EntityDataAccessor<Boolean> DRY = SynchedEntityData.defineId(CoralGolem.class, EntityDataSerializers.BOOLEAN);
 
   // the amount of time since this golem started changing between "dry" and "wet"
-  private static final DataParameter<Integer> CHANGE_TIME = EntityDataManager.createKey(CoralGolem.class, DataSerializers.VARINT);
+  private static final EntityDataAccessor<Integer> CHANGE_TIME = SynchedEntityData.defineId(CoralGolem.class, EntityDataSerializers.INT);
 
   private static final String KEY_DRY = "isDry";
   private static final String KEY_CHANGE = "changeTime";
@@ -49,7 +49,7 @@ public final class CoralGolem extends GolemMultiTextured {
   // the minimum amount of time before golem will change between "dry" and "wet"
   private final int maxChangingTime;
 
-  public CoralGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+  public CoralGolem(final EntityType<? extends GolemBase> entityType, final Level world) {
     super(entityType, world, "minecraft", TEXTURE_NAMES, ExtraGolems.MODID, LOOT_TABLES);
     this.texturesDry = new ResourceLocation[TEXTURE_NAMES.length];
     this.lootTablesDry = new ResourceLocation[LOOT_TABLES.length];
@@ -64,52 +64,52 @@ public final class CoralGolem extends GolemMultiTextured {
 
   /** @return whether this golem is dried out or wet **/
   public boolean isDry() {
-    return this.getDataManager().get(DRY).booleanValue();
+    return this.getEntityData().get(DRY).booleanValue();
   }
 
   /** Updates the "Dry" flag **/
   public void setDry(boolean isDry) {
     if (isDry() != isDry) {
-      this.getDataManager().set(DRY, Boolean.valueOf(isDry));
+      this.getEntityData().set(DRY, Boolean.valueOf(isDry));
     }
   }
 
   /** @return the amount of time this golem has been "changing" **/
   public int getChangingTime() {
-    return this.getDataManager().get(CHANGE_TIME).intValue();
+    return this.getEntityData().get(CHANGE_TIME).intValue();
   }
 
   /** Adds or removes time to the change timer **/
   public void addChangingTime(final int toAdd) {
     if (toAdd != 0) {
-      this.getDataManager().set(CHANGE_TIME, getChangingTime() + toAdd);
+      this.getEntityData().set(CHANGE_TIME, getChangingTime() + toAdd);
     }
   }
 
   public void setChangingTime(final int toSet) {
-    this.getDataManager().set(CHANGE_TIME, toSet);
+    this.getEntityData().set(CHANGE_TIME, toSet);
   }
 
   @Override
-  protected void damageEntity(DamageSource source, float amount) {
+  protected void actuallyHurt(DamageSource source, float amount) {
     if (this.isDry()) {
       // damage resistant when dried out
       amount *= 0.7F;
     }
-    super.damageEntity(source, amount);
+    super.actuallyHurt(source, amount);
   }
 
   @Override
-  protected void registerData() {
-    super.registerData();
-    this.getDataManager().register(DRY, Boolean.valueOf(false));
-    this.getDataManager().register(CHANGE_TIME, Integer.valueOf(0));
+  protected void defineSynchedData() {
+    super.defineSynchedData();
+    this.getEntityData().define(DRY, Boolean.valueOf(false));
+    this.getEntityData().define(CHANGE_TIME, Integer.valueOf(0));
   }
 
   @Override
-  public void livingTick() {
-    super.livingTick();
-    if (this.isServerWorld() && !this.world.isRemote) {
+  public void aiStep() {
+    super.aiStep();
+    if (this.isEffectiveAi() && !this.level.isClientSide) {
       // the golem is "changing" whenever it is either in water AND dry, or out of
       // water AND wet
       final boolean isChanging = (this.isInWater() == this.isDry());
@@ -128,22 +128,22 @@ public final class CoralGolem extends GolemMultiTextured {
       if (!this.isDry()) {
         // randomly reduce timer if golem is wet (but not submerged)
         // extends "wet" lifetime by roughly 30%
-        if (isChanging && this.isWet() && getChangingTime() > 0 && rand.nextInt(3) == 0) {
+        if (isChanging && this.isInWaterOrRain() && getChangingTime() > 0 && random.nextInt(3) == 0) {
           addChangingTime(-1);
         }
         // heals randomly when wet
-        if (this.allowHealing && rand.nextInt(650) == 0) {
-          this.addPotionEffect(new EffectInstance(Effects.REGENERATION, 50, 1));
+        if (this.allowHealing && random.nextInt(650) == 0) {
+          this.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 50, 1));
         }
       }
     }
   }
 
   @Override
-  public void notifyDataManagerChange(final DataParameter<?> key) {
-    super.notifyDataManagerChange(key);
+  public void onSyncedDataUpdated(final EntityDataAccessor<?> key) {
+    super.onSyncedDataUpdated(key);
     if (DRY.equals(key)) {
-      this.setDry(this.getDataManager().get(DRY).booleanValue());
+      this.setDry(this.getEntityData().get(DRY).booleanValue());
       if (this.isDry()) {
         // adjust values when the golem dries out: less health, less speed, more attack
         // note how we use mult and div to truncate to a specific number of decimal
@@ -155,8 +155,8 @@ public final class CoralGolem extends GolemMultiTextured {
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(dryAttack);
         this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(drySpeed);
         // particle effects to show that the golem is "drying out"
-        final Vector3d pos = this.getPositionVec().add(0, 0.2D, 0);
-        ItemBedrockGolem.spawnParticles(this.world, pos.x, pos.y, pos.z, 0.09D, ParticleTypes.SMOKE, 80);
+        final Vec3 pos = this.position().add(0, 0.2D, 0);
+        ItemBedrockGolem.spawnParticles(this.level, pos.x, pos.y, pos.z, 0.09D, ParticleTypes.SMOKE, 80);
       } else {
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(getGolemContainer().getHealth());
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(getGolemContainer().getAttack());
@@ -166,15 +166,15 @@ public final class CoralGolem extends GolemMultiTextured {
   }
 
   @Override
-  public void writeAdditional(final CompoundNBT nbt) {
-    super.writeAdditional(nbt);
+  public void addAdditionalSaveData(final CompoundTag nbt) {
+    super.addAdditionalSaveData(nbt);
     nbt.putBoolean(KEY_DRY, this.isDry());
     nbt.putByte(KEY_CHANGE, (byte) this.getChangingTime());
   }
 
   @Override
-  public void readAdditional(final CompoundNBT nbt) {
-    super.readAdditional(nbt);
+  public void readAdditionalSaveData(final CompoundTag nbt) {
+    super.readAdditionalSaveData(nbt);
     this.setDry(nbt.getBoolean(KEY_DRY));
     this.setChangingTime(nbt.getByte(KEY_CHANGE));
   }
@@ -191,18 +191,18 @@ public final class CoralGolem extends GolemMultiTextured {
   }
 
   @Override
-  public ItemStack getCreativeReturn(final RayTraceResult target) {
+  public ItemStack getCreativeReturn(final HitResult target) {
     return new ItemStack(
         GolemTextureBytes.getByByte(this.isDry() ? GolemTextureBytes.CORAL_DEAD : GolemTextureBytes.CORAL, (byte) this.getTextureNum()));
   }
 
   @Override
-  public boolean shouldMoveToWater(final Vector3d target) {
+  public boolean shouldMoveToWater(final Vec3 target) {
     // allowed to leave water if NOT dry and NOT too far away
     if (this.isDry()) {
       return true;
     } else {
-      double dis = this.getPositionVec().distanceTo(target);
+      double dis = this.position().distanceTo(target);
       return dis > 8.0D && getTimeUntilChange() < 60;
     }
   }

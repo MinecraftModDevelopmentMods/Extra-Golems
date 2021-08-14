@@ -27,25 +27,25 @@ import com.mcmoddev.golems.util.GolemRenderSettings.ITextureProvider;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ITag;
 import net.minecraft.tags.Tag;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.tags.Tag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.registries.IRegistryDelegate;
 
@@ -145,22 +145,22 @@ public final class GolemContainer {
    *
    * @param list a List that may or may not contain other descriptions already.
    **/
-  public void addDescription(final List<IFormattableTextComponent> list) {
+  public void addDescription(final List<MutableComponent> list) {
     // ADD FIREPROOF TIP
-    if (this.entityType.isImmuneToFire()) {
-      list.add(new TranslationTextComponent("enchantment.minecraft.fire_protection").mergeStyle(TextFormatting.GOLD));
+    if (this.entityType.fireImmune()) {
+      list.add(new TranslatableComponent("enchantment.minecraft.fire_protection").withStyle(ChatFormatting.GOLD));
     }
     // ADD EXPLOSION-PROOF TIP
     if (this.explosionImmunity) {
-      list.add(new TranslationTextComponent("enchantment.minecraft.blast_protection").mergeStyle(TextFormatting.GRAY, TextFormatting.BOLD));
+      list.add(new TranslatableComponent("enchantment.minecraft.blast_protection").withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD));
     }
     // ADD INTERACT-TEXTURE TIP
     if (ExtraGolemsConfig.enableTextureInteract() && this.canInteractChangeTexture) {
-      list.add(new TranslationTextComponent("entitytip.click_change_texture").mergeStyle(TextFormatting.BLUE));
+      list.add(new TranslatableComponent("entitytip.click_change_texture").withStyle(ChatFormatting.BLUE));
     }
     // ADD SWIMMING TIP
     if(this.swimMode == SwimMode.SWIM) {
-      list.add(new TranslationTextComponent("entitytip.advanced_swim").mergeStyle(TextFormatting.AQUA));
+      list.add(new TranslatableComponent("entitytip.advanced_swim").withStyle(ChatFormatting.AQUA));
     }
     // ADD ALL OTHER DESCRIPTIONS
     for (final GolemDescription desc : descContainers) {
@@ -184,8 +184,8 @@ public final class GolemContainer {
   public Set<Block> getBuildingBlocks() {
     // make set of all blocks including tags (run-time only)
     Set<Block> blocks = validBuildingBlocks.isEmpty() ? new HashSet<>() : validBuildingBlocks.stream().map(d -> d.get()).collect(Collectors.toSet());
-    for (final ITag<Block> tag : loadTags(validBuildingBlockTags)) {
-      blocks.addAll(tag.getAllElements());
+    for (final Tag<Block> tag : loadTags(validBuildingBlockTags)) {
+      blocks.addAll(tag.getValues());
     }
     blocks.remove(Blocks.AIR);
     return blocks;
@@ -277,7 +277,7 @@ public final class GolemContainer {
    * @param additional Block Tag to register as "valid"
    * @return if the Block Tag was added successfully
    **/
-  public boolean addBlocks(@Nonnull final ITag.INamedTag<Block> additional) {
+  public boolean addBlocks(@Nonnull final Tag.Named<Block> additional) {
     return this.validBuildingBlockTags.add(additional.getName());
   }
 
@@ -288,11 +288,11 @@ public final class GolemContainer {
    * @param rls a Collection of ResourceLocation IDs that represent Block Tags.
    * @return a current Collection of Block Tags
    **/
-  private static Collection<ITag<Block>> loadTags(final Collection<ResourceLocation> rls) {
-    final Collection<ITag<Block>> tags = new HashSet<>();
+  private static Collection<Tag<Block>> loadTags(final Collection<ResourceLocation> rls) {
+    final Collection<Tag<Block>> tags = new HashSet<>();
     for (final ResourceLocation rl : rls) {
-      if (BlockTags.getCollection().get(rl) != null) {
-        ITag<Block> tag = BlockTags.getCollection().get(rl);
+      if (BlockTags.getAllTags().getTag(rl) != null) {
+        Tag<Block> tag = BlockTags.getAllTags().getTag(rl);
         if(tag != null) {
           tags.add(tag);
         }
@@ -400,12 +400,12 @@ public final class GolemContainer {
   public boolean noGolemBookEntry() { return this.noGolemBookEntry; }
   
   /** @return a new attribute map supplier for the Golem **/
-  public Supplier<AttributeModifierMap.MutableAttribute> getAttributeSupplier() {
-    return () -> MobEntity.func_233666_p_()
-         .createMutableAttribute(Attributes.MAX_HEALTH, this.health)
-         .createMutableAttribute(Attributes.MOVEMENT_SPEED, this.speed)
-         .createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, this.knockbackResist)
-         .createMutableAttribute(Attributes.ATTACK_DAMAGE, this.attack);
+  public Supplier<AttributeSupplier.Builder> getAttributeSupplier() {
+    return () -> Mob.createMobAttributes()
+         .add(Attributes.MAX_HEALTH, this.health)
+         .add(Attributes.MOVEMENT_SPEED, this.speed)
+         .add(Attributes.KNOCKBACK_RESISTANCE, this.knockbackResist)
+         .add(Attributes.ATTACK_DAMAGE, this.attack);
    }
 
   //////////////////////////////////////////////////////////////
@@ -425,7 +425,7 @@ public final class GolemContainer {
     private final Class<? extends GolemBase> entityClass;
     private EntityType.Builder<? extends GolemBase> entityTypeBuilder;
 
-    private SoundEvent basicSound = SoundEvents.BLOCK_STONE_STEP;
+    private SoundEvent basicSound = SoundEvents.STONE_STEP;
 
     private String modid = ExtraGolems.MODID;
     private double health = 100.0D;
@@ -475,11 +475,11 @@ public final class GolemContainer {
      *                      abilities, use {@code GenericGolem.class}
      **/
     public Builder(final String golemName, final Class<? extends GolemBase> entityClazz,
-        final EntityType.IFactory<? extends GolemBase> entityFactory) {
+        final EntityType.EntityFactory<? extends GolemBase> entityFactory) {
       this.golemName = golemName;
       this.entityClass = entityClazz;
-      this.entityTypeBuilder = EntityType.Builder.create(entityFactory, EntityClassification.MISC).setTrackingRange(48).setUpdateInterval(3)
-          .setShouldReceiveVelocityUpdates(true).size(1.4F, 2.9F);
+      this.entityTypeBuilder = EntityType.Builder.of(entityFactory, MobCategory.MISC).setTrackingRange(48).setUpdateInterval(3)
+          .setShouldReceiveVelocityUpdates(true).sized(1.4F, 2.9F);
     }
 
     /**
@@ -544,7 +544,7 @@ public final class GolemContainer {
      * @return instance to allow chaining of methods
      **/
     public Builder setLightLevel(final int lLightLevel) {
-      lightLevel = MathHelper.clamp(lLightLevel, 0, 15);
+      lightLevel = Mth.clamp(lLightLevel, 0, 15);
       if(lightLevel > 0) {
         addSpecial(GolemBase.ALLOW_LIGHT, true, "Whether the golem can emit light");
       }
@@ -558,7 +558,7 @@ public final class GolemContainer {
     * @return instance to allow chaining of methods
     **/
    public Builder setPowerLevel(final int lPowerLevel) {
-     powerLevel = MathHelper.clamp(lPowerLevel, 0, 15);
+     powerLevel = Mth.clamp(lPowerLevel, 0, 15);
      if(powerLevel > 0) {
        addSpecial(GolemBase.ALLOW_POWER, true, "Whether the golem can emit power");
      }
@@ -807,7 +807,7 @@ public final class GolemContainer {
      * @return instance to allow chaining of methods
      * @see #addBlocks(Block...)
      **/
-    public Builder addBlocks(final ITag.INamedTag<Block> blockTag) {
+    public Builder addBlocks(final Tag.Named<Block> blockTag) {
       this.validBuildingBlockTags.add(blockTag.getName());
       return this;
     }
@@ -867,7 +867,7 @@ public final class GolemContainer {
      * @param desc    a fancier description to be used in-game
      * @return instance to allow chaining of methods
      **/
-    public Builder addSpecial(final String name, final Boolean value, final String comment, final IFormattableTextComponent desc) {
+    public Builder addSpecial(final String name, final Boolean value, final String comment, final MutableComponent desc) {
       addSpecial(name, value, comment);
       addDesc(new GolemDescription(desc, name));
       return this;
@@ -906,7 +906,7 @@ public final class GolemContainer {
      * @return instance to allow chaining of methods
      **/
     public Builder immuneToFire() {
-      this.entityTypeBuilder = this.entityTypeBuilder.immuneToFire();
+      this.entityTypeBuilder = this.entityTypeBuilder.fireImmune();
       return this;
     }
     

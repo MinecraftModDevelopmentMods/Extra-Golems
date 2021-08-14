@@ -1,12 +1,12 @@
 package com.mcmoddev.golems.entity.ai;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.FlowingFluidBlock;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.core.BlockPos;
 
 import java.util.function.BiPredicate;
 
@@ -24,9 +24,9 @@ public class PlaceUtilityBlockGoal extends Goal {
   public final BiPredicate<GolemBase, BlockPos> predicate;
   
   public static final BiPredicate<GolemBase, BlockPos> ABOVE_AIR_PRED = 
-      (g, pos) -> g.getEntityWorld().isAirBlock(pos.down());
+      (g, pos) -> g.getCommandSenderWorld().isEmptyBlock(pos.below());
   public static final BiPredicate<GolemBase, BlockPos> ABOVE_WATER_PRED = 
-      (g, pos) -> g.getEntityWorld().getBlockState(pos.down()).getBlock() == Blocks.WATER;
+      (g, pos) -> g.getCommandSenderWorld().getBlockState(pos.below()).getBlock() == Blocks.WATER;
 
 
   /**
@@ -67,7 +67,7 @@ public class PlaceUtilityBlockGoal extends Goal {
   }
 
   @Override
-  public boolean shouldExecute() {
+  public boolean canUse() {
     return true;
   }
 
@@ -76,19 +76,19 @@ public class PlaceUtilityBlockGoal extends Goal {
    */
   @Override
   public void tick() {
-    if ((this.golem.ticksExisted % this.tickDelay) == 0) {
-      final BlockPos blockPosIn = golem.getBlockBelow().up();
+    if ((this.golem.tickCount % this.tickDelay) == 0) {
+      final BlockPos blockPosIn = golem.getBlockBelow().above();
       // test the predicate against each BlockPos in a vertical column
       // when it passes, place the block and return
       for (int i = 0; i < 4; i++) {
-        BlockPos pos = blockPosIn.up(i);
-        final BlockState cur = golem.getEntityWorld().getBlockState(pos);
+        BlockPos pos = blockPosIn.above(i);
+        final BlockState cur = golem.getCommandSenderWorld().getBlockState(pos);
         // if there's already a matching block, stop here
         if (cur.getBlock() == stateToPlace.getBlock()) {
           return;
         }
         if (this.predicate.test(golem, pos)) {
-          this.golem.getEntityWorld().setBlockState(pos, getStateToPlace(cur), 2 | 4);
+          this.golem.getCommandSenderWorld().setBlock(pos, getStateToPlace(cur), 2 | 4);
           return;
         }
       }
@@ -96,7 +96,7 @@ public class PlaceUtilityBlockGoal extends Goal {
   }
 
   @Override
-  public void startExecuting() {
+  public void start() {
     this.tick();
   }
 
@@ -109,7 +109,7 @@ public class PlaceUtilityBlockGoal extends Goal {
    *         the given state
    **/
   public static BlockState getStateWaterlogged(final BlockState stateIn) {
-    return canBeWaterlogged(stateIn) ? stateIn.with(BlockStateProperties.WATERLOGGED, true) : stateIn;
+    return canBeWaterlogged(stateIn) ? stateIn.setValue(BlockStateProperties.WATERLOGGED, true) : stateIn;
   }
 
   /**
@@ -127,12 +127,12 @@ public class PlaceUtilityBlockGoal extends Goal {
     // whether or not the utility block can be waterlogged
     final boolean canBeWaterlogged = canBeWaterlogged(stateIn);
     // the main purpose of the predicate is to make sure the block can be replaced
-    BiPredicate<GolemBase, BlockPos> pred = (golem, pos) -> golem.getEntityWorld().isAirBlock(pos);
+    BiPredicate<GolemBase, BlockPos> pred = (golem, pos) -> golem.getCommandSenderWorld().isEmptyBlock(pos);
     // if the utility block can be waterlogged, allow replacing water as well as air
     if(canBeWaterlogged) {
       pred = pred.or((golem, pos) -> {
-        final BlockState toReplace = golem.getEntityWorld().getBlockState(pos);
-        return toReplace.getBlock() == Blocks.WATER && toReplace.get(FlowingFluidBlock.LEVEL) == 0;
+        final BlockState toReplace = golem.getCommandSenderWorld().getBlockState(pos);
+        return toReplace.getBlock() == Blocks.WATER && toReplace.getValue(LiquidBlock.LEVEL) == 0;
       });
     }
     // if there must be an empty (air or water) block below the utility block, check for that

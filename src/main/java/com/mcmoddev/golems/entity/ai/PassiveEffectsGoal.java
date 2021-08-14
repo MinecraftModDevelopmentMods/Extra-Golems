@@ -4,21 +4,21 @@ import java.util.function.Predicate;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectInstance;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
 
 public class PassiveEffectsGoal extends Goal {
 
   protected final GolemBase golem;
-  protected final Effect effect;
+  protected final MobEffect effect;
   protected final int minLength;
   protected final int maxLength;
   protected final int minAmplifier;
   protected final int maxAmplifier;
   protected final Predicate<GolemBase> shouldApply;
 
-  public PassiveEffectsGoal(final GolemBase golemIn, final Effect effectIn, final int minLen, final int maxLen, final int minAmp, final int maxAmp,
+  public PassiveEffectsGoal(final GolemBase golemIn, final MobEffect effectIn, final int minLen, final int maxLen, final int minAmp, final int maxAmp,
       final Predicate<GolemBase> shouldApplyPredicate) {
     this.golem = golemIn;
     this.effect = effectIn;
@@ -29,23 +29,23 @@ public class PassiveEffectsGoal extends Goal {
     this.shouldApply = shouldApplyPredicate;
   }
 
-  public PassiveEffectsGoal(final GolemBase golemIn, final Effect effectIn, final int minLen, final int maxLen, final int minAmp, final int maxAmp) {
+  public PassiveEffectsGoal(final GolemBase golemIn, final MobEffect effectIn, final int minLen, final int maxLen, final int minAmp, final int maxAmp) {
     this(golemIn, effectIn, minLen, maxLen, minAmp, maxAmp, doesNotHaveEffect(effectIn));
   }
 
   @Override
-  public boolean shouldExecute() {
+  public boolean canUse() {
     return shouldApply.test(golem);
   }
 
   @Override
-  public void startExecuting() {
-    final int len = effect.isInstant() ? 1 : minLength + golem.getEntityWorld().getRandom().nextInt(Math.max(1, maxLength - minLength + 1));
-    final int amp = minAmplifier + golem.getEntityWorld().getRandom().nextInt(Math.max(1, maxAmplifier - minAmplifier + 1));
-    golem.addPotionEffect(new EffectInstance(this.effect, len, amp));
+  public void start() {
+    final int len = effect.isInstantenous() ? 1 : minLength + golem.getCommandSenderWorld().getRandom().nextInt(Math.max(1, maxLength - minLength + 1));
+    final int amp = minAmplifier + golem.getCommandSenderWorld().getRandom().nextInt(Math.max(1, maxAmplifier - minAmplifier + 1));
+    golem.addEffect(new MobEffectInstance(this.effect, len, amp));
   }
 
-  public static Predicate<GolemBase> doesNotHaveEffect(final Effect e) {
-    return g -> g.getActivePotionEffect(e) == null;
+  public static Predicate<GolemBase> doesNotHaveEffect(final MobEffect e) {
+    return g -> g.getEffect(e) == null;
   }
 }

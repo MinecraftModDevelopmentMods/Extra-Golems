@@ -7,11 +7,11 @@ import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemTextureBytes;
 
-import net.minecraft.block.Block;
-import net.minecraft.entity.EntityType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.level.Level;
 
 public final class StainedTerracottaGolem extends GolemMultiTextured {
   
@@ -22,12 +22,12 @@ public final class StainedTerracottaGolem extends GolemMultiTextured {
   public static final String[] LOOT_TABLE_NAMES = { "black", "orange", "magenta", "light_blue", "yellow", "lime", "pink", "gray", "light_gray",
       "cyan", "purple", "blue", "brown", "green", "red", "white" };
 
-  public StainedTerracottaGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+  public StainedTerracottaGolem(final EntityType<? extends GolemBase> entityType, final Level world) {
     super(entityType, world, "minecraft", TEXTURE_NAMES, ExtraGolems.MODID, LOOT_TABLE_NAMES);
   }
 
   @Override
-  public ItemStack getCreativeReturn(final RayTraceResult target) {
+  public ItemStack getCreativeReturn(final HitResult target) {
     return new ItemStack(GolemTextureBytes.getByByte(GolemTextureBytes.TERRACOTTA, (byte) this.getTextureNum()));
   }
 

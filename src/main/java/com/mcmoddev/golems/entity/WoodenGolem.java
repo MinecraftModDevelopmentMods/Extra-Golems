@@ -8,27 +8,27 @@ import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.EntityType;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biomes;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biomes;
 
 public final class WoodenGolem extends GolemMultiTextured {
   
-  private static final Map<RegistryKey<Biome>, Integer> BIOME_TO_TEXTURE_MAP = new HashMap<>();
+  private static final Map<ResourceKey<Biome>, Integer> BIOME_TO_TEXTURE_MAP = new HashMap<>();
   
   public static final String[] TEXTURE_NAMES = { "oak_log", "spruce_log", "birch_log", "jungle_log", "acacia_log", "dark_oak_log" };
   public static final String[] LOOT_TABLE_NAMES = { "oak", "spruce", "birch", "jungle", "acacia", "dark_oak" };
 
-  public WoodenGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+  public WoodenGolem(final EntityType<? extends GolemBase> entityType, final Level world) {
     super(entityType, world, "minecraft", TEXTURE_NAMES, ExtraGolems.MODID, LOOT_TABLE_NAMES);
   }
 
@@ -39,20 +39,20 @@ public final class WoodenGolem extends GolemMultiTextured {
     final Block b = body.getBlock();
     byte textureNum;
     // check the following block tags for matches
-    if (b.isIn(BlockTags.OAK_LOGS)) {
+    if (b.is(BlockTags.OAK_LOGS)) {
       textureNum = 0;
-    } else if (b.isIn(BlockTags.SPRUCE_LOGS)) {
+    } else if (b.is(BlockTags.SPRUCE_LOGS)) {
       textureNum = 1;
-    } else if (b.isIn(BlockTags.BIRCH_LOGS)) {
+    } else if (b.is(BlockTags.BIRCH_LOGS)) {
       textureNum = 2;
-    } else if (b.isIn(BlockTags.JUNGLE_LOGS)) {
+    } else if (b.is(BlockTags.JUNGLE_LOGS)) {
       textureNum = 3;
-    } else if (b.isIn(BlockTags.ACACIA_LOGS)) {
+    } else if (b.is(BlockTags.ACACIA_LOGS)) {
       textureNum = 4;
-    } else if (b.isIn(BlockTags.DARK_OAK_LOGS)) {
+    } else if (b.is(BlockTags.DARK_OAK_LOGS)) {
       textureNum = 5;
     } else {
-      this.randomizeTexture(this.world, this.getPositionUnderneath());
+      this.randomizeTexture(this.level, this.getBlockPosBelowThatAffectsMyMovement());
       return;
     }
     // set the texture num based on above
@@ -60,7 +60,7 @@ public final class WoodenGolem extends GolemMultiTextured {
   }
 
   @Override
-  public ItemStack getCreativeReturn(final RayTraceResult target) {
+  public ItemStack getCreativeReturn(final HitResult target) {
     switch (this.getTextureNum()) {
     case 0:
       return new ItemStack(Blocks.OAK_LOG);
@@ -80,11 +80,11 @@ public final class WoodenGolem extends GolemMultiTextured {
   }
 
   @Override
-  public void randomizeTexture(final World world, final BlockPos pos) {
+  public void randomizeTexture(final Level world, final BlockPos pos) {
     // use the location to select a biome-appropriate texture
     final boolean useBiome = world.getRandom().nextBoolean();
     if (useBiome) {
-      final Optional<RegistryKey<Biome>> biome = world.func_242406_i(pos);
+      final Optional<ResourceKey<Biome>> biome = world.getBiomeName(pos);
       byte texture = (byte)getTextureForBiome(biome);
       setTextureNum(texture);
       return;
@@ -97,7 +97,7 @@ public final class WoodenGolem extends GolemMultiTextured {
     return new HashMap<>();
   }
   
-  public static int getTextureForBiome(final Optional<RegistryKey<Biome>> biome) {
+  public static int getTextureForBiome(final Optional<ResourceKey<Biome>> biome) {
     if(BIOME_TO_TEXTURE_MAP.isEmpty()) {
       initLogMap();
     }

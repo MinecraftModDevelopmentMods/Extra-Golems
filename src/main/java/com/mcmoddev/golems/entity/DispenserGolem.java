@@ -7,43 +7,43 @@ import java.util.function.Predicate;
 import com.mcmoddev.golems.container.ContainerDispenserGolem;
 import com.mcmoddev.golems.entity.base.GolemBase;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.IRangedAttackMob;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.entity.ai.goal.RangedAttackGoal;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity.PickupStatus;
-import net.minecraft.entity.projectile.ProjectileHelper;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.IInventoryChangedListener;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ArrowItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.IndirectEntityDamageSource;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.monster.RangedAttackMob;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RangedAttackGoal;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.AbstractArrow.Pickup;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.Container;
+import net.minecraft.world.ContainerListener;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.item.ArrowItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.IndirectEntityDamageSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-public final class DispenserGolem extends GolemBase implements IRangedAttackMob, IInventoryChangedListener {
-  private static final DataParameter<Integer> ARROWS = EntityDataManager.createKey(DispenserGolem.class, DataSerializers.VARINT);
+public final class DispenserGolem extends GolemBase implements RangedAttackMob, ContainerListener {
+  private static final EntityDataAccessor<Integer> ARROWS = SynchedEntityData.defineId(DispenserGolem.class, EntityDataSerializers.INT);
   
   public static final String ALLOW_SPECIAL = "Allow Special: Shoot Arrows";
   public static final String ARROW_DAMAGE = "Arrow Damage";
@@ -56,7 +56,7 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
   private boolean allowArrows;
   private double arrowDamage;
   private int arrowSpeed;
-  private Inventory inventory;
+  private SimpleContainer inventory;
 
   private final RangedAttackGoal aiArrowAttack;
   private final MeleeAttackGoal aiMeleeAttack;
@@ -65,10 +65,10 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
     // make sure the item is an arrow
     if(stack != null && !stack.isEmpty() && stack.getItem() instanceof ArrowItem) {
       // make sure the golem can pick up this stack
-      for (int i = 0, l = this.inventory.getSizeInventory(); i < l; i++) {
-        final ItemStack invStack = this.inventory.getStackInSlot(i);
+      for (int i = 0, l = this.inventory.getContainerSize(); i < l; i++) {
+        final ItemStack invStack = this.inventory.getItem(i);
         if (invStack.isEmpty() || (invStack.getItem() == stack.getItem()
-            && ItemStack.areItemStackTagsEqual(invStack, stack) 
+            && ItemStack.tagMatches(invStack, stack) 
             && invStack.getCount() + stack.getCount() <= invStack.getMaxStackSize())) {
           return true;
         }
@@ -77,7 +77,7 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
     return false;
   };
 
-  public DispenserGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+  public DispenserGolem(final EntityType<? extends GolemBase> entityType, final Level world) {
     super(entityType, world);
     // set config values
     this.allowArrows = this.getConfigBool(ALLOW_SPECIAL);
@@ -92,9 +92,9 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
   }
   
   @Override
-  protected void registerData() {
-    super.registerData();
-    this.getDataManager().register(ARROWS, Integer.valueOf(0));
+  protected void defineSynchedData() {
+    super.defineSynchedData();
+    this.getEntityData().define(ARROWS, Integer.valueOf(0));
   }
 
   @Override
@@ -105,57 +105,57 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
   }
 
   @Override
-  protected void collideWithEntity(Entity entityIn) {
-    super.collideWithEntity(entityIn);
-    this.updateCombatTask(entityIn != null && this.getRevengeTarget() != null && entityIn == this.getRevengeTarget());
+  protected void doPush(Entity entityIn) {
+    super.doPush(entityIn);
+    this.updateCombatTask(entityIn != null && this.getLastHurtByMob() != null && entityIn == this.getLastHurtByMob());
   }
 
   @Override
-  public void livingTick() {
-    super.livingTick();
+  public void aiStep() {
+    super.aiStep();
     // update combat style every few seconds
-    if (this.ticksExisted % 50 == 0) {
-      final boolean forceMelee = !allowArrows || (this.getRevengeTarget() != null && this.getRevengeTarget().getDistanceSq(this) < 4.5D);
+    if (this.tickCount % 50 == 0) {
+      final boolean forceMelee = !allowArrows || (this.getLastHurtByMob() != null && this.getLastHurtByMob().distanceToSqr(this) < 4.5D);
       this.updateCombatTask(forceMelee);
     }
     // pick up nearby arrows
-    final List<ItemEntity> droppedArrows = this.getEntityWorld().getEntitiesWithinAABB(ItemEntity.class, 
-        this.getBoundingBox().grow(1.0D), e -> !e.cannotPickup() && pickUpItemstackPredicate.test(e.getItem()));
+    final List<ItemEntity> droppedArrows = this.getCommandSenderWorld().getEntitiesOfClass(ItemEntity.class, 
+        this.getBoundingBox().inflate(1.0D), e -> !e.hasPickUpDelay() && pickUpItemstackPredicate.test(e.getItem()));
    
     // check a whole load of conditions to make sure we can pick up nearby arrows
-    if (!droppedArrows.isEmpty() && !this.world.isRemote() && this.isAlive() && !this.dead 
-        && this.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING)
-        && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this)) {
+    if (!droppedArrows.isEmpty() && !this.level.isClientSide() && this.isAlive() && !this.dead 
+        && this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)
+        && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this)) {
       // actually pick up the arrows
-      this.world.getProfiler().startSection("dispenserGolemLooting");
+      this.level.getProfiler().push("dispenserGolemLooting");
       for (final ItemEntity i : droppedArrows) {
         final int arrowCountBefore = this.getArrowsInInventory();
         final ItemStack item = i.getItem().copy();
         i.setItem(this.inventory.addItem(item));
         final int arrowCountAfter = this.updateArrowsInInventory();
-        this.onItemPickup(i, arrowCountAfter - arrowCountBefore);
+        this.take(i, arrowCountAfter - arrowCountBefore);
       }
-      this.world.getProfiler().endSection();
+      this.level.getProfiler().pop();
     }
   }
 
   @Override
-  protected ActionResultType getEntityInteractionResult(final PlayerEntity player, final Hand hand) {
-    if (!player.isCrouching() && player instanceof ServerPlayerEntity) {
+  protected InteractionResult mobInteract(final Player player, final InteractionHand hand) {
+    if (!player.isCrouching() && player instanceof ServerPlayer) {
       // open dispenser GUI by sending request to server
-      NetworkHooks.openGui((ServerPlayerEntity) player, new ContainerDispenserGolem.Provider(inventory));
-      player.swingArm(hand);
-      return ActionResultType.SUCCESS;
+      NetworkHooks.openGui((ServerPlayer) player, new ContainerDispenserGolem.Provider(inventory));
+      player.swing(hand);
+      return InteractionResult.SUCCESS;
     }
-    return super.getEntityInteractionResult(player, hand);
+    return super.mobInteract(player, hand);
   }
 
   @Override
-  public boolean attackEntityFrom(final DamageSource src, final float amnt) {
-    if (super.attackEntityFrom(src, amnt)) {
+  public boolean hurt(final DamageSource src, final float amnt) {
+    if (super.hurt(src, amnt)) {
       // if it's an arrow or something, set the attacker as revenge target
-      if (src instanceof IndirectEntityDamageSource && src.getTrueSource() instanceof LivingEntity) {
-        this.setRevengeTarget((LivingEntity) src.getTrueSource());
+      if (src instanceof IndirectEntityDamageSource && src.getEntity() instanceof LivingEntity) {
+        this.setLastHurtByMob((LivingEntity) src.getEntity());
       }
       return true;
     }
@@ -163,45 +163,45 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
   }
 
   @Override
-  public void dropInventory() {
+  public void dropEquipment() {
     // drop all items in inventory
-    for (int i = 0, l = this.inventory.getSizeInventory(); i < l; i++) {
-      final ItemStack stack = this.inventory.getStackInSlot(i);
+    for (int i = 0, l = this.inventory.getContainerSize(); i < l; i++) {
+      final ItemStack stack = this.inventory.getItem(i);
       if (!stack.isEmpty()) {
-        this.entityDropItem(stack.copy());
-        this.inventory.setInventorySlotContents(i, ItemStack.EMPTY);
+        this.spawnAtLocation(stack.copy());
+        this.inventory.setItem(i, ItemStack.EMPTY);
       }
     }
-    this.onInventoryChanged(inventory);
+    this.containerChanged(inventory);
   }
 
   @Override
-  public void readAdditional(final CompoundNBT tag) {
-    super.readAdditional(tag);
-    final ListNBT list = tag.getList(KEY_INVENTORY, 10);
+  public void readAdditionalSaveData(final CompoundTag tag) {
+    super.readAdditionalSaveData(tag);
+    final ListTag list = tag.getList(KEY_INVENTORY, 10);
     initInventory();
     // read inventory slots from NBT
     for (int i = 0; i < list.size(); i++) {
-      CompoundNBT slotNBT = list.getCompound(i);
+      CompoundTag slotNBT = list.getCompound(i);
       int slotNum = slotNBT.getByte(KEY_SLOT) & 0xFF;
-      if (slotNum >= 0 && slotNum < this.inventory.getSizeInventory()) {
-        this.inventory.setInventorySlotContents(slotNum, ItemStack.read(slotNBT));
+      if (slotNum >= 0 && slotNum < this.inventory.getContainerSize()) {
+        this.inventory.setItem(slotNum, ItemStack.of(slotNBT));
       }
     }
-    onInventoryChanged(this.inventory);
+    containerChanged(this.inventory);
   }
 
   @Override
-  public void writeAdditional(final CompoundNBT tag) {
-    super.writeAdditional(tag);
-    ListNBT listNBT = new ListNBT();
+  public void addAdditionalSaveData(final CompoundTag tag) {
+    super.addAdditionalSaveData(tag);
+    ListTag listNBT = new ListTag();
     // write inventory slots to NBT
-    for (int i = 0; i < this.inventory.getSizeInventory(); i++) {
-      ItemStack stack = this.inventory.getStackInSlot(i);
+    for (int i = 0; i < this.inventory.getContainerSize(); i++) {
+      ItemStack stack = this.inventory.getItem(i);
       if (!stack.isEmpty()) {
-        CompoundNBT slotNBT = new CompoundNBT();
+        CompoundTag slotNBT = new CompoundTag();
         slotNBT.putByte(KEY_SLOT, (byte) i);
-        stack.write(slotNBT);
+        stack.save(slotNBT);
         listNBT.add(slotNBT);
       }
     }
@@ -209,34 +209,34 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
   }
 
   private void initInventory() {
-    Inventory inv = this.inventory;
-    this.inventory = new Inventory(INVENTORY_SIZE);
+    SimpleContainer inv = this.inventory;
+    this.inventory = new SimpleContainer(INVENTORY_SIZE);
     if (inv != null) {
       inv.removeListener(this);
-      int i = Math.min(inv.getSizeInventory(), this.inventory.getSizeInventory());
+      int i = Math.min(inv.getContainerSize(), this.inventory.getContainerSize());
       for (int j = 0; j < i; j++) {
-        ItemStack itemstack = inv.getStackInSlot(j);
+        ItemStack itemstack = inv.getItem(j);
         if (!itemstack.isEmpty()) {
-          this.inventory.setInventorySlotContents(j, itemstack.copy());
+          this.inventory.setItem(j, itemstack.copy());
         }
       }
     }
     this.inventory.addListener(this);
-    onInventoryChanged(this.inventory);
+    containerChanged(this.inventory);
   }
 
   @Override
-  public void onInventoryChanged(final IInventory inv) {
-    if (this.isServerWorld()) {
+  public void containerChanged(final Container inv) {
+    if (this.isEffectiveAi()) {
       this.updateArrowsInInventory();
       this.updateCombatTask();
     }
   }
 
-  private static ItemStack findArrowsInInventory(final IInventory inv) {
+  private static ItemStack findArrowsInInventory(final Container inv) {
     // search inventory to find suitable arrow itemstack
-    for (int i = 0, l = inv.getSizeInventory(); i < l; i++) {
-      final ItemStack stack = inv.getStackInSlot(i);
+    for (int i = 0, l = inv.getContainerSize(); i < l; i++) {
+      final ItemStack stack = inv.getItem(i);
       if (!stack.isEmpty() && stack.getItem() instanceof ArrowItem) {
         return stack;
       }
@@ -247,47 +247,47 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
   private int updateArrowsInInventory() {
     int arrowCount = 0;
     // add up the size of each itemstack in inventory
-    for (int i = 0, l = this.inventory.getSizeInventory(); i < l; i++) {
-      final ItemStack stack = this.inventory.getStackInSlot(i);
+    for (int i = 0, l = this.inventory.getContainerSize(); i < l; i++) {
+      final ItemStack stack = this.inventory.getItem(i);
       if (!stack.isEmpty() && stack.getItem() instanceof ArrowItem) {
         arrowCount += stack.getCount();
       }
     }
     // update data manager if necessary
     if(arrowCount != getArrowsInInventory()) {
-      this.getDataManager().set(ARROWS, arrowCount);
+      this.getEntityData().set(ARROWS, arrowCount);
     }
     // return arrow count
     return arrowCount;
   }
   
   public int getArrowsInInventory() {
-    return this.getDataManager().get(ARROWS).intValue();
+    return this.getEntityData().get(ARROWS).intValue();
   }
 
   @Override
-  public void attackEntityWithRangedAttack(final LivingEntity target, final float distanceFactor) {
+  public void performRangedAttack(final LivingEntity target, final float distanceFactor) {
     ItemStack itemstack = findArrowsInInventory(this.inventory);
     if (!itemstack.isEmpty()) {
       // make an arrow out of the inventory
-      AbstractArrowEntity arrow = ProjectileHelper.fireArrow(this, itemstack, distanceFactor);
+      AbstractArrow arrow = ProjectileUtil.getMobArrow(this, itemstack, distanceFactor);
       // set the arrow position and velocity
-      final Vector3d myPos = this.getPositionVec();
-      arrow.setPosition(myPos.x, myPos.y + this.getHeight() * 0.66666F, myPos.z);
-      double d0 = target.getPosX() - this.getPosX();
-      double d1 = target.getPosYHeight(1.0D / 3.0D) - arrow.getPosY();
-      double d2 = target.getPosZ() - this.getPosZ();
-      double d3 = (double) MathHelper.sqrt(d0 * d0 + d2 * d2);
-      arrow.setShooter(this);
-      arrow.setDamage(arrowDamage + rand.nextDouble() * 0.5D);
-      arrow.pickupStatus = PickupStatus.ALLOWED;
+      final Vec3 myPos = this.position();
+      arrow.setPos(myPos.x, myPos.y + this.getBbHeight() * 0.66666F, myPos.z);
+      double d0 = target.getX() - this.getX();
+      double d1 = target.getY(1.0D / 3.0D) - arrow.getY();
+      double d2 = target.getZ() - this.getZ();
+      double d3 = (double) Mth.sqrt(d0 * d0 + d2 * d2);
+      arrow.setOwner(this);
+      arrow.setBaseDamage(arrowDamage + random.nextDouble() * 0.5D);
+      arrow.pickup = Pickup.ALLOWED;
       arrow.shoot(d0, d1 + d3 * 0.2D, d2, 1.6F, 1.2F);
       // play sound and add arrow to world
-      this.playSound(SoundEvents.ENTITY_ARROW_SHOOT, 1.0F, 0.9F + rand.nextFloat() * 0.2F);
-      this.world.addEntity(arrow);
+      this.playSound(SoundEvents.ARROW_SHOOT, 1.0F, 0.9F + random.nextFloat() * 0.2F);
+      this.level.addFreshEntity(arrow);
       // update itemstack and inventory
       itemstack.shrink(1);
-      this.onInventoryChanged(this.inventory);
+      this.containerChanged(this.inventory);
     }
   }
 
@@ -296,7 +296,7 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
   }
 
   public void updateCombatTask(final boolean forceMelee) {
-    if (!this.world.isRemote()) {
+    if (!this.level.isClientSide()) {
       // remove both goals (clean slate)
       this.goalSelector.removeGoal(this.aiMeleeAttack);
       this.goalSelector.removeGoal(this.aiArrowAttack);
@@ -315,37 +315,37 @@ public final class DispenserGolem extends GolemBase implements IRangedAttackMob,
     protected final double speed;
     
     public MoveToArrowsGoal(final DispenserGolem golemIn, final double rangeIn, final double speedIn) {
-      this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE));
+      this.setFlags(EnumSet.of(Goal.Flag.MOVE));
       golem = golemIn;
       range = rangeIn;
       speed = speedIn;
     }
 
     @Override
-    public boolean shouldExecute() {
+    public boolean canUse() {
       return golem.allowArrows;
       }
     
     @Override
-    public boolean shouldContinueExecuting() {
+    public boolean canContinueToUse() {
       return false;
     }
     
     @Override
     public void tick() {
       // make a list of arrow itemstacks in nearby area
-      final List<ItemEntity> droppedArrows = golem.getEntityWorld().getEntitiesWithinAABB(ItemEntity.class, 
-          golem.getBoundingBox().grow(range), e -> !e.cannotPickup() && pickUpItemstackPredicate.test(e.getItem()));
+      final List<ItemEntity> droppedArrows = golem.getCommandSenderWorld().getEntitiesOfClass(ItemEntity.class, 
+          golem.getBoundingBox().inflate(range), e -> !e.hasPickUpDelay() && pickUpItemstackPredicate.test(e.getItem()));
      
       if (!droppedArrows.isEmpty()) {
         // path toward the nearest arrow itemstack
-        droppedArrows.sort((e1, e2) -> (int)(golem.getDistanceSq(e1) - golem.getDistanceSq(e2)));
-        golem.getNavigator().tryMoveToEntityLiving(droppedArrows.get(0), speed);
+        droppedArrows.sort((e1, e2) -> (int)(golem.distanceToSqr(e1) - golem.distanceToSqr(e2)));
+        golem.getNavigation().moveTo(droppedArrows.get(0), speed);
       }
     }
 
     @Override
-    public void startExecuting() {
+    public void start() {
        tick();
     }
   }

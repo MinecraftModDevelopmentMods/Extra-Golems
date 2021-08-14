@@ -2,17 +2,17 @@ package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.pathfinding.PathNodeType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 public final class MagmaGolem extends GolemBase {
 
@@ -41,7 +41,7 @@ public final class MagmaGolem extends GolemBase {
   private boolean allowMelting;
   private int meltDelay;
 
-  public MagmaGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+  public MagmaGolem(final EntityType<? extends GolemBase> entityType, final Level world) {
     super(entityType, world);
     this.isHurtByWater = this.getConfigBool(ALLOW_WATER_DAMAGE);
     this.allowFire = this.getConfigBool(ALLOW_FIRE_SPECIAL);
@@ -49,18 +49,18 @@ public final class MagmaGolem extends GolemBase {
     this.meltDelay = this.getConfigInt(MELT_DELAY);
     this.ticksStandingStill = 0;
     if (isHurtByWater) {
-      this.setPathPriority(PathNodeType.WATER, -1.0F);
+      this.setPathfindingMalus(BlockPathTypes.WATER, -1.0F);
     }
   }
 
   @Override
-  public boolean canSwim() {
+  public boolean isUnderWater() {
     return isHurtByWater;
   }
   
   @Override
-  public void setChild(final boolean isChild) {
-    super.setChild(isChild);
+  public void setBaby(final boolean isChild) {
+    super.setBaby(isChild);
     if(isChild) {
       allowMelting = false;
       allowFire = false;
@@ -71,10 +71,10 @@ public final class MagmaGolem extends GolemBase {
    * Attack by lighting on fire as well.
    */
   @Override
-  public boolean attackEntityAsMob(final Entity entity) {
-    if (super.attackEntityAsMob(entity)) {
-      if (!this.isChild() && allowFire) {
-        entity.setFire(2 + rand.nextInt(5));
+  public boolean doHurtTarget(final Entity entity) {
+    if (super.doHurtTarget(entity)) {
+      if (!this.isBaby() && allowFire) {
+        entity.setSecondsOnFire(2 + random.nextInt(5));
       }
       return true;
     }
@@ -87,22 +87,22 @@ public final class MagmaGolem extends GolemBase {
    * burn.
    */
   @Override
-  public void livingTick() {
-    super.livingTick();
+  public void aiStep() {
+    super.aiStep();
     // take damage from water/rain
-    if (this.isHurtByWater && this.isWet()) {
-      this.attackEntityFrom(DamageSource.DROWN, 0.5F);
+    if (this.isHurtByWater && this.isInWaterOrRain()) {
+      this.hurt(DamageSource.DROWN, 0.5F);
     }
     // check the cobblestone-melting math
-    if (this.allowMelting && !this.isChild()) {
+    if (this.allowMelting && !this.isBaby()) {
       final BlockPos below = this.getBlockBelow();
-      final Block b1 = this.world.getBlockState(below).getBlock();
+      final Block b1 = this.level.getBlockState(below).getBlock();
 
       if (below.getX() == this.stillX && below.getZ() == this.stillZ) {
         // check if it's been holding still long enough AND on top of cobblestone
-        if (++this.ticksStandingStill >= this.meltDelay && b1 == Blocks.COBBLESTONE && rand.nextInt(16) == 0) {
-          BlockState replace = Blocks.MAGMA_BLOCK.getDefaultState();
-          this.world.setBlockState(below, replace, 3);
+        if (++this.ticksStandingStill >= this.meltDelay && b1 == Blocks.COBBLESTONE && random.nextInt(16) == 0) {
+          BlockState replace = Blocks.MAGMA_BLOCK.defaultBlockState();
+          this.level.setBlock(below, replace, 3);
           this.ticksStandingStill = 0;
         }
       } else {
@@ -115,15 +115,15 @@ public final class MagmaGolem extends GolemBase {
 
   @Override
   protected SoundEvent getHurtSound(final DamageSource ignored) {
-    return ignored == DamageSource.DROWN ? SoundEvents.BLOCK_LAVA_EXTINGUISH : this.getGolemSound();
+    return ignored == DamageSource.DROWN ? SoundEvents.LAVA_EXTINGUISH : this.getGolemSound();
   }
 
   @Override
-  public void onDeath(final DamageSource source) {
+  public void die(final DamageSource source) {
     int children = this.getConfigInt(SPLITTING_CHILDREN);
     if (children > 0) {
       trySpawnChildren(children);
     }
-    super.onDeath(source);
+    super.die(source);
   }
 }

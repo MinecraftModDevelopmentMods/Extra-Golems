@@ -2,22 +2,22 @@ package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.level.Level;
 
 public final class LapisGolem extends GolemBase {
 
   public static final String ALLOW_SPECIAL = "Allow Special: Potion Effects";
 
-  private static final Effect[] badEffects = { Effects.BLINDNESS, Effects.SLOWNESS, Effects.POISON, Effects.INSTANT_DAMAGE, Effects.WEAKNESS,
-      Effects.WITHER, Effects.LEVITATION, Effects.GLOWING };
+  private static final MobEffect[] badEffects = { MobEffects.BLINDNESS, MobEffects.MOVEMENT_SLOWDOWN, MobEffects.POISON, MobEffects.HARM, MobEffects.WEAKNESS,
+      MobEffects.WITHER, MobEffects.LEVITATION, MobEffects.GLOWING };
 
-  public LapisGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+  public LapisGolem(final EntityType<? extends GolemBase> entityType, final Level world) {
     super(entityType, world);
   }
 
@@ -25,14 +25,14 @@ public final class LapisGolem extends GolemBase {
    * Attack by adding potion effect as well.
    */
   @Override
-  public boolean attackEntityAsMob(final Entity entityIn) {
-    if (super.attackEntityAsMob(entityIn) && entityIn instanceof LivingEntity) {
+  public boolean doHurtTarget(final Entity entityIn) {
+    if (super.doHurtTarget(entityIn) && entityIn instanceof LivingEntity) {
       final LivingEntity entity = (LivingEntity) entityIn;
       if (this.getConfigBool(ALLOW_SPECIAL)) {
-        final Effect potionID = entity.isEntityUndead() ? Effects.INSTANT_HEALTH : badEffects[rand.nextInt(badEffects.length)];
-        final int len = potionID.isInstant() ? 1 : 20 * (5 + rand.nextInt(9));
-        final int amp = potionID.isInstant() ? rand.nextInt(2) : rand.nextInt(3);
-        entity.addPotionEffect(new EffectInstance(potionID, len, amp));
+        final MobEffect potionID = entity.isInvertedHealAndHarm() ? MobEffects.HEAL : badEffects[random.nextInt(badEffects.length)];
+        final int len = potionID.isInstantenous() ? 1 : 20 * (5 + random.nextInt(9));
+        final int amp = potionID.isInstantenous() ? random.nextInt(2) : random.nextInt(3);
+        entity.addEffect(new MobEffectInstance(potionID, len, amp));
       }
       return true;
     }

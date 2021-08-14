@@ -3,9 +3,9 @@ package com.mcmoddev.golems.main;
 import com.mcmoddev.golems.container.ContainerDispenserGolem;
 import com.mcmoddev.golems.container.ContainerPortableWorkbench;
 
-import net.minecraft.block.Block;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.ObjectHolder;
 
 @ObjectHolder(ExtraGolems.MODID)
@@ -37,8 +37,8 @@ public final class GolemItems {
 
   ////// OTHER //////
   @ObjectHolder("crafting_portable")
-  public static final ContainerType<ContainerPortableWorkbench> CRAFTING_GOLEM = new ContainerType<>(ContainerPortableWorkbench::new);
+  public static final MenuType<ContainerPortableWorkbench> CRAFTING_GOLEM = new MenuType<>(ContainerPortableWorkbench::new);
 
   @ObjectHolder("dispenser_portable")
-  public static final ContainerType<ContainerDispenserGolem> DISPENSER_GOLEM = new ContainerType<>(ContainerDispenserGolem::new);
+  public static final MenuType<ContainerDispenserGolem> DISPENSER_GOLEM = new MenuType<>(ContainerDispenserGolem::new);
 }

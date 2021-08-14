@@ -1,8 +1,8 @@
 package com.mcmoddev.golems.gui;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 public final class GuiLoader {
 
@@ -10,12 +10,12 @@ public final class GuiLoader {
     //
   }
 
-  public static void loadBookGui(final PlayerEntity playerIn, final ItemStack itemstack) {
+  public static void loadBookGui(final Player playerIn, final ItemStack itemstack) {
     // only load client-side, of course
-    if (!playerIn.getEntityWorld().isRemote()) {
+    if (!playerIn.getCommandSenderWorld().isClientSide()) {
       return;
     }
     // open the gui
-    Minecraft.getInstance().displayGuiScreen(new GuiGolemBook(playerIn, itemstack));
+    Minecraft.getInstance().setScreen(new GuiGolemBook(playerIn, itemstack));
   }
 }

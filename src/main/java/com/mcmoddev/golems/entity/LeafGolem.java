@@ -3,10 +3,10 @@ package com.mcmoddev.golems.entity;
 import com.mcmoddev.golems.entity.ai.PassiveEffectsGoal;
 import com.mcmoddev.golems.entity.base.GolemBase;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.potion.Effects;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 
 public final class LeafGolem extends GolemBase {
   
@@ -14,7 +14,7 @@ public final class LeafGolem extends GolemBase {
 
   public static final String ALLOW_SPECIAL = "Allow Special: Regeneration";
 
-  public LeafGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+  public LeafGolem(final EntityType<? extends GolemBase> entityType, final Level world) {
     super(entityType, world);
   }
 
@@ -22,8 +22,8 @@ public final class LeafGolem extends GolemBase {
   protected void registerGoals() {
     super.registerGoals();
     if (this.getConfigBool(ALLOW_SPECIAL)) {
-      this.goalSelector.addGoal(4, new PassiveEffectsGoal(this, Effects.REGENERATION, 200, 360, 0, 1,
-          PassiveEffectsGoal.doesNotHaveEffect(Effects.REGENERATION).and(g -> g.getEntityWorld().getRandom().nextInt(40) == 0)));
+      this.goalSelector.addGoal(4, new PassiveEffectsGoal(this, MobEffects.REGENERATION, 200, 360, 0, 1,
+          PassiveEffectsGoal.doesNotHaveEffect(MobEffects.REGENERATION).and(g -> g.getCommandSenderWorld().getRandom().nextInt(40) == 0)));
     }
   }
 
@@ -33,20 +33,20 @@ public final class LeafGolem extends GolemBase {
    * burn.
    */
   @Override
-  public void livingTick() {
-    super.livingTick();
+  public void aiStep() {
+    super.aiStep();
 
     // update color
-    if (this.ticksExisted % 10 == 2 && this.world.isRemote && !this.isServerWorld()) {
+    if (this.tickCount % 10 == 2 && this.level.isClientSide && !this.isEffectiveAi()) {
       // this.world.getBiomeManager().getBiome(BlockPos)
-      Biome biome = this.world.getBiome(this.getPositionUnderneath().up(2));
+      Biome biome = this.level.getBiome(this.getBlockPosBelowThatAffectsMyMovement().above(2));
       int color = biome.getFoliageColor();
       this.setColor(color);
     }
 
     // slow falling for this entity
-    if (this.getMotion().y < -0.05D) {
-      this.setMotion(this.getMotion().mul(1.0D, 0.75D, 1.0D));
+    if (this.getDeltaMovement().y < -0.05D) {
+      this.setDeltaMovement(this.getDeltaMovement().multiply(1.0D, 0.75D, 1.0D));
     }
   }
   

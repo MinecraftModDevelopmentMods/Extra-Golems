@@ -11,14 +11,14 @@ import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.EntityType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.level.Level;
 
 public final class RedstoneLampGolem extends GolemMultiTextured {
 
@@ -29,7 +29,7 @@ public final class RedstoneLampGolem extends GolemMultiTextured {
 
   public static final BiPredicate<GolemBase, BlockPos> LIT_PRED = (golem, pos) -> golem.isProvidingLight();
 
-  public RedstoneLampGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+  public RedstoneLampGolem(final EntityType<? extends GolemBase> entityType, final Level world) {
     super(entityType, world, "minecraft", TEXTURE_NAMES, ExtraGolems.MODID, LOOT_TABLE_NAMES);
   }
   
@@ -37,7 +37,7 @@ public final class RedstoneLampGolem extends GolemMultiTextured {
   protected void registerGoals() {
     super.registerGoals();
     if(this.getConfigBool(ALLOW_SPECIAL)) {
-      final BlockState state = GolemItems.UTILITY_LIGHT.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, 15);
+      final BlockState state = GolemItems.UTILITY_LIGHT.defaultBlockState().setValue(BlockUtilityGlow.LIGHT_LEVEL, 15);
       this.goalSelector.addGoal(9, new PlaceUtilityBlockGoal(this, state, BlockUtilityGlow.UPDATE_TICKS, 
           true, LIT_PRED));
     }
@@ -61,7 +61,7 @@ public final class RedstoneLampGolem extends GolemMultiTextured {
   }
 
   @Override
-  public ItemStack getCreativeReturn(final RayTraceResult target) {
+  public ItemStack getCreativeReturn(final HitResult target) {
     return new ItemStack(Blocks.REDSTONE_LAMP);
   }
 

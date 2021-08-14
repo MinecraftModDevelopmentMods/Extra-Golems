@@ -6,22 +6,22 @@ import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemRegistrar;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.HorizontalBlock;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.passive.IronGolemEntity;
-import net.minecraft.entity.passive.SnowGolemEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.StateContainer;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.animal.SnowGolem;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
-public final class BlockGolemHead extends HorizontalBlock {
+public final class BlockGolemHead extends HorizontalDirectionalBlock {
 
   /*
    * This behavior is modified from that of CARVED_PUMPKIN, where the block is
@@ -44,26 +44,26 @@ public final class BlockGolemHead extends HorizontalBlock {
    * return stack; } };
    */
   public BlockGolemHead() {
-    super(Block.Properties.from(Blocks.CARVED_PUMPKIN));
-    this.setDefaultState(this.getStateContainer().getBaseState().with(HORIZONTAL_FACING, Direction.NORTH));
+    super(Block.Properties.copy(Blocks.CARVED_PUMPKIN));
+    this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
     // dispenser behavior TODO: NOT WORKING
     // BlockDispenser.registerDispenseBehavior(this.asItem(),
     // BlockGolemHead.DISPENSER_BEHAVIOR);
   }
 
   @Override
-  public BlockState getStateForPlacement(BlockItemUseContext context) {
-    return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite());
+  public BlockState getStateForPlacement(BlockPlaceContext context) {
+    return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
   }
 
   @Override
-  protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-    builder.add(HORIZONTAL_FACING);
+  protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    builder.add(FACING);
   }
 
   @Override
-  public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-    super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+  public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+    super.setPlacedBy(worldIn, pos, state, placer, stack);
     trySpawnGolem(worldIn, pos);
   }
 
@@ -82,19 +82,19 @@ public final class BlockGolemHead extends HorizontalBlock {
    * @param headPos the position of the golem head block
    * @return if the golem was built and spawned
    */
-  public static boolean trySpawnGolem(final World world, final BlockPos headPos) {
-    if (world.isRemote()) {
+  public static boolean trySpawnGolem(final Level world, final BlockPos headPos) {
+    if (world.isClientSide()) {
       return false;
     }
 
     // get all the block and state values that we will be using in the following
     // code
-    final BlockState stateBelow1 = world.getBlockState(headPos.down(1));
-    final BlockState stateBelow2 = world.getBlockState(headPos.down(2));
-    final BlockState stateArmNorth = world.getBlockState(headPos.down(1).north(1));
-    final BlockState stateArmSouth = world.getBlockState(headPos.down(1).south(1));
-    final BlockState stateArmEast = world.getBlockState(headPos.down(1).east(1));
-    final BlockState stateArmWest = world.getBlockState(headPos.down(1).west(1));
+    final BlockState stateBelow1 = world.getBlockState(headPos.below(1));
+    final BlockState stateBelow2 = world.getBlockState(headPos.below(2));
+    final BlockState stateArmNorth = world.getBlockState(headPos.below(1).north(1));
+    final BlockState stateArmSouth = world.getBlockState(headPos.below(1).south(1));
+    final BlockState stateArmEast = world.getBlockState(headPos.below(1).east(1));
+    final BlockState stateArmWest = world.getBlockState(headPos.below(1).west(1));
     final Block blockBelow1 = stateBelow1.getBlock();
     final Block blockBelow2 = stateBelow2.getBlock();
     final Block blockArmNorth = stateArmNorth.getBlock();
@@ -113,10 +113,10 @@ public final class BlockGolemHead extends HorizontalBlock {
     ////// Hard-coded support for Snow Golem //////
     if (doBlocksMatch(Blocks.SNOW_BLOCK, blockBelow1, blockBelow2)) {
       removeGolemBody(world, headPos);
-      final SnowGolemEntity entitysnowman = EntityType.SNOW_GOLEM.create(world);
+      final SnowGolem entitysnowman = EntityType.SNOW_GOLEM.create(world);
       ExtraGolems.LOGGER.info("[Extra Golems]: Building regular boring Snow Golem");
-      entitysnowman.setLocationAndAngles(spawnX, spawnY, spawnZ, 0.0F, 0.0F);
-      world.addEntity(entitysnowman);
+      entitysnowman.moveTo(spawnX, spawnY, spawnZ, 0.0F, 0.0F);
+      world.addFreshEntity(entitysnowman);
       return true;
     }
 
@@ -132,11 +132,11 @@ public final class BlockGolemHead extends HorizontalBlock {
     if (isIron) {
       removeAllGolemBlocks(world, headPos, flagX);
       // build Iron Golem
-      final IronGolemEntity ironGolem = EntityType.IRON_GOLEM.create(world);
+      final IronGolem ironGolem = EntityType.IRON_GOLEM.create(world);
       ExtraGolems.LOGGER.info("[Extra Golems]: Building regular boring Iron Golem");
       ironGolem.setPlayerCreated(true);
-      ironGolem.setLocationAndAngles(spawnX, spawnY, spawnZ, 0.0F, 0.0F);
-      world.addEntity(ironGolem);
+      ironGolem.moveTo(spawnX, spawnY, spawnZ, 0.0F, 0.0F);
+      world.addFreshEntity(ironGolem);
       return true;
     }
 
@@ -157,9 +157,9 @@ public final class BlockGolemHead extends HorizontalBlock {
       // spawn the golem!
       removeAllGolemBlocks(world, headPos, flagX);
       golem.setPlayerCreated(true);
-      golem.setLocationAndAngles(spawnX, spawnY, spawnZ, 0.0F, 0.0F);
+      golem.moveTo(spawnX, spawnY, spawnZ, 0.0F, 0.0F);
       ExtraGolems.LOGGER.debug("[Extra Golems]: Building golem " + golem.toString());
-      world.addEntity(golem);
+      world.addFreshEntity(golem);
       golem.onBuilt(stateBelow1, stateBelow2, flagX ? stateArmEast : stateArmWest, flagX ? stateArmNorth : stateArmSouth);
       return true;
     }
@@ -183,7 +183,7 @@ public final class BlockGolemHead extends HorizontalBlock {
   /**
    * Replaces this block and the four construction blocks with air.
    **/
-  public static void removeAllGolemBlocks(final World world, final BlockPos pos, final boolean isXAligned) {
+  public static void removeAllGolemBlocks(final Level world, final BlockPos pos, final boolean isXAligned) {
     removeGolemBody(world, pos);
     removeGolemArms(world, pos, isXAligned);
   }
@@ -191,22 +191,22 @@ public final class BlockGolemHead extends HorizontalBlock {
   /**
    * Replaces this block and the two below it with air.
    **/
-  public static void removeGolemBody(final World world, final BlockPos head) {
+  public static void removeGolemBody(final Level world, final BlockPos head) {
     world.destroyBlock(head, false);
-    world.destroyBlock(head.down(1), false);
-    world.destroyBlock(head.down(2), false);
+    world.destroyBlock(head.below(1), false);
+    world.destroyBlock(head.below(2), false);
   }
 
   /**
    * Replaces blocks at arm positions with air.
    **/
-  public static void removeGolemArms(final World world, final BlockPos pos, final boolean isXAligned) {
+  public static void removeGolemArms(final Level world, final BlockPos pos, final boolean isXAligned) {
     if (isXAligned) {
-      world.destroyBlock(pos.down(1).west(1), false);
-      world.destroyBlock(pos.down(1).east(1), false);
+      world.destroyBlock(pos.below(1).west(1), false);
+      world.destroyBlock(pos.below(1).east(1), false);
     } else {
-      world.destroyBlock(pos.down(1).north(1), false);
-      world.destroyBlock(pos.down(1).south(1), false);
+      world.destroyBlock(pos.below(1).north(1), false);
+      world.destroyBlock(pos.below(1).south(1), false);
     }
   }
 

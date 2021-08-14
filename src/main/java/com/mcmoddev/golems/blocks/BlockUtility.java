@@ -4,56 +4,58 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.IBucketPickupHandler;
-import net.minecraft.block.ILiquidContainer;
-import net.minecraft.entity.Entity;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.BucketPickup;
+import net.minecraft.world.level.block.LiquidBlockContainer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 
-public abstract class BlockUtility extends Block implements IBucketPickupHandler, ILiquidContainer {
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
+public abstract class BlockUtility extends Block implements BucketPickup, LiquidBlockContainer {
   
   protected final int tickRate;
 
   public BlockUtility(final Properties prop, final int tickrate) {
-    super(prop.hardnessAndResistance(-1F).doesNotBlockMovement().tickRandomly());
-    this.setDefaultState(this.stateContainer.getBaseState().with(BlockStateProperties.WATERLOGGED, false));
+    super(prop.strength(-1F).noCollission().randomTicks());
+    this.registerDefaultState(this.stateDefinition.any().setValue(BlockStateProperties.WATERLOGGED, false));
     this.tickRate = tickrate;
   }
 
-  protected boolean remove(final World worldIn, final BlockState state, final BlockPos pos, final int flag) {
+  protected boolean remove(final Level worldIn, final BlockState state, final BlockPos pos, final int flag) {
     // remove this block and replace with air or water
-    final BlockState replaceWith = state.get(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getStillFluid().getDefaultState().getBlockState()
-        : Blocks.AIR.getDefaultState();
+    final BlockState replaceWith = state.getValue(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getSource().defaultFluidState().createLegacyBlock()
+        : Blocks.AIR.defaultBlockState();
     // replace with air OR water depending on waterlogged state
-    return worldIn.setBlockState(pos, replaceWith, flag);
+    return worldIn.setBlock(pos, replaceWith, flag);
   }
 
   @Override
-  protected void fillStateContainer(final StateContainer.Builder<Block, BlockState> builder) {
+  protected void createBlockStateDefinition(final StateDefinition.Builder<Block, BlockState> builder) {
     builder.add(BlockStateProperties.WATERLOGGED);
   }
 
   @Override
-  public Fluid pickupFluid(final IWorld worldIn, final BlockPos pos, final BlockState state) {
-    if (state.get(BlockStateProperties.WATERLOGGED)) {
-      worldIn.setBlockState(pos, state.with(BlockStateProperties.WATERLOGGED, Boolean.valueOf(false)), 3);
+  public Fluid takeLiquid(final LevelAccessor worldIn, final BlockPos pos, final BlockState state) {
+    if (state.getValue(BlockStateProperties.WATERLOGGED)) {
+      worldIn.setBlock(pos, state.setValue(BlockStateProperties.WATERLOGGED, Boolean.valueOf(false)), 3);
       return Fluids.WATER;
     } else {
       return Fluids.EMPTY;
@@ -62,20 +64,20 @@ public abstract class BlockUtility extends Block implements IBucketPickupHandler
 
   @Override
   public FluidState getFluidState(final BlockState state) {
-    return state.get(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+    return state.getValue(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
   }
 
   @Override
-  public boolean canContainFluid(final IBlockReader worldIn, final BlockPos pos, final BlockState state, final Fluid fluidIn) {
-    return !state.get(BlockStateProperties.WATERLOGGED) && fluidIn == Fluids.WATER;
+  public boolean canPlaceLiquid(final BlockGetter worldIn, final BlockPos pos, final BlockState state, final Fluid fluidIn) {
+    return !state.getValue(BlockStateProperties.WATERLOGGED) && fluidIn == Fluids.WATER;
   }
 
   @Override
-  public boolean receiveFluid(final IWorld worldIn, final BlockPos pos, final BlockState state, final FluidState fluidStateIn) {
-    if (!state.get(BlockStateProperties.WATERLOGGED) && fluidStateIn.getFluid() == Fluids.WATER) {
-      if (!worldIn.isRemote()) {
-        worldIn.setBlockState(pos, state.with(BlockStateProperties.WATERLOGGED, Boolean.valueOf(true)), 3);
-        worldIn.getPendingFluidTicks().scheduleTick(pos, fluidStateIn.getFluid(), fluidStateIn.getFluid().getTickRate(worldIn));
+  public boolean placeLiquid(final LevelAccessor worldIn, final BlockPos pos, final BlockState state, final FluidState fluidStateIn) {
+    if (!state.getValue(BlockStateProperties.WATERLOGGED) && fluidStateIn.getType() == Fluids.WATER) {
+      if (!worldIn.isClientSide()) {
+        worldIn.setBlock(pos, state.setValue(BlockStateProperties.WATERLOGGED, Boolean.valueOf(true)), 3);
+        worldIn.getLiquidTicks().scheduleTick(pos, fluidStateIn.getType(), fluidStateIn.getType().getTickDelay(worldIn));
       }
       return true;
     } else {
@@ -84,85 +86,85 @@ public abstract class BlockUtility extends Block implements IBucketPickupHandler
   }
 
   @Override
-  public void onBlockAdded(final BlockState state, final World worldIn, final BlockPos pos, final BlockState oldState, final boolean isMoving) {
-    if (this.ticksRandomly(state)) {
-      worldIn.getPendingBlockTicks().scheduleTick(pos, this, tickRate);
-      if(state.get(BlockStateProperties.WATERLOGGED)) {
-        worldIn.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+  public void onPlace(final BlockState state, final Level worldIn, final BlockPos pos, final BlockState oldState, final boolean isMoving) {
+    if (this.isRandomlyTicking(state)) {
+      worldIn.getBlockTicks().scheduleTick(pos, this, tickRate);
+      if(state.getValue(BlockStateProperties.WATERLOGGED)) {
+        worldIn.getLiquidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
       }
-      worldIn.notifyNeighborsOfStateChange(pos, this);
+      worldIn.updateNeighborsAt(pos, this);
     }
   }
 
   @Override
-  public void tick(final BlockState state, final ServerWorld worldIn, final BlockPos pos, final Random rand) {
+  public void tick(final BlockState state, final ServerLevel worldIn, final BlockPos pos, final Random rand) {
     super.tick(state, worldIn, pos, rand);
-    if (this.ticksRandomly(state)) {
-      worldIn.getPendingBlockTicks().scheduleTick(pos, this, tickRate);
-      if(state.get(BlockStateProperties.WATERLOGGED)) {
-        worldIn.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+    if (this.isRandomlyTicking(state)) {
+      worldIn.getBlockTicks().scheduleTick(pos, this, tickRate);
+      if(state.getValue(BlockStateProperties.WATERLOGGED)) {
+        worldIn.getLiquidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
       }
     }
   }
 
   @Override
-  public VoxelShape getShape(final BlockState state, final IBlockReader worldIn, final BlockPos pos, final ISelectionContext cxt) {
-    return VoxelShapes.empty();
+  public VoxelShape getShape(final BlockState state, final BlockGetter worldIn, final BlockPos pos, final CollisionContext cxt) {
+    return Shapes.empty();
   }
 
   @Override
-  public VoxelShape getCollisionShape(final BlockState state, final IBlockReader worldIn, final BlockPos pos, final ISelectionContext cxt) {
-    return VoxelShapes.empty();
+  public VoxelShape getCollisionShape(final BlockState state, final BlockGetter worldIn, final BlockPos pos, final CollisionContext cxt) {
+    return Shapes.empty();
   }
 
   @Override
-  public VoxelShape getRaytraceShape(final BlockState state, final IBlockReader worldIn, final BlockPos pos) {
-    return VoxelShapes.empty();
+  public VoxelShape getInteractionShape(final BlockState state, final BlockGetter worldIn, final BlockPos pos) {
+    return Shapes.empty();
   }
 
   @Override
-  public VoxelShape getRenderShape(final BlockState state, final IBlockReader worldIn, final BlockPos pos) {
-    return VoxelShapes.empty();
+  public VoxelShape getOcclusionShape(final BlockState state, final BlockGetter worldIn, final BlockPos pos) {
+    return Shapes.empty();
   }
 
   @Override
-  public ItemStack getItem(final IBlockReader worldIn, final BlockPos pos, final BlockState state) {
+  public ItemStack getCloneItemStack(final BlockGetter worldIn, final BlockPos pos, final BlockState state) {
     return ItemStack.EMPTY;
   }
 
   @Override
-  public boolean isReplaceable(final BlockState state, final BlockItemUseContext useContext) {
+  public boolean canBeReplaced(final BlockState state, final BlockPlaceContext useContext) {
     return true;
   }
 
   @Nullable
   @Override
-  public BlockState getStateForPlacement(final BlockItemUseContext context) {
-    return getDefaultState();
+  public BlockState getStateForPlacement(final BlockPlaceContext context) {
+    return defaultBlockState();
   }
 
   @Override
-  public BlockRenderType getRenderType(final BlockState state) {
-    return BlockRenderType.INVISIBLE;
+  public RenderShape getRenderShape(final BlockState state) {
+    return RenderShape.INVISIBLE;
   }
 
   @Override
-  public void onFallenUpon(final World worldIn, final BlockPos pos, final Entity entityIn, final float fallDistance) {
+  public void fallOn(final Level worldIn, final BlockPos pos, final Entity entityIn, final float fallDistance) {
     // do nothing
   }
 
   @Override
-  public void onEntityCollision(final BlockState state, final World worldIn, final BlockPos pos, final Entity entity) {
+  public void entityInside(final BlockState state, final Level worldIn, final BlockPos pos, final Entity entity) {
     // do nothing
   }
 
   @Override
-  public void onLanded(final IBlockReader worldIn, final Entity entityIn) {
+  public void updateEntityAfterFallOn(final BlockGetter worldIn, final Entity entityIn) {
     // do nothing
   }
 
   @Override
-  public boolean canSpawnInBlock() {
+  public boolean isPossibleToRespawnInThis() {
     return true;
   }
 }

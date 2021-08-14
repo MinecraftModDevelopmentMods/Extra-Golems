@@ -5,19 +5,21 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
+apply from: 'https://raw.githubusercontent.com/SizableShrimp/Forge-Class-Remapper/main/classremapper.gradle'
 
 version = project.mod_version
 group = project.maven_group // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = project.archives_base_name
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+// Mojang ships Java 16 to end users in 1.17+ instead of Java 8 in 1.16 or lower, so your mod should target Java 16.
+java.toolchain.languageVersion = JavaLanguageVersion.of(16)
 
 def remapRefmap = 'mixin_remap_refmap'
 def remapRefmapFile = "${projectDir}/build/createSrgToMcp/output.srg"
@@ -99,28 +101,6 @@ repositories {
 dependencies {
 	// Forge
     minecraft "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
-	
-	// Mixins
-	// annotationProcessor "org.spongepowered:mixin:${project.mixin_version}:processor"
-	
-	// AutoRegLib
-	implementation fg.deobf("vazkii.autoreglib:AutoRegLib:${project.arl_version}")
-	// Quark
-	implementation fg.deobf("vazkii.quark:Quark:${project.quark_version}")
-	// CoFHCore
-	compile fg.deobf("curse.maven:cofh-core-${project.cofhcore_proj}:${project.cofhcore_file}") { transitive = false }
-	// Thermal Foundation
-	compile fg.deobf("curse.maven:thermal-foundation-${project.thermalfoundation_proj}:${project.thermalfoundation_file}") { transitive = false }
-	// CLib
-	compile fg.deobf("curse.maven:clib-${project.clib_proj}:${project.clib_file}") { transitive = false }
-	// Mekanism
-	compile fg.deobf("curse.maven:mekanism-${project.mekanism_proj}:${project.mekanism_file}") { transitive = false }
-	// Immersive Engineering
-	compile fg.deobf("curse.maven:immersive-engineering-${project.ie_proj}:${project.ie_file}") { transitive = false }
-	
-	// HWYLA
-	compileOnly fg.deobf("mcp.mobius.waila:Hwyla:${project.hwyla_version}:api")
-	runtimeOnly fg.deobf("mcp.mobius.waila:Hwyla:${project.hwyla_version}")
 }
 processResources {
     inputs.property "version", project.version

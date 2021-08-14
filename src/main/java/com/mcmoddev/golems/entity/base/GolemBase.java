@@ -18,49 +18,49 @@ import com.mcmoddev.golems.util.GolemRegistrar;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MoverType;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.controller.MovementController;
-import net.minecraft.entity.ai.goal.RandomSwimmingGoal;
-import net.minecraft.entity.ai.goal.SwimGoal;
-import net.minecraft.entity.passive.IronGolemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.BannerItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ShearsItem;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.pathfinding.GroundPathNavigator;
-import net.minecraft.pathfinding.PathNodeType;
-import net.minecraft.pathfinding.SwimmerPathNavigator;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.control.MoveControl;
+import net.minecraft.world.entity.ai.goal.RandomSwimmingGoal;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.BannerItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ShearsItem;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.entity.ai.navigation.WaterBoundPathNavigation;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 /**
  * Base class for all golems in this mod.
  **/
-public abstract class GolemBase extends IronGolemEntity {
+public abstract class GolemBase extends IronGolem {
 
-  protected static final DataParameter<Boolean> CHILD = EntityDataManager.createKey(GolemBase.class, DataSerializers.BOOLEAN);
+  protected static final EntityDataAccessor<Boolean> CHILD = SynchedEntityData.defineId(GolemBase.class, EntityDataSerializers.BOOLEAN);
   protected static final String KEY_CHILD = "isChild";
   protected static final String KEY_BANNER = "Banner";
   
@@ -70,30 +70,30 @@ public abstract class GolemBase extends IronGolemEntity {
   private final GolemContainer container;
 
   // swimming helpers
-  protected final SwimmerPathNavigator waterNavigator;
-  protected final GroundPathNavigator groundNavigator;
+  protected final WaterBoundPathNavigation waterNavigator;
+  protected final GroundPathNavigation groundNavigator;
   protected boolean swimmingUp;
   
-  public GolemBase(EntityType<? extends GolemBase> type, World world) {
+  public GolemBase(EntityType<? extends GolemBase> type, Level world) {
     super(type, world);
     this.container = GolemRegistrar.getContainer(type);
     // the following will be unused if swimming is not enabled
-    this.waterNavigator = new SwimmerPathNavigator(this, world);
-    this.groundNavigator = new GroundPathNavigator(this, world);
+    this.waterNavigator = new WaterBoundPathNavigation(this, world);
+    this.groundNavigator = new GroundPathNavigation(this, world);
     // define behavior for the given swimming ability
     switch (container.getSwimMode()) {
     case FLOAT:
       // basic swimming AI
-      this.goalSelector.addGoal(0, new SwimGoal(this));
+      this.goalSelector.addGoal(0, new FloatGoal(this));
       break;
     case SWIM:
       // advanced swimming AI
-      this.stepHeight = 1.0F;
-      this.moveController = new SwimmingMovementController(this);
-      this.setPathPriority(PathNodeType.WATER, 0.0F);
+      this.maxUpStep = 1.0F;
+      this.moveControl = new SwimmingMovementController(this);
+      this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
       this.goalSelector.addGoal(1, new GoToWaterGoal(this, 14, 1.0D));
       this.goalSelector.addGoal(4, new RandomSwimmingGoal(this, 0.8F, 200));
-      this.goalSelector.addGoal(5, new SwimUpGoal(this, 1.0D, this.world.getSeaLevel()));
+      this.goalSelector.addGoal(5, new SwimUpGoal(this, 1.0D, this.level.getSeaLevel()));
       break;
     case SINK:
     default:
@@ -115,9 +115,9 @@ public abstract class GolemBase extends IronGolemEntity {
   }
 
   @Override
-  protected void registerData() {
-    super.registerData();
-    this.getDataManager().register(CHILD, Boolean.valueOf(false));
+  protected void defineSynchedData() {
+    super.defineSynchedData();
+    this.getEntityData().define(CHILD, Boolean.valueOf(false));
   }
   
   @Override
@@ -127,14 +127,14 @@ public abstract class GolemBase extends IronGolemEntity {
     // register light level AI if enabled
     if(cont.getLightLevel() > 0 && getConfigBool(ALLOW_LIGHT)) {
       int lightInt = cont.getLightLevel();
-      final BlockState state = GolemItems.UTILITY_LIGHT.getDefaultState().with(BlockUtilityGlow.LIGHT_LEVEL, lightInt);
+      final BlockState state = GolemItems.UTILITY_LIGHT.defaultBlockState().setValue(BlockUtilityGlow.LIGHT_LEVEL, lightInt);
       this.goalSelector.addGoal(9, new PlaceUtilityBlockGoal(this, state, BlockUtilityGlow.UPDATE_TICKS, 
           true, null));
     }
     // register power level AI if enabled
     if(cont.getPowerLevel() > 0 && getConfigBool(ALLOW_POWER)) {
       int powerInt = cont.getPowerLevel();
-      final BlockState state = GolemItems.UTILITY_POWER.getDefaultState().with(BlockUtilityPower.POWER_LEVEL, powerInt);
+      final BlockState state = GolemItems.UTILITY_POWER.defaultBlockState().setValue(BlockUtilityPower.POWER_LEVEL, powerInt);
       final int freq = BlockUtilityPower.UPDATE_TICKS;
       this.goalSelector.addGoal(9, new PlaceUtilityBlockGoal(this, state, freq));
     }
@@ -186,7 +186,7 @@ public abstract class GolemBase extends IronGolemEntity {
    **/
   public float getHealAmount(final ItemStack i) {
     float amount = (float) (this.getMaxHealth() * this.getGolemContainer().getHealAmount(i.getItem()));
-    if(this.isChild()) {
+    if(this.isBaby()) {
       amount *= 1.75F;
     }
     // max heal amount is 64, for no reason at all
@@ -198,15 +198,15 @@ public abstract class GolemBase extends IronGolemEntity {
 //    int j = MathHelper.floor(this.getPosY() - 0.2D);
 //    int k = MathHelper.floor(this.getPosZ());
 //    return new BlockPos(i, j, k);
-    return getPositionUnderneath();
+    return getBlockPosBelowThatAffectsMyMovement();
   }
   
-  public ItemStack getBanner() { return this.getItemStackFromSlot(EquipmentSlotType.CHEST); }
+  public ItemStack getBanner() { return this.getItemBySlot(EquipmentSlot.CHEST); }
   
   public void setBanner(final ItemStack bannerItem) { 
-    this.setItemStackToSlot(EquipmentSlotType.CHEST, bannerItem);
+    this.setItemSlot(EquipmentSlot.CHEST, bannerItem);
     if(bannerItem.getItem() instanceof BannerItem) {
-      this.setDropChance(EquipmentSlotType.CHEST, 1.0F);
+      this.setDropChance(EquipmentSlot.CHEST, 1.0F);
     }
   }
 
@@ -271,7 +271,7 @@ public abstract class GolemBase extends IronGolemEntity {
 
   // fall(float, float)
   @Override
-  public boolean onLivingFall(float distance, float damageMultiplier) {
+  public boolean causeFallDamage(float distance, float damageMultiplier) {
     if (!container.takesFallDamage()) {
       return false;
     }
@@ -281,12 +281,12 @@ public abstract class GolemBase extends IronGolemEntity {
     distance = ret[0];
     damageMultiplier = ret[1];
 
-    boolean flag = super.onLivingFall(distance, damageMultiplier);
+    boolean flag = super.causeFallDamage(distance, damageMultiplier);
     int i = this.calculateFallDamage(distance, damageMultiplier);
     if (i > 0) {
-       this.playSound(this.getFallSound(i), 1.0F, 1.0F);
-       this.playFallSound();
-       this.attackEntityFrom(DamageSource.FALL, (float)i);
+       this.playSound(this.getFallDamageSound(i), 1.0F, 1.0F);
+       this.playBlockFallSound();
+       this.hurt(DamageSource.FALL, (float)i);
        return true;
     } else {
        return flag;
@@ -294,45 +294,45 @@ public abstract class GolemBase extends IronGolemEntity {
   }
   
   @Override
-  public boolean isImmuneToExplosions() {
+  public boolean ignoreExplosion() {
     return this.getGolemContainer().isImmuneToExplosions();
   }
 
   @Override
-  public boolean canAttack(final EntityType<?> type) {
+  public boolean canAttackType(final EntityType<?> type) {
     if (type == EntityType.PLAYER && this.isPlayerCreated()) {
       return ExtraGolemsConfig.enableFriendlyFire();
     }
     if (type == EntityType.VILLAGER || type.getRegistryName().toString().contains("golem")) {
       return false;
     }
-    return super.canAttack(type);
+    return super.canAttackType(type);
   }
 
   @Override
-  public ItemStack getPickedResult(final RayTraceResult ray) {
+  public ItemStack getPickedResult(final HitResult ray) {
     final Block block = container.getPrimaryBuildingBlock();
     return block != null ? new ItemStack(block) : ItemStack.EMPTY;
   }
 
   @Override
-  protected ActionResultType getEntityInteractionResult(final PlayerEntity player, final Hand hand) {
-    ItemStack stack = player.getHeldItem(hand);
+  protected InteractionResult mobInteract(final Player player, final InteractionHand hand) {
+    ItemStack stack = player.getItemInHand(hand);
     // Attempt to remove banner from the golem
     if(!this.getBanner().isEmpty() && stack.getItem() instanceof ShearsItem) {
-      this.entityDropItem(this.getBanner(), this.isChild() ? 0.9F : 1.4F);
+      this.spawnAtLocation(this.getBanner(), this.isBaby() ? 0.9F : 1.4F);
       this.setBanner(ItemStack.EMPTY);
     }
     // Attempt to place a banner on the golem
     if(stack.getItem() instanceof BannerItem && processInteractBanner(player, hand, stack)) {
-      return ActionResultType.CONSUME;
+      return InteractionResult.CONSUME;
     }
     // Attempt to heal the golem
     final float healAmount = getHealAmount(stack);
     if (healAmount > 0 && processInteractHeal(player, hand, stack, healAmount)) {
-      return ActionResultType.CONSUME;
+      return InteractionResult.CONSUME;
     }
-    return super.getEntityInteractionResult(player, hand);
+    return super.mobInteract(player, hand);
   }
   
   /**
@@ -343,9 +343,9 @@ public abstract class GolemBase extends IronGolemEntity {
    * @param healAmount the amount of health this item will restore
    * @return true if the item was consumed
    */
-  protected boolean processInteractBanner(final PlayerEntity player, final Hand hand, final ItemStack stack) {
+  protected boolean processInteractBanner(final Player player, final InteractionHand hand, final ItemStack stack) {
     if(!this.getBanner().isEmpty()) {
-      this.entityDropItem(this.getBanner(), this.isChild() ? 0.9F : 1.4F);
+      this.spawnAtLocation(this.getBanner(), this.isBaby() ? 0.9F : 1.4F);
     }
     setBanner(stack.split(1));
     return true;
@@ -359,7 +359,7 @@ public abstract class GolemBase extends IronGolemEntity {
    * @param healAmount the amount of health this item will restore
    * @return true if the item was consumed
    */
-  protected boolean processInteractHeal(final PlayerEntity player, final Hand hand, final ItemStack stack, final float healAmount) {
+  protected boolean processInteractHeal(final Player player, final InteractionHand hand, final ItemStack stack, final float healAmount) {
     if (ExtraGolemsConfig.enableHealGolems() && this.getHealth() < this.getMaxHealth()) {
       heal(healAmount);
       // update stack size/item
@@ -368,18 +368,18 @@ public abstract class GolemBase extends IronGolemEntity {
           stack.shrink(1);
         } else {
           // update the player's held item
-          player.setHeldItem(hand, stack.getContainerItem());
+          player.setItemInHand(hand, stack.getContainerItem());
         }
       }
       // if currently attacking this player, stop
-      if (this.getAttackTarget() == player) {
-        this.setRevengeTarget(null);
-        this.setAttackTarget(null);
+      if (this.getTarget() == player) {
+        this.setLastHurtByMob(null);
+        this.setTarget(null);
       }
       // spawn particles and play sound
-      final Vector3d pos = this.getPositionVec();
-      ItemBedrockGolem.spawnParticles(this.world, pos.x, pos.y + this.getHeight() / 2.0D, pos.z, 0.15D, ParticleTypes.INSTANT_EFFECT, 30);
-      this.playSound(SoundEvents.BLOCK_STONE_PLACE, 0.85F, 1.1F + rand.nextFloat() * 0.2F);
+      final Vec3 pos = this.position();
+      ItemBedrockGolem.spawnParticles(this.level, pos.x, pos.y + this.getBbHeight() / 2.0D, pos.z, 0.15D, ParticleTypes.INSTANT_EFFECT, 30);
+      this.playSound(SoundEvents.STONE_PLACE, 0.85F, 1.1F + random.nextFloat() * 0.2F);
       return true;
     }
     return false;
@@ -393,23 +393,23 @@ public abstract class GolemBase extends IronGolemEntity {
   ///////////////// CHILD LOGIC ///////////////////
 
   @Override
-  public boolean isChild() {
-    return this.getDataManager().get(CHILD).booleanValue();
+  public boolean isBaby() {
+    return this.getEntityData().get(CHILD).booleanValue();
   }
 
   /** Update whether this entity is 'child' and recalculate size **/
-  public void setChild(final boolean isChild) {
-    if (this.getDataManager().get(CHILD).booleanValue() != isChild) {
-      this.getDataManager().set(CHILD, Boolean.valueOf(isChild));
-      this.recalculateSize();
+  public void setBaby(final boolean isChild) {
+    if (this.getEntityData().get(CHILD).booleanValue() != isChild) {
+      this.getEntityData().set(CHILD, Boolean.valueOf(isChild));
+      this.refreshDimensions();
     }
   }
   
   @Override
-  public void notifyDataManagerChange(final DataParameter<?> key) {
-    super.notifyDataManagerChange(key);
+  public void onSyncedDataUpdated(final EntityDataAccessor<?> key) {
+    super.onSyncedDataUpdated(key);
     if (CHILD.equals(key)) {
-      if (this.isChild()) {
+      if (this.isBaby()) {
         // truncate these values to one decimal place after reducing them from base values
         double childHealth = (Math.floor(getGolemContainer().getHealth() * 0.3D * 10D)) / 10D;
         double childAttack = (Math.floor(getGolemContainer().getAttack() * 0.6D * 10D)) / 10D;
@@ -423,7 +423,7 @@ public abstract class GolemBase extends IronGolemEntity {
         this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(getGolemContainer().getKnockbackResist());
       }
       // recalculate size
-      this.recalculateSize();
+      this.refreshDimensions();
     }
   }
   
@@ -434,17 +434,17 @@ public abstract class GolemBase extends IronGolemEntity {
    **/
   protected Collection<GolemBase> trySpawnChildren(final int count) {
     final List<GolemBase> children = new ArrayList<>();
-    if(!this.world.isRemote && !this.isChild()) {
+    if(!this.level.isClientSide && !this.isBaby()) {
       for(int i = 0; i < count; i++) {
-        GolemBase child = this.getGolemContainer().getEntityType().create(this.world);
-        child.setChild(true);
-        if (this.getAttackTarget() != null) {
-          child.setAttackTarget(this.getAttackTarget());
+        GolemBase child = this.getGolemContainer().getEntityType().create(this.level);
+        child.setBaby(true);
+        if (this.getTarget() != null) {
+          child.setTarget(this.getTarget());
         }
         // set location
-        child.copyLocationAndAnglesFrom(this);
+        child.copyPosition(this);
         // spawn the entity
-        this.getEntityWorld().addEntity(child);
+        this.getCommandSenderWorld().addFreshEntity(child);
         // add to the list
         children.add(child);
       }
@@ -455,19 +455,19 @@ public abstract class GolemBase extends IronGolemEntity {
   //////////////// NBT /////////////////
 
   @Override
-  public void readAdditional(final CompoundNBT tag) {
-    super.readAdditional(tag);
-    this.setChild(tag.getBoolean(KEY_CHILD));
+  public void readAdditionalSaveData(final CompoundTag tag) {
+    super.readAdditionalSaveData(tag);
+    this.setBaby(tag.getBoolean(KEY_CHILD));
   }
 
   @Override
-  public void writeAdditional(final CompoundNBT tag) {
-    super.writeAdditional(tag);
-    tag.putBoolean(KEY_CHILD, this.isChild());
+  public void addAdditionalSaveData(final CompoundTag tag) {
+    super.addAdditionalSaveData(tag);
+    tag.putBoolean(KEY_CHILD, this.isBaby());
   }
 
   @Override
-  public IPacket<?> createSpawnPacket() {
+  public Packet<?> getAddEntityPacket() {
     return NetworkHooks.getEntitySpawningPacket(this);
   }
 
@@ -480,12 +480,12 @@ public abstract class GolemBase extends IronGolemEntity {
 
   @Override
   protected SoundEvent getHurtSound(final DamageSource ignored) {
-    return getGolemSound() == SoundEvents.BLOCK_GLASS_STEP ? SoundEvents.BLOCK_GLASS_HIT : getGolemSound();
+    return getGolemSound() == SoundEvents.GLASS_STEP ? SoundEvents.GLASS_HIT : getGolemSound();
   }
 
   @Override
   protected SoundEvent getDeathSound() {
-    return getGolemSound() == SoundEvents.BLOCK_GLASS_STEP ? SoundEvents.BLOCK_GLASS_BREAK : getGolemSound();
+    return getGolemSound() == SoundEvents.GLASS_STEP ? SoundEvents.GLASS_BREAK : getGolemSound();
   }
 
   /**
@@ -499,11 +499,11 @@ public abstract class GolemBase extends IronGolemEntity {
   ///////////////////// SWIMMING BEHAVIOR ////////////////////////
 
   @Override
-  public void travel(final Vector3d vec) {
-    if (isServerWorld() && isInWater() && isSwimmingUp()) {
+  public void travel(final Vec3 vec) {
+    if (isEffectiveAi() && isInWater() && isSwimmingUp()) {
       moveRelative(0.01F, vec);
-      move(MoverType.SELF, getMotion());
-      setMotion(getMotion().scale(0.9D));
+      move(MoverType.SELF, getDeltaMovement());
+      setDeltaMovement(getDeltaMovement().scale(0.9D));
     } else {
       super.travel(vec);
     }
@@ -515,12 +515,12 @@ public abstract class GolemBase extends IronGolemEntity {
       super.updateSwimming();
       return;
     }
-    if (!this.world.isRemote) {
-      if (isServerWorld() && isInWater() && isSwimmingUp()) {
-        this.navigator = this.waterNavigator;
+    if (!this.level.isClientSide) {
+      if (isEffectiveAi() && isInWater() && isSwimmingUp()) {
+        this.navigation = this.waterNavigator;
         setSwimming(true);
       } else {
-        this.navigator = this.groundNavigator;
+        this.navigation = this.groundNavigator;
         setSwimming(false);
       }
     }
@@ -532,7 +532,7 @@ public abstract class GolemBase extends IronGolemEntity {
   }
 
   @Override
-  public boolean isPushedByWater() {
+  public boolean isPushedByFluid() {
     return !isSwimming();
   }
 
@@ -547,7 +547,7 @@ public abstract class GolemBase extends IronGolemEntity {
     if (this.swimmingUp) {
       return true;
     }
-    LivingEntity e = getAttackTarget();
+    LivingEntity e = getTarget();
     return e != null && e.isInWater();
   }
 
@@ -561,11 +561,11 @@ public abstract class GolemBase extends IronGolemEntity {
    * @param target a location representing a water block
    * @return true if the golem should move towards the water
    **/
-  public boolean shouldMoveToWater(final Vector3d target) {
+  public boolean shouldMoveToWater(final Vec3 target) {
     return container.getSwimMode() == SwimMode.SWIM;
   }
   
-  static class SwimmingMovementController extends MovementController {
+  static class SwimmingMovementController extends MoveControl {
     private final GolemBase golem;
 
     public SwimmingMovementController(GolemBase golem) {
@@ -576,34 +576,34 @@ public abstract class GolemBase extends IronGolemEntity {
     @Override
     public void tick() {
       // All of this is copied from DrownedEntity#MoveHelperController
-      LivingEntity target = this.golem.getAttackTarget();
+      LivingEntity target = this.golem.getTarget();
       if (this.golem.isSwimmingUp() && this.golem.isInWater()) {
-        if ((target != null && target.getPosY() > this.golem.getPosY()) || this.golem.swimmingUp) {
-          this.golem.setMotion(this.golem.getMotion().add(0.0D, 0.002D, 0.0D));
+        if ((target != null && target.getY() > this.golem.getY()) || this.golem.swimmingUp) {
+          this.golem.setDeltaMovement(this.golem.getDeltaMovement().add(0.0D, 0.002D, 0.0D));
         }
 
-        if (this.action != MovementController.Action.MOVE_TO || this.golem.getNavigator().noPath()) {
-          this.golem.setAIMoveSpeed(0.0F);
+        if (this.operation != MoveControl.Operation.MOVE_TO || this.golem.getNavigation().isDone()) {
+          this.golem.setSpeed(0.0F);
           return;
         }
-        double dX = this.posX - this.golem.getPosX();
-        double dY = this.posY - this.golem.getPosY();
-        double dZ = this.posZ - this.golem.getPosZ();
-        double dTotal = MathHelper.sqrt(dX * dX + dY * dY + dZ * dZ);
+        double dX = this.wantedX - this.golem.getX();
+        double dY = this.wantedY - this.golem.getY();
+        double dZ = this.wantedZ - this.golem.getZ();
+        double dTotal = Mth.sqrt(dX * dX + dY * dY + dZ * dZ);
         dY /= dTotal;
 
-        float rot = (float) (MathHelper.atan2(dZ, dX) * 57.2957763671875D) - 90.0F;
-        this.golem.rotationYaw = limitAngle(this.golem.rotationYaw, rot, 90.0F);
-        this.golem.renderYawOffset = this.golem.rotationYaw;
+        float rot = (float) (Mth.atan2(dZ, dX) * 57.2957763671875D) - 90.0F;
+        this.golem.yRot = rotlerp(this.golem.yRot, rot, 90.0F);
+        this.golem.yBodyRot = this.golem.yRot;
 
-        float moveSpeed = (float) (this.speed * this.golem.getAttributeValue(Attributes.MOVEMENT_SPEED));
-        float moveSpeedAdjusted = MathHelper.lerp(0.125F, this.golem.getAIMoveSpeed(), moveSpeed);
-        this.golem.setAIMoveSpeed(moveSpeedAdjusted);
-        this.golem.setMotion(this.golem.getMotion().add(moveSpeedAdjusted * dX * 0.005D, moveSpeedAdjusted * dY * 0.1D,
+        float moveSpeed = (float) (this.speedModifier * this.golem.getAttributeValue(Attributes.MOVEMENT_SPEED));
+        float moveSpeedAdjusted = Mth.lerp(0.125F, this.golem.getSpeed(), moveSpeed);
+        this.golem.setSpeed(moveSpeedAdjusted);
+        this.golem.setDeltaMovement(this.golem.getDeltaMovement().add(moveSpeedAdjusted * dX * 0.005D, moveSpeedAdjusted * dY * 0.1D,
             moveSpeedAdjusted * dZ * 0.005D));
       } else {
         if (!this.golem.onGround) {
-          this.golem.setMotion(this.golem.getMotion().add(0.0D, -0.008D, 0.0D));
+          this.golem.setDeltaMovement(this.golem.getDeltaMovement().add(0.0D, -0.008D, 0.0D));
         }
         super.tick();
       }

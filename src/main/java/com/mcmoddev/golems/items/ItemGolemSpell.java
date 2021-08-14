@@ -4,18 +4,18 @@ import com.mcmoddev.golems.blocks.BlockGolemHead;
 import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.HorizontalBlock;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
 
 public class ItemGolemSpell extends Item {
 
@@ -39,30 +39,30 @@ public class ItemGolemSpell extends Item {
    * super.dispenseStack(source, stack); } return stack; } };
    */
   public ItemGolemSpell() {
-    super(new Item.Properties().maxStackSize(64).group(ItemGroup.MISC));
+    super(new Item.Properties().stacksTo(64).tab(CreativeModeTab.TAB_MISC));
     // dispenser behavior TODO: NOT WORKING
     // BlockDispenser.registerDispenseBehavior(this, DISPENSER_BEHAVIOR);
   }
 
   @Override
-  public ActionResultType onItemUse(ItemUseContext cxt) {
-    if (ExtraGolemsConfig.enableUseSpellItem() && cxt.getPos() != null && cxt.getItem() != null && !cxt.getItem().isEmpty()) {
-      final Block b = cxt.getWorld().getBlockState(cxt.getPos()).getBlock();
+  public InteractionResult useOn(UseOnContext cxt) {
+    if (ExtraGolemsConfig.enableUseSpellItem() && cxt.getClickedPos() != null && cxt.getItemInHand() != null && !cxt.getItemInHand().isEmpty()) {
+      final Block b = cxt.getLevel().getBlockState(cxt.getClickedPos()).getBlock();
       if (b == Blocks.CARVED_PUMPKIN || (b == Blocks.PUMPKIN && ExtraGolemsConfig.pumpkinBuildsGolems())) {
-        if (!cxt.getWorld().isRemote()) {
-          final Direction facing = cxt.getWorld().getBlockState(cxt.getPos()).get(HorizontalBlock.HORIZONTAL_FACING);
-          cxt.getWorld().setBlockState(cxt.getPos(), GolemItems.GOLEM_HEAD.getDefaultState().with(HorizontalBlock.HORIZONTAL_FACING, facing), 3);
-          BlockGolemHead.trySpawnGolem(cxt.getWorld(), cxt.getPos());
-          cxt.getItem().shrink(1);
+        if (!cxt.getLevel().isClientSide()) {
+          final Direction facing = cxt.getLevel().getBlockState(cxt.getClickedPos()).getValue(HorizontalDirectionalBlock.FACING);
+          cxt.getLevel().setBlock(cxt.getClickedPos(), GolemItems.GOLEM_HEAD.defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, facing), 3);
+          BlockGolemHead.trySpawnGolem(cxt.getLevel(), cxt.getClickedPos());
+          cxt.getItemInHand().shrink(1);
         }
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
       }
     }
-    return ActionResultType.PASS;
+    return InteractionResult.PASS;
   }
 
   @Override
-  public ITextComponent getDisplayName(ItemStack stack) {
-    return new TranslationTextComponent(this.getTranslationKey(stack)).mergeStyle(TextFormatting.RED);
+  public Component getName(ItemStack stack) {
+    return new TranslatableComponent(this.getDescriptionId(stack)).withStyle(ChatFormatting.RED);
   }
 }

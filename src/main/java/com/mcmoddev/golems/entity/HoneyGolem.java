@@ -2,13 +2,13 @@ package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.DamageSource;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.level.Level;
 
 public final class HoneyGolem extends GolemBase {
 
@@ -17,14 +17,14 @@ public final class HoneyGolem extends GolemBase {
   
   private boolean allowHoney;
 
-  public HoneyGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+  public HoneyGolem(final EntityType<? extends GolemBase> entityType, final Level world) {
     super(entityType, world);
     allowHoney = this.getConfigBool(ALLOW_HONEY);
   }
 
   @Override
-  public boolean attackEntityAsMob(final Entity entityIn) {
-    if (super.attackEntityAsMob(entityIn)) {
+  public boolean doHurtTarget(final Entity entityIn) {
+    if (super.doHurtTarget(entityIn)) {
       if(entityIn instanceof LivingEntity) {
         applyHoney((LivingEntity)entityIn);
       }
@@ -34,28 +34,28 @@ public final class HoneyGolem extends GolemBase {
   }
   
   @Override
-  protected void damageEntity(final DamageSource source, final float amount) {
+  protected void actuallyHurt(final DamageSource source, final float amount) {
     if (!this.isInvulnerableTo(source)) {
-      super.damageEntity(source, amount);
+      super.actuallyHurt(source, amount);
       // slows the entity that attacked it
-      if(source.getImmediateSource() instanceof LivingEntity) {
-        applyHoney((LivingEntity)source.getImmediateSource());
+      if(source.getDirectEntity() instanceof LivingEntity) {
+        applyHoney((LivingEntity)source.getDirectEntity());
       }
     }
   }
 
   @Override
-  public void onDeath(final DamageSource source) {
+  public void die(final DamageSource source) {
     int children = this.getConfigInt(SPLITTING_CHILDREN);
     if (children > 0) {
       trySpawnChildren(children);
     }
-    super.onDeath(source);
+    super.die(source);
   }
   
   @Override
-  public void setChild(final boolean isChild) {
-    super.setChild(isChild);
+  public void setBaby(final boolean isChild) {
+    super.setBaby(isChild);
     if(isChild) {
       allowHoney = false;
     }
@@ -68,10 +68,10 @@ public final class HoneyGolem extends GolemBase {
    * or false if the honey effect is not enabled for the golem
    **/
   private boolean applyHoney(final LivingEntity entity) {
-    if (!this.isChild() && allowHoney) {
-      final int len = 20 * (3 + rand.nextInt(3));
-      final int amp = 3 + rand.nextInt(2);
-      return entity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, len, amp));
+    if (!this.isBaby() && allowHoney) {
+      final int len = 20 * (3 + random.nextInt(3));
+      final int amp = 3 + random.nextInt(2);
+      return entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, len, amp));
     }
     return false;
   }

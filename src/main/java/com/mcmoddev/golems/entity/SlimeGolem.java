@@ -2,12 +2,12 @@ package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.monster.SlimeEntity;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.monster.Slime;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 
 public final class SlimeGolem extends GolemBase {
 
@@ -18,17 +18,17 @@ public final class SlimeGolem extends GolemBase {
   private boolean allowKnockback;
   private double knockbackAmount;
 
-  public SlimeGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+  public SlimeGolem(final EntityType<? extends GolemBase> entityType, final Level world) {
     super(entityType, world);
     allowKnockback = this.getConfigBool(ALLOW_SPECIAL);
     knockbackAmount = this.getConfigDouble(KNOCKBACK);
   }
 
   @Override
-  public boolean attackEntityAsMob(final Entity entity) {
-    if (super.attackEntityAsMob(entity)) {
+  public boolean doHurtTarget(final Entity entity) {
+    if (super.doHurtTarget(entity)) {
       // knocks back the target entity (if it's adult and not attacking a slime)
-      if (!this.isChild() && allowKnockback && !(entity instanceof SlimeEntity)) {
+      if (!this.isBaby() && allowKnockback && !(entity instanceof Slime)) {
         applyKnockback(entity, knockbackAmount);
       }
       return true;
@@ -37,42 +37,42 @@ public final class SlimeGolem extends GolemBase {
   }
 
   @Override
-  protected void damageEntity(final DamageSource source, final float amount) {
+  protected void actuallyHurt(final DamageSource source, final float amount) {
     if (!this.isInvulnerableTo(source)) {
-      super.damageEntity(source, amount);
+      super.actuallyHurt(source, amount);
       // knocks back the entity that is attacking it
-      if (allowKnockback && !this.isChild() && source.getImmediateSource() != null) {
-        applyKnockback(source.getImmediateSource(), this.getConfigDouble(KNOCKBACK));
+      if (allowKnockback && !this.isBaby() && source.getDirectEntity() != null) {
+        applyKnockback(source.getDirectEntity(), this.getConfigDouble(KNOCKBACK));
       }
     }
   }
 
   @Override
-  public void setChild(final boolean isChild) {
-    super.setChild(isChild);
+  public void setBaby(final boolean isChild) {
+    super.setBaby(isChild);
     if(isChild) {
       allowKnockback = false;
     }
   }
  
   @Override
-  public void onDeath(final DamageSource source) {
+  public void die(final DamageSource source) {
     int children = this.getConfigInt(SPLITTING_CHILDREN);
     if (children > 0) {
       trySpawnChildren(children);
     }
-    super.onDeath(source);
+    super.die(source);
   }
   
   /**
    * Adds extra velocity to the golem's knockback attack.
    **/
   private void applyKnockback(final Entity entity, final double knockbackFactor) {
-    final Vector3d myPos = this.getPositionVec();
-    final Vector3d ePos = entity.getPositionVec();
+    final Vec3 myPos = this.position();
+    final Vec3 ePos = entity.position();
     final double dX = Math.signum(ePos.x - myPos.x) * knockbackFactor;
     final double dZ = Math.signum(ePos.z - myPos.z) * knockbackFactor;
-    entity.addVelocity(dX, knockbackFactor / 2, dZ);
-    entity.velocityChanged = true;
+    entity.push(dX, knockbackFactor / 2, dZ);
+    entity.hurtMarked = true;
   }
 }

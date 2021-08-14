@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
 
-import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 /**
@@ -20,7 +20,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
  **/
 public class GolemDescription {
 
-  private final IFormattableTextComponent text;
+  private final MutableComponent text;
   private final String configKey;
   private final Predicate<ForgeConfigSpec.ConfigValue<?>> configValue;
 
@@ -34,7 +34,7 @@ public class GolemDescription {
    *                      acceptable in order to display this description. adding
    *                      this text to any description lists.
    **/
-  public GolemDescription(final IFormattableTextComponent textIn, final String configKeyIn,
+  public GolemDescription(final MutableComponent textIn, final String configKeyIn,
       @Nullable final Predicate<ForgeConfigSpec.ConfigValue<?>> configValueIn) {
     this.text = textIn;
     this.configKey = configKeyIn != null ? configKeyIn : "";
@@ -51,7 +51,7 @@ public class GolemDescription {
    * @param configKeyIn an optional String to match against the config before
    *                    adding this text to any description lists.
    **/
-  public GolemDescription(final IFormattableTextComponent textIn, final String configKeyIn) {
+  public GolemDescription(final MutableComponent textIn, final String configKeyIn) {
     this(textIn, configKeyIn, c -> c != null && c.get() instanceof Boolean && (Boolean) c.get());
   }
 
@@ -61,7 +61,7 @@ public class GolemDescription {
    *
    * @param textIn a pre-formatted text component to display
    **/
-  public GolemDescription(final IFormattableTextComponent textIn) {
+  public GolemDescription(final MutableComponent textIn) {
     this(textIn, "", c -> true);
   }
 
@@ -73,7 +73,7 @@ public class GolemDescription {
    * @param list a list to which text will be added
    * @return True, as specified in interface {@code Collection<E>}
    **/
-  public boolean addDescription(final List<IFormattableTextComponent> list) {
+  public boolean addDescription(final List<MutableComponent> list) {
     return list.add(this.text);
   }
 
@@ -83,7 +83,7 @@ public class GolemDescription {
    * @return true if the description was added.
    * @see #addDescription(List)
    **/
-  public boolean addDescription(final List<IFormattableTextComponent> list, final GolemContainer container) {
+  public boolean addDescription(final List<MutableComponent> list, final GolemContainer container) {
     // check the config
     if (isEnabledFor(container)) {
       return addDescription(list);

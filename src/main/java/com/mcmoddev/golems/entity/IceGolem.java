@@ -6,13 +6,13 @@ import java.util.function.Function;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.events.IceGolemFreezeEvent;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
 
@@ -21,7 +21,7 @@ public final class IceGolem extends GolemBase {
   public static final String AOE = "Area of Effect";
   public static final String FROST = "Use Frosted Ice";
 
-  public IceGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+  public IceGolem(final EntityType<? extends GolemBase> entityType, final Level world) {
     super(entityType, world);
   }
 
@@ -37,19 +37,19 @@ public final class IceGolem extends GolemBase {
    * burn.
    */
   @Override
-  public void livingTick() {
-    super.livingTick();
-    final BlockPos pos = this.getPositionUnderneath().up(2);
-    if (this.world.getBiome(pos).getTemperature(pos) > 1.0F) {
-      this.attackEntityFrom(DamageSource.ON_FIRE, 1.0F);
+  public void aiStep() {
+    super.aiStep();
+    final BlockPos pos = this.getBlockPosBelowThatAffectsMyMovement().above(2);
+    if (this.level.getBiome(pos).getTemperature(pos) > 1.0F) {
+      this.hurt(DamageSource.ON_FIRE, 1.0F);
     }
   }
 
   @Override
-  public boolean attackEntityAsMob(final Entity entity) {
-    if (super.attackEntityAsMob(entity)) {
-      if (entity.isBurning()) {
-        this.attackEntityFrom(DamageSource.GENERIC, 0.5F);
+  public boolean doHurtTarget(final Entity entity) {
+    if (super.doHurtTarget(entity)) {
+      if (entity.isOnFire()) {
+        this.hurt(DamageSource.GENERIC, 0.5F);
       }
       return true;
     }
@@ -69,17 +69,17 @@ public final class IceGolem extends GolemBase {
     }
 
     @Override
-    public boolean shouldExecute() {
-      return golem.ticksExisted % 2 == 0;
+    public boolean canUse() {
+      return golem.tickCount % 2 == 0;
     }
 
     @Override
-    public boolean shouldContinueExecuting() {
+    public boolean canContinueToUse() {
       return false;
     }
 
     @Override
-    public void startExecuting() {
+    public void start() {
       final BlockPos below = this.golem.getBlockBelow();
 
       if (range > 0) {
@@ -101,7 +101,7 @@ public final class IceGolem extends GolemBase {
     public boolean freezeBlocks(final List<BlockPos> positions, final Function<BlockState, BlockState> function, final int updateFlag) {
       boolean flag = true;
       for (BlockPos pos : positions) {
-        flag &= golem.getEntityWorld().setBlockState(pos, function.apply(golem.getEntityWorld().getBlockState(pos)), updateFlag);
+        flag &= golem.getCommandSenderWorld().setBlock(pos, function.apply(golem.getCommandSenderWorld().getBlockState(pos)), updateFlag);
       }
       return flag;
     }

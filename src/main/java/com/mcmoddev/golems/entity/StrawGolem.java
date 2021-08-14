@@ -4,21 +4,21 @@ import java.util.Random;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.IGrowable;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.item.BoneMealItem;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.BonemealableBlock;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.item.BoneMealItem;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 
 public final class StrawGolem extends GolemBase {
 
   public static final String ALLOW_SPECIAL = "Allow Special: Crop Boost";
   public static final String SPECIAL_FREQ = "Crop Boost Frequency";
 
-  public StrawGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+  public StrawGolem(final EntityType<? extends GolemBase> entityType, final Level world) {
     super(entityType, world);
   }
 
@@ -38,16 +38,16 @@ public final class StrawGolem extends GolemBase {
     public BoostCropGoal(final GolemBase golemIn, final int rangeIn, final int freq) {
       golem = golemIn;
       range = rangeIn;
-      frequency = freq + golem.getEntityWorld().getRandom().nextInt(Math.max(10, freq / 2));
+      frequency = freq + golem.getCommandSenderWorld().getRandom().nextInt(Math.max(10, freq / 2));
     }
 
     @Override
-    public boolean shouldExecute() {
-      return golem.getEntityWorld().getRandom().nextInt(frequency) == 0;
+    public boolean canUse() {
+      return golem.getCommandSenderWorld().getRandom().nextInt(frequency) == 0;
     }
 
     @Override
-    public void startExecuting() {
+    public void start() {
       tryBoostCrop();
     }
 
@@ -58,7 +58,7 @@ public final class StrawGolem extends GolemBase {
      * @return always returns false...
      **/
     private boolean tryBoostCrop() {
-      final Random rand = this.golem.getEntityWorld().getRandom();
+      final Random rand = this.golem.getCommandSenderWorld().getRandom();
       final int maxAttempts = 25;
       final int variationY = 2;
       int attempts = 0;
@@ -67,18 +67,18 @@ public final class StrawGolem extends GolemBase {
         final int x1 = rand.nextInt(this.range * 2) - this.range;
         final int y1 = rand.nextInt(variationY * 2) - variationY;
         final int z1 = rand.nextInt(this.range * 2) - this.range;
-        final BlockPos blockpos = this.golem.getBlockBelow().add(x1, y1, z1);
-        final BlockState state = golem.getEntityWorld().getBlockState(blockpos);
+        final BlockPos blockpos = this.golem.getBlockBelow().offset(x1, y1, z1);
+        final BlockState state = golem.getCommandSenderWorld().getBlockState(blockpos);
         // if the block can be grown, grow it and return
-        if (state.getBlock() instanceof IGrowable) {
-          IGrowable crop = (IGrowable) state.getBlock();
-          if (golem.getEntityWorld() instanceof ServerWorld
-              && crop.canGrow(golem.getEntityWorld(), blockpos, state, golem.getEntityWorld().isRemote)) {
+        if (state.getBlock() instanceof BonemealableBlock) {
+          BonemealableBlock crop = (BonemealableBlock) state.getBlock();
+          if (golem.getCommandSenderWorld() instanceof ServerLevel
+              && crop.isValidBonemealTarget(golem.getCommandSenderWorld(), blockpos, state, golem.getCommandSenderWorld().isClientSide)) {
             // grow the crop!
-            crop.grow((ServerWorld) golem.getEntityWorld(), rand, blockpos, state);
+            crop.performBonemeal((ServerLevel) golem.getCommandSenderWorld(), rand, blockpos, state);
             // spawn particles
-            if (golem.getEntityWorld().isRemote()) {
-              BoneMealItem.spawnBonemealParticles(golem.getEntityWorld(), blockpos, 0);
+            if (golem.getCommandSenderWorld().isClientSide()) {
+              BoneMealItem.addGrowthParticles(golem.getCommandSenderWorld(), blockpos, 0);
             }
             // cap the attempts here so we exit the while loop safely
             attempts = maxAttempts;

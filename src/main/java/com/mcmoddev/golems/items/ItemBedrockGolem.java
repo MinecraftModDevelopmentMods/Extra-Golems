@@ -11,46 +11,48 @@ import com.mcmoddev.golems.util.GolemNames;
 import com.mcmoddev.golems.util.GolemRegistrar;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import net.minecraft.world.item.Item.Properties;
 
 public final class ItemBedrockGolem extends Item {
 
   public ItemBedrockGolem() {
-    super(new Properties().group(ItemGroup.MISC));
+    super(new Properties().tab(CreativeModeTab.TAB_MISC));
   }
 
   @Override
-  public ActionResultType onItemUse(ItemUseContext context) {
-    final World worldIn = context.getWorld();
-    final PlayerEntity player = context.getPlayer();
-    final Direction facing = context.getFace();
-    final BlockPos pos = context.getPos();
-    final ItemStack stack = context.getItem();
+  public InteractionResult useOn(UseOnContext context) {
+    final Level worldIn = context.getLevel();
+    final Player player = context.getPlayer();
+    final Direction facing = context.getClickedFace();
+    final BlockPos pos = context.getClickedPos();
+    final ItemStack stack = context.getItemInHand();
 
-    if ((ExtraGolemsConfig.bedrockGolemCreativeOnly() && !player.abilities.isCreativeMode) || facing == Direction.DOWN) {
-      return ActionResultType.FAIL;
+    if ((ExtraGolemsConfig.bedrockGolemCreativeOnly() && !player.abilities.instabuild) || facing == Direction.DOWN) {
+      return InteractionResult.FAIL;
     }
 
     // check if the golem is enabled
@@ -59,46 +61,46 @@ public final class ItemBedrockGolem extends Item {
       // make sure the golem can be spawned here (empty block)
       BlockState state = worldIn.getBlockState(pos);
       BlockPos spawnPos;
-      if (state.getCollisionShape(context.getWorld(), context.getPos()).isEmpty()) {
+      if (state.getBlockSupportShape(context.getLevel(), context.getClickedPos()).isEmpty()) {
         spawnPos = pos;
       } else {
-        spawnPos = pos.offset(context.getFace());
+        spawnPos = pos.relative(context.getClickedFace());
       }
       // attempt to spawn a bedrock golem at this position
       EntityType<?> entitytype = container.getEntityType();
-      if (!worldIn.isRemote() && entitytype != null) {
+      if (!worldIn.isClientSide() && entitytype != null) {
         // spawn the golem!
-        entitytype.spawn((ServerWorld)worldIn, stack, player, spawnPos, SpawnReason.SPAWN_EGG, true, !Objects.equals(pos, spawnPos) && facing == Direction.UP);
+        entitytype.spawn((ServerLevel)worldIn, stack, player, spawnPos, MobSpawnType.SPAWN_EGG, true, !Objects.equals(pos, spawnPos) && facing == Direction.UP);
         stack.shrink(1);
       }
       spawnParticles(worldIn, spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), 0.12D);
-      return ActionResultType.SUCCESS;
+      return InteractionResult.SUCCESS;
     }
-    return ActionResultType.PASS;
+    return InteractionResult.PASS;
   }
 
-  public static void spawnParticles(final World world, final double x, final double y, final double z, final double motion) {
+  public static void spawnParticles(final Level world, final double x, final double y, final double z, final double motion) {
     spawnParticles(world, x, y, z, motion, ParticleTypes.LARGE_SMOKE, 60);
   }
 
-  public static void spawnParticles(final World world, final double x, final double y, final double z, final double motion, final IParticleData type,
+  public static void spawnParticles(final Level world, final double x, final double y, final double z, final double motion, final ParticleOptions type,
       final int num) {
-    if (world.isRemote) {
-      for (int i = num + world.rand.nextInt(Math.max(1, num / 2)); i > 0; --i) {
-        world.addParticle(type, x + world.rand.nextDouble() - 0.5D, y + world.rand.nextDouble() - 0.5D, z + world.rand.nextDouble() - 0.5D,
-            world.rand.nextDouble() * motion - motion * 0.5D, world.rand.nextDouble() * motion * 0.5D,
-            world.rand.nextDouble() * motion - motion * 0.5D);
+    if (world.isClientSide) {
+      for (int i = num + world.random.nextInt(Math.max(1, num / 2)); i > 0; --i) {
+        world.addParticle(type, x + world.random.nextDouble() - 0.5D, y + world.random.nextDouble() - 0.5D, z + world.random.nextDouble() - 0.5D,
+            world.random.nextDouble() * motion - motion * 0.5D, world.random.nextDouble() * motion * 0.5D,
+            world.random.nextDouble() * motion - motion * 0.5D);
       }
     }
   }
 
   @Override
   @OnlyIn(Dist.CLIENT)
-  public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-    final ITextComponent loreCreativeOnly = trans("tooltip.creative_only_item").mergeStyle(TextFormatting.RED);
-    final ITextComponent lorePressShift = trans("tooltip.press").mergeStyle(TextFormatting.GRAY).appendString(" ")
-        .appendSibling(trans("tooltip.shift").mergeStyle(TextFormatting.YELLOW)).appendString(" ")
-        .appendSibling(trans("tooltip.for_more_details").mergeStyle(TextFormatting.GRAY));
+  public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    final Component loreCreativeOnly = trans("tooltip.creative_only_item").withStyle(ChatFormatting.RED);
+    final Component lorePressShift = trans("tooltip.press").withStyle(ChatFormatting.GRAY).append(" ")
+        .append(trans("tooltip.shift").withStyle(ChatFormatting.YELLOW)).append(" ")
+        .append(trans("tooltip.for_more_details").withStyle(ChatFormatting.GRAY));
     // "Creative-Mode Only"
     tooltip.add(loreCreativeOnly);
     // "Use to spawn Bedrock Golem. Use on existing Bedrock Golem to remove it"
@@ -112,7 +114,7 @@ public final class ItemBedrockGolem extends Item {
     }
   }
 
-  private static TranslationTextComponent trans(final String s, final Object... param) {
-    return new TranslationTextComponent(s, param);
+  private static TranslatableComponent trans(final String s, final Object... param) {
+    return new TranslatableComponent(s, param);
   }
 }

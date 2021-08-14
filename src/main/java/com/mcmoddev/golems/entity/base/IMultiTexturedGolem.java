@@ -2,15 +2,15 @@ package com.mcmoddev.golems.entity.base;
 
 import java.util.Map;
 
-import net.minecraft.block.Block;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.level.Level;
 
 public interface IMultiTexturedGolem<T> {
 
@@ -50,7 +50,7 @@ public interface IMultiTexturedGolem<T> {
    * @param target the RayTraceResult
    * @return an ItemStack that best represents this golem, or an empty itemstack
    **/
-  ItemStack getCreativeReturn(final RayTraceResult target);
+  ItemStack getCreativeReturn(final HitResult target);
 
   /**
    * @return the total number of possible textures
@@ -78,16 +78,16 @@ public interface IMultiTexturedGolem<T> {
    * @param world the World
    * @param pos   an approximate position for the golem
    **/
-  default void randomizeTexture(final World world, final BlockPos pos) {
+  default void randomizeTexture(final Level world, final BlockPos pos) {
     final byte texture = (byte) world.getRandom().nextInt(Math.max(1, getNumTextures()));
     setTextureNum(texture);
   }
   
-  default ActionResultType handlePlayerInteract(final PlayerEntity player, final Hand hand) {
+  default InteractionResult handlePlayerInteract(final Player player, final InteractionHand hand) {
     // change texture when player clicks
     final int incremented = (this.getTextureNum() + 1) % this.getNumTextures();
     this.setTextureNum((byte) incremented);
-    player.swingArm(hand);
-    return ActionResultType.SUCCESS;
+    player.swing(hand);
+    return InteractionResult.SUCCESS;
   }
 }

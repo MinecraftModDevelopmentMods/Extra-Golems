@@ -5,14 +5,16 @@ import java.util.Random;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class BlockUtilityGlow extends BlockUtility {
 
@@ -21,31 +23,31 @@ public class BlockUtilityGlow extends BlockUtility {
   public static final int UPDATE_TICKS = 6;
 
   public BlockUtilityGlow(final Material m, final float defaultLight) {
-    super(Properties.create(m).tickRandomly().setLightLevel(state -> state.get(LIGHT_LEVEL)), UPDATE_TICKS);
+    super(Properties.of(m).randomTicks().lightLevel(state -> state.getValue(LIGHT_LEVEL)), UPDATE_TICKS);
     int light = (int) (defaultLight * 15.0F);
-    this.setDefaultState(this.getDefaultState().with(LIGHT_LEVEL, light));
+    this.registerDefaultState(this.defaultBlockState().setValue(LIGHT_LEVEL, light));
   }
 
   @Override
-  public void tick(final BlockState state, final ServerWorld worldIn, final BlockPos pos, final Random random) {
+  public void tick(final BlockState state, final ServerLevel worldIn, final BlockPos pos, final Random random) {
     // make a slightly expanded AABB to check for the golem
-    final AxisAlignedBB toCheck = new AxisAlignedBB(pos).grow(0.5D);
+    final AABB toCheck = new AABB(pos).inflate(0.5D);
     // we'll probably only ever get one golem, but it doesn't hurt to be safe and
     // check them all
-    final List<GolemBase> list = worldIn.getEntitiesWithinAABB(GolemBase.class, toCheck);
+    final List<GolemBase> list = worldIn.getEntitiesOfClass(GolemBase.class, toCheck);
     boolean hasLightGolem = !list.isEmpty() && hasLightGolem(list);
 
     if (hasLightGolem) {
       // light golem is nearby, schedule another update
-      worldIn.getPendingBlockTicks().scheduleTick(pos, state.getBlock(), this.tickRate);
+      worldIn.getBlockTicks().scheduleTick(pos, state.getBlock(), this.tickRate);
     } else {
       this.remove(worldIn, state, pos, 3);
     }
   }
 
   @Override
-  protected void fillStateContainer(final StateContainer.Builder<Block, BlockState> builder) {
-    super.fillStateContainer(builder);
+  protected void createBlockStateDefinition(final StateDefinition.Builder<Block, BlockState> builder) {
+    super.createBlockStateDefinition(builder);
     builder.add(LIGHT_LEVEL);
   }
 

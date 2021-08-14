@@ -2,11 +2,11 @@ package com.mcmoddev.golems.entity.ai;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 
-import net.minecraft.entity.ai.RandomPositionGenerator;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.pathfinding.Path;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.entity.ai.util.RandomPos;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.level.pathfinder.Path;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
 
 public class SwimUpGoal extends Goal {
   private final GolemBase golem;
@@ -20,47 +20,47 @@ public class SwimUpGoal extends Goal {
     this.targetY = seaLevel;
   }
 
-  public boolean shouldExecute() {
-    return (!golem.world.isDaytime() && golem.isInWater() && golem.getPosY() < (this.targetY - 2.5D));
+  public boolean canUse() {
+    return (!golem.level.isDay() && golem.isInWater() && golem.getY() < (this.targetY - 2.5D));
   }
 
   @Override
-  public boolean shouldContinueExecuting() {
-    return (shouldExecute() && !this.obstructed);
+  public boolean canContinueToUse() {
+    return (canUse() && !this.obstructed);
   }
 
   @Override
   public void tick() {
-    if (golem.getPosY() < (this.targetY - 1) && (golem.getNavigator().noPath() || isCloseToPathTarget())) {
+    if (golem.getY() < (this.targetY - 1) && (golem.getNavigation().isDone() || isCloseToPathTarget())) {
 
-      Vector3d vec = RandomPositionGenerator.findRandomTargetBlockTowards(golem, 4, 8,
-          new Vector3d(golem.getPosX(), (this.targetY - 1), golem.getPosZ()));
+      Vec3 vec = RandomPos.getPosTowards(golem, 4, 8,
+          new Vec3(golem.getX(), (this.targetY - 1), golem.getZ()));
 
       if (vec == null) {
         this.obstructed = true;
         return;
       }
-      golem.getNavigator().tryMoveToXYZ(vec.x, vec.y, vec.z, this.speed);
+      golem.getNavigation().moveTo(vec.x, vec.y, vec.z, this.speed);
     }
   }
 
   @Override
-  public void startExecuting() {
+  public void start() {
     golem.setSwimmingUp(true);
     this.obstructed = false;
   }
 
   @Override
-  public void resetTask() {
+  public void stop() {
     golem.setSwimmingUp(false);
   }
 
   private boolean isCloseToPathTarget() {
-    Path path = golem.getNavigator().getPath();
+    Path path = golem.getNavigation().getPath();
     if (path != null) {
       BlockPos pos = path.getTarget();
       if (pos != null) {
-        double dis = golem.getDistanceSq(pos.getX(), pos.getY(), pos.getZ());
+        double dis = golem.distanceToSqr(pos.getX(), pos.getY(), pos.getZ());
         if (dis < 4.0D) {
           return true;
         }

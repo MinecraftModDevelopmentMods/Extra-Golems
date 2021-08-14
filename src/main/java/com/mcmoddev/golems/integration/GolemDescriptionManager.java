@@ -7,12 +7,12 @@ import com.mcmoddev.golems.entity.DispenserGolem;
 import com.mcmoddev.golems.entity.FurnaceGolem;
 import com.mcmoddev.golems.entity.base.GolemBase;
 
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
 
 /**
  * Base class to get in-game information about types of golems. Currently used
@@ -38,13 +38,13 @@ public abstract class GolemDescriptionManager {
    *         golem
    **/
   @SuppressWarnings("WeakerAccess")
-  public List<IFormattableTextComponent> getEntityDescription(final GolemBase golem) {    
-    List<IFormattableTextComponent> list = new LinkedList<>();
+  public List<MutableComponent> getEntityDescription(final GolemBase golem) {    
+    List<MutableComponent> list = new LinkedList<>();
     // add attack damage to tip enabled (usually checks if sneaking)
     if (showAttack) {
       double attack = (golem.getAttribute(Attributes.ATTACK_DAMAGE).getValue());
-      list.add(new TranslationTextComponent("entitytip.attack").mergeStyle(TextFormatting.GRAY).appendString(": ")
-          .appendSibling(new StringTextComponent(Double.toString(attack)).mergeStyle(TextFormatting.WHITE)));
+      list.add(new TranslatableComponent("entitytip.attack").withStyle(ChatFormatting.GRAY).append(": ")
+          .append(new TextComponent(Double.toString(attack)).withStyle(ChatFormatting.WHITE)));
     }
     // add special descriptions
     if(showSpecial) {
@@ -59,41 +59,41 @@ public abstract class GolemDescriptionManager {
     }
 
     // add special information
-    if ((!golem.isChild() && showSpecial) || (golem.isChild() && showSpecialChild)) {
+    if ((!golem.isBaby() && showSpecial) || (golem.isBaby() && showSpecialChild)) {
       golem.getGolemContainer().addDescription(list);
     }
     return list;
   }
   
-  protected void addFurnaceGolemInfo(final FurnaceGolem g, final List<IFormattableTextComponent> list) {
+  protected void addFurnaceGolemInfo(final FurnaceGolem g, final List<MutableComponent> list) {
     // add fuel amount if this is a furnace golem
     final int fuel = g.getFuel();
     final int percentFuel = (int) Math.ceil(g.getFuelPercentage() * 100F);
-    final TextFormatting color;
+    final ChatFormatting color;
     if (percentFuel < 6) {
-      color = TextFormatting.RED;
+      color = ChatFormatting.RED;
     } else if (percentFuel < 16) {
-      color = TextFormatting.YELLOW;
+      color = ChatFormatting.YELLOW;
     } else {
-      color = TextFormatting.WHITE;
+      color = ChatFormatting.WHITE;
     }
     // if sneaking, show exact value, otherwise show percentage value
     final String fuelString = isShiftDown() ? Integer.toString(fuel) : (Integer.toString(percentFuel) + "%");
     // actually add the description
-    list.add(new TranslationTextComponent("entitytip.fuel").mergeStyle(TextFormatting.GRAY).appendString(": ")
-        .appendSibling(new StringTextComponent(fuelString).mergeStyle(color)));
+    list.add(new TranslatableComponent("entitytip.fuel").withStyle(ChatFormatting.GRAY).append(": ")
+        .append(new TextComponent(fuelString).withStyle(color)));
   }
   
-  protected void addDispenserGolemInfo(final DispenserGolem g, final List<IFormattableTextComponent> list) {
+  protected void addDispenserGolemInfo(final DispenserGolem g, final List<MutableComponent> list) {
     // add fuel amount if this is a furnace golem
     final int arrows = g.getArrowsInInventory();
     if(arrows > 0 && isShiftDown()) {
-       final TextFormatting color = TextFormatting.WHITE;
+       final ChatFormatting color = ChatFormatting.WHITE;
       // if sneaking, show exact value, otherwise show percentage value
       final String arrowString = Integer.toString(arrows);
       // actually add the description
-      list.add(new TranslationTextComponent("entitytip.arrows").mergeStyle(TextFormatting.GRAY).appendString(": ")
-          .appendSibling(new StringTextComponent(arrowString).mergeStyle(color)));
+      list.add(new TranslatableComponent("entitytip.arrows").withStyle(ChatFormatting.GRAY).append(": ")
+          .append(new TextComponent(arrowString).withStyle(color)));
     }
    
   }

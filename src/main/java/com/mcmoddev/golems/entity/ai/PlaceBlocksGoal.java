@@ -6,12 +6,12 @@ import javax.annotation.Nullable;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
 
 public class PlaceBlocksGoal extends Goal {
 
@@ -46,31 +46,31 @@ public class PlaceBlocksGoal extends Goal {
   }
 
   @Override
-  public boolean shouldExecute() {
-    return tickDelay > 0 && golem.getEntityWorld().rand.nextInt(tickDelay) == 0 && this.canExecute.test(this);
+  public boolean canUse() {
+    return tickDelay > 0 && golem.getCommandSenderWorld().random.nextInt(tickDelay) == 0 && this.canExecute.test(this);
   }
 
   @Override
-  public void startExecuting() {
+  public void start() {
     final BlockPos below = golem.getBlockBelow();
-    final BlockPos in = below.up(1);
+    final BlockPos in = below.above(1);
 
-    if (golem.world.isAirBlock(in) && isPlantSupport(golem.world, below)) {
-      setToPlant(golem.world, in);
+    if (golem.level.isEmptyBlock(in) && isPlantSupport(golem.level, below)) {
+      setToPlant(golem.level, in);
     }
   }
 
   @Override
-  public boolean shouldContinueExecuting() {
+  public boolean canContinueToUse() {
     return false;
   }
 
-  protected boolean setToPlant(final World world, final BlockPos pos) {
-    final BlockState state = this.plantables[world.rand.nextInt(this.plantables.length)];
-    return world.setBlockState(pos, state, 2);
+  protected boolean setToPlant(final Level world, final BlockPos pos) {
+    final BlockState state = this.plantables[world.random.nextInt(this.plantables.length)];
+    return world.setBlock(pos, state, 2);
   }
 
-  protected boolean isPlantSupport(final World world, final BlockPos pos) {
+  protected boolean isPlantSupport(final Level world, final BlockPos pos) {
     if (!this.checkSupports) {
       return true;
     }
@@ -88,6 +88,6 @@ public class PlaceBlocksGoal extends Goal {
   }
 
   public static Predicate<PlaceBlocksGoal> getGriefingPredicate() {
-    return t -> t.golem.world.getGameRules().getBoolean(GameRules.MOB_GRIEFING);
+    return t -> t.golem.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING);
   }
 }

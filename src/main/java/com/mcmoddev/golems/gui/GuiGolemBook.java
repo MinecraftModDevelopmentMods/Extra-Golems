@@ -8,23 +8,23 @@ import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.util.GolemContainer;
 import com.mcmoddev.golems.util.GolemRegistrar;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.Button;
+import com.mojang.blaze3d.platform.Lighting;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 
 public class GuiGolemBook extends Screen {
 
@@ -102,8 +102,8 @@ public class GuiGolemBook extends Screen {
   private static final ItemStack[] ingredientsHead = new ItemStack[] { new ItemStack(Blocks.CARVED_PUMPKIN), new ItemStack(GolemItems.GOLEM_SPELL) };
   private static final ItemStack outputHead = new ItemStack(GolemItems.GOLEM_HEAD);
 
-  public GuiGolemBook(PlayerEntity playerIn, ItemStack itemIn) {
-    super(new TranslationTextComponent("item.golems.info_book"));
+  public GuiGolemBook(Player playerIn, ItemStack itemIn) {
+    super(new TranslatableComponent("item.golems.info_book"));
     if (GOLEMS.isEmpty()) {
       initGolemBookEntries();
     }
@@ -141,7 +141,7 @@ public class GuiGolemBook extends Screen {
     int doneH = 20;
     int doneX = (this.width - doneW) / 2;
     int doneY = BOOK_HEIGHT + SCR_OFFSET_Y + 8;
-    this.addButton(new Button(doneX, doneY, doneW, doneH, new TranslationTextComponent("gui.done"), c -> this.minecraft.displayGuiScreen(null)));
+    this.addButton(new Button(doneX, doneY, doneW, doneH, new TranslatableComponent("gui.done"), c -> this.minecraft.setScreen(null)));
     // locate and activate the "page change" arrows
     int arrowX = (this.width - BOOK_WIDTH) / 2;
     int arrowY = SCR_OFFSET_Y + BOOK_HEIGHT - (ARROW_HEIGHT * 3 / 2);
@@ -171,11 +171,11 @@ public class GuiGolemBook extends Screen {
   }
 
   @Override
-  public void render(final MatrixStack matrix, final int mouseX, final int mouseY, final float partialTicks) {
+  public void render(final PoseStack matrix, final int mouseX, final int mouseY, final float partialTicks) {
     RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
     // draw background (book)
-    this.getMinecraft().getTextureManager().bindTexture(TEXTURE);
+    this.getMinecraft().getTextureManager().bind(TEXTURE);
     int bookX = (this.width - BOOK_WIDTH) / 2;
     int bookY = SCR_OFFSET_Y;
     this.blit(matrix, bookX, bookY, 0, 0, BOOK_WIDTH, BOOK_HEIGHT);
@@ -207,18 +207,18 @@ public class GuiGolemBook extends Screen {
    * @param pageNum the page to draw
    * @param partialTicks the partial tick count
    **/
-  private void drawPageAt(final MatrixStack matrix, final int cornerX, final int cornerY, final int pageNum, final float partialTicks) {
+  private void drawPageAt(final PoseStack matrix, final int cornerX, final int cornerY, final int pageNum, final float partialTicks) {
     // draw the page number
     this.drawPageNum(matrix, cornerX, cornerY, pageNum + 1);
     // declare these for the following switch statement
-    IFormattableTextComponent title;
-    IFormattableTextComponent body;
+    MutableComponent title;
+    MutableComponent body;
     // using the page number, decides which page to draw and how to draw it
     switch (pageNum) {
     case 0:
       // draw introduction
       title = trans("item.golems.info_book");
-      body = trans("golembook.intro1").appendString("\n").appendSibling(trans("golembook.intro2"));
+      body = trans("golembook.intro1").append("\n").append(trans("golembook.intro2"));
       drawBasicPage(matrix, cornerX, cornerY, title, body);
       return;
     case 1:
@@ -229,7 +229,7 @@ public class GuiGolemBook extends Screen {
     case 2:
       // draw Golem Spell instructions
       title = trans("item.golems.golem_paper");
-      body = wrap("\n\n\n\n").appendSibling(
+      body = wrap("\n\n\n\n").append(
           trans("golembook.recipe_spell.recipe", title, trans("item.minecraft.paper"), trans("item.minecraft.feather"),
           trans("item.minecraft.ink_sac"), trans("item.minecraft.redstone")));
       drawBasicPage(matrix, cornerX, cornerY, title, body);
@@ -238,16 +238,16 @@ public class GuiGolemBook extends Screen {
     case 3:
       // draw Golem Head instructions
       title = trans("block.golems.golem_head");
-      body = wrap("\n\n\n\n").appendSibling(trans("golembook.recipe_head.recipe", title, trans("item.golems.golem_paper"), trans("block.minecraft.pumpkin")));
+      body = wrap("\n\n\n\n").append(trans("golembook.recipe_head.recipe", title, trans("item.golems.golem_paper"), trans("block.minecraft.pumpkin")));
       drawBasicPage(matrix, cornerX, cornerY, title, body);
       draw2x2Grid(matrix, cornerX + MARGIN * 2, cornerY + MARGIN * 2, ingredientsHead, outputHead);
       return;
     case 4:
       // draw Make Golem instructions
       title = trans("golembook.build_golem.title");
-      body = trans("golembook.build_golem.howto1").appendString(" ")
-          .appendSibling(trans("golembook.build_golem.howto2")).appendString("\n\n")
-          .appendSibling(trans("golembook.build_golem.howto3", trans("block.golems.golem_head")));
+      body = trans("golembook.build_golem.howto1").append(" ")
+          .append(trans("golembook.build_golem.howto2")).append("\n\n")
+          .append(trans("golembook.build_golem.howto3", trans("block.golems.golem_head")));
       drawBasicPage(matrix, cornerX, cornerY, title, body);
       return;
     case 5:
@@ -265,14 +265,14 @@ public class GuiGolemBook extends Screen {
     }
   }
 
-  private void drawPageNum(final MatrixStack matrix, final int cornerX, final int cornerY, final int pageNum) {
+  private void drawPageNum(final PoseStack matrix, final int cornerX, final int cornerY, final int pageNum) {
     boolean isLeft = pageNum % 2 == 1;
     // 'page x of xx'
     int numX = isLeft ? ((this.width / 2) - MARGIN) : ((this.width / 2) + MARGIN);
     int numY = cornerY + BOOK_HEIGHT - (ARROW_HEIGHT * 3 / 2);
     String pageNumLeft = String.valueOf(pageNum);
-    int sWidth = isLeft ? this.font.getStringWidth(pageNumLeft) : 0;
-    this.font.drawString(matrix, pageNumLeft, numX - sWidth, numY, 0);
+    int sWidth = isLeft ? this.font.width(pageNumLeft) : 0;
+    this.font.draw(matrix, pageNumLeft, numX - sWidth, numY, 0);
   }
 
   /**
@@ -290,27 +290,27 @@ public class GuiGolemBook extends Screen {
     // Render the Block with given scale
     RenderSystem.pushMatrix();
     RenderSystem.enableRescaleNormal();
-    RenderHelper.enableStandardItemLighting();
+    Lighting.turnBackOn();
     RenderSystem.scalef(scale, scale, scale);
-    this.itemRenderer.renderItemIntoGUI(new ItemStack(block), (int) (blockX / scale), (int) (blockY / scale));
+    this.itemRenderer.renderGuiItem(new ItemStack(block), (int) (blockX / scale), (int) (blockY / scale));
     RenderSystem.popMatrix();
   }
 
   /**
    * Draws the GolemEntry name and description at the given location
    **/
-  private void drawGolemEntry(final MatrixStack matrix, int cornerX, int cornerY, final GolemBookEntry entry, final float partialTicks) {
+  private void drawGolemEntry(final PoseStack matrix, int cornerX, int cornerY, final GolemBookEntry entry, final float partialTicks) {
     // 'golem name' text box
     int nameX = cornerX + MARGIN * 4;
     int nameY = cornerY + MARGIN;
-    IFormattableTextComponent golemName = entry.getGolemName();
-    this.font.func_238418_a_(golemName, nameX, nameY, (BOOK_WIDTH / 2) - MARGIN * 5, 0);
+    MutableComponent golemName = entry.getGolemName();
+    this.font.drawWordWrap(golemName, nameX, nameY, (BOOK_WIDTH / 2) - MARGIN * 5, 0);
 
     // 'golem stats' text box
     int statsX = cornerX + MARGIN;
     int statsY = nameY + MARGIN * 2;
-    IFormattableTextComponent stats = entry.getDescriptionPage();
-    this.font.func_238418_a_(stats, statsX, statsY, (BOOK_WIDTH / 2) - (MARGIN * 2), 0);
+    MutableComponent stats = entry.getDescriptionPage();
+    this.font.drawWordWrap(stats, statsX, statsY, (BOOK_WIDTH / 2) - (MARGIN * 2), 0);
 
     // 'screenshot' (supplemental image)
     if (entry.hasImage()) {
@@ -318,39 +318,39 @@ public class GuiGolemBook extends Screen {
       float scale = 0.9F;
       int imgX = cornerX + (BOOK_WIDTH / 4) - (int) ((SUPP_WIDTH * scale) / 2.0F);
       int imgY = cornerY + BOOK_HEIGHT - (int) (SUPP_HEIGHT * scale) - (MARGIN * 2);
-      this.getMinecraft().getTextureManager().bindTexture(entry.getImageResource());
+      this.getMinecraft().getTextureManager().bind(entry.getImageResource());
       int w = (int) (SUPP_WIDTH * scale);
       int h = (int) (SUPP_HEIGHT * scale);
       blit(matrix, imgX, imgY, 0, 0, w, h, w, h);
     }
   }
 
-  private void drawBasicPage(final MatrixStack matrix, int cornerX, int cornerY, 
-      IFormattableTextComponent title, IFormattableTextComponent body) {
+  private void drawBasicPage(final PoseStack matrix, int cornerX, int cornerY, 
+      MutableComponent title, MutableComponent body) {
     final int maxWidth = (BOOK_WIDTH / 2) - (MARGIN * 2);
 
     int titleX = cornerX + MARGIN + 4;
     int titleY = cornerY + MARGIN;
-    int sWidth = this.font.getStringWidth(title.getString());
+    int sWidth = this.font.width(title.getString());
     if (sWidth > maxWidth) {
       // draw title wrapped
-      this.font.func_238418_a_(title, titleX, titleY, maxWidth, 0);
+      this.font.drawWordWrap(title, titleX, titleY, maxWidth, 0);
     } else {
       // draw title centered
-      this.font.drawString(matrix, title.getString(), titleX + ((maxWidth - sWidth) / 2), titleY, 0);
+      this.font.draw(matrix, title.getString(), titleX + ((maxWidth - sWidth) / 2), titleY, 0);
     }
 
     int bodyX = titleX;
     int bodyY = titleY + MARGIN * 2;
-    this.font.func_238418_a_(body, bodyX, bodyY, maxWidth, 0);
+    this.font.drawWordWrap(body, bodyX, bodyY, maxWidth, 0);
   }
   
-  private void drawTableOfContents(final MatrixStack matrix, final int cornerX, final int cornerY, final IFormattableTextComponent title) {
+  private void drawTableOfContents(final PoseStack matrix, final int cornerX, final int cornerY, final MutableComponent title) {
     // use this to draw the title
     drawBasicPage(matrix, cornerX, cornerY, title, wrap(""));
 
     // draw background
-    this.getMinecraft().getTextureManager().bindTexture(CONTENTS);
+    this.getMinecraft().getTextureManager().bind(CONTENTS);
     RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
     int startX = cornerX + SCROLL_STARTX + 1;
     int startY = cornerY + SCROLL_STARTY - 1;
@@ -370,7 +370,7 @@ public class GuiGolemBook extends Screen {
     }
   }
 
-  private void draw2x2Grid(final MatrixStack matrix, final int startX, final int startY, final ItemStack[] ingredients, final ItemStack result) {
+  private void draw2x2Grid(final PoseStack matrix, final int startX, final int startY, final ItemStack[] ingredients, final ItemStack result) {
     final int frameWidth = 3;
     final float scale = 1.0F;
     /** texture location and size of 2x2 crafting **/
@@ -380,12 +380,12 @@ public class GuiGolemBook extends Screen {
     RenderSystem.scalef(scale, scale, scale);
     RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
     // draw 2x2 grid background
-    this.getMinecraft().getTextureManager().bindTexture(TEXTURE);
+    this.getMinecraft().getTextureManager().bind(TEXTURE);
     this.blit(matrix, startX, startY, BOOK_WIDTH - gridW, BOOK_HEIGHT + ICON_SP, gridW, gridH); // drawTexturedModalRect
 
     // draw itemstacks
     RenderSystem.enableRescaleNormal();
-    RenderHelper.enableStandardItemLighting();
+    Lighting.turnBackOn();
     float posX;
     float posY;
     int iconW = 15;
@@ -394,19 +394,19 @@ public class GuiGolemBook extends Screen {
     case 4:
       posX = startX + iconW + frameWidth * 3.0F;
       posY = startY + iconW + frameWidth * 3.0F;
-      this.itemRenderer.renderItemIntoGUI(ingredients[3], (int) (posX / scale), (int) (posY / scale));
+      this.itemRenderer.renderGuiItem(ingredients[3], (int) (posX / scale), (int) (posY / scale));
     case 3:
       posX = startX + frameWidth * 2.0F;
       posY = startY + iconW + frameWidth * 3.0F;
-      this.itemRenderer.renderItemIntoGUI(ingredients[2], (int) (posX / scale), (int) (posY / scale));
+      this.itemRenderer.renderGuiItem(ingredients[2], (int) (posX / scale), (int) (posY / scale));
     case 2:
       posX = startX + iconW + frameWidth * 3.0F;
       posY = startY + frameWidth * 2.0F;
-      this.itemRenderer.renderItemIntoGUI(ingredients[1], (int) (posX / scale), (int) (posY / scale));
+      this.itemRenderer.renderGuiItem(ingredients[1], (int) (posX / scale), (int) (posY / scale));
     case 1:
       posX = startX + frameWidth * 2.0F;
       posY = startY + frameWidth * 2.0F;
-      this.itemRenderer.renderItemIntoGUI(ingredients[0], (int) (posX / scale), (int) (posY / scale));
+      this.itemRenderer.renderGuiItem(ingredients[0], (int) (posX / scale), (int) (posY / scale));
     default:
       break;
     }
@@ -414,13 +414,13 @@ public class GuiGolemBook extends Screen {
     // draw result itemstack
     posX = startX + gridW - 16.0F - frameWidth * 2.0F;
     posY = startY + 16.0F;
-    this.itemRenderer.renderItemIntoGUI(result, (int) (posX / scale), (int) (posY / scale));
+    this.itemRenderer.renderGuiItem(result, (int) (posX / scale), (int) (posY / scale));
 
     // reset scale
     RenderSystem.popMatrix();
   }
   
-  private void drawGolemDiagram(final MatrixStack matrix, int cornerX, int cornerY) {
+  private void drawGolemDiagram(final PoseStack matrix, int cornerX, int cornerY) {
     Block golemBody = Blocks.IRON_BLOCK;
     Block golemHead = GolemItems.GOLEM_HEAD;
     float scale = 2.0F;
@@ -550,7 +550,7 @@ public class GuiGolemBook extends Screen {
   }
 
   private static GolemBookEntry[] getGolemEntriesForScroll(final float scrollIn) {
-    float scroll = MathHelper.clamp(scrollIn, 0.0F, 1.0F);
+    float scroll = Mth.clamp(scrollIn, 0.0F, 1.0F);
     int i = (int) (scroll * (float) (ALPHABETICAL.size() - NUM_CONTENTS_ENTRIES));
     return ALPHABETICAL.subList(i, i + NUM_CONTENTS_ENTRIES).toArray(new GolemBookEntry[NUM_CONTENTS_ENTRIES]);
   }
@@ -558,12 +558,12 @@ public class GuiGolemBook extends Screen {
   /**
    * Helper method for translating text into local language using TranslationTextComponent
    **/
-  protected static IFormattableTextComponent trans(final String s, final Object... strings) {
-    return new TranslationTextComponent(s, strings);
+  protected static MutableComponent trans(final String s, final Object... strings) {
+    return new TranslatableComponent(s, strings);
   }
   
-  protected static IFormattableTextComponent wrap(final String s) {
-    return new StringTextComponent(s);
+  protected static MutableComponent wrap(final String s) {
+    return new TextComponent(s);
   }
 
   protected static class BlockButton extends Button {
@@ -574,7 +574,7 @@ public class GuiGolemBook extends Screen {
     private final GuiGolemBook gui;
 
     public BlockButton(GuiGolemBook guiIn, Block[] blockValues, int x, int y, float scaleIn) {
-      super(x, y, (int) (scaleIn * 16.0F), (int) (scaleIn * 16.0F), new StringTextComponent(""), b -> {
+      super(x, y, (int) (scaleIn * 16.0F), (int) (scaleIn * 16.0F), new TextComponent(""), b -> {
       });
       this.gui = guiIn;
       this.blocks = blockValues;
@@ -582,7 +582,7 @@ public class GuiGolemBook extends Screen {
     }
 
     @Override
-    public void render(final MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+    public void render(final PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
       if (this.visible) {
         // update hovered flag
         this.isHovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
@@ -608,10 +608,10 @@ public class GuiGolemBook extends Screen {
      *
      * @return if the text was successfully drawn
      **/
-    public boolean drawHoveringText(final MatrixStack matrix, final int mouseX, final int mouseY) {
+    public boolean drawHoveringText(final PoseStack matrix, final int mouseX, final int mouseY) {
       // draw the name of the block if this button is being hovered over
       if (this.currentBlock != Blocks.AIR) {
-        this.gui.renderTooltip(matrix, new TranslationTextComponent(this.currentBlock.getTranslationKey()), mouseX, mouseY);
+        this.gui.renderTooltip(matrix, new TranslatableComponent(this.currentBlock.getDescriptionId()), mouseX, mouseY);
         return true;
       }
       return false;
@@ -647,10 +647,10 @@ public class GuiGolemBook extends Screen {
     }
 
     @Override
-    public void render(final MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+    public void render(final PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
       if (this.visible) {
         this.isHovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
-        Minecraft.getInstance().getTextureManager().bindTexture(CONTENTS);
+        Minecraft.getInstance().getTextureManager().bind(CONTENTS);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         // draw the background of the button
         this.blit(matrix, this.x, this.y, CONTENTS_W + ICON_SP, this.isHovered ? (ENTRY_H + ICON_SP) : 0, ENTRY_W, ENTRY_H); // drawTexturedModalRect
@@ -661,19 +661,19 @@ public class GuiGolemBook extends Screen {
         // prepare to draw the golem's name
         RenderSystem.pushMatrix();
 
-        final IFormattableTextComponent name = entry.getGolemName();
+        final MutableComponent name = entry.getGolemName();
         final int wrap = this.width - 20;
         float scale = 1.0F;
-        int nameH = gui.font.getWordWrappedHeight(name.getString(), wrap);
+        int nameH = gui.font.wordWrapHeight(name.getString(), wrap);
         if (nameH > this.height) {
           scale = 0.7F;
-          nameH = (int) (scale * gui.font.getWordWrappedHeight(name.getString(), (int) (wrap / scale)));
+          nameH = (int) (scale * gui.font.wordWrapHeight(name.getString(), (int) (wrap / scale)));
         }
         int nameX = this.x + 20;
         int nameY = this.y + ((this.height - nameH) / 2) + 1;
         // re-scale and draw the golem name
         RenderSystem.scalef(scale, scale, scale);
-        gui.font.func_238418_a_(name, (int) ((nameX) / scale), (int) (nameY / scale), (int) (wrap / scale), 0);
+        gui.font.drawWordWrap(name, (int) ((nameX) / scale), (int) (nameY / scale), (int) (wrap / scale), 0);
         RenderSystem.popMatrix();
       }
     }
@@ -707,11 +707,11 @@ public class GuiGolemBook extends Screen {
      * Draws this button to the screen.
      */
     @Override
-    public void render(final MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+    public void render(final PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
       if (this.visible) {
         boolean mouseOver = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        Minecraft.getInstance().getTextureManager().bindTexture(GuiGolemBook.TEXTURE);
+        Minecraft.getInstance().getTextureManager().bind(GuiGolemBook.TEXTURE);
         int tx = 0;
         int ty = TEXTURE_STARTY;
 

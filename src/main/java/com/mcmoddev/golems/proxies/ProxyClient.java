@@ -12,18 +12,17 @@ import com.mcmoddev.golems.renders.GolemRenderer;
 import com.mcmoddev.golems.renders.model.SimpleTextureLayer;
 import com.mcmoddev.golems.util.GolemNames;
 import com.mcmoddev.golems.util.GolemRegistrar;
-import com.mcmoddev.golems_thermal.ThermalGolemNames;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.model.ModelBakery;
-import net.minecraft.client.resources.ReloadListener;
-import net.minecraft.entity.EntityType;
-import net.minecraft.profiler.IProfiler;
-import net.minecraft.resources.IReloadableResourceManager;
-import net.minecraft.resources.IResourceManager;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.server.packs.resources.ReloadableResourceManager;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 public final class ProxyClient extends ProxyCommon {
@@ -31,16 +30,16 @@ public final class ProxyClient extends ProxyCommon {
   @Override
   public void registerListeners() {
     // add a listener to refresh golem textures
-    IResourceManager manager = Minecraft.getInstance().getResourceManager();
-    if (manager instanceof IReloadableResourceManager) {
-      ((IReloadableResourceManager)manager).addReloadListener(new ReloadListener<ModelBakery>() {
+    ResourceManager manager = Minecraft.getInstance().getResourceManager();
+    if (manager instanceof ReloadableResourceManager) {
+      ((ReloadableResourceManager)manager).registerReloadListener(new SimplePreparableReloadListener<ModelBakery>() {
         @Override
-        protected void apply(ModelBakery arg0, IResourceManager arg1, IProfiler arg2) {
+        protected void apply(ModelBakery arg0, ResourceManager arg1, ProfilerFiller arg2) {
           GolemRenderType.reloadDynamicTextureMap();
         }
 
         @Override
-        protected ModelBakery prepare(IResourceManager arg0, IProfiler arg1) {
+        protected ModelBakery prepare(ResourceManager arg0, ProfilerFiller arg1) {
           return null;
         }
         
@@ -50,7 +49,7 @@ public final class ProxyClient extends ProxyCommon {
 
   @Override
   public void registerContainerRenders() {
-    ScreenManager.registerFactory(GolemItems.DISPENSER_GOLEM, GuiDispenserGolem::new);
+    MenuScreens.register(GolemItems.DISPENSER_GOLEM, GuiDispenserGolem::new);
   }
 
   @SuppressWarnings("unchecked")
@@ -77,8 +76,7 @@ public final class ProxyClient extends ProxyCommon {
     registerMushroomGolemRenders();
     // Thermal Series custom renders
     if(AddonLoader.isThermalLoaded()) {
-      // Rockwool Golem
-      registerRockwoolGolemRenders();
+      
     }
   }
   
@@ -117,16 +115,5 @@ public final class ProxyClient extends ProxyCommon {
       });
   }
   
-  private void registerRockwoolGolemRenders() {
-    RenderingRegistry.registerEntityRenderingHandler(
-      GolemRegistrar.getContainer(new ResourceLocation(AddonLoader.THERMAL_GOLEMS_MODID, ThermalGolemNames.ROCKWOOL_GOLEM)).getEntityType(), 
-      m -> {
-        GolemRenderer<GolemBase> r = new GolemRenderer<>(m);
-        return r.withLayer(new SimpleTextureLayer<GolemBase>(r, g -> ((com.mcmoddev.golems_thermal.entity.RockwoolGolem)g).getTexture(), g -> 0xFFFFFF, g -> false, 1.0F) {
-          @Override
-          protected RenderType getRenderType(final ResourceLocation texture) { return GolemRenderType.getGolemCutout(texture, GolemRenderType.WOOL_TEMPLATE, true); }
-        }).withAllLayers();
-      });
-  }
 
 }

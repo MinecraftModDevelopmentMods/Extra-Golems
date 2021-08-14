@@ -2,18 +2,18 @@ package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.level.Level;
 
 public final class CoalGolem extends GolemBase {
 
   public static final String ALLOW_SPECIAL = "Allow Special: Blindness";
 
-  public CoalGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+  public CoalGolem(final EntityType<? extends GolemBase> entityType, final Level world) {
     super(entityType, world);
   }
 
@@ -21,11 +21,11 @@ public final class CoalGolem extends GolemBase {
    * Attack by adding potion effect as well.
    */
   @Override
-  public boolean attackEntityAsMob(final Entity entity) {
-    if (super.attackEntityAsMob(entity)) {
+  public boolean doHurtTarget(final Entity entity) {
+    if (super.doHurtTarget(entity)) {
       final int BLIND_CHANCE = 2;
-      if (entity instanceof LivingEntity && this.getConfigBool(ALLOW_SPECIAL) && this.rand.nextInt(BLIND_CHANCE) == 0) {
-        ((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.BLINDNESS, 20 * (3 + rand.nextInt(5)), 0));
+      if (entity instanceof LivingEntity && this.getConfigBool(ALLOW_SPECIAL) && this.random.nextInt(BLIND_CHANCE) == 0) {
+        ((LivingEntity) entity).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 20 * (3 + random.nextInt(5)), 0));
       }
       return true;
     }
@@ -38,11 +38,11 @@ public final class CoalGolem extends GolemBase {
    * burn.
    */
   @Override
-  public void livingTick() {
-    super.livingTick();
+  public void aiStep() {
+    super.aiStep();
     // if burning, the fire never goes out on its own
-    if (this.isBurning() && !this.isWet()) {
-      this.setFire(2);
+    if (this.isOnFire() && !this.isInWaterOrRain()) {
+      this.setSecondsOnFire(2);
     }
   }
 }

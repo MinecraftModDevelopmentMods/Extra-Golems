@@ -2,9 +2,9 @@ package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.level.Level;
 
 public final class NetheriteGolem extends GolemBase {
   
@@ -12,18 +12,18 @@ public final class NetheriteGolem extends GolemBase {
   
   private boolean allowResist;
   
-  public NetheriteGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+  public NetheriteGolem(final EntityType<? extends GolemBase> entityType, final Level world) {
     super(entityType, world);
     allowResist = getConfigBool(ALLOW_RESIST);
   }
   
   @Override
-  protected void damageEntity(DamageSource source, float amount) {
+  protected void actuallyHurt(DamageSource source, float amount) {
     // reduce all incoming damage
     float amt = amount;
-    if(allowResist && !source.isDamageAbsolute()) {
+    if(allowResist && !source.isBypassMagic()) {
       amt *= 0.64F;
     }
-    super.damageEntity(source, amt);
+    super.actuallyHurt(source, amt);
   }
 }

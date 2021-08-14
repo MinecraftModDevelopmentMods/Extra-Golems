@@ -3,31 +3,31 @@ package com.mcmoddev.golems.container;
 import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.util.GolemNames;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ArrowItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ArrowItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 
-public class ContainerDispenserGolem extends Container {
+public class ContainerDispenserGolem extends AbstractContainerMenu {
 
-  private final IInventory dispenserInventory;
+  private final Container dispenserInventory;
 
-  public ContainerDispenserGolem(final int id, final PlayerInventory playerInv) {
-    this(id, playerInv, new Inventory(9));
+  public ContainerDispenserGolem(final int id, final Inventory playerInv) {
+    this(id, playerInv, new SimpleContainer(9));
   }
 
-  public ContainerDispenserGolem(final int id, final PlayerInventory playerInv, final IInventory inv) {
+  public ContainerDispenserGolem(final int id, final Inventory playerInv, final Container inv) {
     super(GolemItems.DISPENSER_GOLEM, id);
-    assertInventorySize(inv, 9);
+    checkContainerSize(inv, 9);
     this.dispenserInventory = inv;
-    inv.openInventory(playerInv.player);
+    inv.startOpen(playerInv.player);
 
     for (int i = 0; i < 3; i++) {
       for (int j = 0; j < 3; j++) {
@@ -46,30 +46,30 @@ public class ContainerDispenserGolem extends Container {
   }
 
   @Override
-  public boolean canInteractWith(final PlayerEntity playerIn) {
+  public boolean stillValid(final Player playerIn) {
     return true;
   }
 
   @Override
-  public ItemStack transferStackInSlot(final PlayerEntity player, final int slotIndex) {
+  public ItemStack quickMoveStack(final Player player, final int slotIndex) {
     ItemStack stack = ItemStack.EMPTY;
-    Slot slot = this.inventorySlots.get(slotIndex);
-    if (slot != null && slot.getHasStack()) {
-      ItemStack slotStack = slot.getStack();
+    Slot slot = this.slots.get(slotIndex);
+    if (slot != null && slot.hasItem()) {
+      ItemStack slotStack = slot.getItem();
       stack = slotStack.copy();
 
       if (slotIndex < 9) {
-        if (!mergeItemStack(slotStack, 9, 45, true)) {
+        if (!moveItemStackTo(slotStack, 9, 45, true)) {
           return ItemStack.EMPTY;
         }
-      } else if (!mergeItemStack(slotStack, 0, 9, false)) {
+      } else if (!moveItemStackTo(slotStack, 0, 9, false)) {
         return ItemStack.EMPTY;
       }
 
       if (slotStack.isEmpty()) {
-        slot.putStack(ItemStack.EMPTY);
+        slot.set(ItemStack.EMPTY);
       } else {
-        slot.onSlotChanged();
+        slot.setChanged();
       }
       if (slotStack.getCount() == stack.getCount()) {
         return ItemStack.EMPTY;
@@ -81,22 +81,22 @@ public class ContainerDispenserGolem extends Container {
   }
 
   @Override
-  public void onContainerClosed(final PlayerEntity player) {
-    super.onContainerClosed(player);
-    this.dispenserInventory.closeInventory(player);
+  public void removed(final Player player) {
+    super.removed(player);
+    this.dispenserInventory.stopOpen(player);
   }
 
-  public static class Provider implements INamedContainerProvider {
+  public static class Provider implements MenuProvider {
 
-    private final IInventory inventory;
+    private final Container inventory;
 
-    public Provider(final IInventory inv) {
+    public Provider(final Container inv) {
       super();
       inventory = inv;
     }
 
     @Override
-    public Container createMenu(int i, final PlayerInventory playerInv, final PlayerEntity player) {
+    public AbstractContainerMenu createMenu(int i, final Inventory playerInv, final Player player) {
       if (player.isSpectator()) {
         return null;
       } else {
@@ -105,19 +105,19 @@ public class ContainerDispenserGolem extends Container {
     }
 
     @Override
-    public ITextComponent getDisplayName() {
-      return new TranslationTextComponent("entity.golems." + GolemNames.DISPENSER_GOLEM);
+    public Component getDisplayName() {
+      return new TranslatableComponent("entity.golems." + GolemNames.DISPENSER_GOLEM);
     }
   }
 
   public static class ArrowSlot extends Slot {
 
-    public ArrowSlot(IInventory inventoryIn, int index, int xPosition, int yPosition) {
+    public ArrowSlot(Container inventoryIn, int index, int xPosition, int yPosition) {
       super(inventoryIn, index, xPosition, yPosition);
     }
 
     @Override
-    public boolean isItemValid(final ItemStack stack) {
+    public boolean mayPlace(final ItemStack stack) {
       return stack.isEmpty() || stack.getItem() instanceof ArrowItem;
     }
   }

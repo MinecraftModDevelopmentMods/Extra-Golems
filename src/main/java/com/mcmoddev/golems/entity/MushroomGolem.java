@@ -9,14 +9,14 @@ import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.main.ExtraGolems;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.EntityType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.level.Level;
 
 public final class MushroomGolem extends GolemMultiTextured {
 
@@ -27,7 +27,7 @@ public final class MushroomGolem extends GolemMultiTextured {
   public static final String[] TEXTURE_NAMES = { "red_mushroom_block", "brown_mushroom_block" };
   public static final String[] LOOT_TABLE_NAMES = { "red", "brown" };
 
-  public MushroomGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+  public MushroomGolem(final EntityType<? extends GolemBase> entityType, final Level world) {
     super(entityType, world, "minecraft", TEXTURE_NAMES, ExtraGolems.MODID, LOOT_TABLE_NAMES);
   }
 
@@ -36,13 +36,13 @@ public final class MushroomGolem extends GolemMultiTextured {
     super.registerGoals();
     final boolean allowed = this.getConfigBool(ALLOW_SPECIAL);
     int freq = allowed ? this.getConfigInt(FREQUENCY) : -100;
-    freq += this.rand.nextInt(Math.max(10, freq / 2));
-    final BlockState[] mushrooms = { Blocks.BROWN_MUSHROOM.getDefaultState(), Blocks.RED_MUSHROOM.getDefaultState() };
+    freq += this.random.nextInt(Math.max(10, freq / 2));
+    final BlockState[] mushrooms = { Blocks.BROWN_MUSHROOM.defaultBlockState(), Blocks.RED_MUSHROOM.defaultBlockState() };
     final Block[] soils = { Blocks.DIRT, Blocks.GRASS_BLOCK, Blocks.MYCELIUM, Blocks.PODZOL, Blocks.NETHERRACK, Blocks.SOUL_SAND };
     this.goalSelector.addGoal(2, new PlaceBlocksGoal(this, freq, mushrooms, soils, allowed));
     if (this.getConfigBool(ALLOW_HEALING)) {
-      this.goalSelector.addGoal(4, new PassiveEffectsGoal(this, Effects.REGENERATION, 50, 60, 1, 1,
-          g -> !g.getEntityWorld().isDaytime() && g.getEntityWorld().getRandom().nextInt(450) == 0));
+      this.goalSelector.addGoal(4, new PassiveEffectsGoal(this, MobEffects.REGENERATION, 50, 60, 1, 1,
+          g -> !g.getCommandSenderWorld().isDay() && g.getCommandSenderWorld().getRandom().nextInt(450) == 0));
     }
   }
 
@@ -55,7 +55,7 @@ public final class MushroomGolem extends GolemMultiTextured {
   }
 
   @Override
-  public ItemStack getCreativeReturn(final RayTraceResult target) {
+  public ItemStack getCreativeReturn(final HitResult target) {
     return this.getTextureNum() == 0 ? new ItemStack(Blocks.RED_MUSHROOM_BLOCK) : new ItemStack(Blocks.BROWN_MUSHROOM_BLOCK);
   }
 

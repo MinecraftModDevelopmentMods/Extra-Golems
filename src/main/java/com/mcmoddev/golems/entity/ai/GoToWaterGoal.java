@@ -5,11 +5,11 @@ import java.util.Random;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 
 public class GoToWaterGoal extends Goal {
 
@@ -19,23 +19,23 @@ public class GoToWaterGoal extends Goal {
   private double targetY;
   private double targetZ;
   private final double speed;
-  private final World world;
+  private final Level world;
 
   public GoToWaterGoal(final GolemBase golemBase, final int radius, final double speed) {
     this.golem = golemBase;
     this.detectWaterRadius = radius;
     this.speed = speed;
-    this.world = golemBase.world;
-    setMutexFlags(EnumSet.of(Goal.Flag.MOVE));
+    this.world = golemBase.level;
+    setFlags(EnumSet.of(Goal.Flag.MOVE));
   }
 
   @Override
-  public boolean shouldExecute() {
+  public boolean canUse() {
     if (this.golem.isInWater()) {
       return false;
     }
 
-    Vector3d target = getNearbyWater();
+    Vec3 target = getNearbyWater();
     if (target == null || !this.golem.shouldMoveToWater(target)) {
       return false;
     }
@@ -47,26 +47,26 @@ public class GoToWaterGoal extends Goal {
   }
 
   @Override
-  public boolean shouldContinueExecuting() {
-    return !this.golem.getNavigator().noPath();
+  public boolean canContinueToUse() {
+    return !this.golem.getNavigation().isDone();
   }
 
   @Override
-  public void startExecuting() {
-    this.golem.getNavigator().tryMoveToXYZ(this.targetX, this.targetY, this.targetZ, this.speed);
+  public void start() {
+    this.golem.getNavigation().moveTo(this.targetX, this.targetY, this.targetZ, this.speed);
   }
 
-  private Vector3d getNearbyWater() {
-    Random rand = this.golem.getRNG();
+  private Vec3 getNearbyWater() {
+    Random rand = this.golem.getRandom();
 
     BlockPos pos1 = this.golem.getBlockBelow();
 
     for (int i = 0; i < 10; i++) {
-      BlockPos pos2 = pos1.add(rand.nextInt(detectWaterRadius * 2) - detectWaterRadius, 2 - rand.nextInt(8),
+      BlockPos pos2 = pos1.offset(rand.nextInt(detectWaterRadius * 2) - detectWaterRadius, 2 - rand.nextInt(8),
           rand.nextInt(detectWaterRadius * 2) - detectWaterRadius);
 
       if (this.world.getBlockState(pos2).getBlock() == Blocks.WATER) {
-        return new Vector3d(pos2.getX(), pos2.getY(), pos2.getZ());
+        return new Vec3(pos2.getX(), pos2.getY(), pos2.getZ());
       }
     }
     return null;

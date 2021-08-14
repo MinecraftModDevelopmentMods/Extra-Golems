@@ -2,9 +2,9 @@ package com.mcmoddev.golems.entity.modded;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.level.Level;
 
 public class ElectrumGolem extends GolemBase {
   
@@ -12,14 +12,14 @@ public class ElectrumGolem extends GolemBase {
   
   private boolean immuneToMagic;
 
-  public ElectrumGolem(EntityType<? extends GolemBase> type, World world) {
+  public ElectrumGolem(EntityType<? extends GolemBase> type, Level world) {
     super(type, world);
     immuneToMagic = getConfigBool(IMMUNE_TO_MAGIC);
   }
   
   @Override
   public boolean isInvulnerableTo(DamageSource source) {
-    return (immuneToMagic && source.isMagicDamage()) || super.isInvulnerableTo(source);
+    return (immuneToMagic && source.isMagic()) || super.isInvulnerableTo(source);
   }
 
 }

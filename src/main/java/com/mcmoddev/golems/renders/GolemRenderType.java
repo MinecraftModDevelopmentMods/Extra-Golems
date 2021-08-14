@@ -9,9 +9,13 @@ import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.vertex.VertexFormat;
-import net.minecraft.util.ResourceLocation;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import net.minecraft.resources.ResourceLocation;
+
+import net.minecraft.client.renderer.RenderStateShard.CullStateShard;
+import net.minecraft.client.renderer.RenderStateShard.TextureStateShard;
+import net.minecraft.client.renderer.RenderType.CompositeState;
 
 public class GolemRenderType extends RenderType {
   
@@ -31,7 +35,7 @@ public class GolemRenderType extends RenderType {
     copy.entrySet().forEach(e -> dynamicTextureMap.put(e.getKey(), new DynamicTextureState(e.getKey(), e.getValue().templateImage)));
   }
   
-  private static TextureState getTextureState(final ResourceLocation texture, final ResourceLocation template) {
+  private static TextureStateShard getTextureState(final ResourceLocation texture, final ResourceLocation template) {
     // lazy-load the texture state
     if(!dynamicTextureMap.containsKey(texture)) {
       dynamicTextureMap.put(texture, new DynamicTextureState(texture, template));
@@ -45,52 +49,52 @@ public class GolemRenderType extends RenderType {
   
   public static RenderType getGolemCutout(final ResourceLocation texture, final ResourceLocation template, final boolean dynamic) {        
     if(!dynamic) {
-      return RenderType.getEntityCutoutNoCull(texture);
+      return RenderType.entityCutoutNoCull(texture);
     }
     // make dynamic cutout type
-    return makeType("golem_cutout", DefaultVertexFormats.ENTITY, GL11.GL_QUADS, 256, true, false,
-        RenderType.State.getBuilder()
-        .transparency(NO_TRANSPARENCY)
-        .diffuseLighting(DIFFUSE_LIGHTING_ENABLED)
-        .alpha(DEFAULT_ALPHA)
-        .cull(CULL_DISABLED)
-        .lightmap(LIGHTMAP_ENABLED)
-        .overlay(OVERLAY_ENABLED)
-        .texture(getTextureState(texture, template))
-        .build(true));
+    return create("golem_cutout", DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, 256, true, false,
+        RenderType.CompositeState.builder()
+        .setTransparencyState(NO_TRANSPARENCY)
+        .setDiffuseLightingState(DIFFUSE_LIGHTING)
+        .setAlphaState(DEFAULT_ALPHA)
+        .setCullState(NO_CULL)
+        .setLightmapState(LIGHTMAP)
+        .setOverlayState(OVERLAY)
+        .setTextureState(getTextureState(texture, template))
+        .createCompositeState(true));
   }
   
   public static RenderType getGolemTransparent(final ResourceLocation texture, final boolean dynamic) {
     if(!dynamic) {
-      return RenderType.getEntityTranslucent(texture);
+      return RenderType.entityTranslucent(texture);
     }
     // make dynamic translucent type
-    return makeType("golem_transparent", DefaultVertexFormats.ENTITY, GL11.GL_QUADS, 256, true, true, 
-        RenderType.State.getBuilder()
-        .texture(getTextureState(texture, TEMPLATE))
-        .transparency(TRANSLUCENT_TRANSPARENCY)
-        .diffuseLighting(DIFFUSE_LIGHTING_ENABLED)
-        .alpha(DEFAULT_ALPHA)
-        .cull(CULL_DISABLED)
-        .lightmap(LIGHTMAP_ENABLED)
-        .overlay(OVERLAY_ENABLED)
-        .build(true));
+    return create("golem_transparent", DefaultVertexFormat.NEW_ENTITY, GL11.GL_QUADS, 256, true, true, 
+        RenderType.CompositeState.builder()
+        .setTextureState(getTextureState(texture, TEMPLATE))
+        .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+        .setDiffuseLightingState(DIFFUSE_LIGHTING)
+        .setAlphaState(DEFAULT_ALPHA)
+        .setCullState(NO_CULL)
+        .setLightmapState(LIGHTMAP)
+        .setOverlayState(OVERLAY)
+        .createCompositeState(true));
   }
   
   public static RenderType getGolemOutline(final ResourceLocation texture, final boolean dynamic) {
     if(!dynamic) {
-      return RenderType.getOutline(texture);
+      return RenderType.outline(texture);
     }
     // make dynamic outline type
-    return makeType("golem_outline", DefaultVertexFormats.POSITION_COLOR_TEX, GL11.GL_QUADS, 256, 
-        State.getBuilder()
-        .texture(getTextureState(texture, TEMPLATE))
-        .cull(CullState.CULL_DISABLED)
-        .depthTest(DEPTH_ALWAYS)
-        .alpha(DEFAULT_ALPHA)
-        .texturing(OUTLINE_TEXTURING)
-        .fog(NO_FOG)
-        .target(OUTLINE_TARGET)
-        .build(RenderType.OutlineState.IS_OUTLINE));
+    return create("golem_outline", DefaultVertexFormat.POSITION_COLOR_TEX, GL11.GL_QUADS, 256, 
+        CompositeState.builder()
+        .setTextureState(getTextureState(texture, TEMPLATE))
+        .setCullState(CullStateShard.NO_CULL)
+        .setDepthTestState(NO_DEPTH_TEST)
+        .setAlphaState(DEFAULT_ALPHA)
+        .setTexturingState(OUTLINE_TEXTURING)
+        .setFogState(NO_FOG)
+        .setOutputState(OUTLINE_TARGET)
+        .createCompositeState(RenderType.OutlineProperty.IS_OUTLINE));
   }
 }

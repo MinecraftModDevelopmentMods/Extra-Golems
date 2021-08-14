@@ -5,12 +5,12 @@ import java.io.IOException;
 import com.mcmoddev.golems.main.ExtraGolems;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderState;
+import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.renderer.texture.NativeImage;
+import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.resources.IResource;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * Adapted from AtelierAmber [Amber (was Ashe)#5285]. Used with permission.
@@ -20,7 +20,7 @@ public class DynamicTextureState {
   public static final int TILES = 8;
   public ResourceLocation location;
   public ResourceLocation templateImage;
-  public RenderState.TextureState state;
+  public RenderStateShard.TextureStateShard state;
   public DynamicTexture texture;
 
   /**
@@ -33,8 +33,8 @@ public class DynamicTextureState {
     
     try {
       // attempt to read the block and template textures
-      IResource blockResource = Minecraft.getInstance().getResourceManager().getResource(blockName);
-      IResource templateResource = Minecraft.getInstance().getResourceManager().getResource(templateName);
+      Resource blockResource = Minecraft.getInstance().getResourceManager().getResource(blockName);
+      Resource templateResource = Minecraft.getInstance().getResourceManager().getResource(templateName);
       NativeImage block = NativeImage.read(blockResource.getInputStream());
       NativeImage template = NativeImage.read(templateResource.getInputStream());
       final int blockWidth = block.getWidth();
@@ -45,23 +45,23 @@ public class DynamicTextureState {
       final float scale = outputWidth / templateWidth;
       // create a new texture and write each pixel
       texture = new DynamicTexture(outputWidth, outputHeight, true);
-      NativeImage outputImg = texture.getTextureData();
+      NativeImage outputImg = texture.getPixels();
       for (int j = 0; j < outputHeight; ++j) {
         for (int i = 0; i < outputWidth; ++i) {
-          int alpha = template.getPixelLuminanceOrAlpha((int)(i / scale) % templateWidth, (int)(j / scale) % templateHeight);
+          int alpha = template.getLuminanceOrAlpha((int)(i / scale) % templateWidth, (int)(j / scale) % templateHeight);
           outputImg.setPixelRGBA(i, j, block.getPixelRGBA(i % blockWidth, j % blockWidth) & alpha);
         }
       }
     } catch (IOException e) {
       ExtraGolems.LOGGER.error("Error trying to make dynamic texture for " + blockName + " with template " + templateName);
       texture = new DynamicTexture(16 * TILES, 16 * TILES, true);
-      texture.getTextureData().fillAreaRGBA(0, 0, 16 * TILES, 16 * TILES, 0xffffffff);
+      texture.getPixels().fillRect(0, 0, 16 * TILES, 16 * TILES, 0xffffffff);
       e.printStackTrace();
     }
     // update texture
-    texture.updateDynamicTexture();
+    texture.upload();
     TextureManager textureManager = Minecraft.getInstance().getTextureManager();
-    textureManager.loadTexture(location, texture);
-    state = new RenderState.TextureState(location, false, false);
+    textureManager.register(location, texture);
+    state = new RenderStateShard.TextureStateShard(location, false, false);
   }
 }

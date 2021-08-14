@@ -6,11 +6,11 @@ import java.util.function.Function;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
@@ -37,9 +37,9 @@ public final class SpongeGolemSoakEvent extends Event {
 
   public SpongeGolemSoakEvent(final GolemBase golem, final BlockPos center, final int radius) {
     this(golem, center, radius,
-        (state) -> state.hasProperty(BlockStateProperties.WATERLOGGED) ? state.with(BlockStateProperties.WATERLOGGED, false)
+        (state) -> state.hasProperty(BlockStateProperties.WATERLOGGED) ? state.setValue(BlockStateProperties.WATERLOGGED, false)
             : (state.getMaterial() == Material.WATER || state.getBlock() == Blocks.KELP || state.getBlock() == Blocks.KELP_PLANT
-                || state.getBlock() == Blocks.SEAGRASS || state.getBlock() == Blocks.TALL_SEAGRASS ? Blocks.AIR.getDefaultState() : state));
+                || state.getBlock() == Blocks.SEAGRASS || state.getBlock() == Blocks.TALL_SEAGRASS ? Blocks.AIR.defaultBlockState() : state));
   }
 
   public SpongeGolemSoakEvent(final GolemBase golem, final BlockPos center, final int radius, final Function<BlockState, BlockState> function) {
@@ -57,9 +57,9 @@ public final class SpongeGolemSoakEvent extends Event {
     for (int i = -range; i <= range; i++) {
       for (int j = -range; j <= range; j++) {
         for (int k = -range; k <= range; k++) {
-          final BlockPos current = this.spongeGolemPos.add(i, j, k);
-          if (spongeGolemPos.distanceSq(current) <= MAX_DIS) {
-            final BlockState state = this.spongeGolem.world.getBlockState(current);
+          final BlockPos current = this.spongeGolemPos.offset(i, j, k);
+          if (spongeGolemPos.distSqr(current) <= MAX_DIS) {
+            final BlockState state = this.spongeGolem.level.getBlockState(current);
             final BlockState replace = this.absorbFunction.apply(state);
             if (replace != null && replace != state) {
               this.affectedBlocks.add(current);

@@ -2,49 +2,49 @@ package com.mcmoddev.golems.container;
 
 import com.mcmoddev.golems.util.GolemNames;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.inventory.container.WorkbenchContainer;
-import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.inventory.CraftingMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 
-public class ContainerPortableWorkbench extends WorkbenchContainer {
+public class ContainerPortableWorkbench extends CraftingMenu {
 
-  public ContainerPortableWorkbench(final int i, final PlayerInventory inv) {
+  public ContainerPortableWorkbench(final int i, final Inventory inv) {
     this(i, inv, null);
   }
 
-  public ContainerPortableWorkbench(final int i, final PlayerInventory inv, final IWorldPosCallable call) {
+  public ContainerPortableWorkbench(final int i, final Inventory inv, final ContainerLevelAccess call) {
     super(i, inv, call);
   }
 
   @Override
-  public boolean canInteractWith(final PlayerEntity playerIn) {
+  public boolean stillValid(final Player playerIn) {
     return true;
   }
 
-  public static class Provider implements INamedContainerProvider {
+  public static class Provider implements MenuProvider {
 
     public Provider() {
       super();
     }
 
     @Override
-    public Container createMenu(int i, final PlayerInventory playerInv, final PlayerEntity player) {
+    public AbstractContainerMenu createMenu(int i, final Inventory playerInv, final Player player) {
       if (player.isSpectator()) {
         return null;
       } else {
-        return new ContainerPortableWorkbench(i, playerInv, IWorldPosCallable.of(player.world, new BlockPos(player.getPositionVec())));
+        return new ContainerPortableWorkbench(i, playerInv, ContainerLevelAccess.create(player.level, new BlockPos(player.position())));
       }
     }
 
     @Override
-    public ITextComponent getDisplayName() {
-      return new TranslationTextComponent("entity.golems." + GolemNames.CRAFTING_GOLEM);
+    public Component getDisplayName() {
+      return new TranslatableComponent("entity.golems." + GolemNames.CRAFTING_GOLEM);
     }
   }
 }

@@ -7,13 +7,15 @@ import java.util.function.Function;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
+
+import net.minecraftforge.eventbus.api.Event.Result;
 
 /**
  * This event exists for other mods or addons to handle and modify the Ice
@@ -44,7 +46,7 @@ public final class IceGolemFreezeEvent extends Event {
   public int updateFlag;
 
   public IceGolemFreezeEvent(final GolemBase golem, final BlockPos center, final int radius, final boolean frostedIce) {
-    this(golem, center, radius, new DefaultFreezeFunction(golem.getRNG(), frostedIce, ICE_CHANCE, COBBLE_CHANCE));
+    this(golem, center, radius, new DefaultFreezeFunction(golem.getRandom(), frostedIce, ICE_CHANCE, COBBLE_CHANCE));
   }
 
   public IceGolemFreezeEvent(final GolemBase golem, final BlockPos center, final int radius, final Function<BlockState, BlockState> function) {
@@ -64,9 +66,9 @@ public final class IceGolemFreezeEvent extends Event {
     for (int i = -range; i <= range; i++) {
       for (int j = -1; j <= 1; j++) {
         for (int k = -range; k <= range; k++) {
-          final BlockPos currentPos = this.iceGolemPos.add(i, j, k);
-          if (iceGolemPos.distanceSq(currentPos) <= maxDis) {
-            final BlockState state = this.iceGolem.world.getBlockState(currentPos);
+          final BlockPos currentPos = this.iceGolemPos.offset(i, j, k);
+          if (iceGolemPos.distSqr(currentPos) <= maxDis) {
+            final BlockState state = this.iceGolem.level.getBlockState(currentPos);
             final BlockState replace = this.freezeFunction.apply(state);
             if (replace != state) {
               this.affectedBlocks.add(currentPos);
@@ -139,18 +141,18 @@ public final class IceGolemFreezeEvent extends Event {
 
     @Override
     public BlockState apply(final BlockState input) {
-      final BlockState cobbleState = Blocks.COBBLESTONE.getDefaultState();
-      final BlockState iceState = this.frostedIce ? Blocks.FROSTED_ICE.getDefaultState() : Blocks.ICE.getDefaultState();
+      final BlockState cobbleState = Blocks.COBBLESTONE.defaultBlockState();
+      final BlockState iceState = this.frostedIce ? Blocks.FROSTED_ICE.defaultBlockState() : Blocks.ICE.defaultBlockState();
       final Material material = input.getMaterial();
       if (material.isLiquid()) {
         final Block block = input.getBlock();
 
         if (block == Blocks.WATER) {
           final boolean isNotPacked = this.frostedIce || this.random.nextInt(100) < this.iceChance;
-          return isNotPacked ? iceState : Blocks.PACKED_ICE.getDefaultState();
+          return isNotPacked ? iceState : Blocks.PACKED_ICE.defaultBlockState();
         } else if (block == Blocks.LAVA) {
           final boolean isNotObsidian = this.random.nextInt(100) < this.cobbleChance;
-          return isNotObsidian ? cobbleState : Blocks.OBSIDIAN.getDefaultState();
+          return isNotObsidian ? cobbleState : Blocks.OBSIDIAN.defaultBlockState();
         }
       }
 

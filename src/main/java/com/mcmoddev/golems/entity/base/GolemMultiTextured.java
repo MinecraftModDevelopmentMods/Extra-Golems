@@ -4,20 +4,20 @@ import java.util.Map;
 
 import com.mcmoddev.golems.util.GolemTextureBytes;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.level.Level;
 
 public abstract class GolemMultiTextured extends GolemBase implements IMultiTexturedGolem<ResourceLocation> {
 
@@ -25,7 +25,7 @@ public abstract class GolemMultiTextured extends GolemBase implements IMultiText
    * The DataParameter that stores which texture this golem is using. Max value is
    * 128
    **/
-  protected static final DataParameter<Byte> DATA_TEXTURE = EntityDataManager.<Byte>createKey(GolemMultiTextured.class, DataSerializers.BYTE);
+  protected static final EntityDataAccessor<Byte> DATA_TEXTURE = SynchedEntityData.<Byte>defineId(GolemMultiTextured.class, EntityDataSerializers.BYTE);
   protected static final String KEY_TEXTURE = "GolemTextureData";
 
   /**
@@ -60,7 +60,7 @@ public abstract class GolemMultiTextured extends GolemBase implements IMultiText
    * <code>golems/textures/entity/golem_example/three.png</code> <br>
    * as well as loot tables for the same names with the JSON suffix
    **/
-  public GolemMultiTextured(final EntityType<? extends GolemBase> entityType, final World world, final String textureModId, 
+  public GolemMultiTextured(final EntityType<? extends GolemBase> entityType, final Level world, final String textureModId, 
       final String[] textureNames, final String lootTableModId, final String[] lootTableNames) {
     super(entityType, world);
     this.textures = new ResourceLocation[textureNames.length];
@@ -74,18 +74,18 @@ public abstract class GolemMultiTextured extends GolemBase implements IMultiText
   }
 
   @Override
-  protected void registerData() {
-    super.registerData();
-    this.getDataManager().register(DATA_TEXTURE, (byte) 0);
+  protected void defineSynchedData() {
+    super.defineSynchedData();
+    this.getEntityData().define(DATA_TEXTURE, (byte) 0);
   }
 
   @Override
-  public ActionResultType getEntityInteractionResult(final PlayerEntity player, final Hand hand) {
+  public InteractionResult mobInteract(final Player player, final InteractionHand hand) {
     // change texture when player clicks (if enabled)
     if (!player.isCrouching() && this.canInteractChangeTexture()) {
       return handlePlayerInteract(player, hand);
     } else {
-      return super.getEntityInteractionResult(player, hand);
+      return super.mobInteract(player, hand);
     }
   }
 
@@ -99,8 +99,8 @@ public abstract class GolemMultiTextured extends GolemBase implements IMultiText
   }
 
   @Override
-  public void notifyDataManagerChange(DataParameter<?> key) {
-    super.notifyDataManagerChange(key);
+  public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+    super.onSyncedDataUpdated(key);
     // attempt to sync texture from client -> server -> other clients
     if (DATA_TEXTURE.equals(key)) {
       this.setTextureNum((byte) this.getTextureNum());
@@ -108,37 +108,37 @@ public abstract class GolemMultiTextured extends GolemBase implements IMultiText
   }
 
   @Override
-  public void writeAdditional(final CompoundNBT nbt) {
-    super.writeAdditional(nbt);
+  public void addAdditionalSaveData(final CompoundTag nbt) {
+    super.addAdditionalSaveData(nbt);
     nbt.putByte(KEY_TEXTURE, (byte) this.getTextureNum());
   }
 
   @Override
-  public void readAdditional(final CompoundNBT nbt) {
-    super.readAdditional(nbt);
+  public void readAdditionalSaveData(final CompoundTag nbt) {
+    super.readAdditionalSaveData(nbt);
     this.setTextureNum(nbt.getByte(KEY_TEXTURE));
   }
 
   @Override
-  protected ResourceLocation getLootTable() {
+  protected ResourceLocation getDefaultLootTable() {
     return this.lootTables[this.getTextureNum() % this.lootTables.length];
   }
 
   @Override
-  public ItemStack getPickedResult(final RayTraceResult target) {
+  public ItemStack getPickedResult(final HitResult target) {
     return getCreativeReturn(target);
   }
 
   @Override
   public void setTextureNum(final byte toSet) {
-    if (toSet != this.getDataManager().get(DATA_TEXTURE).byteValue()) {
-      this.getDataManager().set(DATA_TEXTURE, Byte.valueOf(toSet));
+    if (toSet != this.getEntityData().get(DATA_TEXTURE).byteValue()) {
+      this.getEntityData().set(DATA_TEXTURE, Byte.valueOf(toSet));
     }
   }
 
   @Override
   public int getTextureNum() {
-    return this.getDataManager().get(DATA_TEXTURE).byteValue();
+    return this.getEntityData().get(DATA_TEXTURE).byteValue();
   }
 
   @Override

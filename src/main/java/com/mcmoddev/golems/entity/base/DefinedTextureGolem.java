@@ -4,19 +4,19 @@ import javax.annotation.Nullable;
 
 import com.mcmoddev.golems.util.GolemRenderSettings;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 
 public class DefinedTextureGolem extends GolemBase {
   
-  protected static final DataParameter<String> DATA_TEXTURE = EntityDataManager.createKey(DefinedTextureGolem.class, DataSerializers.STRING);
-  protected static final DataParameter<Integer> DATA_COLOR = EntityDataManager.createKey(DefinedTextureGolem.class, DataSerializers.VARINT);
-  protected static final DataParameter<Integer> DATA_VINES = EntityDataManager.createKey(DefinedTextureGolem.class, DataSerializers.VARINT);
+  protected static final EntityDataAccessor<String> DATA_TEXTURE = SynchedEntityData.defineId(DefinedTextureGolem.class, EntityDataSerializers.STRING);
+  protected static final EntityDataAccessor<Integer> DATA_COLOR = SynchedEntityData.defineId(DefinedTextureGolem.class, EntityDataSerializers.INT);
+  protected static final EntityDataAccessor<Integer> DATA_VINES = SynchedEntityData.defineId(DefinedTextureGolem.class, EntityDataSerializers.INT);
   protected static final String KEY_TEXTURE = "Texture";
   protected static final String KEY_COLOR = "Color";
   protected static final String KEY_VINES = "Vines";
@@ -26,29 +26,29 @@ public class DefinedTextureGolem extends GolemBase {
   protected ResourceLocation vines = null;
   protected int vinesColor = 0;
 
-  public DefinedTextureGolem(EntityType<? extends GolemBase> type, World world) {
+  public DefinedTextureGolem(EntityType<? extends GolemBase> type, Level world) {
     super(type, world);
   }
   
   @Override
-  public void livingTick() {
-    super.livingTick();
+  public void aiStep() {
+    super.aiStep();
     if(color <= 0) {
       color = 0xFFFFFF;
     }
   }
   
   @Override
-  protected void registerData() {
-    super.registerData();
-    this.getDataManager().register(DATA_TEXTURE, GolemRenderSettings.FALLBACK_BLOCK.toString());
-    this.getDataManager().register(DATA_COLOR, Integer.valueOf(0xFFFFFF));
-    this.getDataManager().register(DATA_VINES, Integer.valueOf(0));
+  protected void defineSynchedData() {
+    super.defineSynchedData();
+    this.getEntityData().define(DATA_TEXTURE, GolemRenderSettings.FALLBACK_BLOCK.toString());
+    this.getEntityData().define(DATA_COLOR, Integer.valueOf(0xFFFFFF));
+    this.getEntityData().define(DATA_VINES, Integer.valueOf(0));
   }
   
   @Override
-  public void notifyDataManagerChange(DataParameter<?> key) {
-    super.notifyDataManagerChange(key);
+  public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+    super.onSyncedDataUpdated(key);
     // attempt to sync texture from client -> server -> other clients
     if (DATA_TEXTURE.equals(key)) {
       String textureString = getTextureString();
@@ -64,16 +64,16 @@ public class DefinedTextureGolem extends GolemBase {
   }
   
   @Override
-  public void writeAdditional(final CompoundNBT nbt) {
-    super.writeAdditional(nbt);
+  public void addAdditionalSaveData(final CompoundTag nbt) {
+    super.addAdditionalSaveData(nbt);
     nbt.putString(KEY_TEXTURE, this.getTextureString());
     nbt.putInt(KEY_COLOR, this.getColorData());
     nbt.putInt(KEY_VINES, this.getVinesColorData());
   }
 
   @Override
-  public void readAdditional(final CompoundNBT nbt) {
-    super.readAdditional(nbt);
+  public void readAdditionalSaveData(final CompoundTag nbt) {
+    super.readAdditionalSaveData(nbt);
     this.setTexture(nbt.getString(KEY_TEXTURE));
     this.setColorData(nbt.getInt(KEY_COLOR));
     this.setVinesColorData(nbt.getInt(KEY_VINES));
@@ -81,13 +81,13 @@ public class DefinedTextureGolem extends GolemBase {
 
   public void setTexture(final String tex) {
     if(!tex.isEmpty()) {
-      this.getDataManager().set(DATA_TEXTURE, tex);
+      this.getEntityData().set(DATA_TEXTURE, tex);
       texture = new ResourceLocation(tex);
     }
   }
   
   public String getTextureString() {
-    return this.getDataManager().get(DATA_TEXTURE);
+    return this.getEntityData().get(DATA_TEXTURE);
   }
   
   public ResourceLocation getTexture() {
@@ -95,12 +95,12 @@ public class DefinedTextureGolem extends GolemBase {
   }
   
   public void setColorData(final int colorData) {
-    this.getDataManager().set(DATA_COLOR, Integer.valueOf(colorData));
+    this.getEntityData().set(DATA_COLOR, Integer.valueOf(colorData));
     color = colorData;
   }
   
   public int getColorData() {
-    return this.getDataManager().get(DATA_COLOR).intValue();
+    return this.getEntityData().get(DATA_COLOR).intValue();
   }
   
   public int getColor() {
@@ -108,13 +108,13 @@ public class DefinedTextureGolem extends GolemBase {
   }
   
   public void setVinesColorData(final int vinesColorData) {
-    this.getDataManager().set(DATA_VINES, Integer.valueOf(vinesColorData));
+    this.getEntityData().set(DATA_VINES, Integer.valueOf(vinesColorData));
     vinesColor = vinesColorData;
     vines = vinesColorData > 0 ? GolemRenderSettings.FALLBACK_VINES : null;
   }
   
   public int getVinesColorData() {
-    return this.getDataManager().get(DATA_VINES).intValue();
+    return this.getEntityData().get(DATA_VINES).intValue();
   }
   
   public int getVinesColor() {

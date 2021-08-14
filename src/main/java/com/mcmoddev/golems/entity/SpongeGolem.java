@@ -6,14 +6,14 @@ import java.util.function.Function;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.events.SpongeGolemSoakEvent;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.particles.BasicParticleType;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
 
@@ -23,7 +23,7 @@ public final class SpongeGolem extends GolemBase {
   public static final String INTERVAL = "Water Soaking Frequency";
   public static final String RANGE = "Water Soaking Range";
 
-  public SpongeGolem(final EntityType<? extends GolemBase> entityType, final World world) {
+  public SpongeGolem(final EntityType<? extends GolemBase> entityType, final Level world) {
     super(entityType, world);
   }
 
@@ -41,16 +41,16 @@ public final class SpongeGolem extends GolemBase {
    * burn.
    */
   @Override
-  public void livingTick() {
-    super.livingTick();
-    if (Math.abs(this.getMotion().getX()) < 0.03D && Math.abs(this.getMotion().getZ()) < 0.03D && world.isRemote) {
-      final BasicParticleType particle = this.isBurning() ? ParticleTypes.SMOKE : ParticleTypes.SPLASH;
-      final double x = this.rand.nextDouble() - 0.5D * (double) this.getWidth() * 0.6D;
-      final double y = this.rand.nextDouble() * (this.getHeight() - 0.75D);
-      final double z = this.rand.nextDouble() - 0.5D * (double) this.getWidth();
-      final Vector3d pos = this.getPositionVec();
-      this.world.addParticle(particle, pos.x + x, pos.y + y, pos.z + z, (this.rand.nextDouble() - 0.5D) * 0.5D, this.rand.nextDouble() - 0.5D,
-          (this.rand.nextDouble() - 0.5D) * 0.5D);
+  public void aiStep() {
+    super.aiStep();
+    if (Math.abs(this.getDeltaMovement().x()) < 0.03D && Math.abs(this.getDeltaMovement().z()) < 0.03D && level.isClientSide) {
+      final SimpleParticleType particle = this.isOnFire() ? ParticleTypes.SMOKE : ParticleTypes.SPLASH;
+      final double x = this.random.nextDouble() - 0.5D * (double) this.getBbWidth() * 0.6D;
+      final double y = this.random.nextDouble() * (this.getBbHeight() - 0.75D);
+      final double z = this.random.nextDouble() - 0.5D * (double) this.getBbWidth();
+      final Vec3 pos = this.position();
+      this.level.addParticle(particle, pos.x + x, pos.y + y, pos.z + z, (this.random.nextDouble() - 0.5D) * 0.5D, this.random.nextDouble() - 0.5D,
+          (this.random.nextDouble() - 0.5D) * 0.5D);
     }
   }
 
@@ -67,17 +67,17 @@ public final class SpongeGolem extends GolemBase {
     }
 
     @Override
-    public boolean shouldExecute() {
-      return golem.ticksExisted % interval == 0;
+    public boolean canUse() {
+      return golem.tickCount % interval == 0;
     }
 
     @Override
-    public boolean shouldContinueExecuting() {
+    public boolean canContinueToUse() {
       return false;
     }
 
     @Override
-    public void startExecuting() {
+    public void start() {
       final BlockPos center = this.golem.getBlockBelow();
       final SpongeGolemSoakEvent event = new SpongeGolemSoakEvent(golem, center, range);
       if (!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Event.Result.DENY) {
@@ -95,7 +95,7 @@ public final class SpongeGolem extends GolemBase {
     public boolean replaceWater(final List<BlockPos> positions, final Function<BlockState, BlockState> replaceWater, final int updateFlag) {
       boolean flag = true;
       for (final BlockPos p : positions) {
-        flag &= golem.getEntityWorld().setBlockState(p, replaceWater.apply(golem.getEntityWorld().getBlockState(p)), updateFlag);
+        flag &= golem.getCommandSenderWorld().setBlock(p, replaceWater.apply(golem.getCommandSenderWorld().getBlockState(p)), updateFlag);
       }
       return flag;
     }

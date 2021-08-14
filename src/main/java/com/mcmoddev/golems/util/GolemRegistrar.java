@@ -7,10 +7,10 @@ import javax.annotation.Nullable;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 
-import net.minecraft.block.Block;
-import net.minecraft.entity.EntityType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 
 /**
  * This class, unlike most of the others in this package, is my own work. This
@@ -81,7 +81,7 @@ public final class GolemRegistrar {
    * @see GolemContainer#areBuildingBlocks(Block, Block, Block, Block)
    **/
   @Nullable
-  public static GolemBase getGolem(World world, Block below1, Block below2, Block arm1, Block arm2) {
+  public static GolemBase getGolem(Level world, Block below1, Block below2, Block arm1, Block arm2) {
     GolemContainer container = null;
     for (GolemContainer c : golemList.values()) {
       if (c.areBuildingBlocks(below1, below2, arm1, arm2)) {

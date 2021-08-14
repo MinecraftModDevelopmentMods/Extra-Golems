@@ -9,16 +9,16 @@ import javax.annotation.Nullable;
 
 import com.mcmoddev.golems.util.GolemContainer;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.EntityType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
 
 /**
  * This class will be used to easily connect golems and their blocks and other
@@ -31,12 +31,12 @@ public class GolemBookEntry {
   private ResourceLocation imageLoc = null;
   private final int health;
   private final float attack;
-  private final List<IFormattableTextComponent> specials = new ArrayList<>();
+  private final List<MutableComponent> specials = new ArrayList<>();
 
   public GolemBookEntry(@Nonnull GolemContainer container) {
     // initialize fields based on golem attributes
     final EntityType<?> golemType = container.getEntityType();
-    this.golemName = golemType.getTranslationKey();
+    this.golemName = golemType.getDescriptionId();
     this.health = (int) container.getHealth();
     this.attack = (float) container.getAttack();
     container.addDescription(specials);
@@ -59,7 +59,7 @@ public class GolemBookEntry {
   /**
    * @return the localized version of this golem's name
    **/
-  public IFormattableTextComponent getGolemName() {
+  public MutableComponent getGolemName() {
     return trans(this.golemName);
   }
 
@@ -95,7 +95,7 @@ public class GolemBookEntry {
    * @return the Block in this entry
    **/
   public String getBlockName(final Block b) {
-    return trans(b.getTranslationKey()).getString();
+    return trans(b.getDescriptionId()).getString();
   }
 
   /**
@@ -115,7 +115,7 @@ public class GolemBookEntry {
   /**
    * @return all Golem Stats as one StringTextComponent
    **/
-  public IFormattableTextComponent getDescriptionPage() {
+  public MutableComponent getDescriptionPage() {
     // re-make each time for real-time localization
     return makePage();
   }
@@ -139,21 +139,21 @@ public class GolemBookEntry {
   /**
    * Concatenates the golem's stats and specials into a single StringTextComponent
    **/
-  private IFormattableTextComponent makePage() {
-    StringTextComponent page = new StringTextComponent("");
+  private MutableComponent makePage() {
+    TextComponent page = new TextComponent("");
     // ADD (ROUNDED) HEALTH TIP
-    page.appendString("\n")
-        .appendSibling(trans("entitytip.health").appendString(": ").mergeStyle(TextFormatting.GRAY))
-        .appendSibling(wrap(String.valueOf(this.health)).mergeStyle(TextFormatting.BLACK)) 
-        .appendSibling(wrap(" \u2764").mergeStyle(TextFormatting.DARK_RED));
+    page.append("\n")
+        .append(trans("entitytip.health").append(": ").withStyle(ChatFormatting.GRAY))
+        .append(wrap(String.valueOf(this.health)).withStyle(ChatFormatting.BLACK)) 
+        .append(wrap(" \u2764").withStyle(ChatFormatting.DARK_RED));
     // ADD ATTACK POWER TIP
-    page.appendString("\n")
-        .appendSibling(trans("entitytip.attack").appendString(": ").mergeStyle(TextFormatting.GRAY))
-        .appendSibling(wrap(String.valueOf(this.attack)).mergeStyle(TextFormatting.BLACK)) 
-        .appendString(" \u2694").appendString("\n");
+    page.append("\n")
+        .append(trans("entitytip.attack").append(": ").withStyle(ChatFormatting.GRAY))
+        .append(wrap(String.valueOf(this.attack)).withStyle(ChatFormatting.BLACK)) 
+        .append(" \u2694").append("\n");
     // ADD SPECIALS
-    for (ITextComponent s : this.specials) {
-      page.appendString("\n").appendSibling(s);
+    for (Component s : this.specials) {
+      page.append("\n").append(s);
     }
 
     return page;
@@ -162,11 +162,11 @@ public class GolemBookEntry {
   /**
    * Helper method for translating text into local language
    **/
-  protected static IFormattableTextComponent trans(final String s, final Object... strings) {
-    return new TranslationTextComponent(s, strings);
+  protected static MutableComponent trans(final String s, final Object... strings) {
+    return new TranslatableComponent(s, strings);
   }
   
-  protected static IFormattableTextComponent wrap(final String s) {
-    return new StringTextComponent(s);
+  protected static MutableComponent wrap(final String s) {
+    return new TextComponent(s);
   }
 }

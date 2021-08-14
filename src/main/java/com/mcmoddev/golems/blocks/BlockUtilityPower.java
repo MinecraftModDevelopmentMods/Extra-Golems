@@ -5,16 +5,18 @@ import java.util.Random;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.server.level.ServerLevel;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class BlockUtilityPower extends BlockUtility {
   public static final IntegerProperty POWER_LEVEL = IntegerProperty.create("power", 0, 15);
@@ -22,28 +24,28 @@ public class BlockUtilityPower extends BlockUtility {
   public static final int UPDATE_TICKS = 4;
 
   public BlockUtilityPower(final int powerLevel) {
-    super(Properties.create(Material.GLASS).tickRandomly(), UPDATE_TICKS);
-    this.setDefaultState(this.getDefaultState().with(POWER_LEVEL, powerLevel));
+    super(Properties.of(Material.GLASS).randomTicks(), UPDATE_TICKS);
+    this.registerDefaultState(this.defaultBlockState().setValue(POWER_LEVEL, powerLevel));
   }
 
   @Override
-  public void tick(final BlockState state, final ServerWorld worldIn, final BlockPos pos, final Random random) {
+  public void tick(final BlockState state, final ServerLevel worldIn, final BlockPos pos, final Random random) {
     // make a slightly expanded AABB to check for the golem
-    AxisAlignedBB toCheck = new AxisAlignedBB(pos).grow(0.25D);
-    List<GolemBase> list = worldIn.getEntitiesWithinAABB(GolemBase.class, toCheck);
+    AABB toCheck = new AABB(pos).inflate(0.25D);
+    List<GolemBase> list = worldIn.getEntitiesOfClass(GolemBase.class, toCheck);
     boolean hasPowerGolem = !list.isEmpty() && hasPowerGolem(list);
 
     if (hasPowerGolem) {
       // power golem is nearby, schedule another update
-      worldIn.getPendingBlockTicks().scheduleTick(pos, this, this.tickRate);
+      worldIn.getBlockTicks().scheduleTick(pos, this, this.tickRate);
     } else {
       this.remove(worldIn, state, pos, 3);
     }
   }
 
   @Override
-  protected void fillStateContainer(final StateContainer.Builder<Block, BlockState> builder) {
-    super.fillStateContainer(builder);
+  protected void createBlockStateDefinition(final StateDefinition.Builder<Block, BlockState> builder) {
+    super.createBlockStateDefinition(builder);
     builder.add(POWER_LEVEL);
   }
 
@@ -51,13 +53,13 @@ public class BlockUtilityPower extends BlockUtility {
    * "Implementing/overriding is fine."
    */
   @Override
-  public int getWeakPower(final BlockState blockState, final IBlockReader blockAccess, final BlockPos pos, final Direction side) {
-    return blockState.get(POWER_LEVEL);
+  public int getSignal(final BlockState blockState, final BlockGetter blockAccess, final BlockPos pos, final Direction side) {
+    return blockState.getValue(POWER_LEVEL);
   }
 
   @Override
-  public int getStrongPower(final BlockState blockState, final IBlockReader blockAccess, final BlockPos pos, final Direction side) {
-    return blockState.get(POWER_LEVEL);
+  public int getDirectSignal(final BlockState blockState, final BlockGetter blockAccess, final BlockPos pos, final Direction side) {
+    return blockState.getValue(POWER_LEVEL);
   }
 
   /**

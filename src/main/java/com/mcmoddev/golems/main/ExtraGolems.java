@@ -23,15 +23,15 @@ import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mcmoddev.golems.util.config.GolemConfigurationSection;
 import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.EntityType;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
@@ -95,17 +95,17 @@ public class ExtraGolems {
     ExtraGolems.LOGGER.info("registerEntityAttributes");
     // Register Entity Attributes by iterating through each registered GolemContainer
     GolemRegistrar.getContainers().forEach(container -> {
-      event.put(container.getEntityType(), container.getAttributeSupplier().get().create());
+      event.put(container.getEntityType(), container.getAttributeSupplier().get().build());
     });
   }
 
   @SubscribeEvent
   public static void registerItems(final RegistryEvent.Register<Item> event) {
     ExtraGolems.LOGGER.info("registerItems");
-    event.getRegistry().registerAll(new BlockItem(GolemItems.GOLEM_HEAD, new Item.Properties().group(ItemGroup.MISC)) {
+    event.getRegistry().registerAll(new BlockItem(GolemItems.GOLEM_HEAD, new Item.Properties().tab(CreativeModeTab.TAB_MISC)) {
       @Override
       @OnlyIn(Dist.CLIENT)
-      public boolean hasEffect(final ItemStack stack) {
+      public boolean isFoil(final ItemStack stack) {
         return true;
       }
     }.setRegistryName(GolemItems.GOLEM_HEAD.getRegistryName()), new ItemBedrockGolem().setRegistryName(ExtraGolems.MODID, "spawn_bedrock_golem"),
@@ -121,7 +121,7 @@ public class ExtraGolems {
   }
 
   @SubscribeEvent
-  public static void registerContainers(final RegistryEvent.Register<ContainerType<?>> event) {
+  public static void registerContainers(final RegistryEvent.Register<MenuType<?>> event) {
     ExtraGolems.LOGGER.info("registerContainers");
     event.getRegistry().register(GolemItems.CRAFTING_GOLEM.setRegistryName(ExtraGolems.MODID, "crafting_portable"));
     event.getRegistry().register(GolemItems.DISPENSER_GOLEM.setRegistryName(ExtraGolems.MODID, "dispenser_portable"));

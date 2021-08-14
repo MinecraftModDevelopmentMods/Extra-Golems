@@ -6,11 +6,11 @@ import com.mcmoddev.golems.entity.modded.ElectrumGolem;
 import com.mcmoddev.golems.entity.modded.EnderiumGolem;
 import com.mcmoddev.golems.entity.modded.UraniumGolem;
 
-import net.minecraft.item.Items;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.item.Items;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
 
 public final class GolemBuilders {
   
@@ -41,13 +41,13 @@ public final class GolemBuilders {
   
   public static GolemContainer.Builder aluminumGolem() {
     return new GolemContainer.Builder(ALUMINUM_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(48.0D).setAttack(4.25D).setSound(SoundEvents.BLOCK_METAL_STEP)
+        .setModId(MODID).setHealth(48.0D).setAttack(4.25D).setSound(SoundEvents.METAL_STEP)
         .addBlocks(new ResourceLocation("forge", "storage_blocks/aluminum"));
   }
   
   public static GolemContainer.Builder bronzeGolem() {
     return new GolemContainer.Builder(BRONZE_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(104.0D).setAttack(7.25D).setSound(SoundEvents.BLOCK_METAL_STEP)
+        .setModId(MODID).setHealth(104.0D).setAttack(7.25D).setSound(SoundEvents.METAL_STEP)
         .addBlocks(new ResourceLocation("forge", "storage_blocks/bronze"));
   }
 
@@ -55,14 +55,14 @@ public final class GolemBuilders {
     return new GolemContainer.Builder(CHARCOAL_GOLEM, CoalGolem.class, CoalGolem::new)
         .setModId(MODID).setHealth(24.0D).setAttack(2.5D).setSpeed(0.28D).setKnockbackResist(0.2D)
         .addSpecial(CoalGolem.ALLOW_SPECIAL, true, "Whether this golem can inflict blindness",
-            new TranslationTextComponent("entitytip.blinds_creatures").mergeStyle(TextFormatting.GRAY))
+            new TranslatableComponent("entitytip.blinds_creatures").withStyle(ChatFormatting.GRAY))
         .addHealItem(Items.COAL, 0.25D).addHealItem(Items.CHARCOAL, 0.25D)
         .addBlocks(new ResourceLocation("forge", "storage_blocks/charcoal"));
   }
 
   public static GolemContainer.Builder constantanGolem() {
     return new GolemContainer.Builder(CONSTANTAN_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(96.0D).setAttack(6.0D).setSound(SoundEvents.BLOCK_METAL_STEP)
+        .setModId(MODID).setHealth(96.0D).setAttack(6.0D).setSound(SoundEvents.METAL_STEP)
         .addBlocks(new ResourceLocation("forge", "storage_blocks/constantan"));
   }
 
@@ -74,92 +74,92 @@ public final class GolemBuilders {
 
   public static GolemContainer.Builder copperGolem() {
     return new GolemContainer.Builder(COPPER_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(82.0D).setAttack(5.25D).setSound(SoundEvents.BLOCK_METAL_STEP)
+        .setModId(MODID).setHealth(82.0D).setAttack(5.25D).setSound(SoundEvents.METAL_STEP)
         .addBlocks(new ResourceLocation("forge", "storage_blocks/copper"));
   }
 
   public static GolemContainer.Builder electrumGolem() {
     return new GolemContainer.Builder(ELECTRUM_GOLEM, ElectrumGolem.class, ElectrumGolem::new)
-        .setModId(MODID).setHealth(88.0D).setAttack(5.7D).setSpeed(0.32D).setSound(SoundEvents.BLOCK_METAL_STEP)
+        .setModId(MODID).setHealth(88.0D).setAttack(5.7D).setSpeed(0.32D).setSound(SoundEvents.METAL_STEP)
         .addSpecial(ElectrumGolem.IMMUNE_TO_MAGIC, true, "Whether the golem is immune to magic damage",
-            new TranslationTextComponent("entitytip.immune_to_magic").mergeStyle(TextFormatting.YELLOW))
+            new TranslatableComponent("entitytip.immune_to_magic").withStyle(ChatFormatting.YELLOW))
         .addBlocks(new ResourceLocation("forge", "storage_blocks/electrum"));
   }
   
   public static GolemContainer.Builder enderiumGolem() {
     return new GolemContainer.Builder(ENDERIUM_GOLEM, EnderiumGolem.class, EnderiumGolem::new)
-        .setModId(MODID).setHealth(134.0D).setAttack(8.5D).setSound(SoundEvents.BLOCK_METAL_STEP)
+        .setModId(MODID).setHealth(134.0D).setAttack(8.5D).setSound(SoundEvents.METAL_STEP)
         .addSpecial(EnderiumGolem.ALLOW_SPECIAL, true, "Whether this golem can teleport",
-            new TranslationTextComponent("entitytip.can_teleport").mergeStyle(TextFormatting.DARK_AQUA))
+            new TranslatableComponent("entitytip.can_teleport").withStyle(ChatFormatting.DARK_AQUA))
         .addBlocks(new ResourceLocation("forge", "storage_blocks/enderium"));
   }
   
   public static GolemContainer.Builder invarGolem() {
     return new GolemContainer.Builder(INVAR_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(94.0D).setAttack(6.75D).setSound(SoundEvents.BLOCK_METAL_STEP)
+        .setModId(MODID).setHealth(94.0D).setAttack(6.75D).setSound(SoundEvents.METAL_STEP)
         .addBlocks(new ResourceLocation("forge", "storage_blocks/invar"));
   }
   
   public static GolemContainer.Builder leadGolem() {
     return new GolemContainer.Builder(LEAD_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(66.0D).setAttack(4.5D).setKnockbackResist(1.0D).setSound(SoundEvents.BLOCK_METAL_STEP)
+        .setModId(MODID).setHealth(66.0D).setAttack(4.5D).setKnockbackResist(1.0D).setSound(SoundEvents.METAL_STEP)
         .addBlocks(new ResourceLocation("forge", "storage_blocks/lead"));
   }
   
   public static GolemContainer.Builder lumiumGolem() {
     return new GolemContainer.Builder(LUMIUM_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(102.0D).setAttack(5.0D).setSound(SoundEvents.BLOCK_METAL_STEP).setLightLevel(15)
+        .setModId(MODID).setHealth(102.0D).setAttack(5.0D).setSound(SoundEvents.METAL_STEP).setLightLevel(15)
         .addBlocks(new ResourceLocation("forge", "storage_blocks/lumium"));
   }
   
   public static GolemContainer.Builder nickelGolem() {
     return new GolemContainer.Builder(NICKEL_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(86.0D).setAttack(6.0D).setSound(SoundEvents.BLOCK_METAL_STEP)
+        .setModId(MODID).setHealth(86.0D).setAttack(6.0D).setSound(SoundEvents.METAL_STEP)
         .addBlocks(new ResourceLocation("forge", "storage_blocks/nickel"));
   }
   
   public static GolemContainer.Builder osmiumGolem() {
     return new GolemContainer.Builder(OSMIUM_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(106.0D).setAttack(6.0D).setKnockbackResist(1.0D).setSound(SoundEvents.BLOCK_METAL_STEP)
+        .setModId(MODID).setHealth(106.0D).setAttack(6.0D).setKnockbackResist(1.0D).setSound(SoundEvents.METAL_STEP)
         .addBlocks(new ResourceLocation("forge", "storage_blocks/osmium"));
   }
   
   public static GolemContainer.Builder platinumGolem() {
     return new GolemContainer.Builder(PLATINUM_GOLEM, GenericGolem.class, GenericGolem::new)
         .setModId(MODID).setHealth(86.0D).setAttack(6.0D).setKnockbackResist(0.8D)
-        .setSound(SoundEvents.BLOCK_METAL_STEP).addBlocks(new ResourceLocation("forge", "storage_blocks/platinum"));
+        .setSound(SoundEvents.METAL_STEP).addBlocks(new ResourceLocation("forge", "storage_blocks/platinum"));
   }
   
   public static GolemContainer.Builder rubyGolem() {
     return new GolemContainer.Builder(RUBY_GOLEM, GenericGolem.class, GenericGolem::new)
         .setModId(MODID).setHealth(76.0D).setAttack(6.25D).setSpeed(0.28D).setKnockbackResist(0.6D)
-        .setSound(SoundEvents.BLOCK_GLASS_STEP).addBlocks(new ResourceLocation("forge", "storage_blocks/ruby"));
+        .setSound(SoundEvents.GLASS_STEP).addBlocks(new ResourceLocation("forge", "storage_blocks/ruby"));
   }
   
   public static GolemContainer.Builder signalumGolem() {
     return new GolemContainer.Builder(SIGNALUM_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(124.0D).setAttack(7.5D).setSound(SoundEvents.BLOCK_METAL_STEP)
+        .setModId(MODID).setHealth(124.0D).setAttack(7.5D).setSound(SoundEvents.METAL_STEP)
         .addBlocks(new ResourceLocation("forge", "storage_blocks/signalum"));
   }
   
   public static GolemContainer.Builder silverGolem() {
     return new GolemContainer.Builder(SILVER_GOLEM, ElectrumGolem.class, ElectrumGolem::new)
-        .setModId(MODID).setHealth(94.0D).setAttack(5.5D).setSound(SoundEvents.BLOCK_METAL_STEP)
+        .setModId(MODID).setHealth(94.0D).setAttack(5.5D).setSound(SoundEvents.METAL_STEP)
         .addSpecial(ElectrumGolem.IMMUNE_TO_MAGIC, true, "Whether the golem is immune to magic damage",
-            new TranslationTextComponent("entitytip.immune_to_magic").mergeStyle(TextFormatting.LIGHT_PURPLE))
+            new TranslatableComponent("entitytip.immune_to_magic").withStyle(ChatFormatting.LIGHT_PURPLE))
         .addBlocks(new ResourceLocation("forge", "storage_blocks/silver"));
   }
   
   public static GolemContainer.Builder steelGolem() {
     return new GolemContainer.Builder(STEEL_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(140.0D).setAttack(8.5D).setSound(SoundEvents.BLOCK_METAL_STEP)
+        .setModId(MODID).setHealth(140.0D).setAttack(8.5D).setSound(SoundEvents.METAL_STEP)
         .addBlocks(new ResourceLocation("forge", "storage_blocks/steel"));
   }
   
   public static GolemContainer.Builder sapphireGolem() {
     return new GolemContainer.Builder(SAPPHIRE_GOLEM, GenericGolem.class, GenericGolem::new)
         .setModId(MODID).setHealth(70.0D).setAttack(6.5D).setSpeed(0.28D).setKnockbackResist(0.6D)
-        .setSound(SoundEvents.BLOCK_GLASS_STEP).addBlocks(new ResourceLocation("forge", "storage_blocks/sapphire"));
+        .setSound(SoundEvents.GLASS_STEP).addBlocks(new ResourceLocation("forge", "storage_blocks/sapphire"));
   }
   
   public static GolemContainer.Builder sulfurGolem() {
@@ -170,15 +170,15 @@ public final class GolemBuilders {
   
   public static GolemContainer.Builder tinGolem() {
     return new GolemContainer.Builder(TIN_GOLEM, GenericGolem.class, GenericGolem::new)
-        .setModId(MODID).setHealth(72.0D).setAttack(5.75D).setSound(SoundEvents.BLOCK_METAL_STEP)
+        .setModId(MODID).setHealth(72.0D).setAttack(5.75D).setSound(SoundEvents.METAL_STEP)
         .addBlocks(new ResourceLocation("forge", "storage_blocks/tin"));
   }
   
   public static GolemContainer.Builder uraniumGolem() {
     return new GolemContainer.Builder(URANIUM_GOLEM, UraniumGolem.class, UraniumGolem::new)
-        .setModId(MODID).setHealth(72.0D).setAttack(5.75D).setSound(SoundEvents.BLOCK_METAL_STEP)
+        .setModId(MODID).setHealth(72.0D).setAttack(5.75D).setSound(SoundEvents.METAL_STEP)
         .addSpecial(UraniumGolem.ALLOW_POISON, true, "Whether this golem can poison nearby creatures",
-            new TranslationTextComponent("entitytip.poisons_mobs").mergeStyle(TextFormatting.DARK_GREEN))
+            new TranslatableComponent("entitytip.poisons_mobs").withStyle(ChatFormatting.DARK_GREEN))
         .addSpecial(UraniumGolem.AOE, 1.75D, "Poison effect radius")
         .addSpecial(UraniumGolem.DURATION, 42, "Poison effect length (in ticks)")
         .addSpecial(UraniumGolem.AMPLIFIER, 2, "Poison effect amplifier")
