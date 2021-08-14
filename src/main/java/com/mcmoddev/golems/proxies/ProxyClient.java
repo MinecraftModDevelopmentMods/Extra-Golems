@@ -57,10 +57,6 @@ public final class ProxyClient extends ProxyCommon {
   }
   
   @Override
-  public void addEntityLayers(EntityRenderersEvent.AddLayers event) {
-  }
-
-  @Override
   public void registerEntityLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
     event.registerLayerDefinition(GOLEM_MODEL_RESOURCE , GolemModel::createBodyLayer);
   }

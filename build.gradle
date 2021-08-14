@@ -102,25 +102,56 @@ dependencies {
 	// Forge
     minecraft "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
 }
-processResources {
-    inputs.property "version", project.version
 
-    from(sourceSets.main.resources.srcDirs) {
-        include "META-INF/mods.toml"
-        expand "golems_version": project.version
-        expand "forge_version": project.forge_version
+// This block of code expands all the gradle properties in the specified resource targets.
+// It copies them into the targets and expands all the defined properties.
+def resourceTargets = ['META-INF/mods.toml', 'pack.mcmeta']
+def intoTargets = ["$rootDir/out/production/resources/", "$rootDir/out/production/${project.name}.main/", "$rootDir/bin/main/"]
+def replaceProperties = [mod_id: mod_id, mod_name: mod_name, mod_version: mod_version,
+        mod_authors: mod_authors, mod_description: mod_description,
+        minecraft_version_range: minecraft_version_range, forge_version_range: forge_version_range,
+        loader_version_range: loader_version_range]
+processResources {
+    inputs.properties replaceProperties
+    replaceProperties.put 'project', project
+
+    filesMatching(resourceTargets) {
+        expand replaceProperties
     }
 
-    from(sourceSets.main.resources.srcDirs) {
-        exclude "META-INF/mods.toml"
+    intoTargets.each { target ->
+        if (file(target).exists()) {
+            copy {
+                from(sourceSets.main.resources) {
+                    include resourceTargets
+                    expand replaceProperties
+                }
+                into target
+            }
+        }
     }
 }
+
+//processResources {
+    //inputs.property "version", project.version
+
+    //from(sourceSets.main.resources.srcDirs) {
+        //include "META-INF/mods.toml"
+        //expand "golems_version": project.version
+        //expand "forge_version": project.forge_version
+    //}
+
+    //from(sourceSets.main.resources.srcDirs) {
+        //exclude "META-INF/mods.toml"
+    //}
+//}
+
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {
     manifest {
         attributes([
                 "Specification-Title": "Extra-Golems",
-                "Specification-Vendor": "skyjay1 and the MMD Team",
+                "Specification-Vendor": "${mod_authors}",
                 "Specification-Version": "1", // We are version 1 of ourselves
                 "Implementation-Title": project.name,
                 "Implementation-Version": "${version}",
@@ -158,7 +189,7 @@ javadoc {
 
 task deobfJar(type: Jar, dependsOn: 'jar') {
     from "build/source/main"
-    classifier "dev"
+    classifier "deobf"
 }
 artifacts {
     archives deobfJar

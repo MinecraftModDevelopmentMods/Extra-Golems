@@ -31,7 +31,7 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> implement
   public GolemModel(ModelPart rootIn) {
     super(rootIn);
     tail = rootIn.getChild("tail");
-    tail1 = rootIn.getChild("tail1");
+    tail1 = tail.getChild("tail1");
     ears = rootIn.getChild("ears");
 //    tail = new ModelPart(this, 0, 0).setTexSize(32, 32);
 //    tail.setPos(0.0F, 10.0F, 4.0F);
