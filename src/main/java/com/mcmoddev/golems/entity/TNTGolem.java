@@ -1,8 +1,11 @@
 package com.mcmoddev.golems.entity;
 
+import java.util.Collection;
+
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.items.ItemBedrockGolem;
 
+import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
@@ -14,6 +17,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.phys.Vec3;
@@ -175,14 +179,34 @@ public class TNTGolem extends GolemBase {
     if (this.allowedToExplode) {
       if (!this.level.isClientSide) {
         final boolean flag = this.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING);
-        final float range = this.maxExplosionRad > this.minExplosionRad ? (minExplosionRad + random.nextInt(maxExplosionRad - minExplosionRad))
+        final float range = this.maxExplosionRad > this.minExplosionRad
+            ? (minExplosionRad + random.nextInt(maxExplosionRad - minExplosionRad))
             : this.minExplosionRad;
         final Vec3 pos = this.position();
         this.level.explode(this, pos.x, pos.y, pos.z, range, flag ? BlockInteraction.BREAK : BlockInteraction.NONE);
-        this.remove();
+        this.discard();
+        this.spawnLingeringCloud();
       }
     } else {
       resetIgnite();
+    }
+  }
+
+  protected void spawnLingeringCloud() {
+    Collection<MobEffectInstance> collection = this.getActiveEffects();
+    if (!collection.isEmpty()) {
+      AreaEffectCloud areaeffectcloud = new AreaEffectCloud(this.level, this.getX(), this.getY(), this.getZ());
+      areaeffectcloud.setRadius(2.5F);
+      areaeffectcloud.setRadiusOnUse(-0.5F);
+      areaeffectcloud.setWaitTime(10);
+      areaeffectcloud.setDuration(areaeffectcloud.getDuration() / 2);
+      areaeffectcloud.setRadiusPerTick(-areaeffectcloud.getRadius() / (float) areaeffectcloud.getDuration());
+
+      for (MobEffectInstance mobeffectinstance : collection) {
+        areaeffectcloud.addEffect(new MobEffectInstance(mobeffectinstance));
+      }
+
+      this.level.addFreshEntity(areaeffectcloud);
     }
   }
 }

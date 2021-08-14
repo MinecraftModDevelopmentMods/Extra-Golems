@@ -144,7 +144,7 @@ public class EndstoneGolem extends GolemBase {
     final double d0 = pos.x + (this.random.nextDouble() - 0.5D) * range;
     final double d1 = pos.y + (this.random.nextDouble() - 0.5D) * range * 0.5D;
     final double d2 = pos.z + (this.random.nextDouble() - 0.5D) * range;
-    return this.teleportTo(d0, d1, d2);
+    return this.attemptTeleportTo(d0, d1, d2);
   }
 
   /**
@@ -158,13 +158,13 @@ public class EndstoneGolem extends GolemBase {
     double d1 = this.getX() + (this.random.nextDouble() - 0.5D) * d - vec3d.x * d0;
     double d2 = this.getY() + (this.random.nextDouble() - 0.5D) * d - vec3d.y * d0;
     double d3 = this.getZ() + (this.random.nextDouble() - 0.5D) * d - vec3d.z * d0;
-    return this.teleportTo(d1, d2, d3);
+    return this.attemptTeleportTo(d1, d2, d3);
   }
 
   /**
    * Teleport the golem.
    **/
-  protected boolean teleportTo(final double x, final double y, final double z) {
+  protected boolean attemptTeleportTo(final double x, final double y, final double z) {
     final EndGolemTeleportEvent event = new EndGolemTeleportEvent(this, x, y, z, 0);
     if (!this.allowTeleport || MinecraftForge.EVENT_BUS.post(event)) {
       return false;

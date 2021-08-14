@@ -11,7 +11,7 @@ import com.mcmoddev.golems.util.GolemContainer;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 
 /**
  * Taken in part from betteranimalsplus (who probably took it in part from
@@ -31,7 +31,7 @@ public class ExtraGolemsConfig {
   }
 
   @SubscribeEvent
-  public static void onLoad(final ModConfig.Loading configEvent) {
+  public static void onLoad(final ModConfigEvent.Loading configEvent) {
     if (configEvent.getConfig().getSpec() == COMMON_CONFIG) {
       GOLEM_CONFIG.loadData();
     }

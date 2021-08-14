@@ -39,7 +39,7 @@ public class GolemBannerLayer<T extends GolemBase> extends RenderLayer<T, GolemM
       matrixStackIn.translate(0, -0.5D, 0);
       // scale and center on golem body
       matrixStackIn.scale(2.6F, 2.6F, 2.6F);
-      getParentModel().body.translateAndRotate(matrixStackIn);
+      getParentModel().root().translateAndRotate(matrixStackIn);
       // Actually render the banner item
       Minecraft.getInstance().getItemInHandRenderer().renderItem(entity, entity.getBanner(), ItemTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, false, matrixStackIn, bufferIn, packedLightIn);
       matrixStackIn.popPose();

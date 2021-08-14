@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BucketPickup;
@@ -16,6 +17,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.core.BlockPos;
@@ -29,7 +31,7 @@ import net.minecraft.server.level.ServerLevel;
 
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
-public abstract class BlockUtility extends Block implements BucketPickup, LiquidBlockContainer {
+public abstract class BlockUtility extends Block implements SimpleWaterloggedBlock {
   
   protected final int tickRate;
 
@@ -52,38 +54,38 @@ public abstract class BlockUtility extends Block implements BucketPickup, Liquid
     builder.add(BlockStateProperties.WATERLOGGED);
   }
 
-  @Override
-  public Fluid takeLiquid(final LevelAccessor worldIn, final BlockPos pos, final BlockState state) {
-    if (state.getValue(BlockStateProperties.WATERLOGGED)) {
-      worldIn.setBlock(pos, state.setValue(BlockStateProperties.WATERLOGGED, Boolean.valueOf(false)), 3);
-      return Fluids.WATER;
-    } else {
-      return Fluids.EMPTY;
-    }
-  }
+//  @Override
+//  public ItemStack pickupBlock(final LevelAccessor worldIn, final BlockPos pos, final BlockState state) {
+//    worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 11);
+//    if (state.getValue(BlockStateProperties.WATERLOGGED)) {
+//      return new ItemStack(Items.WATER_BUCKET);
+//    } else {
+//      return ItemStack.EMPTY;
+//    }
+//  }
 
   @Override
   public FluidState getFluidState(final BlockState state) {
     return state.getValue(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
   }
-
-  @Override
-  public boolean canPlaceLiquid(final BlockGetter worldIn, final BlockPos pos, final BlockState state, final Fluid fluidIn) {
-    return !state.getValue(BlockStateProperties.WATERLOGGED) && fluidIn == Fluids.WATER;
-  }
-
-  @Override
-  public boolean placeLiquid(final LevelAccessor worldIn, final BlockPos pos, final BlockState state, final FluidState fluidStateIn) {
-    if (!state.getValue(BlockStateProperties.WATERLOGGED) && fluidStateIn.getType() == Fluids.WATER) {
-      if (!worldIn.isClientSide()) {
-        worldIn.setBlock(pos, state.setValue(BlockStateProperties.WATERLOGGED, Boolean.valueOf(true)), 3);
-        worldIn.getLiquidTicks().scheduleTick(pos, fluidStateIn.getType(), fluidStateIn.getType().getTickDelay(worldIn));
-      }
-      return true;
-    } else {
-      return false;
-    }
-  }
+//
+//  @Override
+//  public boolean canPlaceLiquid(final BlockGetter worldIn, final BlockPos pos, final BlockState state, final Fluid fluidIn) {
+//    return !state.getValue(BlockStateProperties.WATERLOGGED) && fluidIn == Fluids.WATER;
+//  }
+//
+//  @Override
+//  public boolean placeLiquid(final LevelAccessor worldIn, final BlockPos pos, final BlockState state, final FluidState fluidStateIn) {
+//    if (!state.getValue(BlockStateProperties.WATERLOGGED) && fluidStateIn.getType() == Fluids.WATER) {
+//      if (!worldIn.isClientSide()) {
+//        worldIn.setBlock(pos, state.setValue(BlockStateProperties.WATERLOGGED, Boolean.valueOf(true)), 3);
+//        worldIn.getLiquidTicks().scheduleTick(pos, fluidStateIn.getType(), fluidStateIn.getType().getTickDelay(worldIn));
+//      }
+//      return true;
+//    } else {
+//      return false;
+//    }
+//  }
 
   @Override
   public void onPlace(final BlockState state, final Level worldIn, final BlockPos pos, final BlockState oldState, final boolean isMoving) {
@@ -149,7 +151,7 @@ public abstract class BlockUtility extends Block implements BucketPickup, Liquid
   }
 
   @Override
-  public void fallOn(final Level worldIn, final BlockPos pos, final Entity entityIn, final float fallDistance) {
+  public void fallOn(final Level worldIn, final BlockState state, final BlockPos pos, final Entity entityIn, final float fallDistance) {
     // do nothing
   }
 

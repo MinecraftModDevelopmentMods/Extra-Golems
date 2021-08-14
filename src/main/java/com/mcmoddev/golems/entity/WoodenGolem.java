@@ -36,20 +36,19 @@ public final class WoodenGolem extends GolemMultiTextured {
   public void onBuilt(final BlockState body, final BlockState legs, final BlockState arm1, final BlockState arm2) {
     // uses the top-middle building block of this golem to set texture.
     // defaults to a random texture.
-    final Block b = body.getBlock();
     byte textureNum;
     // check the following block tags for matches
-    if (b.is(BlockTags.OAK_LOGS)) {
+    if (body.is(BlockTags.OAK_LOGS)) {
       textureNum = 0;
-    } else if (b.is(BlockTags.SPRUCE_LOGS)) {
+    } else if (body.is(BlockTags.SPRUCE_LOGS)) {
       textureNum = 1;
-    } else if (b.is(BlockTags.BIRCH_LOGS)) {
+    } else if (body.is(BlockTags.BIRCH_LOGS)) {
       textureNum = 2;
-    } else if (b.is(BlockTags.JUNGLE_LOGS)) {
+    } else if (body.is(BlockTags.JUNGLE_LOGS)) {
       textureNum = 3;
-    } else if (b.is(BlockTags.ACACIA_LOGS)) {
+    } else if (body.is(BlockTags.ACACIA_LOGS)) {
       textureNum = 4;
-    } else if (b.is(BlockTags.DARK_OAK_LOGS)) {
+    } else if (body.is(BlockTags.DARK_OAK_LOGS)) {
       textureNum = 5;
     } else {
       this.randomizeTexture(this.level, this.getBlockPosBelowThatAffectsMyMovement());

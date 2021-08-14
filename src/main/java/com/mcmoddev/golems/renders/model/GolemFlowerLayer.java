@@ -31,7 +31,7 @@ public class GolemFlowerLayer<T extends GolemBase> extends RenderLayer<T, GolemM
       matrixStackIn.scale(0.5F, 0.5F, 0.5F);
       matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(-90.0F));
       matrixStackIn.translate(-0.5D, -0.5D, -0.5D);
-      Minecraft.getInstance().getBlockRenderer().renderBlock(Blocks.POPPY.defaultBlockState(), matrixStackIn, bufferIn,
+      Minecraft.getInstance().getBlockRenderer().renderSingleBlock(Blocks.POPPY.defaultBlockState(), matrixStackIn, bufferIn,
           packedLightIn, OverlayTexture.NO_OVERLAY, net.minecraftforge.client.model.data.EmptyModelData.INSTANCE);
       matrixStackIn.popPose();
     }

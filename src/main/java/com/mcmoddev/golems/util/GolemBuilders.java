@@ -2,15 +2,12 @@ package com.mcmoddev.golems.util;
 
 import com.mcmoddev.golems.entity.CoalGolem;
 import com.mcmoddev.golems.entity.GenericGolem;
-import com.mcmoddev.golems.entity.modded.ElectrumGolem;
-import com.mcmoddev.golems.entity.modded.EnderiumGolem;
-import com.mcmoddev.golems.entity.modded.UraniumGolem;
 
-import net.minecraft.world.item.Items;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.item.Items;
 
 public final class GolemBuilders {
   
@@ -78,21 +75,21 @@ public final class GolemBuilders {
         .addBlocks(new ResourceLocation("forge", "storage_blocks/copper"));
   }
 
-  public static GolemContainer.Builder electrumGolem() {
-    return new GolemContainer.Builder(ELECTRUM_GOLEM, ElectrumGolem.class, ElectrumGolem::new)
-        .setModId(MODID).setHealth(88.0D).setAttack(5.7D).setSpeed(0.32D).setSound(SoundEvents.METAL_STEP)
-        .addSpecial(ElectrumGolem.IMMUNE_TO_MAGIC, true, "Whether the golem is immune to magic damage",
-            new TranslatableComponent("entitytip.immune_to_magic").withStyle(ChatFormatting.YELLOW))
-        .addBlocks(new ResourceLocation("forge", "storage_blocks/electrum"));
-  }
+//  public static GolemContainer.Builder electrumGolem() {
+//    return new GolemContainer.Builder(ELECTRUM_GOLEM, ElectrumGolem.class, ElectrumGolem::new)
+//        .setModId(MODID).setHealth(88.0D).setAttack(5.7D).setSpeed(0.32D).setSound(SoundEvents.METAL_STEP)
+//        .addSpecial(ElectrumGolem.IMMUNE_TO_MAGIC, true, "Whether the golem is immune to magic damage",
+//            new TranslatableComponent("entitytip.immune_to_magic").withStyle(ChatFormatting.YELLOW))
+//        .addBlocks(new ResourceLocation("forge", "storage_blocks/electrum"));
+//  }
   
-  public static GolemContainer.Builder enderiumGolem() {
-    return new GolemContainer.Builder(ENDERIUM_GOLEM, EnderiumGolem.class, EnderiumGolem::new)
-        .setModId(MODID).setHealth(134.0D).setAttack(8.5D).setSound(SoundEvents.METAL_STEP)
-        .addSpecial(EnderiumGolem.ALLOW_SPECIAL, true, "Whether this golem can teleport",
-            new TranslatableComponent("entitytip.can_teleport").withStyle(ChatFormatting.DARK_AQUA))
-        .addBlocks(new ResourceLocation("forge", "storage_blocks/enderium"));
-  }
+//  public static GolemContainer.Builder enderiumGolem() {
+//    return new GolemContainer.Builder(ENDERIUM_GOLEM, EnderiumGolem.class, EnderiumGolem::new)
+//        .setModId(MODID).setHealth(134.0D).setAttack(8.5D).setSound(SoundEvents.METAL_STEP)
+//        .addSpecial(EnderiumGolem.ALLOW_SPECIAL, true, "Whether this golem can teleport",
+//            new TranslatableComponent("entitytip.can_teleport").withStyle(ChatFormatting.DARK_AQUA))
+//        .addBlocks(new ResourceLocation("forge", "storage_blocks/enderium"));
+//  }
   
   public static GolemContainer.Builder invarGolem() {
     return new GolemContainer.Builder(INVAR_GOLEM, GenericGolem.class, GenericGolem::new)
@@ -142,13 +139,13 @@ public final class GolemBuilders {
         .addBlocks(new ResourceLocation("forge", "storage_blocks/signalum"));
   }
   
-  public static GolemContainer.Builder silverGolem() {
-    return new GolemContainer.Builder(SILVER_GOLEM, ElectrumGolem.class, ElectrumGolem::new)
-        .setModId(MODID).setHealth(94.0D).setAttack(5.5D).setSound(SoundEvents.METAL_STEP)
-        .addSpecial(ElectrumGolem.IMMUNE_TO_MAGIC, true, "Whether the golem is immune to magic damage",
-            new TranslatableComponent("entitytip.immune_to_magic").withStyle(ChatFormatting.LIGHT_PURPLE))
-        .addBlocks(new ResourceLocation("forge", "storage_blocks/silver"));
-  }
+//  public static GolemContainer.Builder silverGolem() {
+//    return new GolemContainer.Builder(SILVER_GOLEM, ElectrumGolem.class, ElectrumGolem::new)
+//        .setModId(MODID).setHealth(94.0D).setAttack(5.5D).setSound(SoundEvents.METAL_STEP)
+//        .addSpecial(ElectrumGolem.IMMUNE_TO_MAGIC, true, "Whether the golem is immune to magic damage",
+//            new TranslatableComponent("entitytip.immune_to_magic").withStyle(ChatFormatting.LIGHT_PURPLE))
+//        .addBlocks(new ResourceLocation("forge", "storage_blocks/silver"));
+//  }
   
   public static GolemContainer.Builder steelGolem() {
     return new GolemContainer.Builder(STEEL_GOLEM, GenericGolem.class, GenericGolem::new)
@@ -174,14 +171,14 @@ public final class GolemBuilders {
         .addBlocks(new ResourceLocation("forge", "storage_blocks/tin"));
   }
   
-  public static GolemContainer.Builder uraniumGolem() {
-    return new GolemContainer.Builder(URANIUM_GOLEM, UraniumGolem.class, UraniumGolem::new)
-        .setModId(MODID).setHealth(72.0D).setAttack(5.75D).setSound(SoundEvents.METAL_STEP)
-        .addSpecial(UraniumGolem.ALLOW_POISON, true, "Whether this golem can poison nearby creatures",
-            new TranslatableComponent("entitytip.poisons_mobs").withStyle(ChatFormatting.DARK_GREEN))
-        .addSpecial(UraniumGolem.AOE, 1.75D, "Poison effect radius")
-        .addSpecial(UraniumGolem.DURATION, 42, "Poison effect length (in ticks)")
-        .addSpecial(UraniumGolem.AMPLIFIER, 2, "Poison effect amplifier")
-        .addBlocks(new ResourceLocation("forge", "storage_blocks/uranium"));
-  }
+//  public static GolemContainer.Builder uraniumGolem() {
+//    return new GolemContainer.Builder(URANIUM_GOLEM, UraniumGolem.class, UraniumGolem::new)
+//        .setModId(MODID).setHealth(72.0D).setAttack(5.75D).setSound(SoundEvents.METAL_STEP)
+//        .addSpecial(UraniumGolem.ALLOW_POISON, true, "Whether this golem can poison nearby creatures",
+//            new TranslatableComponent("entitytip.poisons_mobs").withStyle(ChatFormatting.DARK_GREEN))
+//        .addSpecial(UraniumGolem.AOE, 1.75D, "Poison effect radius")
+//        .addSpecial(UraniumGolem.DURATION, 42, "Poison effect length (in ticks)")
+//        .addSpecial(UraniumGolem.AMPLIFIER, 2, "Poison effect amplifier")
+//        .addBlocks(new ResourceLocation("forge", "storage_blocks/uranium"));
+//  }
 }

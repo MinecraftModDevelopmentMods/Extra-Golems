@@ -54,9 +54,10 @@ public class SimpleTextureLayer<T extends GolemBase> extends RenderLayer<T, Gole
       //final int packedOverlay = LivingRenderer.getPackedOverlay(golem, 0.0F);
       final VertexConsumer vertexBuilder = bufferIn.getBuffer(getRenderType(texture));
       if(alphaColor < 1.0F) {
-        RenderSystem.defaultAlphaFunc();
+        // TODO ??
+//        RenderSystem.defaultAlphaFunc(); // alphaFunc(516, 0.1F);
         RenderSystem.enableBlend();
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, alphaColor);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, alphaColor);
       }
       this.getParentModel().setColor(colors.x(), colors.y(), colors.z());
       this.getParentModel().renderToBuffer(matrixStackIn, vertexBuilder, packedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, alphaColor);

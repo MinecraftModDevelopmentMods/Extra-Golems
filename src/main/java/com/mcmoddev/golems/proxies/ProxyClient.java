@@ -9,23 +9,27 @@ import com.mcmoddev.golems.gui.GuiDispenserGolem;
 import com.mcmoddev.golems.integration.AddonLoader;
 import com.mcmoddev.golems.renders.GolemRenderType;
 import com.mcmoddev.golems.renders.GolemRenderer;
+import com.mcmoddev.golems.renders.model.GolemModel;
 import com.mcmoddev.golems.renders.model.SimpleTextureLayer;
 import com.mcmoddev.golems.util.GolemNames;
 import com.mcmoddev.golems.util.GolemRegistrar;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
+import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.entity.EntityType;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 
 public final class ProxyClient extends ProxyCommon {
+
+  public static final ModelLayerLocation GOLEM_MODEL_RESOURCE = new ModelLayerLocation(new ResourceLocation(ExtraGolems.MODID, "golem"), "main");
 
   @Override
   public void registerListeners() {
@@ -51,37 +55,46 @@ public final class ProxyClient extends ProxyCommon {
   public void registerContainerRenders() {
     MenuScreens.register(GolemItems.DISPENSER_GOLEM, GuiDispenserGolem::new);
   }
+  
+  @Override
+  public void addEntityLayers(EntityRenderersEvent.AddLayers event) {
+  }
+
+  @Override
+  public void registerEntityLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
+    event.registerLayerDefinition(GOLEM_MODEL_RESOURCE , GolemModel::createBodyLayer);
+  }
 
   @SuppressWarnings("unchecked")
   @Override
-  public void registerEntityRenders() {
+  public void registerEntityRenders(EntityRenderersEvent.RegisterRenderers event) {
     // Simple renders
     GolemRegistrar.getContainers().forEach(container -> {
       if (!container.getRenderSettings().hasCustomRender()) {
-        RenderingRegistry.registerEntityRenderingHandler(container.getEntityType(), m -> (new GolemRenderer<GolemBase>(m).withAllLayers()));
+        event.registerEntityRenderer(container.getEntityType(), m -> (new GolemRenderer<GolemBase>(m).withAllLayers()));
       }
     });
     // Custom renders
     // Lapis Golem
-    registerWithSimpleLayers(
+    registerWithSimpleLayers(event,
         GolemRegistrar.getContainer(new ResourceLocation(ExtraGolems.MODID, GolemNames.LAPIS_GOLEM)).getEntityType(),
         new ResourceLocation(ExtraGolems.MODID, "textures/entity/layer/gold_edging.png"));
     // Blackstone Golem
-    registerWithSimpleLayers(
+    registerWithSimpleLayers(event,
         GolemRegistrar.getContainer(new ResourceLocation(ExtraGolems.MODID, GolemNames.BLACKSTONE_GOLEM)).getEntityType(),
         new ResourceLocation(ExtraGolems.MODID, "textures/entity/layer/gold_nuggets.png"));
     // Wool Golem
-    registerWoolGolemRenders();
+    registerWoolGolemRenders(event);
     // Mushroom Golem
-    registerMushroomGolemRenders();
+    registerMushroomGolemRenders(event);
     // Thermal Series custom renders
     if(AddonLoader.isThermalLoaded()) {
       
     }
   }
   
-  private void registerWithSimpleLayers(final EntityType<? extends GolemBase> entityType, final ResourceLocation... layers) {
-    RenderingRegistry.registerEntityRenderingHandler(entityType, 
+  private void registerWithSimpleLayers(final EntityRenderersEvent.RegisterRenderers event, final EntityType<? extends GolemBase> entityType, final ResourceLocation... layers) {
+    event.registerEntityRenderer(entityType, 
       m -> {
         GolemRenderer<GolemBase> r = new GolemRenderer<>(m);
         for(final ResourceLocation l : layers) {
@@ -91,8 +104,8 @@ public final class ProxyClient extends ProxyCommon {
       });
   }
   
-  private void registerWoolGolemRenders() {
-    RenderingRegistry.registerEntityRenderingHandler(
+  private void registerWoolGolemRenders(final EntityRenderersEvent.RegisterRenderers event) {
+    event.registerEntityRenderer(
       GolemRegistrar.getContainer(new ResourceLocation(ExtraGolems.MODID, GolemNames.WOOL_GOLEM)).getEntityType(), 
       m -> {
         GolemRenderer<GolemBase> r = new GolemRenderer<>(m);
@@ -103,8 +116,8 @@ public final class ProxyClient extends ProxyCommon {
       });
   }
   
-  private void registerMushroomGolemRenders() {
-    RenderingRegistry.registerEntityRenderingHandler(
+  private void registerMushroomGolemRenders(final EntityRenderersEvent.RegisterRenderers event) {
+    event.registerEntityRenderer(
       GolemRegistrar.getContainer(new ResourceLocation(ExtraGolems.MODID, GolemNames.MUSHROOM_GOLEM)).getEntityType(), 
       m -> {
         GolemRenderer<GolemBase> r = new GolemRenderer<>(m);

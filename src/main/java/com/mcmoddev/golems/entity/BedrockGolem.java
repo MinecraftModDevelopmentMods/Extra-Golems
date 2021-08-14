@@ -39,11 +39,11 @@ public final class BedrockGolem extends GolemBase {
   protected InteractionResult mobInteract(final Player player, final InteractionHand hand) {
     // creative players can "despawn" by using spawnBedrockGolem on this entity
     final ItemStack itemstack = player.getItemInHand(hand);
-    if ((player.abilities.instabuild || !ExtraGolemsConfig.bedrockGolemCreativeOnly()) && !itemstack.isEmpty()
+    if ((player.isCreative() || !ExtraGolemsConfig.bedrockGolemCreativeOnly()) && !itemstack.isEmpty()
         && itemstack.getItem() == GolemItems.SPAWN_BEDROCK_GOLEM) {
       player.swing(hand);
       if (!this.level.isClientSide) {
-        this.remove();
+        this.discard();
       } else {
         final Vec3 pos = this.position().add(0, 0.2D, 0);
         ItemBedrockGolem.spawnParticles(this.level, pos.x, pos.y, pos.z, 0.12D);

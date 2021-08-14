@@ -1,7 +1,5 @@
 package com.mcmoddev.golems;
 
-import java.util.Map.Entry;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,23 +15,20 @@ import com.mcmoddev.golems.items.ItemInfoBook;
 import com.mcmoddev.golems.proxies.ProxyClient;
 import com.mcmoddev.golems.proxies.ProxyCommon;
 import com.mcmoddev.golems.proxies.ProxyServer;
-import com.mcmoddev.golems.util.GolemContainer;
 import com.mcmoddev.golems.util.GolemRegistrar;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
-import com.mcmoddev.golems.util.config.GolemConfigurationSection;
-import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
 
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -87,7 +82,18 @@ public class ExtraGolems {
     GolemRegistrar.getContainers().forEach(container -> {
       event.getRegistry().register(container.getEntityType());
     });
-    ExtraGolems.PROXY.registerEntityRenders();
+  }
+  
+  @SubscribeEvent
+  public static void registerEntityLayers(final EntityRenderersEvent.RegisterLayerDefinitions event) {
+    ExtraGolems.LOGGER.info("registerEntityLayers");
+    ExtraGolems.PROXY.registerEntityLayers(event);
+  }
+  
+  @SubscribeEvent
+  public static void registerEntityRenderers(final EntityRenderersEvent.RegisterRenderers event) {
+    ExtraGolems.LOGGER.info("registerEntityRenderers");
+    ExtraGolems.PROXY.registerEntityRenders(event);
   }
   
   @SubscribeEvent

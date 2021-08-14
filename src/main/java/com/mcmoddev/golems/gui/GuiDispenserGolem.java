@@ -32,8 +32,8 @@ public class GuiDispenserGolem extends AbstractContainerScreen<ContainerDispense
 
   @Override
   protected void renderBg(PoseStack matrix, float f, int i1, int i2) {
-    RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-    this.minecraft.getTextureManager().bind(BG_TEXTURE);
+    RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+    RenderSystem.setShaderTexture(0, BG_TEXTURE);
     int i = (this.width - this.imageWidth) / 2;
     int j = (this.height - this.imageHeight) / 2;
     this.blit(matrix, i, j, 0, 0, this.imageWidth, this.imageHeight);

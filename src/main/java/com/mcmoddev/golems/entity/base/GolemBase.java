@@ -18,42 +18,40 @@ import com.mcmoddev.golems.util.GolemRegistrar;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
 
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
-import net.minecraft.world.entity.ai.goal.RandomSwimmingGoal;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.RandomSwimmingGoal;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.entity.ai.navigation.WaterBoundPathNavigation;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.BannerItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShearsItem;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
-import net.minecraft.world.entity.ai.navigation.WaterBoundPathNavigation;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.core.BlockPos;
-import net.minecraft.util.Mth;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.network.NetworkHooks;
 
 /**
  * Base class for all golems in this mod.
@@ -271,7 +269,7 @@ public abstract class GolemBase extends IronGolem {
 
   // fall(float, float)
   @Override
-  public boolean causeFallDamage(float distance, float damageMultiplier) {
+  public boolean causeFallDamage(float distance, float damageMultiplier, DamageSource source) {
     if (!container.takesFallDamage()) {
       return false;
     }
@@ -281,7 +279,7 @@ public abstract class GolemBase extends IronGolem {
     distance = ret[0];
     damageMultiplier = ret[1];
 
-    boolean flag = super.causeFallDamage(distance, damageMultiplier);
+    boolean flag = super.causeFallDamage(distance, damageMultiplier, source);
     int i = this.calculateFallDamage(distance, damageMultiplier);
     if (i > 0) {
        this.playSound(this.getFallDamageSound(i), 1.0F, 1.0F);
@@ -466,11 +464,6 @@ public abstract class GolemBase extends IronGolem {
     tag.putBoolean(KEY_CHILD, this.isBaby());
   }
 
-  @Override
-  public Packet<?> getAddEntityPacket() {
-    return NetworkHooks.getEntitySpawningPacket(this);
-  }
-
   ///////////////////// SOUND OVERRIDES ////////////////////
 
   @Override
@@ -564,21 +557,19 @@ public abstract class GolemBase extends IronGolem {
   public boolean shouldMoveToWater(final Vec3 target) {
     return container.getSwimMode() == SwimMode.SWIM;
   }
-  
+
   static class SwimmingMovementController extends MoveControl {
     private final GolemBase golem;
 
-    public SwimmingMovementController(GolemBase golem) {
-      super(golem);
-      this.golem = golem;
-    }
+    public SwimmingMovementController(GolemBase golemIn) {
+      super(golemIn);
+      this.golem = golemIn;
+   }
 
-    @Override
     public void tick() {
-      // All of this is copied from DrownedEntity#MoveHelperController
-      LivingEntity target = this.golem.getTarget();
+      LivingEntity livingentity = this.golem.getTarget();
       if (this.golem.isSwimmingUp() && this.golem.isInWater()) {
-        if ((target != null && target.getY() > this.golem.getY()) || this.golem.swimmingUp) {
+        if (livingentity != null && livingentity.getY() > this.golem.getY() || this.golem.swimmingUp) {
           this.golem.setDeltaMovement(this.golem.getDeltaMovement().add(0.0D, 0.002D, 0.0D));
         }
 
@@ -586,27 +577,28 @@ public abstract class GolemBase extends IronGolem {
           this.golem.setSpeed(0.0F);
           return;
         }
-        double dX = this.wantedX - this.golem.getX();
-        double dY = this.wantedY - this.golem.getY();
-        double dZ = this.wantedZ - this.golem.getZ();
-        double dTotal = Mth.sqrt(dX * dX + dY * dY + dZ * dZ);
-        dY /= dTotal;
 
-        float rot = (float) (Mth.atan2(dZ, dX) * 57.2957763671875D) - 90.0F;
-        this.golem.yRot = rotlerp(this.golem.yRot, rot, 90.0F);
-        this.golem.yBodyRot = this.golem.yRot;
-
-        float moveSpeed = (float) (this.speedModifier * this.golem.getAttributeValue(Attributes.MOVEMENT_SPEED));
-        float moveSpeedAdjusted = Mth.lerp(0.125F, this.golem.getSpeed(), moveSpeed);
-        this.golem.setSpeed(moveSpeedAdjusted);
-        this.golem.setDeltaMovement(this.golem.getDeltaMovement().add(moveSpeedAdjusted * dX * 0.005D, moveSpeedAdjusted * dY * 0.1D,
-            moveSpeedAdjusted * dZ * 0.005D));
+        double d0 = this.wantedX - this.golem.getX();
+        double d1 = this.wantedY - this.golem.getY();
+        double d2 = this.wantedZ - this.golem.getZ();
+        double d3 = Math.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
+        d1 = d1 / d3;
+        float f = (float) (Mth.atan2(d2, d0) * (double) (180F / (float) Math.PI)) - 90.0F;
+        this.golem.setYRot(this.rotlerp(this.golem.getYRot(), f, 90.0F));
+        this.golem.yBodyRot = this.golem.getYRot();
+        float f1 = (float) (this.speedModifier * this.golem.getAttributeValue(Attributes.MOVEMENT_SPEED));
+        float f2 = Mth.lerp(0.125F, this.golem.getSpeed(), f1);
+        this.golem.setSpeed(f2);
+        this.golem.setDeltaMovement(
+            this.golem.getDeltaMovement().add((double) f2 * d0 * 0.005D, (double) f2 * d1 * 0.1D, (double) f2 * d2 * 0.005D));
       } else {
         if (!this.golem.onGround) {
           this.golem.setDeltaMovement(this.golem.getDeltaMovement().add(0.0D, -0.008D, 0.0D));
         }
+
         super.tick();
       }
+
     }
   }
 }

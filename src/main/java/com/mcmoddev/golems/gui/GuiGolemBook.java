@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.gui.components.Button;
 import com.mojang.blaze3d.platform.Lighting;
 import net.minecraft.world.entity.player.Player;
@@ -141,21 +142,21 @@ public class GuiGolemBook extends Screen {
     int doneH = 20;
     int doneX = (this.width - doneW) / 2;
     int doneY = BOOK_HEIGHT + SCR_OFFSET_Y + 8;
-    this.addButton(new Button(doneX, doneY, doneW, doneH, new TranslatableComponent("gui.done"), c -> this.minecraft.setScreen(null)));
+    this.addWidget(new Button(doneX, doneY, doneW, doneH, new TranslatableComponent("gui.done"), c -> this.minecraft.setScreen(null)));
     // locate and activate the "page change" arrows
     int arrowX = (this.width - BOOK_WIDTH) / 2;
     int arrowY = SCR_OFFSET_Y + BOOK_HEIGHT - (ARROW_HEIGHT * 3 / 2);
-    this.buttonPreviousPage = this.addButton(new GuiGolemBook.NextPageButton(this, arrowX + ARROW_WIDTH, arrowY, false));
-    this.buttonNextPage = this.addButton(new GuiGolemBook.NextPageButton(this, arrowX + BOOK_WIDTH - ARROW_WIDTH * 2, arrowY, true));
+    this.buttonPreviousPage = this.addWidget(new GuiGolemBook.NextPageButton(this, arrowX + ARROW_WIDTH, arrowY, false));
+    this.buttonNextPage = this.addWidget(new GuiGolemBook.NextPageButton(this, arrowX + BOOK_WIDTH - ARROW_WIDTH * 2, arrowY, true));
     // calculate location and size of blocks icons, if present
     int blockX = ((this.width - BOOK_WIDTH) / 2) + MARGIN + 4;
     int blockY = SCR_OFFSET_Y + MARGIN;
-    this.buttonBlockLeft = this.addButton(new GuiGolemBook.BlockButton(this, new Block[] {}, blockX, blockY, GOLEM_BLOCK_SCALE));
+    this.buttonBlockLeft = this.addWidget(new GuiGolemBook.BlockButton(this, new Block[] {}, blockX, blockY, GOLEM_BLOCK_SCALE));
     blockX = (this.width / 2) + MARGIN;
-    this.buttonBlockRight = this.addButton(new GuiGolemBook.BlockButton(this, new Block[] {}, blockX, blockY, GOLEM_BLOCK_SCALE));
+    this.buttonBlockRight = this.addWidget(new GuiGolemBook.BlockButton(this, new Block[] {}, blockX, blockY, GOLEM_BLOCK_SCALE));
     // create table of contents
     for (int i = 0; i < NUM_CONTENTS_ENTRIES; i++) {
-      this.tableOfContents[i] = this.addButton(
+      this.tableOfContents[i] = this.addWidget(
           new GuiGolemBook.GolemEntryButton(this, ALPHABETICAL.get(i), (this.width / 2) + SCROLL_STARTX, SCR_OFFSET_Y + SCROLL_STARTY + ENTRY_H * i));
     }
     this.updateButtons();
@@ -172,10 +173,10 @@ public class GuiGolemBook extends Screen {
 
   @Override
   public void render(final PoseStack matrix, final int mouseX, final int mouseY, final float partialTicks) {
-    RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+    //RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
     // draw background (book)
-    this.getMinecraft().getTextureManager().bind(TEXTURE);
+    this.getMinecraft().getTextureManager().bindForSetup(TEXTURE);
     int bookX = (this.width - BOOK_WIDTH) / 2;
     int bookY = SCR_OFFSET_Y;
     this.blit(matrix, bookX, bookY, 0, 0, BOOK_WIDTH, BOOK_HEIGHT);
@@ -288,12 +289,19 @@ public class GuiGolemBook extends Screen {
     float blockX = (float) (cornerX + MARGIN + 4);
     float blockY = (float) (cornerY + MARGIN);
     // Render the Block with given scale
-    RenderSystem.pushMatrix();
-    RenderSystem.enableRescaleNormal();
-    Lighting.turnBackOn();
-    RenderSystem.scalef(scale, scale, scale);
+    RenderSystem.getModelViewStack().pushPose();
+    // TODO ???
+//    RenderSystem.enableRescaleNormal();
+    Lighting.setupForFlatItems();
+    RenderSystem.getModelViewStack().scale(scale, scale, scale);
+    
+    RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+    RenderSystem.setShader(GameRenderer::getPositionTexShader);
+    RenderSystem.setShaderTexture(0, STATS_ICON_LOCATION);
+    
+    
     this.itemRenderer.renderGuiItem(new ItemStack(block), (int) (blockX / scale), (int) (blockY / scale));
-    RenderSystem.popMatrix();
+    RenderSystem.getModelViewStack().popPose();
   }
 
   /**
@@ -314,11 +322,11 @@ public class GuiGolemBook extends Screen {
 
     // 'screenshot' (supplemental image)
     if (entry.hasImage()) {
-      RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+      RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
       float scale = 0.9F;
       int imgX = cornerX + (BOOK_WIDTH / 4) - (int) ((SUPP_WIDTH * scale) / 2.0F);
       int imgY = cornerY + BOOK_HEIGHT - (int) (SUPP_HEIGHT * scale) - (MARGIN * 2);
-      this.getMinecraft().getTextureManager().bind(entry.getImageResource());
+      RenderSystem.setShaderTexture(0, entry.getImageResource());
       int w = (int) (SUPP_WIDTH * scale);
       int h = (int) (SUPP_HEIGHT * scale);
       blit(matrix, imgX, imgY, 0, 0, w, h, w, h);
@@ -350,8 +358,8 @@ public class GuiGolemBook extends Screen {
     drawBasicPage(matrix, cornerX, cornerY, title, wrap(""));
 
     // draw background
-    this.getMinecraft().getTextureManager().bind(CONTENTS);
-    RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+    RenderSystem.setShaderTexture(0, CONTENTS);
+    RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
     int startX = cornerX + SCROLL_STARTX + 1;
     int startY = cornerY + SCROLL_STARTY - 1;
     this.blit(matrix, startX, startY, 0, 0, CONTENTS_W, CONTENTS_H + 2);
@@ -376,16 +384,17 @@ public class GuiGolemBook extends Screen {
     /** texture location and size of 2x2 crafting **/
     final int gridW = 84;
     final int gridH = 46;
-    RenderSystem.pushMatrix();
-    RenderSystem.scalef(scale, scale, scale);
-    RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+    RenderSystem.getModelViewStack().pushPose();
+    RenderSystem.getModelViewStack().scale(scale, scale, scale);
+    RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
     // draw 2x2 grid background
-    this.getMinecraft().getTextureManager().bind(TEXTURE);
+    RenderSystem.setShaderTexture(0, TEXTURE);
     this.blit(matrix, startX, startY, BOOK_WIDTH - gridW, BOOK_HEIGHT + ICON_SP, gridW, gridH); // drawTexturedModalRect
 
     // draw itemstacks
-    RenderSystem.enableRescaleNormal();
-    Lighting.turnBackOn();
+    // TODO ???
+//    RenderSystem.enableRescaleNormal();
+    Lighting.setupForFlatItems();
     float posX;
     float posY;
     int iconW = 15;
@@ -417,7 +426,7 @@ public class GuiGolemBook extends Screen {
     this.itemRenderer.renderGuiItem(result, (int) (posX / scale), (int) (posY / scale));
 
     // reset scale
-    RenderSystem.popMatrix();
+    RenderSystem.getModelViewStack().popPose();
   }
   
   private void drawGolemDiagram(final PoseStack matrix, int cornerX, int cornerY) {
@@ -650,8 +659,8 @@ public class GuiGolemBook extends Screen {
     public void render(final PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
       if (this.visible) {
         this.isHovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
-        Minecraft.getInstance().getTextureManager().bind(CONTENTS);
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, CONTENTS);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         // draw the background of the button
         this.blit(matrix, this.x, this.y, CONTENTS_W + ICON_SP, this.isHovered ? (ENTRY_H + ICON_SP) : 0, ENTRY_W, ENTRY_H); // drawTexturedModalRect
         // draw the block and name of the golem
@@ -659,7 +668,7 @@ public class GuiGolemBook extends Screen {
         gui.drawBlock(this.entry.getBlock(index), this.x - MARGIN - 2, this.y - 9, 1.0F);
 
         // prepare to draw the golem's name
-        RenderSystem.pushMatrix();
+        RenderSystem.getModelViewStack().pushPose();
 
         final MutableComponent name = entry.getGolemName();
         final int wrap = this.width - 20;
@@ -672,9 +681,9 @@ public class GuiGolemBook extends Screen {
         int nameX = this.x + 20;
         int nameY = this.y + ((this.height - nameH) / 2) + 1;
         // re-scale and draw the golem name
-        RenderSystem.scalef(scale, scale, scale);
+        RenderSystem.getModelViewStack().scale(scale, scale, scale);
         gui.font.drawWordWrap(name, (int) ((nameX) / scale), (int) (nameY / scale), (int) (wrap / scale), 0);
-        RenderSystem.popMatrix();
+        RenderSystem.getModelViewStack().popPose();
       }
     }
   }
@@ -710,8 +719,8 @@ public class GuiGolemBook extends Screen {
     public void render(final PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
       if (this.visible) {
         boolean mouseOver = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        Minecraft.getInstance().getTextureManager().bind(GuiGolemBook.TEXTURE);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, GuiGolemBook.TEXTURE);
         int tx = 0;
         int ty = TEXTURE_STARTY;
 

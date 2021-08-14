@@ -2,10 +2,10 @@ package com.mcmoddev.golems.entity.ai;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 
-import net.minecraft.world.entity.ai.util.RandomPos;
-import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.util.DefaultRandomPos;
+import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
 
 public class SwimUpGoal extends Goal {
@@ -33,8 +33,7 @@ public class SwimUpGoal extends Goal {
   public void tick() {
     if (golem.getY() < (this.targetY - 1) && (golem.getNavigation().isDone() || isCloseToPathTarget())) {
 
-      Vec3 vec = RandomPos.getPosTowards(golem, 4, 8,
-          new Vec3(golem.getX(), (this.targetY - 1), golem.getZ()));
+      Vec3 vec = DefaultRandomPos.getPosTowards(this.golem, 4, 8, new Vec3(this.golem.getX(), (double)(this.targetY - 1), this.golem.getZ()), (double)((float)Math.PI / 2F));
 
       if (vec == null) {
         this.obstructed = true;

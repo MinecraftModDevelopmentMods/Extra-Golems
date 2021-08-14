@@ -2,8 +2,7 @@ package com.mcmoddev.golems.events;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 
-import net.minecraftforge.event.entity.living.EnderTeleportEvent;
-import net.minecraftforge.event.entity.living.EntityTeleportEvent;
+import net.minecraftforge.event.entity.EntityTeleportEvent;
 import net.minecraftforge.eventbus.api.Cancelable;
 
 /**

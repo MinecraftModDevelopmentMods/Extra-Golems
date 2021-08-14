@@ -20,6 +20,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -117,7 +118,7 @@ public final class FurnaceGolem extends GolemBase {
     // allow player to add fuel to the golem by clicking on them with a fuel item
     final Vec3 pos = this.position();
     ItemStack stack = player.getItemInHand(hand);
-    int burnTime = ForgeHooks.getBurnTime(stack) * (player.isCrouching() ? stack.getCount() : 1);
+    int burnTime = ForgeHooks.getBurnTime(stack, RecipeType.SMELTING) * (player.isCrouching() ? stack.getCount() : 1);
     if (burnTime > 0 && (getFuel() + burnTime) <= MAX_FUEL) {
       if (player.isCrouching()) {
         // take entire ItemStack

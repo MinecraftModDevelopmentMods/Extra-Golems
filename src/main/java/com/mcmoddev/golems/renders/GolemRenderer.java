@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 import com.google.common.collect.ImmutableMap;
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.entity.base.GolemBase;
+import com.mcmoddev.golems.proxies.ProxyClient;
 import com.mcmoddev.golems.renders.model.GolemBannerLayer;
 import com.mcmoddev.golems.renders.model.GolemFlowerLayer;
 import com.mcmoddev.golems.renders.model.GolemKittyLayer;
@@ -21,6 +22,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.EntityRendererProvider.Context;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.world.entity.animal.IronGolem;
@@ -45,10 +48,10 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
   protected boolean isAlphaLayer;
 
   /**
-   * @param renderManagerIn the entity render manager
+   * @param m the entity render manager
    **/
-  public GolemRenderer(final EntityRenderDispatcher renderManagerIn) {
-    super(renderManagerIn, new GolemModel<T>(), 0.5F);
+  public GolemRenderer(final EntityRendererProvider.Context context) {
+    super(context, new GolemModel<T>(context.bakeLayer(ProxyClient.GOLEM_MODEL_RESOURCE)), 0.5F);
   }
   
   /**
@@ -110,7 +113,8 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
     // transparency flag
     isAlphaLayer = settings.hasTransparency();
     if (isAlphaLayer) {
-      RenderSystem.defaultAlphaFunc();
+      // TODO ???
+//      RenderSystem.defaultAlphaFunc();
       RenderSystem.enableBlend();
     }
     // lighting
@@ -166,7 +170,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
     boolean dynamic = isDynamic(texture, settings);
     if (isVisible || isVisibleToPlayer || isAlphaLayer) {
       return GolemRenderType.getGolemTransparent(texture, dynamic);
-    } else if(golem.isGlowing()) {
+    } else if(isGlowing) {
       return GolemRenderType.getGolemOutline(texture, dynamic);
     } else {
       return GolemRenderType.getGolemCutout(texture, dynamic);

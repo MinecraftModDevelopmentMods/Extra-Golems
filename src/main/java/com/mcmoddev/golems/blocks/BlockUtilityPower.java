@@ -5,18 +5,16 @@ import java.util.Random;
 
 import com.mcmoddev.golems.entity.base.GolemBase;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.server.level.ServerLevel;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class BlockUtilityPower extends BlockUtility {
   public static final IntegerProperty POWER_LEVEL = IntegerProperty.create("power", 0, 15);
