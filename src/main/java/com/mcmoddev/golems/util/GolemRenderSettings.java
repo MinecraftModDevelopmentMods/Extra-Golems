@@ -1,7 +1,7 @@
 package com.mcmoddev.golems.util;
 
+import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.entity.base.GolemBase;
-import com.mcmoddev.golems.main.ExtraGolems;
 
 import net.minecraft.resources.ResourceLocation;
 import com.mojang.math.Vector3f;

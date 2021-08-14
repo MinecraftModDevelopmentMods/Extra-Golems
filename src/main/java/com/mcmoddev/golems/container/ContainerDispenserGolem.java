@@ -1,6 +1,6 @@
 package com.mcmoddev.golems.container;
 
-import com.mcmoddev.golems.main.GolemItems;
+import com.mcmoddev.golems.GolemItems;
 import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.world.entity.player.Player;

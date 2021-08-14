@@ -1,7 +1,7 @@
 package com.mcmoddev.golems.items;
 
+import com.mcmoddev.golems.GolemItems;
 import com.mcmoddev.golems.blocks.BlockGolemHead;
-import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 
 import net.minecraft.world.level.block.Block;

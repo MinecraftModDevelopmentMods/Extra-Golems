@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
+import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.items.ItemBedrockGolem;
-import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.world.entity.EntityType;

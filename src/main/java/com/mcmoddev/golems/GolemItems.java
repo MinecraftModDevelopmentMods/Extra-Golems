@@ -1,4 +1,4 @@
-package com.mcmoddev.golems.main;
+package com.mcmoddev.golems;
 
 import com.mcmoddev.golems.container.ContainerDispenserGolem;
 import com.mcmoddev.golems.container.ContainerPortableWorkbench;

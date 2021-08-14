@@ -5,11 +5,11 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.blocks.BlockGolemHead;
 import com.mcmoddev.golems.entity.FurnaceGolem;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.IMultiTexturedGolem;
-import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemContainer;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 

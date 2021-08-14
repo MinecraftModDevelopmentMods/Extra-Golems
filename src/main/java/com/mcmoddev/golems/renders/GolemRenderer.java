@@ -5,8 +5,8 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableMap;
+import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.entity.base.GolemBase;
-import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.renders.model.GolemBannerLayer;
 import com.mcmoddev.golems.renders.model.GolemFlowerLayer;
 import com.mcmoddev.golems.renders.model.GolemKittyLayer;

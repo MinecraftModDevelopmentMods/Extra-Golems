@@ -5,7 +5,7 @@ import java.util.Objects;
 
 import javax.annotation.Nullable;
 
-import com.mcmoddev.golems.main.ExtraGolems;
+import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.util.GolemContainer;
 import com.mcmoddev.golems.util.GolemNames;
 import com.mcmoddev.golems.util.GolemRegistrar;

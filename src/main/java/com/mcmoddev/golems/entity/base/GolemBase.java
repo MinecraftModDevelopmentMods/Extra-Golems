@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.mcmoddev.golems.ExtraGolems;
+import com.mcmoddev.golems.GolemItems;
 import com.mcmoddev.golems.blocks.BlockUtilityGlow;
 import com.mcmoddev.golems.blocks.BlockUtilityPower;
 import com.mcmoddev.golems.entity.ai.GoToWaterGoal;
 import com.mcmoddev.golems.entity.ai.PlaceUtilityBlockGoal;
 import com.mcmoddev.golems.entity.ai.SwimUpGoal;
 import com.mcmoddev.golems.items.ItemBedrockGolem;
-import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.util.GolemContainer;
 import com.mcmoddev.golems.util.GolemContainer.SwimMode;
 import com.mcmoddev.golems.util.GolemRegistrar;

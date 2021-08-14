@@ -2,11 +2,11 @@ package com.mcmoddev.golems.renders;
 
 import java.io.IOException;
 
-import com.mcmoddev.golems.main.ExtraGolems;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.texture.DynamicTexture;
+
+import com.mcmoddev.golems.ExtraGolems;
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.server.packs.resources.Resource;

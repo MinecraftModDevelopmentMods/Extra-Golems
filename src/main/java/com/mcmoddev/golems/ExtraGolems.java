@@ -1,4 +1,4 @@
-package com.mcmoddev.golems.main;
+package com.mcmoddev.golems;
 
 import java.util.Map.Entry;
 

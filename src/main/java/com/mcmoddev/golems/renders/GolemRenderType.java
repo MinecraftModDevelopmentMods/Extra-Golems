@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.lwjgl.opengl.GL11;
 
-import com.mcmoddev.golems.main.ExtraGolems;
+import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.util.GolemNames;
 
 import net.minecraft.client.renderer.RenderType;

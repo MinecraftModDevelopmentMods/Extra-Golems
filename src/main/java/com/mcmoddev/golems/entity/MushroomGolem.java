@@ -3,11 +3,11 @@ package com.mcmoddev.golems.entity;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.entity.ai.PassiveEffectsGoal;
 import com.mcmoddev.golems.entity.ai.PlaceBlocksGoal;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
-import com.mcmoddev.golems.main.ExtraGolems;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;

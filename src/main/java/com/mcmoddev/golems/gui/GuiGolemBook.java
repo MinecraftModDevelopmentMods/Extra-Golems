@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.main.GolemItems;
+import com.mcmoddev.golems.ExtraGolems;
+import com.mcmoddev.golems.GolemItems;
 import com.mcmoddev.golems.util.GolemContainer;
 import com.mcmoddev.golems.util.GolemRegistrar;
 import com.mojang.blaze3d.vertex.PoseStack;

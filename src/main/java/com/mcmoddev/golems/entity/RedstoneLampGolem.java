@@ -4,12 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiPredicate;
 
+import com.mcmoddev.golems.ExtraGolems;
+import com.mcmoddev.golems.GolemItems;
 import com.mcmoddev.golems.blocks.BlockUtilityGlow;
 import com.mcmoddev.golems.entity.ai.PlaceUtilityBlockGoal;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
-import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.main.GolemItems;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;

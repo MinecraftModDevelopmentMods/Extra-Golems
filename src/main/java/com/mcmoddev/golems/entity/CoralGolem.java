@@ -2,10 +2,10 @@ package com.mcmoddev.golems.entity;
 
 import java.util.Map;
 
+import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.entity.base.GolemMultiTextured;
 import com.mcmoddev.golems.items.ItemBedrockGolem;
-import com.mcmoddev.golems.main.ExtraGolems;
 import com.mcmoddev.golems.util.GolemTextureBytes;
 
 import net.minecraft.world.level.block.Block;

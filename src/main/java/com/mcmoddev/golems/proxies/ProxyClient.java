@@ -1,12 +1,12 @@
 package com.mcmoddev.golems.proxies;
 
+import com.mcmoddev.golems.ExtraGolems;
+import com.mcmoddev.golems.GolemItems;
 import com.mcmoddev.golems.entity.MushroomGolem;
 import com.mcmoddev.golems.entity.WoolGolem;
 import com.mcmoddev.golems.entity.base.GolemBase;
 import com.mcmoddev.golems.gui.GuiDispenserGolem;
 import com.mcmoddev.golems.integration.AddonLoader;
-import com.mcmoddev.golems.main.ExtraGolems;
-import com.mcmoddev.golems.main.GolemItems;
 import com.mcmoddev.golems.renders.GolemRenderType;
 import com.mcmoddev.golems.renders.GolemRenderer;
 import com.mcmoddev.golems.renders.model.SimpleTextureLayer;
