@@ -1,6 +1,6 @@
 package com.mcmoddev.golems.renders.model;
 
-import com.mcmoddev.golems.entity.base.GolemBase;
+import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -121,8 +121,8 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> implement
   
   protected ModelPart getArmForSide(HumanoidArm side) {
     if (side == HumanoidArm.LEFT) {
-      return this.root().getChild("left_arm");
+      return this.leftArm;
     }
-    return this.root().getChild("right_arm");
+    return this.rightArm;
   }
 }

@@ -1,6 +1,6 @@
 package com.mcmoddev.golems.renders.model;
 
-import com.mcmoddev.golems.entity.base.GolemBase;
+import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 import com.mojang.blaze3d.vertex.PoseStack;
 

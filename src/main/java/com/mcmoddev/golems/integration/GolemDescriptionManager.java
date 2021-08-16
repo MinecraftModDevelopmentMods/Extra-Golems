@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.mcmoddev.golems.entity.DispenserGolem;
 import com.mcmoddev.golems.entity.FurnaceGolem;
-import com.mcmoddev.golems.entity.base.GolemBase;
+import com.mcmoddev.golems.entity.GolemBase;
 
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -65,7 +65,7 @@ public abstract class GolemDescriptionManager {
     return list;
   }
   
-  protected void addFurnaceGolemInfo(final FurnaceGolem g, final List<MutableComponent> list) {
+  protected void addFurnaceGolemInfo(final GolemBase g, final List<MutableComponent> list) {
     // add fuel amount if this is a furnace golem
     final int fuel = g.getFuel();
     final int percentFuel = (int) Math.ceil(g.getFuelPercentage() * 100F);
@@ -84,7 +84,7 @@ public abstract class GolemDescriptionManager {
         .append(new TextComponent(fuelString).withStyle(color)));
   }
   
-  protected void addDispenserGolemInfo(final DispenserGolem g, final List<MutableComponent> list) {
+  protected void addDispenserGolemInfo(final GolemBase g, final List<MutableComponent> list) {
     // add fuel amount if this is a furnace golem
     final int arrows = g.getArrowsInInventory();
     if(arrows > 0 && isShiftDown()) {

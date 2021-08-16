@@ -3,17 +3,11 @@ package com.mcmoddev.golems.util.config;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.util.GolemContainer;
-import com.mcmoddev.golems.util.GolemNames;
 import com.mcmoddev.golems.util.GolemRegistrar;
-import com.mcmoddev.golems.util.config.special.GolemSpecialContainer;
-import com.mcmoddev.golems.util.config.special.GolemSpecialSection;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -24,9 +18,6 @@ import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
  */
 public class GolemConfiguration {
 
-  private final Map<GolemContainer, GolemConfigurationSection> sections = new HashMap<>();
-  public final Map<GolemSpecialContainer, GolemSpecialSection> specials = new HashMap<>();
-
   protected final ForgeConfigSpec.BooleanValue bedrockGolemCreativeOnly;
   protected final ForgeConfigSpec.BooleanValue pumpkinBuildsGolem;
   protected final ForgeConfigSpec.BooleanValue enableFriendlyFire;
@@ -36,12 +27,13 @@ public class GolemConfiguration {
   protected final ForgeConfigSpec.BooleanValue holidayTweaks;
   protected final ForgeConfigSpec.IntValue villagerGolemSpawnChance;
   private final ConfigValue<List<? extends String>> villagerGolemSpawns;
-  private static final String[] defaultVillagerGolemSpawns = { GolemNames.BOOKSHELF_GOLEM, GolemNames.CLAY_GOLEM,
-      GolemNames.COAL_GOLEM, GolemNames.CRAFTING_GOLEM, GolemNames.GLASS_GOLEM, GolemNames.GLOWSTONE_GOLEM, GolemNames.LEAF_GOLEM,
-      GolemNames.MELON_GOLEM, GolemNames.MUSHROOM_GOLEM, GolemNames.OBSIDIAN_GOLEM, GolemNames.QUARTZ_GOLEM,
-      GolemNames.REDSANDSTONE_GOLEM, GolemNames.SANDSTONE_GOLEM, GolemNames.STAINEDGLASS_GOLEM,
-      GolemNames.STAINEDTERRACOTTA_GOLEM, GolemNames.STRAW_GOLEM, GolemNames.TERRACOTTA_GOLEM, GolemNames.WOODEN_GOLEM,
-      GolemNames.WOOL_GOLEM };
+  private static final String[] defaultVillagerGolemSpawns = {
+      "golems:bookshelf", "golems:clay", "golems:coal", "golems:crafting",
+      "golems:glass", "golems:glowstone", "golems:leaves", "golems:melon",
+      "golems:mushroom", "golems:obsidian", "golems:quartz", "golems:red_sandstone",
+      "golems:sandstone", "golems:stained_glass", "golems:colored_terracotta", 
+      "golems:hay", "golems:terracotta", "golems:log", "golems:wool"
+  };
   
   private boolean aprilFirst;
   private boolean halloween;
@@ -67,36 +59,12 @@ public class GolemConfiguration {
         .defineList("villager_summon_golems", initVillagerGolemList(defaultVillagerGolemSpawns), o -> o instanceof String);
 
     builder.pop();
-
-    // Categories for each Golem and their specials
-    for (GolemContainer c : GolemRegistrar.golemList.values()) {
-      builder.push(c.getName());
-      sections.put(c, new GolemConfigurationSection(c, builder));
-      builder.push("specials"); // golem.specials
-      for (GolemSpecialContainer specialC : c.getSpecialContainers()) {
-        specials.put(specialC, new GolemSpecialSection(specialC, builder));
-      }
-      // Pops specials and the golem
-      builder.pop(2);
-    }
   }
 
   /**
    * Call on world load. Refills all containers with config values
    */
   public void loadData() {
-    for (Entry<GolemContainer, GolemConfigurationSection> e : this.sections.entrySet()) {
-      GolemContainer c = e.getKey();
-      GolemConfigurationSection section = e.getValue();
-      // update attack, health, and spawn perms based on config
-      c.setAttack(section.attack.get());
-      c.setHealth(section.health.get());
-      c.setEnabled(section.enabled.get());
-      // update specials based on config
-      for (GolemSpecialContainer specialC : c.getSpecialContainers()) {
-        specialC.value = specials.get(specialC).value;
-      }
-    }
     // also update the holiday configs
     final LocalDateTime now = LocalDateTime.now();
     aprilFirst = (now.getMonth() == Month.MARCH && now.getDayOfMonth() >= 31) || (now.getMonth() == Month.APRIL && now.getDayOfMonth() <= 2);

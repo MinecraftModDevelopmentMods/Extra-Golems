@@ -35,18 +35,17 @@ public class GolemBookEntry {
 
   public GolemBookEntry(@Nonnull GolemContainer container) {
     // initialize fields based on golem attributes
-    final EntityType<?> golemType = container.getEntityType();
-    this.golemName = golemType.getDescriptionId();
-    this.health = (int) container.getHealth();
-    this.attack = (float) container.getAttack();
+    this.golemName = container.getMaterial().toString();
+    this.health = (int) container.getAttributes().getHealth();
+    this.attack = (float) container.getAttributes().getAttack();
     container.addDescription(specials);
 
     // set the block and block name if it exists
-    this.buildingBlocks = container.getBuildingBlocks().toArray(new Block[0]);
+    this.buildingBlocks = container.getBlocks().toArray(new Block[0]);
 
     // find the image to add to the book
-    final String modid = container.getRegistryName().getNamespace();
-    final String name = container.getRegistryName().getPath();
+    final String modid = container.getMaterial().getNamespace();
+    final String name = container.getMaterial().getPath();
     String img = (modid + ":textures/gui/screenshots/").concat(name).concat(".png");
     try {
       this.imageLoc = Minecraft.getInstance().getResourceManager().getResource(new ResourceLocation(img)).getLocation();

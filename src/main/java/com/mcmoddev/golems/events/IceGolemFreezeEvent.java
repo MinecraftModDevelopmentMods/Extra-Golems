@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Function;
 
-import com.mcmoddev.golems.entity.base.GolemBase;
+import com.mcmoddev.golems.entity.GolemBase;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;

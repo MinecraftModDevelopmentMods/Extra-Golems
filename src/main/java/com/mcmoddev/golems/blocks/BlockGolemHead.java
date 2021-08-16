@@ -3,7 +3,7 @@ package com.mcmoddev.golems.blocks;
 import javax.annotation.Nullable;
 
 import com.mcmoddev.golems.ExtraGolems;
-import com.mcmoddev.golems.entity.base.GolemBase;
+import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.util.GolemRegistrar;
 
 import net.minecraft.world.level.block.Block;
@@ -38,7 +38,7 @@ public final class BlockGolemHead extends HorizontalDirectionalBlock {
    * blockpos = source.getBlockPos().offset(facing); if
    * (world.isAirBlock(blockpos)) { System.out.println(blockpos.toString() +
    * " IS AIR BLOCK"); if(!world.isRemote) { world.setBlockState(blockpos,
-   * GolemItems.GOLEM_HEAD.getDefaultState().with(HORIZONTAL_FACING, facing), 3);
+   * EGRegistry.GOLEM_HEAD.getDefaultState().with(HORIZONTAL_FACING, facing), 3);
    * } stack.shrink(1); } else { return super.dispenseStack(source, stack); }
    * 
    * return stack; } };

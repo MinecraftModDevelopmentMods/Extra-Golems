@@ -7,12 +7,24 @@ List of bugs, fixes, and features for the 1.17 version of Extra Golems
 - X Update mappings
 - X Fix initial compile errors
 - _ Add entity types: "basic" and "multitexture"
-- _ Add EntityDataAccessor to store golem material (from NBT)
-- _ Add JSON resource loader
+- X Add JSON resource loader
 - _ Separate GolemContainer and RenderSettings
-- _ Add GolemCointainer Codec
- - _ Add GolemGoal and GolemGoal.Type for all special behavior
-- _ Add RenderSettings Codec
+- X Add GolemCointainer Codec
+  - X Add GolemAttributes and Codec
+  - X Add GolemMultitextureSettings and Codec
+- _ Add GolemBehavior for all special behavior
+  - _ aoe_dry
+  - _ aoe_freeze
+  - _ arrows
+  - _ explode
+  - X hurt
+  - X attack
+  - X place_blocks
+  - X passive_effect
+  - X split
+  - _ teleport
+  - X use_fuel
+- X Add RenderSettings Codec
 
 
 ## Bugs
@@ -39,20 +51,23 @@ The below example includes all functionality that will be available for each gol
 ```
 {
   "material": "clay", // unique id that must match the file name
-  "parent": "golems:polished_stone" // parent file to use as base settings if not blank. path: data/golems/golems/polished_stone.json
-  "multitexture": false, // true to look for and use multi-texture settings
-  "health": 20.0,
-  "attack": 2.0,
-  "speed": 0.25, // movement speed
-  "knockback_resistance": 0.4,
-  "armor": 0, // damage resistance
-  "knockback": 1.0, // attack knockback multiplier
-  "immune_to_fire": false,
-  "immune_to_explosions": false,
-  "hurt_by_water": false, // true if hurt by touching water
-  "children": 0, // number of mini golems to spawn on death
+  "attributes": {
+    "health": 20.0,
+    "attack": 2.0,
+    "speed": 0.25, // movement speed
+    "knockback_resistance": 0.4,
+    "armor": 0, // damage resistance
+    "knockback": 1.0, // attack knockback multiplier
+    "immune_to_fire": false,
+    "immune_to_explosions": false,
+    "hurt_by_water": false, // true if hurt by touching water
+    "hurt_by_fall": false,
+  },
   "swim_ability": "sink", // "sink", "float", or "swim"
+  "glow": 11,
+  "power": 15,
   "hidden": false, // true to omit from golem book
+  "sound": "minecraft:block.gravel.step",
   "blocks": [
 	"minecraft:clay_block",
 	"#minecraft:blocks/clay" // example of block tag, doesn't actually exist
@@ -69,7 +84,8 @@ The below example includes all functionality that will be available for each gol
 	"attack": {
 	  "fire": { // sets the enemy on fire
 	    "target": "enemy",
-		"chance": 0.9
+		"chance": 0.9,
+		"time": 2 // number of seconds of fire
 	  }, 
 	  "potion_array": [ // applies a random effect from this array
 	    {
@@ -86,7 +102,8 @@ The below example includes all functionality that will be available for each gol
 	"hurt": {
 	  "fire": { // sets the enemy on fire
 	    "target": "enemy",
-		"chance": 0.9
+		"chance": 0.9,
+		"time": 4 // number of seconds of fire
 	  }, 
 	  "effect" { // applies a potion effect
 		"target": "self",
@@ -156,18 +173,6 @@ The below example includes all functionality that will be available for each gol
 	  "burn_interval": 10 // number of ticks before depleting fuel
 	},
 	
-	// Place light blocks
-	"glow": {
-	  "interval": 4, // number of ticks between light updates
-	  "level": 11
-	}
-	
-	// Place power blocks
-	"power": {
-	  "interval": 2, // number of ticks between power updates
-	  "level": 15
-	}
-	
 	// Place plants or other blocks
 	"place_blocks": {
 	  "interval": 30,
@@ -180,27 +185,38 @@ The below example includes all functionality that will be available for each gol
 		"#minecraft:blocks/dirt" // Block tag
 	  ]
 	}
+	
+	// Split into a number of mini golems upon death
+	"split": {
+	  "children": 2
+	}
   }
 }
 ```
 
 #### Multi-textured example data/golems/golems/mushroom.json
 
-The below information will be expected when `"multitexture"` is `true`. Here is an example for the mushroom golem. 
+The below information will allow multitexture behavior if present. Here is an example for the mushroom golem. 
 
 ```
 {
   [...],
-  "texture_count": 2, // number of textureIDs
-  "cycle": true, // true to change texture on player interact
-  "block_map": { // map of block->textureID
-    "minecraft:mushroom_stem": 0,
-    "minecraft:brown_mushroom_block": 0,
-    "minecraft:red_mushroom_block": 1
-  },
-  "light_map": { // map of textureID->lightLevel; defaults to 0
-    "0": 0,
-	"1": 0
+  "multitexture": {
+    "texture_count": 2, // number of textureIDs
+    "cycle": true, // true to change texture on player interact
+    "block_texture_map": { // map of block->textureID
+      "minecraft:mushroom_stem": 0,
+      "minecraft:brown_mushroom_block": 0,
+      "minecraft:red_mushroom_block": 1
+    },
+	"loot_table_map": { // map of textureID->loot table
+      "0": 0,
+      "1": 0
+	},
+    "texture_glow_map": { // map of textureID->lightLevel; defaults to 0
+      "0": 0,
+    	"1": 0
+    }
   }
 }
 ```
@@ -216,7 +232,6 @@ The below example includes all functionality that will be available for each gol
 ```
 {
   "material": "clay", // unique id that must match the file name,
-  "multitexture": false, // true to look for and use multi-texture settings
   "description": [ // array of text components to add to the golem book
     {
 	  "key": "entitytip.translation_key",
@@ -225,9 +240,11 @@ The below example includes all functionality that will be available for each gol
   ],
   "base": "minecraft:clay" // texture path assets/minecraft/textures/block/clay
   // for prefab textures - "base": "#golems:dispenser" // '#' indicates texture path assets/golems/textures/entity/dispenser.png
+  "base_template": "golems:layer/mushroom", // template for rendering
   "base_color": 0, // color value to apply
-  "base_light": true, // if not present, uses GolemBase#isProvidingLight
   "use_biome_color": false, // when true, uses biome foliage color instead of base_color
+  "base_light": true, // if not present, uses GolemBase#isProvidingLight
+  "transparent": false,
   "layers": [ // SimpleTextureLayer
     {
 	  "texture": "golems:layer/vines", // texture path "assets/golems/textures/entity/layer/vines.png"
@@ -248,14 +265,16 @@ The below example includes all functionality that will be available for each gol
 
 ### Multi-textured Example assets/golems/golems/furnace.json
 
-The below information will be expected when `"multitexture"` is `true`. Here is an example for the mushroom golem. 
+The below information will be expected when `"multitexture"` is present. Here is an example for the mushroom golem. 
 
 ```
 {
   [...],
-  "base_map": { // map of textureID->block/prefab texture
-    0: "#golems:furnace/lit", // '#' indicates prefab texture
-	1: "#golems:furnace/unlit" // texture path "assets/golems/textures/entity/furnace/unlit.png"
+  "multitexture": {
+    "base_map": { // map of textureID->block/prefab texture
+      0: "#golems:furnace/lit", // '#' indicates prefab texture
+	  1: "#golems:furnace/unlit" // texture path "assets/golems/textures/entity/furnace/unlit.png"
+    }
   }
 }
 ```

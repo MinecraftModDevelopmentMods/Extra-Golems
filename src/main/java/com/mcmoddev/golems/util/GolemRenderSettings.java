@@ -1,94 +1,144 @@
 package com.mcmoddev.golems.util;
 
-import com.mcmoddev.golems.ExtraGolems;
-import com.mcmoddev.golems.entity.base.GolemBase;
+import java.util.List;
+import java.util.Optional;
 
-import net.minecraft.resources.ResourceLocation;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+import com.mcmoddev.golems.entity.GolemBase;
 import com.mojang.math.Vector3f;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+
+import javafx.util.Pair;
+import net.minecraft.resources.ResourceLocation;
 
 public class GolemRenderSettings {
   
   public static final ResourceLocation FALLBACK_BLOCK = new ResourceLocation("minecraft", "textures/block/clay.png");
-  public static final ResourceLocation FALLBACK_PREFAB = new ResourceLocation("minecraft", "textures/entity/iron_golem/iron_golem.png");
-  public static final ResourceLocation FALLBACK_VINES = new ResourceLocation(ExtraGolems.MODID, "textures/entity/layer/vines.png");
-  public static final ResourceLocation FALLBACK_EYES = new ResourceLocation(ExtraGolems.MODID, "textures/entity/layer/eyes/eyes.png");
+  
+  public static final Codec<GolemRenderSettings> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+      ResourceLocation.CODEC.fieldOf("material").forGetter(GolemRenderSettings::getMaterial),
+      Codec.STRING.optionalFieldOf("base", FALLBACK_BLOCK.toString()).forGetter(GolemRenderSettings::getBaseRaw),
+      ResourceLocation.CODEC.optionalFieldOf("base_template").forGetter(GolemRenderSettings::getBaseTemplate),
+      Codec.INT.optionalFieldOf("base_color", 0).forGetter(GolemRenderSettings::getBaseColor),
+      Codec.BOOL.optionalFieldOf("use_biome_color", false).forGetter(GolemRenderSettings::useBiomeColor),
+      Codec.INT.optionalFieldOf("base_light").forGetter(GolemRenderSettings::getBaseLight),
+      Codec.BOOL.optionalFieldOf("transparent", false).forGetter(GolemRenderSettings::isTransparent),
+      GolemRenderLayerSettings.CODEC.listOf()
+        .optionalFieldOf("layers", Lists.newArrayList(GolemRenderLayerSettings.EYES, GolemRenderLayerSettings.VINES))
+        .forGetter(GolemRenderSettings::getLayers),
+      GolemMultitextureRenderSettings.CODEC.optionalFieldOf("multitexture").forGetter(GolemRenderSettings::getMultitexture)
+    ).apply(instance, GolemRenderSettings::new));
+  
+  
+  private final ResourceLocation material;
+  private final String baseRaw;
+  private final Pair<ResourceLocation, Boolean> base;
+  private final Optional<ResourceLocation> baseTemplate;
+  private final int baseColor;
+  private final boolean useBiomeColor;
+  private final Optional<Integer> baseLight;
+  private final boolean transparent;
+  private final List<GolemRenderLayerSettings> layers;
+  private final Optional<GolemMultitextureRenderSettings> multitexture;
+  
+  
+  private GolemRenderSettings(ResourceLocation material, String baseRaw, Optional<ResourceLocation> baseTemplate, int baseColor,
+      boolean useBiomeColor, Optional<Integer> baseLight, boolean transparent,
+      List<GolemRenderLayerSettings> layers, Optional<GolemMultitextureRenderSettings> multitexture) {
+    super();
+    this.material = material;
+    this.baseRaw = baseRaw;
+    // determine if base is block or prefab texture
+    if(baseRaw.length() > 0 && baseRaw.charAt(0) == '#') {
+      this.base = new Pair<>(new ResourceLocation(baseRaw.substring(1)), false);
+    } else {
+      this.base = new Pair<>(new ResourceLocation(baseRaw), true);
+    }
+    this.baseColor = baseColor;
+    this.baseTemplate = baseTemplate;
+    this.baseLight = baseLight;
+    this.useBiomeColor = useBiomeColor;
+    this.transparent = transparent;
+    this.layers = ImmutableList.copyOf(layers);
+    this.multitexture = multitexture;
+  }
 
-  /** Default value to use when coloring the vines layer **/
-  public static final int VINES_COLOR = 0x83a05a; // 8626266
-  
-  /** When false, none of this class is used **/
-  private final boolean hasCustomRender;
-  
-  // These are used when a texture is auto-generated
-  private final boolean hasTransparency;
-  private final ILightingProvider textureGlow;
-  private final ITextureProvider blockTexture;
-  private final boolean hasVines;
-  private final ILightingProvider vinesGlow;
-  private final ITextureProvider vinesTexture;
-  private final ILightingProvider eyesGlow;
-  private final ITextureProvider eyesTexture;
-  
-  // This is used when a texture is already made
-  private final boolean hasPrefabTexture;
-  private final ITextureProvider prefabTexture;
+  /** @return the ID of the render settings. Must be unique. **/
+  public ResourceLocation getMaterial() { return material; }
 
-  private final boolean hasColor;
-  private final IColorProvider textureColorProvider;
-  private final IColorProvider vinesColorProvider;
+
+
+
   
-  public GolemRenderSettings(boolean lHasCustomRender, boolean lHasTransparency,
-      ILightingProvider lTextureGlow, ITextureProvider lBlockTextureProvider, 
-      boolean lHasVines, boolean lVinesGlow, ITextureProvider lVinesTextureProvider, 
-      boolean lEyesGlow, ITextureProvider lEyesTextureProvider,
-      boolean lHasPrefabTexture, ITextureProvider lPrefabTextureProvider, 
-      boolean lHasColor, IColorProvider lTextureColorProvider, 
-      IColorProvider lVinesColorProvider) {
-    this.hasCustomRender = lHasCustomRender;
-    this.hasTransparency = lHasTransparency;
-    this.textureGlow = lTextureGlow;
-    this.blockTexture = lBlockTextureProvider;
-    this.hasVines = lHasVines;
-    this.vinesGlow = g -> lVinesGlow;
-    this.vinesTexture = lVinesTextureProvider;
-    this.eyesGlow = g -> lEyesGlow;
-    this.eyesTexture = lEyesTextureProvider;
-    this.hasPrefabTexture = lHasPrefabTexture;
-    this.prefabTexture = lPrefabTextureProvider;
-    this.hasColor = lHasColor;
-    this.textureColorProvider = lTextureColorProvider;
-    this.vinesColorProvider = lVinesColorProvider;
+  /** @return a String representation of the base texture **/
+  private String getBaseRaw() { return baseRaw; }
+  
+  /**
+   * @return a ResourceLocation of the base texture.
+   * The Boolean is true for a block texture and 
+   * false for a prefab texture;
+   */
+
+
+
+
+  public Pair<ResourceLocation, Boolean> getBase() { return base; }
+
+  /** @return a color to apply to the base texture **/
+  public int getBaseColor() { return baseColor; }
+  
+  /** @return a prefab template texture to use, if any **/
+
+
+
+
+  public Optional<ResourceLocation> getBaseTemplate() { return baseTemplate; }
+  
+  /** 
+   * @return a light level to use for the base layer. 
+   * If empty, uses Golem light level
+   **/
+
+
+
+
+  public Optional<Integer> getBaseLight() { return baseLight; }
+  
+  /** @return true to use the biome color instead of {@link #getBaseColor()} **/
+
+
+
+
+  public boolean useBiomeColor() { return useBiomeColor; }
+  
+  /** @return whether the texture should be rendered transparent **/
+  public boolean isTransparent() { return transparent; }
+  
+  /** @return a List of GolemRenderLayerSettings, may be empty **/
+
+
+
+
+  public List<GolemRenderLayerSettings> getLayers() { return layers; }
+  
+  /** @return the GolemMultiTextureRenderSettings, if present **/
+
+
+
+
+  public Optional<GolemMultitextureRenderSettings> getMultitexture() {
+    return multitexture;
   }
   
-  /** @return whether to skip these render settings when registering renders **/
-  public boolean hasCustomRender() { return hasCustomRender; }
-  /** @return whether the texture should be rendered transparent **/
-  public boolean hasTransparency() { return hasTransparency; }
-  /** @return whether the eyes should be rendered with constant light **/
-  public ILightingProvider getTextureLighting() { return textureGlow; }
-  /** @return the block texture provider **/
-  public ITextureProvider getBlockTexture() { return blockTexture; }
-  /** @return whether to render vines **/
-  public boolean hasVines() { return hasVines; }
-  /** @return whether the eyes should be rendered with constant light **/
-  public ILightingProvider getVinesLighting() { return vinesGlow; }
-  /** @return the vines texture provider **/
-  public ITextureProvider getVinesTexture() { return vinesTexture; }
-  /** @return whether the eyes should be rendered with constant light **/
-  public ILightingProvider getEyesLighting() { return eyesGlow; }
-  /** @return the vines texture provider **/
-  public ITextureProvider getEyesTexture() { return eyesTexture; }
-  /** @return whether a prefabricated texture should be used **/
-  public boolean hasPrefabTexture() { return hasPrefabTexture; }
-  /** @return the prefab texture provider **/
-  public ITextureProvider getPrefabTexture() { return prefabTexture; }
-  /** @return whether the texture should be colored **/
-  public boolean hasColor() { return hasColor; }
-  /** @return the texture color provider **/
-  public IColorProvider getBlockColorProvider() { return textureColorProvider; }
-  /** @return the vines color provider **/
-  public IColorProvider getVinesColorProvider() { return vinesColorProvider; }
   
+  
+  
+
+
+
+
   /**
    * @param color a packed int RGB color
    * @return the red, green, and blue components as a Vector3f
@@ -119,7 +169,7 @@ public class GolemRenderSettings {
      * Accepts an instance of a GolemBase and returns
      * the appropriate ResourceLocation texture. Since
      * this is called every frame, the ResourceLocation
-     * can change during run-time and have immediate effect.
+     * can change during run-time and have immediate effects.
      * @param entity the golem
      * @return the texture to use
      */

@@ -6,8 +6,8 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableMap;
 import com.mcmoddev.golems.ExtraGolems;
-import com.mcmoddev.golems.entity.base.GolemBase;
-import com.mcmoddev.golems.proxies.ProxyClient;
+import com.mcmoddev.golems.entity.GolemBase;
+import com.mcmoddev.golems.proxies.ClientProxy;
 import com.mcmoddev.golems.renders.model.GolemBannerLayer;
 import com.mcmoddev.golems.renders.model.GolemFlowerLayer;
 import com.mcmoddev.golems.renders.model.GolemKittyLayer;
@@ -51,7 +51,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
    * @param m the entity render manager
    **/
   public GolemRenderer(final EntityRendererProvider.Context context) {
-    super(context, new GolemModel<T>(context.bakeLayer(ProxyClient.GOLEM_MODEL_RESOURCE)), 0.5F);
+    super(context, new GolemModel<T>(context.bakeLayer(ClientProxy.GOLEM_MODEL_RESOURCE)), 0.5F);
   }
   
   /**
