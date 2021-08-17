@@ -1,16 +1,14 @@
-package com.mcmoddev.golems.container;
+package com.mcmoddev.golems.menu;
 
-import com.mcmoddev.golems.util.GolemNames;
-
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.inventory.CraftingMenu;
-import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.CraftingMenu;
 
 public class PortableCraftingMenu extends CraftingMenu {
 
@@ -44,7 +42,7 @@ public class PortableCraftingMenu extends CraftingMenu {
 
     @Override
     public Component getDisplayName() {
-      return new TranslatableComponent("entity.golems." + GolemNames.CRAFTING_GOLEM);
+      return new TranslatableComponent("entity.golems.crafting");
     }
   }
 }

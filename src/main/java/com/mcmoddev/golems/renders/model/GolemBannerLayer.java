@@ -37,7 +37,7 @@ public class GolemBannerLayer<T extends GolemBase> extends RenderLayer<T, GolemM
       matrixStackIn.translate(0, 0.5D, 0);
       matrixStackIn.mulPose(Vector3f.ZP.rotation(bannerSwing));
       matrixStackIn.translate(0, -0.5D, 0);
-      // scale and center on golem body
+      // scale and center on entity body
       matrixStackIn.scale(2.6F, 2.6F, 2.6F);
       getParentModel().root().translateAndRotate(matrixStackIn);
       // Actually render the banner item

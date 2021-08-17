@@ -1,7 +1,7 @@
 package com.mcmoddev.golems.gui;
 
-import com.mcmoddev.golems.container.DispenserGolemMenu;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mcmoddev.golems.menu.DispenserGolemMenu;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;

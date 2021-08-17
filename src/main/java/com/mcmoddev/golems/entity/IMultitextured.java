@@ -36,11 +36,11 @@ public interface IMultitextured {
   }
 
   /**
-   * Selects a random texture to apply. Parameters are given in case the golem
+   * Selects a random texture to apply. Parameters are given in case the entity
    * randomizes texture based on location.
    * 
    * @param world the World
-   * @param pos   an approximate position for the golem
+   * @param pos   an approximate position for the entity
    **/
   default void randomizeTexture(final Level world, final BlockPos pos) {
     final byte texture = (byte) world.getRandom().nextInt(Math.max(1, getTextureCount()));

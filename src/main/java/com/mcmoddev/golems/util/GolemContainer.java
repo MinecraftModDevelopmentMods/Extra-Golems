@@ -37,19 +37,19 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 /**
  * This class stores characteristics and other vital information
- * about a single golem. These attributes are then referenced from
+ * about a single entity. These attributes are then referenced from
  * {@link GolemBase} as needed.
  * Adapted from BetterAnimalsPlus by its_meow. Used with permission.
  **/
 public final class GolemContainer {
   
   public static final GolemContainer EMPTY = new GolemContainer(
-      new ResourceLocation(ExtraGolems.MODID, "clay"), GolemAttributes.EMPTY, SwimMode.SINK, 0, 0, true, 
-      SoundEvents.STONE_STEP, Lists.newArrayList(), Maps.newHashMap(), Optional.of(GolemMultitextureSettings.EMPTY), new CompoundTag());
+      new ResourceLocation(ExtraGolems.MODID, "empty"), AttributeSettings.EMPTY, SwimMode.SINK, 0, 0, true, 
+      SoundEvents.STONE_STEP, Lists.newArrayList(), Maps.newHashMap(), Optional.of(MultitextureSettings.EMPTY), new CompoundTag());
 
   public static final Codec<GolemContainer> CODEC = RecordCodecBuilder.create(instance -> instance.group(
       ResourceLocation.CODEC.fieldOf("material").forGetter(GolemContainer::getMaterial),
-      GolemAttributes.CODEC.fieldOf("attributes").forGetter(GolemContainer::getAttributes),
+      AttributeSettings.CODEC.fieldOf("attributes").forGetter(GolemContainer::getAttributes),
       SwimMode.CODEC.optionalFieldOf("swim_ability", SwimMode.SINK).forGetter(GolemContainer::getSwimAbility),
       Codec.INT.optionalFieldOf("glow", 0).forGetter(GolemContainer::getMaxLightLevel),
       Codec.INT.optionalFieldOf("power", 0).forGetter(GolemContainer::getMaxPowerLevel),
@@ -57,12 +57,12 @@ public final class GolemContainer {
       SoundEvent.CODEC.optionalFieldOf("sound", SoundEvents.STONE_STEP).forGetter(GolemContainer::getSound),
       Codec.STRING.listOf().optionalFieldOf("blocks", Lists.newArrayList()).forGetter(GolemContainer::getBlocksRaw),
       Codec.unboundedMap(Codec.STRING, Codec.DOUBLE).optionalFieldOf("heal_items", Maps.newHashMap()).forGetter(GolemContainer::getHealItemsRaw),
-      GolemMultitextureSettings.CODEC.optionalFieldOf("multitexture").forGetter(GolemContainer::getMultitexture),
+      MultitextureSettings.CODEC.optionalFieldOf("multitexture").forGetter(GolemContainer::getMultitexture),
       CompoundTag.CODEC.optionalFieldOf("behavior", new CompoundTag()).forGetter(GolemContainer::getBehaviorsRaw)
     ).apply(instance, GolemContainer::new));
   
   private final ResourceLocation material;
-  private final GolemAttributes attributes;
+  private final AttributeSettings attributes;
   private final SwimMode swimAbility;
   private final int glow;
   private final int power;
@@ -80,11 +80,11 @@ public final class GolemContainer {
   private final CompoundTag behaviorsRaw;
   private final ImmutableMap<ResourceLocation, GolemBehavior> behaviors;
   
-  private final Optional<GolemMultitextureSettings> multitexture;
+  private final Optional<MultitextureSettings> multitexture;
 
-  private GolemContainer(ResourceLocation material, GolemAttributes attributes, SwimMode swimAbility, int glow, int power,
+  private GolemContainer(ResourceLocation material, AttributeSettings attributes, SwimMode swimAbility, int glow, int power,
       boolean hidden, SoundEvent sound, List<String> blocksRaw, Map<String, Double> healItemsRaw,
-      Optional<GolemMultitextureSettings> multitexture, CompoundTag goalsRaw) {
+      Optional<MultitextureSettings> multitexture, CompoundTag goalsRaw) {
     this.material = material;
     this.attributes = attributes;
     this.swimAbility = swimAbility;
@@ -147,7 +147,7 @@ public final class GolemContainer {
   public ResourceLocation getMaterial() { return this.material; }
 
   /** @return the Golem base attributes **/
-  public GolemAttributes getAttributes() { return attributes; }
+  public AttributeSettings getAttributes() { return attributes; }
   
   /** @return the {@link SwimMode} of the Golem **/
   public SwimMode getSwimAbility() { return swimAbility; }
@@ -155,7 +155,7 @@ public final class GolemContainer {
   /** @return true if the Golem can swim on top of water **/
   public boolean canSwim() { return this.swimAbility == SwimMode.FLOAT; }
 
-  /** @return true if the Golem should not appear in the golem guide book **/
+  /** @return true if the Golem should not appear in the entity guide book **/
   public boolean isHidden() { return hidden; }
   
   /** @return a default SoundEvent to play when the Golem moves or is attacked **/
@@ -186,7 +186,7 @@ public final class GolemContainer {
   public ImmutableMap<ResourceLocation, GolemBehavior> getBehaviors() { return behaviors; }
 
   /** @return an Optional containing multitexture settings if applicable **/
-  public Optional<GolemMultitextureSettings> getMultitexture() { return multitexture; }
+  public Optional<MultitextureSettings> getMultitexture() { return multitexture; }
   
   /** @return the Golem's base light level **/
   public int getMaxLightLevel() { return glow; }
@@ -297,11 +297,11 @@ public final class GolemContainer {
   }
 
   /**
-   * There are three distinct behaviors when a golem is in contact with water:
+   * There are three distinct behaviors when a entity is in contact with water:
    * <br>
-   * {@code SINK} = the golem does not swim at all <br>
-   * {@code FLOAT} = the golem swims on top of water <br>
-   * {@code SWIM} = the golem navigates up and down in the water
+   * {@code SINK} = the entity does not swim at all <br>
+   * {@code FLOAT} = the entity swims on top of water <br>
+   * {@code SWIM} = the entity navigates up and down in the water
    **/
   public static enum SwimMode implements StringRepresentable {
     SINK("sink"), 

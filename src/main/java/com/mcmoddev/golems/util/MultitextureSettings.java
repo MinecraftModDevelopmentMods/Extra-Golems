@@ -9,17 +9,17 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.resources.ResourceLocation;
 
-public class GolemMultitextureSettings {
+public class MultitextureSettings {
   
-  public static final GolemMultitextureSettings EMPTY = new GolemMultitextureSettings(0, false, Maps.newHashMap(), Maps.newHashMap(), Maps.newHashMap());
+  public static final MultitextureSettings EMPTY = new MultitextureSettings(0, false, Maps.newHashMap(), Maps.newHashMap(), Maps.newHashMap());
   
-  public static final Codec<GolemMultitextureSettings> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-      Codec.INT.fieldOf("texture_count").forGetter(GolemMultitextureSettings::getTextureCount),
-      Codec.BOOL.optionalFieldOf("cycle", false).forGetter(GolemMultitextureSettings::canCycle),
-      Codec.unboundedMap(ResourceLocation.CODEC, Codec.INT).fieldOf("block_texture_map").forGetter(GolemMultitextureSettings::getBlockTextureMap),
-      Codec.unboundedMap(Codec.INT, ResourceLocation.CODEC).fieldOf("loot_table_map").forGetter(GolemMultitextureSettings::getLootTableMap),
-      Codec.unboundedMap(Codec.INT, Codec.INT).fieldOf("texture_glow_map").forGetter(GolemMultitextureSettings::getTextureGlowMap)
-    ).apply(instance, GolemMultitextureSettings::new));
+  public static final Codec<MultitextureSettings> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+      Codec.INT.fieldOf("texture_count").forGetter(MultitextureSettings::getTextureCount),
+      Codec.BOOL.optionalFieldOf("cycle", false).forGetter(MultitextureSettings::canCycle),
+      Codec.unboundedMap(ResourceLocation.CODEC, Codec.INT).fieldOf("block_texture_map").forGetter(MultitextureSettings::getBlockTextureMap),
+      Codec.unboundedMap(Codec.INT, ResourceLocation.CODEC).fieldOf("loot_table_map").forGetter(MultitextureSettings::getLootTableMap),
+      Codec.unboundedMap(Codec.INT, Codec.INT).fieldOf("texture_glow_map").forGetter(MultitextureSettings::getTextureGlowMap)
+    ).apply(instance, MultitextureSettings::new));
   
   private final int textureCount;
   private final boolean cycle;
@@ -27,7 +27,7 @@ public class GolemMultitextureSettings {
   private final ImmutableMap<Integer, Integer> textureGlowMap;
   private final ImmutableMap<Integer, ResourceLocation> lootTableMap;
   
-  private GolemMultitextureSettings(int textureCount, boolean cycle, 
+  private MultitextureSettings(int textureCount, boolean cycle, 
       Map<ResourceLocation, Integer> blockTextureMap,
       Map<Integer, ResourceLocation> lootTableMap,
       Map<Integer, Integer> textureGlowMap) {

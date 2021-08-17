@@ -1,14 +1,11 @@
 package com.mcmoddev.golems.entity;
 
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeHooks;
 
 public interface IFuelConsumer {
@@ -52,7 +49,7 @@ public interface IFuelConsumer {
   }
   
   default void consumeFuel(final Player player, final InteractionHand hand) {
-    // allow player to add fuel to the golem by clicking on them with a fuel item
+    // allow player to add fuel to the entity by clicking on them with a fuel item
     ItemStack stack = player.getItemInHand(hand);
     int burnTime = ForgeHooks.getBurnTime(stack, RecipeType.SMELTING) * (player.isCrouching() ? stack.getCount() : 1);
     if (burnTime > 0 && (getFuel() + burnTime) <= getMaxFuel()) {

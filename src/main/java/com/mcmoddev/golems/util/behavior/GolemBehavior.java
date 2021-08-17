@@ -11,6 +11,17 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 
+/**
+ * This is the base class for NBT-based behaviors.
+ * Each GolemContainer has a set of behaviors that is
+ * read from a CompoundTag. Each behavior can access
+ * the entity at key points such as goal registration,
+ * mob interaction, entity death, and entity NBT read/write.
+ * The GolemBehavior does not change after loading its
+ * initial parameters.
+ * The GolemBehavior may make use of a BehaviorParameter
+ * to easily load complicated settings from NBT.
+ */
 @Immutable
 public abstract class GolemBehavior {
   
@@ -56,6 +67,33 @@ public abstract class GolemBehavior {
    * @param hand the Player's hand
    */
   public void onMobInteract(final GolemBase entity, final Player player, final InteractionHand hand) {
+    
+  }
+  
+  /**
+   * Called when the Golem dies, before it is marked as removed
+   * @param entity the Golem
+   * @param source the DamageSource that killed the Golem
+   */
+  public void onDie(final GolemBase entity, final DamageSource source) {
+    
+  }
+  
+  /**
+   * Called after reading additional data from NBT
+   * @param entity the Golem
+   * @param tag the Golem NBT tag
+   */
+  public void onWriteData(final GolemBase entity, final CompoundTag tag) {
+    
+  }
+  
+  /**
+   * Called after writing additional data to NBT
+   * @param entity the Golem
+   * @param tag the Golem NBT tag
+   */
+  public void onReadData(final GolemBase entity, final CompoundTag tag) {
     
   }
   

@@ -13,10 +13,9 @@ public class UseFuelGoal<T extends Mob & IFuelConsumer> extends Goal {
   protected final int interval;
 
   public UseFuelGoal(T entity, int interval) {
-    super();
+    this.setFlags(EnumSet.noneOf(Goal.Flag.class));
     this.entity = entity;
     this.interval = interval;
-    this.setFlags(EnumSet.noneOf(Goal.Flag.class));
   }
 
   @Override

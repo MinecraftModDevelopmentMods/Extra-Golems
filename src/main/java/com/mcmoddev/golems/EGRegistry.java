@@ -1,8 +1,8 @@
 package com.mcmoddev.golems;
 
-import com.mcmoddev.golems.container.DispenserGolemMenu;
-import com.mcmoddev.golems.container.PortableCraftingMenu;
 import com.mcmoddev.golems.entity.GolemBase;
+import com.mcmoddev.golems.menu.DispenserGolemMenu;
+import com.mcmoddev.golems.menu.PortableCraftingMenu;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.entity.EntityType;
@@ -38,7 +38,7 @@ public final class EGRegistry {
   public static final Block UTILITY_POWER = null;
   
   ////// ENTITIES //////
-  @ObjectHolder("golem")
+  @ObjectHolder("entity")
   public static final EntityType<GolemBase> GOLEM = null;
 
   ////// OTHER //////

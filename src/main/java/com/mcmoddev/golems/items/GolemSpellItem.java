@@ -1,7 +1,7 @@
 package com.mcmoddev.golems.items;
 
 import com.mcmoddev.golems.EGRegistry;
-import com.mcmoddev.golems.blocks.BlockGolemHead;
+import com.mcmoddev.golems.blocks.GolemHeadBlock;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 
 import net.minecraft.world.level.block.Block;
@@ -52,7 +52,7 @@ public class GolemSpellItem extends Item {
         if (!cxt.getLevel().isClientSide()) {
           final Direction facing = cxt.getLevel().getBlockState(cxt.getClickedPos()).getValue(HorizontalDirectionalBlock.FACING);
           cxt.getLevel().setBlock(cxt.getClickedPos(), EGRegistry.GOLEM_HEAD.defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, facing), 3);
-          BlockGolemHead.trySpawnGolem(cxt.getLevel(), cxt.getClickedPos());
+          GolemHeadBlock.trySpawnGolem(cxt.getLevel(), cxt.getClickedPos());
           cxt.getItemInHand().shrink(1);
         }
         return InteractionResult.SUCCESS;

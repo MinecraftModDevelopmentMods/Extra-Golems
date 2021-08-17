@@ -5,18 +5,14 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.mcmoddev.golems.blocks.BlockGolemHead;
-import com.mcmoddev.golems.entity.FurnaceGolem;
+import com.mcmoddev.golems.blocks.GolemHeadBlock;
 import com.mcmoddev.golems.entity.GolemBase;
-import com.mcmoddev.golems.entity.IMultitextured;
 import com.mcmoddev.golems.util.GolemContainer;
+import com.mcmoddev.golems.util.behavior.GolemBehaviors;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.sensing.GolemSensor;
@@ -24,19 +20,25 @@ import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerData;
 import net.minecraft.world.entity.npc.VillagerProfession;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class EGEvents {
+  
+  @SubscribeEvent
+  public void addReloadListeners(AddReloadListenerEvent event) {
+    ExtraGolems.LOGGER.info("addListeners");
+    ExtraGolems.PROXY.addReloadListeners(event);
+  }
 
   /**
-   * Checks if a Carved Pumpkin was placed and, if so, attempts to spawn a golem
+   * Checks if a Carved Pumpkin was placed and, if so, attempts to spawn a entity
    * at that location where enabled by the config.
    **/
   @SubscribeEvent
@@ -44,8 +46,8 @@ public class EGEvents {
     // if the config allows it, and the block is a CARVED pumpkin...
     if (!event.isCanceled() && ExtraGolemsConfig.pumpkinBuildsGolems() && event.getPlacedBlock().getBlock() == Blocks.CARVED_PUMPKIN
         && event.getWorld() instanceof Level) {
-      // try to spawn a golem!
-      BlockGolemHead.trySpawnGolem((Level) event.getWorld(), event.getPos());
+      // try to spawn a entity!
+      GolemHeadBlock.trySpawnGolem((Level) event.getWorld(), event.getPos());
     }
   }
 
@@ -54,10 +56,14 @@ public class EGEvents {
    **/
   @SubscribeEvent
   public void onTargetEvent(final LivingSetAttackTargetEvent event) {
-    if (event.getEntityLiving() instanceof GolemBase && event.getTarget() instanceof FurnaceGolem && !((FurnaceGolem) event.getTarget()).hasFuel()) {
+    if (event.getEntityLiving() instanceof Mob && event.getTarget() instanceof GolemBase) {
+      Mob mob = (Mob)event.getEntityLiving();
+      GolemBase target = (GolemBase)event.getTarget();
       // clear the attack target
-      ((GolemBase) event.getEntityLiving()).setTarget(null);
-      ((GolemBase) event.getEntityLiving()).setLastHurtByMob(null);
+      if(target.getContainer().hasBehavior(GolemBehaviors.USE_FUEL) && !target.hasFuel()) {
+        mob.setTarget(null);
+        mob.setLastHurtByMob(null);
+      }
     }
   }
 
@@ -67,7 +73,7 @@ public class EGEvents {
         && !event.getEntityLiving().isSleeping() && event.getEntityLiving().tickCount % 50 == 0) {
       Villager villager = (Villager) event.getEntityLiving();
       VillagerData villagerdata = villager.getVillagerData();
-      // determine whether to spawn a golem this tick
+      // determine whether to spawn a entity this tick
       if (villagerdata != null && !villager.isBaby() && villagerdata.getProfession() != VillagerProfession.NITWIT) {
         final long time = villager.getCommandSenderWorld().getGameTime();
         final int minNumVillagers = 3;
@@ -80,10 +86,10 @@ public class EGEvents {
         if (nearbyVillagers.size() >= minNumVillagers && nearbyGolems.isEmpty()) {
           // one last check (against config) to adjust frequency
           if (villager.getRandom().nextInt(100) < ExtraGolemsConfig.villagerSummonChance()) {
-            // summon a golem
+            // summon a entity
             GolemBase golem = summonGolem(villager);
             if (golem != null) {
-              ExtraGolems.LOGGER.info("Villager summoned a golem! " + golem.toString());
+              ExtraGolems.LOGGER.info("Villager summoned a entity! " + golem.toString());
               nearbyVillagers.forEach(GolemSensor::checkForNearbyGolem);
             }
           }
@@ -120,7 +126,7 @@ public class EGEvents {
         if (golem.getTextureCount() > 0) {
           golem.randomizeTexture(world, blockpos2);
         }
-        // spawn the golem
+        // spawn the entity
         if (golem.checkSpawnRules(world, MobSpawnType.MOB_SUMMONED) && golem.checkSpawnObstruction(world)) {
           golem.setPos(blockpos2.getX(), blockpos2.getY(), blockpos2.getZ());
           world.addFreshEntity(golem);

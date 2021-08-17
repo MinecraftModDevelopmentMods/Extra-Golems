@@ -13,6 +13,7 @@ import com.mcmoddev.golems.entity.goal.UseFuelGoal;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
@@ -47,7 +48,22 @@ public class UseFuelBehavior extends GolemBehavior {
     entity.goalSelector.addGoal(8, new LookRandomlyWhenActiveGoal<>(entity));
   }
   
-  private boolean removeGoal(final GolemBase entity, final Class<? extends Goal> goalToRemove) {
+  @Override
+  public void onMobInteract(final GolemBase entity, final Player player, final InteractionHand hand) {
+    entity.consumeFuel(player, hand);
+  }
+  
+  @Override
+  public void onWriteData(final GolemBase entity, final CompoundTag tag) {
+    entity.saveFuel(tag);
+  }
+  
+  @Override
+  public void onReadData(final GolemBase entity, final CompoundTag tag) {
+    entity.loadFuel(tag);
+  }
+  
+  protected static boolean removeGoal(final GolemBase entity, final Class<? extends Goal> goalToRemove) {
     final List<Goal> goalsToRemove = new ArrayList<>();
     entity.goalSelector.availableGoals.forEach(g -> {
       if(g.getGoal().getClass() == goalToRemove) {

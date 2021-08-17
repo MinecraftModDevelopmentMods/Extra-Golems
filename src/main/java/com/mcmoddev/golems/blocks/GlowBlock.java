@@ -28,15 +28,15 @@ public class GlowBlock extends UtilityBlock {
 
   @Override
   public void tick(final BlockState state, final ServerLevel worldIn, final BlockPos pos, final Random random) {
-    // make a slightly expanded AABB to check for the golem
+    // make a slightly expanded AABB to check for the entity
     final AABB toCheck = new AABB(pos).inflate(0.5D);
-    // we'll probably only ever get one golem, but it doesn't hurt to be safe and
+    // we'll probably only ever get one entity, but it doesn't hurt to be safe and
     // check them all
     final List<GolemBase> list = worldIn.getEntitiesOfClass(GolemBase.class, toCheck);
     boolean hasLightGolem = !list.isEmpty() && hasLightGolem(list);
 
     if (hasLightGolem) {
-      // light golem is nearby, schedule another update
+      // light entity is nearby, schedule another update
       worldIn.getBlockTicks().scheduleTick(pos, state.getBlock(), this.tickRate);
     } else {
       this.remove(worldIn, state, pos, 3);

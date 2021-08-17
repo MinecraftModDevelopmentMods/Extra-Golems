@@ -6,36 +6,39 @@ List of bugs, fixes, and features for the 1.17 version of Extra Golems
 
 - X Update mappings
 - X Fix initial compile errors
-- _ Add entity types: "basic" and "multitexture"
 - X Add JSON resource loader
-- _ Separate GolemContainer and RenderSettings
+- X Separate GolemContainer and RenderSettings
 - X Add GolemCointainer Codec
   - X Add GolemAttributes and Codec
   - X Add GolemMultitextureSettings and Codec
 - _ Add GolemBehavior for all special behavior
-  - _ aoe_dry
-  - _ aoe_freeze
+  - X aoe_dry
+  - X aoe_freeze
   - _ arrows
-  - _ explode
+  - X explode
   - X hurt
   - X attack
   - X place_blocks
   - X passive_effect
   - X split
-  - _ teleport
+  - X teleport
   - X use_fuel
+  - X craft_menu
 - X Add RenderSettings Codec
+- X Add single entity type
+- X Add synched data for Material (key for Container)
 
 
 ## Bugs
 
-- _ Fix dynamic golem rendering to tile block textures
+- _ Fix dynamic golem rendering:  tile block textures
 - _ Fix Kitty layer rendering
 - _ Fix golem book textures
 
 ## New Features
 
-- _ Add "/golem" command (shortcut for "/summon" that is specialized for golems)
+- _ Add "/golem" command (replacement for "/summon" that is specialized for golems)
+- _ Disable summoning golem entity type once that is done
 - _ Re-add HWYLA integration when available
 - _ Make datapacks for other mods (Mekanism, Immersive Engineering, Thermal, CLib, Quark)
 
@@ -61,7 +64,8 @@ The below example includes all functionality that will be available for each gol
     "immune_to_fire": false,
     "immune_to_explosions": false,
     "hurt_by_water": false, // true if hurt by touching water
-    "hurt_by_fall": false,
+    "hurt_by_fall": false, // true if hurt when falling
+	"hurt_by_heat": false // true if hurt while in warm biome
   },
   "swim_ability": "sink", // "sink", "float", or "swim"
   "glow": 11,
@@ -136,7 +140,7 @@ The below example includes all functionality that will be available for each gol
 	
 	// Cause explosions
 	"explode": {
-	  "radius": 1.5,
+	  "range": 1.5,
 	  "fuse": 60,
 	  "chance_on_hurt": 0.1, // percent chance to apply when hurt
 	  "chance_on_attack": 0.02 // percent chance to apply when attacking
@@ -147,12 +151,18 @@ The below example includes all functionality that will be available for each gol
 	  "range": 32, // range is 64 for enderman
 	  "chance_on_idle": 0.2, // percent chance to apply each tick
 	  "chance_on_hurt": 0.8 // percent chance to apply when hurt
+	  "chance_on_target": 0.5 // percent chance to apply when far from target
 	},
+	
+	"crafting_menu": {
+      // no parameters
+	}
 	
     // Freeze surrounding blocks
     "aoe_freeze": {
 	  "range": 4,
-	  "interval": 4
+	  "interval": 4,
+	  "frosted": false
 	},
 	
 	// Dry surrounding water/waterlogged blocks
@@ -244,12 +254,13 @@ The below example includes all functionality that will be available for each gol
   "base_color": 0, // color value to apply
   "use_biome_color": false, // when true, uses biome foliage color instead of base_color
   "base_light": true, // if not present, uses GolemBase#isProvidingLight
-  "transparent": false,
+  "translucent": false,
   "layers": [ // SimpleTextureLayer
     {
 	  "texture": "golems:layer/vines", // texture path "assets/golems/textures/entity/layer/vines.png"
 	  "color": 8626266, // colorize vines
-	  "light": true // causes vines to glow
+	  "light": true, // causes vines to glow
+	  "translucent": false
 	},
     {
 	  "texture": "golems:layer/eyes/eyes", // texture path "assets/golems/textures/entity/layer/eyes/eyes.png"

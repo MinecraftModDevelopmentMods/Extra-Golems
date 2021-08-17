@@ -1,9 +1,5 @@
 package com.mcmoddev.golems.entity;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.blocks.GlowBlock;
@@ -16,7 +12,6 @@ import com.mcmoddev.golems.util.GolemContainer;
 import com.mcmoddev.golems.util.GolemContainer.SwimMode;
 import com.mcmoddev.golems.util.behavior.GolemBehavior;
 import com.mcmoddev.golems.util.behavior.GolemBehaviors;
-import com.mcmoddev.golems.util.behavior.SplitBehavior;
 import com.mcmoddev.golems.util.behavior.UseFuelBehavior;
 import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
 
@@ -40,6 +35,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
@@ -62,7 +58,7 @@ import net.minecraftforge.fmllegacy.network.NetworkHooks;
 /**
  * Base class for all golems in this mod.
  **/
-public class GolemBase extends IronGolem implements IMultitextured, IFuelConsumer, IEntityAdditionalSpawnData {
+public class GolemBase extends IronGolem implements IMultitextured, IFuelConsumer, IRandomTeleporter, IRandomExploder, IEntityAdditionalSpawnData {
   
   protected static final EntityDataAccessor<Boolean> CHILD = SynchedEntityData.defineId(GolemBase.class, EntityDataSerializers.BOOLEAN);
   protected static final EntityDataAccessor<Byte> TEXTURE = SynchedEntityData.<Byte>defineId(GolemBase.class, EntityDataSerializers.BYTE);
@@ -80,7 +76,12 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
   protected final GroundPathNavigation groundNavigator;
   protected boolean swimmingUp;
   
-  private GolemBase(EntityType<? extends GolemBase> type, Level world) {
+  // explode goal
+  protected int fuseLen;
+  protected int fuse;
+  protected boolean fuseLit;
+  
+  public GolemBase(EntityType<? extends GolemBase> type, Level world) {
     super(type, world);
     // the following will be unused if swimming is not enabled
     this.waterNavigator = new WaterBoundPathNavigation(this, world);
@@ -96,13 +97,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
   public void setMaterial(final ResourceLocation materialIn) {
     this.material = materialIn;
     this.container = ExtraGolems.PROXY.GOLEM_CONTAINERS.get(materialIn).orElse(GolemContainer.EMPTY);
-    //golem.attributes = new AttributeMap(golem.container.getAttributeSupplier().get().build());
-    getAttribute(Attributes.MAX_HEALTH).setBaseValue(container.getAttributes().getHealth());
-    getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(container.getAttributes().getSpeed());
-    getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(container.getAttributes().getKnockbackResist());
-    getAttribute(Attributes.ATTACK_KNOCKBACK).setBaseValue(container.getAttributes().getAttackKnockback());
-    getAttribute(Attributes.ARMOR).setBaseValue(container.getAttributes().getArmor());
-    getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(container.getAttributes().getAttack());
+    attributes = new AttributeMap(container.getAttributeSupplier().get().build());
     setHealth((float) getMaxHealth());
 
     if (!level.isClientSide()) {
@@ -135,10 +130,12 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
     }
   }
   
+  /** @return the Material that can be used to look up the GolemContainer **/
   public ResourceLocation getMaterial() {
     return this.material;
   }
   
+  /** @return the GolemContainer that was looked up by Material **/
   public GolemContainer getContainer() {
     return this.container;
   }
@@ -163,7 +160,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(childAttack);
         this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(0.0D);
       } else {
-        // use full values for non-child golem
+        // use full values for non-child entity
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(getContainer().getAttributes().getHealth());
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(getContainer().getAttributes().getAttack());
         this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(getContainer().getAttributes().getKnockbackResist());
@@ -186,17 +183,17 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
       int lightInt = container.getMaxLightLevel();
       final BlockState state = EGRegistry.UTILITY_LIGHT.defaultBlockState().setValue(GlowBlock.LIGHT_LEVEL, lightInt);
       this.goalSelector.addGoal(9, new PlaceUtilityBlockGoal(this, state, GlowBlock.UPDATE_TICKS, 
-          true, null));
+          true, (golem, pos) -> golem.isProvidingLight()));
     }
   }
   
   protected void registerPowerGoal() {
     // register power level AI if enabled
-    if(container.getMaxPowerLevel() > 0) {
-      int powerInt = container.getMaxPowerLevel();
+    if(getContainer().getMaxPowerLevel() > 0) {
+      int powerInt = getContainer().getMaxPowerLevel();
       final BlockState state = EGRegistry.UTILITY_POWER.defaultBlockState().setValue(PowerBlock.POWER_LEVEL, powerInt);
       final int freq = PowerBlock.UPDATE_TICKS;
-      this.goalSelector.addGoal(9, new PlaceUtilityBlockGoal(this, state, freq));
+      this.goalSelector.addGoal(9, new PlaceUtilityBlockGoal(this, state, freq, false, (golem, pos) -> golem.isProvidingPower()));
     }
   }
 
@@ -214,7 +211,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
   }
 
   /**
-   * Whether this golem provides light (by placing light source blocks). Does not
+   * Whether this entity provides light (by placing light source blocks). Does not
    * change any behavior, but is used in the Light Block code to determine if it
    * can stay (called AFTER light is placed).
    *
@@ -228,7 +225,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
   }
 
   /**
-   * Whether this golem provides power (by placing power source blocks). Does not
+   * Whether this entity provides power (by placing power source blocks). Does not
    * change any behavior, but is used in the Power Block code to determine if it
    * can stay.
    *
@@ -239,8 +236,8 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
   }
 
   /**
-   * @param i the ItemStack being used to heal the golem
-   * @return the amount by which this item should heal the golem, in half-hearts.
+   * @param i the ItemStack being used to heal the entity
+   * @return the amount by which this item should heal the entity, in half-hearts.
    *         Defaults to 25% of max health or 32.0, whichever is smaller
    **/
   public float getHealAmount(final ItemStack i) {
@@ -266,11 +263,33 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
   }
 
   /////////////// OVERRIDEN BEHAVIOR //////////////////
+  
+  @Override
+  public void customServerAiStep() {
+    super.customServerAiStep();
+    // take damage from water
+    if (getContainer().getAttributes().isHurtByWater() && this.isInWaterRainOrBubble()) {
+      this.hurt(DamageSource.DROWN, 1.0F);
+    }
+    // take damage from heat
+    if(getContainer().getAttributes().isHurtByHeat()) {
+      final BlockPos pos = this.getBlockPosBelowThatAffectsMyMovement().above(2);
+      if (this.level.getBiome(pos).getTemperature(pos) > 1.0F) {
+        this.hurt(DamageSource.ON_FIRE, 1.0F);
+      }
+    }
+    // modify fuse and fuse timer
+    if(getContainer().hasBehavior(GolemBehaviors.EXPLODE)) {
+      if (this.isInWaterRainOrBubble()) {
+        this.resetFuseLit();
+      }
+    }
+  }
 
   // fall(float, float)
   @Override
   public boolean causeFallDamage(float distance, float damageMultiplier, DamageSource source) {
-    if (!container.getAttributes().isHurtByFall()) {
+    if (!getContainer().getAttributes().isHurtByFall()) {
       return false;
     }
 
@@ -301,7 +320,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
     if (type == EntityType.PLAYER && this.isPlayerCreated()) {
       return ExtraGolemsConfig.enableFriendlyFire();
     }
-    if (type == EntityType.VILLAGER || type.getRegistryName().toString().contains("golem")) {
+    if (type == EntityType.VILLAGER || type == EGRegistry.GOLEM || type == EntityType.IRON_GOLEM || type == EntityType.SNOW_GOLEM) {
       return false;
     }
     return super.canAttackType(type);
@@ -332,16 +351,16 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
   @Override
   protected InteractionResult mobInteract(final Player player, final InteractionHand hand) {
     ItemStack stack = player.getItemInHand(hand);
-    // Attempt to remove banner from the golem
+    // Attempt to remove banner from the entity
     if(!this.getBanner().isEmpty() && stack.getItem() instanceof ShearsItem) {
       this.spawnAtLocation(this.getBanner(), this.isBaby() ? 0.9F : 1.4F);
       this.setBanner(ItemStack.EMPTY);
     }
-    // Attempt to place a banner on the golem
+    // Attempt to place a banner on the entity
     if(stack.getItem() instanceof BannerItem && processInteractBanner(player, hand, stack)) {
       return InteractionResult.CONSUME;
     }
-    // Attempt to heal the golem
+    // Attempt to heal the entity
     final float healAmount = getHealAmount(stack);
     if (healAmount > 0 && processInteractHeal(player, hand, stack, healAmount)) {
       return InteractionResult.CONSUME;
@@ -376,7 +395,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
   }
   
   /**
-   * Called when the player uses an item that can heal this golem
+   * Called when the player uses an item that can heal this entity
    * @param player the player using the item
    * @param hand the player hand
    * @param stack the item being used
@@ -410,6 +429,11 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
   }
   
   @Override
+  public boolean isSensitiveToWater() {
+    return this.getContainer().getAttributes().isHurtByWater();
+  }
+  
+  @Override
   public float getBrightness() {
     return this.isProvidingLight() || this.isProvidingPower() ? 1.0F : super.getBrightness();
   }
@@ -429,35 +453,9 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
   
   @Override
   public void die(final DamageSource source) {
-    if(container.hasBehavior(GolemBehaviors.SPLIT_ON_DEATH)) {
-      attemptAddChildren(((SplitBehavior)container.getBehaviors().get(GolemBehaviors.SPLIT_ON_DEATH)).getChildren());
-    }
+    // allow behaviors to process die
+    this.getContainer().getBehaviors().values().forEach(b -> b.onDie(this, source));
     super.die(source);
-  }
-  
-  /**
-   * Attempts to spawn the given number of "mini" golems
-   * @param count the number of children to spawn
-   * @return a collection containing the entities that were spawned
-   **/
-  protected Collection<GolemBase> attemptAddChildren(final int count) {
-    final List<GolemBase> children = new ArrayList<>();
-    if(!this.level.isClientSide && !this.isBaby()) {
-      for(int i = 0; i < count; i++) {
-        GolemBase child = create(level, material);
-        child.setBaby(true);
-        if (this.getTarget() != null) {
-          child.setTarget(this.getTarget());
-        }
-        // set location
-        child.copyPosition(this);
-        // spawn the entity
-        level.addFreshEntity(child);
-        // add to the list
-        children.add(child);
-      }
-    }
-    return children;
   }
   
   ////////////////NBT /////////////////
@@ -468,9 +466,8 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
     this.setMaterial(new ResourceLocation(tag.getString(KEY_MATERIAL)));
     this.setBaby(tag.getBoolean(KEY_CHILD));
     container.getMultitexture().ifPresent(m -> loadTextureId(tag));
-    if(this.container.hasBehavior(GolemBehaviors.USE_FUEL)) {
-      loadFuel(tag);
-    }
+    // allow behaviors to process readData
+    this.getContainer().getBehaviors().values().forEach(b -> b.onReadData(this, tag));
   }
 
   @Override
@@ -479,9 +476,8 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
     tag.putString(KEY_MATERIAL, material.toString());
     tag.putBoolean(KEY_CHILD, this.isBaby());
     container.getMultitexture().ifPresent(m -> saveTextureId(tag));
-    if(this.container.hasBehavior(GolemBehaviors.USE_FUEL)) {
-      saveFuel(tag);
-    }
+    // allow behaviors to process writeData
+    this.getContainer().getBehaviors().values().forEach(b -> b.onWriteData(this, tag));
   }
 
   @Override
@@ -517,7 +513,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
   }
 
   /**
-   * @return A SoundEvent to play when the golem is attacking, walking, hurt, and
+   * @return A SoundEvent to play when the entity is attacking, walking, hurt, and
    *         on death
    **/
   public final SoundEvent getGolemSound() {
@@ -542,7 +538,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
   }
 
   /**
-   * Called after construction when a golem is built by a player
+   * Called after construction when a entity is built by a player
    * 
    * @param body the body block
    * @param legs the legs block
@@ -569,6 +565,24 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
     GolemBehavior b = container.getBehaviors().get(GolemBehaviors.USE_FUEL);
     return ((UseFuelBehavior)b).getMaxFuel();
   }
+  
+  
+  ///////////////////// EXPLODE ////////////////////////
+  
+  @Override
+  public int getFuseLen() { return fuseLen; }
+
+  @Override
+  public int getFuse() { return fuse; }
+
+  @Override
+  public void setFuse(int fuseIn) { fuse = fuseIn; }  
+  
+  @Override
+  public void setFuseLit(boolean litIn) { fuseLit = true; }
+
+  @Override
+  public boolean isFuseLit() { return fuseLit; }
   
   ///////////////////// SWIMMING BEHAVIOR ////////////////////////
 
@@ -633,7 +647,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
    * Referenced from {@link GoToWaterGoal}.
    * 
    * @param target a location representing a water block
-   * @return true if the golem should move towards the water
+   * @return true if the entity should move towards the water
    **/
   public boolean shouldMoveToWater(final Vec3 target) {
     return container.getSwimAbility() == SwimMode.SWIM;
@@ -682,6 +696,4 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 
     }
   }
-
-  
 }

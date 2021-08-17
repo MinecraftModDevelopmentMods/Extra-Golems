@@ -3,7 +3,7 @@ package com.mcmoddev.golems;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.mcmoddev.golems.blocks.BlockGolemHead;
+import com.mcmoddev.golems.blocks.GolemHeadBlock;
 import com.mcmoddev.golems.blocks.GlowBlock;
 import com.mcmoddev.golems.blocks.PowerBlock;
 import com.mcmoddev.golems.entity.GolemBase;
@@ -30,6 +30,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -62,7 +63,6 @@ public class ExtraGolems {
     FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
     FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
     MinecraftForge.EVENT_BUS.register(new EGEvents());
-    ExtraGolems.PROXY.registerListeners();
     ExtraGolemsEntities.initEntityTypes();
     // set up config file
     ExtraGolemsConfig.setupConfig();
@@ -82,8 +82,8 @@ public class ExtraGolems {
     ExtraGolems.LOGGER.info("registerEntities");
     EntityType.Builder<GolemBase> builder = EntityType.Builder.of(GolemBase::new, MobCategory.MISC)
         .setTrackingRange(48).setUpdateInterval(3).setShouldReceiveVelocityUpdates(true).sized(1.4F, 2.9F);
-    EntityType<GolemBase> entityType = builder.build("golem");
-    event.getRegistry().register(entityType.setRegistryName(MODID, "golem"));
+    EntityType<GolemBase> entityType = builder.build("entity");
+    event.getRegistry().register(entityType.setRegistryName(MODID, "entity"));
   }
   
   @SubscribeEvent
@@ -120,7 +120,7 @@ public class ExtraGolems {
   @SubscribeEvent
   public static void registerBlocks(final RegistryEvent.Register<Block> event) {
     ExtraGolems.LOGGER.info("registerBlocks");
-    event.getRegistry().registerAll(new BlockGolemHead().setRegistryName(ExtraGolems.MODID, "golem_head"),
+    event.getRegistry().registerAll(new GolemHeadBlock().setRegistryName(ExtraGolems.MODID, "golem_head"),
         new GlowBlock(Material.GLASS, 1.0F).setRegistryName(ExtraGolems.MODID, "light_provider"),
         new PowerBlock(15).setRegistryName(ExtraGolems.MODID, "power_provider"));
   }

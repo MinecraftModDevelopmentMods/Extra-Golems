@@ -3,16 +3,15 @@ package com.mcmoddev.golems.integration;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.mcmoddev.golems.entity.DispenserGolem;
-import com.mcmoddev.golems.entity.FurnaceGolem;
 import com.mcmoddev.golems.entity.GolemBase;
+import com.mcmoddev.golems.util.behavior.GolemBehaviors;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 
 /**
  * Base class to get in-game information about types of golems. Currently used
@@ -31,11 +30,11 @@ public abstract class GolemDescriptionManager {
   }
 
   /**
-   * Checks the passed golem for various characteristics, making a String for each
+   * Checks the passed entity for various characteristics, making a String for each
    * one. Use this from a child class in order to populate your descriptions.
    *
    * @return a LinkedList containing all descriptions that apply to the passed
-   *         golem
+   *         entity
    **/
   @SuppressWarnings("WeakerAccess")
   public List<MutableComponent> getEntityDescription(final GolemBase golem) {    
@@ -48,25 +47,26 @@ public abstract class GolemDescriptionManager {
     }
     // add special descriptions
     if(showSpecial) {
-      // add fuel amount if this is a furnace golem
-      if (golem instanceof FurnaceGolem) {
-        addFurnaceGolemInfo((FurnaceGolem)golem, list);
+      // add fuel amount if this is a furnace entity
+      if (golem.getContainer().hasBehavior(GolemBehaviors.USE_FUEL)) {
+        addFuelInfo(golem, list);
       }
-      // add arrow amount if this is a dispenser golem
-      if(golem instanceof DispenserGolem) {
-        addDispenserGolemInfo((DispenserGolem)golem, list);
+      // add arrow amount if this is a dispenser entity
+      if(golem.getContainer().hasBehavior(GolemBehaviors.ARROWS)) {
+        addArrowsInfo(golem, list);
       }
     }
 
     // add special information
-    if ((!golem.isBaby() && showSpecial) || (golem.isBaby() && showSpecialChild)) {
-      golem.getGolemContainer().addDescription(list);
-    }
+    // TODO descriptions
+//    if ((!golem.isBaby() && showSpecial) || (golem.isBaby() && showSpecialChild)) {
+//      golem.getContainer().addDescription(list);
+//    }
     return list;
   }
   
-  protected void addFurnaceGolemInfo(final GolemBase g, final List<MutableComponent> list) {
-    // add fuel amount if this is a furnace golem
+  protected void addFuelInfo(final GolemBase g, final List<MutableComponent> list) {
+    // add fuel amount if this is a furnace entity
     final int fuel = g.getFuel();
     final int percentFuel = (int) Math.ceil(g.getFuelPercentage() * 100F);
     final ChatFormatting color;
@@ -84,9 +84,10 @@ public abstract class GolemDescriptionManager {
         .append(new TextComponent(fuelString).withStyle(color)));
   }
   
-  protected void addDispenserGolemInfo(final GolemBase g, final List<MutableComponent> list) {
-    // add fuel amount if this is a furnace golem
-    final int arrows = g.getArrowsInInventory();
+  protected void addArrowsInfo(final GolemBase g, final List<MutableComponent> list) {
+    // add fuel amount if this is a furnace entity
+    // TODO arrows goal
+    final int arrows = 1; //g.getArrowsInInventory();
     if(arrows > 0 && isShiftDown()) {
        final ChatFormatting color = ChatFormatting.WHITE;
       // if sneaking, show exact value, otherwise show percentage value

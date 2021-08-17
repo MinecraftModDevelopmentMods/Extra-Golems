@@ -1,4 +1,4 @@
-package com.mcmoddev.golems.container;
+package com.mcmoddev.golems.menu;
 
 import com.mcmoddev.golems.EGRegistry;
 

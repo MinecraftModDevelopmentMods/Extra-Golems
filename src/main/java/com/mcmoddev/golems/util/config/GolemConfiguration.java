@@ -4,10 +4,10 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.util.GolemContainer;
-import com.mcmoddev.golems.util.GolemRegistrar;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -44,15 +44,15 @@ public class GolemConfiguration {
     this.bedrockGolemCreativeOnly = builder.comment("When true, only players in creative mode can use a Bedrock Golem spawn item")
         .define("bedrock_golem_creative_only", true);
     this.pumpkinBuildsGolem = builder.comment("When true, pumpkins can be used to build this mod's golems").define("pumpkin_builds_golems", false);
-    this.enableFriendlyFire = builder.comment("When enabled, attacking a player-built golem will make it attack you").define("friendly_fire", true);
+    this.enableFriendlyFire = builder.comment("When enabled, attacking a player-built entity will make it attack you").define("friendly_fire", true);
     this.enableTextureInteract = builder.comment("When enabled, some golems will change their texture when clicked").define("texture_interact",
         false);
     this.enableUseItemSpell = builder
-        .comment("When enabled, players can 'use' the spell item on a carved pumpkin to convert it to a golem head in-world")
+        .comment("When enabled, players can 'use' the spell item on a carved pumpkin to convert it to a entity head in-world")
         .define("use_spell", true);
     this.holidayTweaks = builder
         .comment("Super secret special days").define("holidays", true);
-    this.villagerGolemSpawnChance = builder.comment("Percent chance for a villager to successfully summon an Extra Golems golem")
+    this.villagerGolemSpawnChance = builder.comment("Percent chance for a villager to successfully summon an Extra Golems entity")
         .defineInRange("villager_summon_chance", 60, 0, 100);
     this.enableHealGolems = builder.comment("When enabled, giving blocks and items to golems can restore health").define("heal_golems", true);
     this.villagerGolemSpawns = builder.comment("Golems that can be summoned by villagers", "(Duplicate entries increase chances)")
@@ -83,10 +83,8 @@ public class GolemConfiguration {
     final List<GolemContainer> list = new ArrayList<>();
     for (final String s : villagerGolemSpawns.get()) {
       if (s != null && !s.isEmpty()) {
-        final GolemContainer container = GolemRegistrar.getContainer(new ResourceLocation(s));
-        if (container != null) {
-          list.add(container);
-        }
+        final Optional<GolemContainer> container = ExtraGolems.PROXY.GOLEM_CONTAINERS.get(new ResourceLocation(s));
+        container.ifPresent(c -> list.add(c));
       }
     }
     return list;

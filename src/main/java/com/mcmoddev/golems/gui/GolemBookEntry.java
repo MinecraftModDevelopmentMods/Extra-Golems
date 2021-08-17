@@ -34,11 +34,12 @@ public class GolemBookEntry {
   private final List<MutableComponent> specials = new ArrayList<>();
 
   public GolemBookEntry(@Nonnull GolemContainer container) {
-    // initialize fields based on golem attributes
+    // initialize fields based on entity attributes
     this.golemName = container.getMaterial().toString();
     this.health = (int) container.getAttributes().getHealth();
     this.attack = (float) container.getAttributes().getAttack();
-    container.addDescription(specials);
+    // TODO custom descriptions
+    //container.addDescription(specials);
 
     // set the block and block name if it exists
     this.buildingBlocks = container.getBlocks().toArray(new Block[0]);
@@ -56,21 +57,21 @@ public class GolemBookEntry {
   }
 
   /**
-   * @return the localized version of this golem's name
+   * @return the localized version of this entity's name
    **/
   public MutableComponent getGolemName() {
     return trans(this.golemName);
   }
 
   /**
-   * @return the unlocalized version of this golem's name
+   * @return the unlocalized version of this entity's name
    **/
   public String getGolemNameRaw() {
     return this.golemName;
   }
 
   /**
-   * @return true if building blocks were found for this golem
+   * @return true if building blocks were found for this entity
    **/
   public boolean hasBlocks() {
     return this.buildingBlocks != null && this.buildingBlocks.length > 0;
@@ -98,14 +99,14 @@ public class GolemBookEntry {
   }
 
   /**
-   * @return the attack power of this golem
+   * @return the attack power of this entity
    **/
   public float getAttack() {
     return this.attack;
   }
 
   /**
-   * @return the number of special descriptions added by this golem
+   * @return the number of special descriptions added by this entity
    **/
   public int getDescriptionSize() {
     return specials.size();
@@ -136,7 +137,7 @@ public class GolemBookEntry {
   }
 
   /**
-   * Concatenates the golem's stats and specials into a single StringTextComponent
+   * Concatenates the entity's stats and specials into a single StringTextComponent
    **/
   private MutableComponent makePage() {
     TextComponent page = new TextComponent("");

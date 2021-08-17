@@ -3,29 +3,28 @@ package com.mcmoddev.golems.gui;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
-import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.EGRegistry;
+import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.util.GolemContainer;
-import com.mcmoddev.golems.util.GolemRegistrar;
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.gui.components.Button;
-import com.mojang.blaze3d.platform.Lighting;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 
 public class GolemBookScreen extends Screen {
 
@@ -45,7 +44,7 @@ public class GolemBookScreen extends Screen {
   protected static final int ARROW_WIDTH = 13 + ICON_SP;
   protected static final int ARROW_HEIGHT = 10 + ICON_SP;
   /**
-   * size of the supplemental (optional) image for each golem. As long as it's a
+   * size of the supplemental (optional) image for each entity. As long as it's a
    * 2:1 ratio, it'll work
    **/
   protected static final int SUPP_WIDTH = 100;
@@ -59,7 +58,7 @@ public class GolemBookScreen extends Screen {
   private GolemBookScreen.NextPageButton buttonNextPage;
   // Decrements the page number by 2
   private GolemBookScreen.NextPageButton buttonPreviousPage;
-  // Clickable link to each golem, used on page 2
+  // Clickable link to each entity, used on page 2
   private GolemBookScreen.GolemEntryButton[] tableOfContents;
 
   protected int curPage;
@@ -95,11 +94,11 @@ public class GolemBookScreen extends Screen {
    **/
   protected long ticksOpen;
 
-  // for use in drawing golem spell recipe
+  // for use in drawing entity spell recipe
   private static final ItemStack[] ingredientsSpell = new ItemStack[] { new ItemStack(Items.PAPER), new ItemStack(Items.FEATHER),
       new ItemStack(Items.REDSTONE), new ItemStack(Items.INK_SAC) };
   private static final ItemStack outputSpell = new ItemStack(EGRegistry.GOLEM_SPELL, 3);
-  // for use in drawing golem head recipe
+  // for use in drawing entity head recipe
   private static final ItemStack[] ingredientsHead = new ItemStack[] { new ItemStack(Blocks.CARVED_PUMPKIN), new ItemStack(EGRegistry.GOLEM_SPELL) };
   private static final ItemStack outputHead = new ItemStack(EGRegistry.GOLEM_HEAD);
 
@@ -121,9 +120,9 @@ public class GolemBookScreen extends Screen {
    **/
   private static final void initGolemBookEntries() {
     GOLEMS.clear();
-    for (GolemContainer container : GolemRegistrar.getContainers()) {
-      if (container.isEnabled() && !container.noGolemBookEntry()) {
-        GOLEMS.add(new GolemBookEntry(container));
+    for (Optional<GolemContainer> container : ExtraGolems.PROXY.GOLEM_CONTAINERS.getValues()) {
+      if (container.isPresent() && !container.get().isHidden()) {
+        GOLEMS.add(new GolemBookEntry(container.get()));
       }
     }
     // sort golems by attack power
@@ -257,7 +256,7 @@ public class GolemBookScreen extends Screen {
       return;
     case 6:
     default:
-      // draw golem entry
+      // draw entity entry
       if (isPageGolemEntry(pageNum, this.totalPages)) {
         GolemBookEntry entry = getGolemEntryForPage(pageNum);
         drawGolemEntry(matrix, cornerX, cornerY, entry, partialTicks);
@@ -308,13 +307,13 @@ public class GolemBookScreen extends Screen {
    * Draws the GolemEntry name and description at the given location
    **/
   private void drawGolemEntry(final PoseStack matrix, int cornerX, int cornerY, final GolemBookEntry entry, final float partialTicks) {
-    // 'golem name' text box
+    // 'entity name' text box
     int nameX = cornerX + MARGIN * 4;
     int nameY = cornerY + MARGIN;
     MutableComponent golemName = entry.getGolemName();
     this.font.drawWordWrap(golemName, nameX, nameY, (BOOK_WIDTH / 2) - MARGIN * 5, 0);
 
-    // 'golem stats' text box
+    // 'entity stats' text box
     int statsX = cornerX + MARGIN;
     int statsY = nameY + MARGIN * 2;
     MutableComponent stats = entry.getDescriptionPage();
@@ -506,7 +505,7 @@ public class GolemBookScreen extends Screen {
     for (Button b : this.tableOfContents) {
       b.visible = tableContentsVisible;
     }
-    // golem-entry block buttons
+    // entity-entry block buttons
     if (isPageGolemEntry(this.curPage, this.totalPages)) {
       this.buttonBlockLeft.visible = true;
       this.buttonBlockLeft.updateBlocks(getGolemEntryForPage(this.curPage).getBlocks());
@@ -663,11 +662,11 @@ public class GolemBookScreen extends Screen {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         // draw the background of the button
         this.blit(matrix, this.x, this.y, CONTENTS_W + ICON_SP, this.isHovered ? (ENTRY_H + ICON_SP) : 0, ENTRY_W, ENTRY_H); // drawTexturedModalRect
-        // draw the block and name of the golem
+        // draw the block and name of the entity
         int index = (int) (gui.ticksOpen / 30);
         gui.drawBlock(this.entry.getBlock(index), this.x - MARGIN - 2, this.y - 9, 1.0F);
 
-        // prepare to draw the golem's name
+        // prepare to draw the entity's name
         RenderSystem.getModelViewStack().pushPose();
 
         final MutableComponent name = entry.getGolemName();
@@ -680,7 +679,7 @@ public class GolemBookScreen extends Screen {
         }
         int nameX = this.x + 20;
         int nameY = this.y + ((this.height - nameH) / 2) + 1;
-        // re-scale and draw the golem name
+        // re-scale and draw the entity name
         RenderSystem.getModelViewStack().scale(scale, scale, scale);
         gui.font.drawWordWrap(name, (int) ((nameX) / scale), (int) (nameY / scale), (int) (wrap / scale), 0);
         RenderSystem.getModelViewStack().popPose();

@@ -28,13 +28,13 @@ public class PowerBlock extends UtilityBlock {
 
   @Override
   public void tick(final BlockState state, final ServerLevel worldIn, final BlockPos pos, final Random random) {
-    // make a slightly expanded AABB to check for the golem
+    // make a slightly expanded AABB to check for the entity
     AABB toCheck = new AABB(pos).inflate(0.25D);
     List<GolemBase> list = worldIn.getEntitiesOfClass(GolemBase.class, toCheck);
     boolean hasPowerGolem = !list.isEmpty() && hasPowerGolem(list);
 
     if (hasPowerGolem) {
-      // power golem is nearby, schedule another update
+      // power entity is nearby, schedule another update
       worldIn.getBlockTicks().scheduleTick(pos, this, this.tickRate);
     } else {
       this.remove(worldIn, state, pos, 3);
