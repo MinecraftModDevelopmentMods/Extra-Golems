@@ -3,8 +3,8 @@ package com.mcmoddev.golems.entity.goal;
 import java.util.Random;
 
 import com.mcmoddev.golems.entity.GolemBase;
-import com.mcmoddev.golems.events.AoeFunction;
-import com.mcmoddev.golems.events.GolemModifyBlocksEvent;
+import com.mcmoddev.golems.event.AoeFunction;
+import com.mcmoddev.golems.event.GolemModifyBlocksEvent;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;

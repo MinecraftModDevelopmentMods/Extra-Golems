@@ -2,23 +2,25 @@ package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.ExtraGolems;
-import com.mcmoddev.golems.blocks.GlowBlock;
-import com.mcmoddev.golems.blocks.PowerBlock;
+import com.mcmoddev.golems.block.GlowBlock;
+import com.mcmoddev.golems.block.PowerBlock;
+import com.mcmoddev.golems.EGConfig;
+import com.mcmoddev.golems.container.GolemContainer;
+import com.mcmoddev.golems.container.GolemContainer.SwimMode;
+import com.mcmoddev.golems.container.behavior.GolemBehavior;
+import com.mcmoddev.golems.container.behavior.GolemBehaviors;
+import com.mcmoddev.golems.container.behavior.UseFuelBehavior;
 import com.mcmoddev.golems.entity.goal.GoToWaterGoal;
 import com.mcmoddev.golems.entity.goal.PlaceUtilityBlockGoal;
 import com.mcmoddev.golems.entity.goal.SwimUpGoal;
-import com.mcmoddev.golems.items.SpawnGolemItem;
-import com.mcmoddev.golems.util.GolemContainer;
-import com.mcmoddev.golems.util.GolemContainer.SwimMode;
-import com.mcmoddev.golems.util.behavior.GolemBehavior;
-import com.mcmoddev.golems.util.behavior.GolemBehaviors;
-import com.mcmoddev.golems.util.behavior.UseFuelBehavior;
-import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
+import com.mcmoddev.golems.item.SpawnGolemItem;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -70,6 +72,8 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 
   private ResourceLocation material = GolemContainer.EMPTY.getMaterial();
   private GolemContainer container = GolemContainer.EMPTY;
+  
+  protected Component description;
 
   // swimming helpers
   protected final WaterBoundPathNavigation waterNavigator;
@@ -99,7 +103,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
     this.container = ExtraGolems.PROXY.GOLEM_CONTAINERS.get(materialIn).orElse(GolemContainer.EMPTY);
     attributes = new AttributeMap(container.getAttributeSupplier().get().build());
     setHealth((float) getMaxHealth());
-
+    
     if (!level.isClientSide()) {
       // define behavior for the given swimming ability
       switch (container.getSwimAbility()) {
@@ -206,7 +210,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
    *         is enabled.
    **/
   public boolean canInteractChangeTexture() {
-    return ExtraGolemsConfig.enableTextureInteract() && getContainer().getMultitexture().isPresent()
+    return EGConfig.enableTextureInteract() && getContainer().getMultitexture().isPresent()
         && getContainer().getMultitexture().get().canCycle();
   }
 
@@ -215,7 +219,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
    * change any behavior, but is used in the Light Block code to determine if it
    * can stay (called AFTER light is placed).
    *
-   * @see com.mcmoddev.golems.blocks.GlowBlock
+   * @see com.mcmoddev.golems.block.GlowBlock
    **/
   public boolean isProvidingLight() {
     if(getContainer().getMultitexture().isPresent()) {
@@ -229,7 +233,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
    * change any behavior, but is used in the Power Block code to determine if it
    * can stay.
    *
-   * @see com.mcmoddev.golems.blocks.PowerBlock
+   * @see com.mcmoddev.golems.block.PowerBlock
    **/
   public boolean isProvidingPower() {
     return this.getContainer().getMaxPowerLevel() > 0;
@@ -318,7 +322,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
   @Override
   public boolean canAttackType(final EntityType<?> type) {
     if (type == EntityType.PLAYER && this.isPlayerCreated()) {
-      return ExtraGolemsConfig.enableFriendlyFire();
+      return EGConfig.enableFriendlyFire();
     }
     if (type == EntityType.VILLAGER || type == EGRegistry.GOLEM || type == EntityType.IRON_GOLEM || type == EntityType.SNOW_GOLEM) {
       return false;
@@ -403,7 +407,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
    * @return true if the item was consumed
    */
   protected boolean processInteractHeal(final Player player, final InteractionHand hand, final ItemStack stack, final float healAmount) {
-    if (ExtraGolemsConfig.enableHealGolems() && this.getHealth() < this.getMaxHealth()) {
+    if (EGConfig.enableHealGolems() && this.getHealth() < this.getMaxHealth()) {
       heal(healAmount);
       // update stack size/item
       if(!player.isCreative()) {
@@ -438,6 +442,14 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
     return this.isProvidingLight() || this.isProvidingPower() ? 1.0F : super.getBrightness();
   }
   
+  @Override
+  protected Component getTypeName() {
+    if(description == null) {
+      description = new TranslatableComponent(getType().getDescriptionId() + "." + material.getPath());
+    }
+    return description;
+  }
+
   @Override
   public boolean isBaby() {
     return this.getEntityData().get(CHILD).booleanValue();

@@ -1,6 +1,6 @@
 package com.mcmoddev.golems.entity;
 
-import com.mcmoddev.golems.events.EndGolemTeleportEvent;
+import com.mcmoddev.golems.event.EndGolemTeleportEvent;
 
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;

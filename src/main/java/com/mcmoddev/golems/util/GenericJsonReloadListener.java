@@ -88,15 +88,8 @@ public class GenericJsonReloadListener<T> extends SimpleJsonResourceReloadListen
     // read Object T from nbt
     return codec.parse(NbtOps.INSTANCE, nbt);
   }
-
-  @Override
-  protected void apply(Map<ResourceLocation, JsonElement> jsons, ResourceManager manager, ProfilerFiller profile) {
-    // build the maps
-    OBJECTS.clear();
-    ExtraGolems.LOGGER.debug("Parsing Reloadable JSON map of type " + objClass.getName());
-    jsons.forEach((key, input) -> OBJECTS.put(key, jsonToObject(input).resultOrPartial(error -> ExtraGolems.LOGGER.error("Failed to read JSON object for type" + objClass.getName() + "\n" + error))));
-    // print size of the map for debugging purposes
-    ExtraGolems.LOGGER.debug("Found " + OBJECTS.size() + " entries");
+  
+  public void syncOnReload() {
     boolean isServer = true;
     try {
       LogicalSidedProvider.INSTANCE.get(LogicalSide.SERVER);
@@ -107,5 +100,18 @@ public class GenericJsonReloadListener<T> extends SimpleJsonResourceReloadListen
     if (isServer == true) {
       syncOnReload.accept(this);
     }
+  }
+
+  @Override
+  protected void apply(Map<ResourceLocation, JsonElement> jsons, ResourceManager manager, ProfilerFiller profile) {
+    // build the maps
+    OBJECTS.clear();
+    ExtraGolems.LOGGER.info("Parsing Reloadable JSON map of type " + objClass.getName());
+    jsons.forEach((key, input) -> OBJECTS.put(key, jsonToObject(input).resultOrPartial(error -> ExtraGolems.LOGGER.error("Failed to read JSON object for type" + objClass.getName() + "\n" + error))));
+    // print size of the map for debugging purposes
+    ExtraGolems.LOGGER.info("Found " + OBJECTS.size() + " entries");
+    // DEBUG: print each entry
+    OBJECTS.forEach((r, i) -> i.ifPresent(c -> ExtraGolems.LOGGER.info(c.toString())));
+    syncOnReload();
   }
 }

@@ -1,39 +1,22 @@
 package com.mcmoddev.golems;
 
+import java.util.Optional;
+
+import javax.annotation.Nullable;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.mcmoddev.golems.blocks.GolemHeadBlock;
-import com.mcmoddev.golems.blocks.GlowBlock;
-import com.mcmoddev.golems.blocks.PowerBlock;
+import com.mcmoddev.golems.container.GolemContainer;
 import com.mcmoddev.golems.entity.GolemBase;
-import com.mcmoddev.golems.items.GolemSpellItem;
-import com.mcmoddev.golems.items.GuideBookItem;
-import com.mcmoddev.golems.items.SpawnGolemItem;
-import com.mcmoddev.golems.proxies.ClientProxy;
-import com.mcmoddev.golems.proxies.CommonProxy;
-import com.mcmoddev.golems.proxies.ServerProxy;
-import com.mcmoddev.golems.util.GolemContainer;
-import com.mcmoddev.golems.util.config.ExtraGolemsConfig;
+import com.mcmoddev.golems.network.SGolemContainerPacket;
+import com.mcmoddev.golems.proxy.ClientProxy;
+import com.mcmoddev.golems.proxy.CommonProxy;
+import com.mcmoddev.golems.proxy.ServerProxy;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.material.Material;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -41,6 +24,7 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fmllegacy.network.NetworkDirection;
 import net.minecraftforge.fmllegacy.network.NetworkRegistry;
 import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
 
@@ -62,11 +46,15 @@ public class ExtraGolems {
   public ExtraGolems() {
     FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
     FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
-    MinecraftForge.EVENT_BUS.register(new EGEvents());
-    ExtraGolemsEntities.initEntityTypes();
+    // register event handlers
+    PROXY.registerEventHandlers();
     // set up config file
-    ExtraGolemsConfig.setupConfig();
-    ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ExtraGolemsConfig.COMMON_CONFIG);
+    EGConfig.setupConfig();
+    ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, EGConfig.COMMON_CONFIG);
+    // register messages
+    ExtraGolems.LOGGER.info(ExtraGolems.MODID + ":registerNetwork");
+    int messageId = 0;
+    CHANNEL.registerMessage(messageId++, SGolemContainerPacket.class, SGolemContainerPacket::toBytes, SGolemContainerPacket::fromBytes, SGolemContainerPacket::handlePacket, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
   }
   
   private void setup(final FMLCommonSetupEvent event) {
@@ -76,60 +64,28 @@ public class ExtraGolems {
   private void enqueueIMC(final InterModEnqueueEvent event) {
 
   }
-
-  @SubscribeEvent
-  public static void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
-    ExtraGolems.LOGGER.info("registerEntities");
-    EntityType.Builder<GolemBase> builder = EntityType.Builder.of(GolemBase::new, MobCategory.MISC)
-        .setTrackingRange(48).setUpdateInterval(3).setShouldReceiveVelocityUpdates(true).sized(1.4F, 2.9F);
-    EntityType<GolemBase> entityType = builder.build("entity");
-    event.getRegistry().register(entityType.setRegistryName(MODID, "entity"));
-  }
   
-  @SubscribeEvent
-  public static void registerEntityLayers(final EntityRenderersEvent.RegisterLayerDefinitions event) {
-    ExtraGolems.LOGGER.info("registerEntityLayers");
-    ExtraGolems.PROXY.registerEntityLayers(event);
-  }
-  
-  @SubscribeEvent
-  public static void registerEntityRenderers(final EntityRenderersEvent.RegisterRenderers event) {
-    ExtraGolems.LOGGER.info("registerEntityRenderers");
-    ExtraGolems.PROXY.registerEntityRenders(event);
-  }
-  
-  @SubscribeEvent
-  public static void registerEntityAttributes(final EntityAttributeCreationEvent event) {
-    ExtraGolems.LOGGER.info("registerEntityAttributes");
-    event.put(EGRegistry.GOLEM, GolemContainer.EMPTY.getAttributeSupplier().get().build());
-  }
-
-  @SubscribeEvent
-  public static void registerItems(final RegistryEvent.Register<Item> event) {
-    ExtraGolems.LOGGER.info("registerItems");
-    event.getRegistry().registerAll(new BlockItem(EGRegistry.GOLEM_HEAD, new Item.Properties().tab(CreativeModeTab.TAB_MISC)) {
-      @Override
-      @OnlyIn(Dist.CLIENT)
-      public boolean isFoil(final ItemStack stack) {
-        return true;
+  /**
+   * Checks all registered GolemContainers until one is found that is constructed
+   * out of the passed Blocks. Parameters are the current World and the 4 blocks
+   * that will be used to calculate this Golem. It is okay to pass {@code null} or
+   * Air.
+   *
+   * @return the constructed GolemBase instance if there is one for the passed blocks, otherwise null
+   * @see GolemContainer#matches(Block, Block, Block, Block)
+   **/
+  @Nullable
+  public static GolemBase getGolem(Level world, Block below1, Block below2, Block arm1, Block arm2) {
+    GolemContainer container = null;
+    for (Optional<GolemContainer> c : ExtraGolems.PROXY.GOLEM_CONTAINERS.getValues()) {
+      if (c.isPresent() && c.get().matches(below1, below2, arm1, arm2)) {
+        container = c.get();
+        break;
       }
-    }.setRegistryName(EGRegistry.GOLEM_HEAD.getRegistryName()), new SpawnGolemItem().setRegistryName(ExtraGolems.MODID, "spawn_bedrock_golem"),
-        new GolemSpellItem().setRegistryName(ExtraGolems.MODID, "golem_paper"), new GuideBookItem().setRegistryName(ExtraGolems.MODID, "info_book"));
-  }
-
-  @SubscribeEvent
-  public static void registerBlocks(final RegistryEvent.Register<Block> event) {
-    ExtraGolems.LOGGER.info("registerBlocks");
-    event.getRegistry().registerAll(new GolemHeadBlock().setRegistryName(ExtraGolems.MODID, "golem_head"),
-        new GlowBlock(Material.GLASS, 1.0F).setRegistryName(ExtraGolems.MODID, "light_provider"),
-        new PowerBlock(15).setRegistryName(ExtraGolems.MODID, "power_provider"));
-  }
-
-  @SubscribeEvent
-  public static void registerContainers(final RegistryEvent.Register<MenuType<?>> event) {
-    ExtraGolems.LOGGER.info("registerContainers");
-    event.getRegistry().register(EGRegistry.CRAFTING_GOLEM.setRegistryName(ExtraGolems.MODID, "crafting_portable"));
-    event.getRegistry().register(EGRegistry.DISPENSER_GOLEM.setRegistryName(ExtraGolems.MODID, "dispenser_portable"));
-    ExtraGolems.PROXY.registerContainerRenders();
+    }
+    if (container == null) {
+      return null;
+    }
+    return GolemBase.create(world, container.getMaterial());
   }
 }

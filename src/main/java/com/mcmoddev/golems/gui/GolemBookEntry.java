@@ -7,7 +7,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.mcmoddev.golems.util.GolemContainer;
+import com.mcmoddev.golems.container.GolemContainer;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -42,7 +42,7 @@ public class GolemBookEntry {
     //container.addDescription(specials);
 
     // set the block and block name if it exists
-    this.buildingBlocks = container.getBlocks().toArray(new Block[0]);
+    this.buildingBlocks = container.getAllBlocks().toArray(new Block[0]);
 
     // find the image to add to the book
     final String modid = container.getMaterial().getNamespace();

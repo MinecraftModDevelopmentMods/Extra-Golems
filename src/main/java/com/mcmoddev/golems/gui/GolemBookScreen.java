@@ -7,7 +7,7 @@ import java.util.Optional;
 
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.ExtraGolems;
-import com.mcmoddev.golems.util.GolemContainer;
+import com.mcmoddev.golems.container.GolemContainer;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -154,7 +154,7 @@ public class GolemBookScreen extends Screen {
     blockX = (this.width / 2) + MARGIN;
     this.buttonBlockRight = this.addWidget(new GolemBookScreen.BlockButton(this, new Block[] {}, blockX, blockY, GOLEM_BLOCK_SCALE));
     // create table of contents
-    for (int i = 0; i < NUM_CONTENTS_ENTRIES; i++) {
+    for (int i = 0, l = Math.min(NUM_CONTENTS_ENTRIES, ALPHABETICAL.size()); i < l; i++) {
       this.tableOfContents[i] = this.addWidget(
           new GolemBookScreen.GolemEntryButton(this, ALPHABETICAL.get(i), (this.width / 2) + SCROLL_STARTX, SCR_OFFSET_Y + SCROLL_STARTY + ENTRY_H * i));
     }

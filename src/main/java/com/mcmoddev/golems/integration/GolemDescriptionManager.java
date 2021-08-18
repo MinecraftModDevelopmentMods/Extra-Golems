@@ -3,8 +3,8 @@ package com.mcmoddev.golems.integration;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.mcmoddev.golems.container.behavior.GolemBehaviors;
 import com.mcmoddev.golems.entity.GolemBase;
-import com.mcmoddev.golems.util.behavior.GolemBehaviors;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;

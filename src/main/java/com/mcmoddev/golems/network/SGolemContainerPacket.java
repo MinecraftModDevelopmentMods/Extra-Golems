@@ -4,7 +4,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import com.mcmoddev.golems.ExtraGolems;
-import com.mcmoddev.golems.util.GolemContainer;
+import com.mcmoddev.golems.container.GolemContainer;
 import com.mojang.serialization.DataResult;
 
 import net.minecraft.nbt.CompoundTag;
@@ -41,8 +41,8 @@ public class SGolemContainerPacket {
   public static SGolemContainerPacket fromBytes(final FriendlyByteBuf buf) {
     final ResourceLocation sName = buf.readResourceLocation();
     final CompoundTag sNBT = buf.readNbt();
-    final Optional<GolemContainer> sEffect = ExtraGolems.PROXY.GOLEM_CONTAINERS.readObject(sNBT).resultOrPartial(error -> ExtraGolems.LOGGER.error("Failed to read GolemContainer from NBT for packet\n" + error));
-    return new SGolemContainerPacket(sName, sEffect.orElse(GolemContainer.EMPTY));
+    final Optional<GolemContainer> sCont = ExtraGolems.PROXY.GOLEM_CONTAINERS.readObject(sNBT).resultOrPartial(error -> ExtraGolems.LOGGER.error("Failed to read GolemContainer from NBT for packet\n" + error));
+    return new SGolemContainerPacket(sName, sCont.orElse(GolemContainer.EMPTY));
   }
   
   /**

@@ -11,6 +11,9 @@ List of bugs, fixes, and features for the 1.17 version of Extra Golems
 - X Add GolemCointainer Codec
   - X Add GolemAttributes and Codec
   - X Add GolemMultitextureSettings and Codec
+- X Implement multitexture settings in golem
+- _ Implement multitexture settings in renderer
+- _ Change base_block texture to an array (first found is used)
 - _ Add GolemBehavior for all special behavior
   - X aoe_dry
   - X aoe_freeze
@@ -82,7 +85,7 @@ The below example includes all functionality that will be available for each gol
 	"#minecraft:items/clay" // example of item tag, doesn't actually exist
   }
   // examples of each goal that can be added to any golem
-  "goals": { // Map of key-value pairs, can be empty
+  "goals": { // Compound Tag, can be empty
   
 	// To do when attacking
 	"attack": {
