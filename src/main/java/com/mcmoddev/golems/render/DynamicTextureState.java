@@ -28,8 +28,8 @@ public class DynamicTextureState {
    * @param templateName a ResourceLocation of a template image file
    **/
   public DynamicTextureState(ResourceLocation blockName, ResourceLocation templateName) {
-    location = new ResourceLocation(ExtraGolems.MODID, "dynamic/" + blockName.getPath());
-    templateImage = new ResourceLocation(templateName.getNamespace(), "textures/entity/" + templateName.getPath());
+    location = new ResourceLocation(blockName.getNamespace(), "dynamic/" + blockName.getPath());
+    templateImage = templateName;
     
     try {
       // attempt to read the block and template textures

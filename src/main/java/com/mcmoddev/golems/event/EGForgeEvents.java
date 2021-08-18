@@ -11,6 +11,7 @@ import com.mcmoddev.golems.block.GolemHeadBlock;
 import com.mcmoddev.golems.container.GolemContainer;
 import com.mcmoddev.golems.container.behavior.GolemBehaviors;
 import com.mcmoddev.golems.entity.GolemBase;
+import com.mcmoddev.golems.network.SGolemContainerPacket;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -32,6 +33,7 @@ import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 public class EGForgeEvents {
   
@@ -45,7 +47,7 @@ public class EGForgeEvents {
     Player player = event.getPlayer();
     // reload golem containers
     if (player instanceof ServerPlayer) {
-      ExtraGolems.PROXY.GOLEM_CONTAINERS.syncOnReload();
+      ExtraGolems.PROXY.GOLEM_CONTAINERS.getEntries().forEach(e -> e.getValue().ifPresent(c -> ExtraGolems.CHANNEL.send(PacketDistributor.ALL.noArg(), new SGolemContainerPacket(c))));
     }
   }
 

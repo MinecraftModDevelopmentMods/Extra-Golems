@@ -10,7 +10,6 @@ import com.mojang.serialization.DataResult;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
@@ -21,15 +20,12 @@ import net.minecraftforge.fmllegacy.network.NetworkEvent;
  **/
 public class SGolemContainerPacket {
 
-  protected ResourceLocation golemName;
   protected GolemContainer golemContainer;
 
   /**
-   * @param golemMaterialIn the ResourceLocation ID of the Golem Container
    * @param golemContainerIn the Golem Container
    **/
-  public SGolemContainerPacket(final ResourceLocation golemMaterialIn, final GolemContainer golemContainerIn) {
-    this.golemName = golemMaterialIn;
+  public SGolemContainerPacket(final GolemContainer golemContainerIn) {
     this.golemContainer = golemContainerIn;
   }
 
@@ -39,10 +35,9 @@ public class SGolemContainerPacket {
    * @return a new instance of a SGolemContainerPacket based on the FriendlyByteBuf
    */
   public static SGolemContainerPacket fromBytes(final FriendlyByteBuf buf) {
-    final ResourceLocation sName = buf.readResourceLocation();
     final CompoundTag sNBT = buf.readNbt();
     final Optional<GolemContainer> sCont = ExtraGolems.PROXY.GOLEM_CONTAINERS.readObject(sNBT).resultOrPartial(error -> ExtraGolems.LOGGER.error("Failed to read GolemContainer from NBT for packet\n" + error));
-    return new SGolemContainerPacket(sName, sCont.orElse(GolemContainer.EMPTY));
+    return new SGolemContainerPacket(sCont.orElse(GolemContainer.EMPTY));
   }
   
   /**
@@ -53,7 +48,6 @@ public class SGolemContainerPacket {
   public static void toBytes(final SGolemContainerPacket msg, final FriendlyByteBuf buf) {
     DataResult<Tag> nbtResult = ExtraGolems.PROXY.GOLEM_CONTAINERS.writeObject(msg.golemContainer);
     Tag tag = nbtResult.resultOrPartial(error -> ExtraGolems.LOGGER.error("Failed to write GolemContainer to NBT for packet\n" + error)).get();
-    buf.writeResourceLocation(msg.golemName);
     buf.writeNbt((CompoundTag)tag);
   }
 
@@ -66,7 +60,7 @@ public class SGolemContainerPacket {
     NetworkEvent.Context context = contextSupplier.get();
     if (context.getDirection().getReceptionSide() == LogicalSide.CLIENT) {
       context.enqueueWork(() -> {
-        ExtraGolems.PROXY.GOLEM_CONTAINERS.put(message.golemName, message.golemContainer);
+        ExtraGolems.PROXY.GOLEM_CONTAINERS.put(message.golemContainer.getMaterial(), message.golemContainer);
       });
     }
     context.setPacketHandled(true);

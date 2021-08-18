@@ -1,6 +1,7 @@
-package com.mcmoddev.golems.render.model;
+package com.mcmoddev.golems.render.layer;
 
 import com.mcmoddev.golems.entity.GolemBase;
+import com.mcmoddev.golems.render.GolemModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.world.level.block.Blocks;

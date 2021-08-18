@@ -12,8 +12,8 @@ List of bugs, fixes, and features for the 1.17 version of Extra Golems
   - X Add GolemAttributes and Codec
   - X Add GolemMultitextureSettings and Codec
 - X Implement multitexture settings in golem
-- _ Implement multitexture settings in renderer
-- _ Change base_block texture to an array (first found is used)
+- X Implement multitexture settings in renderer
+- X Change base_block texture to an array (first found is used)
 - _ Add GolemBehavior for all special behavior
   - X aoe_dry
   - X aoe_freeze
@@ -223,12 +223,12 @@ The below information will allow multitexture behavior if present. Here is an ex
       "minecraft:red_mushroom_block": 1
     },
 	"loot_table_map": { // map of textureID->loot table
-      "0": 0,
-      "1": 0
+      "0": "golems:mushroom/brown",
+      "1": "golems:mushroom/red"
 	},
     "texture_glow_map": { // map of textureID->lightLevel; defaults to 0
       "0": 0,
-    	"1": 0
+      "1": 0
     }
   }
 }

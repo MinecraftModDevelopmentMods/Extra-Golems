@@ -1,4 +1,4 @@
-package com.mcmoddev.golems.render.model;
+package com.mcmoddev.golems.render;
 
 import com.mcmoddev.golems.EGConfig;
 import com.mcmoddev.golems.entity.GolemBase;
@@ -20,6 +20,9 @@ import com.mojang.math.Vector3f;
 
 public class GolemModel<T extends GolemBase> extends IronGolemModel<T> implements ArmedModel {
   
+
+  
+  private final ModelPart kitty = createKittyLayer().bakeRoot();
   private final ModelPart tail;
   private final ModelPart tail1;
   private final ModelPart ears;
@@ -30,9 +33,9 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> implement
   
   public GolemModel(ModelPart rootIn) {
     super(rootIn);
-    tail = rootIn.getChild("tail");
+    tail = kitty.getChild("tail");
     tail1 = tail.getChild("tail1");
-    ears = rootIn.getChild("ears");
+    ears = kitty.getChild("ears");
 //    tail = new ModelPart(this, 0, 0).setTexSize(32, 32);
 //    tail.setPos(0.0F, 10.0F, 4.0F);
 //    tail.xRot = -2.4435F;
@@ -58,11 +61,21 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> implement
     partdefinition.addOrReplaceChild("left_arm", CubeListBuilder.create().texOffs(60, 58).addBox(9.0F, -2.5F, -3.0F, 4.0F, 30.0F, 6.0F), PartPose.offset(0.0F, -7.0F, 0.0F));
     partdefinition.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(37, 0).addBox(-3.5F, -3.0F, -3.0F, 6.0F, 16.0F, 5.0F), PartPose.offset(-4.0F, 11.0F, 0.0F));
     partdefinition.addOrReplaceChild("left_leg", CubeListBuilder.create().texOffs(60, 0).mirror().addBox(-3.5F, -3.0F, -3.0F, 6.0F, 16.0F, 5.0F), PartPose.offset(5.0F, 11.0F, 0.0F));
+    return LayerDefinition.create(meshdefinition, 128, 128);
+  }
+  
+  public static LayerDefinition createKittyLayer() {
+    MeshDefinition meshdefinition = new MeshDefinition();
+    PartDefinition partdefinition = meshdefinition.getRoot();
     partdefinition.addOrReplaceChild("ears", CubeListBuilder.create().texOffs(9, 16).addBox(-5.0F, -16.0F, -4.0F, 10.0F, 6.0F, 1.0F), PartPose.offset(0.0F, 0.0F, 0.0F));
     PartDefinition taildefinition = partdefinition.addOrReplaceChild("tail", CubeListBuilder.create().texOffs(0, 0).addBox(-2.0F, -8.0F, 0.0F, 4.0F, 8.0F, 4.0F), PartPose.offsetAndRotation(0.0F, 10.0F, 4.0F, -2.4435F, 0.0F, 0.0F));
-    taildefinition.addOrReplaceChild("tail1", CubeListBuilder.create().texOffs(32, 32).addBox(-1.0F, -8.0F, -2.0F, 2.0F, 10.0F, 2.0F), PartPose.offsetAndRotation(0.0F, -8.0F, 3.0F, 0.2618F, 0.0F, 0.0F));
-    return LayerDefinition.create(meshdefinition, 128, 128);
- }
+    taildefinition.addOrReplaceChild("tail1", CubeListBuilder.create().texOffs(0, 16).addBox(-1.0F, -8.0F, -2.0F, 2.0F, 10.0F, 2.0F), PartPose.offsetAndRotation(0.0F, -8.0F, 3.0F, 0.2618F, 0.0F, 0.0F));
+    return LayerDefinition.create(meshdefinition, 32, 32);
+  }
+  
+  public ModelPart getKitty() {
+    return this.kitty;
+  }
 
   @Override
   public void renderToBuffer(final PoseStack matrixStackIn, final VertexConsumer vertexBuilder, final int packedLightIn, final int packedOverlayIn, final float redIn,
@@ -91,6 +104,29 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> implement
   public float blue() { return blue;  }
   
   // KITTY LAYER HELPERS
+  
+  @Override
+  public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float partialTicks, float netHeadYaw, float headPitch) {
+    super.setupAnim(entity, limbSwing, limbSwingAmount, partialTicks, netHeadYaw, headPitch);
+    final boolean earsAndTail = entity.hasCustomName() && "Kitty".equals(entity.getName().getContents());
+    // animate tail
+    if(earsAndTail) {
+      // ears
+      this.ears.copyFrom(this.head);
+      // tail
+      this.tail.y = 2.0F;
+      this.tail.z = 4.0F;
+      // tail animation
+      float idleSwing = Mth.cos((entity.tickCount + partialTicks) * 0.058F);
+      float tailSwing = Mth.cos(limbSwing) * limbSwingAmount;
+      tail.xRot = -2.4435F + 0.38F * tailSwing;
+      tail1.xRot = 0.2618F + 0.48F * tailSwing;
+      tail.zRot = 0.06F * idleSwing;
+      tail1.zRot = -0.05F * idleSwing;
+    }
+    // show or hide ears/tail
+    this.kitty.visible = earsAndTail;
+  }
   
   public void renderKittyEars(T golem, PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn, 
       int packedOverlayIn) {

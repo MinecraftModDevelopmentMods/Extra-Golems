@@ -4,10 +4,13 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import com.mcmoddev.golems.util.ResourcePair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class MultitextureSettings {
   
@@ -16,19 +19,19 @@ public class MultitextureSettings {
   public static final Codec<MultitextureSettings> CODEC = RecordCodecBuilder.create(instance -> instance.group(
       Codec.INT.fieldOf("texture_count").forGetter(MultitextureSettings::getTextureCount),
       Codec.BOOL.optionalFieldOf("cycle", false).forGetter(MultitextureSettings::canCycle),
-      Codec.unboundedMap(ResourceLocation.CODEC, Codec.INT).fieldOf("block_texture_map").forGetter(MultitextureSettings::getBlockTextureMap),
+      Codec.unboundedMap(ResourcePair.CODEC, Codec.INT).fieldOf("block_texture_map").forGetter(MultitextureSettings::getBlockTextureMap),
       Codec.unboundedMap(Codec.INT, ResourceLocation.CODEC).fieldOf("loot_table_map").forGetter(MultitextureSettings::getLootTableMap),
       Codec.unboundedMap(Codec.INT, Codec.INT).fieldOf("texture_glow_map").forGetter(MultitextureSettings::getTextureGlowMap)
     ).apply(instance, MultitextureSettings::new));
   
   private final int textureCount;
   private final boolean cycle;
-  private final ImmutableMap<ResourceLocation, Integer> blockTextureMap;
+  private final ImmutableMap<ResourcePair, Integer> blockTextureMap;
   private final ImmutableMap<Integer, Integer> textureGlowMap;
   private final ImmutableMap<Integer, ResourceLocation> lootTableMap;
   
   private MultitextureSettings(int textureCount, boolean cycle, 
-      Map<ResourceLocation, Integer> blockTextureMap,
+      Map<ResourcePair, Integer> blockTextureMap,
       Map<Integer, ResourceLocation> lootTableMap,
       Map<Integer, Integer> textureGlowMap) {
     super();
@@ -64,8 +67,8 @@ public class MultitextureSettings {
   /** @return true to cycle textures upon entity interaction **/
   public boolean canCycle() { return cycle; }
 
-  /** @return a map of Block IDs and Texture IDs **/
-  public Map<ResourceLocation, Integer> getBlockTextureMap() { return blockTextureMap; }
+  /** @return a map of Block IDs or Tags and Texture IDs **/
+  public Map<ResourcePair, Integer> getBlockTextureMap() { return blockTextureMap; }
 
   /** @return a map of Block IDs and light values **/
   public Map<Integer, Integer> getTextureGlowMap() { return textureGlowMap; }
@@ -73,5 +76,27 @@ public class MultitextureSettings {
   /** @return a map of Block IDs and loot table locations **/
   public Map<Integer, ResourceLocation> getLootTableMap() { return lootTableMap; }
 
-  
+  /**
+   * Searches the block-to-textureID map for a match.
+   * First checks against the block name, then checks
+   * each of the block's tags.
+   * @param block the block
+   * @return the texture ID (defaults to 0)
+   */
+  public int getTextureFromBlock(final Block block) {
+    ResourcePair key = new ResourcePair(block.getRegistryName(), true);
+    // if the block is defined literally, use that to look up texture id
+    if(blockTextureMap.containsKey(key)) {
+      return blockTextureMap.get(key);
+    }
+    // otherwise, use each of the block's tags to look up texture id
+    for(final ResourceLocation tag : block.getTags()) {
+      key = new ResourcePair(tag, false);
+      if(blockTextureMap.containsKey(key)) {
+        return blockTextureMap.get(key);
+      }
+    }
+    // default is 0
+    return 0;
+  }
 }

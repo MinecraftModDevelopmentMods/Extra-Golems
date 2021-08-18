@@ -1,11 +1,11 @@
-package com.mcmoddev.golems.render.model;
+package com.mcmoddev.golems.render.layer;
 
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.container.client.GolemRenderSettings;
 import com.mcmoddev.golems.container.client.LayerRenderSettings;
 import com.mcmoddev.golems.entity.GolemBase;
+import com.mcmoddev.golems.render.GolemModel;
 import com.mcmoddev.golems.render.GolemRenderer;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
@@ -18,7 +18,7 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 
-public class TexturesLayer<T extends GolemBase> extends RenderLayer<T, GolemModel<T>> {
+public class ColoredTextureLayer<T extends GolemBase> extends RenderLayer<T, GolemModel<T>> {
   
   private final GolemModel<T> layerModel;
   
@@ -26,7 +26,7 @@ public class TexturesLayer<T extends GolemBase> extends RenderLayer<T, GolemMode
    * Renders all of the textures in the golem render settings
    * @param ientityrenderer the parent renderer
    **/
-  public TexturesLayer(RenderLayerParent<T, GolemModel<T>> renderParent, EntityModelSet modelSet) {
+  public ColoredTextureLayer(RenderLayerParent<T, GolemModel<T>> renderParent, EntityModelSet modelSet) {
     super(renderParent);
     this.layerModel = new GolemModel<>(modelSet.bakeLayer(GolemRenderer.GOLEM_MODEL_RESOURCE));
   }
@@ -36,7 +36,6 @@ public class TexturesLayer<T extends GolemBase> extends RenderLayer<T, GolemMode
       float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
     GolemRenderSettings settings = ExtraGolems.PROXY.GOLEM_RENDER_SETTINGS.get(entity.getMaterial()).orElse(GolemRenderSettings.EMPTY);
     if(!entity.isInvisible() && !settings.getLayers().isEmpty()) {
-      
       getParentModel().copyPropertiesTo(layerModel);
       layerModel.prepareMobModel(entity, limbSwing, limbSwingAmount, partialTicks);
       layerModel.setupAnim(entity, limbSwing, limbSwingAmount, partialTicks, netHeadYaw, headPitch);

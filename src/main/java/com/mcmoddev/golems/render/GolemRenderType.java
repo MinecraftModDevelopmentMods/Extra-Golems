@@ -6,7 +6,6 @@ import java.util.Map;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 
-import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 
@@ -39,9 +38,10 @@ public class GolemRenderType extends RenderType {
     return create("golem_cutout", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true, false,
         RenderType.CompositeState.builder()
             .setShaderState(RENDERTYPE_ENTITY_CUTOUT_SHADER)
-            .setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
             .setTransparencyState(NO_TRANSPARENCY)
-            .setLightmapState(LIGHTMAP).setOverlayState(OVERLAY)
+            .setLightmapState(LIGHTMAP)
+            .setOverlayState(OVERLAY)
+            .setCullState(NO_CULL)
             .setTextureState(getTextureState(texture, template))
             .createCompositeState(true));
   }
@@ -54,9 +54,12 @@ public class GolemRenderType extends RenderType {
     return create("golem_transparent", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true, true, 
         RenderType.CompositeState.builder()
             .setShaderState(RENDERTYPE_ENTITY_TRANSLUCENT_SHADER)
-            .setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
-            .setTransparencyState(TRANSLUCENT_TRANSPARENCY).setCullState(NO_CULL).setLightmapState(LIGHTMAP)
-            .setOverlayState(OVERLAY).createCompositeState(true));
+            .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+            .setCullState(NO_CULL)
+            .setLightmapState(LIGHTMAP)
+            .setOverlayState(OVERLAY)
+            .setTextureState(getTextureState(texture, template))
+            .createCompositeState(true));
   }
   
   public static RenderType getGolemOutline(final ResourceLocation texture, final ResourceLocation template, final boolean dynamic) {
@@ -68,10 +71,10 @@ public class GolemRenderType extends RenderType {
         DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256, false, false,
         RenderType.CompositeState.builder()
             .setShaderState(RENDERTYPE_OUTLINE_SHADER)
-            .setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
             .setCullState(CullStateShard.NO_CULL)
             .setDepthTestState(NO_DEPTH_TEST)
             .setOutputState(OUTLINE_TARGET)
+            .setTextureState(getTextureState(texture, template))
             .createCompositeState(RenderType.OutlineProperty.IS_OUTLINE));
   }
 }

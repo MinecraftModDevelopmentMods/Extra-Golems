@@ -15,9 +15,9 @@ import net.minecraftforge.fmllegacy.network.PacketDistributor;
 public class CommonProxy {
   
   public final GenericJsonReloadListener<GolemContainer> GOLEM_CONTAINERS = new GenericJsonReloadListener<>("golems", GolemContainer.class, GolemContainer.CODEC, 
-      l -> l.getEntries().forEach(e -> ExtraGolems.CHANNEL.send(PacketDistributor.ALL.noArg(), new SGolemContainerPacket(e.getKey(), e.getValue().get()))));
+      l -> l.getEntries().forEach(e -> e.getValue().ifPresent(c -> ExtraGolems.CHANNEL.send(PacketDistributor.ALL.noArg(), new SGolemContainerPacket(c)))));
 
-  public final GenericJsonReloadListener<GolemRenderSettings> GOLEM_RENDER_SETTINGS = new GenericJsonReloadListener<>("golems", GolemRenderSettings.class, GolemRenderSettings.CODEC, 
+  public final GenericJsonReloadListener<GolemRenderSettings> GOLEM_RENDER_SETTINGS = new GenericJsonReloadListener<>("golem", GolemRenderSettings.class, GolemRenderSettings.CODEC, 
       l -> {});
   
   public void registerEventHandlers() {

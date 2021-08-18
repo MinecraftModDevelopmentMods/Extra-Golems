@@ -1,4 +1,4 @@
-package com.mcmoddev.golems.gui;
+package com.mcmoddev.golems.screen;
 
 import java.io.IOException;
 import java.util.ArrayList;

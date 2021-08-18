@@ -1,4 +1,4 @@
-package com.mcmoddev.golems.gui;
+package com.mcmoddev.golems.screen;
 
 import java.util.ArrayList;
 import java.util.Collections;

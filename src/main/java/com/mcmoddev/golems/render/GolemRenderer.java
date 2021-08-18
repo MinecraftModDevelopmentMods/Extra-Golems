@@ -5,16 +5,15 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableMap;
+import com.mcmoddev.golems.EGConfig;
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.container.client.GolemRenderSettings;
-import com.mcmoddev.golems.EGConfig;
 import com.mcmoddev.golems.entity.GolemBase;
-import com.mcmoddev.golems.proxy.ClientProxy;
-import com.mcmoddev.golems.render.model.GolemBannerLayer;
-import com.mcmoddev.golems.render.model.GolemFlowerLayer;
-import com.mcmoddev.golems.render.model.GolemKittyLayer;
-import com.mcmoddev.golems.render.model.GolemModel;
-import com.mcmoddev.golems.render.model.TexturesLayer;
+import com.mcmoddev.golems.render.layer.ColoredTextureLayer;
+import com.mcmoddev.golems.render.layer.GolemBannerLayer;
+import com.mcmoddev.golems.render.layer.GolemCrackinessLayer;
+import com.mcmoddev.golems.render.layer.GolemFlowerLayer;
+import com.mcmoddev.golems.render.layer.GolemKittyLayer;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
@@ -40,6 +39,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
   protected static final ResourceLocation specialTexture = new ResourceLocation(ExtraGolems.MODID, "textures/entity/special.png");
   protected static final ResourceLocation specialTexture2 = new ResourceLocation(ExtraGolems.MODID, "textures/entity/special2.png");
   
+  // TODO implement
   private static final Map<IronGolem.Crackiness, ResourceLocation> cracksToTextureMap = ImmutableMap.of(IronGolem.Crackiness.LOW, new ResourceLocation("textures/entity/iron_golem/iron_golem_crackiness_low.png"), IronGolem.Crackiness.MEDIUM, new ResourceLocation("textures/entity/iron_golem/iron_golem_crackiness_medium.png"), IronGolem.Crackiness.HIGH, new ResourceLocation("textures/entity/iron_golem/iron_golem_crackiness_high.png"));
   
   protected boolean isAlphaLayer;
@@ -50,11 +50,12 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
    * @param m the entity render manager
    **/
   public GolemRenderer(final EntityRendererProvider.Context context) {
-    super(context, new GolemModel<T>(context.bakeLayer(GOLEM_MODEL_RESOURCE)), 0.5F);
-    this.addLayer(new TexturesLayer<>(this, context.getModelSet()));
-    this.addLayer(new GolemFlowerLayer<T>(this));
-    this.addLayer(new GolemKittyLayer<T>(this));
-    this.addLayer(new GolemBannerLayer<T>(this));
+    super(context, new GolemModel<>(context.bakeLayer(GOLEM_MODEL_RESOURCE)), 0.5F);
+    this.addLayer(new ColoredTextureLayer<>(this, context.getModelSet()));
+    this.addLayer(new GolemCrackinessLayer<>(this));
+    this.addLayer(new GolemFlowerLayer<>(this));
+    this.addLayer(new GolemKittyLayer<>(this));
+    this.addLayer(new GolemBannerLayer<>(this));
   }
 
   @Override
@@ -102,7 +103,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
   @Override
   public ResourceLocation getTextureLocation(final T golem) {
     final GolemRenderSettings settings = ExtraGolems.PROXY.GOLEM_RENDER_SETTINGS.get(golem.getMaterial()).orElse(GolemRenderSettings.EMPTY);
-    ResourceLocation texture = settings.getBase().first;
+    ResourceLocation texture = settings.getBase(golem).resource();
     disableLayers = false;
     // special cases
     if(EGConfig.halloween() && isNightTime(golem)) {
@@ -128,7 +129,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
     final GolemRenderSettings settings = ExtraGolems.PROXY.GOLEM_RENDER_SETTINGS.get(golem.getMaterial()).orElse(GolemRenderSettings.EMPTY);
     ResourceLocation texture = this.getTextureLocation(golem);
     ResourceLocation template = settings.getBaseTemplate();
-    boolean dynamic = isDynamic(texture, settings);
+    boolean dynamic = isDynamic(golem, texture, settings);
     if (isVisible || isVisibleToPlayer || isAlphaLayer) {
       return GolemRenderType.getGolemTransparent(texture, template, dynamic);
     } else if(isGlowing) {
@@ -138,8 +139,8 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
     }
   }
   
-  protected boolean isDynamic(final ResourceLocation texture, final GolemRenderSettings settings) {
-    return texture != boneTexture && texture != specialTexture && texture != specialTexture2 && settings.getBase().second;
+  protected boolean isDynamic(final T entity, final ResourceLocation texture, final GolemRenderSettings settings) {
+    return texture != boneTexture && texture != specialTexture && texture != specialTexture2 && !settings.getBase(entity).flag();
   }
   
   public static boolean isNightTime(final GolemBase golem) {

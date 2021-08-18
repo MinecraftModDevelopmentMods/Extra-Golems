@@ -50,6 +50,7 @@ import net.minecraft.world.item.BannerItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShearsItem;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.HitResult;
@@ -349,7 +350,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 
   @Override
   public ItemStack getPickedResult(final HitResult ray) {
-    return container.hasBlocks() ? new ItemStack(container.getAllBlocks().iterator().next()) : ItemStack.EMPTY;
+    return container.hasBlocks() ? new ItemStack(container.getAllBlocks().toArray(new Block[0])[0]) : ItemStack.EMPTY;
   }
 
   @Override
@@ -374,7 +375,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
       cycleTexture(player, hand);
     }
     // Attempt to consume fuel
-    if(!stack.isEmpty() && container.hasBehavior(GolemBehaviors.USE_FUEL)) {
+    if(!player.isCrouching() && !stack.isEmpty() && container.hasBehavior(GolemBehaviors.USE_FUEL)) {
       consumeFuel(player, hand);
     }
     // allow behaviors to process mobInteract
@@ -558,10 +559,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
    * @param arm2 the second arm block
    */
   public void onBuilt(final BlockState body, final BlockState legs, final BlockState arm1, final BlockState arm2) {
-    if(container.getMultitexture().isPresent()) {
-      Integer textureNum = container.getMultitexture().get().getBlockTextureMap().get(body.getBlock().getRegistryName());
-      this.setTextureId(textureNum.byteValue());
-    }
+    container.getMultitexture().ifPresent(m -> this.setTextureId((byte) m.getTextureFromBlock(body.getBlock())));
   }
 
   ///////////////////// FUEL ////////////////////////
@@ -575,7 +573,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
   @Override
   public int getMaxFuel() {
     GolemBehavior b = container.getBehaviors().get(GolemBehaviors.USE_FUEL);
-    return ((UseFuelBehavior)b).getMaxFuel();
+    return b != null ? ((UseFuelBehavior)b).getMaxFuel() : 0;
   }
   
   

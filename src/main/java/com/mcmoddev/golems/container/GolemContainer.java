@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import com.google.common.collect.ImmutableMap;
@@ -18,6 +17,7 @@ import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.container.behavior.GolemBehavior;
 import com.mcmoddev.golems.container.behavior.GolemBehaviors;
 import com.mcmoddev.golems.entity.GolemBase;
+import com.mcmoddev.golems.util.ResourcePair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -28,7 +28,6 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.StringRepresentable;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
@@ -55,8 +54,8 @@ public final class GolemContainer {
       Codec.INT.optionalFieldOf("power", 0).forGetter(GolemContainer::getMaxPowerLevel),
       Codec.BOOL.optionalFieldOf("hidden", false).forGetter(GolemContainer::isHidden),
       SoundEvent.CODEC.optionalFieldOf("sound", SoundEvents.STONE_STEP).forGetter(GolemContainer::getSound),
-      Codec.STRING.listOf().optionalFieldOf("blocks", Lists.newArrayList()).forGetter(GolemContainer::getBlocksRaw),
-      Codec.unboundedMap(Codec.STRING, Codec.DOUBLE).optionalFieldOf("heal_items", Maps.newHashMap()).forGetter(GolemContainer::getHealItemsRaw),
+      ResourcePair.CODEC.listOf().optionalFieldOf("blocks", Lists.newArrayList()).forGetter(GolemContainer::getBlocksRaw),
+      Codec.unboundedMap(ResourcePair.CODEC, Codec.DOUBLE).optionalFieldOf("heal_items", Maps.newHashMap()).forGetter(GolemContainer::getHealItemsRaw),
       MultitextureSettings.CODEC.optionalFieldOf("multitexture").forGetter(GolemContainer::getMultitexture),
       CompoundTag.CODEC.optionalFieldOf("behavior", new CompoundTag()).forGetter(GolemContainer::getBehaviorsRaw)
     ).apply(instance, GolemContainer::new));
@@ -69,11 +68,11 @@ public final class GolemContainer {
   private final boolean hidden;
   private final SoundEvent sound;
   
-  private final List<String> blocksRaw;
+  private final List<ResourcePair> blocksRaw;
   private final ImmutableSet<ResourceLocation> blocks;
   private final ImmutableSet<ResourceLocation> blockTags;
   
-  private final Map<String, Double> healItemsRaw;
+  private final Map<ResourcePair, Double> healItemsRaw;
   private final ImmutableMap<ResourceLocation, Double> healItems;
   private final ImmutableMap<ResourceLocation, Double> healItemTags;
   
@@ -83,7 +82,7 @@ public final class GolemContainer {
   private final Optional<MultitextureSettings> multitexture;
 
   private GolemContainer(ResourceLocation material, AttributeSettings attributes, SwimMode swimAbility, int glow, int power,
-      boolean hidden, SoundEvent sound, List<String> blocksRaw, Map<String, Double> healItemsRaw,
+      boolean hidden, SoundEvent sound, List<ResourcePair> blocksRaw, Map<ResourcePair, Double> healItemsRaw,
       Optional<MultitextureSettings> multitexture, CompoundTag goalsRaw) {
     this.material = material;
     this.attributes = attributes;
@@ -98,16 +97,16 @@ public final class GolemContainer {
     this.behaviorsRaw = goalsRaw;
     
     // populate blocks and block tags
-    Set<ResourceLocation> blockMap = new HashSet<>();
-    Set<ResourceLocation> blockTagMap = new HashSet<>();
-    this.blocksRaw.forEach(s -> parseIdOrTag(s, id -> blockMap.add(id), path -> blockTagMap.add(path)));    
-    this.blocks = ImmutableSet.copyOf(blockMap);
-    this.blockTags = ImmutableSet.copyOf(blockTagMap);
+    this.blocks = ImmutableSet.copyOf(blocksRaw.stream().filter(r -> !r.flag()).map(r -> r.resource()).toList());
+    this.blockTags = ImmutableSet.copyOf(blocksRaw.stream().filter(r -> r.flag()).map(r -> r.resource()).toList());
     
     // populate heal item and heal item tags
     Map<ResourceLocation, Double> healItemMap = new HashMap<>();
     Map<ResourceLocation, Double> healItemTagMap = new HashMap<>();
-    this.healItemsRaw.forEach((s, d) -> parseIdOrTag(s, id -> healItemMap.put(id, d), path -> healItemTagMap.put(path, d)));    
+    this.healItemsRaw.forEach((s, d) -> {
+      if(s.flag()) healItemTagMap.put(s.resource(), d);
+      else healItemMap.put(s.resource(), d);
+    });    
     this.healItems = ImmutableMap.copyOf(healItemMap);
     this.healItemTags = ImmutableMap.copyOf(healItemTagMap);
     
@@ -121,24 +120,6 @@ public final class GolemContainer {
       }
     }
     behaviors = ImmutableMap.copyOf(goalMap);
-  }
-
-  /**
-   * Parses a String as either a regular ResourceLocation
-   * or a ResourceLocation prepended by '#'.
-   * @param id the String that represents a ResourceLocation
-   * @param acceptId what to do if the String does NOT have '#'
-   * @param acceptTag what to do if the String DOES have '#'
-   * @return true if acceptId ran instead of acceptTag (ie, the String id does not contain '#')
-   */
-  public static boolean parseIdOrTag(final String id, final Consumer<ResourceLocation> acceptId, final Consumer<ResourceLocation> acceptTag) {
-    if(id.length() > 0 && id.charAt(0) == '#') {
-      acceptTag.accept(new ResourceLocation(id.substring(1)));
-      return false;
-    } else {
-      acceptId.accept(new ResourceLocation(id));
-      return true;
-    }
   }
   
   ////////// GETTERS //////////
@@ -162,7 +143,7 @@ public final class GolemContainer {
   public SoundEvent getSound() { return sound; }
 
   /** @return a List of string representations of blocks or block tags **/
-  private List<String> getBlocksRaw() { return blocksRaw; }
+  private List<ResourcePair> getBlocksRaw() { return blocksRaw; }
   
   /** @return a Set of Block IDs that can be used to build the Golem **/
   public ImmutableSet<ResourceLocation> getBlocks() { return blocks; }
@@ -171,7 +152,7 @@ public final class GolemContainer {
   public ImmutableSet<ResourceLocation> getBlockTags() { return blockTags; }
 
   /** @return a Map of string representations of item IDs and tags to heal percentage **/
-  private Map<String, Double> getHealItemsRaw() { return healItemsRaw; }
+  private Map<ResourcePair, Double> getHealItemsRaw() { return healItemsRaw; }
   
   /** @return a Map of Item IDs and the heal percentage that item provides **/
   public ImmutableMap<ResourceLocation, Double> getHealItems() { return healItems; }
@@ -293,6 +274,9 @@ public final class GolemContainer {
       all.addAll(BlockTags.getAllTags().getTagOrEmpty(tagId).getValues());
     }
     // return all blocks
+    System.out.println("loaded: " + all.toString());
+    System.out.println("blocks=" + blocks);
+    System.out.println("tags=" + blockTags);
     return all;
   }
 

@@ -1,4 +1,4 @@
-package com.mcmoddev.golems.gui;
+package com.mcmoddev.golems.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mcmoddev.golems.menu.DispenserGolemMenu;

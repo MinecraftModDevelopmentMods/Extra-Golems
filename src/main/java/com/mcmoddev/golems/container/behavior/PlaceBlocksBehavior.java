@@ -2,12 +2,15 @@ package com.mcmoddev.golems.container.behavior;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.concurrent.Immutable;
 
+import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.container.GolemContainer;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.entity.goal.PlaceBlocksGoal;
+import com.mcmoddev.golems.util.ResourcePair;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -31,12 +34,20 @@ public class PlaceBlocksBehavior extends GolemBehavior {
     // read blocks
     ListTag blocksTag = (ListTag) tag.get("blocks");
     for(int i = 0, l = blocksTag.size(); i < l; i++) {
-      GolemContainer.parseIdOrTag(blocksTag.getString(i), id -> blocks.add(id), id -> blockTags.add(id));
+      Optional<ResourcePair> result = ResourcePair.read(blocksTag.getString(i)).resultOrPartial(s -> ExtraGolems.LOGGER.error("Error reading 'blocks' from NBT\n" + s));
+      result.ifPresent(p -> {
+        if(p.flag()) blockTags.add(p.resource());
+        else blocks.add(p.resource());
+      });
     }
     // read supports
     ListTag supportsTag = (ListTag) tag.get("supports");
     for(int i = 0, l = supportsTag.size(); i < l; i++) {
-      GolemContainer.parseIdOrTag(supportsTag.getString(i), id -> supports.add(id), id -> supportTags.add(id));
+      Optional<ResourcePair> result = ResourcePair.read(blocksTag.getString(i)).resultOrPartial(s -> ExtraGolems.LOGGER.error("Error reading 'supports' from NBT\n" + s));
+      result.ifPresent(p -> {
+        if(p.flag()) supportTags.add(p.resource());
+        else supports.add(p.resource());
+      });
     }
   }
   

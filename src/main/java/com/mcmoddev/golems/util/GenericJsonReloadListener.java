@@ -88,19 +88,6 @@ public class GenericJsonReloadListener<T> extends SimpleJsonResourceReloadListen
     // read Object T from nbt
     return codec.parse(NbtOps.INSTANCE, nbt);
   }
-  
-  public void syncOnReload() {
-    boolean isServer = true;
-    try {
-      LogicalSidedProvider.INSTANCE.get(LogicalSide.SERVER);
-    } catch (Exception e) {
-      isServer = false;
-    }
-    // if we're on the server, send syncing packets
-    if (isServer == true) {
-      syncOnReload.accept(this);
-    }
-  }
 
   @Override
   protected void apply(Map<ResourceLocation, JsonElement> jsons, ResourceManager manager, ProfilerFiller profile) {
@@ -112,6 +99,18 @@ public class GenericJsonReloadListener<T> extends SimpleJsonResourceReloadListen
     ExtraGolems.LOGGER.info("Found " + OBJECTS.size() + " entries");
     // DEBUG: print each entry
     OBJECTS.forEach((r, i) -> i.ifPresent(c -> ExtraGolems.LOGGER.info(c.toString())));
-    syncOnReload();
+    boolean isServer = true;
+    try {
+      LogicalSidedProvider.INSTANCE.get(LogicalSide.SERVER);
+    } catch (Exception e) {
+      isServer = false;
+    }
+    // if we're on the server, send syncing packets
+    if (isServer == true) {
+      syncOnReload.accept(this);
+    }
   }
+  
+  @Override
+  public String getName() { return objClass.getName(); }
 }

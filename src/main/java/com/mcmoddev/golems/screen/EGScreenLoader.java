@@ -1,4 +1,4 @@
-package com.mcmoddev.golems.gui;
+package com.mcmoddev.golems.screen;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
