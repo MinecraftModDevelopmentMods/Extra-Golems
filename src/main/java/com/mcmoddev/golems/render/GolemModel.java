@@ -86,7 +86,7 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> implement
       matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(180.0F));
     }
     // render with custom colors
-    super.renderToBuffer(matrixStackIn, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, 1.0F);
+    super.renderToBuffer(matrixStackIn, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, alphaIn);
     matrixStackIn.popPose();
   }
   

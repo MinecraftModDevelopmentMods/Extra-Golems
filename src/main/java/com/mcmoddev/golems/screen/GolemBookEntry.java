@@ -33,9 +33,9 @@ public class GolemBookEntry {
   private final float attack;
   private final List<MutableComponent> specials = new ArrayList<>();
 
-  public GolemBookEntry(@Nonnull GolemContainer container) {
+  public GolemBookEntry(@Nonnull ResourceLocation golemName, @Nonnull GolemContainer container) {
     // initialize fields based on entity attributes
-    this.golemName = container.getMaterial().toString();
+    this.golemName = golemName.toString();
     this.health = (int) container.getAttributes().getHealth();
     this.attack = (float) container.getAttributes().getAttack();
     // TODO custom descriptions
@@ -45,8 +45,8 @@ public class GolemBookEntry {
     this.buildingBlocks = container.getAllBlocks().toArray(new Block[0]);
 
     // find the image to add to the book
-    final String modid = container.getMaterial().getNamespace();
-    final String name = container.getMaterial().getPath();
+    final String modid = golemName.getNamespace();
+    final String name = golemName.getPath();
     String img = (modid + ":textures/gui/screenshots/").concat(name).concat(".png");
     try {
       this.imageLoc = Minecraft.getInstance().getResourceManager().getResource(new ResourceLocation(img)).getLocation();

@@ -13,6 +13,8 @@ List of bugs, fixes, and features for the 1.17 version of Extra Golems
   - X Add GolemMultitextureSettings and Codec
 - X Implement multitexture settings in golem
 - X Implement multitexture settings in renderer
+- _ Implement loot tables
+- _ Implement multitexture loot tables
 - X Change base_block texture to an array (first found is used)
 - _ Add GolemBehavior for all special behavior
   - X aoe_dry
@@ -30,6 +32,8 @@ List of bugs, fixes, and features for the 1.17 version of Extra Golems
 - X Add RenderSettings Codec
 - X Add single entity type
 - X Add synched data for Material (key for Container)
+- _ Work on Bedrock Golem
+- _ Work on Coral Golem
 
 
 ## Bugs
@@ -56,7 +60,6 @@ The below example includes all functionality that will be available for each gol
 
 ```
 {
-  "material": "clay", // unique id that must match the file name
   "attributes": {
     "health": 20.0,
     "attack": 2.0,
@@ -128,10 +131,10 @@ The below example includes all functionality that will be available for each gol
 	// Add potion effect with chance each tick
 	"passive_effect": {
 	  "night_only": false, // only add potion effect at night or in dimension with no night
-	  "effect" { // applies a potion effect
+	  "effect": { // applies a potion effect
 		"target": "self",
 		"chance": 0.04,
-		"effects" [ // applies a random effect from this array
+		"effects": [ // applies a random effect from this array
 	      {
   	  	    "Potion": "minecraft:regeneration",
   	  	    "Amplifier": 0,
@@ -214,22 +217,22 @@ The below information will allow multitexture behavior if present. Here is an ex
 ```
 {
   [...],
-  "multitexture": {
-    "texture_count": 2, // number of textureIDs
-    "cycle": true, // true to change texture on player interact
-    "block_texture_map": { // map of block->textureID
-      "minecraft:mushroom_stem": 0,
-      "minecraft:brown_mushroom_block": 0,
-      "minecraft:red_mushroom_block": 1
-    },
-	"loot_table_map": { // map of textureID->loot table
-      "0": "golems:mushroom/brown",
-      "1": "golems:mushroom/red"
+  "texture_count": 2, // the number of textures
+  "cycle": false, // true if interacting will change texture
+  "textures": { // map of texture IDs (keys must be unique)
+	"0": {
+	  "block": [ // can be single entry or array
+		"minecraft:mushroom_stem",
+		"minecraft:brown_mushroom_block"
+	  ],
+      "loot_table": "golems:mushroom/brown",
+	  "light": 0 // light value when using this texture ID
 	},
-    "texture_glow_map": { // map of textureID->lightLevel; defaults to 0
-      "0": 0,
-      "1": 0
-    }
+	"1": {
+	  "block": "minecraft:red_mushroom_block",
+	  "loot_table": "golems:mushroom/red",
+	  "light": 0
+	}		
   }
 }
 ```
@@ -244,7 +247,6 @@ The below example includes all functionality that will be available for each gol
 
 ```
 {
-  "material": "clay", // unique id that must match the file name,
   "description": [ // array of text components to add to the golem book
     {
 	  "key": "entitytip.translation_key",

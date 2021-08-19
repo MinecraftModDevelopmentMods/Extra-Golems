@@ -5,8 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.mcmoddev.golems.container.GolemContainer;
-
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -64,7 +63,7 @@ public class EGConfig {
     return GOLEM_CONFIG != null ? GOLEM_CONFIG.villagerGolemSpawnChance.get() : 0;
   }
 
-  public static List<GolemContainer> getVillagerGolems() {
+  public static List<ResourceLocation> getVillagerGolems() {
     return GOLEM_CONFIG != null ? GOLEM_CONFIG.loadVillagerGolemList() : new ArrayList<>();
   }
   

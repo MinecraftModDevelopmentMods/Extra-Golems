@@ -101,4 +101,9 @@ public abstract class GolemBehavior {
   public ResourceLocation getRegistryName() {
     return registryName;
   };
+  
+  @Override
+  public String toString() {
+    return "GolemBehavior[" + registryName.toString() + "]";
+  }
 }

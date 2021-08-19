@@ -1,5 +1,6 @@
 package com.mcmoddev.golems;
 
+import java.util.Map.Entry;
 import java.util.Optional;
 
 import javax.annotation.Nullable;
@@ -8,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.mcmoddev.golems.container.GolemContainer;
+import com.mcmoddev.golems.container.behavior.GolemBehaviors;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.network.SGolemContainerPacket;
 import com.mcmoddev.golems.proxy.ClientProxy;
@@ -46,6 +48,8 @@ public class ExtraGolems {
   public ExtraGolems() {
     FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
     FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
+    // init helper classes
+    GolemBehaviors.init();
     // register event handlers
     PROXY.registerEventHandlers();
     // set up config file
@@ -76,16 +80,18 @@ public class ExtraGolems {
    **/
   @Nullable
   public static GolemBase getGolem(Level world, Block below1, Block below2, Block arm1, Block arm2) {
-    GolemContainer container = null;
-    for (Optional<GolemContainer> c : ExtraGolems.PROXY.GOLEM_CONTAINERS.getValues()) {
-      if (c.isPresent() && c.get().matches(below1, below2, arm1, arm2)) {
-        container = c.get();
+    ResourceLocation id = null;
+    for (Entry<ResourceLocation, Optional<GolemContainer>> entry : ExtraGolems.PROXY.GOLEM_CONTAINERS.getEntries()) {
+      if (entry.getValue().isPresent() && entry.getValue().get().matches(below1, below2, arm1, arm2)) {
+        id = entry.getKey();
         break;
       }
     }
-    if (container == null) {
+    if (id == null) {
       return null;
     }
-    return GolemBase.create(world, container.getMaterial());
+    GolemBase entity = GolemBase.create(world, id);
+    entity.setHealth(entity.getMaxHealth());
+    return entity;
   }
 }

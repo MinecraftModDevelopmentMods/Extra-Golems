@@ -2,7 +2,10 @@ package com.mcmoddev.golems.container.behavior;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
+
+import com.mcmoddev.golems.ExtraGolems;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -13,7 +16,7 @@ public final class GolemBehaviors {
 
   public static final ResourceLocation AOE_DRY = register("aoe_dry", AoeDryBehavior::new);
   public static final ResourceLocation AOE_FREEZE = register("aoe_freeze", AoeFreezeBehavior::new);
-   public static final ResourceLocation ARROWS = register("arrows", null); // TODO
+  public static final ResourceLocation ARROWS = register("arrows", null); // TODO
   public static final ResourceLocation CRAFTING_MENU = register("crafting_menu", CraftingMenuBehavior::new);
   public static final ResourceLocation EXPLODE = register("explode", ExplodeBehavior::new);
   public static final ResourceLocation ON_ACTUALLY_HURT = register("hurt", OnActuallyHurtBehavior::new);
@@ -26,16 +29,19 @@ public final class GolemBehaviors {
   
   private GolemBehaviors() { }
   
-  public static GolemBehavior create(final ResourceLocation name, final CompoundTag tag) {
+  // Required to classload on both server and client
+  public static void init() { }
+  
+  public static Optional<GolemBehavior> create(final ResourceLocation name, final CompoundTag tag) {
     if(BEHAVIORS.containsKey(name)) {
-      return BEHAVIORS.get(name).apply(tag);
+      return Optional.of(BEHAVIORS.get(name).apply(tag));
     }
-    return null;
+    return Optional.empty();
   }
   
   private static ResourceLocation register(final String name, final Function<CompoundTag, GolemBehavior> function) {
-    final ResourceLocation id = new ResourceLocation(name);
-    BEHAVIORS.put(id, function);
+    final ResourceLocation id = new ResourceLocation(ExtraGolems.MODID, name);
+    BEHAVIORS.put(id, function);    
     return id;
   }
 

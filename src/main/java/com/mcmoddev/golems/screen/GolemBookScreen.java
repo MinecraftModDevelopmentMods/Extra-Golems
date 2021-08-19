@@ -3,6 +3,7 @@ package com.mcmoddev.golems.screen;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Optional;
 
 import com.mcmoddev.golems.EGRegistry;
@@ -120,9 +121,9 @@ public class GolemBookScreen extends Screen {
    **/
   private static final void initGolemBookEntries() {
     GOLEMS.clear();
-    for (Optional<GolemContainer> container : ExtraGolems.PROXY.GOLEM_CONTAINERS.getValues()) {
-      if (container.isPresent() && !container.get().isHidden()) {
-        GOLEMS.add(new GolemBookEntry(container.get()));
+    for (Entry<ResourceLocation, Optional<GolemContainer>> entry : ExtraGolems.PROXY.GOLEM_CONTAINERS.getEntries()) {
+      if (entry.getValue().isPresent() && !entry.getValue().get().isHidden()) {
+        GOLEMS.add(new GolemBookEntry(entry.getKey(), entry.getValue().get()));
       }
     }
     // sort golems by attack power

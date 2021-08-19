@@ -32,7 +32,9 @@ public class ExplodeGoal<T extends Mob & IRandomExploder> extends Goal {
   @Override
   public void tick() {
     entity.getNavigation().stop();
-    if(entity.getFuse() <= 0) {
+    if (entity.isInWaterRainOrBubble()) {
+      stop();
+    } else if(entity.getFuse() <= 0) {
       entity.explode(entity, range);
     }
   }
@@ -41,5 +43,4 @@ public class ExplodeGoal<T extends Mob & IRandomExploder> extends Goal {
   public void stop() {
     entity.resetFuseLit();
   }
-
 }

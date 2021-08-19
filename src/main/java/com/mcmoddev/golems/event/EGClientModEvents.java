@@ -35,14 +35,10 @@ public class EGClientModEvents {
         protected void apply(ModelBakery arg0, ResourceManager arg1, ProfilerFiller arg2) {
           GolemRenderType.reloadDynamicTextureMap();
         }
+        @Override
+        public String getName() { return "Golem Textures"; }
       });
     }
-  }
-  
-  @SubscribeEvent
-  public static void registerModels(final ModelRegistryEvent event) {
-   // ExtraGolems.LOGGER.info(ExtraGolems.MODID + ":registerModels");
-    
   }
   
   @SubscribeEvent

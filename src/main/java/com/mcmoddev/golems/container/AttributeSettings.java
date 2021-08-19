@@ -5,7 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 public class AttributeSettings {
   
-  public static final AttributeSettings EMPTY = new AttributeSettings(0, 0, 0, 0, 0, 0, false, false, false, false, false);
+  public static final AttributeSettings EMPTY = new AttributeSettings(1024, 0, 0, 0, 0, 0, false, false, false, false, false);
   
   public static final Codec<AttributeSettings> CODEC = RecordCodecBuilder.create(instance -> instance.group(
       Codec.DOUBLE.optionalFieldOf("health", 100.0D).forGetter(AttributeSettings::getHealth),

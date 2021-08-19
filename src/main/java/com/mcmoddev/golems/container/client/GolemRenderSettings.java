@@ -28,27 +28,25 @@ public class GolemRenderSettings {
   public static final ResourcePair FALLBACK_TEXTURE = new ResourcePair(FALLBACK_BLOCK, false);
   
   public static final GolemRenderSettings EMPTY = new GolemRenderSettings(
-      new ResourceLocation(ExtraGolems.MODID, "empty"), Lists.newArrayList(new ResourcePair(Blocks.CLAY.getRegistryName(), false)), 
-      BASE_TEMPLATE, Optional.empty(), false, Optional.empty(), false, Lists.newArrayList(), Optional.empty());
+      Lists.newArrayList(new ResourcePair(Blocks.CLAY.getRegistryName(), false)), 
+      BASE_TEMPLATE, Optional.empty(), false, Optional.empty(), false, Optional.empty(), Lists.newArrayList());
   
   public static final Codec<GolemRenderSettings> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-      ResourceLocation.CODEC.fieldOf("material").forGetter(GolemRenderSettings::getMaterial),
       Codec.either(ResourcePair.CODEC, ResourcePair.CODEC.listOf())
         .xmap(either -> either.map(ImmutableList::of, Function.identity()), 
               list -> list.size() == 1 ? Either.left(list.get(0)) : Either.right(list))
-          .fieldOf("base").forGetter(GolemRenderSettings::getBaseList),
+          .optionalFieldOf("base", Lists.newArrayList()).forGetter(GolemRenderSettings::getBaseList),
       ResourceLocation.CODEC.optionalFieldOf("base_template", BASE_TEMPLATE).forGetter(GolemRenderSettings::getBaseTemplate),
       Codec.INT.optionalFieldOf("base_color").forGetter(GolemRenderSettings::getBaseColor),
       Codec.BOOL.optionalFieldOf("use_biome_color", false).forGetter(GolemRenderSettings::useBiomeColor),
       Codec.BOOL.optionalFieldOf("base_light").forGetter(GolemRenderSettings::getBaseLight),
       Codec.BOOL.optionalFieldOf("translucent", false).forGetter(GolemRenderSettings::isTranslucent),
+      MultitextureRenderSettings.CODEC.optionalFieldOf("multitexture").forGetter(GolemRenderSettings::getMultitexture),
       LayerRenderSettings.CODEC.listOf()
         .optionalFieldOf("layers", Lists.newArrayList(LayerRenderSettings.EYES, LayerRenderSettings.VINES))
-        .forGetter(GolemRenderSettings::getLayers),
-      MultitextureRenderSettings.CODEC.optionalFieldOf("multitexture").forGetter(GolemRenderSettings::getMultitexture)
+        .forGetter(GolemRenderSettings::getLayers)
     ).apply(instance, GolemRenderSettings::new));
   
-  private final ResourceLocation material;
   private final List<ResourcePair> baseList;
   private final ResourcePair base;
   private final ResourceLocation baseTemplate;
@@ -56,37 +54,30 @@ public class GolemRenderSettings {
   private final boolean useBiomeColor;
   private final Optional<Boolean> baseLight;
   private final boolean translucent;
-  private final List<LayerRenderSettings> layers;
   private final Optional<MultitextureRenderSettings> multitexture;
+  private final List<LayerRenderSettings> layers;
   
-  private GolemRenderSettings(ResourceLocation material, List<ResourcePair> baseList, ResourceLocation baseTemplate, 
-      Optional<Integer> baseColor, boolean useBiomeColor, Optional<Boolean> baseLight, boolean transparent,
-      List<LayerRenderSettings> layers, Optional<MultitextureRenderSettings> multitexture) {
-    super();
-    this.material = material;
+  private GolemRenderSettings(List<ResourcePair> baseList, ResourceLocation baseTemplate, 
+      Optional<Integer> baseColor, boolean useBiomeColor, Optional<Boolean> baseLight, boolean translucent,
+      Optional<MultitextureRenderSettings> multitexture, List<LayerRenderSettings> layers) {
     this.baseList = baseList;
-    this.base = buildPreferredTexture(this.baseList);
+    this.base = multitexture.isPresent() ? new ResourcePair(new ResourceLocation("multitexture"), true) : buildPreferredTexture(this.baseList);
     this.baseColor = baseColor;
     this.baseTemplate = new ResourceLocation(baseTemplate.getNamespace(), "textures/entity/" + baseTemplate.getPath());
     this.baseLight = baseLight;
     this.useBiomeColor = useBiomeColor;
-    this.translucent = transparent;
-    this.layers = ImmutableList.copyOf(layers);
+    this.translucent = translucent;
     this.multitexture = multitexture;
+    this.layers = ImmutableList.copyOf(layers);
     
     // validate multitexture
-    //if(this.baseList.isEmpty() && this.multitexture.isEmpty()) {
-    //  throw new IllegalArgumentException("Error parsing GolemRenderSettings '" + material.toString() + "':\n"
-    //      + "Missing either 'base' or 'multitexture', exactly one must be defined");
-    //}
-    //if(!this.baseList.isEmpty() && !this.multitexture.isEmpty()) {
-    //  throw new IllegalArgumentException("Error parsing GolemRenderSettings '" + material.toString() + "':\n"
-    //      + "Cannot use both 'base' and 'multitexture', exactly one must be defined");
-    //}
+    if(getBaseList().isEmpty() && !getMultitexture().isPresent()) {
+      ExtraGolems.LOGGER.warn("Error parsing GolemRenderSettings: Missing either 'base' or 'multitexture', exactly one must be defined");
+    }
+    if(!getBaseList().isEmpty() && getMultitexture().isPresent()) {
+      ExtraGolems.LOGGER.warn("Found both 'base' and 'multitexture' in GolemRenderSettings. Ignoring 'base'");
+    }
   }
-
-  /** @return the ID of the render settings. Must be unique. **/
-  public ResourceLocation getMaterial() { return material; }
 
   /** @return a List of ResourcePairs of base textures **/
   private List<ResourcePair> getBaseList() { return baseList; }
@@ -142,7 +133,6 @@ public class GolemRenderSettings {
   @Override
   public String toString() {
     StringBuilder b = new StringBuilder("GolemRenderSettings: ");
-    b.append("material[").append(material).append("] ");
     b.append("base[").append(base).append("] ");
     b.append("template[").append(baseTemplate).append("] ");
     b.append("color[").append(baseColor).append("] ");
@@ -150,6 +140,7 @@ public class GolemRenderSettings {
     b.append("light[").append(baseLight).append("] ");
     b.append("translucent[").append(translucent).append("] ");
     b.append("layers[").append(layers).append("] ");
+    b.append("multitexture[").append(multitexture).append("] ");
     return b.toString();
   }
   
@@ -158,7 +149,7 @@ public class GolemRenderSettings {
    * @param textureList the texture list
    * @return a ResourcePair containing the first texture that loads
    */
-  public ResourcePair buildPreferredTexture(final List<ResourcePair> textureList) {
+  public static ResourcePair buildPreferredTexture(final List<ResourcePair> textureList) {
     for(final ResourcePair texture : textureList) {
       // attempt to load the resource to ensure it exists
       try {

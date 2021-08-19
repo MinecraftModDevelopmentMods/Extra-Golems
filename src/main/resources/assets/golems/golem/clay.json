@@ -1,5 +1,4 @@
 {
-  "material": "golems:clay",
   "base": "minecraft:clay",
   "layers": [
     {
@@ -7,8 +6,7 @@
 	  "color": 8626266
 	},
     {
-	  "texture": "golems:layer/eyes/eyes",
-	  "light": true
+	  "texture": "golems:layer/eyes/eyes"
 	}
   ]
 }

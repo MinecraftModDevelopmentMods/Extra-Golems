@@ -35,7 +35,8 @@ public class GolemCrackinessLayer<T extends GolemBase> extends RenderLayer<T, Go
            VertexConsumer vertexconsumer = buffer.getBuffer(RenderType.entityTranslucent(resourcelocation));
            stack.pushPose();
            RenderSystem.enableBlend();
-           getParentModel().renderToBuffer(stack, vertexconsumer, packedLight, LivingEntityRenderer.getOverlayCoords(entity, 0.0F), 1.0F, 1.0F, 1.0F, 0.4F);
+           RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.5F);
+           getParentModel().renderToBuffer(stack, vertexconsumer, packedLight, LivingEntityRenderer.getOverlayCoords(entity, 0.0F), 1.0F, 1.0F, 1.0F, 0.5F);
            RenderSystem.disableBlend();
            stack.popPose();
         }

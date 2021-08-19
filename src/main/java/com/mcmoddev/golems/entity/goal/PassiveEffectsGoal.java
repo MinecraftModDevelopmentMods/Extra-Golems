@@ -26,7 +26,8 @@ public class PassiveEffectsGoal extends Goal {
   @Override
   public boolean canUse() {
     return effects.length > 0 && golem.getRandom().nextFloat() < chance
-        && (self || golem.getTarget() != null)
+        && ((self && golem.getActiveEffects().isEmpty()) 
+            || (!self && golem.getTarget() != null && golem.getTarget().getActiveEffects().isEmpty()))
         && (!nightOnly || !golem.level.isDay() || !golem.level.dimensionType().hasSkyLight());
   }
 
@@ -36,9 +37,7 @@ public class PassiveEffectsGoal extends Goal {
     if(effectTarget != null) {
       // apply a randomly chosen mob effects (if not already present)
       MobEffectInstance effect = effects[golem.getRandom().nextInt(effects.length)];
-      if(effectTarget.getEffect(effect.getEffect()) != null) {
-        effectTarget.addEffect(effect);
-      }
+      effectTarget.addEffect(effect);
     }
   }
 }

@@ -1,8 +1,7 @@
 {
-  "material": "golems:clay",
   "attributes": {
     "health": 20.0,
-    "attack": 2.0,
+    "attack": 5.0,
     "speed": 0.25,
     "knockback_resistance": 0.4,
     "armor": 0,
@@ -18,12 +17,10 @@
   "power": 0,
   "hidden": false,
   "sound": "minecraft:block.gravel.step",
-  "blocks": [
-	"minecraft:clay"
-  ],
+  "block": "minecraft:clay",
   "heal_items": {
     "minecraft:clay": 0.5,
 	"minecraft:clay_ball": 0.1
   },
-  "goals": { }
+  "behavior": { }
 }

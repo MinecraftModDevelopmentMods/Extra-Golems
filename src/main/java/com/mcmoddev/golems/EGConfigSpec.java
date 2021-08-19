@@ -75,12 +75,12 @@ public class EGConfigSpec {
     return list;
   }
 
-  public List<GolemContainer> loadVillagerGolemList() {
-    final List<GolemContainer> list = new ArrayList<>();
+  public List<ResourceLocation> loadVillagerGolemList() {
+    final List<ResourceLocation> list = new ArrayList<>();
     for (final String s : villagerGolemSpawns.get()) {
       if (s != null && !s.isEmpty()) {
         final Optional<GolemContainer> container = ExtraGolems.PROXY.GOLEM_CONTAINERS.get(new ResourceLocation(s));
-        container.ifPresent(c -> list.add(c));
+        container.ifPresent(c -> list.add(new ResourceLocation(s)));
       }
     }
     return list;

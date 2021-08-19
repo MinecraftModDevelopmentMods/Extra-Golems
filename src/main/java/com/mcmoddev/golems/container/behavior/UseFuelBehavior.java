@@ -50,7 +50,9 @@ public class UseFuelBehavior extends GolemBehavior {
   
   @Override
   public void onMobInteract(final GolemBase entity, final Player player, final InteractionHand hand) {
-    entity.consumeFuel(player, hand);
+    if(!player.isCrouching() && !player.getItemInHand(hand).isEmpty()) {
+      entity.consumeFuel(player, hand);
+    }
   }
   
   @Override

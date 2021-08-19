@@ -82,9 +82,8 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
     // transparency flag
     isAlphaLayer = settings.isTranslucent();
     if (isAlphaLayer) {
-      // TODO ???
-//      RenderSystem.defaultAlphaFunc();
       RenderSystem.enableBlend();
+      RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.5F);
     }
     // packed light
     final int packedLight = settings.getBaseLight().orElse(settings.getBaseLight().orElse(false)) ? 15728880 : packedLightIn;
@@ -92,6 +91,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
     super.render(golem, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLight);
     if (isAlphaLayer) {
       RenderSystem.disableBlend();
+      RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
     }
     matrixStackIn.popPose();
   }

@@ -6,6 +6,7 @@ import com.mcmoddev.golems.container.client.LayerRenderSettings;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.render.GolemModel;
 import com.mcmoddev.golems.render.GolemRenderer;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
@@ -39,7 +40,7 @@ public class ColoredTextureLayer<T extends GolemBase> extends RenderLayer<T, Gol
       getParentModel().copyPropertiesTo(layerModel);
       layerModel.prepareMobModel(entity, limbSwing, limbSwingAmount, partialTicks);
       layerModel.setupAnim(entity, limbSwing, limbSwingAmount, partialTicks, netHeadYaw, headPitch);
-
+      
       settings.getLayers().forEach(l -> renderTexture(layerModel, settings, l, matrixStackIn, bufferIn, packedLightIn, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch));
     }
   }
@@ -53,10 +54,8 @@ public class ColoredTextureLayer<T extends GolemBase> extends RenderLayer<T, Gol
     final int packedLight = layer.getLight().orElse(settings.getBaseLight().orElse(false)) ? 15728880 : packedLightIn;
     final VertexConsumer vertexBuilder = bufferIn.getBuffer(layer.isTranslucent() ? RenderType.entityTranslucent(texture) : RenderType.entityCutout(texture));
     if(layer.isTranslucent()) {
-      // TODO ??
-//      RenderSystem.defaultAlphaFunc(); // alphaFunc(516, 0.1F);
-//      RenderSystem.enableBlend();
-      
+      RenderSystem.enableBlend();
+      RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.5F);
     }
     final Vector3f colors;
     if(layer.getColor().isPresent()) {
@@ -69,9 +68,10 @@ public class ColoredTextureLayer<T extends GolemBase> extends RenderLayer<T, Gol
       model.resetColor();
     }
     model.renderToBuffer(matrixStackIn, vertexBuilder, packedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
-//    if(layer.isTranslucent()) {
-//      RenderSystem.disableBlend();
-//    }
+    if(layer.isTranslucent()) {
+      RenderSystem.disableBlend();
+      RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+    }
     matrixStackIn.popPose();
   }
 }

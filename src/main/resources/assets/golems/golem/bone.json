@@ -1,0 +1,8 @@
+{
+  "base": "#golems:golem_bone_skeleton",
+  "layers": [
+    {
+	  "texture": "golems:layer/eyes/eyes"
+	}
+  ]
+}

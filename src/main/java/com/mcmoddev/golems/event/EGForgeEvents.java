@@ -1,6 +1,7 @@
 package com.mcmoddev.golems.event;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -14,6 +15,7 @@ import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.network.SGolemContainerPacket;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Mob;
@@ -47,7 +49,7 @@ public class EGForgeEvents {
     Player player = event.getPlayer();
     // reload golem containers
     if (player instanceof ServerPlayer) {
-      ExtraGolems.PROXY.GOLEM_CONTAINERS.getEntries().forEach(e -> e.getValue().ifPresent(c -> ExtraGolems.CHANNEL.send(PacketDistributor.ALL.noArg(), new SGolemContainerPacket(c))));
+      ExtraGolems.PROXY.GOLEM_CONTAINERS.getEntries().forEach(e -> e.getValue().ifPresent(c -> ExtraGolems.CHANNEL.send(PacketDistributor.ALL.noArg(), new SGolemContainerPacket(e.getKey(), c))));
     }
   }
 
@@ -133,9 +135,11 @@ public class EGForgeEvents {
       }
 
       BlockPos blockpos2 = blockpos.offset(d0, d2, d1);
-      GolemContainer type = getGolemToSpawn(world, blockpos2);
-      if (type != null) {
-        GolemBase golem = GolemBase.create(world, type.getMaterial());
+      ResourceLocation typeName = getGolemToSpawn(world, blockpos2);
+      Optional<GolemContainer> type = ExtraGolems.PROXY.GOLEM_CONTAINERS.get(typeName);
+      if (type.isPresent()) {
+        GolemBase golem = GolemBase.create(world, typeName);
+        golem.setHealth(golem.getMaxHealth());
         // randomize texture if applicable
         if (golem.getTextureCount() > 0) {
           golem.randomizeTexture(world, blockpos2);
@@ -155,9 +159,9 @@ public class EGForgeEvents {
   }
 
   @Nullable
-  private static GolemContainer getGolemToSpawn(final Level world, final BlockPos pos) {
-    final List<GolemContainer> options = EGConfig.getVillagerGolems();
-    final GolemContainer choice = options.isEmpty() ? null : options.get(world.getRandom().nextInt(options.size()));
+  private static ResourceLocation getGolemToSpawn(final Level world, final BlockPos pos) {
+    final List<ResourceLocation> options = EGConfig.getVillagerGolems();
+    final ResourceLocation choice = options.isEmpty() ? null : options.get(world.getRandom().nextInt(options.size()));
     return choice;
   }
 }
