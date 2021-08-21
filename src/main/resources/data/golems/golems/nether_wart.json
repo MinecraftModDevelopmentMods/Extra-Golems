@@ -1,0 +1,40 @@
+{
+  "attributes": {
+    "health": 22.0,
+    "attack": 4.5,
+    "speed": 0.26,
+	"immune_to_fire": true
+  },
+  "swim_ability": "float",
+  "sound": "minecraft:block.grass.step",
+  "heal_items": {
+    "#minecraft:crimson_stems": 0.5,
+	"minecraft:crimson_fungus": 0.15
+  },
+  "multitexture": {
+	"texture_count": 2,
+	"textures": {
+	  "0": {
+		"blocks": "minecraft:nether_wart_block",
+		"loot_table": "golems:stem/crimson"
+	  },
+	  "1": {
+		"blocks": "minecraft:warped_wart_block",
+		"loot_table": "golems:stem/warped"
+	  }
+	}
+  },
+  "behavior": [ 
+    {
+	  "type": "golems:place_blocks",
+	  "interval": 1200,
+	  "blocks": [
+	    "minecraft:nether_wart"
+	  ],
+	  "supports": [
+	    "minecraft:soul_sand",
+		"minecraft:soul_soil"
+	  ]
+	}
+  ]
+}

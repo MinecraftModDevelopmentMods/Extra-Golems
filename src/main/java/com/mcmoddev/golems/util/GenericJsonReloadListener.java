@@ -97,8 +97,6 @@ public class GenericJsonReloadListener<T> extends SimpleJsonResourceReloadListen
     jsons.forEach((key, input) -> OBJECTS.put(key, jsonToObject(input).resultOrPartial(error -> ExtraGolems.LOGGER.error("Failed to read JSON object for type" + objClass.getName() + "\n" + error))));
     // print size of the map for debugging purposes
     ExtraGolems.LOGGER.info("Found " + OBJECTS.size() + " entries");
-    // DEBUG: print each entry
-    OBJECTS.forEach((r, i) -> i.ifPresent(c -> ExtraGolems.LOGGER.info(c.toString())));
     boolean isServer = true;
     try {
       LogicalSidedProvider.INSTANCE.get(LogicalSide.SERVER);

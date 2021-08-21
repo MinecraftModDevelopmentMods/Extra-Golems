@@ -18,6 +18,7 @@ import com.google.common.collect.Maps;
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.container.behavior.GolemBehavior;
 import com.mcmoddev.golems.container.behavior.GolemBehaviors;
+import com.mcmoddev.golems.container.client.GolemRenderSettings;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.util.ResourcePair;
 import com.mojang.datafixers.util.Either;
@@ -25,7 +26,10 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -46,24 +50,24 @@ import net.minecraftforge.registries.ForgeRegistries;
 public final class GolemContainer {
   
   public static final GolemContainer EMPTY = new GolemContainer(
-      /*new ResourceLocation(ExtraGolems.MODID, "empty"), */AttributeSettings.EMPTY, SwimMode.SINK, 0, 0, true, 
-      SoundEvents.STONE_STEP, Lists.newArrayList(), Maps.newHashMap(), Optional.of(MultitextureSettings.EMPTY), new CompoundTag());
+      AttributeSettings.EMPTY, SwimMode.SINK, 0, 0, true, SoundEvents.STONE_STEP, Optional.empty(), 
+      Lists.newArrayList(), Maps.newHashMap(), Optional.of(MultitextureSettings.EMPTY), Lists.newArrayList());
 
   public static final Codec<GolemContainer> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-     // ResourceLocation.CODEC.fieldOf("material").forGetter(GolemContainer::getMaterial),
       AttributeSettings.CODEC.fieldOf("attributes").forGetter(GolemContainer::getAttributes),
       SwimMode.CODEC.optionalFieldOf("swim_ability", SwimMode.SINK).forGetter(GolemContainer::getSwimAbility),
       Codec.INT.optionalFieldOf("glow", 0).forGetter(GolemContainer::getMaxLightLevel),
       Codec.INT.optionalFieldOf("power", 0).forGetter(GolemContainer::getMaxPowerLevel),
       Codec.BOOL.optionalFieldOf("hidden", false).forGetter(GolemContainer::isHidden),
       SoundEvent.CODEC.optionalFieldOf("sound", SoundEvents.STONE_STEP).forGetter(GolemContainer::getSound),
+      ParticleTypes.CODEC.optionalFieldOf("particle").forGetter(GolemContainer::getParticle),
       Codec.either(ResourcePair.CODEC, ResourcePair.CODEC.listOf())
       .xmap(either -> either.map(ImmutableList::of, Function.identity()), 
             list -> list.size() == 1 ? Either.left(list.get(0)) : Either.right(list))
-      .optionalFieldOf("block", Lists.newArrayList()).forGetter(GolemContainer::getBlocksRaw),
+      .optionalFieldOf("blocks", Lists.newArrayList()).forGetter(GolemContainer::getBlocksRaw),
       Codec.unboundedMap(ResourcePair.CODEC, Codec.DOUBLE).optionalFieldOf("heal_items", Maps.newHashMap()).forGetter(GolemContainer::getHealItemsRaw),
       MultitextureSettings.CODEC.optionalFieldOf("multitexture").forGetter(GolemContainer::getMultitexture),
-      CompoundTag.CODEC.optionalFieldOf("behavior", new CompoundTag()).forGetter(GolemContainer::getBehaviorsRaw)
+      CompoundTag.CODEC.listOf().optionalFieldOf("behavior", Lists.newArrayList(new CompoundTag())).forGetter(GolemContainer::getBehaviorsRaw)
     ).apply(instance, GolemContainer::new));
   
   private final AttributeSettings attributes;
@@ -72,6 +76,7 @@ public final class GolemContainer {
   private final int power;
   private final boolean hidden;
   private final SoundEvent sound;
+  private final Optional<ParticleOptions> particle;
   
   private final List<ResourcePair> blocksRaw;
   private final ImmutableSet<ResourceLocation> blocks;
@@ -81,20 +86,21 @@ public final class GolemContainer {
   private final ImmutableMap<ResourceLocation, Double> healItems;
   private final ImmutableMap<ResourceLocation, Double> healItemTags;
   
-  private final CompoundTag behaviorsRaw;
-  private final ImmutableMap<ResourceLocation, GolemBehavior> behaviors;
+  private final List<CompoundTag> behaviorsRaw;
+  private final ImmutableMap<ResourceLocation, ImmutableList<GolemBehavior>> behaviors;
   
   private final Optional<MultitextureSettings> multitexture;
 
-  private GolemContainer(AttributeSettings attributes, SwimMode swimAbility, int glow, int power,
-      boolean hidden, SoundEvent sound, List<ResourcePair> blocksRaw, Map<ResourcePair, Double> healItemsRaw,
-      Optional<MultitextureSettings> multitexture, CompoundTag goalsRaw) {
+  private GolemContainer(AttributeSettings attributes, SwimMode swimAbility, int glow, int power, boolean hidden,
+      SoundEvent sound, Optional<ParticleOptions> particle, List<ResourcePair> blocksRaw, Map<ResourcePair, Double> healItemsRaw,
+      Optional<MultitextureSettings> multitexture, List<CompoundTag> goalsRaw) {
     this.attributes = attributes;
     this.swimAbility = swimAbility;
     this.glow = glow;
     this.power = power;
     this.hidden = hidden;
     this.sound = sound;
+    this.particle = particle;
     this.blocksRaw = blocksRaw;
     this.healItemsRaw = healItemsRaw;
     this.multitexture = multitexture;
@@ -106,43 +112,58 @@ public final class GolemContainer {
     if(this.multitexture.isPresent()) {
       // when using multitexture, add all blocks from each entry
       this.multitexture.get().getBlockMap().keySet().forEach(pair -> {
+        // add to correct set for block name or block tag
         if(pair.flag()) bblockTags.add(pair.resource());
         else bblocks.add(pair.resource());
       });
     } else {
       // when not using multitexture, add all blocks from blocks list
       this.blocksRaw.forEach(pair -> {
+        // add to correct set for block name or block tag
         if(pair.flag()) bblockTags.add(pair.resource());
         else bblocks.add(pair.resource());
       });
     }
+    // build block maps
     this.blocks = bblocks.build();
     this.blockTags = bblockTags.build();
     
     // populate heal item and heal item tags
-    Map<ResourceLocation, Double> healItemMap = new HashMap<>();
-    Map<ResourceLocation, Double> healItemTagMap = new HashMap<>();
+    ImmutableMap.Builder<ResourceLocation, Double> bhealItems = ImmutableMap.builder();
+    ImmutableMap.Builder<ResourceLocation, Double> bhealItemTags = ImmutableMap.builder();
     this.healItemsRaw.forEach((s, d) -> {
-      if(s.flag()) healItemTagMap.put(s.resource(), d);
-      else healItemMap.put(s.resource(), d);
-    });    
-    this.healItems = ImmutableMap.copyOf(healItemMap);
-    this.healItemTags = ImmutableMap.copyOf(healItemTagMap);
+      // add to correct map for item name or item tag
+      if(s.flag()) bhealItemTags.put(s.resource(), d);
+      else bhealItems.put(s.resource(), d);
+    });
+    // build heal item maps
+    this.healItems = bhealItems.build();
+    this.healItemTags = bhealItemTags.build();
     
     // populate behaviors
-    ImmutableMap.Builder<ResourceLocation, GolemBehavior> bbehaviors = ImmutableMap.builder();
+    Map<ResourceLocation, List<GolemBehavior>> bbehaviors = new HashMap<>();
     ResourceLocation goalId;
     Optional<GolemBehavior> behavior;
-    for(final String s : goalsRaw.getAllKeys()) {
-      goalId = new ResourceLocation(s);
-      if(goalsRaw.contains(s, CompoundTag.TAG_COMPOUND) && GolemBehaviors.BEHAVIORS.containsKey(goalId)) {
-        behavior = GolemBehaviors.create(goalId, goalsRaw.getCompound(s));
+    for(final CompoundTag goalTag : goalsRaw) {
+      if(goalTag.contains("type", Tag.TAG_STRING)) {
+        // determine the GolemBehavior type
+        goalId = new ResourceLocation(goalTag.getString("type"));
+        // create the behavior using the tag
+        behavior = GolemBehaviors.create(goalId, goalTag);
         if(behavior.isPresent()) {
-          bbehaviors.put(goalId, behavior.get());
+          // create list if necessary
+          bbehaviors.putIfAbsent(goalId, Lists.newArrayList());
+          // add behavior to existing list
+          bbehaviors.get(goalId).add(behavior.get());
         } else ExtraGolems.LOGGER.warn("GolemContainer: behavior '" + goalId + "' does not exist!");
       }
     }
-    behaviors = bbehaviors.build();
+    // build behavior map
+    ImmutableMap.Builder<ResourceLocation, ImmutableList<GolemBehavior>> bbehaviors2 = ImmutableMap.builder();
+    bbehaviors.forEach((id, list) -> {
+      bbehaviors2.put(id, ImmutableList.copyOf(list));
+    });
+    behaviors = bbehaviors2.build();
   }
   
   ////////// GETTERS //////////
@@ -161,6 +182,9 @@ public final class GolemContainer {
   
   /** @return a default SoundEvent to play when the Golem moves or is attacked **/
   public SoundEvent getSound() { return sound; }
+
+  /** @return the ambient particle, if any **/
+  public Optional<ParticleOptions> getParticle() { return particle; }
 
   /** @return a List of string representations of blocks or block tags **/
   private List<ResourcePair> getBlocksRaw() { return blocksRaw; }
@@ -181,11 +205,11 @@ public final class GolemContainer {
   public ImmutableMap<ResourceLocation, Double> getHealItemTags() { return healItemTags; }
   
   /** @return a CompoundTag representation of the Golem behaviors **/
-  private CompoundTag getBehaviorsRaw() { return behaviorsRaw; }
-  
-  /** @return an ImmutableMap of ResourceLocation and GolemBehavior **/
-  public ImmutableMap<ResourceLocation, GolemBehavior> getBehaviors() { return behaviors; }
+  private List<CompoundTag> getBehaviorsRaw() { return behaviorsRaw; }
 
+  /** @return an ImmutableMap of Behavior IDs and GolemBehaviors **/
+  public ImmutableMap<ResourceLocation, ImmutableList<GolemBehavior>> getBehaviors() { return behaviors; }
+  
   /** @return an Optional containing multitexture settings if applicable **/
   public Optional<MultitextureSettings> getMultitexture() { return multitexture; }
   
@@ -251,7 +275,7 @@ public final class GolemContainer {
    * @return true if the requested behavior is present in the Golem
    */
   public boolean hasBehavior(final ResourceLocation name) {
-    return this.getBehaviors().containsKey(name);
+    return this.getBehaviors().getOrDefault(name, ImmutableList.of()).isEmpty();
   }
   
   /** @return a new attribute map supplier for the Golem **/
@@ -272,7 +296,8 @@ public final class GolemContainer {
     b.append("swim_ability[").append(swimAbility).append("] ");
     b.append("hidden[").append(hidden).append("] ");
     b.append("sound[").append(sound.getLocation()).append("] ");
-    b.append("block[").append(blocksRaw).append("] ");
+    b.append("particle[").append(particle).append("] ");
+    b.append("blocks[").append(blocksRaw).append("] ");
     b.append("healItems[").append(healItemsRaw).append("] ");
     b.append("behavior[").append(behaviors).append("] ");
     b.append("multitexture[").append(multitexture).append("] ");

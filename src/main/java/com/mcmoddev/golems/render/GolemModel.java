@@ -20,8 +20,6 @@ import com.mojang.math.Vector3f;
 
 public class GolemModel<T extends GolemBase> extends IronGolemModel<T> implements ArmedModel {
   
-
-  
   private final ModelPart kitty = createKittyLayer().bakeRoot();
   private final ModelPart tail;
   private final ModelPart tail1;
@@ -30,26 +28,13 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> implement
   private float red = 1.0f;
   private float green = 1.0f;
   private float blue = 1.0f;
+  private boolean disableLayers;
   
   public GolemModel(ModelPart rootIn) {
     super(rootIn);
     tail = kitty.getChild("tail");
     tail1 = tail.getChild("tail1");
     ears = kitty.getChild("ears");
-//    tail = new ModelPart(this, 0, 0).setTexSize(32, 32);
-//    tail.setPos(0.0F, 10.0F, 4.0F);
-//    tail.xRot = -2.4435F;
-//    tail.addBox(-2.0F, -8.0F, 0.0F, 4.0F, 8.0F, 4.0F, 0.0F);
-//
-//    tail1 = new ModelPart(this, 0, 16).setTexSize(32, 32);
-//    tail1.setPos(0.0F, -8.0F, 3.0F);
-//    tail.addChild(tail1);
-//    tail1.xRot = 0.2618F;
-//    tail1.addBox(-1.0F, -8.0F, -2.0F, 2.0F, 10.0F, 2.0F, 0.0F);
-//    
-//    ears = new ModelPart(this).setTexSize(32, 32);
-//    ears.setPos(0.0F, 0.0F, 0.0F);
-//    ears.texOffs(9, 16).addBox(-5.0F, -16.0F, -4.0F, 10.0F, 6.0F, 1.0F, 0.0F);
   }
   
   public static LayerDefinition createBodyLayer() {
@@ -97,11 +82,15 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> implement
     green = g;
     blue = b;
   }
+  
 
   public void resetColor() { red = green = blue = 1.0F; }
   public float red() { return red; }
   public float green() {  return green; }
   public float blue() { return blue;  }
+  
+  public void disableLayers(final boolean disable) { disableLayers = disable; }
+  public boolean disableLayers() { return disableLayers; }
   
   // KITTY LAYER HELPERS
   

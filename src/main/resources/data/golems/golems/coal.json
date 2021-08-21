@@ -6,13 +6,14 @@
     "speed": 0.28
   },
   "swim_ability": "float",
-  "block": "minecraft:coal_block",
+  "blocks": "#storage_blocks:coal",
   "heal_items": {
-	"minecraft:coal_block": 0.5,
+	"#storage_blocks:coal": 0.5,
     "#minecraft:coals": 0.1
   },
-  "behavior": { 
-    "golems:attack": {
+  "behavior": [ 
+    {
+	  "type": "golems:attack",
 	  "effect": {
 		"target": "enemy",
 		"chance": 0.4,
@@ -25,5 +26,5 @@
 	    ]
 	  }
 	}
-  }
+  ]
 }

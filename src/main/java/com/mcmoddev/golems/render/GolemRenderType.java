@@ -19,15 +19,16 @@ public class GolemRenderType extends RenderType {
   
   public static void reloadDynamicTextureMap() {
     final Map<ResourceLocation, DynamicTextureState> copy = new HashMap<>(dynamicTextureMap);
-    copy.entrySet().forEach(e -> dynamicTextureMap.put(e.getKey(), new DynamicTextureState(e.getKey(), e.getValue().templateImage)));
+    copy.entrySet().forEach(e -> dynamicTextureMap.put(e.getKey(), new DynamicTextureState(e.getKey(), e.getValue().sourceImage, e.getValue().templateImage)));
   }
   
   private static TextureStateShard getTextureState(final ResourceLocation texture, final ResourceLocation template) {
     // lazy-load the texture state
-    if(!dynamicTextureMap.containsKey(texture)) {
-      dynamicTextureMap.put(texture, new DynamicTextureState(texture, template));
+    final ResourceLocation id = new ResourceLocation(texture.getNamespace(), "dynamic/" + template.getPath() + "/" + texture.getPath());
+    if(!dynamicTextureMap.containsKey(id)) {
+      dynamicTextureMap.put(id, new DynamicTextureState(id, texture, template));
     }
-    return dynamicTextureMap.get(texture).state;
+    return dynamicTextureMap.get(id).state;
   }
   
   public static RenderType getGolemCutout(final ResourceLocation texture, final ResourceLocation template, final boolean dynamic) {        
@@ -46,7 +47,7 @@ public class GolemRenderType extends RenderType {
             .createCompositeState(true));
   }
   
-  public static RenderType getGolemTransparent(final ResourceLocation texture, final ResourceLocation template, final boolean dynamic) {
+  public static RenderType getGolemTranslucent(final ResourceLocation texture, final ResourceLocation template, final boolean dynamic) {
     if(!dynamic) {
       return RenderType.entityTranslucent(texture);
     }

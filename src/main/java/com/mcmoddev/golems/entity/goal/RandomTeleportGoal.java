@@ -25,8 +25,8 @@ public class RandomTeleportGoal<T extends Mob & IRandomTeleporter> extends Goal 
 
   @Override
   public boolean canUse() {
-    return (entity.getTarget() == null && entity.getRandom().nextFloat() < chanceOnIdle)
-        || (entity.getTarget() != null && entity.distanceToSqr(entity.getTarget()) > 10.0F && entity.getRandom().nextFloat() < chanceOnTarget);
+    return !entity.isBaby() && ((entity.getTarget() == null && entity.getRandom().nextFloat() < chanceOnIdle)
+        || (entity.getTarget() != null && entity.distanceToSqr(entity.getTarget()) > 10.0F && entity.getRandom().nextFloat() < chanceOnTarget));
   }
   
   @Override

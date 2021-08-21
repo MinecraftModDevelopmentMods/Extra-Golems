@@ -32,18 +32,30 @@ List of bugs, fixes, and features for the 1.17 version of Extra Golems
 - X Add RenderSettings Codec
 - X Add single entity type
 - X Add synched data for Material (key for Container)
-- _ Work on Bedrock Golem
-- _ Work on Coral Golem
+- _ Bedrock Golem JSON
+- _ Coral Golem JSON
+- _ Dispenser Golem JSON
 
 
 ## Bugs
 
-- _ Fix dynamic golem rendering:  tile block textures
+- X Properly read ParticleType
+- _ Furnace Golem: change texture based on fuel
+- _ Hay Golem: crop boost
+- _ Honeycomb golem: summon bees
 - _ Fix Kitty layer rendering
 - _ Fix golem book textures
 
 ## New Features
 
+- _ (Polished) Deepslate Golem
+- _ Amethyst Block Golem (+Budding Amethyst?)
+- _ Copper Golem
+- _ Raw Copper Golem, Raw Gold Golem, Raw Iron Golem
+- _ Moss Block Golem
+- _ Calcite Golem?
+- _ Tuff Golem?
+- _ Tinted Glass? (add to Glass Golem)
 - _ Add "/golem" command (replacement for "/summon" that is specialized for golems)
 - _ Disable summoning golem entity type once that is done
 - _ Re-add HWYLA integration when available
@@ -88,10 +100,11 @@ The below example includes all functionality that will be available for each gol
 	"#minecraft:items/clay" // example of item tag, doesn't actually exist
   }
   // examples of each goal that can be added to any golem
-  "goals": { // Compound Tag, can be empty
+  "behavior": [ // List of Compound Tags, can be empty
   
 	// To do when attacking
-	"attack": {
+	{
+	  "type": "golems:attack",
 	  "fire": { // sets the enemy on fire
 	    "target": "enemy",
 		"chance": 0.9,
@@ -109,7 +122,8 @@ The below example includes all functionality that will be available for each gol
 	},
 	
     // To do when attacked
-	"hurt": {
+	{
+	  "type": "golems:hurt",
 	  "fire": { // sets the enemy on fire
 	    "target": "enemy",
 		"chance": 0.9,
@@ -129,7 +143,8 @@ The below example includes all functionality that will be available for each gol
 	},
 	
 	// Add potion effect with chance each tick
-	"passive_effect": {
+	{
+	  "type": "golems:passive_effect",
 	  "night_only": false, // only add potion effect at night or in dimension with no night
 	  "effect": { // applies a potion effect
 		"target": "self",
@@ -145,7 +160,8 @@ The below example includes all functionality that will be available for each gol
 	}
 	
 	// Cause explosions
-	"explode": {
+	{
+	  "type": "golems:explode",
 	  "range": 1.5,
 	  "fuse": 60,
 	  "chance_on_hurt": 0.1, // percent chance to apply when hurt
@@ -153,44 +169,52 @@ The below example includes all functionality that will be available for each gol
 	},
 	
 	// Teleport randomly (or toward enemies)
-	"teleport": {
+	{
+	  "type": "golems:teleport",
 	  "range": 32, // range is 64 for enderman
 	  "chance_on_idle": 0.2, // percent chance to apply each tick
 	  "chance_on_hurt": 0.8 // percent chance to apply when hurt
 	  "chance_on_target": 0.5 // percent chance to apply when far from target
 	},
 	
-	"crafting_menu": {
+	// Open crafting menu
+	{
+	  "type": "golems:crafting_menu"
       // no parameters
 	}
 	
     // Freeze surrounding blocks
-    "aoe_freeze": {
+	{
+      "type": "golems:aoe_freeze",
 	  "range": 4,
 	  "interval": 4,
 	  "frosted": false
 	},
 	
 	// Dry surrounding water/waterlogged blocks
-    "aoe_dry": {
+	{
+      "type": "golems:aoe_dry",
 	  "range": 4,
 	  "interval": 5
 	},
 	
 	// Store and shoot arrows
-	"arrows": {
+	{
+	  "type": "golems:arrows",
 	  "arrow_damage": 4.25,
 	  "interval": 28
 	},
 	
 	// Store and use fuel
-	"use_fuel": {
+	{
+	  "type": "golems:use_fuel",
 	  "max_fuel": 102400,
 	  "burn_interval": 10 // number of ticks before depleting fuel
 	},
 	
 	// Place plants or other blocks
-	"place_blocks": {
+	{
+	  "type": "golems:place_blocks",
 	  "interval": 30,
 	  "blocks": [
 	    "minecraft:brown_mushroom",
@@ -198,15 +222,16 @@ The below example includes all functionality that will be available for each gol
 	  ],
 	  "supports": [ // blocks that can have the blocks placed on top of them
 	    "minecraft:stone",
-		"#minecraft:blocks/dirt" // Block tag
+		"#minecraft:dirt" // Block tag
 	  ]
 	}
 	
 	// Split into a number of mini golems upon death
-	"split": {
+	{
+	  "type": "golems:split_on_death",
 	  "children": 2
 	}
-  }
+  ]
 }
 ```
 
@@ -221,7 +246,7 @@ The below information will allow multitexture behavior if present. Here is an ex
   "cycle": false, // true if interacting will change texture
   "textures": { // map of texture IDs (keys must be unique)
 	"0": {
-	  "block": [ // can be single entry or array
+	  "blocks": [ // can be single entry or array
 		"minecraft:mushroom_stem",
 		"minecraft:brown_mushroom_block"
 	  ],
@@ -229,7 +254,7 @@ The below information will allow multitexture behavior if present. Here is an ex
 	  "light": 0 // light value when using this texture ID
 	},
 	"1": {
-	  "block": "minecraft:red_mushroom_block",
+	  "blocks": "minecraft:red_mushroom_block",
 	  "loot_table": "golems:mushroom/red",
 	  "light": 0
 	}		

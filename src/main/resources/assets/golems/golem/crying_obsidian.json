@@ -1,0 +1,12 @@
+{
+  "base": "minecraft:crying_obsidian",
+  "layers": [
+    {
+	  "texture": "#golems:layer/crying_obsidian",
+	  "light": true
+	},
+    {
+	  "texture": "#golems:layer/eyes/eyes"
+	}
+  ]
+}

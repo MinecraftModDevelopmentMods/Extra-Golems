@@ -15,7 +15,10 @@ import com.mojang.math.Vector3f;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
+import net.minecraft.ResourceLocationException;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
 
@@ -23,12 +26,12 @@ public class GolemRenderSettings {
   
   public static final ResourceLocation FALLBACK_PREFAB = new ResourceLocation("minecraft", "textures/entity/iron_golem/iron_golem.png");
   public static final ResourceLocation FALLBACK_BLOCK = new ResourceLocation("minecraft", "textures/block/clay.png");
-  public static final ResourceLocation BASE_TEMPLATE = new ResourceLocation(ExtraGolems.MODID, "layer/template.png");
+  public static final ResourceLocation BASE_TEMPLATE = new ResourceLocation(ExtraGolems.MODID, "template");
 
-  public static final ResourcePair FALLBACK_TEXTURE = new ResourcePair(FALLBACK_BLOCK, false);
+  public static final ResourcePair FALLBACK_TEXTURE = new ResourcePair(FALLBACK_PREFAB, true);
   
   public static final GolemRenderSettings EMPTY = new GolemRenderSettings(
-      Lists.newArrayList(new ResourcePair(Blocks.CLAY.getRegistryName(), false)), 
+      ImmutableList.of(new ResourcePair(new ResourceLocation("minecraft", "iron_golem/iron_golem"), true)), 
       BASE_TEMPLATE, Optional.empty(), false, Optional.empty(), false, Optional.empty(), Lists.newArrayList());
   
   public static final Codec<GolemRenderSettings> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -42,9 +45,7 @@ public class GolemRenderSettings {
       Codec.BOOL.optionalFieldOf("base_light").forGetter(GolemRenderSettings::getBaseLight),
       Codec.BOOL.optionalFieldOf("translucent", false).forGetter(GolemRenderSettings::isTranslucent),
       MultitextureRenderSettings.CODEC.optionalFieldOf("multitexture").forGetter(GolemRenderSettings::getMultitexture),
-      LayerRenderSettings.CODEC.listOf()
-        .optionalFieldOf("layers", Lists.newArrayList(LayerRenderSettings.EYES, LayerRenderSettings.VINES))
-        .forGetter(GolemRenderSettings::getLayers)
+      LayerRenderSettings.CODEC.listOf().fieldOf("layers").forGetter(GolemRenderSettings::getLayers)
     ).apply(instance, GolemRenderSettings::new));
   
   private final List<ResourcePair> baseList;
@@ -63,7 +64,7 @@ public class GolemRenderSettings {
     this.baseList = baseList;
     this.base = multitexture.isPresent() ? new ResourcePair(new ResourceLocation("multitexture"), true) : buildPreferredTexture(this.baseList);
     this.baseColor = baseColor;
-    this.baseTemplate = new ResourceLocation(baseTemplate.getNamespace(), "textures/entity/" + baseTemplate.getPath());
+    this.baseTemplate = new ResourceLocation(baseTemplate.getNamespace(), "textures/entity/" + baseTemplate.getPath() + ".png");
     this.baseLight = baseLight;
     this.useBiomeColor = useBiomeColor;
     this.translucent = translucent;
@@ -112,9 +113,7 @@ public class GolemRenderSettings {
   public List<LayerRenderSettings> getLayers() { return layers; }
   
   /** @return the GolemMultiTextureRenderSettings, if present **/
-  public Optional<MultitextureRenderSettings> getMultitexture() {
-    return multitexture;
-  }
+  public Optional<MultitextureRenderSettings> getMultitexture() { return multitexture; }
   
   /**
    * @param entity the Golem
@@ -139,8 +138,8 @@ public class GolemRenderSettings {
     b.append("biome_color[").append(useBiomeColor).append("] ");
     b.append("light[").append(baseLight).append("] ");
     b.append("translucent[").append(translucent).append("] ");
-    b.append("layers[").append(layers).append("] ");
     b.append("multitexture[").append(multitexture).append("] ");
+    b.append("layers[").append(layers).append("] ");
     return b.toString();
   }
   
@@ -152,8 +151,8 @@ public class GolemRenderSettings {
   public static ResourcePair buildPreferredTexture(final List<ResourcePair> textureList) {
     for(final ResourcePair texture : textureList) {
       // attempt to load the resource to ensure it exists
+      ResourceLocation res = null;
       try {
-        ResourceLocation res;
         if(texture.flag()) {
           res = new ResourceLocation(texture.resource().getNamespace(), "textures/entity/" +  texture.resource().getPath() + ".png");
         } else {
@@ -162,14 +161,16 @@ public class GolemRenderSettings {
         res = Minecraft.getInstance().getResourceManager().getResource(res).getLocation();
         // if the resource was loaded above, then it exists
         return new ResourcePair(res, texture.flag());
-      } catch (IOException e) { }
+      } catch (IOException e) {
+        if(ExtraGolems.LOGGER != null) {
+          ExtraGolems.LOGGER.error("GolemRenderSettings: Failed to locate resource " + (res != null ? res.toString() : "ResourcePair: ".concat(texture.toString())));
+        }
+      }
     }
     // if none of the resources loaded, return fallback texture
-    return new ResourcePair(FALLBACK_PREFAB, false);
+    return new ResourcePair(FALLBACK_PREFAB, true);
   }
   
-  private static final Vector3f ONE = new Vector3f(1.0F, 1.0F, 1.0F);
-
   /**
    * Separates a hex color into RGB components.
    * If the color int is less than 0, returns
@@ -178,9 +179,6 @@ public class GolemRenderSettings {
    * @return the red, green, and blue components as a Vector3f
    **/
   public static Vector3f unpackColor(final int color) {
-    if(color < 0) {
-      return ONE;
-    }
     long tmpColor = color;
     if ((tmpColor & -67108864) == 0) {
       tmpColor |= -16777216;

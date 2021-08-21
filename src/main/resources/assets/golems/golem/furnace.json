@@ -1,0 +1,9 @@
+{
+  "multitexture": {
+    "base_map": {
+      "0": "#golems:furnace/unlit",
+	  "1": "#golems:furnace/lit"
+    }
+  },
+  "layers": [ ]
+}

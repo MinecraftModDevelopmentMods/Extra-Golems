@@ -29,8 +29,8 @@ public class PlaceBlocksGoal extends Goal {
 
   @Override
   public boolean canUse() {
-    return interval > 0 && golem.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) 
-        && golem.getCommandSenderWorld().random.nextInt(interval) == 0;
+    return !golem.isBaby() && interval > 0 && golem.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) 
+        && golem.getRandom().nextInt(interval) == 0;
   }
 
   @Override

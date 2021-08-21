@@ -25,7 +25,8 @@ public class MultitextureSettings {
   public static final Codec<MultitextureSettings> CODEC = RecordCodecBuilder.create(instance -> instance.group(
       Codec.INT.fieldOf("texture_count").forGetter(MultitextureSettings::getTextureCount),
       Codec.BOOL.optionalFieldOf("cycle", false).forGetter(MultitextureSettings::canCycle),
-      Codec.unboundedMap(Codec.STRING.xmap(Integer::parseInt, i -> Integer.toString(i)), MultitextureSettings.TextureEntry.CODEC).fieldOf("textures").forGetter(MultitextureSettings::getTextureEntryMap)
+      Codec.unboundedMap(Codec.STRING.xmap(Integer::parseInt, i -> Integer.toString(i)), MultitextureSettings.TextureEntry.CODEC)
+        .fieldOf("textures").forGetter(MultitextureSettings::getTextureEntryMap)
     ).apply(instance, MultitextureSettings::new));
   
   private final int textureCount;
@@ -120,7 +121,7 @@ public class MultitextureSettings {
         Codec.either(ResourcePair.CODEC, ResourcePair.CODEC.listOf())
         .xmap(either -> either.map(ImmutableList::of, Function.identity()), 
               list -> list.size() == 1 ? Either.left(list.get(0)) : Either.right(list))
-          .fieldOf("block").forGetter(TextureEntry::getBlocks),
+          .optionalFieldOf("blocks", Lists.newArrayList()).forGetter(TextureEntry::getBlocks),
         ResourceLocation.CODEC.fieldOf("loot_table").forGetter(TextureEntry::getLootTable),
         Codec.INT.optionalFieldOf("light", 0).forGetter(TextureEntry::getLight)
       ).apply(instance, TextureEntry::new));

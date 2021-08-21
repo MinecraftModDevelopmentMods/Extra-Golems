@@ -1,0 +1,86 @@
+{
+  "attributes": {
+    "health": 8.0,
+    "attack": 16.5,
+	"speed": 0.29,
+    "hurt_by_fall": true
+  },
+  "sound": "minecraft:block.glass.step",
+  "heal_items": {
+    "#forge:glass": 0.5,
+	"#forge:glass_panes": 0.15
+  },
+  "multitexture": {
+    "texture_count": 17,
+	"textures": {
+	  "0": {
+		"blocks": "#forge:glass/colorless",
+		"loot_table": "golems:glass/colorless"
+	  },
+	  "1": {
+		"blocks": "#forge:glass/white",
+		"loot_table": "golems:glass/white"
+	  },
+	  "2": {
+		"blocks": "#forge:glass/orange",
+		"loot_table": "golems:glass/orange"
+	  },
+	  "3": {
+		"blocks": "#forge:glass/magenta",
+		"loot_table": "golems:glass/magenta"
+	  },
+	  "4": {
+		"blocks": "#forge:glass/light_blue",
+		"loot_table": "golems:glass/light_blue"
+	  },
+	  "5": {
+		"blocks": "#forge:glass/yellow",
+		"loot_table": "golems:glass/yellow"
+	  },
+	  "6": {
+		"blocks": "#forge:glass/lime",
+		"loot_table": "golems:glass/lime"
+	  },
+	  "7": {
+		"blocks": "#forge:glass/pink",
+		"loot_table": "golems:glass/pink"
+	  },
+	  "8": {
+		"blocks": "#forge:glass/gray",
+		"loot_table": "golems:glass/gray"
+	  },
+	  "9": {
+		"blocks": "#forge:glass/light_gray",
+		"loot_table": "golems:glass/light_gray"
+	  },
+	  "10": {
+		"blocks": "#forge:glass/cyan",
+		"loot_table": "golems:glass/cyan"
+	  },
+	  "11": {
+		"blocks": "#forge:glass/purple",
+		"loot_table": "golems:glass/purple"
+	  },
+	  "12": {
+		"blocks": "#forge:glass/blue",
+		"loot_table": "golems:glass/blue"
+	  },
+	  "13": {
+		"blocks": "#forge:glass/brown",
+		"loot_table": "golems:glass/brown"
+	  },
+	  "14": {
+		"blocks": "#forge:glass/green",
+		"loot_table": "golems:glass/green"
+	  },
+	  "15": {
+		"blocks": "#forge:glass/red",
+		"loot_table": "golems:glass/red"
+	  },
+	  "16": {
+		"blocks": "#forge:glass/black",
+		"loot_table": "golems:glass/black"
+	  }
+    }
+  }
+}

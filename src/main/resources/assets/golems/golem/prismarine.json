@@ -1,0 +1,12 @@
+{
+  "base": "minecraft:prismarine_bricks",
+  "layers": [
+    {
+	  "texture": "#golems:layer/vines",
+	  "color": 2070638
+	},
+    {
+	  "texture": "#golems:layer/eyes/eyes"
+	}
+  ]
+}

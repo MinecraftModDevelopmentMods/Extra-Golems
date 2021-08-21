@@ -1,0 +1,12 @@
+{
+  "attributes": {
+    "health": 50.0,
+    "attack": 9.0,
+    "knockback_resistance": 0.8
+  },
+  "blocks": "minecraft:polished_diorite",
+  "heal_items": {
+    "minecraft:polished_diorite": 0.5,
+	"minecraft:cobblestone": 0.15
+  }
+}

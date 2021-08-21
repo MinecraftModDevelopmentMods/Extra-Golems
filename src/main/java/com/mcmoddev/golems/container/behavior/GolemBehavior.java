@@ -104,6 +104,6 @@ public abstract class GolemBehavior {
   
   @Override
   public String toString() {
-    return "GolemBehavior[" + registryName.toString() + "]";
+    return "GolemBehavior: tag=" + tag.toString();
   }
 }

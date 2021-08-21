@@ -26,9 +26,11 @@ public class OnActuallyHurtBehavior extends GolemBehavior {
   
   @Override
   public void onActuallyHurt(final GolemBase entity, final DamageSource source, final float amount) {
-    fire.ifPresent(p -> p.apply(entity, source.getEntity()));
-    if(source.getEntity() instanceof LivingEntity) {
-      effect.ifPresent(p -> p.apply(entity, (LivingEntity)source.getEntity()));
+    if(!entity.isBaby()) {
+      fire.ifPresent(p -> p.apply(entity, source.getEntity()));
+      if(source.getEntity() instanceof LivingEntity) {
+        effect.ifPresent(p -> p.apply(entity, (LivingEntity)source.getEntity()));
+      }
     }
   }
 }

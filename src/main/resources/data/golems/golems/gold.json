@@ -1,0 +1,15 @@
+{
+  "attributes": {
+    "health": 85.0,
+    "attack": 11.5,
+	"speed": 0.21,
+    "knockback_resistance": 1.0,
+	"armor": 2.5
+  },
+  "blocks": "#forge:storage_blocks/gold",
+  "heal_items": {
+    "#forge:storage_blocks/gold": 0.5,
+	"#forge:ingots/gold": 0.1,
+	"#forge:nuggets/gold": 0.05
+  }
+}

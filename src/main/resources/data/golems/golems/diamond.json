@@ -1,0 +1,13 @@
+{
+  "attributes": {
+    "health": 220.0,
+    "attack": 22.0,
+    "knockback_resistance": 0.8,
+	"armor": 4.0
+  },
+  "blocks": "#forge:storage_blocks/diamond",
+  "heal_items": {
+    "#forge:storage_blocks/diamond": 0.5,
+	"#forge:gems/diamond": 0.1
+  }
+}

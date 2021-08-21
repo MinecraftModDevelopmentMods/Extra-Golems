@@ -176,7 +176,8 @@ public class GolemBookScreen extends Screen {
     //RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
     // draw background (book)
-    this.getMinecraft().getTextureManager().bindForSetup(TEXTURE);
+    //this.getMinecraft().getTextureManager().bindForSetup(TEXTURE);
+    RenderSystem.setShaderTexture(0, TEXTURE);
     int bookX = (this.width - BOOK_WIDTH) / 2;
     int bookY = SCR_OFFSET_Y;
     this.blit(matrix, bookX, bookY, 0, 0, BOOK_WIDTH, BOOK_HEIGHT);

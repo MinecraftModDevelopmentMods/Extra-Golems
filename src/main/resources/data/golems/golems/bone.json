@@ -5,11 +5,10 @@
     "speed": 0.3,
 	"hurt_by_fall": true
   },
-  "block": "minecraft:bone_block",
+  "blocks": "minecraft:bone_block",
   "heal_items": {
     "minecraft:bone_block": 0.5,
-	"minecraft:bone": 0.25,
+	"#forge:bones": 0.25,
 	"minecraft:bone_meal": 0.08
-  },
-  "behavior": { }
+  }
 }

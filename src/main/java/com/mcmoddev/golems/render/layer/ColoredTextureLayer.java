@@ -5,7 +5,9 @@ import com.mcmoddev.golems.container.client.GolemRenderSettings;
 import com.mcmoddev.golems.container.client.LayerRenderSettings;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.render.GolemModel;
+import com.mcmoddev.golems.render.GolemRenderType;
 import com.mcmoddev.golems.render.GolemRenderer;
+import com.mcmoddev.golems.util.ResourcePair;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -21,6 +23,8 @@ import net.minecraft.resources.ResourceLocation;
 
 public class ColoredTextureLayer<T extends GolemBase> extends RenderLayer<T, GolemModel<T>> {
   
+  private static final Vector3f ONE = new Vector3f(1.0F, 1.0F, 1.0F);
+
   private final GolemModel<T> layerModel;
   
   /**
@@ -36,37 +40,41 @@ public class ColoredTextureLayer<T extends GolemBase> extends RenderLayer<T, Gol
   public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, T entity,
       float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
     GolemRenderSettings settings = ExtraGolems.PROXY.GOLEM_RENDER_SETTINGS.get(entity.getMaterial()).orElse(GolemRenderSettings.EMPTY);
-    if(!entity.isInvisible() && !settings.getLayers().isEmpty()) {
+    if(!entity.isInvisible() && !getParentModel().disableLayers() && !settings.getLayers().isEmpty()) {
       getParentModel().copyPropertiesTo(layerModel);
       layerModel.prepareMobModel(entity, limbSwing, limbSwingAmount, partialTicks);
       layerModel.setupAnim(entity, limbSwing, limbSwingAmount, partialTicks, netHeadYaw, headPitch);
-      
-      settings.getLayers().forEach(l -> renderTexture(layerModel, settings, l, matrixStackIn, bufferIn, packedLightIn, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch));
+      // render all of the layers in the LayerRenderSettings
+      settings.getLayers().forEach(l -> renderTexture(layerModel, settings, l, matrixStackIn, bufferIn, packedLightIn, entity));
     }
   }
   
-  protected static void renderTexture(GolemModel<? extends GolemBase> model, GolemRenderSettings settings, LayerRenderSettings layer, 
-      PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, float limbSwing, 
-      float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+  protected static <G extends GolemBase> void renderTexture(GolemModel<G> model, GolemRenderSettings settings, LayerRenderSettings layer, 
+      PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, G entity) {
     matrixStackIn.pushPose();
-    final ResourceLocation texture = layer.getTexture();
+    final ResourcePair texture = layer.getTexture();
     // get packed light and a vertex builder bound to the correct texture
     final int packedLight = layer.getLight().orElse(settings.getBaseLight().orElse(false)) ? 15728880 : packedLightIn;
-    final VertexConsumer vertexBuilder = bufferIn.getBuffer(layer.isTranslucent() ? RenderType.entityTranslucent(texture) : RenderType.entityCutout(texture));
+    final RenderType renderType;
+    if(layer.isTranslucent()) {
+      renderType = GolemRenderType.getGolemTranslucent(texture.resource(), layer.getTemplate(), !texture.flag());
+    } else {
+      renderType = GolemRenderType.getGolemCutout(texture.resource(), layer.getTemplate(), !texture.flag());
+    }
+    final VertexConsumer vertexBuilder = bufferIn.getBuffer(renderType);
     if(layer.isTranslucent()) {
       RenderSystem.enableBlend();
       RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.5F);
     }
     final Vector3f colors;
-    if(layer.getColor().isPresent()) {
+    if(layer.getColor().isPresent() && layer.getColor().get() >= 0) {
       colors = GolemRenderSettings.unpackColor(layer.getColor().get());
-      model.setColor(colors.x(), colors.y(), colors.z());
-    } else if (settings.getBaseColor().isPresent()) {
+    } else if (settings.getBaseColor().isPresent() && settings.getBaseColor().get() >= 0) {
       colors = GolemRenderSettings.unpackColor(settings.getBaseColor().get());
-      model.setColor(colors.x(), colors.y(), colors.z());
     } else {
-      model.resetColor();
+      colors = ONE;
     }
+    model.setColor(colors.x(), colors.y(), colors.z());
     model.renderToBuffer(matrixStackIn, vertexBuilder, packedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
     if(layer.isTranslucent()) {
       RenderSystem.disableBlend();

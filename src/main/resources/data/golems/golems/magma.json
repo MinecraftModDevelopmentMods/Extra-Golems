@@ -1,0 +1,30 @@
+{
+  "attributes": {
+    "health": 46.0,
+    "attack": 8.5,
+    "speed": 0.28,
+	"immune_to_fire": true,
+	"hurt_by_water": true
+  },
+  "glow": 11,
+  "swim_ability": "float",
+  "blocks": "minecraft:magma_block",
+  "heal_items": {
+    "minecraft:magma_block": 0.5,
+	"minecraft:magma_cream": 0.15
+  },
+  "behavior": [ 
+    {
+	  "type": "golems:hurt",
+	  "fire": {
+		"target": "enemy",
+		"chance": 0.9,
+		"time": 4
+	  }
+	},
+	{
+	  "type": "golems:split_on_death",
+	  "children": 2
+	}
+  ]
+}

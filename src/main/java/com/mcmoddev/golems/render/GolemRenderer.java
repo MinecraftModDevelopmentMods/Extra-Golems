@@ -1,6 +1,7 @@
 package com.mcmoddev.golems.render;
 
 import java.util.Map;
+import java.util.Optional;
 
 import javax.annotation.Nullable;
 
@@ -39,13 +40,12 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
   protected static final ResourceLocation specialTexture = new ResourceLocation(ExtraGolems.MODID, "textures/entity/special.png");
   protected static final ResourceLocation specialTexture2 = new ResourceLocation(ExtraGolems.MODID, "textures/entity/special2.png");
   
-  // TODO implement
   private static final Map<IronGolem.Crackiness, ResourceLocation> cracksToTextureMap = ImmutableMap.of(IronGolem.Crackiness.LOW, new ResourceLocation("textures/entity/iron_golem/iron_golem_crackiness_low.png"), IronGolem.Crackiness.MEDIUM, new ResourceLocation("textures/entity/iron_golem/iron_golem_crackiness_medium.png"), IronGolem.Crackiness.HIGH, new ResourceLocation("textures/entity/iron_golem/iron_golem_crackiness_high.png"));
+  
+  private static final Vector3f ONE = new Vector3f(1.0F, 1.0F, 1.0F);
   
   protected boolean isAlphaLayer;
   
-  protected boolean disableLayers;
-
   /**
    * @param m the entity render manager
    **/
@@ -65,7 +65,12 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
       return;
     }
     // get render settings
-    final GolemRenderSettings settings = ExtraGolems.PROXY.GOLEM_RENDER_SETTINGS.get(golem.getMaterial()).orElse(GolemRenderSettings.EMPTY);
+    final Optional<GolemRenderSettings> settings = ExtraGolems.PROXY.GOLEM_RENDER_SETTINGS.get(golem.getMaterial());
+    if(!settings.isPresent()) {
+      final ResourceLocation m = golem.getMaterial();
+      ExtraGolems.LOGGER.error("Missing GolemRenderSettings at assets/" + m.getNamespace() + "/golem/" + m.getPath() + ".json");
+      ExtraGolems.PROXY.GOLEM_RENDER_SETTINGS.put(golem.getMaterial(), GolemRenderSettings.EMPTY);
+    }
     matrixStackIn.pushPose();
     // scale
     if (golem.isBaby()) {
@@ -73,20 +78,23 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
       matrixStackIn.scale(scaleChild, scaleChild, scaleChild);
     }
     // colors
-    if(settings.getBaseColor().isPresent()) {
-      final Vector3f colors = GolemRenderSettings.unpackColor(settings.getBaseColor().get());
-      this.getModel().setColor(colors.x(), colors.y(), colors.z());
+    final Vector3f colors;
+    if(settings.get().getBaseColor().isPresent() && settings.get().getBaseColor().get() > 0) {
+      colors = GolemRenderSettings.unpackColor(settings.get().getBaseColor().get());
+    } else if(settings.get().useBiomeColor()) {
+      colors = GolemRenderSettings.unpackColor(golem.getBiomeColor());
     } else {
-      this.getModel().resetColor();
+      colors = ONE;
     }
+    this.getModel().setColor(colors.x(), colors.y(), colors.z());
     // transparency flag
-    isAlphaLayer = settings.isTranslucent();
+    isAlphaLayer = settings.get().isTranslucent();
     if (isAlphaLayer) {
       RenderSystem.enableBlend();
       RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.5F);
     }
     // packed light
-    final int packedLight = settings.getBaseLight().orElse(settings.getBaseLight().orElse(false)) ? 15728880 : packedLightIn;
+    final int packedLight = settings.get().getBaseLight().orElse(settings.get().getBaseLight().orElse(false)) ? 15728880 : packedLightIn;
     // render the entity
     super.render(golem, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLight);
     if (isAlphaLayer) {
@@ -104,7 +112,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
   public ResourceLocation getTextureLocation(final T golem) {
     final GolemRenderSettings settings = ExtraGolems.PROXY.GOLEM_RENDER_SETTINGS.get(golem.getMaterial()).orElse(GolemRenderSettings.EMPTY);
     ResourceLocation texture = settings.getBase(golem).resource();
-    disableLayers = false;
+    boolean disableLayers = false;
     // special cases
     if(EGConfig.halloween() && isNightTime(golem)) {
       texture = boneTexture;
@@ -120,6 +128,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
         disableLayers = true;
       }
     }
+    this.getModel().disableLayers(disableLayers);
     return texture;
   }
 
@@ -131,7 +140,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
     ResourceLocation template = settings.getBaseTemplate();
     boolean dynamic = isDynamic(golem, texture, settings);
     if (isVisible || isVisibleToPlayer || isAlphaLayer) {
-      return GolemRenderType.getGolemTransparent(texture, template, dynamic);
+      return GolemRenderType.getGolemTranslucent(texture, template, dynamic);
     } else if(isGlowing) {
       return GolemRenderType.getGolemOutline(texture, template, dynamic);
     } else {
@@ -139,8 +148,12 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
     }
   }
   
-  protected boolean isDynamic(final T entity, final ResourceLocation texture, final GolemRenderSettings settings) {
-    return texture != boneTexture && texture != specialTexture && texture != specialTexture2 && !settings.getBase(entity).flag();
+  protected static boolean isSpecial(final ResourceLocation texture) {
+    return texture == boneTexture || texture == specialTexture || texture == specialTexture2;
+  }
+  
+  protected static <T extends GolemBase> boolean isDynamic(final T entity, final ResourceLocation texture, final GolemRenderSettings settings) {
+    return !isSpecial(texture) && !settings.getBase(entity).flag();
   }
   
   public static boolean isNightTime(final GolemBase golem) {

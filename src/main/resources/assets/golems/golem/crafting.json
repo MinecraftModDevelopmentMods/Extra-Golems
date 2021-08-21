@@ -2,7 +2,7 @@
   "base": "minecraft:crafting_table_front",
   "layers": [
     {
-	  "texture": "golems:layer/eyes/glasses"
+	  "texture": "#golems:layer/eyes/glasses"
 	}
   ]
 }

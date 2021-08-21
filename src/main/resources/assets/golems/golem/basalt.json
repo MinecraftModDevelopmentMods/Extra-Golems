@@ -2,11 +2,11 @@
   "base": "minecraft:polished_basalt_side",
   "layers": [
     {
-	  "texture": "golems:layer/vines",
+	  "texture": "#golems:layer/vines",
 	  "color": 23157
 	},
     {
-	  "texture": "golems:layer/eyes/eyes"
+	  "texture": "#golems:layer/eyes/eyes"
 	}
   ]
 }

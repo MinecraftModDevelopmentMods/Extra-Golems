@@ -1,0 +1,28 @@
+{
+  "attributes": {
+    "health": 50.0,
+    "attack": 12.0,
+    "knockback_resistance": 0.3,
+	"hurt_by_water": true
+  },
+  "particle": {
+    "type": "minecraft:portal"
+  },
+  "blocks": [
+    "#forge:end_stones",
+	"minecraft:end_stone_bricks"
+  ],
+  "heal_items": {
+    "#forge:end_stones": 0.5,
+	"minecraft:end_stone_bricks": 0.5
+  },
+  "behavior": [
+    {
+	  "type": "golems:teleport",
+	  "range": 32,
+	  "chance_on_idle": 0.008,
+	  "chance_on_hurt": 0.6,
+	  "chance_on_target": 0.2
+	}
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "attributes": {
+    "health": 120.0,
+    "attack": 19.0,
+    "speed": 0.23,
+	"armor": 3.0,
+	"knockback_resistance": 0.8,
+	"immune_to_fire": true,
+	"immune_to_explosions": true
+  },
+  "blocks": "minecraft:obsidian",
+  "heal_items": {
+    "minecraft:obsidian": 0.5,
+	"minecraft:crying_obsidian": 0.25
+  }
+}

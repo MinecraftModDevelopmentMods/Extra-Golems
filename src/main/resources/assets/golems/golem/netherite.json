@@ -1,0 +1,8 @@
+{
+  "base": "minecraft:netherite_block",
+  "layers": [
+    {
+	  "texture": "#golems:layer/eyes/eyes"
+	}
+  ]
+}

@@ -3,7 +3,7 @@
     "health": 47.0,
     "attack": 9.0,
     "knockback_resistance": 0.8,
-	"armor": 4.0
+	"armor": 3.0
   },
   "heal_items": {
     "#forge:concrete": 0.5
@@ -12,70 +12,69 @@
     "texture_count": 16,
 	"textures": {
 	  "0": {
-		"block": "#forge:concrete/white",
+		"blocks": "#forge:concrete/white",
 		"loot_table": "golems:concrete/white"
 	  },
 	  "1": {
-		"block": "#forge:concrete/orange",
+		"blocks": "#forge:concrete/orange",
 		"loot_table": "golems:concrete/orange"
 	  },
 	  "2": {
-		"block": "#forge:concrete/magenta",
+		"blocks": "#forge:concrete/magenta",
 		"loot_table": "golems:concrete/magenta"
 	  },
 	  "3": {
-		"block": "#forge:concrete/light_blue",
+		"blocks": "#forge:concrete/light_blue",
 		"loot_table": "golems:concrete/light_blue"
 	  },
 	  "4": {
-		"block": "#forge:concrete/yellow",
+		"blocks": "#forge:concrete/yellow",
 		"loot_table": "golems:concrete/yellow"
 	  },
 	  "5": {
-		"block": "#forge:concrete/lime",
+		"blocks": "#forge:concrete/lime",
 		"loot_table": "golems:concrete/lime"
 	  },
 	  "6": {
-		"block": "#forge:concrete/pink",
+		"blocks": "#forge:concrete/pink",
 		"loot_table": "golems:concrete/pink"
 	  },
 	  "7": {
-		"block": "#forge:concrete/gray",
+		"blocks": "#forge:concrete/gray",
 		"loot_table": "golems:concrete/gray"
 	  },
 	  "8": {
-		"block": "#forge:concrete/light_gray",
+		"blocks": "#forge:concrete/light_gray",
 		"loot_table": "golems:concrete/light_gray"
 	  },
 	  "9": {
-		"block": "#forge:concrete/cyan",
+		"blocks": "#forge:concrete/cyan",
 		"loot_table": "golems:concrete/cyan"
 	  },
 	  "10": {
-		"block": "#forge:concrete/purple",
+		"blocks": "#forge:concrete/purple",
 		"loot_table": "golems:concrete/purple"
 	  },
 	  "11": {
-		"block": "#forge:concrete/blue",
+		"blocks": "#forge:concrete/blue",
 		"loot_table": "golems:concrete/blue"
 	  },
 	  "12": {
-		"block": "#forge:concrete/brown",
+		"blocks": "#forge:concrete/brown",
 		"loot_table": "golems:concrete/brown"
 	  },
 	  "13": {
-		"block": "#forge:concrete/green",
+		"blocks": "#forge:concrete/green",
 		"loot_table": "golems:concrete/green"
 	  },
 	  "14": {
-		"block": "#forge:concrete/red",
+		"blocks": "#forge:concrete/red",
 		"loot_table": "golems:concrete/red"
 	  },
 	  "15": {
-		"block": "#forge:concrete/black",
+		"blocks": "#forge:concrete/black",
 		"loot_table": "golems:concrete/black"
 	  }
     }
-  },
-  "behavior": { }
+  }
 }

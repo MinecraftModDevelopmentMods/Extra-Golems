@@ -15,7 +15,7 @@
 	"minecraft:polished_blackstone": 0.5,
 	"minecraft:polished_blackstone_bricks": 0.5,
 	"minecraft:chiseled_polished_blackstone": 0.5,
-	"minecraft:cracked_polished_blackstone": 0.5
-  },
-  "behavior": { }
+	"minecraft:cracked_polished_blackstone": 0.5,
+	"minecraft:blackstone": 0.25
+  }
 }

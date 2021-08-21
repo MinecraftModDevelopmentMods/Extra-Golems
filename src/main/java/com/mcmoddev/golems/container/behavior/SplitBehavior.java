@@ -36,7 +36,7 @@ public class SplitBehavior extends GolemBehavior {
    **/
   protected Collection<GolemBase> attemptAddChildren(final GolemBase entity, final int count) {
     final List<GolemBase> children = new ArrayList<>();
-    if(!entity.level.isClientSide && !entity.isBaby()) {
+    if(!entity.level.isClientSide() && !entity.isBaby() && count > 0) {
       for(int i = 0; i < count; i++) {
         GolemBase child = GolemBase.create(entity.level, entity.getMaterial());
         child.setBaby(true);

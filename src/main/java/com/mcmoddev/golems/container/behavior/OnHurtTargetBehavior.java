@@ -26,9 +26,11 @@ public class OnHurtTargetBehavior extends GolemBehavior {
   
   @Override
   public void onHurtTarget(final GolemBase entity, final Entity target) {
-    fire.ifPresent(p -> p.apply(entity, target));
-    if(target instanceof LivingEntity) {
-      effect.ifPresent(p -> p.apply(entity, (LivingEntity)target));
+    if(!entity.isBaby()) {
+      fire.ifPresent(p -> p.apply(entity, target));
+      if(target instanceof LivingEntity) {
+        effect.ifPresent(p -> p.apply(entity, (LivingEntity)target));
+      }
     }
   }
 }

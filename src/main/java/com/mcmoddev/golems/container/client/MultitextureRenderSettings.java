@@ -2,6 +2,7 @@ package com.mcmoddev.golems.container.client;
 
 import java.util.Map;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -24,7 +25,7 @@ public class MultitextureRenderSettings {
   private MultitextureRenderSettings(Map<Integer, ResourcePair> baseMapRaw) {
     ImmutableMap.Builder<Integer, ResourcePair> builder = ImmutableMap.builder();
     baseMapRaw.forEach((num, pair) -> {
-      builder.put(num, GolemRenderSettings.buildPreferredTexture(Lists.newArrayList(pair)));
+      builder.put(num, GolemRenderSettings.buildPreferredTexture(ImmutableList.of(pair)));
     });
     this.baseMap = builder.build(); 
   }

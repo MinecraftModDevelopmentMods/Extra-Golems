@@ -1,0 +1,9 @@
+{
+  "base": "minecraft:slime_block",
+  "translucent": true,
+  "layers": [
+    {
+	  "texture": "#golems:layer/eyes/eyes"
+	}
+  ]
+}

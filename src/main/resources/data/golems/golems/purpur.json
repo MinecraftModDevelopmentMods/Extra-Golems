@@ -1,0 +1,27 @@
+{
+  "attributes": {
+    "health": 80.0,
+    "attack": 7.0,
+    "knockback_resistance": 0.3
+  },
+  "particle": {
+    "type": "minecraft:portal"
+  },
+  "blocks": [
+    "minecraft:purpur_block",
+	"minecraft:purpur_pillar"
+  ],
+  "heal_items": {
+    "minecraft:purpur_block": 0.5,
+	"minecraft:purpur_pillar": 0.5
+  },
+  "behavior": [
+    {
+	  "type": "golems:teleport",
+	  "range": 16,
+	  "chance_on_idle": 0.01,
+	  "chance_on_hurt": 0.6,
+	  "chance_on_target": 0.2
+	}
+  ]
+}

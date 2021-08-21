@@ -1,0 +1,15 @@
+{
+  "attributes": {
+    "health": 68.0,
+    "attack": 6.0,
+	"speed": 0.27
+  },
+  "swim_ability": "float",
+  "sound": "minecraft:block.grass.step",
+  "blocks": "minecraft:dried_kelp_block",
+  "heal_items": {
+    "minecraft:dried_kelp_block": 0.5,
+	"minecraft:dried_kelp": 0.15,
+	"minecraft:kelp": 0.1
+  }
+}

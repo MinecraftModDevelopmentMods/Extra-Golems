@@ -19,16 +19,19 @@ public class DynamicTextureState {
   
   public static final int TILES = 8;
   public ResourceLocation location;
+  public ResourceLocation sourceImage;
   public ResourceLocation templateImage;
   public RenderStateShard.TextureStateShard state;
   public DynamicTexture texture;
 
   /**
+   * @param id a unique ResourceLocation for the location of the DynamicTextureState
    * @param blockName a ResourceLocation of a block image file
    * @param templateName a ResourceLocation of a template image file
    **/
-  public DynamicTextureState(ResourceLocation blockName, ResourceLocation templateName) {
-    location = new ResourceLocation(blockName.getNamespace(), "dynamic/" + blockName.getPath());
+  public DynamicTextureState(ResourceLocation id, ResourceLocation blockName, ResourceLocation templateName) {
+    location = id;
+    sourceImage = blockName;
     templateImage = templateName;
     
     try {

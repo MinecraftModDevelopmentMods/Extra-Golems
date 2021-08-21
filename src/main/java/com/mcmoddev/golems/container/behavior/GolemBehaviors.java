@@ -23,7 +23,7 @@ public final class GolemBehaviors {
   public static final ResourceLocation ON_HURT_TARGET = register("attack", OnHurtTargetBehavior::new);
   public static final ResourceLocation PLACE_BLOCKS = register("place_blocks", PlaceBlocksBehavior::new);
   public static final ResourceLocation PASSIVE_EFFECT = register("passive_effect", PassiveEffectBehavior::new);
-  public static final ResourceLocation SPLIT_ON_DEATH = register("split", SplitBehavior::new);
+  public static final ResourceLocation SPLIT_ON_DEATH = register("split_on_death", SplitBehavior::new);
   public static final ResourceLocation TELEPORT = register("teleport", TeleportBehavior::new);
   public static final ResourceLocation USE_FUEL = register("use_fuel", UseFuelBehavior::new);
   

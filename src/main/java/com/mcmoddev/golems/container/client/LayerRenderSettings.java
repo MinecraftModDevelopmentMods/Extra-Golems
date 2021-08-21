@@ -2,42 +2,46 @@ package com.mcmoddev.golems.container.client;
 
 import java.util.Optional;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.mcmoddev.golems.ExtraGolems;
+import com.mcmoddev.golems.util.ResourcePair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.resources.ResourceLocation;
 
 public class LayerRenderSettings {
-  /** Default value to use when coloring the vines layer **/
-  private static final int VINES_COLOR = 0x83a05a; // 8626266
-  
-  public static final LayerRenderSettings VINES = new LayerRenderSettings(new ResourceLocation(ExtraGolems.MODID, "layer/vines"), Optional.of(VINES_COLOR), Optional.empty(), false);
-  public static final LayerRenderSettings EYES = new LayerRenderSettings(new ResourceLocation(ExtraGolems.MODID, "layer/eyes/eyes"), Optional.empty(), Optional.empty(), false);
 
   public static final Codec<LayerRenderSettings> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-      ResourceLocation.CODEC.fieldOf("texture").forGetter(LayerRenderSettings::getTexture),
+      ResourcePair.CODEC.fieldOf("texture").forGetter(LayerRenderSettings::getTexture),
+      ResourceLocation.CODEC.optionalFieldOf("template", GolemRenderSettings.BASE_TEMPLATE).forGetter(LayerRenderSettings::getTemplate),
       Codec.INT.optionalFieldOf("color").forGetter(LayerRenderSettings::getColor),
       Codec.BOOL.optionalFieldOf("light").forGetter(LayerRenderSettings::getLight),
       Codec.BOOL.optionalFieldOf("translucent", false).forGetter(LayerRenderSettings::isTranslucent)
     ).apply(instance, LayerRenderSettings::new));
 
-  private final ResourceLocation texture;
+  private final ResourcePair texture;
+  private final ResourceLocation template;
   private final Optional<Integer> color;
   private final Optional<Boolean> light;
   private final boolean translucent;
   
-  private LayerRenderSettings(ResourceLocation texture, Optional<Integer> color, 
+  private LayerRenderSettings(ResourcePair texture, ResourceLocation template, Optional<Integer> color, 
       Optional<Boolean> light, boolean translucent) {
     super();
-    this.texture = new ResourceLocation(texture.getNamespace(), "textures/entity/" +  texture.getPath() + ".png");
+    this.texture = GolemRenderSettings.buildPreferredTexture(ImmutableList.of(texture));
+    this.template = new ResourceLocation(template.getNamespace(), "textures/entity/" + template.getPath() + ".png");
     this.color = color;
     this.light = light;
     this.translucent = translucent;
   }
   
   /** @return the ResourceLocation of the prefab texture **/
-  public ResourceLocation getTexture() { return texture; }
+  public ResourcePair getTexture() { return texture; }
+  
+  /** @return the ResourceLocation of the template **/
+  public ResourceLocation getTemplate() { return template; }
   
   /**
    * @return an Optional containing a color for the layer.

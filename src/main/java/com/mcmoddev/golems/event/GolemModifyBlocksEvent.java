@@ -53,7 +53,7 @@ public final class GolemModifyBlocksEvent extends Event {
             final BlockState state = this.entity.level.getBlockState(currentPos);
             final BlockState replace = this.function.map(entity, currentPos, state);
             if (replace != state) {
-              this.affectedBlocks.add(currentPos);
+              this.affectedBlocks.add(currentPos.immutable());
             }
           }
         }

@@ -37,7 +37,7 @@ public class AoeBlocksGoal extends Goal {
 
   @Override
   public boolean canUse() {
-    return range > 0 && entity.tickCount % interval == 0;
+    return !entity.isBaby() && range > 0 && entity.tickCount % interval == 0;
   }
   
   @Override

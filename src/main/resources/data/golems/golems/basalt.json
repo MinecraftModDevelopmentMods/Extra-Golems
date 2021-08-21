@@ -5,9 +5,9 @@
     "knockback_resistance": 0.8,
 	"immune_to_fire": true
   },
-  "block": "minecraft:polished_basalt",
+  "blocks": "minecraft:polished_basalt",
   "heal_items": {
-    "minecraft:polished_basalt": 0.5
-  },
-  "behavior": { }
+    "minecraft:polished_basalt": 0.5,
+	"minecraft:basalt": 0.25
+  }
 }

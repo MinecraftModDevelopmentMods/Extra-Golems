@@ -6,14 +6,15 @@
   },
   "swim_ability": "float",
   "sound": "minecraft:block.wood.step",
-  "block": "minecraft:bookshelf",
+  "blocks": "minecraft:bookshelf",
   "heal_items": {
-    "minecraft:bookshelf": 0.5,
+    "#forge:bookshelves": 0.5,
 	"minecraft:book": 0.15,
 	"#minecraft:planks": 0.15
   },
-  "behavior": { 
-    "golems:passive_effect": {
+  "behavior": [
+    {
+	  "type": "golems:passive_effect",
 	  "effect": {
 		"target": "self",
 		"chance": 0.9,
@@ -56,5 +57,5 @@
 	    ]
 	  }
 	}
-  }
+  ]
 }

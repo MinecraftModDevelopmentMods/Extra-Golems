@@ -17,10 +17,10 @@
   "power": 0,
   "hidden": false,
   "sound": "minecraft:block.gravel.step",
-  "block": "minecraft:clay",
+  "blocks": "minecraft:clay",
   "heal_items": {
     "minecraft:clay": 0.5,
 	"minecraft:clay_ball": 0.1
   },
-  "behavior": { }
+  "behavior": [ ]
 }
