@@ -31,7 +31,6 @@ import net.minecraftforge.fmllegacy.network.NetworkRegistry;
 import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
 
 @Mod(ExtraGolems.MODID)
-@Mod.EventBusSubscriber(modid = ExtraGolems.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ExtraGolems {
 
   public static final String MODID = "golems";

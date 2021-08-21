@@ -18,7 +18,6 @@ import com.google.common.collect.Maps;
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.container.behavior.GolemBehavior;
 import com.mcmoddev.golems.container.behavior.GolemBehaviors;
-import com.mcmoddev.golems.container.client.GolemRenderSettings;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.util.ResourcePair;
 import com.mojang.datafixers.util.Either;
@@ -39,6 +38,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.registries.ForgeRegistries;
 
 /**
@@ -51,7 +51,8 @@ public final class GolemContainer {
   
   public static final GolemContainer EMPTY = new GolemContainer(
       AttributeSettings.EMPTY, SwimMode.SINK, 0, 0, true, SoundEvents.STONE_STEP, Optional.empty(), 
-      Lists.newArrayList(), Maps.newHashMap(), Optional.of(MultitextureSettings.EMPTY), Lists.newArrayList());
+      ImmutableList.of(new ResourcePair(Blocks.AIR.getRegistryName(), false)), 
+      ImmutableMap.of(), Optional.empty(), ImmutableList.of());
 
   public static final Codec<GolemContainer> CODEC = RecordCodecBuilder.create(instance -> instance.group(
       AttributeSettings.CODEC.fieldOf("attributes").forGetter(GolemContainer::getAttributes),
@@ -90,7 +91,7 @@ public final class GolemContainer {
   private final ImmutableMap<ResourceLocation, ImmutableList<GolemBehavior>> behaviors;
   
   private final Optional<MultitextureSettings> multitexture;
-
+  
   private GolemContainer(AttributeSettings attributes, SwimMode swimAbility, int glow, int power, boolean hidden,
       SoundEvent sound, Optional<ParticleOptions> particle, List<ResourcePair> blocksRaw, Map<ResourcePair, Double> healItemsRaw,
       Optional<MultitextureSettings> multitexture, List<CompoundTag> goalsRaw) {
@@ -218,6 +219,13 @@ public final class GolemContainer {
   
   /** @return the Golem's base redstone power level **/
   public int getMaxPowerLevel() { return power; }
+
+  public ResourceLocation getLootTable(final GolemBase entity) {
+    if(multitexture.isPresent()) {
+      return multitexture.get().getLootTable(entity);
+    }
+    return new ResourceLocation(entity.getMaterial().getNamespace(), "entities/" + entity.getMaterial().getPath());
+  }
 
   // CONVENIENCE METHODS //
   

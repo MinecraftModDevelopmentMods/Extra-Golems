@@ -43,7 +43,7 @@
 //import net.minecraftforge.fmllegacy.network.NetworkHooks;
 //
 //public final class DispenserGolem extends GolemBase implements RangedAttackMob, ContainerListener {
-//  private static final EntityDataAccessor<Integer> ARROWS = SynchedEntityData.defineId(DispenserGolem.class, EntityDataSerializers.INT);
+//  private static final EntityDataAccessor<Integer> SHOOT_ARROWS = SynchedEntityData.defineId(DispenserGolem.class, EntityDataSerializers.INT);
 //  
 //  public static final String ALLOW_SPECIAL = "Allow Special: Shoot Arrows";
 //  public static final String ARROW_DAMAGE = "Arrow Damage";
@@ -61,7 +61,7 @@
 //  private final RangedAttackGoal aiArrowAttack;
 //  private final MeleeAttackGoal aiMeleeAttack;
 //    
-//  protected final Predicate<ItemStack> pickUpItemstackPredicate = stack -> {
+//  protected final Predicate<ItemStack> PICK_UP_ARROW_PRED = stack -> {
 //    // make sure the item is an arrow
 //    if(stack != null && !stack.isEmpty() && stack.getItem() instanceof ArrowItem) {
 //      // make sure the entity can pick up this stack
@@ -94,7 +94,7 @@
 //  @Override
 //  protected void defineSynchedData() {
 //    super.defineSynchedData();
-//    this.getEntityData().define(ARROWS, Integer.valueOf(0));
+//    this.getEntityData().define(SHOOT_ARROWS, Integer.valueOf(0));
 //  }
 //
 //  @Override
@@ -120,7 +120,7 @@
 //    }
 //    // pick up nearby arrows
 //    final List<ItemEntity> droppedArrows = this.getCommandSenderWorld().getEntitiesOfClass(ItemEntity.class, 
-//        this.getBoundingBox().inflate(1.0D), e -> !e.hasPickUpDelay() && pickUpItemstackPredicate.test(e.getItem()));
+//        this.getBoundingBox().inflate(1.0D), e -> !e.hasPickUpDelay() && PICK_UP_ARROW_PRED.test(e.getItem()));
 //   
 //    // check a whole load of conditions to make sure we can pick up nearby arrows
 //    if (!droppedArrows.isEmpty() && !this.level.isClientSide() && this.isAlive() && !this.dead 
@@ -255,14 +255,14 @@
 //    }
 //    // update data manager if necessary
 //    if(arrowCount != getArrowsInInventory()) {
-//      this.getEntityData().set(ARROWS, arrowCount);
+//      this.getEntityData().set(SHOOT_ARROWS, arrowCount);
 //    }
 //    // return arrow count
 //    return arrowCount;
 //  }
 //  
 //  public int getArrowsInInventory() {
-//    return this.getEntityData().get(ARROWS).intValue();
+//    return this.getEntityData().get(SHOOT_ARROWS).intValue();
 //  }
 //
 //  @Override
@@ -335,7 +335,7 @@
 //    public void tick() {
 //      // make a list of arrow itemstacks in nearby area
 //      final List<ItemEntity> droppedArrows = golem.getCommandSenderWorld().getEntitiesOfClass(ItemEntity.class, 
-//          golem.getBoundingBox().inflate(range), e -> !e.hasPickUpDelay() && pickUpItemstackPredicate.test(e.getItem()));
+//          golem.getBoundingBox().inflate(range), e -> !e.hasPickUpDelay() && PICK_UP_ARROW_PRED.test(e.getItem()));
 //     
 //      if (!droppedArrows.isEmpty()) {
 //        // path toward the nearest arrow itemstack

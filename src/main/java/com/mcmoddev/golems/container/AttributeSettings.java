@@ -9,7 +9,7 @@ public class AttributeSettings {
   
   public static final Codec<AttributeSettings> CODEC = RecordCodecBuilder.create(instance -> instance.group(
       Codec.DOUBLE.optionalFieldOf("health", 100.0D).forGetter(AttributeSettings::getHealth),
-      Codec.DOUBLE.optionalFieldOf("attack", 7.0D).forGetter(AttributeSettings::getAttack),
+      Codec.DOUBLE.optionalFieldOf("attack", 10.0D).forGetter(AttributeSettings::getAttack),
       Codec.DOUBLE.optionalFieldOf("speed", 0.25D).forGetter(AttributeSettings::getSpeed),
       Codec.DOUBLE.optionalFieldOf("knockback_resistance", 0.4D).forGetter(AttributeSettings::getKnockbackResist),
       Codec.DOUBLE.optionalFieldOf("armor", 0.0D).forGetter(AttributeSettings::getArmor),

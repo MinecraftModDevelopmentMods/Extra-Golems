@@ -2,12 +2,12 @@ package com.mcmoddev.golems.container;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.util.ResourcePair;
 import com.mojang.datafixers.util.Either;
@@ -16,11 +16,10 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.storage.loot.LootTable;
 
 public class MultitextureSettings {
   
-  public static final MultitextureSettings EMPTY = new MultitextureSettings(0, false, Maps.newHashMap());
+  public static final MultitextureSettings EMPTY = new MultitextureSettings(0, false, ImmutableMap.of());
   
   public static final Codec<MultitextureSettings> CODEC = RecordCodecBuilder.create(instance -> instance.group(
       Codec.INT.fieldOf("texture_count").forGetter(MultitextureSettings::getTextureCount),
@@ -73,7 +72,11 @@ public class MultitextureSettings {
    * @return the Loot Table of the golem, taking into account texture ID
    */
   public ResourceLocation getLootTable(final GolemBase entity) {
-    return entryMap.getOrDefault(entity.getTextureId(), MultitextureSettings.TextureEntry.EMPTY).getLootTable();
+    ResourceLocation fallback = new ResourceLocation(entity.getMaterial().getNamespace(), "entities/" + entity.getMaterial().getPath());;
+    if(entryMap.containsKey(entity.getTextureId())) {
+      return entryMap.get(entity.getTextureId()).getLootTable().orElse(fallback);
+    }
+    return fallback;
   }
 
   /**
@@ -115,24 +118,24 @@ public class MultitextureSettings {
    */
   protected static class TextureEntry {
     
-    public static final TextureEntry EMPTY = new TextureEntry(Lists.newArrayList(), LootTable.EMPTY.getLootTableId(), 0);
+    public static final TextureEntry EMPTY = new TextureEntry(ImmutableList.of(), Optional.empty(), 0);
     
     public static final Codec<TextureEntry> CODEC = RecordCodecBuilder.create(instance -> instance.group(
         Codec.either(ResourcePair.CODEC, ResourcePair.CODEC.listOf())
         .xmap(either -> either.map(ImmutableList::of, Function.identity()), 
               list -> list.size() == 1 ? Either.left(list.get(0)) : Either.right(list))
           .optionalFieldOf("blocks", Lists.newArrayList()).forGetter(TextureEntry::getBlocks),
-        ResourceLocation.CODEC.fieldOf("loot_table").forGetter(TextureEntry::getLootTable),
+        ResourceLocation.CODEC.optionalFieldOf("loot_table").forGetter(TextureEntry::getLootTable),
         Codec.INT.optionalFieldOf("light", 0).forGetter(TextureEntry::getLight)
       ).apply(instance, TextureEntry::new));
     
     private final List<ResourcePair> blocks;
-    private final ResourceLocation lootTable;
+    private final Optional<ResourceLocation> lootTable;
     private final int light;
     
-    private TextureEntry(final List<ResourcePair> blocks, final ResourceLocation lootTable, final int light) {
+    private TextureEntry(final List<ResourcePair> blocks, final Optional<ResourceLocation> lootTable, final int light) {
       this.blocks = blocks;
-      this.lootTable = lootTable;
+      this.lootTable = lootTable.isPresent() ? Optional.of(new ResourceLocation(lootTable.get().getNamespace(), "entities/" + lootTable.get().getPath())) : lootTable;
       this.light = light;    
     }
 
@@ -140,7 +143,7 @@ public class MultitextureSettings {
     public List<ResourcePair> getBlocks() { return blocks; }
     
     /** @return the loot table location for this entry **/
-    public ResourceLocation getLootTable() { return lootTable; }
+    public Optional<ResourceLocation> getLootTable() { return lootTable; }
     
     /** @return the light value for this entry **/
     public int getLight() { return light; }

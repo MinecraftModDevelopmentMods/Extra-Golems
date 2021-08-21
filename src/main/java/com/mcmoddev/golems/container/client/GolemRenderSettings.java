@@ -32,7 +32,7 @@ public class GolemRenderSettings {
   
   public static final GolemRenderSettings EMPTY = new GolemRenderSettings(
       ImmutableList.of(new ResourcePair(new ResourceLocation("minecraft", "iron_golem/iron_golem"), true)), 
-      BASE_TEMPLATE, Optional.empty(), false, Optional.empty(), false, Optional.empty(), Lists.newArrayList());
+      BASE_TEMPLATE, Optional.empty(), false, Optional.empty(), false, Optional.empty(), ImmutableList.of());
   
   public static final Codec<GolemRenderSettings> CODEC = RecordCodecBuilder.create(instance -> instance.group(
       Codec.either(ResourcePair.CODEC, ResourcePair.CODEC.listOf())

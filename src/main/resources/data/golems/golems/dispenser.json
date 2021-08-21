@@ -1,0 +1,19 @@
+{
+  "attributes": {
+    "health": 68.0,
+    "attack": 10.0,
+    "knockback_resistance": 0.6,
+    "armor": 0.5
+  },
+  "blocks": "minecraft:dispenser",
+  "heal_items": {
+    "minecraft:dispenser": 0.5,
+	"#minecraft:stone_crafting_materials": 0.15
+  },
+  "behavior": [
+    {
+	  "type": "golems:shoot_arrows",
+	  "damage": 4.25
+    }
+  ]
+}

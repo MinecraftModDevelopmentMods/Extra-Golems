@@ -25,6 +25,8 @@ public interface IRandomExploder {
   
   boolean isFuseLit();
   
+  GolemBase getGolemEntity();
+  
   default void resetFuse() {
     setFuse(getFuseLen());
   }
@@ -60,17 +62,19 @@ public interface IRandomExploder {
     resetFuse();
   }
 
-  default void explode(Mob entity, float range) {
+  default void explode(float range) {
+    final GolemBase entity = getGolemEntity();
     if (!entity.level.isClientSide()) {
       final boolean flag = entity.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING);
       final Vec3 pos = entity.position();
       entity.level.explode(entity, pos.x, pos.y, pos.z, range, flag ? BlockInteraction.BREAK : BlockInteraction.NONE);
       entity.discard();
-      spawnLingeringCloud(entity);
+      spawnLingeringCloud();
     }
   }
 
-  static void spawnLingeringCloud(Mob entity) {
+  default void spawnLingeringCloud() {
+    final GolemBase entity = getGolemEntity();
     Collection<MobEffectInstance> collection = entity.getActiveEffects();
     if (!collection.isEmpty()) {
       AreaEffectCloud areaeffectcloud = new AreaEffectCloud(entity.level, entity.getX(), entity.getY(), entity.getZ());

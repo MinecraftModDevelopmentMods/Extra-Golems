@@ -1,22 +1,21 @@
 package com.mcmoddev.golems.entity;
 
+import com.google.common.collect.ImmutableList;
+import com.mcmoddev.golems.EGConfig;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.block.GlowBlock;
 import com.mcmoddev.golems.block.PowerBlock;
-import com.electronwill.nightconfig.core.conversion.Path;
-import com.google.common.collect.ImmutableList;
-import com.mcmoddev.golems.EGConfig;
 import com.mcmoddev.golems.container.GolemContainer;
 import com.mcmoddev.golems.container.GolemContainer.SwimMode;
 import com.mcmoddev.golems.container.behavior.GolemBehavior;
 import com.mcmoddev.golems.container.behavior.GolemBehaviors;
+import com.mcmoddev.golems.container.behavior.ShootArrowsBehavior;
 import com.mcmoddev.golems.container.behavior.UseFuelBehavior;
 import com.mcmoddev.golems.entity.goal.GoToWaterGoal;
 import com.mcmoddev.golems.entity.goal.PlaceUtilityBlockGoal;
 import com.mcmoddev.golems.entity.goal.SwimUpGoal;
 import com.mcmoddev.golems.item.SpawnGolemItem;
-import com.mcmoddev.golems.menu.PortableCraftingMenu;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -29,13 +28,12 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -46,7 +44,9 @@ import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomSwimmingGoal;
+import net.minecraft.world.entity.ai.goal.RangedAttackGoal;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.WaterBoundPathNavigation;
 import net.minecraft.world.entity.animal.IronGolem;
@@ -67,13 +67,14 @@ import net.minecraftforge.fmllegacy.network.NetworkHooks;
 /**
  * Base class for all golems in this mod.
  **/
-public class GolemBase extends IronGolem implements IMultitextured, IFuelConsumer, IRandomTeleporter, IRandomExploder, IEntityAdditionalSpawnData {
+public class GolemBase extends IronGolem implements IMultitextured, IFuelConsumer, IRandomTeleporter, IRandomExploder, IArrowShooter, IEntityAdditionalSpawnData {
   
   protected static final EntityDataAccessor<String> MATERIAL = SynchedEntityData.defineId(GolemBase.class, EntityDataSerializers.STRING);
   protected static final EntityDataAccessor<Boolean> CHILD = SynchedEntityData.defineId(GolemBase.class, EntityDataSerializers.BOOLEAN);
   protected static final EntityDataAccessor<Byte> TEXTURE = SynchedEntityData.<Byte>defineId(GolemBase.class, EntityDataSerializers.BYTE);
   protected static final EntityDataAccessor<Integer> FUEL = SynchedEntityData.<Integer>defineId(GolemBase.class, EntityDataSerializers.INT);
   protected static final EntityDataAccessor<Boolean> FUSE_LIT = SynchedEntityData.<Boolean>defineId(GolemBase.class, EntityDataSerializers.BOOLEAN);
+  protected static final EntityDataAccessor<Integer> ARROWS = SynchedEntityData.<Integer>defineId(GolemBase.class, EntityDataSerializers.INT);
   
   protected static final String KEY_MATERIAL = "Material";
   protected static final String KEY_CHILD = "IsChild";
@@ -89,9 +90,14 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
   protected final GroundPathNavigation groundNavigator;
   protected boolean swimmingUp;
   
-  // explode goal
+  // explode behavior
   protected int fuseLen;
   protected int fuse;
+  
+  // shoot arrows behavior
+  protected final RangedAttackGoal aiArrowAttack;
+  protected final MeleeAttackGoal aiMeleeAttack;
+  private SimpleContainer inventory;
   
   // color
   protected int biomeColor = 8626266;
@@ -101,6 +107,10 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
     // the following will be unused if swimming is not enabled
     this.waterNavigator = new WaterBoundPathNavigation(this, world);
     this.groundNavigator = new GroundPathNavigation(this, world);
+    // the following will only be used if ShootArrowsBehavior is added
+    aiArrowAttack = new RangedAttackGoal(this, 1.0D, 28, 32.0F);
+    aiMeleeAttack = new MeleeAttackGoal(this, 1.0D, true);
+    initInventory();
   }
   
   public static GolemBase create(final Level world, final ResourceLocation material) {
@@ -110,6 +120,10 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
   }
   
   public void setMaterial(final ResourceLocation materialIn) {
+    if(materialIn.equals(material)) {
+      return;
+    }
+    // update material and container
     this.getEntityData().set(MATERIAL, materialIn.toString());
     this.material = materialIn;
     this.container = ExtraGolems.PROXY.GOLEM_CONTAINERS.get(materialIn).orElse(GolemContainer.EMPTY);
@@ -168,6 +182,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
     this.getEntityData().define(TEXTURE, Byte.valueOf((byte) 0));
     this.getEntityData().define(FUEL, Integer.valueOf(0));
     this.getEntityData().define(FUSE_LIT, Boolean.valueOf(false));
+    this.getEntityData().define(ARROWS, Integer.valueOf(0));
   }
   
   @Override
@@ -301,6 +316,12 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
       if (this.level.getBiome(pos).getTemperature(pos) > 1.0F) {
         this.hurt(DamageSource.ON_FIRE, 1.0F);
       }
+    }
+    // pick up nearby arrows
+    if(getContainer().hasBehavior(GolemBehaviors.SHOOT_ARROWS) && tickCount % 35 == 1) {
+      pickupArrows();
+      final boolean forceMelee = (getTarget() != null && getTarget().distanceToSqr(this) < 8.0D);
+      updateCombatTask(forceMelee);
     }
   }
   
@@ -483,6 +504,11 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
     }
     return description;
   }
+  
+  @Override
+  protected ResourceLocation getDefaultLootTable() {
+    return getContainer().getLootTable(this);
+  }
 
   @Override
   public boolean isBaby() {
@@ -619,6 +645,9 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
   ///////////////////// EXPLODE ////////////////////////
   
   @Override
+  public GolemBase getGolemEntity() { return this; }
+  
+  @Override
   public int getFuseLen() { return fuseLen; }
 
   @Override
@@ -632,6 +661,67 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 
   @Override
   public boolean isFuseLit() { return getEntityData().get(FUSE_LIT); }
+  
+  ///////////////////// SHOOT ARROWS ////////////////////////
+
+  @Override
+  public void initInventory() {
+    SimpleContainer simplecontainer = this.inventory;
+    this.inventory = new SimpleContainer(INVENTORY_SIZE);
+    if (simplecontainer != null) {
+       simplecontainer.removeListener(this);
+       int i = Math.min(simplecontainer.getContainerSize(), this.inventory.getContainerSize());
+
+       for(int j = 0; j < i; ++j) {
+          ItemStack itemstack = simplecontainer.getItem(j);
+          if (!itemstack.isEmpty()) {
+             this.inventory.setItem(j, itemstack.copy());
+          }
+       }
+    }
+
+    this.inventory.addListener(this);
+    this.containerChanged(this.inventory);
+  }
+  
+  @Override
+  public double getArrowDamage() {
+    if(getContainer().hasBehavior(GolemBehaviors.SHOOT_ARROWS)) {
+      return ((ShootArrowsBehavior)getContainer().getBehaviors().get(GolemBehaviors.SHOOT_ARROWS).get(0)).getDamage();
+    }
+    return 0;
+  }
+
+  @Override
+  public boolean wantsToPickUp(ItemStack stack) {
+    if(this.getContainer().hasBehavior(GolemBehaviors.SHOOT_ARROWS)) {
+      return getArrowInventory().canAddItem(stack);//IArrowShooter.PICK_UP_ARROW_PRED.test(getArrowInventory(), stack);
+    }
+    return this.canHoldItem(stack);
+  }
+  
+  @Override
+  public SimpleContainer getArrowInventory() { return inventory; }
+  
+  @Override
+  public RangedAttackGoal getRangedGoal() { return aiArrowAttack; }
+  
+  @Override
+  public MeleeAttackGoal getMeleeGoal() { return aiMeleeAttack; }
+  
+  @Override
+  public int getArrowsInInventory() { return getEntityData().get(ARROWS); }
+
+  @Override
+  public void setArrowsInInventory(int count) { getEntityData().set(ARROWS, count); }
+  
+  @Override
+  protected void dropEquipment() {
+    super.dropEquipment();
+    if(getContainer().hasBehavior(GolemBehaviors.SHOOT_ARROWS)) {
+      dropArrowInventory();
+    }
+  }
   
   ///////////////////// SWIMMING BEHAVIOR ////////////////////////
 

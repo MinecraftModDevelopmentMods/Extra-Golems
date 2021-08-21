@@ -13,13 +13,13 @@ List of bugs, fixes, and features for the 1.17 version of Extra Golems
   - X Add GolemMultitextureSettings and Codec
 - X Implement multitexture settings in golem
 - X Implement multitexture settings in renderer
-- _ Implement loot tables
-- _ Implement multitexture loot tables
+- X Implement loot tables
+- X Implement multitexture loot tables
 - X Change base_block texture to an array (first found is used)
-- _ Add GolemBehavior for all special behavior
+- X Add GolemBehavior for all special behavior
   - X aoe_dry
   - X aoe_freeze
-  - _ arrows
+  - X arrows
   - X explode
   - X hurt
   - X attack
@@ -32,18 +32,21 @@ List of bugs, fixes, and features for the 1.17 version of Extra Golems
 - X Add RenderSettings Codec
 - X Add single entity type
 - X Add synched data for Material (key for Container)
+- _ Descriptions
 - _ Bedrock Golem JSON
 - _ Coral Golem JSON
-- _ Dispenser Golem JSON
+- X Dispenser Golem JSON
+- _ Localisation
 
 
 ## Bugs
 
 - X Properly read ParticleType
+- _ Dispenser Golem: not detecting and picking up arrows
 - _ Furnace Golem: change texture based on fuel
 - _ Hay Golem: crop boost
 - _ Honeycomb golem: summon bees
-- _ Fix Kitty layer rendering
+- X Fix Kitty layer rendering
 - _ Fix golem book textures
 
 ## New Features
@@ -200,9 +203,8 @@ The below example includes all functionality that will be available for each gol
 	
 	// Store and shoot arrows
 	{
-	  "type": "golems:arrows",
-	  "arrow_damage": 4.25,
-	  "interval": 28
+	  "type": "golems:shoot_arrows",
+	  "damage": 4.25
 	},
 	
 	// Store and use fuel
@@ -250,7 +252,7 @@ The below information will allow multitexture behavior if present. Here is an ex
 		"minecraft:mushroom_stem",
 		"minecraft:brown_mushroom_block"
 	  ],
-      "loot_table": "golems:mushroom/brown",
+      "loot_table": "golems:mushroom/brown", // if unspecified, uses main loot table
 	  "light": 0 // light value when using this texture ID
 	},
 	"1": {

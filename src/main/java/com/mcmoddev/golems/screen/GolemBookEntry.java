@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.container.GolemContainer;
 
 import net.minecraft.world.level.block.Block;
@@ -35,7 +36,7 @@ public class GolemBookEntry {
 
   public GolemBookEntry(@Nonnull ResourceLocation golemName, @Nonnull GolemContainer container) {
     // initialize fields based on entity attributes
-    this.golemName = golemName.toString();
+    this.golemName = EGRegistry.GOLEM.getDescriptionId() + "." + golemName.getPath();
     this.health = (int) container.getAttributes().getHealth();
     this.attack = (float) container.getAttributes().getAttack();
     // TODO custom descriptions
@@ -47,7 +48,7 @@ public class GolemBookEntry {
     // find the image to add to the book
     final String modid = golemName.getNamespace();
     final String name = golemName.getPath();
-    String img = (modid + ":textures/gui/screenshots/").concat(name).concat(".png");
+    String img = (modid + ":textures/gui/info_book/").concat(name).concat(".png");
     try {
       this.imageLoc = Minecraft.getInstance().getResourceManager().getResource(new ResourceLocation(img)).getLocation();
       // System.out.println("Image found, yay! Loading " + img.toString() + " for " + this.GOLEM_NAME);

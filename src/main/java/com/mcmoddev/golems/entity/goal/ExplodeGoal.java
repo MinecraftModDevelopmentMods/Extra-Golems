@@ -35,7 +35,7 @@ public class ExplodeGoal<T extends Mob & IRandomExploder> extends Goal {
     if (entity.isInWaterRainOrBubble()) {
       stop();
     } else if(entity.getFuse() <= 0) {
-      entity.explode(entity, range);
+      entity.explode(range);
     }
   }
   

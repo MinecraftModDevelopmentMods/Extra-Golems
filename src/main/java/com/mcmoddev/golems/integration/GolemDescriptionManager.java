@@ -52,7 +52,7 @@ public abstract class GolemDescriptionManager {
         addFuelInfo(golem, list);
       }
       // add arrow amount if this is a dispenser entity
-      if(golem.getContainer().hasBehavior(GolemBehaviors.ARROWS)) {
+      if(golem.getContainer().hasBehavior(GolemBehaviors.SHOOT_ARROWS)) {
         addArrowsInfo(golem, list);
       }
     }
