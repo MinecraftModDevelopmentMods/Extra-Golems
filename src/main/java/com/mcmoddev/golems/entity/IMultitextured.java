@@ -10,27 +10,21 @@ public interface IMultitextured {
   
   static final String KEY_TEXTURE = "Texture";
 
-  /**
-   * Updates the current texture
-   * 
-   * @param toSet the index of the new texture
-   **/
+  /** @param toSet the index of the new texture **/
   void setTextureId(final byte toSet);
 
-  /**
-   * @return the index of the current texture
-   **/
+  /** @return the index of the current texture **/
   int getTextureId();
 
-  /**
-   * @return the total number of possible textures
-   **/
+  /** @return the total number of possible textures **/
   int getTextureCount();
   
+  /** @param tag the CompoundTag to write to **/
   default void saveTextureId(final CompoundTag tag) {
     tag.putByte(KEY_TEXTURE, (byte) getTextureId());
   }
   
+  /** @param tag the CompoundTag to read from **/
   default void loadTextureId(final CompoundTag tag) {
     setTextureId(tag.getByte(KEY_TEXTURE));
   }

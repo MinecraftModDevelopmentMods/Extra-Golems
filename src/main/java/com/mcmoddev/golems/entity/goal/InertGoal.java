@@ -37,6 +37,7 @@ public class InertGoal<T extends Mob & IFuelConsumer> extends Goal {
   public void tick() {
     // freeze the entity and ai tasks
     final Vec3 pos = entity.position();
+    final Vec3 forward = entity.getForward().scale(0.1D);
     entity.setDeltaMovement(entity.getDeltaMovement().multiply(0, 1.0D, 0));
     entity.setZza(0F);
     entity.setXxa(0F);
@@ -45,8 +46,8 @@ public class InertGoal<T extends Mob & IFuelConsumer> extends Goal {
     entity.setTarget(null);
     entity.setLastHurtByMob(null);
     entity.getNavigation().stop();
-    entity.xRotO = -15F;
+    entity.xRotO = -1.5F;
     // set looking down
-    entity.getLookControl().setLookAt(entity.getX(), entity.getY() + 1.0D, entity.getZ(), 100.0F, 100.0F);
+    entity.getLookControl().setLookAt(forward.x, forward.y, forward.z, 100.0F, 100.0F);
   }
 }

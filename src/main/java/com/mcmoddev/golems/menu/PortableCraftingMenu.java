@@ -9,6 +9,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.CraftingMenu;
+import net.minecraft.world.level.block.Blocks;
 
 public class PortableCraftingMenu extends CraftingMenu {
 
@@ -42,7 +43,7 @@ public class PortableCraftingMenu extends CraftingMenu {
 
     @Override
     public Component getDisplayName() {
-      return new TranslatableComponent("entity.golems.crafting");
+      return Blocks.CRAFTING_TABLE.getName();
     }
   }
 }

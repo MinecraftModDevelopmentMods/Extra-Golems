@@ -72,7 +72,7 @@ public class MultitextureSettings {
    * @return the Loot Table of the golem, taking into account texture ID
    */
   public ResourceLocation getLootTable(final GolemBase entity) {
-    ResourceLocation fallback = new ResourceLocation(entity.getMaterial().getNamespace(), "entities/" + entity.getMaterial().getPath());;
+    ResourceLocation fallback = entity.getMaterial();
     if(entryMap.containsKey(entity.getTextureId())) {
       return entryMap.get(entity.getTextureId()).getLootTable().orElse(fallback);
     }
@@ -135,7 +135,7 @@ public class MultitextureSettings {
     
     private TextureEntry(final List<ResourcePair> blocks, final Optional<ResourceLocation> lootTable, final int light) {
       this.blocks = blocks;
-      this.lootTable = lootTable.isPresent() ? Optional.of(new ResourceLocation(lootTable.get().getNamespace(), "entities/" + lootTable.get().getPath())) : lootTable;
+      this.lootTable = lootTable;
       this.light = light;    
     }
 

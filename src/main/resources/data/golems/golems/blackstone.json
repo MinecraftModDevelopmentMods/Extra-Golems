@@ -5,11 +5,11 @@
     "knockback_resistance": 0.8,
 	"immune_to_fire": true
   },
-  "block": [
+  "blocks": [
 	"minecraft:polished_blackstone",
 	"minecraft:polished_blackstone_bricks",
 	"minecraft:chiseled_polished_blackstone",
-	"minecraft:cracked_polished_blackstone"
+	"minecraft:cracked_polished_blackstone_bricks"
   ],
   "heal_items": {
 	"minecraft:polished_blackstone": 0.5,

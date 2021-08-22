@@ -1,11 +1,16 @@
 package com.mcmoddev.golems.container.behavior;
 
+import java.util.List;
+
 import javax.annotation.concurrent.Immutable;
 
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.entity.goal.ExplodeGoal;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
@@ -53,6 +58,11 @@ public class ExplodeBehavior extends GolemBehavior {
   }
   
   @Override
+  public void onDie(final GolemBase entity, final DamageSource source) {
+    entity.explode((float) range);
+  }
+  
+  @Override
   public void onMobInteract(final GolemBase entity, final Player player, final InteractionHand hand) {
     final ItemStack itemstack = player.getItemInHand(hand);
     if (!itemstack.isEmpty() && itemstack.getItem() == Items.FLINT_AND_STEEL) {
@@ -76,5 +86,10 @@ public class ExplodeBehavior extends GolemBehavior {
   @Override
   public void onReadData(final GolemBase entity, final CompoundTag tag) {
     entity.loadFuse(tag);
+  }
+  
+  @Override
+  public void onAddDescriptions(List<Component> list) {
+    list.add(new TranslatableComponent("entitytip.explode").withStyle(ChatFormatting.RED));
   }
 }

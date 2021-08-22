@@ -1,9 +1,6 @@
 package com.mcmoddev.golems.entity;
 
-import java.util.List;
 import java.util.function.BiPredicate;
-
-import com.mcmoddev.golems.ExtraGolems;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -11,18 +8,15 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerListener;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RangedAttackGoal;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.AbstractArrow.Pickup;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.GameRules;
 
 public interface IArrowShooter extends RangedAttackMob, ContainerListener {
   
@@ -44,13 +38,21 @@ public interface IArrowShooter extends RangedAttackMob, ContainerListener {
     return false;
   };
 
+  /** @return the base damage per arrow **/
   double getArrowDamage();
+  /** @return the number of arrows in the inventory **/
   int getArrowsInInventory();
+  /** @param count the updated number of arrows in the inventory **/
   void setArrowsInInventory(int count);
-  void initInventory();
+  /** Initialize the arrow inventory **/
+  void initArrowInventory();
+  /** @return the arrow inventory container **/
   SimpleContainer getArrowInventory();
+  /** @return the RangedAttackGoal **/
   RangedAttackGoal getRangedGoal();
+  /** @return the MeleeAttackGoal **/
   MeleeAttackGoal getMeleeGoal();
+  /** @return the Golem **/
   GolemBase getGolemEntity();
   
   @Override
@@ -105,7 +107,6 @@ public interface IArrowShooter extends RangedAttackMob, ContainerListener {
   
   default void loadArrowInventory(final CompoundTag tag) {
     final ListTag list = tag.getList(KEY_INVENTORY, 10);
-    initInventory();
     // read inventory slots from NBT
     for (int i = 0; i < list.size(); i++) {
       CompoundTag slotNBT = list.getCompound(i);
@@ -166,31 +167,4 @@ public interface IArrowShooter extends RangedAttackMob, ContainerListener {
     // return arrow count
     return arrowCount;
   }
-  
-  default void pickupArrows() {
-    final GolemBase entity = getGolemEntity();
-    // attempt to pick up nearby arrows
-    final List<ItemEntity> droppedArrows = entity.level.getEntities(EntityType.ITEM, entity.getBoundingBox().inflate(1.0D),
-        e -> !e.isRemoved() && !e.getItem().isEmpty() && !e.hasPickUpDelay() && entity.wantsToPickUp(e.getItem()));
-    // DEBUG
-    ExtraGolems.LOGGER.info("Picking up " + droppedArrows.size() + " arrow stacks"); // DEBUG
-    // check a whole load of conditions to make sure we can pick up nearby arrows
-    if (!droppedArrows.isEmpty() && entity.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)
-        && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(entity.level, entity)) {
-      // actually pick up the arrows
-      entity.level.getProfiler().push("GolemLooting");
-      for (final ItemEntity i : droppedArrows) {
-        // DEBUG
-        ExtraGolems.LOGGER.info("Picking up arrows!" + i.getItem()); // DEBUG
-        if(entity.getArrowInventory().canAddItem(i.getItem())) {
-          i.setItem(entity.getArrowInventory().addItem(i.getItem()));
-          entity.onItemPickup(i);
-        }
-      }
-      entity.level.getProfiler().pop();
-      // update inventory
-      containerChanged(getArrowInventory());
-    }
-  }
-
 }

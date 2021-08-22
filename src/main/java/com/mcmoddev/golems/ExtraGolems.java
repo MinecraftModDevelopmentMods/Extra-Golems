@@ -90,7 +90,6 @@ public class ExtraGolems {
       return null;
     }
     GolemBase entity = GolemBase.create(world, id);
-    entity.setHealth(entity.getMaxHealth());
     return entity;
   }
 }

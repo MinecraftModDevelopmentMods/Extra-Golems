@@ -1,5 +1,6 @@
 package com.mcmoddev.golems.container;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,6 +16,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.mcmoddev.golems.EGConfig;
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.container.behavior.GolemBehavior;
 import com.mcmoddev.golems.container.behavior.GolemBehaviors;
@@ -25,10 +27,13 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -92,6 +97,8 @@ public final class GolemContainer {
   
   private final Optional<MultitextureSettings> multitexture;
   
+  private final ImmutableList<Component> descriptions;
+  
   private GolemContainer(AttributeSettings attributes, SwimMode swimAbility, int glow, int power, boolean hidden,
       SoundEvent sound, Optional<ParticleOptions> particle, List<ResourcePair> blocksRaw, Map<ResourcePair, Double> healItemsRaw,
       Optional<MultitextureSettings> multitexture, List<CompoundTag> goalsRaw) {
@@ -106,6 +113,7 @@ public final class GolemContainer {
     this.healItemsRaw = healItemsRaw;
     this.multitexture = multitexture;
     this.behaviorsRaw = goalsRaw;
+    
     
     // populate blocks and block tags
     ImmutableSet.Builder<ResourceLocation> bblocks = ImmutableSet.builder();
@@ -165,6 +173,9 @@ public final class GolemContainer {
       bbehaviors2.put(id, ImmutableList.copyOf(list));
     });
     behaviors = bbehaviors2.build();
+    
+    // build description list
+    this.descriptions = ImmutableList.copyOf(createDescriptions());
   }
   
   ////////// GETTERS //////////
@@ -219,12 +230,20 @@ public final class GolemContainer {
   
   /** @return the Golem's base redstone power level **/
   public int getMaxPowerLevel() { return power; }
+  
+  /** @return the description list **/
+  public ImmutableList<Component> getDescriptions() { return descriptions; }
 
+  /**
+   * @param entity the Golem
+   * @return the loot table ID, taking into account texture ID
+   */
   public ResourceLocation getLootTable(final GolemBase entity) {
+    ResourceLocation lootTable = entity.getMaterial();
     if(multitexture.isPresent()) {
-      return multitexture.get().getLootTable(entity);
+      lootTable = multitexture.get().getLootTable(entity);
     }
-    return new ResourceLocation(entity.getMaterial().getNamespace(), "entities/" + entity.getMaterial().getPath());
+    return new ResourceLocation(lootTable.getNamespace(), "entities/" + lootTable.getPath());
   }
 
   // CONVENIENCE METHODS //
@@ -283,7 +302,22 @@ public final class GolemContainer {
    * @return true if the requested behavior is present in the Golem
    */
   public boolean hasBehavior(final ResourceLocation name) {
-    return this.getBehaviors().getOrDefault(name, ImmutableList.of()).isEmpty();
+    return !this.getBehaviors().getOrDefault(name, ImmutableList.of()).isEmpty();
+  }
+  
+  /**
+   * @param <T> a GolemBehavior subclass
+   * @param name the GolemBehavior ID
+   * @param clazz the class of the corresponding GolemBehavior
+   * @return a typed list of the GolemBehaviors, may be empty
+   */
+  @SuppressWarnings("unchecked")
+  public <T extends GolemBehavior> List<T> getBehaviors(final ResourceLocation name, Class<T> clazz) {
+    List<GolemBehavior> behaviorList = this.getBehaviors().get(name);
+    if(!behaviorList.isEmpty() && clazz.isAssignableFrom(behaviorList.get(0).getClass())) {
+      return (List<T>)behaviorList;
+    }
+    return ImmutableList.of();
   }
   
   /** @return a new attribute map supplier for the Golem **/
@@ -367,5 +401,36 @@ public final class GolemContainer {
     public static SwimMode getByName(final String nameIn) {
       return valueMap.getOrDefault(nameIn, SINK);
     }
+  }
+
+  private List<Component> createDescriptions() {
+    final List<Component> list = new ArrayList<>();
+    // add "fireproof" description
+    if (attributes.hasFireImmunity()) {
+      list.add(new TranslatableComponent("enchantment.minecraft.fire_protection").withStyle(ChatFormatting.GOLD));
+    }
+    // add "explosion-proof" description
+    if (attributes.hasExplosionImmunity()) {
+      list.add(new TranslatableComponent("enchantment.minecraft.blast_protection").withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD));
+    }
+    // add "provides light" description
+    if(glow > 0) {
+      list.add(new TranslatableComponent("entitytip.provides_light").withStyle(ChatFormatting.GOLD));
+    }
+    // add "provides power" description
+    if(power > 0) {
+      list.add(new TranslatableComponent("entitytip.provides_power").withStyle(ChatFormatting.GOLD));
+    }
+    // add "cycle textures" description
+    if (EGConfig.enableTextureInteract() && multitexture.isPresent() && multitexture.get().canCycle()) {
+      list.add(new TranslatableComponent("entitytip.click_change_texture").withStyle(ChatFormatting.BLUE));
+    }
+    // add "advanced swimmer" description
+    if(swimAbility == SwimMode.SWIM) {
+      list.add(new TranslatableComponent("entitytip.advanced_swim").withStyle(ChatFormatting.AQUA));
+    }
+    // add all other descriptions
+    behaviors.values().forEach(l -> l.forEach(b -> b.onAddDescriptions(list)));
+    return list;
   }
 }

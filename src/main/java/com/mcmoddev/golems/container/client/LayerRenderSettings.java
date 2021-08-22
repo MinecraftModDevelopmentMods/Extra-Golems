@@ -3,8 +3,6 @@ package com.mcmoddev.golems.container.client;
 import java.util.Optional;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.util.ResourcePair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

@@ -16,11 +16,11 @@
 	"textures": {
 	  "0": {
 		"blocks": "minecraft:furnace",
-		"light": 8,
 		"loot_table": "golems:furnace"
 	  },
 	  "1": {
-		"loot_table": "golems:furnace"
+		"loot_table": "golems:furnace",
+		"light": 8
 	  }
     }
   },
@@ -28,7 +28,9 @@
 	{
 	  "type": "golems:use_fuel",
 	  "max_fuel": 102400,
-	  "burn_interval": 10
+	  "burn_interval": 10,
+	  "texture_fueled": 1,
+	  "texture_empty": 0
 	}
   ]
 }

@@ -1,11 +1,9 @@
 package com.mcmoddev.golems.render;
 
-import java.util.Map;
 import java.util.Optional;
 
 import javax.annotation.Nullable;
 
-import com.google.common.collect.ImmutableMap;
 import com.mcmoddev.golems.EGConfig;
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.container.client.GolemRenderSettings;
@@ -26,7 +24,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.animal.IronGolem;
 
 /**
  * GolemRenderer is the same as RenderIronGolem but with casting to GolemBase
@@ -39,9 +36,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
   protected static final ResourceLocation boneTexture = new ResourceLocation(ExtraGolems.MODID, "textures/entity/bone_skeleton.png");
   protected static final ResourceLocation specialTexture = new ResourceLocation(ExtraGolems.MODID, "textures/entity/special.png");
   protected static final ResourceLocation specialTexture2 = new ResourceLocation(ExtraGolems.MODID, "textures/entity/special2.png");
-  
-  private static final Map<IronGolem.Crackiness, ResourceLocation> cracksToTextureMap = ImmutableMap.of(IronGolem.Crackiness.LOW, new ResourceLocation("textures/entity/iron_golem/iron_golem_crackiness_low.png"), IronGolem.Crackiness.MEDIUM, new ResourceLocation("textures/entity/iron_golem/iron_golem_crackiness_medium.png"), IronGolem.Crackiness.HIGH, new ResourceLocation("textures/entity/iron_golem/iron_golem_crackiness_high.png"));
-  
+    
   private static final Vector3f ONE = new Vector3f(1.0F, 1.0F, 1.0F);
   
   protected boolean isAlphaLayer;

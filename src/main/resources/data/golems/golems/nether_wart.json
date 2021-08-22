@@ -8,26 +8,27 @@
   "swim_ability": "float",
   "sound": "minecraft:block.grass.step",
   "heal_items": {
-    "#minecraft:crimson_stems": 0.5,
-	"minecraft:crimson_fungus": 0.15
+    "minecraft:nether_wart_block": 0.5,
+    "minecraft:warped_wart_block": 0.5,
+	"minecraft:nether_wart": 0.15
   },
   "multitexture": {
 	"texture_count": 2,
 	"textures": {
 	  "0": {
 		"blocks": "minecraft:nether_wart_block",
-		"loot_table": "golems:stem/crimson"
+		"loot_table": "golems:nether_wart/nether"
 	  },
 	  "1": {
 		"blocks": "minecraft:warped_wart_block",
-		"loot_table": "golems:stem/warped"
+		"loot_table": "golems:nether_wart/warped"
 	  }
 	}
   },
   "behavior": [ 
     {
 	  "type": "golems:place_blocks",
-	  "interval": 1200,
+	  "interval": 1050,
 	  "blocks": [
 	    "minecraft:nether_wart"
 	  ],

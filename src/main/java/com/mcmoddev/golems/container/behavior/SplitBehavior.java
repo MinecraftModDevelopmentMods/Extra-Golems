@@ -8,7 +8,10 @@ import javax.annotation.concurrent.Immutable;
 
 import com.mcmoddev.golems.entity.GolemBase;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.damagesource.DamageSource;
 
 @Immutable
@@ -52,5 +55,10 @@ public class SplitBehavior extends GolemBehavior {
       }
     }
     return children;
+  }
+  
+  @Override
+  public void onAddDescriptions(List<Component> list) {
+    list.add(new TranslatableComponent("entitytip.split_on_death").withStyle(ChatFormatting.GREEN));
   }
 }

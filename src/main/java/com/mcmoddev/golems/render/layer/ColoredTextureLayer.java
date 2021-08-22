@@ -19,7 +19,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
 
 public class ColoredTextureLayer<T extends GolemBase> extends RenderLayer<T, GolemModel<T>> {
   

@@ -7,8 +7,11 @@ import com.mcmoddev.golems.entity.GolemBase;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.animal.SnowGolem;
 import net.minecraft.world.item.ItemStack;
@@ -61,7 +64,7 @@ public final class GolemHeadBlock extends HorizontalDirectionalBlock {
   @Override
   public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
     super.setPlacedBy(worldIn, pos, state, placer, stack);
-    trySpawnGolem(worldIn, pos);
+    trySpawnGolem(placer, worldIn, pos);
   }
 
   /**
@@ -69,11 +72,12 @@ public final class GolemHeadBlock extends HorizontalDirectionalBlock {
    * be built there and, if so, removes the blocks and spawns the corresponding
    * entity.
    *
+   * @param placer the living entity that triggered the golem spawning
    * @param world   current world
    * @param headPos the position of the entity head block
    * @return if the entity was built and spawned
    */
-  public static boolean trySpawnGolem(final Level world, final BlockPos headPos) {
+  public static boolean trySpawnGolem(@Nullable final Entity placer, final Level world, final BlockPos headPos) {
     if (world.isClientSide()) {
       return false;
     }
@@ -151,6 +155,9 @@ public final class GolemHeadBlock extends HorizontalDirectionalBlock {
       golem.moveTo(spawnX, spawnY, spawnZ, 0.0F, 0.0F);
       ExtraGolems.LOGGER.debug("[Extra Golems]: Building golem " + golem.toString());
       world.addFreshEntity(golem);
+      if(placer != null && placer.getCommandSenderWorld() instanceof ServerLevel) {
+        golem.finalizeSpawn((ServerLevel)placer.getCommandSenderWorld(), world.getCurrentDifficultyAt(headPos), MobSpawnType.MOB_SUMMONED, null, null);
+      }
       golem.onBuilt(stateBelow1, stateBelow2, flagX ? stateArmEast : stateArmWest, flagX ? stateArmNorth : stateArmSouth);
       return true;
     }

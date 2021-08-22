@@ -30,7 +30,22 @@
 	  }
 	}
   },
-  "behavior": [ 
+  "behavior": [
+    {
+	  "type": "golems:passive_effect",
+	  "night_only": true,
+	  "effect": {
+		"target": "self",
+		"chance": 0.08,
+		"effects": [
+		  {
+  	  	    "Potion": "minecraft:regeneration",
+  	  	    "Amplifier": 0,
+  	  	    "Duration": 300
+  	      }
+	    ]
+	  }
+	},
     {
 	  "type": "golems:place_blocks",
 	  "interval": 1050,

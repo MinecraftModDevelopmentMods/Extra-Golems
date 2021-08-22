@@ -11,7 +11,10 @@ import com.mcmoddev.golems.entity.goal.LookAtWhenActiveGoal;
 import com.mcmoddev.golems.entity.goal.LookRandomlyWhenActiveGoal;
 import com.mcmoddev.golems.entity.goal.UseFuelGoal;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -26,16 +29,24 @@ public class UseFuelBehavior extends GolemBehavior {
   
   protected final int maxFuel;
   protected final int interval;
+  protected final int textureFueled;
+  protected final int textureEmpty;
 
   public UseFuelBehavior(CompoundTag tag) {
     super(tag, GolemBehaviors.USE_FUEL);
     maxFuel = tag.getInt("max_fuel");
     interval = tag.getInt("burn_interval");
+    textureFueled = tag.contains("texture_fueled") ? tag.getInt("texture_fueled") : -1;
+    textureEmpty = tag.contains("texture_empty") ? tag.getInt("texture_empty") : -1;
   }
   
   public int getMaxFuel() { return maxFuel; }
   
   public int getInterval() { return interval; }
+  
+  public int getTextureFueled() { return textureFueled; }
+  
+  public int getTextureEmpty() { return textureEmpty; }
   
   @Override
   public void onRegisterGoals(final GolemBase entity) {
@@ -63,6 +74,11 @@ public class UseFuelBehavior extends GolemBehavior {
   @Override
   public void onReadData(final GolemBase entity, final CompoundTag tag) {
     entity.loadFuel(tag);
+  }
+  
+  @Override
+  public void onAddDescriptions(List<Component> list) {
+    list.add(new TranslatableComponent("entitytip.use_fuel").withStyle(ChatFormatting.GRAY));
   }
   
   protected static boolean removeGoal(final GolemBase entity, final Class<? extends Goal> goalToRemove) {

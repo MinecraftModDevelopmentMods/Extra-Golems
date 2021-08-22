@@ -30,7 +30,7 @@
   "behavior": [ 
     {
 	  "type": "golems:place_blocks",
-	  "interval": 2000,
+	  "interval": 1400,
 	  "blocks": [
 	    "minecraft:crimson_fungus"
 	  ],
@@ -41,7 +41,7 @@
 	},
 	{
 	  "type": "golems:place_blocks",
-	  "interval": 2200,
+	  "interval": 1600,
 	  "blocks": [
 	    "minecraft:warped_fungus"
 	  ],

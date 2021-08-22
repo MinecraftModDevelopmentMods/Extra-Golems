@@ -14,6 +14,7 @@ import com.mcmoddev.golems.util.ResourcePair;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 
@@ -61,5 +62,10 @@ public class PlaceBlocksBehavior extends GolemBehavior {
     supportList.addAll(GolemContainer.getAllBlocks(supports, supportTags));
     // add a new PlaceBlocksGoal with the given parameters
     entity.goalSelector.addGoal(2, new PlaceBlocksGoal(entity, interval, blockList.toArray(new Block[0]), supportList.toArray(new Block[0])));
+  }
+  
+  @Override
+  public void onAddDescriptions(List<Component> list) {
+    // TODO
   }
 }

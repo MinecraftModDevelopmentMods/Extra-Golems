@@ -13,6 +13,7 @@ import com.mcmoddev.golems.container.GolemContainer;
 import com.mcmoddev.golems.container.behavior.GolemBehaviors;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.network.SGolemContainerPacket;
+import com.mcmoddev.golems.network.SummonGolemCommand;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -30,6 +31,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.AddReloadListenerEvent;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -53,6 +55,11 @@ public class EGForgeEvents {
     }
   }
 
+  @SubscribeEvent
+  public static void onAddCommands(final RegisterCommandsEvent event) {
+    SummonGolemCommand.register(event.getDispatcher());
+  }
+
   /**
    * Checks if a Carved Pumpkin was placed and, if so, attempts to spawn a entity
    * at that location where enabled by the config.
@@ -63,7 +70,7 @@ public class EGForgeEvents {
     if (!event.isCanceled() && EGConfig.pumpkinBuildsGolems() && event.getPlacedBlock().getBlock() == Blocks.CARVED_PUMPKIN
         && event.getWorld() instanceof Level) {
       // try to spawn a entity!
-      GolemHeadBlock.trySpawnGolem((Level) event.getWorld(), event.getPos());
+      GolemHeadBlock.trySpawnGolem(event.getEntity(), (Level) event.getWorld(), event.getPos());
     }
   }
 
@@ -139,7 +146,6 @@ public class EGForgeEvents {
       Optional<GolemContainer> type = ExtraGolems.PROXY.GOLEM_CONTAINERS.get(typeName);
       if (type.isPresent()) {
         GolemBase golem = GolemBase.create(world, typeName);
-        golem.setHealth(golem.getMaxHealth());
         // randomize texture if applicable
         if (golem.getTextureCount() > 0) {
           golem.randomizeTexture(world, blockpos2);
@@ -148,6 +154,7 @@ public class EGForgeEvents {
         if (golem.checkSpawnRules(world, MobSpawnType.MOB_SUMMONED) && golem.checkSpawnObstruction(world)) {
           golem.setPos(blockpos2.getX(), blockpos2.getY(), blockpos2.getZ());
           world.addFreshEntity(golem);
+          golem.finalizeSpawn(world, world.getCurrentDifficultyAt(blockpos2), MobSpawnType.MOB_SUMMONED, null, null);
           return golem;
         } else {
           golem.discard();;

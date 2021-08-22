@@ -32,25 +32,27 @@ List of bugs, fixes, and features for the 1.17 version of Extra Golems
 - X Add RenderSettings Codec
 - X Add single entity type
 - X Add synched data for Material (key for Container)
-- _ Descriptions
+- X Descriptions
 - _ Bedrock Golem JSON
 - _ Coral Golem JSON
 - X Dispenser Golem JSON
-- _ Localisation
+- X Localisation
 
 
 ## Bugs
 
 - X Properly read ParticleType
-- _ Dispenser Golem: not detecting and picking up arrows
-- _ Furnace Golem: change texture based on fuel
+- X Dispenser Golem: not detecting and picking up arrows
+- X Furnace Golem: change texture based on fuel
 - _ Hay Golem: crop boost
 - _ Honeycomb golem: summon bees
 - X Fix Kitty layer rendering
-- _ Fix golem book textures
+- X Fix golem book textures
+- _ Golem book: next-page buttons not showing on page 5&6
 
 ## New Features
 
+- X Brick Golem
 - _ (Polished) Deepslate Golem
 - _ Amethyst Block Golem (+Budding Amethyst?)
 - _ Copper Golem
@@ -58,9 +60,9 @@ List of bugs, fixes, and features for the 1.17 version of Extra Golems
 - _ Moss Block Golem
 - _ Calcite Golem?
 - _ Tuff Golem?
-- _ Tinted Glass? (add to Glass Golem)
-- _ Add "/golem" command (replacement for "/summon" that is specialized for golems)
-- _ Disable summoning golem entity type once that is done
+- X Tinted Glass? (add to Glass Golem)
+- X Add "/golem" command (replacement for "/summon" that is specialized for golems)
+- X Disable summoning golem entity type once that is done
 - _ Re-add HWYLA integration when available
 - _ Make datapacks for other mods (Mekanism, Immersive Engineering, Thermal, CLib, Quark)
 
@@ -211,7 +213,9 @@ The below example includes all functionality that will be available for each gol
 	{
 	  "type": "golems:use_fuel",
 	  "max_fuel": 102400,
-	  "burn_interval": 10 // number of ticks before depleting fuel
+	  "burn_interval": 10, // number of ticks before depleting fuel
+	  "texture_fueled": 1, // only used when multitexture is present
+	  "texture_empty": 0
 	},
 	
 	// Place plants or other blocks

@@ -1,11 +1,16 @@
 package com.mcmoddev.golems.container.behavior;
 
+import java.util.List;
+
 import javax.annotation.concurrent.Immutable;
 
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.entity.goal.RandomTeleportGoal;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.IndirectEntityDamageSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -58,5 +63,10 @@ public class TeleportBehavior extends GolemBehavior {
         }
       }
     }
+  }
+  
+  @Override
+  public void onAddDescriptions(List<Component> list) {
+    list.add(new TranslatableComponent("entitytip.teleport").withStyle(ChatFormatting.LIGHT_PURPLE));
   }
 }

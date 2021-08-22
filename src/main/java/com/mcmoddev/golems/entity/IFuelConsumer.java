@@ -16,17 +16,17 @@ public interface IFuelConsumer {
    * @param fuel the new amount of fuel
    **/
   void setFuel(final int fuel);
-
   /** @return the amount of fuel remaining **/
   int getFuel();
-  
   /** @return the maximum amount of fuel **/
   int getMaxFuel();
   
+  /** @param tag the CompoundTag to write to **/
   default void saveFuel(final CompoundTag tag) {
     tag.putInt(KEY_FUEL, getFuel());
   }
   
+  /** @param tag the CompoundTag to read from **/
   default void loadFuel(final CompoundTag tag) {
     setFuel(tag.getInt(KEY_FUEL));
   }
@@ -48,6 +48,13 @@ public interface IFuelConsumer {
     }
   }
   
+  /**
+   * Called on mob interaction. Attempts to consume the player's
+   * current item and add fuel. Also handles water buckets causing
+   * fuel reset.
+   * @param player the player
+   * @param hand the player's hand
+   */
   default void consumeFuel(final Player player, final InteractionHand hand) {
     // allow player to add fuel to the entity by clicking on them with a fuel item
     ItemStack stack = player.getItemInHand(hand);

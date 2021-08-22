@@ -1,5 +1,9 @@
 package com.mcmoddev.golems.entity;
 
+import java.util.List;
+
+import javax.annotation.Nullable;
+
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGConfig;
 import com.mcmoddev.golems.EGRegistry;
@@ -31,6 +35,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleContainer;
@@ -39,7 +44,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
@@ -50,11 +57,14 @@ import net.minecraft.world.entity.ai.goal.RangedAttackGoal;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.WaterBoundPathNavigation;
 import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.BannerItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShearsItem;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -76,9 +86,9 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
   protected static final EntityDataAccessor<Boolean> FUSE_LIT = SynchedEntityData.<Boolean>defineId(GolemBase.class, EntityDataSerializers.BOOLEAN);
   protected static final EntityDataAccessor<Integer> ARROWS = SynchedEntityData.<Integer>defineId(GolemBase.class, EntityDataSerializers.INT);
   
-  protected static final String KEY_MATERIAL = "Material";
-  protected static final String KEY_CHILD = "IsChild";
-  protected static final String KEY_BANNER = "Banner";
+  public static final String KEY_MATERIAL = "Material";
+  public static final String KEY_CHILD = "IsChild";
+  public static final String KEY_BANNER = "Banner";
 
   private ResourceLocation material = new ResourceLocation(ExtraGolems.MODID, "empty");
   private GolemContainer container = GolemContainer.EMPTY;
@@ -110,7 +120,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
     // the following will only be used if ShootArrowsBehavior is added
     aiArrowAttack = new RangedAttackGoal(this, 1.0D, 28, 32.0F);
     aiMeleeAttack = new MeleeAttackGoal(this, 1.0D, true);
-    initInventory();
+    initArrowInventory();
   }
   
   public static GolemBase create(final Level world, final ResourceLocation material) {
@@ -211,6 +221,13 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
     }
   }
   
+  @Override
+  public SpawnGroupData finalizeSpawn(ServerLevelAccessor serverLevel, DifficultyInstance difficulty, 
+      MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag tag) {
+    this.setHealth(this.getMaxHealth());
+    return super.finalizeSpawn(serverLevel, difficulty, mobSpawnType, spawnGroupData, tag);
+  }
+
   @Override
   protected void registerGoals() {
     super.registerGoals();
@@ -317,9 +334,8 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
         this.hurt(DamageSource.ON_FIRE, 1.0F);
       }
     }
-    // pick up nearby arrows
+    // update combat goal when arrows behavior is enabled
     if(getContainer().hasBehavior(GolemBehaviors.SHOOT_ARROWS) && tickCount % 35 == 1) {
-      pickupArrows();
       final boolean forceMelee = (getTarget() != null && getTarget().distanceToSqr(this) < 8.0D);
       updateCombatTask(forceMelee);
     }
@@ -372,8 +388,13 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
   }
   
   @Override
+  public boolean fireImmune() {
+    return getContainer().getAttributes().hasFireImmunity();
+  }
+  
+  @Override
   public boolean ignoreExplosion() {
-    return this.getContainer().getAttributes().hasExplosionImmunity();
+    return getContainer().getAttributes().hasExplosionImmunity();
   }
 
   @Override
@@ -412,7 +433,9 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
   @Override
   protected InteractionResult mobInteract(final Player player, final InteractionHand hand) {
     ItemStack stack = player.getItemInHand(hand);
-    ExtraGolems.LOGGER.info(getContainer().toString()); // DEBUG
+    // DEBUG
+    ExtraGolems.LOGGER.info(getContainer().toString());
+    ExtraGolems.LOGGER.info(getContainer().getLootTable(this));
     // Attempt to remove banner from the entity
     if(!this.getBanner().isEmpty() && stack.getItem() instanceof ShearsItem) {
       this.spawnAtLocation(this.getBanner(), this.isBaby() ? 0.9F : 1.4F);
@@ -539,6 +562,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
     this.setBaby(tag.getBoolean(KEY_CHILD));
     container.getMultitexture().ifPresent(m -> loadTextureId(tag));
     // allow behaviors to process readData
+    initArrowInventory();
     this.getContainer().getBehaviors().values().forEach(list -> list.forEach(b -> b.onReadData(this, tag)));
   }
 
@@ -602,7 +626,9 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
   
   @Override
   public void setTextureId(byte toSet) {
-    this.getEntityData().set(TEXTURE, toSet);
+    if(toSet >= 0) {
+      this.getEntityData().set(TEXTURE, toSet);
+    }
   }
 
   @Override
@@ -628,8 +654,18 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
   ///////////////////// FUEL ////////////////////////
   
   @Override
-  public void setFuel(int fuel) { 
+  public void setFuel(int fuel) {
     getEntityData().set(FUEL, fuel);
+    // change fueled/empty texture if enabled
+    List<UseFuelBehavior> fuelBehaviors = getContainer().getBehaviors(GolemBehaviors.USE_FUEL, UseFuelBehavior.class);
+    if(getContainer().getMultitexture().isPresent() && !fuelBehaviors.isEmpty()
+        && fuelBehaviors.get(0).getTextureEmpty() >= 0 && fuelBehaviors.get(0).getTextureFueled() >= 0) {
+      if(fuel > 0) {
+        setTextureId((byte)fuelBehaviors.get(0).getTextureFueled());
+      } else {
+        setTextureId((byte)fuelBehaviors.get(0).getTextureEmpty());
+      }
+    }
   }
 
   @Override
@@ -665,7 +701,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
   ///////////////////// SHOOT ARROWS ////////////////////////
 
   @Override
-  public void initInventory() {
+  public void initArrowInventory() {
     SimpleContainer simplecontainer = this.inventory;
     this.inventory = new SimpleContainer(INVENTORY_SIZE);
     if (simplecontainer != null) {
@@ -694,10 +730,24 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 
   @Override
   public boolean wantsToPickUp(ItemStack stack) {
-    if(this.getContainer().hasBehavior(GolemBehaviors.SHOOT_ARROWS)) {
-      return getArrowInventory().canAddItem(stack);//IArrowShooter.PICK_UP_ARROW_PRED.test(getArrowInventory(), stack);
+    if(stack != null && !stack.isEmpty() && stack.getItem() instanceof ArrowItem 
+        && getContainer().hasBehavior(GolemBehaviors.SHOOT_ARROWS)) {
+      // make sure the entity can pick up this stack
+      for (int i = 0, l = getArrowInventory().getContainerSize(); i < l; i++) {
+        final ItemStack invStack = getArrowInventory().getItem(i);
+        if (invStack.isEmpty() || (invStack.getItem() == stack.getItem() && ItemStack.tagMatches(invStack, stack)
+            && invStack.getCount() + stack.getCount() <= invStack.getMaxStackSize())) {
+          return true;
+        }
+      }
+      return false;
     }
     return this.canHoldItem(stack);
+  }
+
+  @Override
+  public boolean canPickUpLoot() {
+    return getContainer().hasBehavior(GolemBehaviors.SHOOT_ARROWS) || super.canPickUpLoot();
   }
   
   @Override
@@ -722,6 +772,28 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
       dropArrowInventory();
     }
   }
+  
+  @Override
+  public boolean equipItemIfPossible(ItemStack stack) {
+    if(!stack.isEmpty() && stack.getItem() instanceof ArrowItem
+        && getContainer().hasBehavior(GolemBehaviors.SHOOT_ARROWS)
+        && getArrowInventory().canAddItem(stack)) {
+      // attempt to add the arrows to the inventory
+      getArrowInventory().addItem(stack);
+      return true;
+    } else {
+      return super.equipItemIfPossible(stack);
+    }
+  }
+  
+  @Override
+  public void onItemPickup(ItemEntity itemEntity) {
+    super.onItemPickup(itemEntity);
+    containerChanged(getArrowInventory());
+  }
+  
+  @Override
+  public boolean canHoldItem(ItemStack item) { return false; }
   
   ///////////////////// SWIMMING BEHAVIOR ////////////////////////
 

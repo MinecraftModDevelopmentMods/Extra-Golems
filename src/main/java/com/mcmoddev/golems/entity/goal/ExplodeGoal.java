@@ -4,6 +4,7 @@ import java.util.EnumSet;
 
 import com.mcmoddev.golems.entity.IRandomExploder;
 
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 
@@ -31,9 +32,12 @@ public class ExplodeGoal<T extends Mob & IRandomExploder> extends Goal {
   
   @Override
   public void tick() {
+    entity.setFuse(entity.getFuse() - 1);
     entity.getNavigation().stop();
     if (entity.isInWaterRainOrBubble()) {
+      // reset fuse and play sound when wet
       stop();
+      entity.playSound(SoundEvents.FIRE_EXTINGUISH, 0.9F, entity.getRandom().nextFloat());
     } else if(entity.getFuse() <= 0) {
       entity.explode(range);
     }

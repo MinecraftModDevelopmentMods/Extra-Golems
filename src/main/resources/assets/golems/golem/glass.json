@@ -18,8 +18,13 @@
 	  "13": "minecraft:brown_stained_glass",
 	  "14": "minecraft:green_stained_glass",
 	  "15": "minecraft:red_stained_glass",
-	  "16": "minecraft:black_stained_glass"
+	  "16": "minecraft:black_stained_glass",
+	  "17": "minecraft:tinted_glass"
     }
   },
-  "layers": [ ]
+  "layers": [ 
+  	{
+	  "texture": "#golems:layer/eyes/eyes"
+	}
+  ]
 }

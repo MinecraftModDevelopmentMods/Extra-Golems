@@ -1,13 +1,17 @@
 package com.mcmoddev.golems.container.behavior;
 
+import java.util.List;
+
 import javax.annotation.concurrent.Immutable;
 
-import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.entity.goal.MoveToArrowsGoal;
 import com.mcmoddev.golems.menu.DispenserGolemMenu;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
@@ -66,5 +70,11 @@ public class ShootArrowsBehavior extends GolemBehavior {
   @Override
   public void onReadData(final GolemBase entity, final CompoundTag tag) {
     entity.loadArrowInventory(tag);
+  }
+  
+  @Override
+  public void onAddDescriptions(List<Component> list) {
+    list.add(new TranslatableComponent("entitytip.shoot_arrows").withStyle(ChatFormatting.LIGHT_PURPLE));
+    list.add(new TranslatableComponent("entitytip.click_refill").withStyle(ChatFormatting.GRAY));
   }
 }

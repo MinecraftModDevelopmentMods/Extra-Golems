@@ -11,8 +11,6 @@ import com.mcmoddev.golems.item.SpawnGolemItem;
 import com.mcmoddev.golems.menu.DispenserGolemMenu;
 import com.mcmoddev.golems.menu.PortableCraftingMenu;
 
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.inventory.MenuType;
@@ -20,6 +18,8 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.RegistryEvent;
@@ -71,7 +71,7 @@ public final class EGRegistry {
   public static void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
     ExtraGolems.LOGGER.info(ExtraGolems.MODID + ":registerEntities");
     EntityType.Builder<GolemBase> builder = EntityType.Builder.of(GolemBase::new, MobCategory.MISC)
-        .setTrackingRange(48).setUpdateInterval(3).setShouldReceiveVelocityUpdates(true).sized(1.4F, 2.9F);
+        .setTrackingRange(48).setUpdateInterval(3).setShouldReceiveVelocityUpdates(true).sized(1.4F, 2.9F).noSummon();
     EntityType<GolemBase> entityType = builder.build("golem");
     event.getRegistry().register(entityType.setRegistryName(ExtraGolems.MODID, "golem"));
   }

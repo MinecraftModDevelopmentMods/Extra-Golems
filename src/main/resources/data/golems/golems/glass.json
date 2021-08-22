@@ -11,7 +11,7 @@
 	"#forge:glass_panes": 0.15
   },
   "multitexture": {
-    "texture_count": 17,
+    "texture_count": 18,
 	"textures": {
 	  "0": {
 		"blocks": "#forge:glass/colorless",
@@ -80,6 +80,10 @@
 	  "16": {
 		"blocks": "#forge:glass/black",
 		"loot_table": "golems:glass/black"
+	  },
+	  "17": {
+	    "blocks": "#forge:glass/tinted",
+	    "loot_table": "golems:glass/tinted"
 	  }
     }
   }

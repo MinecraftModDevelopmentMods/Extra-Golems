@@ -13,6 +13,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
 
 public class DispenserGolemMenu extends AbstractContainerMenu {
 
@@ -105,7 +106,7 @@ public class DispenserGolemMenu extends AbstractContainerMenu {
 
     @Override
     public Component getDisplayName() {
-      return new TranslatableComponent("entity.golems.dispenser");
+      return Blocks.DISPENSER.getName();
     }
   }
 

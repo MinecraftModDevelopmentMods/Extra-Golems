@@ -14,6 +14,20 @@
   },
   "behavior": [ 
     {
+	  "type": "golems:passive_effect",
+	  "effect": {
+		"target": "self",
+		"chance": 0.08,
+		"effects": [
+		  {
+  	  	    "Potion": "minecraft:regeneration",
+  	  	    "Amplifier": 0,
+  	  	    "Duration": 300
+  	      }
+	    ]
+	  }
+	},
+	{
 	  "type": "golems:place_blocks",
 	  "interval": 1100,
 	  "blocks": [

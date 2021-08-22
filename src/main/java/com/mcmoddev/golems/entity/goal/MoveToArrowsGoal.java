@@ -3,7 +3,6 @@ package com.mcmoddev.golems.entity.goal;
 import java.util.EnumSet;
 import java.util.List;
 
-import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.entity.IArrowShooter;
 

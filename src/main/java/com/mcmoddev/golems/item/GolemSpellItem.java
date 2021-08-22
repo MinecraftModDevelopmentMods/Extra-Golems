@@ -52,7 +52,7 @@ public class GolemSpellItem extends Item {
         if (!cxt.getLevel().isClientSide()) {
           final Direction facing = cxt.getLevel().getBlockState(cxt.getClickedPos()).getValue(HorizontalDirectionalBlock.FACING);
           cxt.getLevel().setBlock(cxt.getClickedPos(), EGRegistry.GOLEM_HEAD.defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, facing), 3);
-          GolemHeadBlock.trySpawnGolem(cxt.getLevel(), cxt.getClickedPos());
+          GolemHeadBlock.trySpawnGolem(cxt.getPlayer(), cxt.getLevel(), cxt.getClickedPos());
           cxt.getItemInHand().shrink(1);
         }
         return InteractionResult.SUCCESS;

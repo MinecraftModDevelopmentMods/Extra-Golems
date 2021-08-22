@@ -6,9 +6,9 @@
     "speed": 0.28
   },
   "swim_ability": "float",
-  "blocks": "#storage_blocks:coal",
+  "blocks": "#forge:storage_blocks/coal",
   "heal_items": {
-	"#storage_blocks:coal": 0.5,
+	"#forge:storage_blocks/coal": 0.5,
     "#minecraft:coals": 0.1
   },
   "behavior": [ 
