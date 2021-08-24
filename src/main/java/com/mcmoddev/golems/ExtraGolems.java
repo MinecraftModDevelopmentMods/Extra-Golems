@@ -20,6 +20,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.InterModComms;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -65,7 +67,11 @@ public class ExtraGolems {
   }
 
   private void enqueueIMC(final InterModEnqueueEvent event) {
-
+    // register TheOneProbe integration
+    if(ModList.get().isLoaded("theoneprobe")) {
+      ExtraGolems.LOGGER.info("Extra Golems detected TheOneProbe, registering plugin now");
+      InterModComms.sendTo(MODID, "theoneprobe", "getTheOneProbe", () -> new com.mcmoddev.golems.integration.TOPDescriptionManager.GetTheOneProbe());
+    }
   }
   
   /**

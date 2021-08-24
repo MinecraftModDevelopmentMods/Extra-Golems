@@ -67,12 +67,14 @@ List of bugs, fixes, and features for the 1.17 version of Extra Golems
 - X Raw Copper Golem, Raw Gold Golem, Raw Iron Golem
 - X Moss Block Golem (place Moss Carpet)
 - X Tinted Glass? (add to Glass Golem)
-- _ Golem names: Amethyst, Moss, Raw Iron, Raw Copper, Raw Gold, Waxed Copper, Copper, Polished Deepslate
-- _ Loot tables: Amethyst, Moss, Raw Iron, Raw Copper, Raw Gold, Waxed Copper, Copper, Polished Deepslate
 - _ Descriptions: summon_x, follow_x, burn_in_sun
+- _ Golem names: Amethyst, Moss, Raw Iron, Raw Copper, Raw Gold, Waxed Copper, Copper, Polished Deepslate, Brick
+  - da, de, fr, pt, ru, zh
+- X Loot tables: Amethyst, Moss, Raw Iron, Raw Copper, Raw Gold, Waxed Copper, Copper, Polished Deepslate, Brick
 - X Add "/golem" command (replacement for "/summon" that is specialized for golems)
 - X Disable summoning golem entity type once that is done
-- _ Re-add HWYLA integration when available
+- X TOP integration
+- _ Jade integration?
 - _ Make datapacks for other mods (Mekanism, Immersive Engineering, Thermal, CLib, Quark)
 
 
