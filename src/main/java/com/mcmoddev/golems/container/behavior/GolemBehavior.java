@@ -11,7 +11,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -36,11 +35,9 @@ public abstract class GolemBehavior {
   protected static final MutableComponent EFFECTS_ENEMY_DESC = new TranslatableComponent("entitytip.potion_effects_enemy").withStyle(ChatFormatting.LIGHT_PURPLE);
   
   protected final CompoundTag tag;
-  protected final ResourceLocation registryName;
   
-  public GolemBehavior(final CompoundTag tag, final ResourceLocation id) {
+  public GolemBehavior(final CompoundTag tag) {
     this.tag = tag;
-    this.registryName = id;
   }
 
   /**
@@ -113,15 +110,5 @@ public abstract class GolemBehavior {
    */
   public void onAddDescriptions(List<Component> list) {
     
-  }
-  
-  /** @return a unique ID for a GolemBehavior **/
-  public ResourceLocation getRegistryName() {
-    return registryName;
-  };
-  
-  @Override
-  public String toString() {
-    return "GolemBehavior: tag=" + tag.toString();
   }
 }

@@ -25,12 +25,9 @@ public class PlaceBlocksBehavior extends GolemBehavior {
   
   private final List<ResourceLocation> blocks = new ArrayList<>();
   private final List<ResourceLocation> blockTags = new ArrayList<>();
-  
-  private final List<ResourceLocation> supports = new ArrayList<>();
-  private final List<ResourceLocation> supportTags = new ArrayList<>();
 
   public PlaceBlocksBehavior(CompoundTag tag) {
-    super(tag, GolemBehaviors.PLACE_BLOCKS);
+    super(tag);
     interval = tag.getInt("interval");
     // read blocks
     ListTag blocksTag = (ListTag) tag.get("blocks");
@@ -41,15 +38,6 @@ public class PlaceBlocksBehavior extends GolemBehavior {
         else blocks.add(p.resource());
       });
     }
-    // read supports
-    ListTag supportsTag = (ListTag) tag.get("supports");
-    for(int i = 0, l = supportsTag.size(); i < l; i++) {
-      Optional<ResourcePair> result = ResourcePair.read(blocksTag.getString(i)).resultOrPartial(s -> ExtraGolems.LOGGER.error("Error reading 'supports' from NBT\n" + s));
-      result.ifPresent(p -> {
-        if(p.flag()) supportTags.add(p.resource());
-        else supports.add(p.resource());
-      });
-    }
   }
   
   @Override
@@ -57,11 +45,8 @@ public class PlaceBlocksBehavior extends GolemBehavior {
     // resolve blocks and block tags
     List<Block> blockList = new ArrayList<>();
     blockList.addAll(GolemContainer.getAllBlocks(blocks, blockTags));
-    // resolve supports and support tags
-    List<Block> supportList = new ArrayList<>();
-    supportList.addAll(GolemContainer.getAllBlocks(supports, supportTags));
     // add a new PlaceBlocksGoal with the given parameters
-    entity.goalSelector.addGoal(2, new PlaceBlocksGoal(entity, interval, blockList.toArray(new Block[0]), supportList.toArray(new Block[0])));
+    entity.goalSelector.addGoal(2, new PlaceBlocksGoal(entity, interval, blockList.toArray(new Block[0])));
   }
   
   @Override

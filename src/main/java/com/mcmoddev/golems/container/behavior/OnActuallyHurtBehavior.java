@@ -8,6 +8,7 @@ import javax.annotation.concurrent.Immutable;
 import com.mcmoddev.golems.container.behavior.parameter.BehaviorParameter.Target;
 import com.mcmoddev.golems.container.behavior.parameter.FireBehaviorParameter;
 import com.mcmoddev.golems.container.behavior.parameter.MobEffectBehaviorParameter;
+import com.mcmoddev.golems.container.behavior.parameter.SummonEntityBehaviorParameter;
 import com.mcmoddev.golems.entity.GolemBase;
 
 import net.minecraft.nbt.CompoundTag;
@@ -20,11 +21,13 @@ public class OnActuallyHurtBehavior extends GolemBehavior {
     
   protected final Optional<FireBehaviorParameter> fire;
   protected final Optional<MobEffectBehaviorParameter> effect;
+  protected final Optional<SummonEntityBehaviorParameter> summon;
 
   public OnActuallyHurtBehavior(CompoundTag tag) {
-    super(tag, GolemBehaviors.ON_ACTUALLY_HURT);
+    super(tag);
     fire = tag.contains("fire") ? Optional.of(new FireBehaviorParameter(tag.getCompound("fire"))) : Optional.empty();
-    effect = tag.contains("effects") ? Optional.of(new MobEffectBehaviorParameter(tag.getCompound("effects"))) : Optional.empty();
+    effect = tag.contains("effect") ? Optional.of(new MobEffectBehaviorParameter(tag.getCompound("effect"))) : Optional.empty();
+    summon = tag.contains("summon") ? Optional.of(new SummonEntityBehaviorParameter(tag.getCompound("summon"))) : Optional.empty();
   }
   
   @Override
@@ -34,6 +37,7 @@ public class OnActuallyHurtBehavior extends GolemBehavior {
       if(source.getEntity() instanceof LivingEntity) {
         effect.ifPresent(p -> p.apply(entity, (LivingEntity)source.getEntity()));
       }
+      summon.ifPresent(p -> p.apply(entity, source.getEntity()));
     }
   }
   
@@ -49,6 +53,11 @@ public class OnActuallyHurtBehavior extends GolemBehavior {
         list.add(EFFECTS_SELF_DESC);
       } else if(p.getTarget() == Target.ENEMY && !list.contains(EFFECTS_ENEMY_DESC)) {
         list.add(EFFECTS_ENEMY_DESC);
+      }
+    });
+    summon.ifPresent(p -> {
+      if(!list.contains(p.getDescription())) {
+        list.add(p.getDescription());
       }
     });
   }

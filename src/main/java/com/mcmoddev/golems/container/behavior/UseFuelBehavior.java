@@ -29,24 +29,16 @@ public class UseFuelBehavior extends GolemBehavior {
   
   protected final int maxFuel;
   protected final int interval;
-  protected final int textureFueled;
-  protected final int textureEmpty;
 
   public UseFuelBehavior(CompoundTag tag) {
-    super(tag, GolemBehaviors.USE_FUEL);
+    super(tag);
     maxFuel = tag.getInt("max_fuel");
     interval = tag.getInt("burn_interval");
-    textureFueled = tag.contains("texture_fueled") ? tag.getInt("texture_fueled") : -1;
-    textureEmpty = tag.contains("texture_empty") ? tag.getInt("texture_empty") : -1;
   }
   
   public int getMaxFuel() { return maxFuel; }
   
   public int getInterval() { return interval; }
-  
-  public int getTextureFueled() { return textureFueled; }
-  
-  public int getTextureEmpty() { return textureEmpty; }
   
   @Override
   public void onRegisterGoals(final GolemBase entity) {
@@ -54,7 +46,6 @@ public class UseFuelBehavior extends GolemBehavior {
     removeGoal(entity, RandomLookAroundGoal.class);
     entity.goalSelector.addGoal(0, new InertGoal<>(entity));
     entity.goalSelector.addGoal(1, new UseFuelGoal<>(entity, interval));
-    entity.goalSelector.addGoal(1, new TemptGoal(entity, 0.7D, Ingredient.of(ItemTags.COALS), false));
     entity.goalSelector.addGoal(7, new LookAtWhenActiveGoal<>(entity, Player.class, 6.0F));
     entity.goalSelector.addGoal(8, new LookRandomlyWhenActiveGoal<>(entity));
   }

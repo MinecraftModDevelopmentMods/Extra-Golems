@@ -44,10 +44,6 @@
 	  "interval": 1600,
 	  "blocks": [
 	    "minecraft:warped_fungus"
-	  ],
-	  "supports": [
-	    "#minecraft:dirt",
-		"#minecraft:mushroom_grow_block"
 	  ]
 	}
   ]

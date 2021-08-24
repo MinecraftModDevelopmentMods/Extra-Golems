@@ -20,7 +20,7 @@ public class SplitBehavior extends GolemBehavior {
   protected final int children;
 
   public SplitBehavior(CompoundTag tag) {
-    super(tag, GolemBehaviors.SPLIT_ON_DEATH);
+    super(tag);
     children = tag.getInt("children");
   }
   

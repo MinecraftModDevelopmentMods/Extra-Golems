@@ -28,9 +28,26 @@
 	{
 	  "type": "golems:use_fuel",
 	  "max_fuel": 102400,
-	  "burn_interval": 10,
-	  "texture_fueled": 1,
-	  "texture_empty": 0
+	  "burn_interval": 10
+	},
+	{
+	  "type": "golems:tempt",
+	  "item": "#minecraft:coals"
+	},
+	{
+	  "type": "golems:change_texture",
+	  "fuel": {
+	    "chance": 1.0,
+	    "textures": {
+	      "0": 1
+	    }
+	  },
+	  "fuel_empty": {
+	    "chance": 1.0,
+	    "textures": {
+	      "1": 0
+	    }
+	  }
 	}
   ]
 }

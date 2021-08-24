@@ -1,5 +1,8 @@
 package com.mcmoddev.golems.container.behavior.parameter;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.annotation.concurrent.Immutable;
 
 import net.minecraft.nbt.CompoundTag;
@@ -15,7 +18,7 @@ public abstract class BehaviorParameter {
   
   public BehaviorParameter() { }
   
-  public static MobEffectInstance[] readEffectArray(final ListTag effectList) {
+  protected static MobEffectInstance[] readEffectArray(final ListTag effectList) {
     // create an EffectInstance array of this size
     MobEffectInstance[] effects = new MobEffectInstance[effectList.size()];
     for(int i = 0, l = effectList.size(); i < l; i++) {
@@ -29,7 +32,7 @@ public abstract class BehaviorParameter {
     return effects;
   }
   
-  public static ListTag writeEffectArray(MobEffectInstance[] effects) {
+  protected static ListTag writeEffectArray(MobEffectInstance[] effects) {
     ListTag effectList = new ListTag();
     for(int i = 0, l = effects.length; i < l; i++) {
       if(effects[i] != null) {
@@ -37,6 +40,14 @@ public abstract class BehaviorParameter {
       }
     }
     return effectList;
+  }
+  
+  protected static Map<String, Integer> readStringIntMap(final CompoundTag tag) {
+    final Map<String, Integer> map = new HashMap<>();
+    for(final String key : tag.getAllKeys()) {
+      map.put(key, tag.getInt(key));
+    }
+    return map;
   }
   
   public static enum Target implements StringRepresentable {

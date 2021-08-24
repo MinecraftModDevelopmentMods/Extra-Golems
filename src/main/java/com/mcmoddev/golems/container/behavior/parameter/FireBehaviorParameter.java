@@ -2,22 +2,23 @@ package com.mcmoddev.golems.container.behavior.parameter;
 
 import javax.annotation.concurrent.Immutable;
 
+import com.mcmoddev.golems.entity.GolemBase;
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 
 @Immutable
 public class FireBehaviorParameter extends BehaviorParameter {
 
-  private Target target = Target.SELF;
-  private double chance = 0;
-  private int time = 0;
+  private final Target target;
+  private final double chance;
+  private final int time;
   
   public FireBehaviorParameter(final CompoundTag tag) {
     super();
-    target = Target.getByName(tag.getString("target"));
-    chance = tag.getDouble("chance");
-    time = tag.getInt("time");
+    this.target = Target.getByName(tag.getString("target"));
+    this.chance = tag.getDouble("chance");
+    this.time = tag.getInt("time");
   }
   
   public Target getTarget() { return target; }
@@ -26,7 +27,7 @@ public class FireBehaviorParameter extends BehaviorParameter {
   
   public int getTime() { return time; }
   
-  public void apply(final LivingEntity self, final Entity other) {
+  public void apply(final GolemBase self, final Entity other) {
     if(self.getRandom().nextFloat() < chance) {
       Entity fireTarget = (target == Target.SELF) ? self : other;
       if(fireTarget != null) {

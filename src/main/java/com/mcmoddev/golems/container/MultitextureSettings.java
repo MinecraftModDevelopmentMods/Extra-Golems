@@ -33,8 +33,7 @@ public class MultitextureSettings {
   private final ImmutableMap<Integer, MultitextureSettings.TextureEntry> entryMap;
   private final ImmutableMap<ResourcePair, Integer> blockMap;
   
-  private MultitextureSettings(int textureCount, boolean cycle, 
-      Map<Integer, MultitextureSettings.TextureEntry> entryMap) {
+  private MultitextureSettings(int textureCount, boolean cycle, Map<Integer, MultitextureSettings.TextureEntry> entryMap) {
     this.textureCount = textureCount;
     this.cycle = cycle;
     this.entryMap = ImmutableMap.copyOf(entryMap);
@@ -60,8 +59,15 @@ public class MultitextureSettings {
   /** @return the map of consolidated data about each texture **/
   public Map<Integer, MultitextureSettings.TextureEntry> getTextureEntryMap() { return entryMap; }
 
+  public MultitextureSettings.TextureEntry getEntry(final int textureId) {
+    return entryMap.getOrDefault(textureId, MultitextureSettings.TextureEntry.EMPTY);
+  }
+  
   /** @return a map of Block IDs or Tags and Texture IDs **/
   public Map<ResourcePair, Integer> getBlockMap() { return blockMap; }
+  
+  
+  
 
   public int getLight(final GolemBase entity) {
     return entryMap.getOrDefault(entity.getTextureId(), MultitextureSettings.TextureEntry.EMPTY).getLight();
@@ -116,7 +122,7 @@ public class MultitextureSettings {
    * This class stores information about a single texture
    * that will be used to populate the maps in MultitextureSettings
    */
-  protected static class TextureEntry {
+  public static class TextureEntry {
     
     public static final TextureEntry EMPTY = new TextureEntry(ImmutableList.of(), Optional.empty(), 0);
     
@@ -136,7 +142,7 @@ public class MultitextureSettings {
     private TextureEntry(final List<ResourcePair> blocks, final Optional<ResourceLocation> lootTable, final int light) {
       this.blocks = blocks;
       this.lootTable = lootTable;
-      this.light = light;    
+      this.light = light;
     }
 
     /** @return a List of blocks and block tags that apply to this entry **/

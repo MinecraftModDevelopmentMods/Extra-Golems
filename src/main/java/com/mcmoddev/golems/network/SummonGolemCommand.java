@@ -59,7 +59,8 @@ public class SummonGolemCommand {
     // create the golem
     tag.putString(GolemBase.KEY_MATERIAL, id.toString());
     final GolemBase entity = GolemBase.create(source.getLevel(), id);
-    entity.moveTo(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, 0.0F, 0.0F);
+    entity.load(tag);
+    entity.moveTo(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D);
     source.getLevel().addFreshEntity(entity);
     entity.finalizeSpawn(source.getLevel(), source.getLevel().getCurrentDifficultyAt(pos), MobSpawnType.COMMAND, null, tag);
     source.sendSuccess(new TranslatableComponent("command.golem.success", id, pos.getX(), pos.getY(), pos.getZ()), true);

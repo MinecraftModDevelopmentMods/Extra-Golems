@@ -20,7 +20,7 @@ public class PassiveEffectBehavior extends GolemBehavior {
   protected final Optional<MobEffectBehaviorParameter> effect;
 
   public PassiveEffectBehavior(CompoundTag tag) {
-    super(tag, GolemBehaviors.PASSIVE_EFFECT);
+    super(tag);
     nightOnly = tag.getBoolean("night_only");
     effect = tag.contains("effect") ? Optional.of(new MobEffectBehaviorParameter(tag.getCompound("effect"))) : Optional.empty();
   }

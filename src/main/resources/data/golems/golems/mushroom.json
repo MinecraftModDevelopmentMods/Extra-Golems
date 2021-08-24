@@ -52,10 +52,6 @@
 	  "blocks": [
 	    "minecraft:brown_mushroom",
 		"minecraft:red_mushroom"
-	  ],
-	  "supports": [
-	    "#minecraft:dirt",
-		"#minecraft:mushroom_grow_block"
 	  ]
 	}
   ]

@@ -1,16 +1,17 @@
 package com.mcmoddev.golems.entity.goal;
 
-import java.util.Random;
-
+import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.event.AoeFunction;
 import com.mcmoddev.golems.event.GolemModifyBlocksEvent;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Material;
@@ -37,7 +38,7 @@ public class AoeBlocksGoal extends Goal {
 
   @Override
   public boolean canUse() {
-    return !entity.isBaby() && range > 0 && entity.tickCount % interval == 0;
+    return !entity.isBaby() && range > 0 && entity.getRandom().nextInt(interval) == 0;
   }
   
   @Override
@@ -72,8 +73,6 @@ public class AoeBlocksGoal extends Goal {
   
   public static class FreezeFunction implements AoeFunction {
     
-    /** Random instance. **/
-    public final Random random;
     /** This percentage of Packed Ice placed will become regular ice instead. **/
     public final int iceChance = 52;
     /** This percentage of Obsidian placed will become cobblestone instead. **/
@@ -81,8 +80,7 @@ public class AoeBlocksGoal extends Goal {
     /** When true, all water will turn to Frosted Ice **/
     public final boolean frostedIce;
 
-    public FreezeFunction(final Random randomIn, final boolean useFrost) {
-      this.random = randomIn;
+    public FreezeFunction(final boolean useFrost) {
       this.frostedIce = useFrost;
     }
 
@@ -95,15 +93,44 @@ public class AoeBlocksGoal extends Goal {
         final Block block = input.getBlock();
 
         if (block == Blocks.WATER) {
-          final boolean isNotPacked = this.frostedIce || this.random.nextInt(100) < this.iceChance;
+          final boolean isNotPacked = this.frostedIce || entity.getRandom().nextInt(100) < this.iceChance;
           return isNotPacked ? iceState : Blocks.PACKED_ICE.defaultBlockState();
         } else if (block == Blocks.LAVA) {
-          final boolean isNotObsidian = this.random.nextInt(100) < this.cobbleChance;
+          final boolean isNotObsidian = entity.getRandom().nextInt(100) < this.cobbleChance;
           return isNotObsidian ? cobbleState : Blocks.OBSIDIAN.defaultBlockState();
         }
       }
 
       return input;
     }
+  }
+  
+  public static class GrowFunction implements AoeFunction {
+    
+    private final float growChance;
+    
+    public GrowFunction(final float growChanceIn) {
+      this.growChance = growChanceIn;
+    }
+
+    @Override
+    public BlockState map(LivingEntity entity, BlockPos pos, BlockState input) {
+      // if the block can be grown, grow it and return
+      if (input.getBlock() instanceof CropBlock) {
+        CropBlock crop = (CropBlock) input.getBlock();
+        if(!crop.isMaxAge(input) && entity.getRandom().nextFloat() < growChance) {
+          // determine the next grow stage for the crop
+          int growAge = input.getValue(crop.getAgeProperty()) + Mth.nextInt(entity.getRandom(), 2, 5);
+          int maxAge = crop.getMaxAge();
+          if (growAge > maxAge) {
+             growAge = maxAge;
+          }
+          // return the updated crop
+          return crop.getStateForAge(growAge);
+        }
+      }
+      return input;
+    }
+    
   }
 }

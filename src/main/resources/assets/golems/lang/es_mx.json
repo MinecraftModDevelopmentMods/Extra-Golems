@@ -88,7 +88,7 @@
   "entitytip.crafting_menu": "Toca para abrir menú de fabricación",
   "entitytip.advanced_swim": "Gran nadador",
   "entitytip.heals": "Sana lentamente",
-  "entitytip.grows_crops": "Ayuda a los cultivos cercanos",
+  "entitytip.aoe_grow": "Ayuda a los cultivos cercanos",
   "entitytip.split_on_death": "Divide en dos",
   "entitytip.fuel": "Combustible",
   "entitytip.use_fuel": "Consume combustibles",

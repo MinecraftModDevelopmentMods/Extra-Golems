@@ -15,7 +15,7 @@ public class ExplodeGoal<T extends Mob & IRandomExploder> extends Goal {
   protected final float range;
 
   public ExplodeGoal(T entity, float range) {
-    this.setFlags(EnumSet.noneOf(Goal.Flag.class));
+    this.setFlags(EnumSet.of(Goal.Flag.MOVE));
     this.entity = entity;
     this.range = range;
   }

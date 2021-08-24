@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "#forge:storage_blocks/waxed_copper",
+    "#forge:storage_blocks/unwaxed_copper"
+  ]
+}

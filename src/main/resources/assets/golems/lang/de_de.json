@@ -94,7 +94,7 @@
   "entitytip.explode": "Kann zufällig explodieren",
   "entitytip.provides_power": "Sendet ein Redstone-Signal",
   "entitytip.heals": "Heilt sich langsam selbst",
-  "entitytip.grows_crops": "Wächst in der Nähe angebaute Kulturen",
+  "entitytip.aoe_grow": "Wächst in der Nähe angebaute Kulturen",
   "entitytype.splits_upon_death": "Splits in zwei!",
   "entitytip.fuel": "Kraftstoff",
   "entitytip.use_fuel": "Verbraucht Kraftstoff",

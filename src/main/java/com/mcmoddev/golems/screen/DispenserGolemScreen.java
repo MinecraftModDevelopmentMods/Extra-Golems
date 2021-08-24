@@ -1,7 +1,7 @@
 package com.mcmoddev.golems.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mcmoddev.golems.menu.DispenserGolemMenu;
+import com.mcmoddev.golems.menu.PortableDispenserMenu;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -9,11 +9,11 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
 
-public class DispenserGolemScreen extends AbstractContainerScreen<DispenserGolemMenu> {
+public class DispenserGolemScreen extends AbstractContainerScreen<PortableDispenserMenu> {
 
   public static final ResourceLocation BG_TEXTURE = new ResourceLocation("minecraft:textures/gui/container/dispenser.png");
 
-  public DispenserGolemScreen(DispenserGolemMenu cont, Inventory pInv, Component title) {
+  public DispenserGolemScreen(PortableDispenserMenu cont, Inventory pInv, Component title) {
     super(cont, pInv, title);
   }
 

@@ -21,7 +21,7 @@ public class AoeFreezeBehavior extends GolemBehavior {
   protected final boolean frosted;
   
   public AoeFreezeBehavior(CompoundTag tag) {
-    super(tag, GolemBehaviors.AOE_FREEZE);
+    super(tag);
     range = tag.getInt("range");
     interval = tag.getInt("interval");
     sphere = tag.getBoolean("sphere");
@@ -31,7 +31,7 @@ public class AoeFreezeBehavior extends GolemBehavior {
   @Override
   public void onRegisterGoals(final GolemBase entity) {
     entity.goalSelector.addGoal(1, new AoeBlocksGoal(entity, range, interval, sphere, 
-        new AoeBlocksGoal.FreezeFunction(entity.getRandom(), frosted)));
+        new AoeBlocksGoal.FreezeFunction(frosted)));
   }
   
   @Override

@@ -87,7 +87,7 @@
   "entitytip.crafting_menu": "Clic droit pour ouvrir un menu d'Établi",
   "entitytip.advanced_swim": "Grand nageur",
   "entitytip.heals": "Se guérit lentement",
-  "entitytip.grows_crops": "Cultive les cultures voisines",
+  "entitytip.aoe_grow": "Cultive les cultures voisines",
   "entitytip.split_on_death": "Divisé en deux!",
   "entitytip.fuel": "Carburant",
   "entitytip.use_fuel": "Consomme du carburant",

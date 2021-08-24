@@ -24,7 +24,7 @@ public class TeleportBehavior extends GolemBehavior {
   protected final double chanceOnTarget;
   
   public TeleportBehavior(CompoundTag tag) {
-    super(tag, GolemBehaviors.TELEPORT);
+    super(tag);
     range = tag.getDouble("range");
     chanceOnIdle = tag.getDouble("chance_on_idle");
     chanceOnHurt = tag.getDouble("chance_on_hurt");

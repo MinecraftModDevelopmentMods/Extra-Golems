@@ -86,7 +86,7 @@
   "entitytip.crafting_menu": "Højreklik på det for at åbne en Arbejdsbord menu",
   "entitytip.advanced_swim": "Fantastisk svømmer",
   "entitytip.heals": "Går langsomt sig selv",
-  "entitytip.grows_crops": "Vokser i nærheden afgrøder",
+  "entitytip.aoe_grow": "Vokser i nærheden afgrøder",
   "entitytip.split_on_death": "Splitter i to!",
   "entitytip.fuel": "Brændstof",
   "entitytip.use_fuel": "Forbruger af brændstof",

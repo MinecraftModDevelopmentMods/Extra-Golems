@@ -10,5 +10,18 @@
   "heal_items": {
     "minecraft:honeycomb_block": 0.5,
 	"minecraft:honeycomb": 0.15
-  }
+  },
+  "behavior": [
+	{
+	  "type": "golems:hurt",
+	  "summon": {
+	    "target": "enemy",
+	    "summon_pos": "self",
+		"chance": 0.30,
+	    "entity": {
+	      "id": "minecraft:bee"
+	    }
+	  }
+	}
+  ]
 }

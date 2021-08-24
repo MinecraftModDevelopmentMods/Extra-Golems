@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGConfig;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.ExtraGolems;
@@ -12,12 +11,12 @@ import com.mcmoddev.golems.block.GlowBlock;
 import com.mcmoddev.golems.block.PowerBlock;
 import com.mcmoddev.golems.container.GolemContainer;
 import com.mcmoddev.golems.container.GolemContainer.SwimMode;
-import com.mcmoddev.golems.container.behavior.GolemBehavior;
+import com.mcmoddev.golems.container.behavior.ExplodeBehavior;
 import com.mcmoddev.golems.container.behavior.GolemBehaviors;
 import com.mcmoddev.golems.container.behavior.ShootArrowsBehavior;
 import com.mcmoddev.golems.container.behavior.UseFuelBehavior;
 import com.mcmoddev.golems.entity.goal.GoToWaterGoal;
-import com.mcmoddev.golems.entity.goal.PlaceUtilityBlockGoal;
+import com.mcmoddev.golems.entity.goal.PlaceUtilityBlocksGoal;
 import com.mcmoddev.golems.entity.goal.SwimUpGoal;
 import com.mcmoddev.golems.item.SpawnGolemItem;
 
@@ -101,7 +100,6 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
   protected boolean swimmingUp;
   
   // explode behavior
-  protected int fuseLen;
   protected int fuse;
   
   // shoot arrows behavior
@@ -153,7 +151,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
         setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
         goalSelector.addGoal(1, new GoToWaterGoal(this, 14, 1.0D));
         goalSelector.addGoal(4, new RandomSwimmingGoal(this, 0.8F, 200));
-        goalSelector.addGoal(5, new SwimUpGoal(this, 1.0D, level.getSeaLevel()));
+        goalSelector.addGoal(5, new SwimUpGoal(this, 1.0D, level.getSeaLevel() + 1));
         break;
       case SINK:
       default:
@@ -238,7 +236,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
     if(container.getMaxLightLevel() > 0) {
       int lightInt = container.getMaxLightLevel();
       final BlockState state = EGRegistry.UTILITY_LIGHT.defaultBlockState().setValue(GlowBlock.LIGHT_LEVEL, lightInt);
-      this.goalSelector.addGoal(9, new PlaceUtilityBlockGoal(this, state, GlowBlock.UPDATE_TICKS, 
+      this.goalSelector.addGoal(9, new PlaceUtilityBlocksGoal(this, state, GlowBlock.UPDATE_TICKS, 
           true, (golem, pos) -> golem.isProvidingLight()));
     }
   }
@@ -249,7 +247,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
       int powerInt = getContainer().getMaxPowerLevel();
       final BlockState state = EGRegistry.UTILITY_POWER.defaultBlockState().setValue(PowerBlock.POWER_LEVEL, powerInt);
       final int freq = PowerBlock.UPDATE_TICKS;
-      this.goalSelector.addGoal(9, new PlaceUtilityBlockGoal(this, state, freq, false, (golem, pos) -> golem.isProvidingPower()));
+      this.goalSelector.addGoal(9, new PlaceUtilityBlocksGoal(this, state, freq, false, (golem, pos) -> golem.isProvidingPower()));
     }
   }
 
@@ -656,16 +654,6 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
   @Override
   public void setFuel(int fuel) {
     getEntityData().set(FUEL, fuel);
-    // change fueled/empty texture if enabled
-    List<UseFuelBehavior> fuelBehaviors = getContainer().getBehaviors(GolemBehaviors.USE_FUEL, UseFuelBehavior.class);
-    if(getContainer().getMultitexture().isPresent() && !fuelBehaviors.isEmpty()
-        && fuelBehaviors.get(0).getTextureEmpty() >= 0 && fuelBehaviors.get(0).getTextureFueled() >= 0) {
-      if(fuel > 0) {
-        setTextureId((byte)fuelBehaviors.get(0).getTextureFueled());
-      } else {
-        setTextureId((byte)fuelBehaviors.get(0).getTextureEmpty());
-      }
-    }
   }
 
   @Override
@@ -673,8 +661,8 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 
   @Override
   public int getMaxFuel() {
-    ImmutableList<GolemBehavior> b = container.getBehaviors().getOrDefault(GolemBehaviors.USE_FUEL, ImmutableList.of());
-    return b.isEmpty() ? 0 : ((UseFuelBehavior)b.get(0)).getMaxFuel();
+    List<UseFuelBehavior> b = container.getBehaviors(GolemBehaviors.USE_FUEL);
+    return b.isEmpty() ? 0 : b.get(0).getMaxFuel();
   }
   
   
@@ -684,7 +672,10 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
   public GolemBase getGolemEntity() { return this; }
   
   @Override
-  public int getFuseLen() { return fuseLen; }
+  public int getFuseLen() { 
+    List<ExplodeBehavior> b = container.getBehaviors(GolemBehaviors.EXPLODE);
+    return b.isEmpty() ? 0 : b.get(0).getFuseLen();
+  }
 
   @Override
   public int getFuse() { return fuse; }
@@ -723,7 +714,8 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
   @Override
   public double getArrowDamage() {
     if(getContainer().hasBehavior(GolemBehaviors.SHOOT_ARROWS)) {
-      return ((ShootArrowsBehavior)getContainer().getBehaviors().get(GolemBehaviors.SHOOT_ARROWS).get(0)).getDamage();
+      double multiplier = isBaby() ? 0.5D : 1.0D;
+      return multiplier * getContainer().<ShootArrowsBehavior>getBehaviors(GolemBehaviors.SHOOT_ARROWS).get(0).getDamage();
     }
     return 0;
   }

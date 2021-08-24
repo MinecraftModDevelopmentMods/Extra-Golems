@@ -1,0 +1,29 @@
+{
+  "attributes": {
+    "health": 38.0,
+    "attack": 12.5,
+    "hurt_by_fall": true
+  },
+  "blocks": "#forge:storage_blocks/amethyst",
+  "heal_items": {
+    "#forge:storage_blocks/amethyst": 0.5,
+	"#forge:gems/amethyst": 0.15
+  },
+  "behavior": [
+    {
+	  "type": "golems:hurt",
+	  "summon": {
+	    "target": "self",
+	    "summon_pos": "self",
+		"chance": 0.09,
+	    "entity": {
+	      "id": "minecraft:item",
+	      "Item": {
+	        "id": "minecraft:amethyst_shard",
+	        "Count": 1
+	      }
+	    }
+	  }
+	}
+  ]
+}

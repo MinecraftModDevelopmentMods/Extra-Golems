@@ -29,7 +29,7 @@ public class ExplodeBehavior extends GolemBehavior {
   protected final double chanceOnAttack;
 
   public ExplodeBehavior(CompoundTag tag) {
-    super(tag, GolemBehaviors.EXPLODE);
+    super(tag);
     range = tag.getDouble("range");
     fuse = tag.getInt("fuse");
     chanceOnHurt = tag.getDouble("chance_on_hurt");
@@ -40,7 +40,7 @@ public class ExplodeBehavior extends GolemBehavior {
   
   @Override
   public void onRegisterGoals(final GolemBase entity) {
-    entity.goalSelector.addGoal(1, new ExplodeGoal<>(entity, (float)range));
+    entity.goalSelector.addGoal(0, new ExplodeGoal<>(entity, (float)range));
   }
   
   @Override

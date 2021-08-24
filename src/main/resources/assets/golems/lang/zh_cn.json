@@ -95,7 +95,7 @@
   "entitytip.crafting_menu": "右键打开制作栏",
   "entitytip.advanced_swim": "可以游泳！",
   "entitytip.heals": "可以缓慢回血",
-  "entitytip.grows_crops": "可以加速作物的生长",
+  "entitytip.aoe_grow": "可以加速作物的生长",
   "entitytip.split_on_death": "一分为二！",
   "entitytip.use_fuel": "消耗燃料",
   "entitytip.fuel": "燃料",

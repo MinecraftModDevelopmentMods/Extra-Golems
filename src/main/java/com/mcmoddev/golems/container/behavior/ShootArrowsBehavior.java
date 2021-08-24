@@ -5,8 +5,8 @@ import java.util.List;
 import javax.annotation.concurrent.Immutable;
 
 import com.mcmoddev.golems.entity.GolemBase;
-import com.mcmoddev.golems.entity.goal.MoveToArrowsGoal;
-import com.mcmoddev.golems.menu.DispenserGolemMenu;
+import com.mcmoddev.golems.entity.goal.MoveToItemGoal;
+import com.mcmoddev.golems.menu.PortableDispenserMenu;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -30,7 +30,7 @@ public class ShootArrowsBehavior extends GolemBehavior {
   protected final AttributeModifier rangeModifier = new AttributeModifier("Ranged attack bonus", 2.0F, AttributeModifier.Operation.MULTIPLY_TOTAL);
   
   public ShootArrowsBehavior(CompoundTag tag) {
-    super(tag, GolemBehaviors.SHOOT_ARROWS);
+    super(tag);
     damage = tag.getDouble("damage");
   }
   
@@ -40,7 +40,7 @@ public class ShootArrowsBehavior extends GolemBehavior {
   public void onRegisterGoals(final GolemBase entity) {
     // modify follow range
     entity.getAttribute(Attributes.FOLLOW_RANGE).addPermanentModifier(rangeModifier);
-    entity.goalSelector.addGoal(4, new MoveToArrowsGoal<>(entity, 10.0D, 1.0D));
+    entity.goalSelector.addGoal(4, new MoveToItemGoal(entity, 10.0D, 30, 1.0D));
   }
   
   @Override
@@ -57,7 +57,7 @@ public class ShootArrowsBehavior extends GolemBehavior {
   public void onMobInteract(final GolemBase entity, final Player player, final InteractionHand hand) {
     if (!player.isCrouching() && player instanceof ServerPlayer) {
       // open dispenser GUI by sending request to server
-      NetworkHooks.openGui((ServerPlayer) player, new DispenserGolemMenu.Provider(entity.getArrowInventory()));
+      NetworkHooks.openGui((ServerPlayer) player, new PortableDispenserMenu.Provider(entity.getArrowInventory()));
       player.swing(hand);
     }
   }

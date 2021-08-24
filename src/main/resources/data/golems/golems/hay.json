@@ -10,5 +10,13 @@
   "heal_items": {
     "minecraft:hay_block": 0.5,
 	"#forge:crops/wheat": 0.1
-  }
+  },
+  "behavior": [
+    {
+      "type": "golems:aoe_grow",
+      "range": 4,
+      "interval": 400,
+      "chance": 0.2
+    }
+  ]
 }

@@ -1,0 +1,58 @@
+{
+  "attributes": {
+    "health": 90.0,
+    "attack": 13.0,
+    "knockback_resistance": 0.98
+  },
+  "heal_items": {
+	"#forge:storage_blocks/waxed_copper": 0.5,
+	"minecraft:copper_ingot": 0.15
+  },
+  "multitexture": {
+	"texture_count": 4,
+	"textures": {
+	  "0": {
+		"blocks": [
+		  "minecraft:waxed_copper_block",
+		  "minecraft:waxed_cut_copper"
+		],
+		"loot_table": "golems:waxed_copper/copper"
+	  },
+	  "1": {
+		"blocks": [
+		  "minecraft:waxed_exposed_copper",
+		  "minecraft:waxed_exposed_cut_copper"
+		],
+		"loot_table": "golems:waxed_copper/exposed"
+	  },
+	  "2": {
+		"blocks": [
+		  "minecraft:waxed_weathered_copper",
+		  "minecraft:waxed_weathered_cut_copper"
+		],
+		"loot_table": "golems:waxed_copper/weathered"
+	  },
+	  "3": {
+		"blocks": [
+		  "minecraft:waxed_oxidized_copper",
+		  "minecraft:waxed_oxidized_cut_copper"
+		],
+		"loot_table": "golems:waxed_copper/oxidized"
+	  }
+	}
+  },
+  "behavior": [
+    {
+	  "type": "golems:hurt",
+	  "summon": {
+	    "target": "enemy",
+	    "summon_pos": "enemy",
+		"chance": 0.0,
+		"bonus_chance_in_rain": 0.1,
+	    "entity": {
+	      "id": "minecraft:lightning_bolt"
+	    }
+	  }
+	}
+  ]
+}

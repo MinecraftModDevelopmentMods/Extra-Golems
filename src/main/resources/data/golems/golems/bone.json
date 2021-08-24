@@ -10,5 +10,12 @@
     "minecraft:bone_block": 0.5,
 	"#forge:bones": 0.25,
 	"minecraft:bone_meal": 0.08
-  }
+  },
+  "behavior": [
+    {
+      "type": "golems:burn_in_sun",
+      "chance": 1.0,
+      "priority": 1
+    }
+  ]
 }

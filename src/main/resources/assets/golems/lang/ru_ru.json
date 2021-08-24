@@ -94,7 +94,7 @@
   "entitytip.crafting_menu": "ПКМ, чтобы открыть меню крафта",
   "entitytip.advanced_swim": "продвинутый пловец",
   "entitytip.heals": "медленно лечит себя",
-  "entitytip.grows_crops": "Выращивает близлежащие культуры",
+  "entitytip.aoe_grow": "Выращивает близлежащие культуры",
   "entitytip.split_on_death": "Разделить пополам",
   "entitytip.fuel": "топливо",
   "entitytip.use_fuel": "Использует топливо",

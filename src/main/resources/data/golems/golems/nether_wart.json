@@ -31,10 +31,6 @@
 	  "interval": 1050,
 	  "blocks": [
 	    "minecraft:nether_wart"
-	  ],
-	  "supports": [
-	    "minecraft:soul_sand",
-		"minecraft:soul_soil"
 	  ]
 	}
   ]

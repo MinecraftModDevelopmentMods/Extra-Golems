@@ -8,7 +8,7 @@ import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.item.GolemSpellItem;
 import com.mcmoddev.golems.item.GuideBookItem;
 import com.mcmoddev.golems.item.SpawnGolemItem;
-import com.mcmoddev.golems.menu.DispenserGolemMenu;
+import com.mcmoddev.golems.menu.PortableDispenserMenu;
 import com.mcmoddev.golems.menu.PortableCraftingMenu;
 
 import net.minecraft.world.entity.EntityType;
@@ -63,7 +63,7 @@ public final class EGRegistry {
   public static final MenuType<PortableCraftingMenu> CRAFTING_GOLEM = new MenuType<>(PortableCraftingMenu::new);
 
   @ObjectHolder("dispenser_portable")
-  public static final MenuType<DispenserGolemMenu> DISPENSER_GOLEM = new MenuType<>(DispenserGolemMenu::new);
+  public static final MenuType<PortableDispenserMenu> DISPENSER_GOLEM = new MenuType<>(PortableDispenserMenu::new);
   
   // EVENT HANDLERS //
   

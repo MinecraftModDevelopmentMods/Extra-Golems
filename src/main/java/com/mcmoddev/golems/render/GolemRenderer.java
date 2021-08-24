@@ -60,11 +60,12 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
       return;
     }
     // get render settings
-    final Optional<GolemRenderSettings> settings = ExtraGolems.PROXY.GOLEM_RENDER_SETTINGS.get(golem.getMaterial());
+    Optional<GolemRenderSettings> settings = ExtraGolems.PROXY.GOLEM_RENDER_SETTINGS.get(golem.getMaterial());
     if(!settings.isPresent()) {
       final ResourceLocation m = golem.getMaterial();
       ExtraGolems.LOGGER.error("Missing GolemRenderSettings at assets/" + m.getNamespace() + "/golem/" + m.getPath() + ".json");
       ExtraGolems.PROXY.GOLEM_RENDER_SETTINGS.put(golem.getMaterial(), GolemRenderSettings.EMPTY);
+      settings = Optional.of(GolemRenderSettings.EMPTY);
     }
     matrixStackIn.pushPose();
     // scale

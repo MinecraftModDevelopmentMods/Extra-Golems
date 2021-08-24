@@ -3,11 +3,14 @@ package com.mcmoddev.golems.entity.goal;
 import com.mcmoddev.golems.entity.GolemBase;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.SupportType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
@@ -16,15 +19,11 @@ public class PlaceBlocksGoal extends Goal {
   protected final GolemBase golem;
   protected final int interval;
   protected final Block[] blocks;
-  protected final Block[] supports;
-  protected final boolean checkSupports;
 
-  public PlaceBlocksGoal(final GolemBase golemBase, final int interval, final Block[] blocks, final Block[] supports) {
+  public PlaceBlocksGoal(final GolemBase golemBase, final int interval, final Block[] blocks) {
     this.golem = golemBase;
     this.interval = Math.max(1, interval);
     this.blocks = blocks;
-    this.supports = supports;
-    this.checkSupports = (supports != null && supports.length > 0);
   }
 
   @Override
@@ -35,11 +34,13 @@ public class PlaceBlocksGoal extends Goal {
 
   @Override
   public void start() {
-    final BlockPos below = golem.getBlockBelow();
-    final BlockPos in = below.above(1);
-
-    if (golem.level.isEmptyBlock(in) && isSupport(golem.level, below)) {
-      place(golem.level, in);
+    final BlockPos in = golem.getBlockBelow().above(1);
+    final BlockState replace = golem.level.getBlockState(in);
+    final BlockState below = golem.level.getBlockState(in.below());
+    // only replace air or water-source above a solid face
+    if ((replace.isAir() || (replace.getBlock() == Blocks.WATER  && replace.getValue(LiquidBlock.LEVEL) == 0)) 
+        && below.isFaceSturdy(golem.level, in.below(), Direction.UP, SupportType.FULL)) {
+      place(golem.level, replace, in);
     }
   }
 
@@ -48,44 +49,16 @@ public class PlaceBlocksGoal extends Goal {
     return false;
   }
 
-  protected boolean place(final Level world, final BlockPos pos) {
+  protected boolean place(final Level world, final BlockState replace, final BlockPos pos) {
     BlockState state = this.blocks[world.random.nextInt(this.blocks.length)].defaultBlockState();
-    if(world.getBlockState(pos).getBlock() == Blocks.WATER) {
-      state = getStateWaterlogged(state);
+    // add waterlogged property if replacing water
+    if(replace.getBlock() == Blocks.WATER && state.hasProperty(BlockStateProperties.WATERLOGGED)) {
+      state = state.setValue(BlockStateProperties.WATERLOGGED, true);
     }
-    return world.setBlock(pos, state, 2);
-  }
-
-  protected boolean isSupport(final Level world, final BlockPos pos) {
-    if (!this.checkSupports) {
-      return true;
+    // check if the selected state is valid for this position
+    if(state.canSurvive(world, pos)) {
+      return world.setBlock(pos, state, 2);
     }
-
-    final Block at = world.getBlockState(pos).getBlock();
-    if (this.supports != null && this.supports.length > 0) {
-      for (final Block b : this.supports) {
-        if (at == b) {
-          return true;
-        }
-      }
-    }
-
     return false;
-  }
-  
-  /**
-   * @param stateIn the original BlockState
-   * @return true if the state can be waterlogged
-   */
-  public static boolean canBeWaterlogged(final BlockState stateIn) {
-    return stateIn.hasProperty(BlockStateProperties.WATERLOGGED);
-  }
-
-  /**
-   * @param stateIn the original BlockState
-   * @return a state with Waterlogged set to True if applicable, otherwise returns the given state
-   **/
-  public static BlockState getStateWaterlogged(final BlockState stateIn) {
-    return canBeWaterlogged(stateIn) ? stateIn.setValue(BlockStateProperties.WATERLOGGED, true) : stateIn;
   }
 }

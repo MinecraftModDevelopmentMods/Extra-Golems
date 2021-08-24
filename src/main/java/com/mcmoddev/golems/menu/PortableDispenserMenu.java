@@ -3,7 +3,6 @@ package com.mcmoddev.golems.menu;
 import com.mcmoddev.golems.EGRegistry;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.Container;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
@@ -15,15 +14,15 @@ import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 
-public class DispenserGolemMenu extends AbstractContainerMenu {
+public class PortableDispenserMenu extends AbstractContainerMenu {
 
   private final Container dispenserInventory;
 
-  public DispenserGolemMenu(final int id, final Inventory playerInv) {
+  public PortableDispenserMenu(final int id, final Inventory playerInv) {
     this(id, playerInv, new SimpleContainer(9));
   }
 
-  public DispenserGolemMenu(final int id, final Inventory playerInv, final Container inv) {
+  public PortableDispenserMenu(final int id, final Inventory playerInv, final Container inv) {
     super(EGRegistry.DISPENSER_GOLEM, id);
     checkContainerSize(inv, 9);
     this.dispenserInventory = inv;
@@ -100,7 +99,7 @@ public class DispenserGolemMenu extends AbstractContainerMenu {
       if (player.isSpectator()) {
         return null;
       } else {
-        return new DispenserGolemMenu(i, playerInv, inventory);
+        return new PortableDispenserMenu(i, playerInv, inventory);
       }
     }
 

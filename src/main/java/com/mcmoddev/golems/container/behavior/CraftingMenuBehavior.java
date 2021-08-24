@@ -21,7 +21,7 @@ import net.minecraftforge.fmllegacy.network.NetworkHooks;
 public class CraftingMenuBehavior extends GolemBehavior {
 
   public CraftingMenuBehavior(CompoundTag tag) {
-    super(tag, GolemBehaviors.CRAFTING_MENU);
+    super(tag);
   }
   
   @Override

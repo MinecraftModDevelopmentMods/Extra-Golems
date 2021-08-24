@@ -152,7 +152,7 @@ public final class GolemContainer {
     // populate behaviors
     Map<ResourceLocation, List<GolemBehavior>> bbehaviors = new HashMap<>();
     ResourceLocation goalId;
-    Optional<GolemBehavior> behavior;
+    Optional<? extends GolemBehavior> behavior;
     for(final CompoundTag goalTag : goalsRaw) {
       if(goalTag.contains("type", Tag.TAG_STRING)) {
         // determine the GolemBehavior type
@@ -312,9 +312,9 @@ public final class GolemContainer {
    * @return a typed list of the GolemBehaviors, may be empty
    */
   @SuppressWarnings("unchecked")
-  public <T extends GolemBehavior> List<T> getBehaviors(final ResourceLocation name, Class<T> clazz) {
-    List<GolemBehavior> behaviorList = this.getBehaviors().get(name);
-    if(!behaviorList.isEmpty() && clazz.isAssignableFrom(behaviorList.get(0).getClass())) {
+  public <T extends GolemBehavior> List<T> getBehaviors(final ResourceLocation name) {
+    List<GolemBehavior> behaviorList = behaviors.get(name);
+    if(!behaviorList.isEmpty() && behaviorList.get(0).getClass().isAssignableFrom(GolemBehaviors.CLASS_MAP.get(name))) {
       return (List<T>)behaviorList;
     }
     return ImmutableList.of();

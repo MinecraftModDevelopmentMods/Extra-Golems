@@ -20,7 +20,7 @@ public class AoeDryBehavior extends GolemBehavior {
   protected final boolean sphere;
   
   public AoeDryBehavior(CompoundTag tag) {
-    super(tag, GolemBehaviors.AOE_DRY);
+    super(tag);
     range = tag.getInt("range");
     interval = tag.getInt("interval");
     sphere = tag.getBoolean("sphere");

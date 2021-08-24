@@ -5,6 +5,7 @@
 	"speed": 0.295,
     "knockback_resistance": 0.2
   },
+  "sound": "minecraft:block.wool.step",
   "heal_items": {
     "#minecraft:wool": 0.5,
 	"#forge:string": 0.1

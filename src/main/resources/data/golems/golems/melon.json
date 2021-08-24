@@ -32,9 +32,6 @@
 	  "interval": 1100,
 	  "blocks": [
 	    "#forge:overworld_small_flowers"
-	  ],
-	  "supports": [
-	    "#minecraft:dirt"
 	  ]
 	}
   ]
