@@ -20,12 +20,20 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
 
+/**
+ * This behavior allows an entity to light a fuse, save/load the fuse, 
+ * and create an explosion when the fuse reaches 0
+ **/
 @Immutable
 public class ExplodeBehavior extends GolemBehavior {
   
+  /** The radius of the explosion **/
   protected final double range;
+  /** The minimum length of the fuse **/
   protected final int fuse;
+  /** The percent chance [0,1] to apply when the entity is hurt **/
   protected final double chanceOnHurt;
+  /** The percent chance [0,1] to apply when the entity attacks **/
   protected final double chanceOnAttack;
 
   public ExplodeBehavior(CompoundTag tag) {

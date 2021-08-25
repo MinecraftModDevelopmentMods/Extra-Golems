@@ -12,11 +12,18 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 
+/**
+ * This behavior allows an entity to remove water or
+ * waterlogged blocks in an area
+ **/
 @Immutable
 public class AoeDryBehavior extends GolemBehavior {
   
+  /** The radius for which the behavior will apply **/
   protected final int range;
+  /** The average number of ticks between application of this behavior **/
   protected final int interval;
+  /** True to affect a spherical area, false to affect a disc area **/
   protected final boolean sphere;
   
   public AoeDryBehavior(CompoundTag tag) {

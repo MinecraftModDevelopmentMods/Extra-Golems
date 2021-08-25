@@ -12,11 +12,17 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 
+/**
+ * This behavior allows an entity to grow crops in an area
+ **/
 @Immutable
 public class AoeGrowBehavior extends GolemBehavior {
   
+  /** The radius for which the behavior will apply **/
   protected final int range;
+  /** The average number of ticks between application of this behavior **/
   protected final int interval;
+  /** The percent chance [0,1] to affect each block **/
   protected final double chance;
   
   public AoeGrowBehavior(CompoundTag tag) {

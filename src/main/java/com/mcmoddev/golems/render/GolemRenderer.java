@@ -42,7 +42,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
   protected boolean isAlphaLayer;
   
   /**
-   * @param m the entity render manager
+   * @param context the entity render manager
    **/
   public GolemRenderer(final EntityRendererProvider.Context context) {
     super(context, new GolemModel<>(context.bakeLayer(GOLEM_MODEL_RESOURCE)), 0.5F);

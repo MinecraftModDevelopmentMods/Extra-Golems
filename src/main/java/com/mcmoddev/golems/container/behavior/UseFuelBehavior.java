@@ -15,19 +15,22 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.TemptGoal;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.crafting.Ingredient;
 
+/**
+ * This behavior allows an entity to use fuel, accept fuel items,
+ * only move and attack while fueled, and save/load fuel
+ **/
 @Immutable
 public class UseFuelBehavior extends GolemBehavior {
   
+  /** The maximum amount of fuel the entity can accept **/
   protected final int maxFuel;
+  /** The number of ticks it takes to deplete one unit of fuel **/
   protected final int interval;
 
   public UseFuelBehavior(CompoundTag tag) {
@@ -36,8 +39,10 @@ public class UseFuelBehavior extends GolemBehavior {
     interval = tag.getInt("burn_interval");
   }
   
+  /** @return The maximum amount of fuel the entity can accept **/
   public int getMaxFuel() { return maxFuel; }
   
+  /** @return The number of ticks it takes to deplete one unit of fuel **/
   public int getInterval() { return interval; }
   
   @Override

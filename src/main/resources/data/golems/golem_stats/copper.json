@@ -57,7 +57,7 @@
 	{
 	  "type": "golems:change_texture",
 	  "tick": {
-	    "chance": 0.0002,
+	    "chance": 0.00010,
 	    "textures": {
 	      "0": 1,
 	      "1": 2,

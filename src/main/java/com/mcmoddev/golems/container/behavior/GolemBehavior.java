@@ -30,8 +30,11 @@ import net.minecraft.world.entity.player.Player;
 @Immutable
 public abstract class GolemBehavior {
   
+  /** The description text for an entity that lights enemies on fire **/
   protected static final MutableComponent FIRE_DESC = new TranslatableComponent("entitytip.lights_mobs_on_fire").withStyle(ChatFormatting.GOLD);
+  /** The description text for an entity that applies potion effects to itself **/
   protected static final MutableComponent EFFECTS_SELF_DESC = new TranslatableComponent("entitytip.potion_effects_self").withStyle(ChatFormatting.LIGHT_PURPLE);
+  /** The description text for an entity that applies potion effects its enemy **/
   protected static final MutableComponent EFFECTS_ENEMY_DESC = new TranslatableComponent("entitytip.potion_effects_enemy").withStyle(ChatFormatting.LIGHT_PURPLE);
   
   protected final CompoundTag tag;

@@ -35,7 +35,6 @@ public class PlaceUtilityBlocksGoal extends Goal {
    * @param stateIn        the BlockState that will be placed every
    *                       {@code interval} ticks
    * @param interval       ticks between placing block
-   * @param cfgAllows      whether this AI is enabled by the config
    * @param onlyAboveEmpty whether the utility block should not be placed directly on top of blocks
    * @param otherPredicate an optional BiPredicate to use when determining whether
    *                       to place a Block. Defaults to replacing air only.
@@ -100,8 +99,8 @@ public class PlaceUtilityBlocksGoal extends Goal {
   }
 
   /**
-   * Builds a BiPredicate that returns True for either of two conditions: <br>
-   * 1. If the current BlockState is Air <br>
+   * Builds a BiPredicate that returns True for either of two conditions:
+   * 1. If the current BlockState is Air or 
    * 2. If the current BlockState is Water AND the replacement state can be
    * Waterlogged
    *

@@ -28,7 +28,8 @@ public class ColoredTextureLayer<T extends GolemBase> extends RenderLayer<T, Gol
   
   /**
    * Renders all of the textures in the golem render settings
-   * @param ientityrenderer the parent renderer
+   * @param renderParent the parent renderer
+   * @param modelSet the model set used to bake a new model
    **/
   public ColoredTextureLayer(RenderLayerParent<T, GolemModel<T>> renderParent, EntityModelSet modelSet) {
     super(renderParent);

@@ -307,7 +307,6 @@ public final class GolemContainer {
   /**
    * @param <T> a GolemBehavior subclass
    * @param name the GolemBehavior ID
-   * @param clazz the class of the corresponding GolemBehavior
    * @return a typed list of the GolemBehaviors, may be empty
    */
   @SuppressWarnings("unchecked")

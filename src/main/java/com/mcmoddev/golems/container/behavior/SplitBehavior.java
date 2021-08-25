@@ -17,6 +17,10 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.level.ServerLevelAccessor;
 
+/**
+ * This behavior allows an entity to create a number of
+ * baby entities upon death.
+ **/
 @Immutable
 public class SplitBehavior extends GolemBehavior {
   

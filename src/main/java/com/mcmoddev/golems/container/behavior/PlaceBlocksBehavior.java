@@ -18,12 +18,18 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 
+/**
+ * This behavior allows an entity to place blocks at its current location.
+ * This is not used for utility blocks such as light and power.
+ **/
 @Immutable
 public class PlaceBlocksBehavior extends GolemBehavior {
-    
-  private final int interval;
   
+  /** The average number of ticks between activation of this behavior **/
+  private final int interval;
+  /** The block IDs of blocks that can be placed **/
   private final List<ResourceLocation> blocks = new ArrayList<>();
+  /** The block Tags of blocks that can be placed **/
   private final List<ResourceLocation> blockTags = new ArrayList<>();
 
   public PlaceBlocksBehavior(CompoundTag tag) {

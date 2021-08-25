@@ -15,11 +15,18 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 
+/**
+ * This behavior allows an entity to detect nearby entities
+ * of a specific type and move to follow them
+ **/
 @Immutable
 public class FollowBehavior extends GolemBehavior {
   
+  /** The goal priority **/
   private final int priority;
+  /** The entity ID of an entity to follow **/
   private final ResourceLocation mobType;
+  /** The description component for this behavior **/
   private final Component description;
 
   public FollowBehavior(CompoundTag tag) {

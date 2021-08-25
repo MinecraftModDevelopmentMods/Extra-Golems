@@ -14,9 +14,14 @@ import net.minecraft.world.entity.ai.goal.TemptGoal;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.registries.ForgeRegistries;
 
+/**
+ * This behavior allows an entity to follow players that are holding
+ * specific items.
+ **/
 @Immutable
 public class TemptBehavior extends GolemBehavior {
   
+  /** An optional containing either an item ID or item tag, if any **/
   private final Optional<ResourcePair> item;
 
   public TemptBehavior(CompoundTag tag) {

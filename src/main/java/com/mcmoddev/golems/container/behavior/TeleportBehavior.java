@@ -15,12 +15,20 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.IndirectEntityDamageSource;
 import net.minecraft.world.entity.LivingEntity;
 
+/**
+ * This behavior allows an entity to teleport randomly,
+ * when hurt, or when attacking.
+ **/
 @Immutable
 public class TeleportBehavior extends GolemBehavior {
   
+  /** The maximum distance the entity can teleport **/
   protected final double range;
+  /** The percent chance [0,1] to apply when the entity is doing nothing **/
   protected final double chanceOnIdle;
+  /** The percent chance [0,1] to apply when the entity is hurt **/
   protected final double chanceOnHurt;
+  /** The percent chance [0,1] to apply each tick that the entity has an attack target **/
   protected final double chanceOnTarget;
   
   public TeleportBehavior(CompoundTag tag) {

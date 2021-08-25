@@ -475,7 +475,6 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
    * @param player the player using the item
    * @param hand the player hand
    * @param stack the item being used
-   * @param healAmount the amount of health this item will restore
    * @return true if the item was consumed
    */
   protected boolean processInteractBanner(final Player player, final InteractionHand hand, final ItemStack stack) {

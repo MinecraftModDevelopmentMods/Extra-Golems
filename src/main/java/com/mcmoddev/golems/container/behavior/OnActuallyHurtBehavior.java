@@ -16,11 +16,19 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 
+/**
+ * This behavior allows an entity to react when actually hurt.
+ * The entity may apply a fire parameter, mob effect parameter, 
+ * or summon entity parameter
+ **/
 @Immutable
 public class OnActuallyHurtBehavior extends GolemBehavior {
-    
+  
+  /** An optional containing the fire parameter, if present **/
   protected final Optional<FireBehaviorParameter> fire;
+  /** An optional containing the mob effect parameter, if present **/
   protected final Optional<MobEffectBehaviorParameter> effect;
+  /** An optional containing the summon entity parameter, if present **/
   protected final Optional<SummonEntityBehaviorParameter> summon;
 
   public OnActuallyHurtBehavior(CompoundTag tag) {

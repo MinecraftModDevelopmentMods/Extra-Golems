@@ -10,18 +10,25 @@ import com.mcmoddev.golems.entity.goal.ChangeTextureGoal;
 
 import net.minecraft.nbt.CompoundTag;
 
+/**
+ * This behavior allows an entity to change its texture based on
+ * several conditions, such as a random chance each tick or while
+ * wet, dry, fueled, or empty of fuel.
+ **/
 @Immutable
 public class ChangeTextureBehavior extends GolemBehavior {
   
-  /** Accepts texture ID as string only **/
+  /** The map to use for per-tick changes. Accepts texture ID as string only **/
   private final Optional<ChangeTexturesBehaviorParameter> tickTextures;
   
+  /** The map to use when the entity is wet **/
   private final Optional<ChangeTexturesBehaviorParameter> wetTextures;
+  /** The map to use when the entity is dry **/
   private final Optional<ChangeTexturesBehaviorParameter> dryTextures;
   
-  /** Only used when UseFuelBehavior is present **/
+  /** The map to use when the entity has fuel. Only used when UseFuelBehavior is present **/
   private final Optional<ChangeTexturesBehaviorParameter> fueledTextures;
-  /** Only used when UseFuelBehavior is present **/
+  /** The map to use when the entity has no fuel. Only used when UseFuelBehavior is present **/
   private final Optional<ChangeTexturesBehaviorParameter> emptyTextures;
     
   public ChangeTextureBehavior(final CompoundTag tag) {

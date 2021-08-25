@@ -14,10 +14,16 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.ai.goal.FleeSunGoal;
 import net.minecraft.world.entity.ai.goal.RestrictSunGoal;
 
+/**
+ * This behavior allows an entity to burn in sunlight
+ * and seek shelter from the sun during the day
+ **/
 @Immutable
 public class BurnInSunBehavior extends GolemBehavior {
   
+  /** The goal priority **/
   private final int priority;
+  /** The percent chance [0,1] to apply each tick **/
   private final double chance;
 
   public BurnInSunBehavior(CompoundTag tag) {

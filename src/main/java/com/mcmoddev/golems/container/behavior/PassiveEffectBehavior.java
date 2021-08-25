@@ -13,10 +13,15 @@ import com.mcmoddev.golems.entity.goal.PassiveEffectsGoal;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 
+/**
+ * This behavior allows an entity to passively apply a mob effect
+ **/
 @Immutable
 public class PassiveEffectBehavior extends GolemBehavior {
   
+  /** True to only use the effect during night **/
   protected final boolean nightOnly;
+  /** An optional containing the mob effect parameter, if present **/
   protected final Optional<MobEffectBehaviorParameter> effect;
 
   public PassiveEffectBehavior(CompoundTag tag) {

@@ -22,11 +22,16 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
+/**
+ * This behavior allows an entity to pick up and shoot arrows,
+ * as well as load/save the arrow inventory
+ **/
 @Immutable
 public class ShootArrowsBehavior extends GolemBehavior {
   
+  /** The amount of damage dealt by arrows **/
   protected final double damage;
-  
+  /** The follow range modifier to allow the entity to detect enemies from a distance **/
   protected final AttributeModifier rangeModifier = new AttributeModifier("Ranged attack bonus", 2.0F, AttributeModifier.Operation.MULTIPLY_TOTAL);
   
   public ShootArrowsBehavior(CompoundTag tag) {
@@ -34,6 +39,7 @@ public class ShootArrowsBehavior extends GolemBehavior {
     damage = tag.getDouble("damage");
   }
   
+  /** @return The amount of damage dealt by arrows **/
   public double getDamage() { return damage; }
   
   @Override

@@ -12,12 +12,20 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 
+/**
+ * This behavior allows an entity to change water and lava
+ * blocks in an area
+ **/
 @Immutable
 public class AoeFreezeBehavior extends GolemBehavior {
   
+  /** The radius for which the behavior will apply **/
   protected final int range;
+  /** The average number of ticks between application of this behavior **/
   protected final int interval;
+  /** True to affect a spherical area, false to affect a disc area **/
   protected final boolean sphere;
+  /** True to use frosted ice, false to use regular/packed ice **/
   protected final boolean frosted;
   
   public AoeFreezeBehavior(CompoundTag tag) {
