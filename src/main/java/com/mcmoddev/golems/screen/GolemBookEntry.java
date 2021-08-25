@@ -39,7 +39,7 @@ public class GolemBookEntry {
 
   public GolemBookEntry(@Nonnull ResourceLocation golemName, @Nonnull GolemContainer container) {
     // initialize fields based on entity attributes
-    this.nameString = EGRegistry.GOLEM.getDescriptionId() + "." + golemName.getPath();
+    this.nameString = "entity." + golemName.getNamespace() + ".golem." + golemName.getPath();
     this.health = (int) container.getAttributes().getHealth();
     this.attack = (float) container.getAttributes().getAttack();
     

@@ -47,10 +47,6 @@ public class EGConfig {
     return GOLEM_CONFIG != null && GOLEM_CONFIG.enableFriendlyFire.get();
   }
 
-  public static boolean enableTextureInteract() {
-    return GOLEM_CONFIG != null && GOLEM_CONFIG.enableTextureInteract.get();
-  }
-
   public static boolean enableUseSpellItem() {
     return GOLEM_CONFIG != null && GOLEM_CONFIG.enableUseItemSpell.get();
   }

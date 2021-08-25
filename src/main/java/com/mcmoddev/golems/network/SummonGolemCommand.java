@@ -53,7 +53,7 @@ public class SummonGolemCommand {
       id = new ResourceLocation(ExtraGolems.MODID, id.getPath());
     }
     // validate the id
-    if(ExtraGolems.PROXY.GOLEM_CONTAINERS.get(id).isEmpty()) {
+    if(ExtraGolems.GOLEM_CONTAINERS.get(id).isEmpty()) {
       throw INVALID_ID.create(id);
     }
     // create the golem

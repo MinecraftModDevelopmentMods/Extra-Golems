@@ -12,7 +12,10 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.level.ServerLevelAccessor;
 
 @Immutable
 public class SplitBehavior extends GolemBehavior {
@@ -39,7 +42,8 @@ public class SplitBehavior extends GolemBehavior {
    **/
   protected Collection<GolemBase> attemptAddChildren(final GolemBase entity, final int count) {
     final List<GolemBase> children = new ArrayList<>();
-    if(!entity.level.isClientSide() && !entity.isBaby() && count > 0) {
+    if(entity.level instanceof ServerLevelAccessor && !entity.isBaby() && count > 0) {
+      final DifficultyInstance diff = entity.level.getCurrentDifficultyAt(entity.blockPosition());
       for(int i = 0; i < count; i++) {
         GolemBase child = GolemBase.create(entity.level, entity.getMaterial());
         child.setBaby(true);
@@ -50,6 +54,7 @@ public class SplitBehavior extends GolemBehavior {
         child.copyPosition(entity);
         // spawn the entity
         entity.level.addFreshEntity(child);
+        child.finalizeSpawn((ServerLevelAccessor) entity.level, diff, MobSpawnType.MOB_SUMMONED, null, null);
         // add to the list
         children.add(child);
       }

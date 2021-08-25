@@ -1,5 +1,7 @@
 package com.mcmoddev.golems.entity;
 
+import com.mcmoddev.golems.ExtraGolems;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
@@ -43,12 +45,12 @@ public interface IMultitextured {
   
   /**
    * Updates the texture to the next one in the array
-   * @param player the player
-   * @param hand the player's hand
+   * @return true if the texture changed
    */
-  default void cycleTexture(final Player player, final InteractionHand hand) {
-    final int incremented = (this.getTextureId() + 1) % this.getTextureCount();
+  default boolean cycleTexture() {
+    final int current = this.getTextureId();
+    final int incremented = (current + 1) % this.getTextureCount();
     this.setTextureId((byte) incremented);
-    player.swing(hand);
+    return current != incremented;
   }
 }

@@ -2,7 +2,6 @@
   "attributes": {
     "health": 58.0,
     "attack": 6.5,
-	"attack_knockback": 2.0,
 	"knockback_resistance": 0.35
   },
   "particle": {

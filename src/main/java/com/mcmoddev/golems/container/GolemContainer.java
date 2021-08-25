@@ -16,7 +16,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.mcmoddev.golems.EGConfig;
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.container.behavior.GolemBehavior;
 import com.mcmoddev.golems.container.behavior.GolemBehaviors;
@@ -415,19 +414,23 @@ public final class GolemContainer {
     }
     // add "provides light" description
     if(glow > 0) {
-      list.add(new TranslatableComponent("entitytip.provides_light").withStyle(ChatFormatting.GOLD));
+      list.add(new TranslatableComponent("entitytip.provides_light").withStyle(ChatFormatting.RED));
     }
     // add "provides power" description
     if(power > 0) {
-      list.add(new TranslatableComponent("entitytip.provides_power").withStyle(ChatFormatting.GOLD));
+      list.add(new TranslatableComponent("entitytip.provides_power").withStyle(ChatFormatting.RED));
+    }
+    // add "knockback" description
+    if(attributes.getAttackKnockback() > 0.39D) {
+      list.add(new TranslatableComponent("entitytip.has_knockback").withStyle(ChatFormatting.DARK_RED));
     }
     // add "cycle textures" description
-    if (EGConfig.enableTextureInteract() && multitexture.isPresent() && multitexture.get().canCycle()) {
+    if (multitexture.isPresent() && multitexture.get().canCycle()) {
       list.add(new TranslatableComponent("entitytip.click_change_texture").withStyle(ChatFormatting.BLUE));
     }
     // add "advanced swimmer" description
     if(swimAbility == SwimMode.SWIM) {
-      list.add(new TranslatableComponent("entitytip.advanced_swim").withStyle(ChatFormatting.AQUA));
+      list.add(new TranslatableComponent("entitytip.advanced_swim").withStyle(ChatFormatting.DARK_AQUA));
     }
     // add all other descriptions
     behaviors.values().forEach(l -> l.forEach(b -> b.onAddDescriptions(list)));

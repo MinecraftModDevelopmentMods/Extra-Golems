@@ -60,11 +60,11 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
       return;
     }
     // get render settings
-    Optional<GolemRenderSettings> settings = ExtraGolems.PROXY.GOLEM_RENDER_SETTINGS.get(golem.getMaterial());
+    Optional<GolemRenderSettings> settings = ExtraGolems.GOLEM_RENDER_SETTINGS.get(golem.getMaterial());
     if(!settings.isPresent()) {
       final ResourceLocation m = golem.getMaterial();
       ExtraGolems.LOGGER.error("Missing GolemRenderSettings at assets/" + m.getNamespace() + "/golem/" + m.getPath() + ".json");
-      ExtraGolems.PROXY.GOLEM_RENDER_SETTINGS.put(golem.getMaterial(), GolemRenderSettings.EMPTY);
+      ExtraGolems.GOLEM_RENDER_SETTINGS.put(golem.getMaterial(), GolemRenderSettings.EMPTY);
       settings = Optional.of(GolemRenderSettings.EMPTY);
     }
     matrixStackIn.pushPose();
@@ -106,7 +106,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
    */
   @Override
   public ResourceLocation getTextureLocation(final T golem) {
-    final GolemRenderSettings settings = ExtraGolems.PROXY.GOLEM_RENDER_SETTINGS.get(golem.getMaterial()).orElse(GolemRenderSettings.EMPTY);
+    final GolemRenderSettings settings = ExtraGolems.GOLEM_RENDER_SETTINGS.get(golem.getMaterial()).orElse(GolemRenderSettings.EMPTY);
     ResourceLocation texture = settings.getBase(golem).resource();
     boolean disableLayers = false;
     // special cases
@@ -131,7 +131,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
   @Override
   @Nullable
   protected RenderType getRenderType(final T golem, boolean isVisible, boolean isVisibleToPlayer, boolean isGlowing) {
-    final GolemRenderSettings settings = ExtraGolems.PROXY.GOLEM_RENDER_SETTINGS.get(golem.getMaterial()).orElse(GolemRenderSettings.EMPTY);
+    final GolemRenderSettings settings = ExtraGolems.GOLEM_RENDER_SETTINGS.get(golem.getMaterial()).orElse(GolemRenderSettings.EMPTY);
     ResourceLocation texture = this.getTextureLocation(golem);
     ResourceLocation template = settings.getBaseTemplate();
     boolean dynamic = isDynamic(golem, texture, settings);

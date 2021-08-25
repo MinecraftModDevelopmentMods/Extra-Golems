@@ -38,7 +38,7 @@ public class ColoredTextureLayer<T extends GolemBase> extends RenderLayer<T, Gol
   @Override
   public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, T entity,
       float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-    GolemRenderSettings settings = ExtraGolems.PROXY.GOLEM_RENDER_SETTINGS.get(entity.getMaterial()).orElse(GolemRenderSettings.EMPTY);
+    GolemRenderSettings settings = ExtraGolems.GOLEM_RENDER_SETTINGS.get(entity.getMaterial()).orElse(GolemRenderSettings.EMPTY);
     if(!entity.isInvisible() && !getParentModel().disableLayers() && !settings.getLayers().isEmpty()) {
       getParentModel().copyPropertiesTo(layerModel);
       layerModel.prepareMobModel(entity, limbSwing, limbSwingAmount, partialTicks);

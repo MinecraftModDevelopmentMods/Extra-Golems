@@ -5,5 +5,9 @@
 	  "1": "minecraft:redstone_lamp"
     }
   },
-  "layers": [ ]
+  "layers": [
+    {
+	  "texture": "#golems:layer/eyes/eyes"
+	}
+  ]
 }

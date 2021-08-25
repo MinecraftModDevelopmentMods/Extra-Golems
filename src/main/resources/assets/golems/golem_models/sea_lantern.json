@@ -1,5 +1,5 @@
 {
-  "base": "minecraft:sea_lantern",
+  "base": "#golems:sea_lantern",
   "layers": [
     {
 	  "texture": "#golems:layer/vines",

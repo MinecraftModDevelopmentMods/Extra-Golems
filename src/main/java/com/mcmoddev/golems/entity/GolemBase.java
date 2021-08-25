@@ -134,7 +134,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
     // update material and container
     this.getEntityData().set(MATERIAL, materialIn.toString());
     this.material = materialIn;
-    this.container = ExtraGolems.PROXY.GOLEM_CONTAINERS.get(materialIn).orElse(GolemContainer.EMPTY);
+    this.container = ExtraGolems.GOLEM_CONTAINERS.get(materialIn).orElse(GolemContainer.EMPTY);
     this.attributes = new AttributeMap(container.getAttributeSupplier().get().build());
     
     if (!level.isClientSide()) {
@@ -260,7 +260,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
    *         is enabled.
    **/
   public boolean canInteractChangeTexture() {
-    return EGConfig.enableTextureInteract() && getContainer().getMultitexture().isPresent()
+    return getContainer().getMultitexture().isPresent()
         && getContainer().getMultitexture().get().canCycle();
   }
 
@@ -409,6 +409,15 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
   @Override
   public boolean doHurtTarget(Entity target) {
     if(super.doHurtTarget(target)) {
+      // use attack knockback stat
+      final double knockback = getContainer().getAttributes().getAttackKnockback();
+      if(knockback > 0 && !isBaby()) {
+        final Vec3 myPos = this.position();
+        final Vec3 ePos = target.position();
+        final double dX = Math.signum(ePos.x - myPos.x) * knockback;
+        final double dZ = Math.signum(ePos.z - myPos.z) * knockback;
+        target.setDeltaMovement(target.getDeltaMovement().add(dX, knockback / 2, dZ));
+      }
       // allow behaviors to process doHurtTarget
       this.getContainer().getBehaviors().values().forEach(list -> list.forEach(b -> b.onHurtTarget(this, target)));
       return true;
@@ -432,12 +441,12 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
   protected InteractionResult mobInteract(final Player player, final InteractionHand hand) {
     ItemStack stack = player.getItemInHand(hand);
     // DEBUG
-    ExtraGolems.LOGGER.info(getContainer().toString());
-    ExtraGolems.LOGGER.info(getContainer().getLootTable(this));
+    ExtraGolems.LOGGER.info(getMaterial() + "=" + getContainer().toString());
     // Attempt to remove banner from the entity
     if(!this.getBanner().isEmpty() && stack.getItem() instanceof ShearsItem) {
       this.spawnAtLocation(this.getBanner(), this.isBaby() ? 0.9F : 1.4F);
       this.setBanner(ItemStack.EMPTY);
+      return InteractionResult.CONSUME;
     }
     // Attempt to place a banner on the entity
     if(stack.getItem() instanceof BannerItem && processInteractBanner(player, hand, stack)) {
@@ -448,12 +457,15 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
     if (!stack.isEmpty() && healAmount > 0 && processInteractHeal(player, hand, stack, healAmount)) {
       return InteractionResult.CONSUME;
     }
-    // special behavior
-    if(!player.isCrouching() && stack.isEmpty() && this.canInteractChangeTexture()) {
-      // Attempt to cycle texture
-      cycleTexture(player, hand);
+    // Cycle texture when server-side player interacts with the entity.
+    // This only runs for one hand, whether or not the hand is empty,
+    // to avoid double-interaction that causes double texture cycles.
+    if(hand == InteractionHand.MAIN_HAND && !level.isClientSide() && !player.isCrouching() 
+        && canInteractChangeTexture() && cycleTexture()) {
+      player.swing(hand);
+      return InteractionResult.CONSUME;
     }
-    // allow behaviors to process mobInteract
+    // Allow behaviors to process mobInteract
     this.getContainer().getBehaviors().values().forEach(list -> list.forEach(b -> b.onMobInteract(this, player, hand)));
     return super.mobInteract(player, hand);
   }
@@ -515,13 +527,13 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
   
   @Override
   public float getBrightness() {
-    return this.isProvidingLight() || this.isProvidingPower() ? 1.0F : super.getBrightness();
+    return (this.isProvidingLight() || this.isProvidingPower()) ? 1.0F : super.getBrightness();
   }
   
   @Override
   protected Component getTypeName() {
     if(description == null) {
-      description = new TranslatableComponent(getType().getDescriptionId() + "." + material.getPath());
+      description = new TranslatableComponent("entity." + material.getNamespace() + ".golem." + material.getPath());
     }
     return description;
   }

@@ -29,7 +29,7 @@ public class EGClientModEvents {
     ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
     if(resourceManager instanceof ReloadableResourceManager) {
       // reload render settings
-      ((ReloadableResourceManager)resourceManager).registerReloadListener(ExtraGolems.PROXY.GOLEM_RENDER_SETTINGS);
+      ((ReloadableResourceManager)resourceManager).registerReloadListener(ExtraGolems.GOLEM_RENDER_SETTINGS);
       // reload dynamic texture map
       ((ReloadableResourceManager)resourceManager).registerReloadListener(new SimplePreparableReloadListener<ModelBakery>() {
         @Override

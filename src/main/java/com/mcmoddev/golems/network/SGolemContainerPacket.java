@@ -41,7 +41,7 @@ public class SGolemContainerPacket {
   public static SGolemContainerPacket fromBytes(final FriendlyByteBuf buf) {
     final ResourceLocation sKey = buf.readResourceLocation();
     final CompoundTag sNBT = buf.readNbt();
-    final Optional<GolemContainer> sCont = ExtraGolems.PROXY.GOLEM_CONTAINERS.readObject(sNBT).resultOrPartial(error -> ExtraGolems.LOGGER.error("Failed to read GolemContainer from NBT for packet\n" + error));
+    final Optional<GolemContainer> sCont = ExtraGolems.GOLEM_CONTAINERS.readObject(sNBT).resultOrPartial(error -> ExtraGolems.LOGGER.error("Failed to read GolemContainer from NBT for packet\n" + error));
     return new SGolemContainerPacket(sKey, sCont.orElse(GolemContainer.EMPTY));
   }
   
@@ -51,7 +51,7 @@ public class SGolemContainerPacket {
    * @param buf the FriendlyByteBuf
    */
   public static void toBytes(final SGolemContainerPacket msg, final FriendlyByteBuf buf) {
-    DataResult<Tag> nbtResult = ExtraGolems.PROXY.GOLEM_CONTAINERS.writeObject(msg.golemContainer);
+    DataResult<Tag> nbtResult = ExtraGolems.GOLEM_CONTAINERS.writeObject(msg.golemContainer);
     Tag tag = nbtResult.resultOrPartial(error -> ExtraGolems.LOGGER.error("Failed to write GolemContainer to NBT for packet\n" + error)).get();
     buf.writeResourceLocation(msg.key);
     buf.writeNbt((CompoundTag)tag);
@@ -66,7 +66,7 @@ public class SGolemContainerPacket {
     NetworkEvent.Context context = contextSupplier.get();
     if (context.getDirection().getReceptionSide() == LogicalSide.CLIENT) {
       context.enqueueWork(() -> {
-        ExtraGolems.PROXY.GOLEM_CONTAINERS.put(message.key, message.golemContainer);
+        ExtraGolems.GOLEM_CONTAINERS.put(message.key, message.golemContainer);
       });
     }
     context.setPacketHandled(true);

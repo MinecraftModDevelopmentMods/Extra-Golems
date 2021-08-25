@@ -54,7 +54,7 @@ public final class SpawnGolemItem extends Item {
     }
 
     // check if the entity is enabled
-    final Optional<GolemContainer> container = ExtraGolems.PROXY.GOLEM_CONTAINERS.get(new ResourceLocation(ExtraGolems.MODID, "bedrock"));
+    final Optional<GolemContainer> container = ExtraGolems.GOLEM_CONTAINERS.get(new ResourceLocation(ExtraGolems.MODID, "bedrock"));
     if (container.isPresent()) {
       // make sure the entity can be spawned here (empty block)
       BlockState state = worldIn.getBlockState(pos);

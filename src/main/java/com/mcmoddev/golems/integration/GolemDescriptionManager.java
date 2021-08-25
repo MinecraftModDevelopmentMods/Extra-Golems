@@ -70,7 +70,7 @@ public abstract class GolemDescriptionManager {
    */
   protected void addFuelInfo(final GolemBase g, final List<Component> list) {
     // determine fuel percentage
-    final float percentFuel = g.getFuelPercentage();
+    final float percentFuel = g.getFuelPercentage() * 100.0F;
     final ChatFormatting color;
     if (percentFuel < 6) {
       color = ChatFormatting.RED;

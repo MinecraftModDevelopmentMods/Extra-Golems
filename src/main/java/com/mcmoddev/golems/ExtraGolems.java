@@ -10,15 +10,17 @@ import org.apache.logging.log4j.Logger;
 
 import com.mcmoddev.golems.container.GolemContainer;
 import com.mcmoddev.golems.container.behavior.GolemBehaviors;
+import com.mcmoddev.golems.container.client.GolemRenderSettings;
 import com.mcmoddev.golems.entity.GolemBase;
+import com.mcmoddev.golems.event.EGForgeEvents;
 import com.mcmoddev.golems.network.SGolemContainerPacket;
-import com.mcmoddev.golems.proxy.ClientProxy;
-import com.mcmoddev.golems.proxy.CommonProxy;
-import com.mcmoddev.golems.proxy.ServerProxy;
+import com.mcmoddev.golems.network.SGolemModelPacket;
+import com.mcmoddev.golems.util.GenericJsonReloadListener;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.ModList;
@@ -30,6 +32,7 @@ import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fmllegacy.network.NetworkDirection;
 import net.minecraftforge.fmllegacy.network.NetworkRegistry;
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
 import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
 
 @Mod(ExtraGolems.MODID)
@@ -37,22 +40,25 @@ public class ExtraGolems {
 
   public static final String MODID = "golems";
 
-  @SuppressWarnings("Convert2MethodRef")
-  // DO NOT USE METHOD REFERENCES. THESE ARE BAD! (according to gigaherz)
-  public static final CommonProxy PROXY = DistExecutor.runForDist(() -> () -> new ClientProxy(), () -> () -> new ServerProxy());
-
   public static final Logger LOGGER = LogManager.getFormatterLogger(ExtraGolems.MODID);
   
   private static final String PROTOCOL_VERSION = "1";
   public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(new ResourceLocation(MODID, "channel"), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
 
+  public static final GenericJsonReloadListener<GolemContainer> GOLEM_CONTAINERS = new GenericJsonReloadListener<>("golem_stats", GolemContainer.class, GolemContainer.CODEC, 
+      l -> l.getEntries().forEach(e -> e.getValue().ifPresent(c -> ExtraGolems.CHANNEL.send(PacketDistributor.ALL.noArg(), new SGolemContainerPacket(e.getKey(), c)))));
+
+  public static final GenericJsonReloadListener<GolemRenderSettings> GOLEM_RENDER_SETTINGS = new GenericJsonReloadListener<>("golem_models", GolemRenderSettings.class, GolemRenderSettings.CODEC, 
+      l -> {});
+  
   public ExtraGolems() {
     FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
     FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
     // init helper classes
     GolemBehaviors.init();
     // register event handlers
-    PROXY.registerEventHandlers();
+    this.registerCommonEvents();
+    DistExecutor.runForDist(() -> () -> this.registerClientEvents(), () -> () -> this.registerServerEvents());
     // set up config file
     EGConfig.setupConfig();
     ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, EGConfig.COMMON_CONFIG);
@@ -60,6 +66,8 @@ public class ExtraGolems {
     ExtraGolems.LOGGER.info(ExtraGolems.MODID + ":registerNetwork");
     int messageId = 0;
     CHANNEL.registerMessage(messageId++, SGolemContainerPacket.class, SGolemContainerPacket::toBytes, SGolemContainerPacket::fromBytes, SGolemContainerPacket::handlePacket, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+    // UNUSED // CHANNEL.registerMessage(messageId++, SGolemModelPacket.class, SGolemModelPacket::toBytes, SGolemModelPacket::fromBytes, SGolemModelPacket::handlePacket, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+  
   }
   
   private void setup(final FMLCommonSetupEvent event) {
@@ -74,6 +82,24 @@ public class ExtraGolems {
     }
   }
   
+  private int registerCommonEvents() {
+    ExtraGolems.LOGGER.info(ExtraGolems.MODID + ":registerEventHandlers");
+    MinecraftForge.EVENT_BUS.register(EGForgeEvents.class);
+    FMLJavaModLoadingContext.get().getModEventBus().register(EGRegistry.class);
+    return 0;
+  }
+
+  private int registerServerEvents() { 
+    return 1;
+  }
+  
+  private int registerClientEvents() {
+    MinecraftForge.EVENT_BUS.register(com.mcmoddev.golems.event.EGClientEvents.class);
+    FMLJavaModLoadingContext.get().getModEventBus().register(com.mcmoddev.golems.event.EGClientModEvents.class);
+    com.mcmoddev.golems.event.EGClientEvents.addResources();
+    return 2;
+  }
+  
   /**
    * Checks all registered GolemContainers until one is found that is constructed
    * out of the passed Blocks. Parameters are the current World and the 4 blocks
@@ -86,7 +112,7 @@ public class ExtraGolems {
   @Nullable
   public static GolemBase getGolem(Level world, Block below1, Block below2, Block arm1, Block arm2) {
     ResourceLocation id = null;
-    for (Entry<ResourceLocation, Optional<GolemContainer>> entry : ExtraGolems.PROXY.GOLEM_CONTAINERS.getEntries()) {
+    for (Entry<ResourceLocation, Optional<GolemContainer>> entry : GOLEM_CONTAINERS.getEntries()) {
       if (entry.getValue().isPresent() && entry.getValue().get().matches(below1, below2, arm1, arm2)) {
         id = entry.getKey();
         break;

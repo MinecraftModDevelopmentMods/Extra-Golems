@@ -13,6 +13,7 @@ import com.mcmoddev.golems.container.GolemContainer;
 import com.mcmoddev.golems.container.behavior.GolemBehaviors;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.network.SGolemContainerPacket;
+import com.mcmoddev.golems.network.SGolemModelPacket;
 import com.mcmoddev.golems.network.SummonGolemCommand;
 
 import net.minecraft.core.BlockPos;
@@ -43,7 +44,8 @@ public class EGForgeEvents {
   
   @SubscribeEvent
   public static void addReloadListeners(final AddReloadListenerEvent event) {
-    event.addListener(ExtraGolems.PROXY.GOLEM_CONTAINERS);
+    event.addListener(ExtraGolems.GOLEM_CONTAINERS);
+    // UNUSED // event.addListener(ExtraGolems.GOLEM_RENDER_SETTINGS);
   }
   
   @SubscribeEvent
@@ -51,7 +53,8 @@ public class EGForgeEvents {
     Player player = event.getPlayer();
     // reload golem containers
     if (player instanceof ServerPlayer) {
-      ExtraGolems.PROXY.GOLEM_CONTAINERS.getEntries().forEach(e -> e.getValue().ifPresent(c -> ExtraGolems.CHANNEL.send(PacketDistributor.ALL.noArg(), new SGolemContainerPacket(e.getKey(), c))));
+      ExtraGolems.GOLEM_CONTAINERS.getEntries().forEach(e -> e.getValue().ifPresent(c -> ExtraGolems.CHANNEL.send(PacketDistributor.ALL.noArg(), new SGolemContainerPacket(e.getKey(), c))));
+      // UNUSED // ExtraGolems.GOLEM_RENDER_SETTINGS.getEntries().forEach(e -> e.getValue().ifPresent(c -> ExtraGolems.CHANNEL.send(PacketDistributor.ALL.noArg(), new SGolemModelPacket(e.getKey(), c))));
     }
   }
 
@@ -143,7 +146,7 @@ public class EGForgeEvents {
 
       BlockPos blockpos2 = blockpos.offset(d0, d2, d1);
       ResourceLocation typeName = getGolemToSpawn(world, blockpos2);
-      Optional<GolemContainer> type = ExtraGolems.PROXY.GOLEM_CONTAINERS.get(typeName);
+      Optional<GolemContainer> type = ExtraGolems.GOLEM_CONTAINERS.get(typeName);
       if (type.isPresent()) {
         GolemBase golem = GolemBase.create(world, typeName);
         // randomize texture if applicable

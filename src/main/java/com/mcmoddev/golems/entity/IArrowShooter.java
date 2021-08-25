@@ -2,12 +2,15 @@ package com.mcmoddev.golems.entity;
 
 import java.util.function.BiPredicate;
 
+import com.mcmoddev.golems.ExtraGolems;
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerListener;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RangedAttackGoal;
@@ -17,6 +20,8 @@ import net.minecraft.world.entity.projectile.AbstractArrow.Pickup;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 public interface IArrowShooter extends RangedAttackMob, ContainerListener {
   
@@ -69,6 +74,25 @@ public interface IArrowShooter extends RangedAttackMob, ContainerListener {
     final GolemBase entity = getGolemEntity();
     ItemStack itemstack = findArrowsInInventory(getArrowInventory());
     if (!itemstack.isEmpty()) {
+      // first, raytrace to ensure no other creatures are in the way
+      Vec3 pos = entity.position().add(0, entity.getBbHeight() * 0.55F, 0);
+      Vec3 to = target.position().add(0, entity.getBbHeight() * 0.5F, 0);
+      Vec3 scaled;
+      // step along the vector and check for entities at each point
+      for(double i = 0, l = pos.distanceToSqr(to), stepSize = 0.25F; (i * i) < l; i += stepSize) {
+        // scale the vector to the step progress
+        scaled = (to.subtract(pos)).normalize().scale(i);
+        final double x = pos.x + scaled.x;
+        final double y = pos.y + scaled.y;
+        final double z = pos.z + scaled.z;
+        final AABB aabb = new AABB(x - 0.2D, y - 0.2D, z - 0.2D, x + 0.2D, y + 0.2D, z + 0.2D);
+        // if any entity at this location cannot be attacked, exit the function
+        for(final Entity e : entity.level.getEntities(entity, aabb)) {
+          if(!entity.canAttackType(e.getType())) {
+            return;
+          }
+        }
+      }
       // make an arrow out of the inventory
       AbstractArrow arrow = ProjectileUtil.getMobArrow(entity, itemstack, distanceFactor);
       arrow.setPos(entity.getX(), entity.getY() + entity.getBbHeight() * 0.55F, entity.getZ());
