@@ -4,7 +4,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import com.mcmoddev.golems.ExtraGolems;
-import com.mcmoddev.golems.container.client.GolemRenderSettings;
+import com.mcmoddev.golems.container.render.GolemRenderSettings;
 import com.mojang.serialization.DataResult;
 
 import net.minecraft.nbt.CompoundTag;
@@ -15,7 +15,6 @@ import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 /**
- * UNUSED
  * Called when datapacks are (re)loaded.
  * Sent from the server to the client with a single ResourceLocation ID
  * and the corresponding Golem Render Settings as it was read from JSON.
@@ -68,6 +67,7 @@ public class SGolemModelPacket {
     if (context.getDirection().getReceptionSide() == LogicalSide.CLIENT) {
       context.enqueueWork(() -> {
         ExtraGolems.GOLEM_RENDER_SETTINGS.put(message.key, message.golemModel);
+		message.golemModel.load();
       });
     }
     context.setPacketHandled(true);

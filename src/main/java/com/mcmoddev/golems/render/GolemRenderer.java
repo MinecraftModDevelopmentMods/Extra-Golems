@@ -6,7 +6,7 @@ import javax.annotation.Nullable;
 
 import com.mcmoddev.golems.EGConfig;
 import com.mcmoddev.golems.ExtraGolems;
-import com.mcmoddev.golems.container.client.GolemRenderSettings;
+import com.mcmoddev.golems.container.render.GolemRenderSettings;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.render.layer.ColoredTextureLayer;
 import com.mcmoddev.golems.render.layer.GolemBannerLayer;

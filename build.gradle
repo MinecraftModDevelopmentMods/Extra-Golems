@@ -36,6 +36,7 @@ minecraft {
     // These can be tweaked, removed, or duplicated as needed.
     runs {
         client {
+			args '--username', System.env.USERNAME, '--uuid', System.env.UUID
             workingDirectory project.file('run')
 
             // Recommended logging data for a userdev environment
@@ -133,20 +134,6 @@ processResources {
         }
     }
 }
-
-//processResources {
-    //inputs.property "version", project.version
-
-    //from(sourceSets.main.resources.srcDirs) {
-        //include "META-INF/mods.toml"
-        //expand "golems_version": project.version
-        //expand "forge_version": project.forge_version
-    //}
-
-    //from(sourceSets.main.resources.srcDirs) {
-        //exclude "META-INF/mods.toml"
-    //}
-//}
 
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {

@@ -1,8 +1,8 @@
 package com.mcmoddev.golems.render.layer;
 
 import com.mcmoddev.golems.ExtraGolems;
-import com.mcmoddev.golems.container.client.GolemRenderSettings;
-import com.mcmoddev.golems.container.client.LayerRenderSettings;
+import com.mcmoddev.golems.container.render.GolemRenderSettings;
+import com.mcmoddev.golems.container.render.LayerRenderSettings;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.render.GolemModel;
 import com.mcmoddev.golems.render.GolemRenderType;

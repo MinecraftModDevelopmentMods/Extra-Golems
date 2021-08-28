@@ -26,22 +26,6 @@ public class EGClientModEvents {
   @SubscribeEvent
   public static void setupClient(final FMLClientSetupEvent event) {
     ExtraGolems.LOGGER.info(ExtraGolems.MODID + ":setupClient");
-    ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
-    if(resourceManager instanceof ReloadableResourceManager) {
-      // reload render settings
-      ((ReloadableResourceManager)resourceManager).registerReloadListener(ExtraGolems.GOLEM_RENDER_SETTINGS);
-      // reload dynamic texture map
-      ((ReloadableResourceManager)resourceManager).registerReloadListener(new SimplePreparableReloadListener<ModelBakery>() {
-        @Override
-        protected ModelBakery prepare(ResourceManager arg0, ProfilerFiller arg1) { return null; }
-        @Override
-        protected void apply(ModelBakery arg0, ResourceManager arg1, ProfilerFiller arg2) {
-          GolemRenderType.reloadDynamicTextureMap();
-        }
-        @Override
-        public String getName() { return "Golem Textures"; }
-      });
-    }
   }
   
   @SubscribeEvent

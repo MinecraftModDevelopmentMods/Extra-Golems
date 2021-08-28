@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.mcmoddev.golems.container.GolemContainer;
 import com.mcmoddev.golems.container.behavior.GolemBehaviors;
-import com.mcmoddev.golems.container.client.GolemRenderSettings;
+import com.mcmoddev.golems.container.render.GolemRenderSettings;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.event.EGForgeEvents;
 import com.mcmoddev.golems.network.SGolemContainerPacket;
@@ -49,7 +49,7 @@ public class ExtraGolems {
       l -> l.getEntries().forEach(e -> e.getValue().ifPresent(c -> ExtraGolems.CHANNEL.send(PacketDistributor.ALL.noArg(), new SGolemContainerPacket(e.getKey(), c)))));
 
   public static final GenericJsonReloadListener<GolemRenderSettings> GOLEM_RENDER_SETTINGS = new GenericJsonReloadListener<>("golem_models", GolemRenderSettings.class, GolemRenderSettings.CODEC, 
-      l -> {});
+      l -> l.getEntries().forEach(e -> e.getValue().ifPresent(c -> ExtraGolems.CHANNEL.send(PacketDistributor.ALL.noArg(), new SGolemModelPacket(e.getKey(), c)))));
   
   public ExtraGolems() {
     FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
@@ -66,7 +66,7 @@ public class ExtraGolems {
     ExtraGolems.LOGGER.info(ExtraGolems.MODID + ":registerNetwork");
     int messageId = 0;
     CHANNEL.registerMessage(messageId++, SGolemContainerPacket.class, SGolemContainerPacket::toBytes, SGolemContainerPacket::fromBytes, SGolemContainerPacket::handlePacket, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-    // UNUSED // CHANNEL.registerMessage(messageId++, SGolemModelPacket.class, SGolemModelPacket::toBytes, SGolemModelPacket::fromBytes, SGolemModelPacket::handlePacket, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+    CHANNEL.registerMessage(messageId++, SGolemModelPacket.class, SGolemModelPacket::toBytes, SGolemModelPacket::fromBytes, SGolemModelPacket::handlePacket, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
   
   }
   

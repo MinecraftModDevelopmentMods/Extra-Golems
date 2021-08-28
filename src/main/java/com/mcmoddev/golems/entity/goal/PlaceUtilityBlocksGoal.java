@@ -107,7 +107,7 @@ public class PlaceUtilityBlocksGoal extends Goal {
    * @param stateIn the state that will replace the given one if possible
    * @param onlyAboveEmpty if there should always be an air/water block underneath
    * the placed block
-   * @return a new BiPredicate<GolemBase, BlockPos>
+   * @return a new BiPredicate
    **/
   public static BiPredicate<GolemBase, BlockPos> makeBiPred(final BlockState stateIn, final boolean onlyAboveEmpty) {
     // whether or not the utility block can be waterlogged

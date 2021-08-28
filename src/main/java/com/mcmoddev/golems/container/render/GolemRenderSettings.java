@@ -1,4 +1,4 @@
-package com.mcmoddev.golems.container.client;
+package com.mcmoddev.golems.container.render;
 
 import java.io.IOException;
 import java.util.List;
@@ -17,6 +17,9 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 
 public class GolemRenderSettings {
   
@@ -35,7 +38,7 @@ public class GolemRenderSettings {
         .xmap(either -> either.map(ImmutableList::of, Function.identity()), 
               list -> list.size() == 1 ? Either.left(list.get(0)) : Either.right(list))
           .optionalFieldOf("base", Lists.newArrayList()).forGetter(GolemRenderSettings::getBaseList),
-      ResourceLocation.CODEC.optionalFieldOf("base_template", BASE_TEMPLATE).forGetter(GolemRenderSettings::getBaseTemplate),
+      ResourceLocation.CODEC.optionalFieldOf("base_template", BASE_TEMPLATE).forGetter(GolemRenderSettings::getBaseTemplateRaw),
       Codec.INT.optionalFieldOf("base_color").forGetter(GolemRenderSettings::getBaseColor),
       Codec.BOOL.optionalFieldOf("use_biome_color", false).forGetter(GolemRenderSettings::useBiomeColor),
       Codec.BOOL.optionalFieldOf("base_light").forGetter(GolemRenderSettings::getBaseLight),
@@ -45,8 +48,9 @@ public class GolemRenderSettings {
     ).apply(instance, GolemRenderSettings::new));
   
   private final List<ResourcePair> baseList;
-  private final ResourcePair base;
-  private final ResourceLocation baseTemplate;
+  private ResourcePair base;
+  private final ResourceLocation baseTemplateRaw;
+  private ResourceLocation baseTemplate;
   private final Optional<Integer> baseColor;
   private final boolean useBiomeColor;
   private final Optional<Boolean> baseLight;
@@ -57,10 +61,10 @@ public class GolemRenderSettings {
   private GolemRenderSettings(List<ResourcePair> baseList, ResourceLocation baseTemplate, 
       Optional<Integer> baseColor, boolean useBiomeColor, Optional<Boolean> baseLight, boolean translucent,
       Optional<MultitextureRenderSettings> multitexture, List<LayerRenderSettings> layers) {
+	this.base = new ResourcePair(new ResourceLocation("not_loaded"), true);
     this.baseList = baseList;
-    this.base = multitexture.isPresent() ? new ResourcePair(new ResourceLocation("multitexture"), true) : buildPreferredTexture(this.baseList);
     this.baseColor = baseColor;
-    this.baseTemplate = new ResourceLocation(baseTemplate.getNamespace(), "textures/entity/" + baseTemplate.getPath() + ".png");
+    this.baseTemplateRaw = baseTemplate;
     this.baseLight = baseLight;
     this.useBiomeColor = useBiomeColor;
     this.translucent = translucent;
@@ -76,6 +80,25 @@ public class GolemRenderSettings {
     }
   }
 
+  /**
+   * Called by the packet handler when this class is received on the client
+   * @return true if this method was called client-side
+   */
+  public boolean load() {
+	return DistExecutor.runForDist(() -> () -> {
+	  // load base
+	  this.base = multitexture.isPresent()
+			  ? new ResourcePair(new ResourceLocation("multitexture"), true)
+	          : buildPreferredTexture(this.baseList);
+	  // load template
+	  this.baseTemplate = new ResourceLocation(baseTemplateRaw.getNamespace(), "textures/entity/" + baseTemplateRaw.getPath() + ".png");
+	  // load multitexture
+	  this.multitexture.ifPresent(m -> m.load());
+	  this.layers.forEach(l -> l.load());
+	  return true;
+	}, () -> () -> false);
+  }
+
   /** @return a List of ResourcePairs of base textures **/
   private List<ResourcePair> getBaseList() { return baseList; }
   
@@ -85,13 +108,18 @@ public class GolemRenderSettings {
    * The Boolean is true for a block texture and 
    * false for a prefab texture;
    */
-  public ResourcePair getBase() { return base; }
+  public ResourcePair getBase() {
+	return base;
+  }
 
   /** @return a color to apply to the base texture **/
   public Optional<Integer> getBaseColor() { return baseColor; }
   
   /** @return a prefab template texture to use **/
   public ResourceLocation getBaseTemplate() { return baseTemplate; }
+
+  /** @return a prefab template texture to use **/
+  public ResourceLocation getBaseTemplateRaw() { return baseTemplateRaw; }
   
   /**
    * @return an Optional containing the light for the layer.
@@ -146,22 +174,28 @@ public class GolemRenderSettings {
    */
   public static ResourcePair buildPreferredTexture(final List<ResourcePair> textureList) {
     for(final ResourcePair texture : textureList) {
-      // attempt to load the resource to ensure it exists
-      ResourceLocation res = null;
-      try {
-        if(texture.flag()) {
-          res = new ResourceLocation(texture.resource().getNamespace(), "textures/entity/" +  texture.resource().getPath() + ".png");
-        } else {
-          res = new ResourceLocation(texture.resource().getNamespace(), "textures/block/" +  texture.resource().getPath() + ".png");
-        }
-        res = Minecraft.getInstance().getResourceManager().getResource(res).getLocation();
-        // if the resource was loaded above, then it exists
-        return new ResourcePair(res, texture.flag());
-      } catch (IOException e) {
-        if(ExtraGolems.LOGGER != null) {
-          ExtraGolems.LOGGER.error("GolemRenderSettings: Failed to locate resource " + (res != null ? res.toString() : "ResourcePair: ".concat(texture.toString())));
-        }
-      }
+	  ResourceLocation loaded = null;
+	  loaded = DistExecutor.runForDist(() -> () -> {
+		final ResourceLocation res;
+		if(texture.flag()) {
+		  res = new ResourceLocation(texture.resource().getNamespace(), "textures/entity/" +  texture.resource().getPath() + ".png");
+		} else {
+		  res = new ResourceLocation(texture.resource().getNamespace(), "textures/block/" +  texture.resource().getPath() + ".png");
+		}
+		// attempt to load the resource to ensure it exists
+		try {
+		  final ResourceLocation r = net.minecraft.client.Minecraft.getInstance().getResourceManager().getResource(res).getLocation();
+		  return r;
+		} catch (IOException e) {
+		  if(ExtraGolems.LOGGER != null) {
+			ExtraGolems.LOGGER.error("GolemRenderSettings: Failed to locate resource " + res.toString());
+		  }
+		  return res;
+		}
+	  }, () -> () -> new ResourceLocation("empty"));
+	  if(loaded != null) {
+		return new ResourcePair(loaded, texture.flag());
+	  }
     }
     // if none of the resources loaded, return fallback texture
     return new ResourcePair(FALLBACK_PREFAB, true);

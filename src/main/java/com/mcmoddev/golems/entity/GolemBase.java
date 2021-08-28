@@ -80,14 +80,13 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
   
   protected static final EntityDataAccessor<String> MATERIAL = SynchedEntityData.defineId(GolemBase.class, EntityDataSerializers.STRING);
   protected static final EntityDataAccessor<Boolean> CHILD = SynchedEntityData.defineId(GolemBase.class, EntityDataSerializers.BOOLEAN);
-  protected static final EntityDataAccessor<Byte> TEXTURE = SynchedEntityData.<Byte>defineId(GolemBase.class, EntityDataSerializers.BYTE);
-  protected static final EntityDataAccessor<Integer> FUEL = SynchedEntityData.<Integer>defineId(GolemBase.class, EntityDataSerializers.INT);
-  protected static final EntityDataAccessor<Boolean> FUSE_LIT = SynchedEntityData.<Boolean>defineId(GolemBase.class, EntityDataSerializers.BOOLEAN);
-  protected static final EntityDataAccessor<Integer> ARROWS = SynchedEntityData.<Integer>defineId(GolemBase.class, EntityDataSerializers.INT);
+  protected static final EntityDataAccessor<Byte> TEXTURE = SynchedEntityData.defineId(GolemBase.class, EntityDataSerializers.BYTE);
+  protected static final EntityDataAccessor<Integer> FUEL = SynchedEntityData.defineId(GolemBase.class, EntityDataSerializers.INT);
+  protected static final EntityDataAccessor<Boolean> FUSE_LIT = SynchedEntityData.defineId(GolemBase.class, EntityDataSerializers.BOOLEAN);
+  protected static final EntityDataAccessor<Integer> ARROWS = SynchedEntityData.defineId(GolemBase.class, EntityDataSerializers.INT);
   
   public static final String KEY_MATERIAL = "Material";
   public static final String KEY_CHILD = "IsChild";
-  public static final String KEY_BANNER = "Banner";
 
   private ResourceLocation material = new ResourceLocation(ExtraGolems.MODID, "empty");
   private GolemContainer container = GolemContainer.EMPTY;
@@ -441,7 +440,8 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
   protected InteractionResult mobInteract(final Player player, final InteractionHand hand) {
     ItemStack stack = player.getItemInHand(hand);
     // DEBUG
-    ExtraGolems.LOGGER.info(getMaterial() + "=" + getContainer().toString());
+    // ExtraGolems.LOGGER.info(getMaterial() + "=" + getContainer().toString());
+	// ExtraGolems.GOLEM_RENDER_SETTINGS.get(getMaterial()).ifPresent(r -> ExtraGolems.LOGGER.info(r.toString()));
     // Attempt to remove banner from the entity
     if(!this.getBanner().isEmpty() && stack.getItem() instanceof ShearsItem) {
       this.spawnAtLocation(this.getBanner(), this.isBaby() ? 0.9F : 1.4F);

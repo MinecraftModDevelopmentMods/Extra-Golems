@@ -45,7 +45,7 @@ public class EGForgeEvents {
   @SubscribeEvent
   public static void addReloadListeners(final AddReloadListenerEvent event) {
     event.addListener(ExtraGolems.GOLEM_CONTAINERS);
-    // UNUSED // event.addListener(ExtraGolems.GOLEM_RENDER_SETTINGS);
+    event.addListener(ExtraGolems.GOLEM_RENDER_SETTINGS);
   }
   
   @SubscribeEvent
@@ -54,7 +54,7 @@ public class EGForgeEvents {
     // reload golem containers
     if (player instanceof ServerPlayer) {
       ExtraGolems.GOLEM_CONTAINERS.getEntries().forEach(e -> e.getValue().ifPresent(c -> ExtraGolems.CHANNEL.send(PacketDistributor.ALL.noArg(), new SGolemContainerPacket(e.getKey(), c))));
-      // UNUSED // ExtraGolems.GOLEM_RENDER_SETTINGS.getEntries().forEach(e -> e.getValue().ifPresent(c -> ExtraGolems.CHANNEL.send(PacketDistributor.ALL.noArg(), new SGolemModelPacket(e.getKey(), c))));
+      ExtraGolems.GOLEM_RENDER_SETTINGS.getEntries().forEach(e -> e.getValue().ifPresent(c -> ExtraGolems.CHANNEL.send(PacketDistributor.ALL.noArg(), new SGolemModelPacket(e.getKey(), c))));
     }
   }
 
@@ -72,7 +72,7 @@ public class EGForgeEvents {
     // if the config allows it, and the block is a CARVED pumpkin...
     if (!event.isCanceled() && EGConfig.pumpkinBuildsGolems() && event.getPlacedBlock().getBlock() == Blocks.CARVED_PUMPKIN
         && event.getWorld() instanceof Level) {
-      // try to spawn a entity!
+      // try to spawn an entity!
       GolemHeadBlock.trySpawnGolem(event.getEntity(), (Level) event.getWorld(), event.getPos());
     }
   }
