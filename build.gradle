@@ -5,7 +5,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
@@ -19,8 +19,6 @@ archivesBaseName = project.archives_base_name
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
-def remapRefmap = 'mixin_remap_refmap'
-def remapRefmapFile = "${projectDir}/build/createSrgToMcp/output.srg"
 
 minecraft {
    
@@ -41,10 +39,6 @@ minecraft {
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
-			
-			// Enable mixins for dependencies that use them
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', remapRefmapFile
 
             mods {
                 golems {
@@ -61,10 +55,6 @@ minecraft {
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
-			
-			// Enable mixins for dependencies that use them
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', remapRefmapFile
 
             mods {
                 golems {
@@ -84,10 +74,6 @@ repositories {
         name 'tehnut'
         url 'https://maven.tehnut.info'
     }
-	maven { // QUARK
-		name 'blamejared'
-		url 'https://maven.blamejared.com/'
-	}
 	maven { // CURSE
 		name 'CurseMaven'
 		url 'https://www.cursemaven.com/'
@@ -100,27 +86,12 @@ dependencies {
 	// Forge
     minecraft "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
 	
-	// Mixins
-	// annotationProcessor "org.spongepowered:mixin:${project.mixin_version}:processor"
-	
-	// AutoRegLib
-	implementation fg.deobf("vazkii.autoreglib:AutoRegLib:${project.arl_version}")
-	// Quark
-	implementation fg.deobf("vazkii.quark:Quark:${project.quark_version}")
-	// CoFHCore
-	compile fg.deobf("curse.maven:cofh-core-${project.cofhcore_proj}:${project.cofhcore_file}") { transitive = false }
-	// Thermal Foundation
-	compile fg.deobf("curse.maven:thermal-foundation-${project.thermalfoundation_proj}:${project.thermalfoundation_file}") { transitive = false }
-	// CLib
-	compile fg.deobf("curse.maven:clib-${project.clib_proj}:${project.clib_file}") { transitive = false }
-	// Mekanism
-	compile fg.deobf("curse.maven:mekanism-${project.mekanism_proj}:${project.mekanism_file}") { transitive = false }
-	// Immersive Engineering
-	compile fg.deobf("curse.maven:immersive-engineering-${project.ie_proj}:${project.ie_file}") { transitive = false }
-	
 	// HWYLA
-	compileOnly fg.deobf("mcp.mobius.waila:Hwyla:${project.hwyla_version}:api")
-	runtimeOnly fg.deobf("mcp.mobius.waila:Hwyla:${project.hwyla_version}")
+	implementation fg.deobf("mcp.mobius.waila:Hwyla:${project.hwyla_version}:api")
+	// runtimeOnly fg.deobf("mcp.mobius.waila:Hwyla:${project.hwyla_version}")
+	
+	// TOP
+	implementation fg.deobf("curse.maven:the-one-probe-${project.top_proj}:${project.top_file}")
 }
 processResources {
     inputs.property "version", project.version
@@ -140,7 +111,7 @@ jar {
     manifest {
         attributes([
                 "Specification-Title": "Extra-Golems",
-                "Specification-Vendor": "skyjay1 and the MMD Team",
+                "Specification-Vendor": "${mod_authors}",
                 "Specification-Version": "1", // We are version 1 of ourselves
                 "Implementation-Title": project.name,
                 "Implementation-Version": "${version}",

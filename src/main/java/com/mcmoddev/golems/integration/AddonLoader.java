@@ -34,57 +34,15 @@ public final class AddonLoader {
   public static boolean isNNOWLoaded() { return ModList.get().isLoaded(NNOW_MODID); }
   
   public static void initEntityTypes() {
-    if(isQuarkLoaded()) {
-      com.mcmoddev.golems_quark.QuarkGolemsEntities.initEntityTypes();
-    }
-    if(isThermalLoaded()) {
-      com.mcmoddev.golems_thermal.ThermalGolemsEntities.initEntityTypes();
-    }
-    if(isMekanismLoaded()) {
-      com.mcmoddev.golems_mekanism.MekanismGolemsEntities.initEntityTypes();;
-    }
-    if(isIELoaded()) {
-      com.mcmoddev.golems_immersiveengineering.IEGolemsEntities.initEntityTypes();
-    }
-    if(isClibLoaded()) {
-      com.mcmoddev.golems_clib.ClibGolemsEntities.initEntityTypes();
-    }
+    
   }
   
   public static void interModEnqueueEvent(final InterModEnqueueEvent event) {
-    if(isQuarkLoaded()) {
-      com.mcmoddev.golems_quark.QuarkGolemsEntities.interModEnqueueEvent(event);
-    }
-    if(isThermalLoaded()) {
-      com.mcmoddev.golems_thermal.ThermalGolemsEntities.interModEnqueueEvent(event);
-    }
-    if(isMekanismLoaded()) {
-      com.mcmoddev.golems_mekanism.MekanismGolemsEntities.interModEnqueueEvent(event);
-    }
-    if(isIELoaded()) {
-      com.mcmoddev.golems_immersiveengineering.IEGolemsEntities.interModEnqueueEvent(event);
-    }
-    if(isClibLoaded()) {
-      com.mcmoddev.golems_clib.ClibGolemsEntities.interModEnqueueEvent(event);
-    }
+    
   }
   
   public static void setupEvent(final FMLCommonSetupEvent event) {
-    if(isQuarkLoaded()) {
-      com.mcmoddev.golems_quark.QuarkGolemsEntities.setupEvent(event);
-    }
-    if(isThermalLoaded()) {
-      com.mcmoddev.golems_thermal.ThermalGolemsEntities.setupEvent(event);
-    }
-    if(isMekanismLoaded()) {
-      com.mcmoddev.golems_mekanism.MekanismGolemsEntities.setupEvent(event);
-    }
-    if(isIELoaded()) {
-      com.mcmoddev.golems_immersiveengineering.IEGolemsEntities.setupEvent(event);
-    }
-    if(isClibLoaded()) {
-      com.mcmoddev.golems_clib.ClibGolemsEntities.setupEvent(event);
-    }
+    
   }
   
 }
