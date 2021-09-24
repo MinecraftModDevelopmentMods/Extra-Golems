@@ -1,0 +1,21 @@
+{
+  "attributes": {
+    "health": 58.0,
+    "attack": 6.5,
+	"attack_knockback": 0.92,
+	"knockback_resistance": 0.35
+  },
+  "swim_ability": "float",
+  "sound": "minecraft:block.slime_block.step",
+  "blocks": "minecraft:slime_block",
+  "heal_items": {
+    "minecraft:slime_block": 0.5,
+	"#forge:slimeballs": 0.15
+  },
+  "behavior": [
+	{
+	  "type": "golems:split_on_death",
+	  "children": 2
+	} 
+  ]
+}

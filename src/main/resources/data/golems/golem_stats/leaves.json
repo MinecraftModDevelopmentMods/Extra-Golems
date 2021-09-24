@@ -1,0 +1,45 @@
+{
+  "attributes": {
+    "health": 6.0,
+    "attack": 1.0,
+    "speed": 0.31,
+	"knockback_resistance": 0.0
+  },
+  "swim_ability": "float",
+  "sound": "minecraft:block.grass.step",
+  "blocks": "#minecraft:leaves",
+  "heal_items": {
+    "#minecraft:leaves": 0.5,
+	"#forge:rods/wooden": 0.1
+  },
+  "behavior": [ 
+    {
+	  "type": "golems:passive_effect",
+	  "effect": {
+		"target": "self",
+		"chance": 1.0,
+		"effects": [
+		  {
+  	  	    "Potion": "minecraft:regeneration",
+  	  	    "Amplifier": 0,
+  	  	    "Duration": 300
+  	      }
+	    ]
+	  }
+	},
+	{
+	  "type": "golems:hurt",
+	  "effect": {
+		"target": "self",
+		"chance": 1.0,
+		"effects": [
+	      {
+  	  	    "Potion": "minecraft:regeneration",
+  	  	    "Amplifier": 1,
+  	  	    "Duration": 200
+  	      }
+	    ]
+	  }
+	}
+  ]
+}

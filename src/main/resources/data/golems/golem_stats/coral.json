@@ -1,0 +1,82 @@
+{
+  "attributes": {
+    "health": 38.0,
+    "attack": 9.0,
+    "knockback_resistance": 0.2
+  },
+  "swim_ability": "swim",
+  "heal_items": {
+    "#minecraft:coral_blocks": 0.5,
+    "#forge:dead_coral_blocks": 0.25
+  },
+  "multitexture": {
+    "texture_count": 10,
+	"textures": {
+	  "0": {
+		"blocks": "minecraft:tube_coral_block",
+		"loot_table": "golems:coral/tube"
+	  },
+	  "1": {
+		"blocks": "minecraft:brain_coral_block",
+		"loot_table": "golems:coral/brain"
+	  },
+	  "2": {
+		"blocks": "minecraft:bubble_coral_block",
+		"loot_table": "golems:coral/bubble"
+	  },
+	  "3": {
+		"blocks": "minecraft:fire_coral_block",
+		"loot_table": "golems:coral/fire"
+	  },
+	  "4": {
+		"blocks": "minecraft:horn_coral_block",
+		"loot_table": "golems:coral/horn"
+	  },
+	  "5": {
+		"blocks": "minecraft:dead_tube_coral_block",
+		"loot_table": "golems:coral/tube"
+	  },
+	  "6": {
+		"blocks": "minecraft:dead_brain_coral_block",
+		"loot_table": "golems:coral/brain"
+	  },
+	  "7": {
+		"blocks": "minecraft:dead_bubble_coral_block",
+		"loot_table": "golems:coral/bubble"
+	  },
+	  "8": {
+		"blocks": "minecraft:dead_fire_coral_block",
+		"loot_table": "golems:coral/fire"
+	  },
+	  "9": {
+		"blocks": "minecraft:dead_horn_coral_block",
+		"loot_table": "golems:coral/horn"
+	  }
+	}
+  },
+  "behavior": [
+    {
+	  "type": "golems:change_texture",
+	  "wet": {
+	    "chance": 0.01,
+	    "textures": {
+	      "5": 0,
+	      "6": 1,
+	      "7": 2,
+	      "8": 3,
+	      "9": 4
+	    }
+	  },
+	  "dry": {
+	    "chance": 0.008,
+	    "textures": {
+	      "0": 5,
+	      "1": 6,
+	      "2": 7,
+	      "3": 8,
+	      "4": 9
+	    }
+	  }
+	}
+  ]
+}

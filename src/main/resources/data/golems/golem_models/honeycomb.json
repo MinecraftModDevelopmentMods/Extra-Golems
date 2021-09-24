@@ -1,0 +1,12 @@
+{
+  "base": "minecraft:honeycomb_block",
+  "layers": [
+    {
+	  "texture": "#golems:layer/vines",
+	  "color": 16764509
+	},
+    {
+	  "texture": "#golems:layer/eyes/eyes"
+	}
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "attributes": {
+    "health": 28.0,
+    "attack": 10.0,
+    "knockback_resistance": 1.0,
+	"immune_to_fire": true
+  },
+  "glow": 15,
+  "sound": "minecraft:block.glass.step",
+  "blocks": "minecraft:redstone_lamp",
+  "heal_items": {
+    "minecraft:redstone_lamp": 0.5,
+	"#forge:dusts/redstone": 0.15,
+	"#forge:dusts/glowstone": 0.15
+  },
+  "multitexture": {
+    "texture_count": 2,
+	"cycle": true,
+	"textures": {
+	  "0": {
+		"blocks": "minecraft:redstone_lamp",
+		"light": 15,
+		"loot_table": "golems:redstone_lamp/lit"
+	  },
+	  "1": {
+	    "light": 0,
+		"loot_table": "golems:redstone_lamp/unlit"
+	  }
+    }
+  }
+}

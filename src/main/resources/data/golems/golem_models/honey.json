@@ -1,0 +1,9 @@
+{
+  "base": "minecraft:honey_block_top",
+  "translucent": true,
+  "layers": [
+    {
+	  "texture": "#golems:layer/eyes/eyes"
+	}
+  ]
+}

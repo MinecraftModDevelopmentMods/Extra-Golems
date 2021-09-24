@@ -1,0 +1,27 @@
+{
+  "attributes": {
+    "health": 68.0,
+    "attack": 6.0,
+	"speed": 0.27
+  },
+  "swim_ability": "float",
+  "sound": "minecraft:block.coral_block.step",
+  "blocks": "minecraft:honeycomb_block",
+  "heal_items": {
+    "minecraft:honeycomb_block": 0.5,
+	"minecraft:honeycomb": 0.15
+  },
+  "behavior": [
+	{
+	  "type": "golems:hurt",
+	  "summon": {
+	    "target": "enemy",
+	    "summon_pos": "self",
+		"chance": 0.30,
+	    "entity": {
+	      "id": "minecraft:bee"
+	    }
+	  }
+	}
+  ]
+}

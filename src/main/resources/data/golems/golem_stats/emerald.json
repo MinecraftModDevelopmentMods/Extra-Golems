@@ -1,0 +1,20 @@
+{
+  "attributes": {
+    "health": 190.0,
+    "attack": 20.0,
+    "knockback_resistance": 0.8,
+	"armor": 3.5
+  },
+  "blocks": "#forge:storage_blocks/emerald",
+  "heal_items": {
+    "#forge:storage_blocks/emerald": 0.5,
+	"#forge:gems/emerald": 0.1
+  },
+  "behavior": [
+    {
+      "type": "golems:follow",
+      "entity": "minecraft:villager",
+      "priority": 3
+    }
+  ]
+}

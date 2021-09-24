@@ -1,0 +1,53 @@
+{
+  "attributes": {
+    "health": 88.0,
+    "attack": 9.5,
+    "knockback_resistance": 1.0,
+	"immune_to_fire": true
+  },
+  "glow": 8,
+  "blocks": "minecraft:furnace",
+  "heal_items": {
+    "minecraft:furnace": 0.5,
+	"minecraft:cobblestone": 0.1
+  },
+  "multitexture": {
+    "texture_count": 2,
+	"textures": {
+	  "0": {
+		"blocks": "minecraft:furnace",
+		"loot_table": "golems:furnace"
+	  },
+	  "1": {
+		"loot_table": "golems:furnace",
+		"light": 8
+	  }
+    }
+  },
+  "behavior": [
+	{
+	  "type": "golems:use_fuel",
+	  "max_fuel": 102400,
+	  "burn_interval": 10
+	},
+	{
+	  "type": "golems:tempt",
+	  "item": "#minecraft:coals"
+	},
+	{
+	  "type": "golems:change_texture",
+	  "fuel": {
+	    "chance": 1.0,
+	    "textures": {
+	      "0": 1
+	    }
+	  },
+	  "fuel_empty": {
+	    "chance": 1.0,
+	    "textures": {
+	      "1": 0
+	    }
+	  }
+	}
+  ]
+}

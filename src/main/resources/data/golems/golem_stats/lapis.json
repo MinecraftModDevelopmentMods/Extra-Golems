@@ -1,0 +1,68 @@
+{
+  "attributes": {
+    "health": 55.0,
+    "attack": 5.0,
+    "speed": 0.28
+  },
+  "blocks": "#forge:storage_blocks/lapis",
+  "heal_items": {
+    "#forge:storage_blocks/lapis": 0.5,
+	"#forge:gems/lapis": 0.1
+  },
+  "behavior": [ 
+    {
+	  "type": "golems:attack",
+	  "effect": {
+		"target": "enemy",
+		"chance": 0.9,
+		"effects": [
+	      {
+  	  	    "Potion": "minecraft:blindess",
+  	  	    "Amplifier": 0,
+  	  	    "Duration": 200
+  	      },
+		  {
+  	  	    "Potion": "minecraft:slowness",
+  	  	    "Amplifier": 0,
+  	  	    "Duration": 290
+  	      },
+		  {
+  	  	    "Potion": "minecraft:slowness",
+  	  	    "Amplifier": 1,
+  	  	    "Duration": 220
+  	      },
+		  {
+  	  	    "Potion": "minecraft:poison",
+  	  	    "Amplifier": 0,
+  	  	    "Duration": 220
+  	      },
+		  {
+  	  	    "Potion": "minecraft:instant_damage",
+  	  	    "Amplifier": 1,
+  	  	    "Duration": 1
+  	      },
+		  {
+  	  	    "Potion": "minecraft:weakness",
+  	  	    "Amplifier": 0,
+  	  	    "Duration": 300
+  	      },
+		  {
+  	  	    "Potion": "minecraft:wither",
+  	  	    "Amplifier": 0,
+  	  	    "Duration": 120
+  	      },
+		  {
+  	  	    "Potion": "minecraft:levitation",
+  	  	    "Amplifier": 0,
+  	  	    "Duration": 200
+  	      },
+		  {
+  	  	    "Potion": "minecraft:glowing",
+  	  	    "Amplifier": 0,
+  	  	    "Duration": 400
+  	      }
+	    ]
+	  }
+	}
+  ]
+}

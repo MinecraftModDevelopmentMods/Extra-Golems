@@ -1,0 +1,76 @@
+{
+  "attributes": {
+    "health": 42.0,
+    "attack": 4.0
+  },
+  "swim_ability": "float",
+  "sound": "minecraft:block.slime_block.step",
+  "blocks": "minecraft:honey_block",
+  "heal_items": {
+    "minecraft:honey_block": 0.5,
+	"minecraft:honey_bottle": 0.25,
+	"minecraft:honeycomb": 0.15
+  },
+  "behavior": [
+	{
+	  "type": "golems:attack",
+	  "effect": {
+		"target": "enemy",
+		"chance": 0.8,
+		"effects": [
+	      {
+  	  	    "Potion": "minecraft:slowness",
+  	  	    "Amplifier": 4,
+  	  	    "Duration": 70
+  	      }
+	    ]
+	  }
+	},
+	{
+	  "type": "golems:attack",
+	  "effect": {
+		"target": "enemy",
+		"chance": 0.8,
+		"effects": [
+		  {
+  	  	    "Potion": "minecraft:jump_boost",
+  	  	    "Amplifier": -4,
+  	  	    "Duration": 70
+  	      }
+	    ]
+	  }
+	},
+	{
+	  "type": "golems:hurt",
+	  "effect": {
+		"target": "enemy",
+		"chance": 0.5,
+		"effects": [
+	      {
+  	  	    "Potion": "minecraft:slowness",
+  	  	    "Amplifier": 4,
+  	  	    "Duration": 70
+  	      }
+	    ]
+	  }
+	},
+	{
+	  "type": "golems:hurt",
+	  "effect": {
+		"target": "enemy",
+		"chance": 0.5,
+		"effects": [
+		  {
+  	  	    "Potion": "minecraft:jump_boost",
+  	  	    "Amplifier": -4,
+  	  	    "Duration": 70
+  	      }
+	    ]
+	  }
+	},
+	{
+	  "type": "golems:split_on_death",
+	  "children": 2
+	} 
+  ]
+}

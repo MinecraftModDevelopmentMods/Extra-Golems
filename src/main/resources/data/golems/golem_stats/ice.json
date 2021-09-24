@@ -1,0 +1,23 @@
+{
+  "attributes": {
+    "health": 18.0,
+    "attack": 9.5,
+	"speed": 0.27,
+	"hurt_by_heat": true
+  },
+  "swim_ability": "float",
+  "sound": "minecraft:block.glass.step",
+  "blocks": "#minecraft:ice",
+  "heal_items": {
+    "#minecraft:ice": 0.5
+  },
+  "behavior": [
+	{
+	  "type": "golems:aoe_freeze",
+	  "range": 3,
+	  "interval": 2,
+	  "sphere": false,
+	  "frosted": false
+	}
+  ]
+}

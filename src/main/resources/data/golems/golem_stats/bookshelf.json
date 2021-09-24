@@ -1,0 +1,61 @@
+{
+  "attributes": {
+    "health": 28.0,
+    "attack": 5.5,
+    "speed": 0.29
+  },
+  "swim_ability": "float",
+  "sound": "minecraft:block.wood.step",
+  "blocks": "minecraft:bookshelf",
+  "heal_items": {
+    "#forge:bookshelves": 0.5,
+	"minecraft:book": 0.15,
+	"#minecraft:planks": 0.15
+  },
+  "behavior": [
+    {
+	  "type": "golems:passive_effect",
+	  "effect": {
+		"target": "self",
+		"chance": 0.9,
+		"effects": [
+	      {
+  	  	    "Potion": "minecraft:regeneration",
+  	  	    "Amplifier": 0,
+  	  	    "Duration": 300
+  	      },
+		  {
+  	  	    "Potion": "minecraft:fire_resistance",
+  	  	    "Amplifier": 0,
+  	  	    "Duration": 500
+  	      },
+		  {
+  	  	    "Potion": "minecraft:strength",
+  	  	    "Amplifier": 0,
+  	  	    "Duration": 250
+  	      },
+		  {
+  	  	    "Potion": "minecraft:instant_health",
+  	  	    "Amplifier": 0,
+  	  	    "Duration": 1
+  	      },
+		  {
+  	  	    "Potion": "minecraft:resistance",
+  	  	    "Amplifier": 0,
+  	  	    "Duration": 500
+  	      },
+		  {
+  	  	    "Potion": "minecraft:invisibility",
+  	  	    "Amplifier": 0,
+  	  	    "Duration": 450
+  	      },
+		  {
+  	  	    "Potion": "minecraft:speed",
+  	  	    "Amplifier": 0,
+  	  	    "Duration": 300
+  	      }
+	    ]
+	  }
+	}
+  ]
+}

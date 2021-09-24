@@ -1,0 +1,28 @@
+{
+  "attributes": {
+    "health": 58.0,
+    "attack": 6.5,
+	"knockback_resistance": 0.35
+  },
+  "particle": {
+    "type": "minecraft:splash"
+  },
+  "swim_ability": "float",
+  "sound": "minecraft:block.wool.step",
+  "blocks": [
+    "minecraft:sponge",
+	"minecraft:wet_sponge"
+  ],
+  "heal_items": {
+    "minecraft:sponge": 0.5,
+	"minecraft:wet_sponge": 0.5
+  },
+  "behavior": [
+	{
+	  "type": "golems:aoe_dry",
+	  "range": 5,
+	  "interval": 7,
+	  "sphere": true
+	} 
+  ]
+}

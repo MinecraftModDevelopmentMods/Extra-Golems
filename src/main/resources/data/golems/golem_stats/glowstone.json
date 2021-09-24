@@ -1,0 +1,16 @@
+{
+  "attributes": {
+    "health": 8.0,
+    "attack": 15.0,
+	"immune_to_fire": true,
+    "hurt_by_fall": true
+  },
+  "swim_ability": "float",
+  "glow": 15,
+  "sound": "minecraft:block.glass.step",
+  "blocks": "minecraft:glowstone",
+  "heal_items": {
+    "minecraft:glowstone": 0.5,
+	"#forge:dusts/glowstone": 0.15
+  }
+}

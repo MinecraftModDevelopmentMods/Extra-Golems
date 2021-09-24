@@ -1,0 +1,21 @@
+{
+	"replace": false,
+	"values": [
+		"#forge:concrete/white",
+		"#forge:concrete/orange",
+		"#forge:concrete/magenta",
+		"#forge:concrete/light_blue",
+		"#forge:concrete/yellow",
+		"#forge:concrete/lime",
+		"#forge:concrete/pink",
+		"#forge:concrete/gray",
+		"#forge:concrete/light_gray",
+		"#forge:concrete/cyan",
+		"#forge:concrete/purple",
+		"#forge:concrete/blue",
+		"#forge:concrete/brown",
+		"#forge:concrete/green",
+		"#forge:concrete/red",
+		"#forge:concrete/black"
+	]
+}

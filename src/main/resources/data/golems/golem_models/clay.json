@@ -1,0 +1,17 @@
+{
+  "base": "minecraft:clay",
+  "base_template": "golems:template",
+  "base_color": -1,
+  "use_biome_color": false,
+  "base_light": false,
+  "translucent": false,
+  "layers": [
+    {
+	  "texture": "#golems:layer/vines",
+	  "color": 8626266
+	},
+    {
+	  "texture": "#golems:layer/eyes/eyes"
+	}
+  ]
+}

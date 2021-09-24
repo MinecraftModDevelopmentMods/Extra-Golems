@@ -1,0 +1,13 @@
+{
+  "base": "minecraft:tnt_side",
+  "layers": [
+    {
+	  "texture": "#golems:layer/vines",
+	  "color": 8626266
+	},
+    {
+	  "texture": "#golems:layer/eyes/creeper",
+	  "light": true
+	}
+  ]
+}

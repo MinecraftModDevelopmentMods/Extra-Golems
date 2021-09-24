@@ -1,0 +1,23 @@
+{
+  "attributes": {
+    "health": 14.0,
+    "attack": 2.5
+  },
+  "swim_ability": "float",
+  "sound": "minecraft:block.gravel.step",
+  "blocks": "minecraft:tnt",
+  "heal_items": {
+    "minecraft:tnt": 0.5,
+	"#forge:gunpowder": 0.15,
+	"#forge:sand": 0.15
+  },
+  "behavior": [
+	{
+      "type": "golems:explode",
+	  "range": 8.0,
+	  "fuse": 50,
+	  "chance_on_hurt": 0.1,
+	  "chance_on_attack": 0.1
+	}  
+  ]
+}

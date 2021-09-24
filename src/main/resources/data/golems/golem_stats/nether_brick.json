@@ -1,0 +1,32 @@
+{
+  "attributes": {
+    "health": 25.0,
+    "attack": 9.5,
+    "speed": 0.28,
+	"knockback_resistance": 0.2,
+	"immune_to_fire": true
+  },
+  "blocks": [
+    "minecraft:nether_bricks",
+    "minecraft:red_nether_bricks",
+    "minecraft:cracked_nether_bricks",
+    "minecraft:chiseled_nether_bricks"
+  ],
+  "heal_items": {
+    "minecraft:nether_bricks": 0.5,
+    "minecraft:red_nether_bricks": 0.5,
+    "minecraft:cracked_nether_bricks": 0.5,
+    "minecraft:chiseled_nether_bricks": 0.5,
+	"#forge:ingots/nether_brick": 0.15
+  },
+  "behavior": [ 
+    {
+	  "type": "golems:attack",
+	  "fire": {
+		"target": "enemy",
+		"chance": 0.9,
+		"time": 2
+	  }
+	}
+  ]
+}

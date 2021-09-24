@@ -1,0 +1,12 @@
+{
+  "base": "minecraft:dried_kelp_top",
+  "layers": [
+    {
+	  "texture": "#golems:layer/vines",
+	  "color": 5127460
+	},
+    {
+	  "texture": "#golems:layer/eyes/eyes"
+	}
+  ]
+}

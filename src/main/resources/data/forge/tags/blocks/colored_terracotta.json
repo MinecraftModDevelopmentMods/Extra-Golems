@@ -1,0 +1,21 @@
+{
+	"replace": false,
+	"values": [
+		"#forge:terracotta/white",
+		"#forge:terracotta/orange",
+		"#forge:terracotta/magenta",
+		"#forge:terracotta/light_blue",
+		"#forge:terracotta/yellow",
+		"#forge:terracotta/lime",
+		"#forge:terracotta/pink",
+		"#forge:terracotta/gray",
+		"#forge:terracotta/light_gray",
+		"#forge:terracotta/cyan",
+		"#forge:terracotta/purple",
+		"#forge:terracotta/blue",
+		"#forge:terracotta/brown",
+		"#forge:terracotta/green",
+		"#forge:terracotta/red",
+		"#forge:terracotta/black"
+	]
+}

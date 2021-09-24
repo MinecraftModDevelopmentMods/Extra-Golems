@@ -1,0 +1,30 @@
+{
+  "attributes": {
+    "health": 24.0,
+    "attack": 6.0,
+	"knockback_resistance": 0.2,
+    "speed": 0.28
+  },
+  "swim_ability": "float",
+  "blocks": "#forge:storage_blocks/coal",
+  "heal_items": {
+	"#forge:storage_blocks/coal": 0.5,
+    "#minecraft:coals": 0.1
+  },
+  "behavior": [ 
+    {
+	  "type": "golems:attack",
+	  "effect": {
+		"target": "enemy",
+		"chance": 0.4,
+		"effects": [
+	      {
+  	  	    "Potion": "minecraft:blindness",
+  	  	    "Amplifier": 0,
+  	  	    "Duration": 90
+  	      }
+	    ]
+	  }
+	}
+  ]
+}
