@@ -71,7 +71,6 @@ public final class SpawnGolemItem extends Item {
 		entity.setPosition(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
 		worldIn.addEntity(entity);
 		entity.onInitialSpawn((ServerWorld)worldIn, worldIn.getDifficultyForLocation(spawnPos), SpawnReason.SPAWN_EGG, null, null);
-		entity.setInvulnerable(true);
 	  }
 	  spawnParticles(worldIn, spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), 0.12D);
 	  return ActionResultType.SUCCESS;

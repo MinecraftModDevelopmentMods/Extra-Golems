@@ -1,15 +1,15 @@
 {
   "base": "minecraft:lapis_block",
   "layers": [
-    {
+	{
+	  "texture": "#golems:layer/gold_edging"
+	},
+	{
 	  "texture": "#golems:layer/vines",
 	  "color": 8626266
 	},
     {
 	  "texture": "#golems:layer/eyes/eyes"
-	},
-    {
-	  "texture": "#golems:layer/gold_edging"
 	}
   ]
 }

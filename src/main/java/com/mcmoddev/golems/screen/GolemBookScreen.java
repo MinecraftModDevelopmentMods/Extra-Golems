@@ -661,7 +661,7 @@ public class GolemBookScreen extends Screen {
 		gui.drawBlock(this.entry.getBlock(index), this.x - MARGIN - 2, this.y - 9, 1.0F);
 
 		// prepare to draw the golem's name
-		matrix.push();
+		RenderSystem.pushMatrix();
 
 		final IFormattableTextComponent name = entry.getGolemName();
 		final int wrap = this.width - 20;
@@ -674,9 +674,9 @@ public class GolemBookScreen extends Screen {
 		int nameX = this.x + 20;
 		int nameY = this.y + ((this.height - nameH) / 2) + 1;
 		// re-scale and draw the golem name
-		matrix.scale(scale, scale, scale);
+		RenderSystem.scalef(scale, scale, scale);
 		gui.font.func_238418_a_(name, (int) ((nameX) / scale), (int) (nameY / scale), (int) (wrap / scale), 0);
-		matrix.pop();
+		RenderSystem.popMatrix();
 	  }
 	}
   }

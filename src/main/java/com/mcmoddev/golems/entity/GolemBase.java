@@ -126,7 +126,11 @@ public class GolemBase extends IronGolemEntity implements IMultitextured, IFuelC
     this.material = materialIn;
     this.container = ExtraGolems.GOLEM_CONTAINERS.get(materialIn).orElse(GolemContainer.EMPTY);
     this.attributes = new AttributeModifierManager(container.getAttributeSupplier().get().create());
-    
+    // bedrock golem invulnerability
+	if(SpawnGolemItem.BEDROCK_GOLEM.equals(materialIn)) {
+	  setInvulnerable(true);
+	}
+
     if (!world.isRemote()) {
       // define behavior for the given swimming ability
       switch (container.getSwimAbility()) {

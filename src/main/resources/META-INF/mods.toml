@@ -3,7 +3,7 @@
 # The name of the mod loader type to load
 modLoader="javafml"
 # A version range to match for said mod loader
-loaderVersion="[34,)"
+loaderVersion="[36,)"
 # The license for your mod. This is mandatory metadata and allows for easier comprehension of your redistributive properties.
 license="zlib License"
 # A URL to refer people to when problems occur with this mod
