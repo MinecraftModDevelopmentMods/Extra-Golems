@@ -37,7 +37,7 @@ public class PlaceBlocksBehavior extends GolemBehavior {
     super(tag);
     interval = tag.getInt("interval");
     // read blocks
-    ListNBT blocksTag = tag.getList("blocks", Constants.NBT.TAG_LIST);
+    ListNBT blocksTag = (ListNBT) tag.get("blocks");
     for(int i = 0, l = blocksTag.size(); i < l; i++) {
       Optional<ResourcePair> result = ResourcePair.read(blocksTag.getString(i)).resultOrPartial(s -> ExtraGolems.LOGGER.error("Error reading 'blocks' from NBT\n" + s));
       result.ifPresent(p -> {

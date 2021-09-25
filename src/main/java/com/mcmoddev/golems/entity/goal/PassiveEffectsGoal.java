@@ -40,4 +40,9 @@ public class PassiveEffectsGoal extends Goal {
       effectTarget.addPotionEffect(effect);
     }
   }
+
+  @Override
+  public boolean shouldContinueExecuting() {
+	return false;
+  }
 }

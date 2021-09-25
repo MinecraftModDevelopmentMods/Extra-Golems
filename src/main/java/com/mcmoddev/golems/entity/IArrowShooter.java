@@ -214,10 +214,10 @@ public interface IArrowShooter extends IRangedAttackMob, IInventoryChangedListen
 	for (int i = 0, l = getArrowInventory().getSizeInventory(); i < l; i++) {
 	  final ItemStack invStack = getArrowInventory().getStackInSlot(i);
 	  if (invStack.isEmpty() || (invStack.getItem() == stack.getItem() && ItemStack.areItemStackTagsEqual(invStack, stack)
-			  && invStack.getCount() + stack.getCount() <= invStack.getMaxStackSize())) {
-		invStack.setCount(stack.getCount());
-		stack.setCount(0);
-		getArrowInventory().setInventorySlotContents(i, invStack);
+			  && invStack.getCount() + stack.getCount() <= stack.getMaxStackSize())) {
+		stack.setCount(stack.getCount() + invStack.getCount());
+		getArrowInventory().setInventorySlotContents(i, stack);
+		onInventoryChanged(getArrowInventory());
 		return;
 	  }
 	}

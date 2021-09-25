@@ -1,12 +1,4 @@
 {
-  "base": "minecraft:diamond_block",
-  "layers": [
-    {
-	  "texture": "#golems:layer/vines",
-	  "color": 2070638
-	},
-    {
-	  "texture": "#golems:layer/eyes/eyes"
-	}
-  ]
+  "base": "#golems:diamond",
+  "layers": [ ]
 }

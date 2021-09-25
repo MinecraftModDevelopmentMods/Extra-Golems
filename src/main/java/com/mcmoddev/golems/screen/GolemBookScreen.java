@@ -397,8 +397,8 @@ public class GolemBookScreen extends Screen {
 	/** texture location and size of 2x2 crafting **/
 	final int gridW = 84;
 	final int gridH = 46;
-	RenderSystem.pushMatrix();
-	RenderSystem.scalef(scale, scale, scale);
+	matrix.push();
+	matrix.scale(scale, scale, scale);
 	RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 	// draw 2x2 grid background
 	this.getMinecraft().getTextureManager().bindTexture(TEXTURE);
@@ -438,7 +438,7 @@ public class GolemBookScreen extends Screen {
 	this.itemRenderer.renderItemIntoGUI(result, (int) (posX / scale), (int) (posY / scale));
 
 	// reset scale
-	RenderSystem.popMatrix();
+	matrix.pop();
   }
 
   private void drawGolemDiagram(final MatrixStack matrix, int cornerX, int cornerY) {
@@ -592,7 +592,7 @@ public class GolemBookScreen extends Screen {
     }
 
     @Override
-    public void render(final MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+    public void renderWidget(final MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
       if (this.visible) {
         // update hovered flag
         this.isHovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
@@ -611,7 +611,6 @@ public class GolemBookScreen extends Screen {
     @Override
     public void renderToolTip(final MatrixStack matrix, int mouseX, int mouseY) {
       if (this.currentBlock != Blocks.AIR) {
-        matrix.scale(1 / scale, 1 / scale, 1 / scale);
         this.gui.renderTooltip(matrix, this.currentBlock.getTranslatedName(), mouseX, mouseY);
       }
     }
@@ -650,7 +649,7 @@ public class GolemBookScreen extends Screen {
     }
 
     @Override
-	public void render(final MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void renderWidget(final MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
 	  if (this.visible) {
 		this.isHovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
 		Minecraft.getInstance().getTextureManager().bindTexture(CONTENTS);
@@ -710,7 +709,7 @@ public class GolemBookScreen extends Screen {
      * Draws this button to the screen.
      */
     @Override
-    public void render(final MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+    public void renderWidget(final MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
       if (this.visible) {
         boolean mouseOver = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);

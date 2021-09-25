@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Nullable;
+import javax.swing.*;
 
 import com.mcmoddev.golems.EGConfig;
 import com.mcmoddev.golems.ExtraGolems;
@@ -12,6 +13,7 @@ import com.mcmoddev.golems.entity.GolemBase;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -22,6 +24,7 @@ import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -52,7 +55,7 @@ public final class SpawnGolemItem extends Item {
 	}
 
 	// check if the golem is enabled
-	final Optional<GolemContainer> container = ExtraGolems.GOLEM_CONTAINERS.get(new ResourceLocation(ExtraGolems.MODID, "bedrock"));
+	final Optional<GolemContainer> container = ExtraGolems.GOLEM_CONTAINERS.get(BEDROCK_GOLEM);
 	if (container.isPresent()) {
 	  // make sure the golem can be spawned here (empty block)
 	  BlockState state = worldIn.getBlockState(pos);
@@ -72,6 +75,25 @@ public final class SpawnGolemItem extends Item {
 	  }
 	  spawnParticles(worldIn, spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), 0.12D);
 	  return ActionResultType.SUCCESS;
+	}
+	return ActionResultType.PASS;
+  }
+
+  @Override
+  public ActionResultType itemInteractionForEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity entity, Hand hand) {
+	// determine if the entity is a golem
+	if(entity instanceof GolemBase) {
+	  GolemBase golem = (GolemBase)entity;
+	  // determine if the entity is a Bedrock golem
+	  if(golem.getMaterial().equals(BEDROCK_GOLEM)) {
+		// attempt to remove the entity
+		if(!entity.world.isRemote()) {
+		  golem.remove();
+		}
+		// spawn particles
+		spawnParticles(playerIn.world, entity.getPosX(), entity.getPosY() + 0.5D, entity.getPosZ(), 0.12D);
+		return ActionResultType.SUCCESS;
+	  }
 	}
 	return ActionResultType.PASS;
   }

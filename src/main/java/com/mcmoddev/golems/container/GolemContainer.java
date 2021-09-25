@@ -328,6 +328,7 @@ public final class GolemContainer {
          .createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, this.attributes.getKnockbackResist())
          .createMutableAttribute(Attributes.ATTACK_KNOCKBACK, this.attributes.getAttackKnockback())
          .createMutableAttribute(Attributes.ARMOR, this.attributes.getArmor())
+		 .createMutableAttribute(Attributes.FOLLOW_RANGE, 8.0F)
          .createMutableAttribute(Attributes.ATTACK_DAMAGE, this.attributes.getAttack());
    }
   

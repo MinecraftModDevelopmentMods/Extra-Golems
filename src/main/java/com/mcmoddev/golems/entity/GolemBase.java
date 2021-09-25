@@ -293,7 +293,7 @@ public class GolemBase extends IronGolemEntity implements IMultitextured, IFuelC
   }
 
   public BlockPos getBlockBelow() {
-    return getBlockBelow();
+    return getPositionUnderneath();
   }
   
   public ItemStack getBanner() { return this.getItemStackFromSlot(EquipmentSlotType.CHEST); }

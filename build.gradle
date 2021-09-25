@@ -87,8 +87,8 @@ dependencies {
     minecraft "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
 	
 	// HWYLA
-	implementation fg.deobf("mcp.mobius.waila:Hwyla:${project.hwyla_version}:api")
-	// runtimeOnly fg.deobf("mcp.mobius.waila:Hwyla:${project.hwyla_version}")
+	compileOnly fg.deobf("mcp.mobius.waila:Hwyla:${project.hwyla_version}:api")
+	runtimeOnly fg.deobf("mcp.mobius.waila:Hwyla:${project.hwyla_version}")
 	
 	// TOP
 	implementation fg.deobf("curse.maven:the-one-probe-${project.top_proj}:${project.top_file}")
