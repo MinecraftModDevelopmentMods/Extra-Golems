@@ -7,8 +7,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.mcmoddev.golems.EGRegistry;
-import com.mcmoddev.golems.container.GolemContainer;
+import com.mcmoddev.golems.golem_stats.GolemContainer;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;

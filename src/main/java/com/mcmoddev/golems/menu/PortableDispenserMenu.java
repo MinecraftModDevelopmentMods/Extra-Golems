@@ -13,6 +13,7 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ArrowItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 public class PortableDispenserMenu extends Container {
 
@@ -104,7 +105,7 @@ public class PortableDispenserMenu extends Container {
     }
 
     @Override
-    public ITextComponent getDisplayName() { return Blocks.DISPENSER.getTranslatedName(); }
+    public ITextComponent getDisplayName() { return new TranslationTextComponent(Blocks.DISPENSER.getTranslationKey()); }
   }
 
   public static class ArrowSlot extends Slot {

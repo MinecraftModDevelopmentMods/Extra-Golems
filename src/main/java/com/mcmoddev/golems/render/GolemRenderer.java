@@ -6,7 +6,7 @@ import javax.annotation.Nullable;
 
 import com.mcmoddev.golems.EGConfig;
 import com.mcmoddev.golems.ExtraGolems;
-import com.mcmoddev.golems.container.render.GolemRenderSettings;
+import com.mcmoddev.golems.golem_models.GolemRenderSettings;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.render.layer.ColoredTextureLayer;
 import com.mcmoddev.golems.render.layer.GolemBannerLayer;
@@ -30,9 +30,9 @@ import net.minecraft.util.text.TextFormatting;
  */
 public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemModel<T>> {
 
-  protected static final ResourceLocation boneTexture = new ResourceLocation(ExtraGolems.MODID, "textures/entity/bone_skeleton.png");
-  protected static final ResourceLocation specialTexture = new ResourceLocation(ExtraGolems.MODID, "textures/entity/special.png");
-  protected static final ResourceLocation specialTexture2 = new ResourceLocation(ExtraGolems.MODID, "textures/entity/special2.png");
+  protected static final ResourceLocation boneTexture = new ResourceLocation(ExtraGolems.MODID, "textures/entity/golem/bone_skeleton.png");
+  protected static final ResourceLocation specialTexture = new ResourceLocation(ExtraGolems.MODID, "textures/entity/golem/special.png");
+  protected static final ResourceLocation specialTexture2 = new ResourceLocation(ExtraGolems.MODID, "textures/entity/golem/special2.png");
     
   private static final Vector3f ONE = new Vector3f(1.0F, 1.0F, 1.0F);
   
@@ -60,7 +60,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
     Optional<GolemRenderSettings> settings = ExtraGolems.GOLEM_RENDER_SETTINGS.get(golem.getMaterial());
     if(!settings.isPresent()) {
       final ResourceLocation m = golem.getMaterial();
-      ExtraGolems.LOGGER.error("Missing GolemRenderSettings at assets/" + m.getNamespace() + "/golem/" + m.getPath() + ".json");
+      ExtraGolems.LOGGER.error("Missing GolemRenderSettings at data/" + m.getNamespace() + "/golem_models/" + m.getPath() + ".json");
       ExtraGolems.GOLEM_RENDER_SETTINGS.put(golem.getMaterial(), GolemRenderSettings.EMPTY);
       settings = Optional.of(GolemRenderSettings.EMPTY);
     }
@@ -104,7 +104,12 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
   @Override
   public ResourceLocation getEntityTexture(final T golem) {
     final GolemRenderSettings settings = ExtraGolems.GOLEM_RENDER_SETTINGS.get(golem.getMaterial()).orElse(GolemRenderSettings.EMPTY);
-    ResourceLocation texture = settings.getBase(golem).resource();
+    ResourceLocation texture;
+	try {
+	  texture = settings.getBase(golem).resource();
+	} catch (NullPointerException e) {
+	  texture = GolemRenderSettings.FALLBACK_BLOCK;
+	}
     boolean disableLayers = false;
     // special cases
     if(EGConfig.halloween() && isNightTime(golem)) {
@@ -146,7 +151,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
   }
   
   protected static <T extends GolemBase> boolean isDynamic(final T entity, final ResourceLocation texture, final GolemRenderSettings settings) {
-    return !isSpecial(texture) && !settings.getBase(entity).flag();
+    return !isSpecial(texture) && (settings == null || !settings.getBase(entity).flag());
   }
   
   public static boolean isNightTime(final GolemBase golem) {

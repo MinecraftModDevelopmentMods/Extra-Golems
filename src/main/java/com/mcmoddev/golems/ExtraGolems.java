@@ -5,8 +5,10 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
+import com.mcmoddev.golems.integration.TopDescriptionManager;
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkRegistry;
@@ -15,9 +17,9 @@ import net.minecraftforge.fml.network.simple.SimpleChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.mcmoddev.golems.container.GolemContainer;
-import com.mcmoddev.golems.container.behavior.GolemBehaviors;
-import com.mcmoddev.golems.container.render.GolemRenderSettings;
+import com.mcmoddev.golems.golem_stats.GolemContainer;
+import com.mcmoddev.golems.golem_stats.behavior.GolemBehaviors;
+import com.mcmoddev.golems.golem_models.GolemRenderSettings;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.event.EGForgeEvents;
 import com.mcmoddev.golems.network.SGolemContainerPacket;
@@ -78,7 +80,7 @@ public class ExtraGolems {
     // register TheOneProbe integration
     if(ModList.get().isLoaded("theoneprobe")) {
       ExtraGolems.LOGGER.info("Extra Golems detected TheOneProbe, registering plugin now");
-      InterModComms.sendTo(MODID, "theoneprobe", "getTheOneProbe", () -> new com.mcmoddev.golems.integration.TOPDescriptionManager.GetTheOneProbe());
+      InterModComms.sendTo(MODID, "theoneprobe", "getTheOneProbe", () -> new TopDescriptionManager.GetTheOneProbe());
     }
   }
   
@@ -99,7 +101,27 @@ public class ExtraGolems {
     com.mcmoddev.golems.event.EGClientEvents.addResources();
     return 2;
   }
-  
+
+  /**
+   * Checks all registered GolemContainers until one is found that is constructed
+   * out of the passed Blocks. Parameters are the current World and the 4 blocks
+   * that will be used to calculate this Golem. It is okay to pass {@code null} or
+   * Air.
+   *
+   * @return an Optional that contains the ResourceLocation of a golem material, or empty if there is none for the passed blocks
+   * @see GolemContainer#matches(Block, Block, Block, Block)
+   **/
+  public static Optional<ResourceLocation> getGolemId(Block below1, Block below2, Block arm1, Block arm2) {
+	ResourceLocation id = null;
+	for (Entry<ResourceLocation, Optional<GolemContainer>> entry : GOLEM_CONTAINERS.getEntries()) {
+	  if (entry.getValue().isPresent() && entry.getValue().get().matches(below1, below2, arm1, arm2)) {
+		id = entry.getKey();
+		break;
+	  }
+	}
+	return Optional.ofNullable(id);
+  }
+
   /**
    * Checks all registered GolemContainers until one is found that is constructed
    * out of the passed Blocks. Parameters are the current World and the 4 blocks
@@ -107,21 +129,15 @@ public class ExtraGolems {
    * Air.
    *
    * @return the constructed GolemBase instance if there is one for the passed blocks, otherwise null
-   * @see GolemContainer#matches(Block, Block, Block, Block)
+   * @see #getGolemId(Block, Block, Block, Block)
    **/
   @Nullable
   public static GolemBase getGolem(World world, Block below1, Block below2, Block arm1, Block arm2) {
-    ResourceLocation id = null;
-    for (Entry<ResourceLocation, Optional<GolemContainer>> entry : GOLEM_CONTAINERS.getEntries()) {
-      if (entry.getValue().isPresent() && entry.getValue().get().matches(below1, below2, arm1, arm2)) {
-        id = entry.getKey();
-        break;
-      }
+    Optional<ResourceLocation> id = getGolemId(below1, below2, arm1, arm2);
+    if (id.isPresent()) {
+	  GolemBase entity = GolemBase.create(world, id.get());
+	  return entity;
     }
-    if (id == null) {
-      return null;
-    }
-    GolemBase entity = GolemBase.create(world, id);
-    return entity;
+    return null;
   }
 }

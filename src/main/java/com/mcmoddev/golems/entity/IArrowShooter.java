@@ -2,10 +2,7 @@ package com.mcmoddev.golems.entity;
 
 import java.util.function.BiPredicate;
 
-import com.mcmoddev.golems.ExtraGolems;
-
-import com.mcmoddev.golems.container.behavior.GolemBehaviors;
-import javafx.scene.chart.Axis;
+import com.mcmoddev.golems.golem_stats.behavior.GolemBehaviors;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.LivingEntity;

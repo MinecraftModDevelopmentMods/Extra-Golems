@@ -5,7 +5,10 @@
 	"knockback_resistance": 0.35
   },
   "particle": {
-    "type": "minecraft:splash"
+	"options": {
+	  "type": "minecraft:splash"
+	},
+	"probability": 0.8
   },
   "swim_ability": "float",
   "sound": "minecraft:block.wool.step",

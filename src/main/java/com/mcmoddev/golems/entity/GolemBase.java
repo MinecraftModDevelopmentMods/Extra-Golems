@@ -9,12 +9,12 @@ import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.block.GlowBlock;
 import com.mcmoddev.golems.block.PowerBlock;
-import com.mcmoddev.golems.container.GolemContainer;
-import com.mcmoddev.golems.container.GolemContainer.SwimMode;
-import com.mcmoddev.golems.container.behavior.ExplodeBehavior;
-import com.mcmoddev.golems.container.behavior.GolemBehaviors;
-import com.mcmoddev.golems.container.behavior.ShootArrowsBehavior;
-import com.mcmoddev.golems.container.behavior.UseFuelBehavior;
+import com.mcmoddev.golems.golem_stats.GolemContainer;
+import com.mcmoddev.golems.golem_stats.GolemContainer.SwimMode;
+import com.mcmoddev.golems.golem_stats.behavior.ExplodeBehavior;
+import com.mcmoddev.golems.golem_stats.behavior.GolemBehaviors;
+import com.mcmoddev.golems.golem_stats.behavior.ShootArrowsBehavior;
+import com.mcmoddev.golems.golem_stats.behavior.UseFuelBehavior;
 import com.mcmoddev.golems.entity.goal.GoToWaterGoal;
 import com.mcmoddev.golems.entity.goal.PlaceUtilityBlocksGoal;
 import com.mcmoddev.golems.entity.goal.SwimUpGoal;
@@ -29,6 +29,7 @@ import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.ai.goal.RandomSwimmingGoal;
 import net.minecraft.entity.ai.goal.RangedAttackGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
+import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -51,7 +52,6 @@ import net.minecraft.pathfinding.SwimmerPathNavigator;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
@@ -60,6 +60,7 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 
@@ -348,9 +349,11 @@ public class GolemBase extends IronGolemEntity implements IMultitextured, IFuelC
       }
       // spawn particles based on container
       getContainer().getParticle().ifPresent(particle -> {
-        world.addParticle(particle, getPosX() + rand.nextDouble() - 0.5D, getPosY() + (rand.nextDouble() * getEyeHeight()), getPosZ() + rand.nextDouble() - 0.5D,
-            0.1D * (rand.nextDouble() - 0.5D), 0.1D * (rand.nextDouble() - 0.5D), 0.1D * (rand.nextDouble() - 0.5D));
-      });
+		if(particle.shouldParticleSpawn(rand)) {
+		  world.addParticle(particle.getParticleOptions(), getPosX() + rand.nextDouble() - 0.5D, getPosY() + (rand.nextDouble() * getEyeHeight()), getPosZ() + rand.nextDouble() - 0.5D,
+				  0.1D * (rand.nextDouble() - 0.5D), 0.1D * (rand.nextDouble() - 0.5D), 0.1D * (rand.nextDouble() - 0.5D));
+		}
+	  });
     }
   }
 
@@ -416,6 +419,19 @@ public class GolemBase extends IronGolemEntity implements IMultitextured, IFuelC
       return true;
     }
     return false;
+  }
+
+  @Override
+  public boolean attackEntityFrom(DamageSource source, float amount) {
+	final double knockback = getContainer().getAttributes().getAttackKnockback() * 0.25D;
+	if(source.getImmediateSource() != null && knockback > 0 && !isChild()) {
+	  final Vector3d myPos = this.getPositionVec();
+	  final Vector3d ePos = source.getImmediateSource().getPositionVec();
+	  final double dX = Math.signum(ePos.x - myPos.x) * knockback;
+	  final double dZ = Math.signum(ePos.z - myPos.z) * knockback;
+	  source.getImmediateSource().setMotion(source.getImmediateSource().getMotion().add(dX, knockback / 2, dZ));
+	}
+	return super.attackEntityFrom(source, amount);
   }
   
   @Override

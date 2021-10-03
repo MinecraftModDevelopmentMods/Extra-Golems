@@ -5,7 +5,10 @@
     "knockback_resistance": 0.3
   },
   "particle": {
-    "type": "minecraft:portal"
+	"options": {
+	  "type": "minecraft:portal"
+	},
+	"probability": 1.0
   },
   "blocks": [
     "minecraft:purpur_block",

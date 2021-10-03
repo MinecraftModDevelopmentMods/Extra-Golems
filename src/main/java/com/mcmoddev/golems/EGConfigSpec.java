@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.google.common.collect.Lists;
-import com.mcmoddev.golems.container.GolemContainer;
+import com.mcmoddev.golems.golem_stats.GolemContainer;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;

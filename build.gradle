@@ -19,6 +19,9 @@ archivesBaseName = project.archives_base_name
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
+def remapRefmap = 'mixin_remap_refmap'
+def remapRefmapFile = "${projectDir}/build/createSrgToMcp/output.srg"
+
 
 minecraft {
    
@@ -39,6 +42,10 @@ minecraft {
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
+			
+			// Enable mixins for dependencies that use them
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', remapRefmapFile
 
             mods {
                 golems {
@@ -55,6 +62,10 @@ minecraft {
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
+			
+			// Enable mixins for dependencies that use them
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', remapRefmapFile
 
             mods {
                 golems {
@@ -78,6 +89,18 @@ repositories {
 		name 'CurseMaven'
 		url 'https://www.cursemaven.com/'
 	}
+	maven { // QUARK
+		name 'blamejared'
+		url 'https://maven.blamejared.com/'
+	}
+	maven { // JEI
+      name = "Progwml6 maven"
+      url = "https://dvs1.progwml6.com/files/maven/"
+    }
+    maven { // JEI MIRROR
+      name = "ModMaven"
+      url = "https://modmaven.k-4u.nl"
+    }
 	jcenter()
     mavenCentral()
 }
@@ -92,6 +115,27 @@ dependencies {
 	
 	// TOP
 	implementation fg.deobf("curse.maven:the-one-probe-${project.top_proj}:${project.top_file}")
+	
+	// JEI
+	runtimeOnly fg.deobf("mezz.jei:jei-${project.minecraft_version}:${project.jei_version}")
+	
+	// Mixins
+	// annotationProcessor "org.spongepowered:mixin:${project.mixin_version}:processor"
+
+	// AutoRegLib
+	runtimeOnly fg.deobf("vazkii.autoreglib:AutoRegLib:${project.arl_version}")
+	// Quark
+	runtimeOnly fg.deobf("vazkii.quark:Quark:${project.quark_version}")
+	// CoFHCore
+	runtimeOnly fg.deobf("curse.maven:cofh-core-${project.cofhcore_proj}:${project.cofhcore_file}") { transitive = false }
+	// Thermal Foundation
+	runtimeOnly fg.deobf("curse.maven:thermal-foundation-${project.thermalfoundation_proj}:${project.thermalfoundation_file}") { transitive = false }
+	// CLib
+	runtimeOnly fg.deobf("curse.maven:clib-${project.clib_proj}:${project.clib_file}") { transitive = false }
+	// Mekanism
+	runtimeOnly fg.deobf("curse.maven:mekanism-${project.mekanism_proj}:${project.mekanism_file}") { transitive = false }
+	// Immersive Engineering
+	runtimeOnly fg.deobf("curse.maven:immersive-engineering-${project.ie_proj}:${project.ie_file}") { transitive = false }
 }
 
 // This block of code expands all the gradle properties in the specified resource targets.

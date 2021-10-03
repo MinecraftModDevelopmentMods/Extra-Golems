@@ -4,11 +4,10 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Nullable;
-import javax.swing.*;
 
 import com.mcmoddev.golems.EGConfig;
 import com.mcmoddev.golems.ExtraGolems;
-import com.mcmoddev.golems.container.GolemContainer;
+import com.mcmoddev.golems.golem_stats.GolemContainer;
 import com.mcmoddev.golems.entity.GolemBase;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.screen.Screen;

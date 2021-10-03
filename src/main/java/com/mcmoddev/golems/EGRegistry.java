@@ -3,7 +3,7 @@ package com.mcmoddev.golems;
 import com.mcmoddev.golems.block.GlowBlock;
 import com.mcmoddev.golems.block.GolemHeadBlock;
 import com.mcmoddev.golems.block.PowerBlock;
-import com.mcmoddev.golems.container.GolemContainer;
+import com.mcmoddev.golems.golem_stats.GolemContainer;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.item.GolemSpellItem;
 import com.mcmoddev.golems.item.GuideBookItem;
@@ -11,7 +11,6 @@ import com.mcmoddev.golems.item.SpawnGolemItem;
 import com.mcmoddev.golems.menu.PortableDispenserMenu;
 import com.mcmoddev.golems.menu.PortableCraftingMenu;
 
-import com.mojang.datafixers.types.Type;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityClassification;

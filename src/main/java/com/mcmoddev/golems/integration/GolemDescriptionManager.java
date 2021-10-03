@@ -3,7 +3,7 @@ package com.mcmoddev.golems.integration;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.mcmoddev.golems.container.behavior.GolemBehaviors;
+import com.mcmoddev.golems.golem_stats.behavior.GolemBehaviors;
 import com.mcmoddev.golems.entity.GolemBase;
 
 import net.minecraft.client.gui.screen.Screen;

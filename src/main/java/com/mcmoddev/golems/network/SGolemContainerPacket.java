@@ -4,7 +4,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import com.mcmoddev.golems.ExtraGolems;
-import com.mcmoddev.golems.container.GolemContainer;
+import com.mcmoddev.golems.golem_stats.GolemContainer;
 import com.mojang.serialization.DataResult;
 
 import net.minecraft.nbt.CompoundNBT;

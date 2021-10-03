@@ -2,54 +2,57 @@ package com.mcmoddev.golems.block;
 
 import javax.annotation.Nullable;
 
+import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.entity.GolemBase;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.HorizontalBlock;
+import net.minecraft.block.*;
+import net.minecraft.block.material.Material;
+import net.minecraft.dispenser.IBlockSource;
+import net.minecraft.dispenser.IDispenseItemBehavior;
+import net.minecraft.dispenser.OptionalDispenseBehavior;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.SnowGolemEntity;
+import net.minecraft.item.ArmorItem;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
 public final class GolemHeadBlock extends HorizontalBlock {
 
-  /*
+  /**
    * This behavior is modified from that of CARVED_PUMPKIN, where the block is
-   * placed if a Golem pattern is found. Here we immediately spawn the golem and
-   * shrink the itemstack, without placing the block, meaning that if there is no
-   * golem to spawn then the block will be 'tossed' instead of placed.
-   *
-   * public static final IBehaviorDispenseItem DISPENSER_BEHAVIOR = new
-   * BehaviorDefaultDispenseItem() {
-   *
-   * @Override protected ItemStack dispenseStack(final IBlockSource source, final
-   * ItemStack stack) { final World world = source.getWorld(); final EnumFacing
-   * facing = source.getBlockState().get(BlockDispenser.FACING); final BlockPos
-   * blockpos = source.getBlockPos().offset(facing); if
-   * (world.isAirBlock(blockpos)) { System.out.println(blockpos.toString() +
-   * " IS AIR BLOCK"); if(!world.isRemote) { world.setBlockState(blockpos,
-   * GolemItems.GOLEM_HEAD.getDefaultState().with(HORIZONTAL_FACING, facing), 3);
-   * } stack.shrink(1); } else { return super.dispenseStack(source, stack); }
-   *
-   * return stack; } };
-   */
+   * placed if a Golem pattern is found.
+   **/
+    public static final IDispenseItemBehavior DISPENSER_BEHAVIOR = new OptionalDispenseBehavior() {
+			@Override
+			protected ItemStack dispenseStack(final IBlockSource source, final ItemStack stack) {
+			  World world = source.getWorld();
+			  BlockPos blockpos = source.getBlockPos().offset(source.getBlockState().get(DispenserBlock.FACING));
+			  if (world.isAirBlock(blockpos) && GolemHeadBlock.canDispenserPlace(world, blockpos)) {
+				if (!world.isRemote()) {
+				  world.setBlockState(blockpos, EGRegistry.GOLEM_HEAD.getDefaultState(), 3);
+				}
+
+				stack.shrink(1);
+				this.setSuccessful(true);
+			  }
+			  return stack;
+			}
+		  };
+
   public GolemHeadBlock() {
 	super(Block.Properties.from(Blocks.CARVED_PUMPKIN));
 	this.setDefaultState(this.getStateContainer().getBaseState().with(HORIZONTAL_FACING, Direction.NORTH));
-	// dispenser behavior TODO: NOT WORKING
-	// BlockDispenser.registerDispenseBehavior(this.asItem(),
-	// BlockGolemHead.DISPENSER_BEHAVIOR);
+	DispenserBlock.registerDispenseBehavior(this.asItem(), GolemHeadBlock.DISPENSER_BEHAVIOR);
   }
 
   @Override
@@ -68,11 +71,37 @@ public final class GolemHeadBlock extends HorizontalBlock {
 	trySpawnGolem(placer, worldIn, pos);
   }
 
-//	@Override
-//	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState) {
-//		super.onBlockAdded(state, worldIn, pos, state);
-//		trySpawnGolem(worldIn, pos);
-//	}
+  public static boolean canDispenserPlace(IWorldReader world, BlockPos headPos) {
+	// get all the block state values that we will be using for matching
+	final Block blockBelow1 = world.getBlockState(headPos.down(1)).getBlock();
+	final Block blockBelow2 = world.getBlockState(headPos.down(2)).getBlock();
+	final Block blockArmNorth = world.getBlockState(headPos.down(1).north(1)).getBlock();
+	final Block blockArmSouth = world.getBlockState(headPos.down(1).south(1)).getBlock();
+	final Block blockArmEast = world.getBlockState(headPos.down(1).east(1)).getBlock();
+	final Block blockArmWest = world.getBlockState(headPos.down(1).west(1)).getBlock();
+	// snow golem
+	if(doBlocksMatch(Blocks.SNOW_BLOCK, blockBelow1, blockBelow2)) {
+	  return true;
+	}
+	// iron golem north-east
+	if(doBlocksMatch(Blocks.IRON_BLOCK, blockBelow1, blockBelow2, blockArmNorth, blockArmSouth)) {
+	  return true;
+	}
+	// iron golem east-west
+	if(doBlocksMatch(Blocks.IRON_BLOCK, blockBelow1, blockBelow2, blockArmEast, blockArmWest)) {
+	  return true;
+	}
+	// extra golem north-south
+	if(ExtraGolems.getGolemId(blockBelow1, blockBelow2, blockArmNorth, blockArmSouth).isPresent()) {
+	  return true;
+	}
+	// extra golem east-west
+	if(ExtraGolems.getGolemId(blockBelow1, blockBelow2, blockArmEast, blockArmWest).isPresent()) {
+	  return true;
+	}
+	// no golem pattern detected
+	return false;
+  }
 
   /**
    * Attempts to build a entity with the given head position. Checks if a entity can
@@ -89,8 +118,7 @@ public final class GolemHeadBlock extends HorizontalBlock {
       return false;
     }
 
-    // get all the block and state values that we will be using in the following
-    // code
+    // get all the block and state values that we will be using for matching
     final BlockState stateBelow1 = world.getBlockState(headPos.down(1));
     final BlockState stateBelow2 = world.getBlockState(headPos.down(2));
     final BlockState stateArmNorth = world.getBlockState(headPos.down(1).north(1));

@@ -6,7 +6,10 @@
 	"hurt_by_water": true
   },
   "particle": {
-    "type": "minecraft:portal"
+	"options": {
+	  "type": "minecraft:portal"
+	},
+	"probability": 1.0
   },
   "blocks": [
     "#forge:end_stones",

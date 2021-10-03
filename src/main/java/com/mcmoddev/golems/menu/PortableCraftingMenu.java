@@ -8,6 +8,7 @@ import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.inventory.container.WorkbenchContainer;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 public class PortableCraftingMenu extends WorkbenchContainer {
 
@@ -40,8 +41,6 @@ public class PortableCraftingMenu extends WorkbenchContainer {
     }
 
     @Override
-    public ITextComponent getDisplayName() {
-      return Blocks.CRAFTING_TABLE.getTranslatedName();
-    }
+	public ITextComponent getDisplayName() { return new TranslationTextComponent(Blocks.CRAFTING_TABLE.getTranslationKey()); }
   }
 }
