@@ -22,37 +22,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
 public final class GolemHeadBlock extends HorizontalBlock {
 
-  /**
-   * This behavior is modified from that of CARVED_PUMPKIN, where the block is
-   * placed if a Golem pattern is found.
-   **/
-    public static final IDispenseItemBehavior DISPENSER_BEHAVIOR = new OptionalDispenseBehavior() {
-			@Override
-			protected ItemStack dispenseStack(final IBlockSource source, final ItemStack stack) {
-			  World world = source.getWorld();
-			  BlockPos blockpos = source.getBlockPos().offset(source.getBlockState().get(DispenserBlock.FACING));
-			  if (world.isAirBlock(blockpos) && GolemHeadBlock.canDispenserPlace(world, blockpos)) {
-				if (!world.isRemote()) {
-				  world.setBlockState(blockpos, EGRegistry.GOLEM_HEAD.getDefaultState(), 3);
-				}
-
-				stack.shrink(1);
-				this.setSuccessful(true);
-			  }
-			  return stack;
-			}
-		  };
-
   public GolemHeadBlock() {
 	super(Block.Properties.from(Blocks.CARVED_PUMPKIN));
 	this.setDefaultState(this.getStateContainer().getBaseState().with(HORIZONTAL_FACING, Direction.NORTH));
-	DispenserBlock.registerDispenseBehavior(this.asItem(), GolemHeadBlock.DISPENSER_BEHAVIOR);
   }
 
   @Override
@@ -69,6 +48,14 @@ public final class GolemHeadBlock extends HorizontalBlock {
   public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
 	super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
 	trySpawnGolem(placer, worldIn, pos);
+  }
+
+  @Override
+  public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+	if(worldIn instanceof World && trySpawnGolem(null, (World)worldIn, currentPos)) {
+	  return Blocks.AIR.getDefaultState();
+	}
+	return stateIn;
   }
 
   public static boolean canDispenserPlace(IWorldReader world, BlockPos headPos) {

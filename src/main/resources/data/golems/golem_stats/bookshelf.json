@@ -6,7 +6,7 @@
   },
   "swim_ability": "float",
   "sound": "minecraft:block.wood.step",
-  "blocks": "minecraft:bookshelf",
+  "blocks": "#forge:bookshelves",
   "heal_items": {
     "#forge:bookshelves": 0.5,
 	"minecraft:book": 0.15,

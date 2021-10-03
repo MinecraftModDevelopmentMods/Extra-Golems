@@ -1,6 +1,7 @@
 package com.mcmoddev.golems.block;
 
 import net.minecraft.block.*;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
@@ -98,6 +99,9 @@ public abstract class UtilityBlock extends Block implements IBucketPickupHandler
 	  }
 	}
   }
+
+  @Override
+  public boolean isAir(BlockState state, IBlockReader world, BlockPos pos) { return true; }
 
   @Override
   public VoxelShape getShape(final BlockState state, final IBlockReader worldIn, final BlockPos pos, final ISelectionContext cxt) {

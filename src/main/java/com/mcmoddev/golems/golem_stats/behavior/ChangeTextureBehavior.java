@@ -65,7 +65,9 @@ public class ChangeTextureBehavior extends GolemBehavior {
 	  }
 	  // if item name is not in map, attempt to process each tag with '#' prefix
 	  for(ResourceLocation r : item.getItem().getTags()) {
+		System.out.println("process #" + r.toString());
 		if(processKey(entity, player, item, itemTextures.get(), "#".concat(r.toString()))) {
+		  System.out.println("Success");
 		  return;
 		}
 	  }

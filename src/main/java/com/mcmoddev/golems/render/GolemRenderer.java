@@ -105,11 +105,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
   public ResourceLocation getEntityTexture(final T golem) {
     final GolemRenderSettings settings = ExtraGolems.GOLEM_RENDER_SETTINGS.get(golem.getMaterial()).orElse(GolemRenderSettings.EMPTY);
     ResourceLocation texture;
-	try {
-	  texture = settings.getBase(golem).resource();
-	} catch (NullPointerException e) {
-	  texture = GolemRenderSettings.FALLBACK_BLOCK;
-	}
+	texture = settings.getBase(golem).resource();
     boolean disableLayers = false;
     // special cases
     if(EGConfig.halloween() && isNightTime(golem)) {
@@ -134,9 +130,18 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
   @Nullable
   protected RenderType func_230496_a_(final T golem, boolean isVisible, boolean isVisibleToPlayer, boolean isGlowing) {
     final GolemRenderSettings settings = ExtraGolems.GOLEM_RENDER_SETTINGS.get(golem.getMaterial()).orElse(GolemRenderSettings.EMPTY);
-    ResourceLocation texture = this.getEntityTexture(golem);
-    ResourceLocation template = settings.getBaseTemplate();
-    boolean dynamic = isDynamic(golem, texture, settings);
+	ResourceLocation texture;
+	ResourceLocation template;
+	boolean dynamic;
+	try {
+	  texture = this.getEntityTexture(golem);
+	  template = settings.getBaseTemplate();
+	  dynamic = isDynamic(golem, texture, settings);
+	} catch(NullPointerException e) {
+	  texture = GolemRenderSettings.FALLBACK_BLOCK;
+	  template = GolemRenderSettings.BASE_TEMPLATE;
+	  dynamic = true;
+	}
     if (isVisible || isVisibleToPlayer || isAlphaLayer) {
       return GolemRenderType.getGolemTranslucent(texture, template, dynamic);
     } else if(isGlowing) {
@@ -151,7 +156,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
   }
   
   protected static <T extends GolemBase> boolean isDynamic(final T entity, final ResourceLocation texture, final GolemRenderSettings settings) {
-    return !isSpecial(texture) && (settings == null || !settings.getBase(entity).flag());
+	return !isSpecial(texture) && !settings.getBase(entity).flag();
   }
   
   public static boolean isNightTime(final GolemBase golem) {
