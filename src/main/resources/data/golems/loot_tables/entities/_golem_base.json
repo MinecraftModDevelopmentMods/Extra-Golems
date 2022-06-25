@@ -6,7 +6,7 @@
 	  "entries": [
 		{
 		  "type": "item",
-		  "name": "golems:golem_paper",
+		  "name": "golems:golem_spell",
 		  "weight": 1,
 		  "quality": 10
 		},

@@ -20,9 +20,5 @@
 	  "15": "minecraft:slime_block"
     }
   },
-  "layers": [
-    {
-	  "texture": "#golems:layer/eyes/eyes"
-	}
-  ]
+  "vines": {}
 }

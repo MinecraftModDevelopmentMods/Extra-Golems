@@ -1,0 +1,7 @@
+{
+  "base": "quark:soul_sandstone",
+  "vines": {
+	"texture": "#golems:layer/vines",
+	"color": 11543845
+  }
+}

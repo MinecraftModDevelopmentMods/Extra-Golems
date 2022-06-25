@@ -1,0 +1,7 @@
+{
+  "base": "quark:permafrost",
+  "vines": {
+	"texture": "#golems:layer/vines",
+	"color": 2070638
+  }
+}

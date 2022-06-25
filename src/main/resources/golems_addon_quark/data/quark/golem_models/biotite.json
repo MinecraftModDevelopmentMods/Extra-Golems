@@ -1,0 +1,11 @@
+{
+  "base": "quark:smooth_biotite",
+  "vines": {
+	"texture": "#golems:layer/vines",
+	"color": 5121902
+  },
+  "eyes": {
+	"texture": "#golems:layer/eyes/ender",
+	"light": true
+  }
+}

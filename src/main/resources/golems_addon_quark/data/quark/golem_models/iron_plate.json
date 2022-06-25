@@ -1,0 +1,8 @@
+{
+  "multitexture": {
+    "base_map": {
+      "0": "quark:iron_plate",
+	  "1": "quark:rusty_iron_plate"
+    }
+  }
+}

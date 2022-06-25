@@ -13,9 +13,5 @@
 	  "8": "quark:black_crystal"
     }
   },
-  "layers": [
-    {
-	  "texture": "#golems:layer/eyes/eyes"
-	}
-  ]
+  "vines": {}
 }

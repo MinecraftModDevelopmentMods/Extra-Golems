@@ -1,8 +1,0 @@
-{
-  "base": "quark:blaze_lantern",
-  "layers": [
-    {
-	  "texture": "#golems:layer/eyes/eyes"
-	}
-  ]
-}

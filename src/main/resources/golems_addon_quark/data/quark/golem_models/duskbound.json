@@ -1,0 +1,7 @@
+{
+  "base": "quark:duskbound_block",
+  "vines": {
+	"texture": "#golems:layer/vines",
+	"color": 5121902
+  }
+}

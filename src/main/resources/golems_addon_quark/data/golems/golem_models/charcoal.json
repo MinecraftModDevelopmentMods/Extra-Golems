@@ -1,0 +1,8 @@
+{
+  "base": [
+    "quark:charcoal_block",
+	"mekanism:block_charcoal",
+	"thermal:storage/charcoal_block",
+	"minecraft:coal_block"
+  ]
+}

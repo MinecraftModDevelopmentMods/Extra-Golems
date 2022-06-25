@@ -21,12 +21,10 @@
 	  "16": "minecraft:black_stained_glass"
     }
   },
+  "vines": {},
   "layers": [ 
     {
 	  "texture": "#quark:layer/framed_glass"
-    },
-  	{
-	  "texture": "#golems:layer/eyes/eyes"
-	}
+    }
   ]
 }
