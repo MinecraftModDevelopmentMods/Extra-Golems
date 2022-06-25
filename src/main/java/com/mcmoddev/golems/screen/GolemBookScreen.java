@@ -121,13 +121,13 @@ public class GolemBookScreen extends Screen {
 	// for use in drawing entity spell recipe
 	private static final ItemStack[] ingredientsSpell = new ItemStack[]{new ItemStack(Items.PAPER), new ItemStack(Items.FEATHER),
 			new ItemStack(Items.REDSTONE), new ItemStack(Items.INK_SAC)};
-	private static final ItemStack outputSpell = new ItemStack(EGRegistry.GOLEM_SPELL, 3);
+	private static final ItemStack outputSpell = new ItemStack(EGRegistry.GOLEM_SPELL.get(), 3);
 	// for use in drawing entity head recipe
-	private static final ItemStack[] ingredientsHead = new ItemStack[]{new ItemStack(Blocks.CARVED_PUMPKIN), new ItemStack(EGRegistry.GOLEM_SPELL)};
-	private static final ItemStack outputHead = new ItemStack(EGRegistry.GOLEM_HEAD);
+	private static final ItemStack[] ingredientsHead = new ItemStack[]{new ItemStack(Blocks.CARVED_PUMPKIN), new ItemStack(EGRegistry.GOLEM_SPELL.get())};
+	private static final ItemStack outputHead = new ItemStack(EGRegistry.GOLEM_HEAD.get());
 
 	public GolemBookScreen(Player playerIn, ItemStack itemIn) {
-		super(EGRegistry.GOLEM_BOOK.getDescription());
+		super(EGRegistry.GOLEM_BOOK.get().getDescription());
 		initGolemBookEntries();
 		this.curPage = 0;
 		this.totalPages = NUM_PAGES_INTRO + GOLEMS.size();
@@ -450,7 +450,7 @@ public class GolemBookScreen extends Screen {
 
 	private void drawGolemDiagram(final PoseStack matrix, int cornerX, int cornerY) {
 		Block golemBody = Blocks.IRON_BLOCK;
-		Block golemHead = EGRegistry.GOLEM_HEAD;
+		Block golemHead = EGRegistry.GOLEM_HEAD.get();
 		float scale = 2.0F;
 		final int blockW = (int) (8.0F * scale);
 		int startX = cornerX + (BOOK_WIDTH / 8);

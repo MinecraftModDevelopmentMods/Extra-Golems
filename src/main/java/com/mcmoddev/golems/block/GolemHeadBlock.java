@@ -17,6 +17,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 
@@ -42,8 +43,8 @@ public final class GolemHeadBlock extends HorizontalDirectionalBlock {
 //    
 //    return stack; } };
 
-	public GolemHeadBlock() {
-		super(Block.Properties.copy(Blocks.CARVED_PUMPKIN));
+	public GolemHeadBlock(BlockBehaviour.Properties properties) {
+		super(properties);
 		this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
 		// dispenser behavior TODO: NOT WORKING
 		// BlockDispenser.registerDispenseBehavior(this.asItem(),

@@ -1,0 +1,53 @@
+{
+  "pools": [
+	{
+	  "name": "main",
+	  "rolls": 1,
+	  "entries": [
+		{
+		  "type": "item",
+		  "name": "quark:magenta_framed_glass",
+		  "weight": 1,
+		  "functions": [
+			{
+			  "function": "set_count",
+			  "count": {
+				"min": 1,
+				"max": 2
+			  }
+			},
+			{
+			  "function": "looting_enchant",
+			  "count": 1
+			}
+		  ]
+		}
+	  ]
+	},
+	{
+	  "name": "pool1",
+	  "rolls": 1,
+	  "entries": [
+		{
+		  "type": "item",
+		  "name": "quark:framed_glass",
+		  "weight": 1
+		},
+		{
+		  "type": "empty",
+		  "weight": 1
+		}
+	  ]
+	},
+	{
+	  "name": "pool2",
+	  "rolls": 1,
+	  "entries": [
+		{
+		  "type": "loot_table",
+		  "name": "golems:entities/golem/framed_glass/framed_glass"
+		}
+	  ]
+	}
+  ]
+}

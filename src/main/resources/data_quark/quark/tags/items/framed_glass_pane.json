@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+  	"quark:black_framed_glass_pane",
+	"quark:blue_framed_glass_pane",
+	"quark:brown_framed_glass_pane",
+	"quark:cyan_framed_glass_pane",
+	"quark:gray_framed_glass_pane",
+	"quark:green_framed_glass_pane",
+	"quark:light_blue_framed_glass_pane",
+	"quark:light_gray_framed_glass_pane",
+	"quark:lime_framed_glass_pane",
+	"quark:magenta_framed_glass_pane",
+	"quark:orange_framed_glass_pane",
+	"quark:pink_framed_glass_pane",
+	"quark:purple_framed_glass_pane",
+	"quark:red_framed_glass_pane",
+	"quark:white_framed_glass_pane",
+	"quark:yellow_framed_glass_pane"
+  ]
+}

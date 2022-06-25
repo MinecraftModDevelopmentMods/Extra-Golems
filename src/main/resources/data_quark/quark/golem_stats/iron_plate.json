@@ -1,0 +1,53 @@
+{
+  "attributes": {
+    "health": 40.0,
+    "attack": 7.0,
+    "knockback_resistance": 1.0
+  },
+  "heal_items": {
+    "quark:iron_plate": 0.25,
+    "quark:rusty_iron_plate": 0.25,
+	"minecraft:iron_ingot": 0.25
+  },
+  "multitexture": {
+	"texture_count": 2,
+	"textures": {
+	  "0": {
+		"blocks": "quark:iron_plate",
+		"loot_table": "quark:iron_plate/normal"
+	  },
+	  "1": {
+		"blocks": "quark:rusty_iron_plate",
+		"loot_table": "quark:iron_plate/rusty"
+	  }
+	}
+  },
+  "behavior": [
+    {
+	  "type": "golems:change_texture",
+	  "wet": {
+	    "chance": 0.00064,
+	    "textures": {
+	      "0": 1
+	    }
+	  },
+	  "dry": {
+	    "chance": 0.0,
+	    "textures": { }
+	  },
+	  "use_item": {
+		"chance": 1.0,
+	    "items": {
+	      "#forge:tools/axe": {
+		    "texture": 0
+		  },
+		  "minecraft:water_bucket": {
+			"consume": true,
+		    "chance": 0.5,
+			"texture": 1
+		  }
+	    }
+	  }
+	}
+  ]
+}

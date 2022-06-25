@@ -1,6 +1,6 @@
 {
   "_comment": "Items and Blocks used by this mod",
-  "item.golems.golem_paper": "Golem Spell",
+  "item.golems.golem_spell": "Golem Spell",
   "item.golems.spawn_bedrock_golem": "Spawn Bedrock Golem",
   "block.golems.golem_head": "Golem Head",
   "_comment": "These will only show up in something like JEI",
@@ -15,6 +15,7 @@
   "entity.golems.golem.bone": "Bone Golem",
   "entity.golems.golem.bookshelf": "Librarian Golem",
   "entity.golems.golem.brick": "Brick Golem",
+  "entity.golems.golem.charcoal": "Charcoal Golem",
   "entity.golems.golem.clay": "Clay Golem",
   "entity.golems.golem.coal": "Coal Golem",
   "entity.golems.golem.concrete": "Concrete Golem",

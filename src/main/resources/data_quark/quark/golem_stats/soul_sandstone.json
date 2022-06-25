@@ -1,0 +1,53 @@
+{
+  "attributes": {
+    "health": 52.0,
+    "attack": 8.9,
+    "knockback_resistance": 0.8
+  },
+  "blocks": [
+    "quark:soul_sandstone",
+    "quark:chiseled_soul_sandstone",
+    "quark:cut_soul_sandstone",
+    "quark:smooth_soul_sandstone",
+    "quark:soul_sandstone_bricks"
+  ],
+  "heal_items": {
+    "quark:soul_sandstone": 0.5,
+    "quark:chiseled_soul_sandstone": 0.5,
+    "quark:cut_soul_sandstone": 0.5,
+    "quark:smooth_soul_sandstone": 0.5,
+    "quark:soul_sandstone_bricks": 0.5,
+	"minecraft:soul_sand": 0.15,
+	"minecraft:soul_soil": 0.15
+  },
+  "behavior": [
+	{
+	  "type": "golems:attack",
+	  "effect": {
+		"target": "enemy",
+		"chance": 0.9,
+		"effects": [
+	      {
+  	  	    "Potion": "minecraft:slowness",
+  	  	    "Amplifier": 0,
+  	  	    "Duration": 90
+  	      }
+	    ]
+	  }
+	},
+	{
+	  "type": "golems:hurt",
+	  "effect": {
+		"target": "enemy",
+		"chance": 0.6,
+		"effects": [
+	      {
+  	  	    "Potion": "minecraft:slowness",
+  	  	    "Amplifier": 0,
+  	  	    "Duration": 70
+  	      }
+	    ]
+	  }
+	}
+  ]
+}

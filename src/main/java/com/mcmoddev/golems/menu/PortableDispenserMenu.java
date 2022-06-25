@@ -22,7 +22,7 @@ public class PortableDispenserMenu extends AbstractContainerMenu {
 	}
 
 	public PortableDispenserMenu(final int id, final Inventory playerInv, final Container inv) {
-		super(EGRegistry.DISPENSER_GOLEM, id);
+		super(EGRegistry.DISPENSER_GOLEM.get(), id);
 		checkContainerSize(inv, 9);
 		this.dispenserInventory = inv;
 		inv.startOpen(playerInv.player);

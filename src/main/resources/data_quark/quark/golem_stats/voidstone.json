@@ -1,0 +1,22 @@
+{
+  "attributes": {
+    "health": 52.0,
+    "attack": 9.8,
+    "speed": 0.28,
+	"knockback_resistance": 0.8,
+	"immune_to_fire": true
+  },
+  "blocks": [
+	"quark:polished_basalt",
+	"quark:chiseled_basalt_bricks",
+	"quark:basalt_pillar",
+	"quark:basalt_pavement"
+  ],
+  "heal_items": {
+	"quark:polished_basalt": 0.5,
+	"quark:chiseled_basalt_bricks": 0.5,
+	"quark:basalt_pillar": 0.5,
+	"quark:basalt_pavement": 0.5,
+	"quark:basalt": 0.15
+  }
+}

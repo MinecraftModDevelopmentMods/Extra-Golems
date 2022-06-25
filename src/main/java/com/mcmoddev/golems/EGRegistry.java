@@ -11,101 +11,90 @@ import com.mcmoddev.golems.item.SpawnGolemItem;
 import com.mcmoddev.golems.menu.PortableCraftingMenu;
 import com.mcmoddev.golems.menu.PortableDispenserMenu;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ObjectHolder;
+import net.minecraftforge.registries.RegistryObject;
 
-@ObjectHolder(ExtraGolems.MODID)
 public final class EGRegistry {
 
 	private EGRegistry() {
 		//
 	}
 
-	////// ITEMS //////
-	@ObjectHolder("golem_paper")
-	public static final Item GOLEM_SPELL = null;
+	private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, ExtraGolems.MODID);
+	private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, ExtraGolems.MODID);
+	private static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITIES, ExtraGolems.MODID);
+	private static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ForgeRegistries.CONTAINERS, ExtraGolems.MODID);
 
-	@ObjectHolder("spawn_bedrock_golem")
-	public static final Item SPAWN_BEDROCK_GOLEM = null;
-
-	@ObjectHolder("info_book")
-	public static final Item GOLEM_BOOK = null;
+	public static void init() {
+		// deferred registers
+		BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
+		ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
+		ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
+		MENU_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
+		// event listeners
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(EGRegistry::registerEntityAttributes);
+	}
 
 	////// BLOCKS //////
-	@ObjectHolder("golem_head")
-	public static final Block GOLEM_HEAD = null;
+	public static final RegistryObject<Block> GOLEM_HEAD = BLOCKS.register("golem_head",
+			() -> new GolemHeadBlock(Block.Properties.copy(Blocks.CARVED_PUMPKIN)));
+	public static final RegistryObject<GlowBlock> UTILITY_LIGHT = BLOCKS.register("light_provider",
+			() -> new GlowBlock(Material.GLASS, 1.0F));
+	public static final RegistryObject<PowerBlock> UTILITY_POWER = BLOCKS.register("power_provider",
+			() -> new PowerBlock(15));
 
-	@ObjectHolder("light_provider")
-	public static final Block UTILITY_LIGHT = null;
+	////// ITEM BLOCKS //////
+	public static final RegistryObject<Item> GOLEM_HEAD_ITEM = ITEMS.register("golem_head",
+			() -> new BlockItem(EGRegistry.GOLEM_HEAD.get(), new Item.Properties().tab(CreativeModeTab.TAB_MISC)) {
+				@Override
+				public boolean isFoil(final ItemStack stack) {
+					return true;
+				}
+			});
 
-	@ObjectHolder("power_provider")
-	public static final Block UTILITY_POWER = null;
+	////// ITEMS //////
+	public static final RegistryObject<GolemSpellItem> GOLEM_SPELL = ITEMS.register("golem_spell", () -> new GolemSpellItem());
+	public static final RegistryObject<SpawnGolemItem> SPAWN_BEDROCK_GOLEM = ITEMS.register("spawn_bedrock_golem", () -> new SpawnGolemItem());
+	public static final RegistryObject<GuideBookItem> GOLEM_BOOK = ITEMS.register("info_book", () -> new GuideBookItem());
+
 
 	////// ENTITIES //////
-	@ObjectHolder("golem")
-	public static final EntityType<GolemBase> GOLEM = null;
-
-	////// OTHER //////
-	@ObjectHolder("crafting_portable")
-	public static final MenuType<PortableCraftingMenu> CRAFTING_GOLEM = new MenuType<>(PortableCraftingMenu::new);
-
-	@ObjectHolder("dispenser_portable")
-	public static final MenuType<PortableDispenserMenu> DISPENSER_GOLEM = new MenuType<>(PortableDispenserMenu::new);
-
-	// EVENT HANDLERS //
-
-	@SubscribeEvent
-	public static void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
+	public static final RegistryObject<? extends EntityType<?>> GOLEM = ENTITY_TYPES.register("golem", () -> {
 		ExtraGolems.LOGGER.info(ExtraGolems.MODID + ":registerEntities");
 		EntityType.Builder<GolemBase> builder = EntityType.Builder.of(GolemBase::new, MobCategory.MISC)
 				.setTrackingRange(48).setUpdateInterval(3).setShouldReceiveVelocityUpdates(true).sized(1.4F, 2.9F).noSummon();
-		EntityType<GolemBase> entityType = builder.build("golem");
-		event.getRegistry().register(entityType.setRegistryName(ExtraGolems.MODID, "golem"));
-	}
+		return builder.build("golem");
+	});
 
-	@SubscribeEvent
+	////// MENU TYPES //////
+	public static final RegistryObject<MenuType<AbstractContainerMenu>> CRAFTING_GOLEM = MENU_TYPES.register("crafting_portable",
+			() -> new MenuType<>(PortableCraftingMenu::new));
+	public static final RegistryObject<MenuType<PortableDispenserMenu>> DISPENSER_GOLEM = MENU_TYPES.register("dispenser_portable",
+			() -> new MenuType<>(PortableDispenserMenu::new));
+
+	////// EVENTS //////
+
 	public static void registerEntityAttributes(final EntityAttributeCreationEvent event) {
 		ExtraGolems.LOGGER.info(ExtraGolems.MODID + ":registerEntityAttributes");
-		event.put(EGRegistry.GOLEM, GolemContainer.EMPTY.getAttributeSupplier().get().build());
-	}
-
-	@SubscribeEvent
-	public static void registerItems(final RegistryEvent.Register<Item> event) {
-		ExtraGolems.LOGGER.info(ExtraGolems.MODID + ":registerItems");
-		event.getRegistry().registerAll(new BlockItem(EGRegistry.GOLEM_HEAD, new Item.Properties().tab(CreativeModeTab.TAB_MISC)) {
-					@Override
-					@OnlyIn(Dist.CLIENT)
-					public boolean isFoil(final ItemStack stack) {
-						return true;
-					}
-				}.setRegistryName(EGRegistry.GOLEM_HEAD.getRegistryName()), new SpawnGolemItem().setRegistryName(ExtraGolems.MODID, "spawn_bedrock_golem"),
-				new GolemSpellItem().setRegistryName(ExtraGolems.MODID, "golem_paper"), new GuideBookItem().setRegistryName(ExtraGolems.MODID, "info_book"));
-	}
-
-	@SubscribeEvent
-	public static void registerBlocks(final RegistryEvent.Register<Block> event) {
-		ExtraGolems.LOGGER.info(ExtraGolems.MODID + ":registerBlocks");
-		event.getRegistry().registerAll(new GolemHeadBlock().setRegistryName(ExtraGolems.MODID, "golem_head"),
-				new GlowBlock(Material.GLASS, 1.0F).setRegistryName(ExtraGolems.MODID, "light_provider"),
-				new PowerBlock(15).setRegistryName(ExtraGolems.MODID, "power_provider"));
-	}
-
-	@SubscribeEvent
-	public static void registerContainers(final RegistryEvent.Register<MenuType<?>> event) {
-		ExtraGolems.LOGGER.info(ExtraGolems.MODID + ":registerContainers");
-		event.getRegistry().register(EGRegistry.CRAFTING_GOLEM.setRegistryName(ExtraGolems.MODID, "crafting_portable"));
-		event.getRegistry().register(EGRegistry.DISPENSER_GOLEM.setRegistryName(ExtraGolems.MODID, "dispenser_portable"));
+		event.put((EntityType<? extends LivingEntity>) EGRegistry.GOLEM.get(), GolemContainer.EMPTY.getAttributeSupplier().get().build());
 	}
 }

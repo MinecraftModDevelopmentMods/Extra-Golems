@@ -1,0 +1,33 @@
+{
+  "attributes": {
+    "health": 88.0,
+    "attack": 9.0,
+    "speed": 0.23,
+	"armor": 3.0,
+	"knockback_resistance": 0.8,
+	"immune_to_fire": true,
+	"immune_to_explosions": true
+  },
+  "glow": 15,
+  "particle": {
+    "type": "minecraft:portal"
+  },
+  "blocks": "quark:duskbound_lantern",
+  "heal_items": {
+    "quark:duskbound_lantern": 0.5,
+    "quark:duskbound_block": 0.25,
+    "minecraft:purpur_block": 0.1,
+	"minecraft:purpur_pillar": 0.1,
+    "minecraft:obsidian": 0.1,
+	"minecraft:crying_obsidian": 0.05
+  },
+  "behavior": [
+    {
+	  "type": "golems:teleport",
+	  "range": 16,
+	  "chance_on_idle": 0.01,
+	  "chance_on_hurt": 0.6,
+	  "chance_on_target": 0.2
+	}
+  ]
+}

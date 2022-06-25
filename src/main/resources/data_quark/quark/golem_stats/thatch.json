@@ -1,0 +1,23 @@
+{
+  "attributes": {
+    "health": 18.0,
+    "attack": 3.6,
+    "speed": 0.30,
+	"knockback_resistance": 0.0
+  },
+  "swim_ability": "float",
+  "blocks": "quark:thatch",
+  "heal_items": {
+    "quark:thatch": 0.5,
+    "minecraft:hay_block": 0.4,
+	"#forge:crops/wheat": 0.1
+  },
+  "behavior": [
+    {
+      "type": "golems:aoe_grow",
+      "range": 4,
+      "interval": 400,
+      "chance": 0.2
+    }
+  ]
+}

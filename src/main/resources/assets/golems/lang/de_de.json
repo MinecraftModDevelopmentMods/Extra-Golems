@@ -1,6 +1,6 @@
 {
   "_comment": "Items and Blocks used by this mod",
-  "item.golems.golem_paper": "Golemzauber",
+  "item.golems.golem_spell": "Golemzauber",
   "item.golems.spawn_bedrock_golem": "Erschaffe Grundgesteingolem",
   "block.golems.golem_head": "Golemkopf",
   "_comment": "These will only show up in something like JEI",

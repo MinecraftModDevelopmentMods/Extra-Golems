@@ -1,7 +1,7 @@
 {
   "_comment": "Credit to vigcrafter for the Russian translation",
   "_comment": "Предметы и блоки",
-  "item.golems.golem_paper": "Часть голема",
+  "item.golems.golem_spell": "Часть голема",
   "item.golems.spawn_bedrock_golem": "Призвать бедрокового голема",
   "block.golems.golem_head": "Голова голема",
   "block.golems.light_provider": "Полный свет динамического голема",

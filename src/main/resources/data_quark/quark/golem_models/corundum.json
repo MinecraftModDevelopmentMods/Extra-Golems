@@ -1,0 +1,21 @@
+{
+  "translucent": true,
+  "multitexture": {
+    "base_map": {
+      "0": "quark:red_crystal",
+	  "1": "quark:orange_crystal",
+	  "2": "quark:yellow_crystal",
+	  "3": "quark:green_crystal",
+	  "4": "quark:blue_crystal",
+	  "5": "quark:indigo_crystal",
+	  "6": "quark:violet_crystal",
+	  "7": "quark:white_crystal",
+	  "8": "quark:black_crystal"
+    }
+  },
+  "layers": [
+    {
+	  "texture": "#golems:layer/eyes/eyes"
+	}
+  ]
+}

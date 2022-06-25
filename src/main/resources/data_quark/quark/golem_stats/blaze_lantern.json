@@ -1,0 +1,27 @@
+{
+  "attributes": {
+    "health": 34.0,
+    "attack": 11.6,
+    "speed": 0.26,
+	"immune_to_fire": true,
+	"hurt_by_water": true
+  },
+  "swim_ability": "float",
+  "glow": 15,
+  "blocks": "quark:blaze_lantern",
+  "heal_items": {
+    "quark:blaze_lantern": 0.5,
+	"#forge:dusts/blaze_powder": 0.1,
+	"#forge:rods/blaze": 0.25
+  },
+  "behavior": [ 
+    {
+	  "type": "golems:hurt",
+	  "fire": {
+		"target": "enemy",
+		"chance": 0.2,
+		"time": 3
+	  }
+	}
+  ]
+}

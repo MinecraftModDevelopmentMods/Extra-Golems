@@ -121,7 +121,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 	}
 
 	public static GolemBase create(final Level world, final ResourceLocation material) {
-		GolemBase golem = new GolemBase(EGRegistry.GOLEM, world);
+		GolemBase golem = new GolemBase((EntityType<? extends GolemBase>) EGRegistry.GOLEM.get(), world);
 		golem.setMaterial(material);
 		return golem;
 	}
@@ -239,7 +239,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 		// register light level AI if enabled
 		if (container.getMaxLightLevel() > 0) {
 			int lightInt = container.getMaxLightLevel();
-			final BlockState state = EGRegistry.UTILITY_LIGHT.defaultBlockState().setValue(GlowBlock.LIGHT_LEVEL, lightInt);
+			final BlockState state = EGRegistry.UTILITY_LIGHT.get().defaultBlockState().setValue(GlowBlock.LIGHT_LEVEL, lightInt);
 			this.goalSelector.addGoal(9, new PlaceUtilityBlocksGoal(this, state, GlowBlock.UPDATE_TICKS,
 					true, (golem, pos) -> golem.isProvidingLight()));
 		}
@@ -249,7 +249,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 		// register power level AI if enabled
 		if (getContainer().getMaxPowerLevel() > 0) {
 			int powerInt = getContainer().getMaxPowerLevel();
-			final BlockState state = EGRegistry.UTILITY_POWER.defaultBlockState().setValue(PowerBlock.POWER_LEVEL, powerInt);
+			final BlockState state = EGRegistry.UTILITY_POWER.get().defaultBlockState().setValue(PowerBlock.POWER_LEVEL, powerInt);
 			final int freq = PowerBlock.UPDATE_TICKS;
 			this.goalSelector.addGoal(9, new PlaceUtilityBlocksGoal(this, state, freq, false, (golem, pos) -> golem.isProvidingPower()));
 		}
@@ -406,7 +406,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 		if (type == EntityType.PLAYER && this.isPlayerCreated()) {
 			return EGConfig.enableFriendlyFire();
 		}
-		if (type == EntityType.VILLAGER || type == EGRegistry.GOLEM || type == EntityType.IRON_GOLEM || type == EntityType.SNOW_GOLEM) {
+		if (type == EntityType.VILLAGER || type == EGRegistry.GOLEM.get() || type == EntityType.IRON_GOLEM || type == EntityType.SNOW_GOLEM) {
 			return false;
 		}
 		return super.canAttackType(type);

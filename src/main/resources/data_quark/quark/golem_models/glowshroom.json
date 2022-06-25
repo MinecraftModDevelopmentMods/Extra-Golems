@@ -1,0 +1,14 @@
+{
+  "base": "quark:glowshroom_block",
+  "base_template": "golems:mushroom/upper_template",
+  "translucent": true,
+  "layers": [
+    {
+	  "texture": "quark:glowshroom_stem",
+	  "template": "golems:mushroom/lower_template"
+	},
+    {
+	  "texture": "#golems:layer/eyes/eyes"
+	}
+  ]
+}

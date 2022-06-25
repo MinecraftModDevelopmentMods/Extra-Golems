@@ -1,0 +1,8 @@
+{
+  "base": "quark:tallow_block",
+  "layers": [
+    {
+	  "texture": "#golems:layer/eyes/eyes"
+	}
+  ]
+}

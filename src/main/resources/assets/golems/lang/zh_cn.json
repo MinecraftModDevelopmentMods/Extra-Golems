@@ -1,6 +1,6 @@
 {
   "_comment": "该模组使用的物品和方块",
-  "item.golems.golem_paper": "傀儡符咒",
+  "item.golems.golem_spell": "傀儡符咒",
   "item.golems.spawn_bedrock_golem": "生成 基岩傀儡",
   "block.golems.golem_head": "傀儡头颅",
   "_comment": "这些东西只会在JEI中显示",

@@ -50,7 +50,7 @@ public class GolemSpellItem extends Item {
 			if (b == Blocks.CARVED_PUMPKIN || (b == Blocks.PUMPKIN && EGConfig.pumpkinBuildsGolems())) {
 				if (!cxt.getLevel().isClientSide()) {
 					final Direction facing = cxt.getLevel().getBlockState(cxt.getClickedPos()).getValue(HorizontalDirectionalBlock.FACING);
-					cxt.getLevel().setBlock(cxt.getClickedPos(), EGRegistry.GOLEM_HEAD.defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, facing), 3);
+					cxt.getLevel().setBlock(cxt.getClickedPos(), EGRegistry.GOLEM_HEAD.get().defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, facing), 3);
 					GolemHeadBlock.trySpawnGolem(cxt.getPlayer(), cxt.getLevel(), cxt.getClickedPos());
 					cxt.getItemInHand().shrink(1);
 				}

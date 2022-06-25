@@ -1,0 +1,13 @@
+{
+  "attributes": {
+    "health": 48.0,
+    "attack": 5.0,
+    "knockback_resistance": 0.2
+  },
+  "swim_ability": "float",
+  "blocks": "quark:tallow_block",
+  "heal_items": {
+    "quark:tallow_block": 0.5,
+    "quark:tallow": 0.1
+  }
+}

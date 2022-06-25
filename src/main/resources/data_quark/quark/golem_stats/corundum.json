@@ -1,0 +1,56 @@
+{
+  "attributes": {
+    "health": 18.0,
+    "attack": 12.2,
+	"speed": 0.29,
+    "hurt_by_fall": true
+  },
+  "glow": 11,
+  "sound": "minecraft:block.glass.step",
+  "heal_items": {
+    "#quark:crystal": 0.5,
+	"#quark:crystal_pane": 0.15,
+	"#quark:crystal_cluster": 0.15
+  },
+  "multitexture": {
+    "texture_count": 9,
+	"textures": {
+	  "0": {
+		"blocks": "quark:red_crystal",
+		"loot_table": "quark:corundum/red"
+	  },
+	  "1": {
+		"blocks": "quark:orange_crystal",
+		"loot_table": "quark:corundum/orange"
+	  },
+	  "2": {
+		"blocks": "quark:yellow_crystal",
+		"loot_table": "quark:corundum/yellow"
+	  },
+	  "3": {
+		"blocks": "quark:green_crystal",
+		"loot_table": "quark:corundum/green"
+	  },
+	  "4": {
+		"blocks": "quark:blue_crystal",
+		"loot_table": "quark:corundum/blue"
+	  },
+	  "5": {
+		"blocks": "quark:indigo_crystal",
+		"loot_table": "quark:corundum/indigo"
+	  },
+	  "6": {
+		"blocks": "quark:violet_crystal",
+		"loot_table": "quark:corundum/violet"
+	  },
+	  "7": {
+		"blocks": "quark:white_crystal",
+		"loot_table": "quark:corundum/white"
+	  },
+	  "8": {
+		"blocks": "quark:black_crystal",
+		"loot_table": "quark:corundum/black"
+	  }
+    }
+  }
+}

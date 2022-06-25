@@ -51,6 +51,8 @@ public class ExtraGolems {
 	public ExtraGolems() {
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
+		// init registry
+		EGRegistry.init();
 		// init helper classes
 		GolemBehaviors.init();
 		// register event handlers
@@ -82,7 +84,6 @@ public class ExtraGolems {
 	private int registerCommonEvents() {
 		ExtraGolems.LOGGER.info(ExtraGolems.MODID + ":registerEventHandlers");
 		MinecraftForge.EVENT_BUS.register(EGForgeEvents.class);
-		FMLJavaModLoadingContext.get().getModEventBus().register(EGRegistry.class);
 		return 0;
 	}
 

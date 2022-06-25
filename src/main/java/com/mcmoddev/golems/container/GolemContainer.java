@@ -318,7 +318,7 @@ public final class GolemContainer {
 		if (multitexture.isPresent()) {
 			lootTable = multitexture.get().getLootTable(entity);
 		}
-		return new ResourceLocation(lootTable.getNamespace(), "entities/" + lootTable.getPath());
+		return new ResourceLocation(lootTable.getNamespace(), "entities/golem/" + lootTable.getPath());
 	}
 
 	// CONVENIENCE METHODS //

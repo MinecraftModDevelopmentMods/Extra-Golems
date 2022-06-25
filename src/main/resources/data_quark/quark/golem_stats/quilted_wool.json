@@ -1,0 +1,83 @@
+{
+  "attributes": {
+    "health": 16.0,
+    "attack": 4.0,
+	"speed": 0.295,
+    "knockback_resistance": 0.2
+  },
+  "sound": "minecraft:block.wool.step",
+  "heal_items": {
+    "#quark:quilted_wools": 0.5,
+	"#minecraft:wool": 0.4,
+	"#forge:string": 0.1
+  },
+  "multitexture": {
+    "texture_count": 16,
+	"textures": {
+	  "0": {
+		"blocks": "quark:white_quilted_wool",
+		"loot_table": "quark:quilted_wool/white"
+	  },
+	  "1": {
+		"blocks": "quark:orange_quilted_wool",
+		"loot_table": "quark:quilted_wool/orange"
+	  },
+	  "2": {
+		"blocks": "quark:magenta_quilted_wool",
+		"loot_table": "quark:quilted_wool/magenta"
+	  },
+	  "3": {
+		"blocks": "quark:light_blue_quilted_wool",
+		"loot_table": "quark:quilted_wool/light_blue"
+	  },
+	  "4": {
+		"blocks": "quark:yellow_quilted_wool",
+		"loot_table": "quark:quilted_wool/yellow"
+	  },
+	  "5": {
+		"blocks": "quark:lime_quilted_wool",
+		"loot_table": "quark:quilted_wool/lime"
+	  },
+	  "6": {
+		"blocks": "quark:pink_quilted_wool",
+		"loot_table": "quark:quilted_wool/pink"
+	  },
+	  "7": {
+		"blocks": "quark:gray_quilted_wool",
+		"loot_table": "quark:quilted_wool/gray"
+	  },
+	  "8": {
+		"blocks": "quark:light_gray_quilted_wool",
+		"loot_table": "quark:quilted_wool/light_gray"
+	  },
+	  "9": {
+		"blocks": "quark:cyan_quilted_wool",
+		"loot_table": "quark:quilted_wool/cyan"
+	  },
+	  "10": {
+		"blocks": "quark:purple_quilted_wool",
+		"loot_table": "quark:quilted_wool/purple"
+	  },
+	  "11": {
+		"blocks": "quark:blue_quilted_wool",
+		"loot_table": "quark:quilted_wool/blue"
+	  },
+	  "12": {
+		"blocks": "quark:brown_quilted_wool",
+		"loot_table": "quark:quilted_wool/brown"
+	  },
+	  "13": {
+		"blocks": "quark:green_quilted_wool",
+		"loot_table": "quark:quilted_wool/green"
+	  },
+	  "14": {
+		"blocks": "quark:red_quilted_wool",
+		"loot_table": "quark:quilted_wool/red"
+	  },
+	  "15": {
+		"blocks": "quark:black_quilted_wool",
+		"loot_table": "quark:quilted_wool/black"
+	  }
+    }
+  }
+}

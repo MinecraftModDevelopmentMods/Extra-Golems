@@ -1,0 +1,16 @@
+{
+  "attributes": {
+    "health": 32.0,
+    "attack": 6.8
+  },
+  "blocks": [
+    "quark:midori_block",
+    "quark:midori_pillar"
+  ],
+  "heal_items": {
+    "quark:midori_block": 0.5,
+    "quark:midori_pillar": 0.5,
+	"quark:cactus_paste": 0.25,
+	"minecraft:cactus": 0.1
+  }
+}
