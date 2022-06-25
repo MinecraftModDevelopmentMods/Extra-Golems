@@ -18,24 +18,24 @@ public class EGClientModEvents {
 
 	@SubscribeEvent
 	public static void setupClient(final FMLClientSetupEvent event) {
-		ExtraGolems.LOGGER.info(ExtraGolems.MODID + ":setupClient");
+		ExtraGolems.LOGGER.debug(ExtraGolems.MODID + ":setupClient");
 	}
 
 	@SubscribeEvent
 	public static void registerContainers(final RegistryEvent.Register<MenuType<?>> event) {
-		ExtraGolems.LOGGER.info(ExtraGolems.MODID + ":registerContainerRenderers");
+		ExtraGolems.LOGGER.debug(ExtraGolems.MODID + ":registerContainerRenderers");
 		MenuScreens.register(EGRegistry.DISPENSER_GOLEM.get(), DispenserGolemScreen::new);
 	}
 
 	@SubscribeEvent
 	public static void registerEntityLayers(final EntityRenderersEvent.RegisterLayerDefinitions event) {
-		ExtraGolems.LOGGER.info(ExtraGolems.MODID + ":registerEntityLayers");
+		ExtraGolems.LOGGER.debug(ExtraGolems.MODID + ":registerEntityLayers");
 		event.registerLayerDefinition(GolemRenderer.GOLEM_MODEL_RESOURCE, GolemModel::createBodyLayer);
 	}
 
 	@SubscribeEvent
 	public static void registerEntityRenderers(final EntityRenderersEvent.RegisterRenderers event) {
-		ExtraGolems.LOGGER.info(ExtraGolems.MODID + ":registerEntityRenderers");
+		ExtraGolems.LOGGER.debug(ExtraGolems.MODID + ":registerEntityRenderers");
 		event.registerEntityRenderer((EntityType<? extends GolemBase>) EGRegistry.GOLEM.get(), m -> (new GolemRenderer<GolemBase>(m)));
 	}
 }

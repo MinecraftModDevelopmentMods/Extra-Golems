@@ -113,7 +113,7 @@ public class EGForgeEvents {
 						// summon a entity
 						GolemBase golem = summonGolem(villager);
 						if (golem != null) {
-							ExtraGolems.LOGGER.info("Villager summoned a entity! " + golem);
+							ExtraGolems.LOGGER.debug("Villager summoned a entity! " + golem);
 							nearbyVillagers.forEach(GolemSensor::checkForNearbyGolem);
 						}
 					}

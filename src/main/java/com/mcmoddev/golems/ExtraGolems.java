@@ -5,6 +5,7 @@ import com.mcmoddev.golems.container.behavior.GolemBehaviors;
 import com.mcmoddev.golems.container.render.GolemRenderSettings;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.event.EGForgeEvents;
+import com.mcmoddev.golems.integration.AddonLoader;
 import com.mcmoddev.golems.network.SGolemContainerPacket;
 import com.mcmoddev.golems.network.SGolemModelPacket;
 import com.mcmoddev.golems.util.GenericJsonReloadListener;
@@ -62,7 +63,7 @@ public class ExtraGolems {
 		EGConfig.setupConfig();
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, EGConfig.COMMON_CONFIG);
 		// register messages
-		ExtraGolems.LOGGER.info(ExtraGolems.MODID + ":registerNetwork");
+		ExtraGolems.LOGGER.debug(ExtraGolems.MODID + ":registerNetwork");
 		int messageId = 0;
 		CHANNEL.registerMessage(messageId++, SGolemContainerPacket.class, SGolemContainerPacket::toBytes, SGolemContainerPacket::fromBytes, SGolemContainerPacket::handlePacket, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
 		CHANNEL.registerMessage(messageId++, SGolemModelPacket.class, SGolemModelPacket::toBytes, SGolemModelPacket::fromBytes, SGolemModelPacket::handlePacket, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
@@ -70,20 +71,22 @@ public class ExtraGolems {
 	}
 
 	private void setup(final FMLCommonSetupEvent event) {
-
+		// init addons
+		AddonLoader.init();
 	}
 
 	private void enqueueIMC(final InterModEnqueueEvent event) {
 		// register TheOneProbe integration
 		if (ModList.get().isLoaded("theoneprobe")) {
-			ExtraGolems.LOGGER.info("Extra Golems detected TheOneProbe, registering plugin now");
+			ExtraGolems.LOGGER.debug("Extra Golems detected TheOneProbe, registering plugin now");
 			InterModComms.sendTo(MODID, "theoneprobe", "getTheOneProbe", () -> new com.mcmoddev.golems.integration.TOPDescriptionManager.GetTheOneProbe());
 		}
 	}
 
 	private int registerCommonEvents() {
-		ExtraGolems.LOGGER.info(ExtraGolems.MODID + ":registerEventHandlers");
+		ExtraGolems.LOGGER.debug(ExtraGolems.MODID + ":registerEventHandlers");
 		MinecraftForge.EVENT_BUS.register(EGForgeEvents.class);
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(AddonLoader::onAddPackFinders);
 		return 0;
 	}
 

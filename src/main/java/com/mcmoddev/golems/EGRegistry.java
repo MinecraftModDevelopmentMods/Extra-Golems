@@ -79,7 +79,7 @@ public final class EGRegistry {
 
 	////// ENTITIES //////
 	public static final RegistryObject<? extends EntityType<?>> GOLEM = ENTITY_TYPES.register("golem", () -> {
-		ExtraGolems.LOGGER.info(ExtraGolems.MODID + ":registerEntities");
+		ExtraGolems.LOGGER.debug(ExtraGolems.MODID + ":registerEntities");
 		EntityType.Builder<GolemBase> builder = EntityType.Builder.of(GolemBase::new, MobCategory.MISC)
 				.setTrackingRange(48).setUpdateInterval(3).setShouldReceiveVelocityUpdates(true).sized(1.4F, 2.9F).noSummon();
 		return builder.build("golem");
@@ -94,7 +94,7 @@ public final class EGRegistry {
 	////// EVENTS //////
 
 	public static void registerEntityAttributes(final EntityAttributeCreationEvent event) {
-		ExtraGolems.LOGGER.info(ExtraGolems.MODID + ":registerEntityAttributes");
+		ExtraGolems.LOGGER.debug(ExtraGolems.MODID + ":registerEntityAttributes");
 		event.put((EntityType<? extends LivingEntity>) EGRegistry.GOLEM.get(), GolemContainer.EMPTY.getAttributeSupplier().get().build());
 	}
 }
