@@ -11,12 +11,13 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 @FunctionalInterface
 public interface AoeFunction {
-  /**
-   * Maps from one BlockState to another BlockState
-   * @param entity the entity that owns the AoeBlocksGoal
-   * @param pos the BlockPos to modify
-   * @param input the original BlockState
-   * @return the BlockState to replace the given input
-   */
-  public BlockState map(final LivingEntity entity, final BlockPos pos, final BlockState input);
+	/**
+	 * Maps from one BlockState to another BlockState
+	 *
+	 * @param entity the entity that owns the AoeBlocksGoal
+	 * @param pos    the BlockPos to modify
+	 * @param input  the original BlockState
+	 * @return the BlockState to replace the given input
+	 */
+	BlockState map(final LivingEntity entity, final BlockPos pos, final BlockState input);
 }

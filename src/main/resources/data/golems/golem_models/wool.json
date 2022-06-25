@@ -20,13 +20,10 @@
 	  "15": "minecraft:black_wool"
     }
   },
+  "vines": { },
   "layers": [
     {
-	  "texture": "minecraft:white_wool",
-	  "template": "golems:wool/template"
-	},
-    {
-	  "texture": "#golems:layer/eyes/eyes"
+	  "texture": "minecraft:white_wool"
 	}
   ]
 }

@@ -19,7 +19,7 @@ group = project.maven_group // http://maven.apache.org/guides/mini/guide-naming-
 archivesBaseName = project.archives_base_name
 
 // Mojang ships Java 16 to end users in 1.17+ instead of Java 8 in 1.16 or lower, so your mod should target Java 16.
-java.toolchain.languageVersion = JavaLanguageVersion.of(16)
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 def remapRefmap = 'mixin_remap_refmap'
 def remapRefmapFile = "${projectDir}/build/createSrgToMcp/output.srg"
@@ -44,10 +44,6 @@ minecraft {
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
-			
-			// Enable mixins for dependencies that use them
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', remapRefmapFile
 
             mods {
                 golems {
@@ -64,10 +60,6 @@ minecraft {
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
-			
-			// Enable mixins for dependencies that use them
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', remapRefmapFile
 
             mods {
                 golems {
@@ -83,14 +75,6 @@ repositories {
         name 'MMD'
         url 'https://maven.mcmoddev.com/'
     }
-    maven { // HWYLA
-        name 'tehnut'
-        url 'https://maven.tehnut.info'
-    }
-	maven { // QUARK
-		name 'blamejared'
-		url 'https://maven.blamejared.com/'
-	}
 	maven { // CURSE
 		name 'CurseMaven'
 		url 'https://www.cursemaven.com/'

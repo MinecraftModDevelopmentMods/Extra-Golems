@@ -1,12 +1,7 @@
 package com.mcmoddev.golems.container.behavior;
 
-import java.util.List;
-
-import javax.annotation.concurrent.Immutable;
-
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.entity.goal.ExplodeGoal;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -20,84 +15,97 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
 
+import javax.annotation.concurrent.Immutable;
+import java.util.List;
+
 /**
- * This behavior allows an entity to light a fuse, save/load the fuse, 
+ * This behavior allows an entity to light a fuse, save/load the fuse,
  * and create an explosion when the fuse reaches 0
  **/
 @Immutable
 public class ExplodeBehavior extends GolemBehavior {
-  
-  /** The radius of the explosion **/
-  protected final double range;
-  /** The minimum length of the fuse **/
-  protected final int fuse;
-  /** The percent chance [0,1] to apply when the entity is hurt **/
-  protected final double chanceOnHurt;
-  /** The percent chance [0,1] to apply when the entity attacks **/
-  protected final double chanceOnAttack;
 
-  public ExplodeBehavior(CompoundTag tag) {
-    super(tag);
-    range = tag.getDouble("range");
-    fuse = tag.getInt("fuse");
-    chanceOnHurt = tag.getDouble("chance_on_hurt");
-    chanceOnAttack = tag.getDouble("chance_on_attack");
-  }
-  
-  public int getFuseLen() { return fuse; }
-  
-  @Override
-  public void onRegisterGoals(final GolemBase entity) {
-    entity.goalSelector.addGoal(0, new ExplodeGoal<>(entity, (float)range));
-  }
-  
-  @Override
-  public void onHurtTarget(final GolemBase entity, final Entity target) {
-    if(target.isOnFire() || entity.getRandom().nextFloat() < chanceOnAttack) {
-      entity.lightFuse();
-    }
-  }
-  
-  @Override
-  public void onActuallyHurt(final GolemBase entity, final DamageSource source, final float amount) {
-    if(source.isFire() || entity.getRandom().nextFloat() < chanceOnHurt) {
-      entity.lightFuse();
-    }
-  }
-  
-  @Override
-  public void onDie(final GolemBase entity, final DamageSource source) {
-    entity.explode((float) range);
-  }
-  
-  @Override
-  public void onMobInteract(final GolemBase entity, final Player player, final InteractionHand hand) {
-    final ItemStack itemstack = player.getItemInHand(hand);
-    if (!itemstack.isEmpty() && itemstack.getItem() == Items.FLINT_AND_STEEL) {
-      // play sound and swing hand
-      final Vec3 pos = entity.position();
-      entity.level.playSound(player, pos.x, pos.y, pos.z, SoundEvents.FLINTANDSTEEL_USE, entity.getSoundSource(), 1.0F,
-          entity.getRandom().nextFloat() * 0.4F + 0.8F);
-      player.swing(hand);
+	/**
+	 * The radius of the explosion
+	 **/
+	protected final double range;
+	/**
+	 * The minimum length of the fuse
+	 **/
+	protected final int fuse;
+	/**
+	 * The percent chance [0,1] to apply when the entity is hurt
+	 **/
+	protected final double chanceOnHurt;
+	/**
+	 * The percent chance [0,1] to apply when the entity attacks
+	 **/
+	protected final double chanceOnAttack;
 
-      entity.setSecondsOnFire(Math.floorDiv(getFuseLen(), 20));
-      entity.lightFuse();
-      itemstack.hurtAndBreak(1, player, c -> c.broadcastBreakEvent(hand));
-    }
-  }
-  
-  @Override
-  public void onWriteData(final GolemBase entity, final CompoundTag tag) {
-    entity.saveFuse(tag);
-  }
-  
-  @Override
-  public void onReadData(final GolemBase entity, final CompoundTag tag) {
-    entity.loadFuse(tag);
-  }
-  
-  @Override
-  public void onAddDescriptions(List<Component> list) {
-    list.add(new TranslatableComponent("entitytip.explode").withStyle(ChatFormatting.RED));
-  }
+	public ExplodeBehavior(CompoundTag tag) {
+		super(tag);
+		range = tag.getDouble("range");
+		fuse = tag.getInt("fuse");
+		chanceOnHurt = tag.getDouble("chance_on_hurt");
+		chanceOnAttack = tag.getDouble("chance_on_attack");
+	}
+
+	public int getFuseLen() {
+		return fuse;
+	}
+
+	@Override
+	public void onRegisterGoals(final GolemBase entity) {
+		entity.goalSelector.addGoal(0, new ExplodeGoal<>(entity, (float) range));
+	}
+
+	@Override
+	public void onHurtTarget(final GolemBase entity, final Entity target) {
+		if (target.isOnFire() || entity.getRandom().nextFloat() < chanceOnAttack) {
+			entity.lightFuse();
+		}
+	}
+
+	@Override
+	public void onActuallyHurt(final GolemBase entity, final DamageSource source, final float amount) {
+		if (source.isFire() || entity.getRandom().nextFloat() < chanceOnHurt) {
+			entity.lightFuse();
+		}
+	}
+
+	@Override
+	public void onDie(final GolemBase entity, final DamageSource source) {
+		entity.explode((float) range);
+	}
+
+	@Override
+	public void onMobInteract(final GolemBase entity, final Player player, final InteractionHand hand) {
+		final ItemStack itemstack = player.getItemInHand(hand);
+		if (!itemstack.isEmpty() && itemstack.getItem() == Items.FLINT_AND_STEEL) {
+			// play sound and swing hand
+			final Vec3 pos = entity.position();
+			entity.level.playSound(player, pos.x, pos.y, pos.z, SoundEvents.FLINTANDSTEEL_USE, entity.getSoundSource(), 1.0F,
+					entity.getRandom().nextFloat() * 0.4F + 0.8F);
+			player.swing(hand);
+
+			entity.setSecondsOnFire(Math.floorDiv(getFuseLen(), 20));
+			entity.lightFuse();
+			itemstack.hurtAndBreak(1, player, c -> c.broadcastBreakEvent(hand));
+		}
+	}
+
+	@Override
+	public void onWriteData(final GolemBase entity, final CompoundTag tag) {
+		entity.saveFuse(tag);
+	}
+
+	@Override
+	public void onReadData(final GolemBase entity, final CompoundTag tag) {
+		entity.loadFuse(tag);
+	}
+
+	@Override
+	public void onAddDescriptions(List<Component> list) {
+		list.add(new TranslatableComponent("entitytip.explode").withStyle(ChatFormatting.RED));
+	}
 }

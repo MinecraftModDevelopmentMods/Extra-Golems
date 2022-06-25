@@ -1,10 +1,7 @@
 package com.mcmoddev.golems.block;
 
-import javax.annotation.Nullable;
-
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.entity.GolemBase;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -22,6 +19,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+
+import javax.annotation.Nullable;
 
 public final class GolemHeadBlock extends HorizontalDirectionalBlock {
 
@@ -42,176 +41,176 @@ public final class GolemHeadBlock extends HorizontalDirectionalBlock {
 //    } stack.shrink(1); } else { return super.dispenseStack(source, stack); }
 //    
 //    return stack; } };
-   
-  public GolemHeadBlock() {
-    super(Block.Properties.copy(Blocks.CARVED_PUMPKIN));
-    this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
-    // dispenser behavior TODO: NOT WORKING
-    // BlockDispenser.registerDispenseBehavior(this.asItem(),
-    // GolemHeadBlock.DISPENSER_BEHAVIOR);
-  }
 
-  @Override
-  public BlockState getStateForPlacement(BlockPlaceContext context) {
-    return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
-  }
+	public GolemHeadBlock() {
+		super(Block.Properties.copy(Blocks.CARVED_PUMPKIN));
+		this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
+		// dispenser behavior TODO: NOT WORKING
+		// BlockDispenser.registerDispenseBehavior(this.asItem(),
+		// GolemHeadBlock.DISPENSER_BEHAVIOR);
+	}
 
-  @Override
-  protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-    builder.add(FACING);
-  }
+	@Override
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
+		return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
+	}
 
-  @Override
-  public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-    super.setPlacedBy(worldIn, pos, state, placer, stack);
-    trySpawnGolem(placer, worldIn, pos);
-  }
+	@Override
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+		builder.add(FACING);
+	}
 
-  /**
-   * Attempts to build a entity with the given head position. Checks if a entity can
-   * be built there and, if so, removes the blocks and spawns the corresponding
-   * entity.
-   *
-   * @param placer the living entity that triggered the golem spawning
-   * @param world   current world
-   * @param headPos the position of the entity head block
-   * @return if the entity was built and spawned
-   */
-  public static boolean trySpawnGolem(@Nullable final Entity placer, final Level world, final BlockPos headPos) {
-    if (world.isClientSide()) {
-      return false;
-    }
+	@Override
+	public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+		super.setPlacedBy(worldIn, pos, state, placer, stack);
+		trySpawnGolem(placer, worldIn, pos);
+	}
 
-    // get all the block and state values that we will be using in the following
-    // code
-    final BlockState stateBelow1 = world.getBlockState(headPos.below(1));
-    final BlockState stateBelow2 = world.getBlockState(headPos.below(2));
-    final BlockState stateArmNorth = world.getBlockState(headPos.below(1).north(1));
-    final BlockState stateArmSouth = world.getBlockState(headPos.below(1).south(1));
-    final BlockState stateArmEast = world.getBlockState(headPos.below(1).east(1));
-    final BlockState stateArmWest = world.getBlockState(headPos.below(1).west(1));
-    final Block blockBelow1 = stateBelow1.getBlock();
-    final Block blockBelow2 = stateBelow2.getBlock();
-    final Block blockArmNorth = stateArmNorth.getBlock();
-    final Block blockArmSouth = stateArmSouth.getBlock();
-    final Block blockArmEast = stateArmEast.getBlock();
-    final Block blockArmWest = stateArmWest.getBlock();
-    // this is where the entity will spawn at the end
-    final double spawnX = headPos.getX() + 0.5D;
-    final double spawnY = headPos.getY() - 1.95D;
-    final double spawnZ = headPos.getZ() + 0.5D;
-    // true if the entity is East-West aligned
-    boolean flagX;
-    // true if the entity is completely Iron Blocks
-    boolean isIron;
+	/**
+	 * Attempts to build a entity with the given head position. Checks if a entity can
+	 * be built there and, if so, removes the blocks and spawns the corresponding
+	 * entity.
+	 *
+	 * @param placer  the living entity that triggered the golem spawning
+	 * @param world   current world
+	 * @param headPos the position of the entity head block
+	 * @return if the entity was built and spawned
+	 */
+	public static boolean trySpawnGolem(@Nullable final Entity placer, final Level world, final BlockPos headPos) {
+		if (world.isClientSide()) {
+			return false;
+		}
 
-    ////// Hard-coded support for Snow Golem //////
-    if (doBlocksMatch(Blocks.SNOW_BLOCK, blockBelow1, blockBelow2)) {
-      removeGolemBody(world, headPos);
-      final SnowGolem entitysnowman = EntityType.SNOW_GOLEM.create(world);
-      ExtraGolems.LOGGER.info("[Extra Golems]: Building regular boring Snow Golem");
-      entitysnowman.moveTo(spawnX, spawnY, spawnZ, 0.0F, 0.0F);
-      world.addFreshEntity(entitysnowman);
-      return true;
-    }
+		// get all the block and state values that we will be using in the following
+		// code
+		final BlockState stateBelow1 = world.getBlockState(headPos.below(1));
+		final BlockState stateBelow2 = world.getBlockState(headPos.below(2));
+		final BlockState stateArmNorth = world.getBlockState(headPos.below(1).north(1));
+		final BlockState stateArmSouth = world.getBlockState(headPos.below(1).south(1));
+		final BlockState stateArmEast = world.getBlockState(headPos.below(1).east(1));
+		final BlockState stateArmWest = world.getBlockState(headPos.below(1).west(1));
+		final Block blockBelow1 = stateBelow1.getBlock();
+		final Block blockBelow2 = stateBelow2.getBlock();
+		final Block blockArmNorth = stateArmNorth.getBlock();
+		final Block blockArmSouth = stateArmSouth.getBlock();
+		final Block blockArmEast = stateArmEast.getBlock();
+		final Block blockArmWest = stateArmWest.getBlock();
+		// this is where the entity will spawn at the end
+		final double spawnX = headPos.getX() + 0.5D;
+		final double spawnY = headPos.getY() - 1.95D;
+		final double spawnZ = headPos.getZ() + 0.5D;
+		// true if the entity is East-West aligned
+		boolean flagX;
+		// true if the entity is completely Iron Blocks
+		boolean isIron;
 
-    ////// Hard-coded support for Iron Golem //////
-    isIron = doBlocksMatch(Blocks.IRON_BLOCK, blockBelow1, blockBelow2, blockArmNorth, blockArmSouth);
-    flagX = false;
-    if (!isIron) {
-      // try to find an Iron Golem east-west aligned
-      isIron = doBlocksMatch(Blocks.IRON_BLOCK, blockBelow1, blockBelow2, blockArmEast, blockArmWest);
-      flagX = true;
-    }
+		////// Hard-coded support for Snow Golem //////
+		if (doBlocksMatch(Blocks.SNOW_BLOCK, blockBelow1, blockBelow2)) {
+			removeGolemBody(world, headPos);
+			final SnowGolem entitysnowman = EntityType.SNOW_GOLEM.create(world);
+			ExtraGolems.LOGGER.debug("[Extra Golems]: Building regular boring Snow Golem");
+			entitysnowman.moveTo(spawnX, spawnY, spawnZ, 0.0F, 0.0F);
+			world.addFreshEntity(entitysnowman);
+			return true;
+		}
 
-    if (isIron) {
-      removeAllGolemBlocks(world, headPos, flagX);
-      // build Iron Golem
-      final IronGolem ironGolem = EntityType.IRON_GOLEM.create(world);
-      ExtraGolems.LOGGER.info("[Extra Golems]: Building regular boring Iron Golem");
-      ironGolem.setPlayerCreated(true);
-      ironGolem.moveTo(spawnX, spawnY, spawnZ, 0.0F, 0.0F);
-      world.addFreshEntity(ironGolem);
-      return true;
-    }
+		////// Hard-coded support for Iron Golem //////
+		isIron = doBlocksMatch(Blocks.IRON_BLOCK, blockBelow1, blockBelow2, blockArmNorth, blockArmSouth);
+		flagX = false;
+		if (!isIron) {
+			// try to find an Iron Golem east-west aligned
+			isIron = doBlocksMatch(Blocks.IRON_BLOCK, blockBelow1, blockBelow2, blockArmEast, blockArmWest);
+			flagX = true;
+		}
 
-    if (isInvalidBlock(blockBelow1) || isInvalidBlock(blockBelow2)) {
-      return false;
-    }
+		if (isIron) {
+			removeAllGolemBlocks(world, headPos, flagX);
+			// build Iron Golem
+			final IronGolem ironGolem = EntityType.IRON_GOLEM.create(world);
+			ExtraGolems.LOGGER.debug("[Extra Golems]: Building regular boring Iron Golem");
+			ironGolem.setPlayerCreated(true);
+			ironGolem.moveTo(spawnX, spawnY, spawnZ, 0.0F, 0.0F);
+			world.addFreshEntity(ironGolem);
+			return true;
+		}
 
-    ////// Attempt to spawn a Golem from this mod //////
-    GolemBase golem = ExtraGolems.getGolem(world, blockBelow1, blockBelow2, blockArmNorth, blockArmSouth);
-    flagX = false;
-    // if no entity found for North-South, try to find one for East-West pattern
-    if (golem == null) {
-      golem = ExtraGolems.getGolem(world, blockBelow1, blockBelow2, blockArmEast, blockArmWest);
-      flagX = true;
-    }
+		if (isInvalidBlock(blockBelow1) || isInvalidBlock(blockBelow2)) {
+			return false;
+		}
 
-    if (golem != null) {
-      // spawn the entity!
-      removeAllGolemBlocks(world, headPos, flagX);
-      golem.setPlayerCreated(true);
-      golem.moveTo(spawnX, spawnY, spawnZ, 0.0F, 0.0F);
-      ExtraGolems.LOGGER.debug("[Extra Golems]: Building golem " + golem.toString());
-      world.addFreshEntity(golem);
-      if(placer != null && placer.getCommandSenderWorld() instanceof ServerLevel) {
-        golem.finalizeSpawn((ServerLevel)placer.getCommandSenderWorld(), world.getCurrentDifficultyAt(headPos), MobSpawnType.MOB_SUMMONED, null, null);
-      }
-      golem.onBuilt(stateBelow1, stateBelow2, flagX ? stateArmEast : stateArmWest, flagX ? stateArmNorth : stateArmSouth);
-      return true;
-    }
-    // No Golems of any kind were spawned :(
-    return false;
-  }
+		////// Attempt to spawn a Golem from this mod //////
+		GolemBase golem = ExtraGolems.getGolem(world, blockBelow1, blockBelow2, blockArmNorth, blockArmSouth);
+		flagX = false;
+		// if no entity found for North-South, try to find one for East-West pattern
+		if (golem == null) {
+			golem = ExtraGolems.getGolem(world, blockBelow1, blockBelow2, blockArmEast, blockArmWest);
+			flagX = true;
+		}
 
-  /**
-   * @param master  the Block to check against
-   * @param toCheck other Block values that you want to ensure are equal
-   * @return true if [every Block in {@code toCheck}] == master
-   **/
-  public static boolean doBlocksMatch(Block master, Block... toCheck) {
-    boolean success = toCheck != null && toCheck.length > 0;
-    for (Block b : toCheck) {
-      success &= b == master;
-    }
-    return success;
-  }
+		if (golem != null) {
+			// spawn the entity!
+			removeAllGolemBlocks(world, headPos, flagX);
+			golem.setPlayerCreated(true);
+			golem.moveTo(spawnX, spawnY, spawnZ, 0.0F, 0.0F);
+			ExtraGolems.LOGGER.debug("[Extra Golems]: Building golem " + golem);
+			world.addFreshEntity(golem);
+			if (placer != null && placer.getCommandSenderWorld() instanceof ServerLevel) {
+				golem.finalizeSpawn((ServerLevel) placer.getCommandSenderWorld(), world.getCurrentDifficultyAt(headPos), MobSpawnType.MOB_SUMMONED, null, null);
+			}
+			golem.onBuilt(stateBelow1, stateBelow2, flagX ? stateArmEast : stateArmWest, flagX ? stateArmNorth : stateArmSouth);
+			return true;
+		}
+		// No Golems of any kind were spawned :(
+		return false;
+	}
 
-  /**
-   * Replaces this block and the four construction blocks with air.
-   **/
-  public static void removeAllGolemBlocks(final Level world, final BlockPos pos, final boolean isXAligned) {
-    removeGolemBody(world, pos);
-    removeGolemArms(world, pos, isXAligned);
-  }
+	/**
+	 * @param master  the Block to check against
+	 * @param toCheck other Block values that you want to ensure are equal
+	 * @return true if [every Block in {@code toCheck}] == master
+	 **/
+	public static boolean doBlocksMatch(Block master, Block... toCheck) {
+		boolean success = toCheck != null && toCheck.length > 0;
+		for (Block b : toCheck) {
+			success &= b == master;
+		}
+		return success;
+	}
 
-  /**
-   * Replaces this block and the two below it with air.
-   **/
-  public static void removeGolemBody(final Level world, final BlockPos head) {
-    world.destroyBlock(head, false);
-    world.destroyBlock(head.below(1), false);
-    world.destroyBlock(head.below(2), false);
-  }
+	/**
+	 * Replaces this block and the four construction blocks with air.
+	 **/
+	public static void removeAllGolemBlocks(final Level world, final BlockPos pos, final boolean isXAligned) {
+		removeGolemBody(world, pos);
+		removeGolemArms(world, pos, isXAligned);
+	}
 
-  /**
-   * Replaces blocks at arm positions with air.
-   **/
-  public static void removeGolemArms(final Level world, final BlockPos pos, final boolean isXAligned) {
-    if (isXAligned) {
-      world.destroyBlock(pos.below(1).west(1), false);
-      world.destroyBlock(pos.below(1).east(1), false);
-    } else {
-      world.destroyBlock(pos.below(1).north(1), false);
-      world.destroyBlock(pos.below(1).south(1), false);
-    }
-  }
+	/**
+	 * Replaces this block and the two below it with air.
+	 **/
+	public static void removeGolemBody(final Level world, final BlockPos head) {
+		world.destroyBlock(head, false);
+		world.destroyBlock(head.below(1), false);
+		world.destroyBlock(head.below(2), false);
+	}
 
-  /**
-   * @return true if the block should not be considered a entity building block
-   **/
-  private static boolean isInvalidBlock(final Block b) {
-    return b == null || b == Blocks.AIR || b == Blocks.WATER;
-  }
+	/**
+	 * Replaces blocks at arm positions with air.
+	 **/
+	public static void removeGolemArms(final Level world, final BlockPos pos, final boolean isXAligned) {
+		if (isXAligned) {
+			world.destroyBlock(pos.below(1).west(1), false);
+			world.destroyBlock(pos.below(1).east(1), false);
+		} else {
+			world.destroyBlock(pos.below(1).north(1), false);
+			world.destroyBlock(pos.below(1).south(1), false);
+		}
+	}
+
+	/**
+	 * @return true if the block should not be considered a entity building block
+	 **/
+	private static boolean isInvalidBlock(final Block b) {
+		return b == null || b == Blocks.AIR || b == Blocks.WATER;
+	}
 }

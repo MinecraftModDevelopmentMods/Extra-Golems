@@ -1,75 +1,74 @@
 package com.mcmoddev.golems.entity.goal;
 
+import com.mcmoddev.golems.entity.GolemBase;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.Vec3;
+
 import java.util.EnumSet;
 import java.util.Random;
 
-import com.mcmoddev.golems.entity.GolemBase;
-
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.level.Level;
-
 public class GoToWaterGoal extends Goal {
 
-  private final GolemBase golem;
-  private final int detectWaterRadius;
-  private double targetX;
-  private double targetY;
-  private double targetZ;
-  private final double speed;
-  private final Level world;
+	private final GolemBase golem;
+	private final int detectWaterRadius;
+	private double targetX;
+	private double targetY;
+	private double targetZ;
+	private final double speed;
+	private final Level world;
 
-  public GoToWaterGoal(final GolemBase golemBase, final int radius, final double speed) {
-    this.golem = golemBase;
-    this.detectWaterRadius = radius;
-    this.speed = speed;
-    this.world = golemBase.level;
-    setFlags(EnumSet.of(Goal.Flag.MOVE));
-  }
+	public GoToWaterGoal(final GolemBase golemBase, final int radius, final double speed) {
+		this.golem = golemBase;
+		this.detectWaterRadius = radius;
+		this.speed = speed;
+		this.world = golemBase.level;
+		setFlags(EnumSet.of(Goal.Flag.MOVE));
+	}
 
-  @Override
-  public boolean canUse() {
-    if (this.golem.isInWater()) {
-      return false;
-    }
+	@Override
+	public boolean canUse() {
+		if (this.golem.isInWater()) {
+			return false;
+		}
 
-    Vec3 target = getNearbyWater();
-    if (target == null || !this.golem.shouldMoveToWater(target)) {
-      return false;
-    }
+		Vec3 target = getNearbyWater();
+		if (target == null || !this.golem.shouldMoveToWater(target)) {
+			return false;
+		}
 
-    this.targetX = target.x;
-    this.targetY = target.y;
-    this.targetZ = target.z;
-    return true;
-  }
+		this.targetX = target.x;
+		this.targetY = target.y;
+		this.targetZ = target.z;
+		return true;
+	}
 
-  @Override
-  public boolean canContinueToUse() {
-    return !this.golem.getNavigation().isDone();
-  }
+	@Override
+	public boolean canContinueToUse() {
+		return !this.golem.getNavigation().isDone();
+	}
 
-  @Override
-  public void start() {
-    this.golem.getNavigation().moveTo(this.targetX, this.targetY, this.targetZ, this.speed);
-  }
+	@Override
+	public void start() {
+		this.golem.getNavigation().moveTo(this.targetX, this.targetY, this.targetZ, this.speed);
+	}
 
-  private Vec3 getNearbyWater() {
-    Random rand = this.golem.getRandom();
+	private Vec3 getNearbyWater() {
+		Random rand = this.golem.getRandom();
 
-    BlockPos pos1 = this.golem.getBlockBelow();
+		BlockPos pos1 = this.golem.getBlockBelow();
 
-    for (int i = 0; i < 10; i++) {
-      BlockPos pos2 = pos1.offset(rand.nextInt(detectWaterRadius * 2) - detectWaterRadius, 2 - rand.nextInt(8),
-          rand.nextInt(detectWaterRadius * 2) - detectWaterRadius);
+		for (int i = 0; i < 10; i++) {
+			BlockPos pos2 = pos1.offset(rand.nextInt(detectWaterRadius * 2) - detectWaterRadius, 2 - rand.nextInt(8),
+					rand.nextInt(detectWaterRadius * 2) - detectWaterRadius);
 
-      if (this.world.getBlockState(pos2).getBlock() == Blocks.WATER) {
-        return new Vec3(pos2.getX(), pos2.getY(), pos2.getZ());
-      }
-    }
-    return null;
-  }
+			if (this.world.getBlockState(pos2).getBlock() == Blocks.WATER) {
+				return new Vec3(pos2.getX(), pos2.getY(), pos2.getZ());
+			}
+		}
+		return null;
+	}
 
 }

@@ -6,16 +6,16 @@ import net.minecraft.world.item.ItemStack;
 
 public final class EGScreenLoader {
 
-  private EGScreenLoader() {
-    //
-  }
+	private EGScreenLoader() {
+		//
+	}
 
-  public static void loadBookGui(final Player playerIn, final ItemStack itemstack) {
-    // only load client-side, of course
-    if (!playerIn.getCommandSenderWorld().isClientSide()) {
-      return;
-    }
-    // open the gui
-    Minecraft.getInstance().setScreen(new GolemBookScreen(playerIn, itemstack));
-  }
+	public static void loadBookGui(final Player playerIn, final ItemStack itemstack) {
+		// only load client-side, of course
+		if (!playerIn.getCommandSenderWorld().isClientSide()) {
+			return;
+		}
+		// open the gui
+		Minecraft.getInstance().setScreen(new GolemBookScreen(playerIn, itemstack));
+	}
 }
