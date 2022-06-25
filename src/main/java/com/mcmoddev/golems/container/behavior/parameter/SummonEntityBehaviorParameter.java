@@ -22,6 +22,8 @@ import java.util.Optional;
 @Immutable
 public class SummonEntityBehaviorParameter extends BehaviorParameter {
 
+	public static final String S_TRANSLATION_KEY = "translation_key";
+
 	private final Target target;
 	private final Target targetPos;
 	private final ResourceLocation entityId;
@@ -38,8 +40,13 @@ public class SummonEntityBehaviorParameter extends BehaviorParameter {
 		this.entityId = new ResourceLocation(this.compoundTag.getString("id"));
 		this.chance = tag.getDouble("chance");
 		this.bonusChanceInRain = tag.getDouble("bonus_chance_in_rain");
-		this.component = new TranslatableComponent("entitytip.summon_x",
-				new TranslatableComponent("entity." + entityId.getNamespace() + "." + entityId.getPath()));
+		// translation component
+		if(tag.contains(S_TRANSLATION_KEY)) {
+			this.component = new TranslatableComponent(tag.getString(S_TRANSLATION_KEY));
+		} else {
+			this.component = new TranslatableComponent("entitytip.summon_x",
+					new TranslatableComponent("entity." + entityId.getNamespace() + "." + entityId.getPath()));
+		}
 	}
 
 	public Target getTarget() {

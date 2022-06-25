@@ -1,12 +1,3 @@
 {
-  "base": "#golems:sea_lantern",
-  "layers": [
-    {
-	  "texture": "#golems:layer/vines",
-	  "color": 8626266
-	},
-    {
-	  "texture": "#golems:layer/eyes/eyes"
-	}
-  ]
+  "base": "#golems:sea_lantern"
 }

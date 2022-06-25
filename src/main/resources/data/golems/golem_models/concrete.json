@@ -18,14 +18,5 @@
 	  "14": "minecraft:red_concrete",
 	  "15": "minecraft:black_concrete"
     }
-  },
-  "layers": [
-    {
-	  "texture": "#golems:layer/vines",
-	  "color": 8626266
-	},
-    {
-	  "texture": "#golems:layer/eyes/eyes"
-	}
-  ]
+  }
 }

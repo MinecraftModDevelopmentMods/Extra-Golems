@@ -1,12 +1,3 @@
 {
-  "base": "minecraft:polished_deepslate",
-  "layers": [
-    {
-	  "texture": "#golems:layer/vines",
-	  "color": 8626266
-	},
-    {
-	  "texture": "#golems:layer/eyes/eyes"
-	}
-  ]
+  "base": "minecraft:polished_deepslate"
 }

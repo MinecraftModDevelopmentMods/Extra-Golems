@@ -1,9 +1,4 @@
 {
   "base": "#golems:netherite",
-  "layers": [
-    {
-	  "texture": "#golems:layer/eyes/eyes",
-	  "light": true
-	}
-  ]
+  "vines": {}
 }

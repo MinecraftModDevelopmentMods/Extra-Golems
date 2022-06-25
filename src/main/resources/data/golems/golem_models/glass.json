@@ -22,9 +22,5 @@
 	  "17": "minecraft:tinted_glass"
     }
   },
-  "layers": [ 
-  	{
-	  "texture": "#golems:layer/eyes/eyes"
-	}
-  ]
+  "vines": {}
 }

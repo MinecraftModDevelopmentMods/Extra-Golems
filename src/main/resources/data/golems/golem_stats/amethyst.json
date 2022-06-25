@@ -16,6 +16,7 @@
 	    "target": "self",
 	    "summon_pos": "self",
 		"chance": 0.09,
+		"translation_key": "entitytip.summon_amethyst",
 	    "entity": {
 	      "id": "minecraft:item",
 	      "Item": {

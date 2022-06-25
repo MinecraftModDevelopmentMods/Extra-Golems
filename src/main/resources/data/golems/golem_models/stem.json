@@ -5,13 +5,8 @@
 	  "1": "minecraft:warped_stem"
     }
   },
-  "layers": [
-    {
-	  "texture": "#golems:layer/vines",
-	  "color": 23157
-	},
-    {
-	  "texture": "#golems:layer/eyes/eyes"
-	}
-  ]
+  "vines": {
+	"texture": "#golems:layer/vines",
+	"color": 23157
+  }
 }

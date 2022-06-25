@@ -1,19 +1,10 @@
 {
   "multitexture": {
-    "base_map": {
-      "0": "minecraft:copper_block",
-	  "1": "minecraft:exposed_copper",
-	  "2": "minecraft:weathered_copper",
-	  "3": "minecraft:oxidized_copper"
-    }
-  },
-  "layers": [
-    {
-	  "texture": "#golems:layer/vines",
-	  "color": 8626266
-	},
-    {
-	  "texture": "#golems:layer/eyes/eyes"
+	"base_map": {
+	  "0": "#golems:copper/copper",
+	  "1": "#golems:copper/exposed_copper",
+	  "2": "#golems:copper/weathered_copper",
+	  "3": "#golems:copper/oxidized_copper"
 	}
-  ]
+  }
 }

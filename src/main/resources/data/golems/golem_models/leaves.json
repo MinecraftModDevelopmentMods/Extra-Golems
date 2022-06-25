@@ -1,13 +1,8 @@
 {
   "base": "minecraft:oak_leaves",
   "use_biome_color": true,
-  "layers": [
-    {
-	  "texture": "#golems:layer/vines",
-	  "color": 5127460
-	},
-    {
-	  "texture": "#golems:layer/eyes/eyes"
-	}
-  ]
+  "vines": {
+	"texture": "#golems:layer/vines",
+	"color": 5127460
+  }
 }

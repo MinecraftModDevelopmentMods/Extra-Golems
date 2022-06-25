@@ -13,13 +13,8 @@
       "9": "minecraft:dead_horn_coral_block"
     }
   },
-  "layers": [
-    {
-	  "texture": "#golems:layer/vines",
-	  "color": 2070638
-	},
-    {
-	  "texture": "#golems:layer/eyes/eyes"
-	}
-  ]
+  "vines": {
+	"texture": "#golems:layer/vines",
+	"color": 2070638
+  }
 }

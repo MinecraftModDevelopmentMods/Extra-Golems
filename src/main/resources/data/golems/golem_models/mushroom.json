@@ -10,13 +10,6 @@
     {
 	  "texture": "minecraft:mushroom_stem",
 	  "template": "golems:mushroom/lower_template"
-	},
-    {
-	  "texture": "#golems:layer/vines",
-	  "color": 8626266
-	},
-    {
-	  "texture": "#golems:layer/eyes/eyes"
 	}
   ]
 }

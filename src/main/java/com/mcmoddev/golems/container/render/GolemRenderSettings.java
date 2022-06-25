@@ -43,7 +43,7 @@ public class GolemRenderSettings {
 			MultitextureRenderSettings.CODEC.optionalFieldOf("multitexture").forGetter(GolemRenderSettings::getMultitexture),
 			LayerRenderSettings.CODEC.optionalFieldOf("eyes", LayerRenderSettings.EYES).forGetter(GolemRenderSettings::getEyes),
 			LayerRenderSettings.CODEC.optionalFieldOf("vines", LayerRenderSettings.VINES).forGetter(GolemRenderSettings::getVines),
-			LayerRenderSettings.CODEC.listOf().optionalFieldOf("layers", Lists.newArrayList(LayerRenderSettings.EYES, LayerRenderSettings.VINES)).forGetter(GolemRenderSettings::getLayers)
+			LayerRenderSettings.CODEC.listOf().optionalFieldOf("layers", Lists.newArrayList()).forGetter(GolemRenderSettings::getLayers)
 	).apply(instance, GolemRenderSettings::new));
 
 	private final List<ResourcePair> baseList;

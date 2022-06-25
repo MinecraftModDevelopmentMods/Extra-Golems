@@ -1,12 +1,3 @@
 {
-  "base": "minecraft:purpur_pillar",
-  "layers": [
-    {
-	  "texture": "#golems:layer/vines",
-	  "color": 8626266
-	},
-    {
-	  "texture": "#golems:layer/eyes/eyes"
-	}
-  ]
+  "base": "minecraft:purpur_pillar"
 }

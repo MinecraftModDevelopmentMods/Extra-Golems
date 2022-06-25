@@ -1,13 +1,10 @@
 {
   "base": "minecraft:polished_blackstone",
+  "vines": {
+	"texture": "#golems:layer/vines",
+	"color": 23157
+  },
   "layers": [
-    {
-	  "texture": "#golems:layer/vines",
-	  "color": 23157
-	},
-    {
-	  "texture": "#golems:layer/eyes/eyes"
-	},
     {
 	  "texture": "#golems:layer/gold_nuggets"
 	}

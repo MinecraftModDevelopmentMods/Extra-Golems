@@ -5,13 +5,12 @@
   "use_biome_color": false,
   "base_light": false,
   "translucent": false,
-  "layers": [
-    {
-	  "texture": "#golems:layer/vines",
-	  "color": 8626266
-	},
-    {
-	  "texture": "#golems:layer/eyes/eyes"
-	}
-  ]
+  "eyes": {
+	"texture": "#golems:layer/eyes/eyes"
+  },
+  "vines": {
+	"texture": "#golems:layer/vines",
+	"color": 8626266
+  },
+  "layers": [ ]
 }

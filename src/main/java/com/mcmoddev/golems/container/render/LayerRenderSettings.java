@@ -51,8 +51,8 @@ public class LayerRenderSettings {
 		this.light = light;
 		this.translucent = translucent;
 		this.enabled = !(null == textureRaw || null == textureRaw.resource()
-				|| textureRaw.resource().getPath().isEmpty()
-				|| "empty".equals(textureRaw.resource().getPath()));
+				|| ResourcePair.EMPTY.equals(textureRaw)
+				|| textureRaw.resource().getPath().isEmpty());
 	}
 
 	public boolean load() {

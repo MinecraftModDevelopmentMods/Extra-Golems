@@ -1,8 +1,4 @@
 {
   "base": "minecraft:moss_block",
-  "layers": [
-    {
-	  "texture": "#golems:layer/eyes/eyes"
-	}
-  ]
+  "vines": {}
 }

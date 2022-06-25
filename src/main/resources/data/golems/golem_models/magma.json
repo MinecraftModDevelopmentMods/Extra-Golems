@@ -1,14 +1,9 @@
 {
   "base": "minecraft:magma",
   "base_light": true,
-  "layers": [
-    {
-	  "texture": "#golems:layer/vines",
-	  "color": 11543845,
-	  "light": true
-	},
-    {
-	  "texture": "#golems:layer/eyes/eyes"
-	}
-  ]
+  "vines": {
+	"texture": "#golems:layer/vines",
+	"color": 11543845,
+	"light": true
+  }
 }

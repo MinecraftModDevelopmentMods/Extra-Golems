@@ -8,14 +8,5 @@
 	  "4": "minecraft:jungle_log",
 	  "5": "minecraft:spruce_log"
     }
-  },
-  "layers": [
-    {
-	  "texture": "#golems:layer/vines",
-	  "color": 8626266
-	},
-    {
-	  "texture": "#golems:layer/eyes/eyes"
-	}
-  ]
+  }
 }

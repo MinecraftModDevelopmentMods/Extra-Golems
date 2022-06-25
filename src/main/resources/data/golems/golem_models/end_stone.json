@@ -1,13 +1,7 @@
 {
   "base": "minecraft:end_stone",
-  "layers": [
-    {
-	  "texture": "#golems:layer/vines",
-	  "color": 8626266
-	},
-    {
-	  "texture": "#golems:layer/eyes/ender",
-	  "light": true
-	}
-  ]
+  "eyes": {
+	"texture": "#golems:layer/eyes/ender",
+	"light": true
+  }
 }

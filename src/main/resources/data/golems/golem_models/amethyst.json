@@ -1,3 +1,4 @@
 {
-  "base": "#golems:amethyst"
+  "base": "#golems:amethyst",
+  "vines": {}
 }

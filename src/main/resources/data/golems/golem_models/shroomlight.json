@@ -1,12 +1,7 @@
 {
   "base": "minecraft:shroomlight",
-  "layers": [
-    {
-	  "texture": "#golems:layer/vines",
-	  "color": 11543845
-	},
-    {
-	  "texture": "#golems:layer/eyes/eyes"
-	}
-  ]
+  "vines": {
+	"texture": "#golems:layer/vines",
+	"color": 11543845
+  }
 }
