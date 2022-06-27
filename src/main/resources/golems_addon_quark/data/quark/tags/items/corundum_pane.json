@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    "quark:red_corundum_pane",
+    "quark:orange_corundum_pane",
+    "quark:yellow_corundum_pane",
+    "quark:green_corundum_pane",
+    "quark:blue_corundum_pane",
+    "quark:indigo_corundum_pane",
+    "quark:violet_corundum_pane",
+    "quark:white_corundum_pane",
+    "quark:black_corundum_pane"
+  ]
+}

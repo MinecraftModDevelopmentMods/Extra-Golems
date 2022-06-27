@@ -9,13 +9,13 @@
   "swim_ability": "float",
   "sound": "minecraft:block.grass.step",
   "blocks": [
-	"quark:glowshroom_stem",
-	"quark:glowshroom_block"
+	"quark:glow_shroom_stem",
+	"quark:glow_shroom_block"
   ],
   "heal_items": {
-	"quark:glowshroom_stem": 0.5,
-	"quark:glowshroom_block": 0.5,
-	"quark:glowshroom": 0.15
+	"quark:glow_shroom_stem": 0.5,
+	"quark:glow_shroom_block": 0.5,
+	"quark:glow_shroom": 0.15
   },
   "behavior": [
     {
@@ -37,7 +37,7 @@
 	  "type": "golems:place_blocks",
 	  "interval": 1050,
 	  "blocks": [
-	    "quark:glowshroom"
+	    "quark:glow_shroom"
 	  ]
 	}
   ]

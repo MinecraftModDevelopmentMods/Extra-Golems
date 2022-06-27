@@ -78,7 +78,7 @@ public class ExtraGolems {
 	private void enqueueIMC(final InterModEnqueueEvent event) {
 		// register TheOneProbe integration
 		if (ModList.get().isLoaded("theoneprobe")) {
-			ExtraGolems.LOGGER.debug("Extra Golems detected TheOneProbe, registering plugin now");
+			ExtraGolems.LOGGER.info("Extra Golems detected TheOneProbe, registering plugin now");
 			InterModComms.sendTo(MODID, "theoneprobe", "getTheOneProbe", () -> new com.mcmoddev.golems.integration.TOPDescriptionManager.GetTheOneProbe());
 		}
 	}

@@ -6,7 +6,7 @@
 	  "entries": [
 		{
 		  "type": "item",
-		  "name": "quark:blue_slime_block",
+		  "name": "quark:myalite",
 		  "weight": 1,
 		  "functions": [
 			{
@@ -18,7 +18,10 @@
 			},
 			{
 			  "function": "looting_enchant",
-			  "count": 1
+			  "count": {
+				"min": 1,
+				"max": 2
+			  }
 			}
 		  ]
 		}
@@ -26,21 +29,6 @@
 	},
 	{
 	  "name": "pool1",
-	  "rolls": 1,
-	  "entries": [
-		{
-		  "type": "item",
-		  "name": "minecraft:slime_block",
-		  "weight": 1
-		},
-		{
-		  "type": "empty",
-		  "weight": 1
-		}
-	  ]
-	},
-	{
-	  "name": "pool2",
 	  "rolls": 1,
 	  "entries": [
 		{

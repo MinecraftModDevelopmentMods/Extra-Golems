@@ -45,7 +45,7 @@
 	  "entries": [
 		{
 		  "type": "loot_table",
-		  "name": "golems:entities/golem/framed_glass/framed_glass"
+		  "name": "quark:entities/golem/framed_glass/framed_glass"
 		}
 	  ]
 	}

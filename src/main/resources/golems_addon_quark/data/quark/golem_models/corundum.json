@@ -3,15 +3,15 @@
   "base_template": "quark:corundum/corundum_template",
   "multitexture": {
     "base_map": {
-      "0": "quark:red_crystal",
-	  "1": "quark:orange_crystal",
-	  "2": "quark:yellow_crystal",
-	  "3": "quark:green_crystal",
-	  "4": "quark:blue_crystal",
-	  "5": "quark:indigo_crystal",
-	  "6": "quark:violet_crystal",
-	  "7": "quark:white_crystal",
-	  "8": "quark:black_crystal"
+      "0": "quark:red_corundum",
+	  "1": "quark:orange_corundum",
+	  "2": "quark:yellow_corundum",
+	  "3": "quark:green_corundum",
+	  "4": "quark:blue_corundum",
+	  "5": "quark:indigo_corundum",
+	  "6": "quark:violet_corundum",
+	  "7": "quark:white_corundum",
+	  "8": "quark:black_corundum"
     }
   },
   "vines": {}

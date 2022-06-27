@@ -25,6 +25,13 @@ public class AoeBlocksGoal extends Goal {
 
 	protected int cooldown;
 
+	/**
+	 * @param golemIn the golem entity
+	 * @param rangeIn the radius of this area of effect
+	 * @param intervalIn the number of ticks between each effect
+	 * @param sphereIn true if the AoE is a sphere, false if it is a disc
+	 * @param modifyIn the function to convert blocks when this effect runs
+	 */
 	public AoeBlocksGoal(final GolemBase golemIn, final int rangeIn, final int intervalIn,
 						 final boolean sphereIn, final AoeFunction modifyIn) {
 		entity = golemIn;

@@ -8,47 +8,47 @@
   "glow": 11,
   "sound": "minecraft:block.glass.step",
   "heal_items": {
-    "#quark:crystal": 0.5,
-	"#quark:crystal_pane": 0.15,
-	"#quark:crystal_cluster": 0.15
+    "#quark:corundum": 0.5,
+	"#quark:corundum_pane": 0.15,
+	"#quark:corundum_cluster": 0.15
   },
   "multitexture": {
     "texture_count": 9,
 	"textures": {
 	  "0": {
-		"blocks": "quark:red_crystal",
+		"blocks": "quark:red_corundum",
 		"loot_table": "quark:corundum/red"
 	  },
 	  "1": {
-		"blocks": "quark:orange_crystal",
+		"blocks": "quark:orange_corundum",
 		"loot_table": "quark:corundum/orange"
 	  },
 	  "2": {
-		"blocks": "quark:yellow_crystal",
+		"blocks": "quark:yellow_corundum",
 		"loot_table": "quark:corundum/yellow"
 	  },
 	  "3": {
-		"blocks": "quark:green_crystal",
+		"blocks": "quark:green_corundum",
 		"loot_table": "quark:corundum/green"
 	  },
 	  "4": {
-		"blocks": "quark:blue_crystal",
+		"blocks": "quark:blue_corundum",
 		"loot_table": "quark:corundum/blue"
 	  },
 	  "5": {
-		"blocks": "quark:indigo_crystal",
+		"blocks": "quark:indigo_corundum",
 		"loot_table": "quark:corundum/indigo"
 	  },
 	  "6": {
-		"blocks": "quark:violet_crystal",
+		"blocks": "quark:violet_corundum",
 		"loot_table": "quark:corundum/violet"
 	  },
 	  "7": {
-		"blocks": "quark:white_crystal",
+		"blocks": "quark:white_corundum",
 		"loot_table": "quark:corundum/white"
 	  },
 	  "8": {
-		"blocks": "quark:black_crystal",
+		"blocks": "quark:black_corundum",
 		"loot_table": "quark:corundum/black"
 	  }
     }

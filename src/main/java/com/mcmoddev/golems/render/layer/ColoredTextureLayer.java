@@ -15,6 +15,7 @@ import com.mojang.math.Vector3f;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -49,12 +50,24 @@ public class ColoredTextureLayer<T extends GolemBase> extends RenderLayer<T, Gol
 			layerModel.prepareMobModel(entity, limbSwing, limbSwingAmount, partialTicks);
 			layerModel.setupAnim(entity, limbSwing, limbSwingAmount, partialTicks, netHeadYaw, headPitch);
 			// render all of the layers in the LayerRenderSettings
-			settings.getLayers().forEach(l -> renderTexture(layerModel, settings, l, matrixStackIn, bufferIn, packedLightIn, entity));
+			int packedOverlay = LivingEntityRenderer.getOverlayCoords(entity, 0.0F);
+			settings.getLayers().forEach(l -> renderTexture(entity, layerModel, settings, l, matrixStackIn, bufferIn, packedLightIn, packedOverlay));
 		}
 	}
 
-	protected static <G extends GolemBase> void renderTexture(GolemModel<G> model, GolemRenderSettings settings, LayerRenderSettings layer,
-															  PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, G entity) {
+	/**
+	 * Renders an individual texture using the given LayerRenderSettings
+	 * @param entity the entity
+	 * @param model the parent model
+	 * @param settings the parent render settings
+	 * @param layer the layer render settings
+	 * @param matrixStackIn the pose stack
+	 * @param bufferIn the buffer source
+	 * @param packedLightIn the packed light amount
+	 * @param <G> the golem entity
+	 */
+	protected static <G extends GolemBase> void renderTexture(G entity, GolemModel<G> model, GolemRenderSettings settings, LayerRenderSettings layer,
+															  PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, int packedOverlayIn) {
 		matrixStackIn.pushPose();
 		final ResourcePair texture = layer.getTexture();
 		// get packed light and a vertex builder bound to the correct texture
@@ -79,7 +92,7 @@ public class ColoredTextureLayer<T extends GolemBase> extends RenderLayer<T, Gol
 			colors = ONE;
 		}
 		model.setColor(colors.x(), colors.y(), colors.z());
-		model.renderToBuffer(matrixStackIn, vertexBuilder, packedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+		model.renderToBuffer(matrixStackIn, vertexBuilder, packedLight, packedOverlayIn, 1.0F, 1.0F, 1.0F, 1.0F);
 		if (layer.isTranslucent()) {
 			RenderSystem.disableBlend();
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);

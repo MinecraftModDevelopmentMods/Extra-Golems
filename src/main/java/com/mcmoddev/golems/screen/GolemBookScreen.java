@@ -47,9 +47,9 @@ public class GolemBookScreen extends Screen {
 	protected static final Component BUILD_HEAD_TITLE = new TranslatableComponent("block.golems.golem_head");
 	protected static final Component BUILD_HEAD_PAGE = new TextComponent("\n\n\n\n")
 			.append(new TranslatableComponent("golembook.recipe_head.recipe", BUILD_HEAD_TITLE,
-					new TranslatableComponent("item.golems.golem_paper"), new TranslatableComponent("block.minecraft.pumpkin")));
+					new TranslatableComponent("item.golems.golem_spell"), new TranslatableComponent("block.minecraft.pumpkin")));
 
-	protected static final Component BUILD_SPELL_TITLE = new TranslatableComponent("item.golems.golem_paper");
+	protected static final Component BUILD_SPELL_TITLE = new TranslatableComponent("item.golems.golem_spell");
 	protected static final Component BUILD_SPELL_PAGE = new TextComponent("\n\n\n\n")
 			.append(new TranslatableComponent("golembook.recipe_spell.recipe", BUILD_SPELL_TITLE,
 					new TranslatableComponent("item.minecraft.paper"), new TranslatableComponent("item.minecraft.feather"),
