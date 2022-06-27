@@ -6,6 +6,7 @@ import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.entity.goal.PassiveEffectsGoal;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.effect.MobEffectInstance;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.List;

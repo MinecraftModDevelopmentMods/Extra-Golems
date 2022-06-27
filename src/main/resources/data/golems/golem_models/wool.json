@@ -24,6 +24,10 @@
   "layers": [
     {
 	  "texture": "minecraft:white_wool"
+	},
+	{
+	  "texture": "#golems:wool/outfit_buttons",
+	  "translucent": true
 	}
   ]
 }

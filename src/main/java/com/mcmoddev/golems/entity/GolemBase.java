@@ -135,8 +135,13 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 		this.material = materialIn;
 		this.container = ExtraGolems.GOLEM_CONTAINERS.get(materialIn).orElse(GolemContainer.EMPTY);
 		this.attributes = new AttributeMap(container.getAttributeSupplier().get().build());
-
+		// clear description
+		this.description = null;
+		// update server data
 		if (!level.isClientSide()) {
+			// remove and re-instantiate goals
+			this.goalSelector.removeAllGoals();
+			this.registerGoals();
 			// define behavior for the given swimming ability
 			switch (container.getSwimAbility()) {
 				case FLOAT:
@@ -237,8 +242,8 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 
 	protected void registerGlowGoal() {
 		// register light level AI if enabled
-		if (container.getMaxLightLevel() > 0) {
-			int lightInt = container.getMaxLightLevel();
+		int lightInt = container.getMaxLightLevel();
+		if (lightInt > 0) {
 			final BlockState state = EGRegistry.UTILITY_LIGHT.get().defaultBlockState().setValue(GlowBlock.LIGHT_LEVEL, lightInt);
 			this.goalSelector.addGoal(9, new PlaceUtilityBlocksGoal(this, state, GlowBlock.UPDATE_TICKS,
 					true, (golem, pos) -> golem.isProvidingLight()));
@@ -247,8 +252,8 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 
 	protected void registerPowerGoal() {
 		// register power level AI if enabled
-		if (getContainer().getMaxPowerLevel() > 0) {
-			int powerInt = getContainer().getMaxPowerLevel();
+		int powerInt = getContainer().getMaxPowerLevel();
+		if (powerInt > 0) {
 			final BlockState state = EGRegistry.UTILITY_POWER.get().defaultBlockState().setValue(PowerBlock.POWER_LEVEL, powerInt);
 			final int freq = PowerBlock.UPDATE_TICKS;
 			this.goalSelector.addGoal(9, new PlaceUtilityBlocksGoal(this, state, freq, false, (golem, pos) -> golem.isProvidingPower()));
@@ -446,9 +451,6 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 	@Override
 	protected InteractionResult mobInteract(final Player player, final InteractionHand hand) {
 		ItemStack stack = player.getItemInHand(hand);
-		// DEBUG
-		// ExtraGolems.LOGGER.info(getMaterial() + "=" + getContainer().toString());
-		// ExtraGolems.GOLEM_RENDER_SETTINGS.get(getMaterial()).ifPresent(r -> ExtraGolems.LOGGER.info(r.toString()));
 		// Attempt to remove banner from the entity
 		if (!this.getBanner().isEmpty() && stack.getItem() instanceof ShearsItem) {
 			this.spawnAtLocation(this.getBanner(), this.isBaby() ? 0.9F : 1.4F);

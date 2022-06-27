@@ -3,5 +3,11 @@
   "vines": {
 	"texture": "#golems:layer/vines",
 	"color": 23157
-  }
+  },
+  "layers": [
+	{
+	  "texture": "minecraft:polished_basalt_side",
+	  "template": "golems:layer/hands_template"
+	}
+  ]
 }

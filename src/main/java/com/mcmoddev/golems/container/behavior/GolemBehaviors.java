@@ -41,6 +41,10 @@ public final class GolemBehaviors {
 	 **/
 	public static final ResourceLocation CHANGE_TEXTURE = register("change_texture", ChangeTextureBehavior.class, ChangeTextureBehavior::new);
 	/**
+	 * The ChangeMaterialBehavior key
+	 **/
+	public static final ResourceLocation CHANGE_MATERIAL = register("change_material", ChangeMaterialBehavior.class, ChangeMaterialBehavior::new);
+	/**
 	 * The CraftingMenuBehavior key
 	 **/
 	public static final ResourceLocation CRAFTING_MENU = register("crafting_menu", CraftingMenuBehavior.class, CraftingMenuBehavior::new);

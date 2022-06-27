@@ -31,6 +31,7 @@
     {
 	  "type": "golems:place_blocks",
 	  "interval": 1400,
+	  "translation_key": "entitytip.plants_fungus",
 	  "blocks": [
 	    "minecraft:crimson_fungus"
 	  ],
@@ -42,6 +43,7 @@
 	{
 	  "type": "golems:place_blocks",
 	  "interval": 1600,
+	  "translation_key": "entitytip.plants_fungus",
 	  "blocks": [
 	    "minecraft:warped_fungus"
 	  ]

@@ -1,3 +1,9 @@
 {
-  "base": "minecraft:polished_diorite"
+  "base": "minecraft:polished_diorite",
+  "layers": [
+	{
+	  "texture": "minecraft:polished_diorite",
+	  "template": "golems:layer/hands_template"
+	}
+  ]
 }

@@ -7,6 +7,10 @@
   "layers": [
     {
 	  "texture": "#golems:layer/gold_nuggets"
+	},
+	{
+	  "texture": "minecraft:polished_blackstone",
+	  "template": "golems:layer/hands_template"
 	}
   ]
 }

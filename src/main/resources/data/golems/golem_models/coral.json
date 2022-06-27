@@ -1,4 +1,5 @@
 {
+  "base_template": "golems:coral/coral_template",
   "multitexture": {
     "base_map": {
       "0": "minecraft:tube_coral_block",
@@ -13,8 +14,5 @@
       "9": "minecraft:dead_horn_coral_block"
     }
   },
-  "vines": {
-	"texture": "#golems:layer/vines",
-	"color": 2070638
-  }
+  "vines": {}
 }

@@ -12,6 +12,9 @@
     "minecraft:moss_block": 0.5,
 	"minecraft:moss_carpet": 0.15
   },
+  "particle": {
+	"type": "minecraft:falling_spore_blossom"
+  },
   "behavior": [ 
     {
 	  "type": "golems:passive_effect",
@@ -30,6 +33,7 @@
 	{
 	  "type": "golems:place_blocks",
 	  "interval": 80,
+	  "translation_key": "entitytip.places_moss",
 	  "blocks": [
 	    "minecraft:moss_carpet"
 	  ]

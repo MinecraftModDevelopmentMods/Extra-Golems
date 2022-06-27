@@ -49,6 +49,7 @@
     {
 	  "type": "golems:place_blocks",
 	  "interval": 1050,
+	  "translation_key": "entitytip.plants_mushrooms",
 	  "blocks": [
 	    "minecraft:brown_mushroom",
 		"minecraft:red_mushroom"

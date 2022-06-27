@@ -1,6 +1,7 @@
 package com.mcmoddev.golems;
 
 import com.mcmoddev.golems.container.GolemContainer;
+import net.minecraft.ResourceLocationException;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
@@ -22,11 +23,11 @@ public class EGConfigSpec {
 	protected final ForgeConfigSpec.IntValue villagerGolemSpawnChance;
 	private final ConfigValue<List<? extends String>> villagerGolemSpawns;
 	private static final String[] defaultVillagerGolemSpawns = {
-			"golems:bookshelf", "golems:clay", "golems:coal", "golems:crafting",
-			"golems:glass", "golems:glowstone", "golems:hay", "golems:leaves",
-			"golems:log", "golems:melon", "golems:mushroom", "golems:obsidian",
-			"golems:quartz", "golems:red_sandstone", "golems:sandstone",
-			"golems:terracotta", "golems:wool"
+			"bookshelf", "clay", "coal", "crafting",
+			"glass", "glowstone", "hay", "leaves",
+			"log", "melon", "moss", "mushroom", "obsidian",
+			"quartz", "red_sandstone", "sandstone",
+			"terracotta", "wool"
 	};
 
 	private boolean aprilFirst;
@@ -75,10 +76,17 @@ public class EGConfigSpec {
 
 	public List<ResourceLocation> loadVillagerGolemList() {
 		final List<ResourceLocation> list = new ArrayList<>();
+		// load all villager golem candidates from config
 		for (final String s : villagerGolemSpawns.get()) {
+			// parse each entry as resource location with error-catching
 			if (s != null && !s.isEmpty()) {
-				final Optional<GolemContainer> container = ExtraGolems.GOLEM_CONTAINERS.get(new ResourceLocation(s));
-				container.ifPresent(c -> list.add(new ResourceLocation(s)));
+				try {
+					ResourceLocation golemId = new ResourceLocation(s);
+					final Optional<GolemContainer> container = ExtraGolems.GOLEM_CONTAINERS.get(golemId);
+					container.ifPresent(c -> list.add(new ResourceLocation(s)));
+				} catch (ResourceLocationException e) {
+					ExtraGolems.LOGGER.error("Invalid golem ID in config file for villager_summon_golems: \"" + s + "\"");
+				}
 			}
 		}
 		return list;

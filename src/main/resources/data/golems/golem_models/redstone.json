@@ -1,4 +1,14 @@
 {
   "base": "minecraft:redstone_block",
-  "base_light": true
+  "base_light": true,
+  "layers": [
+	{
+	  "texture": "minecraft:redstone_block",
+	  "template": "golems:layer/hands_template"
+	},
+	{
+	  "texture": "#golems:layer/redstone",
+	  "template": "golems:layer/cross_template"
+	}
+  ]
 }

@@ -8,6 +8,7 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,19 +16,27 @@ import java.util.Map;
 @Immutable
 public abstract class BehaviorParameter {
 
+	public static final String S_TRANSLATION_KEY = "translation_key";
+
 	public BehaviorParameter() {
 	}
+
+	@Nullable
+	public static MobEffectInstance readEffect(final CompoundTag effect) {
+		// attempt to add byte Id from potion tag
+		if (!effect.contains("Id") && effect.contains("Potion")) {
+			effect.putByte("Id", (byte) MobEffect.getId(ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation(effect.getString("Potion")))));
+		}
+		return MobEffectInstance.load(effect);
+	}
+
 
 	protected static MobEffectInstance[] readEffectArray(final ListTag effectList) {
 		// create an EffectInstance array of this size
 		MobEffectInstance[] effects = new MobEffectInstance[effectList.size()];
 		for (int i = 0, l = effectList.size(); i < l; i++) {
-			CompoundTag effect = (CompoundTag) effectList.get(i);
-			// attempt to add byte Id from potion tag
-			if (!effect.contains("Id") && effect.contains("Potion")) {
-				effect.putByte("Id", (byte) MobEffect.getId(ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation(effect.getString("Potion")))));
-			}
-			effects[i] = MobEffectInstance.load(effect);
+			CompoundTag effectTag = (CompoundTag) effectList.get(i);
+			effects[i] = readEffect(effectTag);
 		}
 		return effects;
 	}

@@ -1,3 +1,9 @@
 {
-  "base": "minecraft:furnace_top"
+  "base": "minecraft:furnace_top",
+  "layers": [
+	{
+	  "texture": "minecraft:furnace_top",
+	  "template": "golems:layer/hands_template"
+	}
+  ]
 }

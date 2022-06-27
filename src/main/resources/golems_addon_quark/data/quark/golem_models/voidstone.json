@@ -1,4 +1,10 @@
 {
   "base": "quark:polished_basalt",
-  "vines": {}
+  "vines": {},
+  "layers": [
+	{
+	  "texture": "quark:polished_basalt",
+	  "template": "golems:layer/hands_template"
+	}
+  ]
 }

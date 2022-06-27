@@ -22,8 +22,6 @@ import java.util.Optional;
 @Immutable
 public class SummonEntityBehaviorParameter extends BehaviorParameter {
 
-	public static final String S_TRANSLATION_KEY = "translation_key";
-
 	private final Target target;
 	private final Target targetPos;
 	private final ResourceLocation entityId;

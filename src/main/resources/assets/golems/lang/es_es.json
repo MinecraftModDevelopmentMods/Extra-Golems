@@ -84,7 +84,7 @@
   "entitytip.plants_flowers": "Planta Flores",
   "entitytip.plants_shrooms": "Planta Champi\u00f1es",
   "entitytip.plants_x": "Planta %s",
-  "entitytip.place_blocks": "Coloca bloques",
+  "entitytip.places_blocks": "Coloca bloques",
   "entitytip.lights_mobs_on_fire": "Enciende a las criaturas",
   "entitytip.slowly_melts": "Derrite lentamente la %s",
   "entitytip.has_knockback": "Ataque de empujo masivo!",

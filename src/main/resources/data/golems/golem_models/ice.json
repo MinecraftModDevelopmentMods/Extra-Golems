@@ -1,5 +1,9 @@
 {
   "base": "minecraft:ice",
+  "base_template": "golems:ice/ice_template",
   "translucent": true,
-  "vines": {}
+  "vines": {},
+  "eyes": {
+	"texture": "#golems:layer/eyes/white"
+  }
 }

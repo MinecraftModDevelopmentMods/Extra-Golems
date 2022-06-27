@@ -1,3 +1,9 @@
 {
-  "base": "minecraft:polished_deepslate"
+  "base": "minecraft:polished_deepslate",
+  "layers": [
+	{
+	  "texture": "minecraft:polished_deepslate",
+	  "template": "golems:layer/hands_template"
+	}
+  ]
 }

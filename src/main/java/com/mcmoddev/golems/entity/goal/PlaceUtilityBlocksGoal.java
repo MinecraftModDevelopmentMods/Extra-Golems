@@ -3,6 +3,7 @@ package com.mcmoddev.golems.entity.goal;
 import com.mcmoddev.golems.entity.GolemBase;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -72,7 +73,7 @@ public class PlaceUtilityBlocksGoal extends Goal {
 					return;
 				}
 				if (this.predicate.test(golem, pos)) {
-					this.golem.level.setBlock(pos, getStateToPlace(cur), 2 | 4);
+					this.golem.level.setBlock(pos, getStateToPlace(cur), Block.UPDATE_CLIENTS | Block.UPDATE_INVISIBLE);
 					return;
 				}
 			}
@@ -93,7 +94,10 @@ public class PlaceUtilityBlocksGoal extends Goal {
 	 * the given state
 	 **/
 	public static BlockState getStateWaterlogged(final BlockState stateIn) {
-		return canBeWaterlogged(stateIn) ? stateIn.setValue(BlockStateProperties.WATERLOGGED, true) : stateIn;
+		if(canBeWaterlogged(stateIn)) {
+			return stateIn.setValue(BlockStateProperties.WATERLOGGED, true);
+		}
+		return stateIn;
 	}
 
 	/**

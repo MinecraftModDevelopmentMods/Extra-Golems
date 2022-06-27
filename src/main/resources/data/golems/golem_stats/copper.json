@@ -64,6 +64,35 @@
 	      "2": 3,
 	      "3": 3
 	    }
+	  },
+	  "wet": {
+		"chance": 0.00010,
+		"textures": {
+		  "0": 1,
+		  "1": 2,
+		  "2": 3,
+		  "3": 3
+		}
+	  },
+	  "items": {
+		"#forge:axe": {
+		  "chance": 1.0,
+		  "textures": {
+			"0": 0,
+			"1": 0,
+			"2": 1,
+			"3": 2
+		  }
+		}
+	  }
+	},
+	{
+	  "type": "golems:change_material",
+	  "items": {
+		"minecraft:honeycomb": {
+		  "chance": 1.0,
+		  "material": "golems:waxed_copper"
+		}
 	  }
 	}
   ]

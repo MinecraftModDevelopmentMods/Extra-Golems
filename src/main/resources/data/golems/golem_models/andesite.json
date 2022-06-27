@@ -1,3 +1,9 @@
 {
-  "base": "minecraft:polished_andesite"
+  "base": "minecraft:polished_andesite",
+  "layers": [
+	{
+	  "texture": "minecraft:polished_andesite",
+	  "template": "golems:layer/hands_template"
+	}
+  ]
 }

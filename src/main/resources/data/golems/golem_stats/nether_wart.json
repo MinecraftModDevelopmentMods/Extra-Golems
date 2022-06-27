@@ -29,6 +29,7 @@
     {
 	  "type": "golems:place_blocks",
 	  "interval": 1050,
+	  "translation_key": "entitytip.plants_nether_wart",
 	  "blocks": [
 	    "minecraft:nether_wart"
 	  ]

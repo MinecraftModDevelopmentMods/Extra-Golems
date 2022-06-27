@@ -1,3 +1,9 @@
 {
-  "base": "quark:polished_limestone"
+  "base": "quark:polished_limestone",
+  "layers": [
+	{
+	  "texture": "quark:polished_limestone",
+	  "template": "golems:layer/hands_template"
+	}
+  ]
 }

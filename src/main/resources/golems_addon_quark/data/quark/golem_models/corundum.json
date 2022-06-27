@@ -1,5 +1,6 @@
 {
   "translucent": true,
+  "base_template": "quark:corundum/corundum_template",
   "multitexture": {
     "base_map": {
       "0": "quark:red_crystal",

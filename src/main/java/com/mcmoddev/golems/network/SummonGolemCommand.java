@@ -48,7 +48,7 @@ public class SummonGolemCommand {
 
 	private static int summonGolem(CommandSourceStack source, ResourceLocation id, BlockPos pos, CompoundTag tag) throws CommandSyntaxException {
 		// hard-coded namespace support
-		if (id.getNamespace().equals("minecraft")) {
+		if ("minecraft".equals(id.getNamespace())) {
 			id = new ResourceLocation(ExtraGolems.MODID, id.getPath());
 		}
 		// validate the id

@@ -6,6 +6,7 @@
 	  "1": "minecraft:red_mushroom_block"
     }
   },
+  "vines": {},
   "layers": [
     {
 	  "texture": "minecraft:mushroom_stem",

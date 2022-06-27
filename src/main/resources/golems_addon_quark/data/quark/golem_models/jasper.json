@@ -1,3 +1,9 @@
 {
-  "base": "quark:polished_jasper"
+  "base": "quark:polished_jasper",
+  "layers": [
+	{
+	  "texture": "quark:polished_jasper",
+	  "template": "golems:layer/hands_template"
+	}
+  ]
 }

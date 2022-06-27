@@ -1,5 +1,6 @@
 {
   "base": "minecraft:oak_leaves",
+  "base_template": "golems:leaves/leaves_template",
   "use_biome_color": true,
   "vines": {
 	"texture": "#golems:layer/vines",

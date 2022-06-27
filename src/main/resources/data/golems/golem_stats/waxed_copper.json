@@ -53,6 +53,15 @@
 	      "id": "minecraft:lightning_bolt"
 	    }
 	  }
+	},
+	{
+	  "type": "golems:change_material",
+	  "items": {
+		"#forge:axe": {
+		  "chance": 1.0,
+		  "material": "golems:copper"
+		}
+	  }
 	}
   ]
 }

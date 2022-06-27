@@ -44,6 +44,6 @@ public class ChangeTexturesBehaviorParameter extends BehaviorParameter {
 
 	@Override
 	public String toString() {
-		return "ConditionalTextures: chance[" + chance + "] textureMap[" + textureMap.toString() + "]";
+		return "ChangeTexturesBehaviorParameter: chance[" + chance + "] textureMap[" + textureMap.toString() + "]";
 	}
 }

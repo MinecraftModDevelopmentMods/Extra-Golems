@@ -3,5 +3,11 @@
   "eyes": {
 	"texture": "#golems:layer/eyes/creeper",
 	"light": true
-  }
+  },
+  "layers": [
+    {
+	  "texture": "#golems:layer/tnt",
+	  "template": "golems:layer/cross_template"
+	}
+  ]
 }
