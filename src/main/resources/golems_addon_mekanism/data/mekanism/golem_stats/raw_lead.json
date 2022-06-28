@@ -1,0 +1,15 @@
+{
+  "attributes": {
+    "health": 58.0,
+    "attack": 7.5,
+    "speed": 0.23,
+    "knockback_resistance": 0.6
+  },
+  "sound": "minecraft:block.metal.step",
+  "blocks": "#forge:storage_blocks/raw_lead",
+  "heal_items": {
+    "#forge:storage_blocks/raw_lead": 0.5,
+    "#forge:ingots/lead": 0.15
+  },
+  "behavior": [ ]
+}

@@ -9,7 +9,7 @@ issueTrackerURL="https://github.com/MinecraftModDevelopmentMods/Extra-Golems/iss
 
 [[mods]]
     modId="golems"
-    version="18.2.0"
+    version="18.2.1"
     displayName="Extra Golems"
     credits="TheGlitch76, jriwanek, AtelierAmber, and translators - Thanks!"
     authors="skyjay1 and the MMD Team"

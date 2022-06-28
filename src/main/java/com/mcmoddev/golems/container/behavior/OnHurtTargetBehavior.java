@@ -63,7 +63,7 @@ public class OnHurtTargetBehavior extends GolemBehavior {
 		effect.ifPresent(p -> {
 			if (p.getTarget() == Target.SELF && !list.contains(EFFECTS_SELF_DESC)) {
 				list.add(EFFECTS_SELF_DESC);
-			} else if (p.getTarget() == Target.ENEMY && !list.contains(EFFECTS_ENEMY_DESC)) {
+			} else if ((p.getTarget() == Target.ENEMY || p.getTarget() == Target.AREA) && !list.contains(EFFECTS_ENEMY_DESC)) {
 				list.add(EFFECTS_ENEMY_DESC);
 			}
 		});

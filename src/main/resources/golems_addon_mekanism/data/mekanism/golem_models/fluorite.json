@@ -1,0 +1,4 @@
+{
+  "base": "mekanism:block_fluorite",
+  "base_template": "golems:ice/ice_template"
+}

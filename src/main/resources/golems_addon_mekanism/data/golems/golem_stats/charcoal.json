@@ -1,0 +1,31 @@
+{
+  "attributes": {
+    "health": 24.0,
+    "attack": 5.5,
+    "speed": 0.28,
+	"knockback_resistance": 0.2
+  },
+  "blocks": [
+	"#forge:storage_blocks/charcoal"
+  ],
+  "heal_items": {
+    "#forge:charcoal": 0.15,
+	"#forge:storage_blocks/charcoal": 0.5
+  },
+  "behavior": [ 
+    {
+	  "type": "golems:attack",
+	  "effect": {
+		"target": "enemy",
+		"chance": 0.4,
+		"effects": [
+	      {
+  	  	    "Potion": "minecraft:blindness",
+  	  	    "Amplifier": 0,
+  	  	    "Duration": 90
+  	      }
+	    ]
+	  }
+	}
+  ]
+}

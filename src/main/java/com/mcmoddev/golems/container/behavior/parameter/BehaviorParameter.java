@@ -61,7 +61,8 @@ public abstract class BehaviorParameter {
 
 	public enum Target implements StringRepresentable {
 		SELF("self"),
-		ENEMY("enemy");
+		ENEMY("enemy"),
+		AREA("area");
 
 		private final String name;
 
@@ -74,9 +75,9 @@ public abstract class BehaviorParameter {
 		 * @return the Target with this name, or SELF as a fallback
 		 */
 		public static Target getByName(final String nameIn) {
-			for (final Target swim : Target.values()) {
-				if (swim.getSerializedName().equals(nameIn)) {
-					return swim;
+			for (final Target t : Target.values()) {
+				if (t.getSerializedName().equals(nameIn)) {
+					return t;
 				}
 			}
 			// default to SELF

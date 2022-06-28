@@ -1,0 +1,30 @@
+{
+  "attributes": {
+    "health": 70.0,
+    "attack": 7.5,
+    "knockback_resistance": 0.6
+  },
+  "sound": "minecraft:block.metal.step",
+  "blocks": "#forge:storage_blocks/raw_uranium",
+  "heal_items": {
+    "#forge:storage_blocks/raw_uranium": 0.5,
+    "#forge:ingots/uranium": 0.15
+  },
+  "behavior": [
+	{
+	  "type": "golems:passive_effect",
+	  "effect": {
+		"target": "area",
+		"chance": 0.25,
+		"range": 1.25,
+		"effects": [
+		  {
+			"Potion": "minecraft:poison",
+			"Amplifier": 0,
+			"Duration": 40
+		  }
+		]
+	  }
+	}
+  ]
+}

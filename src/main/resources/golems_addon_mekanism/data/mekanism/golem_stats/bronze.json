@@ -1,0 +1,14 @@
+{
+  "attributes": {
+    "health": 115.0,
+    "attack": 8.5,
+    "knockback_resistance": 0.8
+  },
+  "sound": "minecraft:block.metal.step",
+  "blocks": "#forge:storage_blocks/bronze",
+  "heal_items": {
+    "#forge:storage_blocks/bronze": 0.5,
+    "#forge:ingots/bronze": 0.15
+  },
+  "behavior": [ ]
+}

@@ -1,0 +1,14 @@
+{
+  "attributes": {
+    "health": 58.0,
+    "attack": 9.5,
+    "immune_to_fire": true
+  },
+  "glow": 15,
+  "blocks": "#forge:storage_blocks/refined_glowstone",
+  "heal_items": {
+    "#forge:storage_blocks/refined_glowstone": 0.5,
+    "#forge:ingots/refined_glowstone": 0.15
+  },
+  "behavior": [ ]
+}

@@ -1,0 +1,14 @@
+{
+  "attributes": {
+    "health": 32.0,
+    "attack": 5.0,
+    "knockback_resistance": 0.6
+  },
+  "sound": "minecraft:block.metal.step",
+  "blocks": "#forge:storage_blocks/raw_tin",
+  "heal_items": {
+    "#forge:storage_blocks/raw_tin": 0.5,
+    "#forge:ingots/tin": 0.15
+  },
+  "behavior": [ ]
+}

@@ -25,52 +25,61 @@ public class OnActuallyHurtBehavior extends GolemBehavior {
 	/**
 	 * An optional containing the fire parameter, if present
 	 **/
-	protected final Optional<FireBehaviorParameter> fire;
+	protected final FireBehaviorParameter fire;
 	/**
 	 * An optional containing the mob effect parameter, if present
 	 **/
-	protected final Optional<MobEffectBehaviorParameter> effect;
+	protected final MobEffectBehaviorParameter effect;
 	/**
 	 * An optional containing the summon entity parameter, if present
 	 **/
-	protected final Optional<SummonEntityBehaviorParameter> summon;
+	protected final SummonEntityBehaviorParameter summon;
 
 	public OnActuallyHurtBehavior(CompoundTag tag) {
 		super(tag);
-		fire = tag.contains("fire") ? Optional.of(new FireBehaviorParameter(tag.getCompound("fire"))) : Optional.empty();
-		effect = tag.contains("effect") ? Optional.of(new MobEffectBehaviorParameter(tag.getCompound("effect"))) : Optional.empty();
-		summon = tag.contains("summon") ? Optional.of(new SummonEntityBehaviorParameter(tag.getCompound("summon"))) : Optional.empty();
+		fire = tag.contains("fire") ? new FireBehaviorParameter(tag.getCompound("fire")) : null;
+		effect = tag.contains("effect") ? new MobEffectBehaviorParameter(tag.getCompound("effect")) : null;
+		summon = tag.contains("summon") ? new SummonEntityBehaviorParameter(tag.getCompound("summon")) : null;
 	}
 
 	@Override
 	public void onActuallyHurt(final GolemBase entity, final DamageSource source, final float amount) {
 		if (!entity.isBaby()) {
-			fire.ifPresent(p -> p.apply(entity, source.getEntity()));
-			if (source.getEntity() instanceof LivingEntity) {
-				effect.ifPresent(p -> p.apply(entity, (LivingEntity) source.getEntity()));
+			// apply fire
+			if(fire != null) {
+				fire.apply(entity, source.getEntity());
 			}
-			summon.ifPresent(p -> p.apply(entity, source.getEntity()));
+			// apply effect
+			if(effect != null && source.getEntity() instanceof LivingEntity) {
+				effect.apply(entity, (LivingEntity) source.getEntity());
+			}
+			// apply summon
+			if(summon != null) {
+				summon.apply(entity, source.getEntity());
+			}
 		}
 	}
 
 	@Override
 	public void onAddDescriptions(List<Component> list) {
-		fire.ifPresent(p -> {
-			if (p.getTarget() == Target.ENEMY && !list.contains(FIRE_DESC)) {
-				list.add(FIRE_DESC);
-			}
-		});
-		effect.ifPresent(p -> {
-			if (p.getTarget() == Target.SELF && !list.contains(EFFECTS_SELF_DESC)) {
+		// add fire description
+		if(fire != null && fire.getTarget() != Target.SELF && !list.contains(FIRE_DESC)) {
+			list.add(FIRE_DESC);
+		}
+		// add effect description
+		if(effect != null) {
+			if (effect.getTarget() == Target.SELF && !list.contains(EFFECTS_SELF_DESC)) {
 				list.add(EFFECTS_SELF_DESC);
-			} else if (p.getTarget() == Target.ENEMY && !list.contains(EFFECTS_ENEMY_DESC)) {
+			} else if (effect.getTarget() != Target.SELF && !list.contains(EFFECTS_ENEMY_DESC)) {
 				list.add(EFFECTS_ENEMY_DESC);
 			}
-		});
-		summon.ifPresent(p -> {
-			if (!list.contains(p.getDescription())) {
-				list.add(p.getDescription());
+		}
+		// add summon description
+		if(summon != null) {
+			Component desc = summon.getDescription();
+			if(!list.contains(desc)) {
+				list.add(desc);
 			}
-		});
+		}
 	}
 }

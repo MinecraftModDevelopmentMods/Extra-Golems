@@ -20,18 +20,30 @@ public final class AddonLoader {
 	/** Datapack name for Quark addon **/
 	private static final String QUARK_PACK_NAME = "golems_addon_quark";
 
+	/** Mod Id for Mekanism (by bradyaidanc) **/
+	public static final String MEKANISM = "mekanism";
+	/** Datapack name for Mekanism addon **/
+	private static final String MEKANISM_PACK_NAME = "golems_addon_mekanism";
+
 	private static boolean isQuarkLoaded;
+	private static boolean isMekanismLoaded;
 
 	/**
 	 * Called from FMLCommonSetupEvent to determine which mods are loaded
 	 */
 	public static void init() {
 		isQuarkLoaded = ModList.get().isLoaded(QUARK);
+		isMekanismLoaded = ModList.get().isLoaded(MEKANISM);
 	}
 
 	/** @return true if Quark is present **/
 	public static boolean isQuarkLoaded() {
 		return isQuarkLoaded;
+	}
+
+	/** @return true if Mekanism is present **/
+	public static boolean isMekanismLoaded() {
+		return isMekanismLoaded;
 	}
 
 	public static void onAddPackFinders(final AddPackFindersEvent event) {
@@ -42,8 +54,14 @@ public final class AddonLoader {
 				ExtraGolems.LOGGER.info("Extra Golems detected Quark, registering data pack now");
 				registerAddon(event, QUARK_PACK_NAME);
 			}
-			// TODO register Mekanism data pack
+			// register Mekanism data pack
+			if(isMekanismLoaded()) {
+				ExtraGolems.LOGGER.info("Extra Golems detected Mekanism, registering data pack now");
+				registerAddon(event, MEKANISM_PACK_NAME);
+			}
 			// TODO register Thermal data pack
+			// TODO register Biomes O Plenty data pack
+			// TODO register Botania data pack
 		}
 	}
 
@@ -52,7 +70,7 @@ public final class AddonLoader {
 			Pack pack = Pack.create(ExtraGolems.MODID + ":" + packName, true, () -> {
 				Path path = ModList.get().getModFileById(ExtraGolems.MODID).getFile().findResource("/" + packName);
 				return new PathResourcePack(packName, path);
-			}, constructor, Pack.Position.BOTTOM, PackSource.DEFAULT);
+			}, constructor, Pack.Position.TOP, PackSource.DEFAULT);
 
 			if (pack != null) {
 				packConsumer.accept(pack);

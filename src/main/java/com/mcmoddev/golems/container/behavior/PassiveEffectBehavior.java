@@ -25,27 +25,29 @@ public class PassiveEffectBehavior extends GolemBehavior {
 	/**
 	 * An optional containing the mob effect parameter, if present
 	 **/
-	protected final Optional<MobEffectBehaviorParameter> effect;
+	protected final MobEffectBehaviorParameter effect;
 
 	public PassiveEffectBehavior(CompoundTag tag) {
 		super(tag);
 		nightOnly = tag.getBoolean("night_only");
-		effect = tag.contains("effect") ? Optional.of(new MobEffectBehaviorParameter(tag.getCompound("effect"))) : Optional.empty();
+		effect = tag.contains("effect") ? new MobEffectBehaviorParameter(tag.getCompound("effect")) : null;
 	}
 
 	@Override
 	public void onRegisterGoals(final GolemBase entity) {
-		effect.ifPresent(e -> entity.goalSelector.addGoal(4, new PassiveEffectsGoal(entity, e.getEffects(), nightOnly, e.getTarget() == Target.SELF, (float) e.getChance())));
+		if(effect != null) {
+			entity.goalSelector.addGoal(4, new PassiveEffectsGoal(entity, effect.getEffects(), nightOnly, effect.getTarget(), (float) effect.getChance(), effect.getRange()));
+		}
 	}
 
 	@Override
 	public void onAddDescriptions(List<Component> list) {
-		effect.ifPresent(p -> {
-			if (p.getTarget() == Target.SELF && !list.contains(EFFECTS_SELF_DESC)) {
+		if(effect != null) {
+			if (effect.getTarget() == Target.SELF && !list.contains(EFFECTS_SELF_DESC)) {
 				list.add(EFFECTS_SELF_DESC);
-			} else if (p.getTarget() == Target.ENEMY && !list.contains(EFFECTS_ENEMY_DESC)) {
+			} else if (effect.getTarget() != Target.SELF && !list.contains(EFFECTS_ENEMY_DESC)) {
 				list.add(EFFECTS_ENEMY_DESC);
 			}
-		});
+		}
 	}
 }
