@@ -1,0 +1,16 @@
+{
+  "attributes": {
+    "health": 67,
+    "attack": 7,
+    "attack_knockback": 0.2
+  },
+  "sound": "minecraft:block.glass.step",
+  "blocks": [
+    "#tconstruct:slime_crystal_block"
+  ],
+  "heal_items": {
+    "#tconstruct:slime_crystal_block": 0.5,
+    "#forge:slimeballs": 0.15
+  },
+  "behavior": [ ]
+}

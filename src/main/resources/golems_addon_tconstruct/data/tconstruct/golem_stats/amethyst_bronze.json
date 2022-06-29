@@ -1,0 +1,15 @@
+{
+  "attributes": {
+    "health": 68,
+    "attack": 9.5
+  },
+  "sound": "minecraft:block.metal.step",
+  "blocks": [
+    "#forge:storage_blocks/amethyst_bronze"
+  ],
+  "heal_items": {
+    "#forge:storage_blocks/amethyst_bronze": 0.5,
+    "#forge:ingots/amethyst_bronze": 0.15
+  },
+  "behavior": [ ]
+}

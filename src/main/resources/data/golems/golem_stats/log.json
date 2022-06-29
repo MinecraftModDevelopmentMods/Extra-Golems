@@ -6,6 +6,7 @@
     "knockback_resistance": 0.2
   },
   "swim_ability": "float",
+  "sound": "minecraft:block.wood.step",
   "heal_items": {
     "#minecraft:logs_that_burn": 0.5,
 	"minecraft:oak_planks": 0.15,

@@ -1,0 +1,15 @@
+{
+  "attributes": {
+    "health": 102,
+    "attack": 6.5
+  },
+  "sound": "minecraft:block.metal.step",
+  "blocks": [
+    "#forge:storage_blocks/queens_slime"
+  ],
+  "heal_items": {
+    "#forge:storage_blocks/queens_slime": 0.5,
+    "#forge:ingots/queens_slime": 0.15
+  },
+  "behavior": [ ]
+}

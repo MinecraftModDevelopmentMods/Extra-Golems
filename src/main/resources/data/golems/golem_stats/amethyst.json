@@ -4,6 +4,7 @@
     "attack": 12.5,
     "hurt_by_fall": true
   },
+  "sound": "minecraft:block.glass.step",
   "blocks": "#forge:storage_blocks/amethyst",
   "heal_items": {
     "#forge:storage_blocks/amethyst": 0.5,

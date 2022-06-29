@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "tconstruct:earth_slime_crystal_block",
+	"tconstruct:sky_slime_crystal_block",
+	"tconstruct:ichor_slime_crystal_block",
+	"tconstruct:ender_slime_crystal_block"
+  ]
+}

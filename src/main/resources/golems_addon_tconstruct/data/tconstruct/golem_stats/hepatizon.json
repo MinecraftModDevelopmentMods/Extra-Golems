@@ -1,0 +1,15 @@
+{
+  "attributes": {
+    "health": 48,
+    "attack": 6.5
+  },
+  "sound": "minecraft:block.metal.step",
+  "blocks": [
+    "#forge:storage_blocks/hepatizon"
+  ],
+  "heal_items": {
+    "#forge:storage_blocks/hepatizon": 0.5,
+    "#forge:ingots/hepatizon": 0.15
+  },
+  "behavior": [ ]
+}

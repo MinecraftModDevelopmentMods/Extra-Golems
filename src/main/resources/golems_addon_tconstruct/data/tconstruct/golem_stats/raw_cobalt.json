@@ -1,0 +1,18 @@
+{
+  "attributes": {
+    "health": 114,
+    "attack": 16,
+    "knockback_resistance": 0.6,
+    "immune_to_fire": true,
+    "immune_to_explosions": true
+  },
+  "sound": "minecraft:block.metal.step",
+  "blocks": [
+    "#forge:storage_blocks/raw_cobalt"
+  ],
+  "heal_items": {
+    "#forge:storage_blocks/raw_cobalt": 0.5,
+    "#forge:raw_materials/cobalt": 0.15
+  },
+  "behavior": [ ]
+}

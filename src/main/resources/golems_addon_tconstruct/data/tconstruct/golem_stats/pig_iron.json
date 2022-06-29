@@ -1,0 +1,15 @@
+{
+  "attributes": {
+    "health": 164,
+    "attack": 12.5
+  },
+  "sound": "minecraft:block.metal.step",
+  "blocks": [
+    "#forge:storage_blocks/pig_iron"
+  ],
+  "heal_items": {
+    "#forge:storage_blocks/pig_iron": 0.5,
+    "#forge:ingots/pig_iron": 0.15
+  },
+  "behavior": [ ]
+}

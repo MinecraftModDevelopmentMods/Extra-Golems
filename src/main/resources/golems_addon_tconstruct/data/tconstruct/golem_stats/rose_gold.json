@@ -1,0 +1,16 @@
+{
+  "attributes": {
+    "health": 75,
+    "attack": 11,
+    "speed": 0.21
+  },
+  "sound": "minecraft:block.metal.step",
+  "blocks": [
+    "#forge:storage_blocks/rose_gold"
+  ],
+  "heal_items": {
+    "#forge:storage_blocks/rose_gold": 0.5,
+    "#forge:ingots/rose_gold": 0.15
+  },
+  "behavior": [ ]
+}

@@ -1,0 +1,18 @@
+{
+  "attributes": {
+    "health": 35,
+    "attack": 18.5,
+    "speed": 0.28,
+    "immune_to_explosions": true
+  },
+  "glow": 5,
+  "sound": "minecraft:block.glass.step",
+  "blocks": [
+    "tconstruct:soul_glass"
+  ],
+  "heal_items": {
+    "tconstruct:soul_glass": 0.5,
+    "#forge:glass": 0.15
+  },
+  "behavior": [ ]
+}

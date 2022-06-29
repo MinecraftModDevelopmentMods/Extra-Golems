@@ -1,0 +1,18 @@
+{
+  "attributes": {
+    "health": 20,
+    "attack": 6,
+    "speed": 0.29,
+    "immune_to_fire": true
+  },
+  "swim_ability": "float",
+  "sound": "minecraft:block.wood.step",
+  "blocks": [
+    "#tconstruct:slimy_logs"
+  ],
+  "heal_items": {
+    "#tconstruct:slimy_logs": 0.5,
+    "#tconstruct:slimy_planks": 0.15
+  },
+  "behavior": [ ]
+}

@@ -1,0 +1,15 @@
+{
+  "attributes": {
+    "health": 10,
+    "attack": 2,
+    "speed": 0.23
+  },
+  "blocks": [
+    "tconstruct:mud_bricks"
+  ],
+  "heal_items": {
+    "tconstruct:mud_bricks": 0.5,
+    "#minecraft:dirt": 0.15
+  },
+  "behavior": [ ]
+}

@@ -1,0 +1,16 @@
+{
+  "attributes": {
+    "health": 32,
+    "attack": 5,
+    "immune_to_fire": true
+  },
+  "sound": "minecraft:block.gravel.step",
+  "blocks": [
+    "tconstruct:grout"
+  ],
+  "heal_items": {
+    "tconstruct:grout": 0.5,
+    "#forge:gravel": 0.15
+  },
+  "behavior": [ ]
+}
