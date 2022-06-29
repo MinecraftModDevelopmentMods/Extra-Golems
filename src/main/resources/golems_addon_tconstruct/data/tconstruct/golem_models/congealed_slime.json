@@ -1,3 +1,11 @@
 {
-  "base": "tconstruct:slime/storage/congealed_ichor"
+  "multitexture": {
+	"base_map": {
+	  "0": "tconstruct:slime/storage/congealed_earth",
+	  "1": "tconstruct:slime/storage/congealed_sky",
+	  "2": "tconstruct:slime/storage/congealed_ichor",
+	  "3": "tconstruct:slime/storage/congealed_ender",
+	  "4": "tconstruct:slime/storage/congealed_blood"
+	}
+  }
 }

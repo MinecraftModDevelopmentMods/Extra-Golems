@@ -5,12 +5,45 @@
     "attack_knockback": 0.2
   },
   "sound": "minecraft:block.glass.step",
-  "blocks": [
-    "#tconstruct:slime_crystal_block"
-  ],
   "heal_items": {
     "#tconstruct:slime_crystal_block": 0.5,
     "#forge:slimeballs": 0.15
   },
-  "behavior": [ ]
+  "multitexture": {
+	"texture_count": 4,
+	"textures": {
+	  "0": {
+		"blocks": "tconstruct:earth_slime_crystal_block",
+		"loot_table": "tconstruct:slime_crystal/earth"
+	  },
+	  "1": {
+		"blocks": "tconstruct:sky_slime_crystal_block",
+		"loot_table": "tconstruct:slime_crystal/sky"
+	  },
+	  "2": {
+		"blocks": "tconstruct:ichor_slime_crystal_block",
+		"loot_table": "tconstruct:slime_crystal/ichor"
+	  },
+	  "3": {
+		"blocks": "tconstruct:ender_slime_crystal_block",
+		"loot_table": "tconstruct:slime_crystal/ender"
+	  }
+	}
+  },
+  "behavior": [
+	{
+	  "type": "golems:passive_effect",
+	  "effect": {
+		"target": "self",
+		"chance": 0.0012,
+		"effects": [
+		  {
+			"Potion": "minecraft:strength",
+			"Amplifier": 0,
+			"Duration": 600
+		  }
+		]
+	  }
+	}
+  ]
 }

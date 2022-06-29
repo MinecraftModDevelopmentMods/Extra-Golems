@@ -1,3 +1,9 @@
 {
-  "base": "tconstruct:wood/greenheart/log"
+  "multitexture": {
+	"base_map": {
+	  "0": "tconstruct:wood/bloodshroom/log",
+	  "1": "tconstruct:wood/greenheart/log",
+	  "2": "tconstruct:wood/skyroot/log"
+	}
+  }
 }

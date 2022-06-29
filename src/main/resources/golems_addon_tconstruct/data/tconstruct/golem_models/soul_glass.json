@@ -1,3 +1,5 @@
 {
-  "base": "tconstruct:soul_glass_top"
+  "base": "tconstruct:soul_glass",
+  "translucent": true,
+  "vines": {}
 }

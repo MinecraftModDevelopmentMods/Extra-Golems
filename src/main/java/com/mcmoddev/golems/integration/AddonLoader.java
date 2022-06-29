@@ -25,8 +25,14 @@ public final class AddonLoader {
 	/** Datapack name for Mekanism addon **/
 	private static final String MEKANISM_PACK_NAME = "golems_addon_mekanism";
 
+	/** Mod Id for Tinkers Construct (by mDiyo) **/
+	public static final String TCONSTRUCT = "tconstruct";
+	/** Datapack name for Tinkers addon **/
+	private static final String TCONSTRUCT_PACK_NAME = "golems_addon_tconstruct";
+
 	private static boolean isQuarkLoaded;
 	private static boolean isMekanismLoaded;
+	private static boolean isTinkersLoaded;
 
 	/**
 	 * Called from FMLCommonSetupEvent to determine which mods are loaded
@@ -34,6 +40,7 @@ public final class AddonLoader {
 	public static void init() {
 		isQuarkLoaded = ModList.get().isLoaded(QUARK);
 		isMekanismLoaded = ModList.get().isLoaded(MEKANISM);
+		isTinkersLoaded = ModList.get().isLoaded(TCONSTRUCT);
 	}
 
 	/** @return true if Quark is present **/
@@ -44,6 +51,11 @@ public final class AddonLoader {
 	/** @return true if Mekanism is present **/
 	public static boolean isMekanismLoaded() {
 		return isMekanismLoaded;
+	}
+
+	/** @return true if Tinkers is present **/
+	public static boolean isTinkersLoaded() {
+		return isTinkersLoaded;
 	}
 
 	public static void onAddPackFinders(final AddPackFindersEvent event) {
@@ -58,6 +70,11 @@ public final class AddonLoader {
 			if(isMekanismLoaded()) {
 				ExtraGolems.LOGGER.info("Extra Golems detected Mekanism, registering data pack now");
 				registerAddon(event, MEKANISM_PACK_NAME);
+			}
+			// register Tinkers data pack
+			if(isTinkersLoaded()) {
+				ExtraGolems.LOGGER.info("Extra Golems detected Tinkers Construct, registering data pack now");
+				registerAddon(event, TCONSTRUCT_PACK_NAME);
 			}
 			// TODO register Thermal data pack
 			// TODO register Biomes O Plenty data pack

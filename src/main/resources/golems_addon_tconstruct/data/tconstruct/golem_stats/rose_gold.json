@@ -12,5 +12,20 @@
     "#forge:storage_blocks/rose_gold": 0.5,
     "#forge:ingots/rose_gold": 0.15
   },
-  "behavior": [ ]
+  "behavior": [ 
+	{
+	  "type": "golems:passive_effect",
+	  "effect": {
+		"target": "self",
+		"chance": 0.2,
+		"effects": [
+		  {
+			"Potion": "minecraft:luck",
+			"Amplifier": 2,
+			"Duration": 1100
+		  }
+		]
+	  }
+	}
+  ]
 }

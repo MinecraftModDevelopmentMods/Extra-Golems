@@ -5,12 +5,39 @@
     "attack_knockback": 0.8
   },
   "sound": "minecraft:block.slime_block.step",
-  "blocks": [
-    "#tconstruct:congealed_slime"
-  ],
   "heal_items": {
     "#tconstruct:congealed_slime": 0.5,
     "#forge:slimeballs": 0.15
   },
-  "behavior": [ ]
+  "multitexture": {
+	"texture_count": 5,
+	"textures": {
+	  "0": {
+		"blocks": "tconstruct:earth_congealed_slime",
+		"loot_table": "tconstruct:congealed_slime/earth"
+	  },
+	  "1": {
+		"blocks": "tconstruct:sky_congealed_slime",
+		"loot_table": "tconstruct:congealed_slime/sky"
+	  },
+	  "2": {
+		"blocks": "tconstruct:ichor_congealed_slime",
+		"loot_table": "tconstruct:congealed_slime/ichor"
+	  },
+	  "3": {
+		"blocks": "tconstruct:ender_congealed_slime",
+		"loot_table": "tconstruct:congealed_slime/ender"
+	  },
+	  "4": {
+		"blocks": "tconstruct:blood_congealed_slime",
+		"loot_table": "tconstruct:congealed_slime/blood"
+	  }
+	}
+  },
+  "behavior": [
+	{
+	  "type": "golems:split_on_death",
+	  "children": 1
+	}
+  ]
 }

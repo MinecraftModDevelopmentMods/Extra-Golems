@@ -1,3 +1,9 @@
 {
-  "base": "tconstruct:storage/cobalt"
+  "base": "tconstruct:storage/cobalt",
+  "layers": [
+	{
+	  "texture": "tconstruct:storage/cobalt",
+	  "template": "golems:layer/hands_template"
+	}
+  ]
 }

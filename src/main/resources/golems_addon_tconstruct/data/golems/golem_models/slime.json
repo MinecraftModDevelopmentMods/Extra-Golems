@@ -1,0 +1,13 @@
+{
+  "multitexture": {
+	"base_map": {
+	  "0": "minecraft:slime_block",
+	  "1": "tconstruct:slime/storage/sky",
+	  "2": "tconstruct:slime/storage/ichor",
+	  "3": "tconstruct:slime/storage/ender",
+	  "4": "tconstruct:slime/storage/blood"
+	}
+  },
+  "translucent": true,
+  "vines": {}
+}

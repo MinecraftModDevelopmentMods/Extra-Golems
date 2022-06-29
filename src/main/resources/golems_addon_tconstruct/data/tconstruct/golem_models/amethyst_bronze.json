@@ -1,3 +1,9 @@
 {
-  "base": "tconstruct:storage/amethyst_bronze"
+  "base": "tconstruct:storage/amethyst_bronze",
+  "layers": [
+	{
+	  "texture": "tconstruct:storage/amethyst_bronze",
+	  "template": "golems:layer/hands_template"
+	}
+  ]
 }

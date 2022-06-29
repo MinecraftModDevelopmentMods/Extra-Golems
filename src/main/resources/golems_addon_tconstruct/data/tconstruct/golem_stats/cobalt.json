@@ -15,5 +15,14 @@
     "#forge:storage_blocks/cobalt": 0.5,
     "#forge:ingots/cobalt": 0.15
   },
-  "behavior": [ ]
+  "behavior": [
+	{
+	  "type": "golems:attack",
+	  "fire": {
+		"target": "enemy",
+		"chance": 0.9,
+		"time": 3
+	  }
+	}
+  ]
 }

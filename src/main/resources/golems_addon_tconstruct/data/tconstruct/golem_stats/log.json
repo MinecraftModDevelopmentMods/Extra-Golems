@@ -7,12 +7,25 @@
   },
   "swim_ability": "float",
   "sound": "minecraft:block.wood.step",
-  "blocks": [
-    "#tconstruct:slimy_logs"
-  ],
   "heal_items": {
-    "#tconstruct:slimy_logs": 0.5,
-    "#tconstruct:slimy_planks": 0.15
+	"#tconstruct:slimy_logs": 0.5,
+	"#tconstruct:slimy_planks": 0.15
   },
-  "behavior": [ ]
+  "multitexture": {
+	"texture_count": 3,
+	"textures": {
+	  "0": {
+		"blocks": "#tconstruct:bloodshroom_logs",
+		"loot_table": "tconstruct:log/bloodshroom"
+	  },
+	  "1": {
+		"blocks": "#tconstruct:greenheart_logs",
+		"loot_table": "tconstruct:log/greenheart"
+	  },
+	  "2": {
+		"blocks": "#tconstruct:skyroot_logs",
+		"loot_table": "tconstruct:log/skyroot"
+	  }
+	}
+  }
 }

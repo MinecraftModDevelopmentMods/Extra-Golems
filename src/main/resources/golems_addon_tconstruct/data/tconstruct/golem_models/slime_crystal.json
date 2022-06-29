@@ -1,3 +1,11 @@
 {
-  "base": "tconstruct:geode/ichor/block"
+  "multitexture": {
+	"base_map": {
+	  "0": "tconstruct:geode/earth/block",
+	  "1": "tconstruct:geode/sky/block",
+	  "2": "tconstruct:geode/ichor/block",
+	  "3": "tconstruct:geode/ender/block"
+	}
+  },
+  "base_template": "golems:ice/ice_template"
 }

@@ -118,4 +118,9 @@ public class GenericJsonReloadListener<T> extends SimpleJsonResourceReloadListen
 	public String getName() {
 		return objClass.getName();
 	}
+
+	@Override
+	public ResourceLocation getPreparedPath(ResourceLocation rl) {
+		return super.getPreparedPath(rl);
+	}
 }

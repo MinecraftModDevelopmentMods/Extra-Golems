@@ -1,3 +1,8 @@
 {
-  "base": "tconstruct:grout"
+  "multitexture": {
+	"base_map": {
+	  "0": "tconstruct:grout",
+	  "1": "tconstruct:nether_grout"
+	}
+  }
 }

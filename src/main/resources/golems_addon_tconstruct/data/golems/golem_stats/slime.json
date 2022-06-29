@@ -1,0 +1,44 @@
+{
+  "attributes": {
+    "health": 58,
+    "attack": 6.5,
+    "attack_knockback": 0.92
+  },
+  "swim_ability": "float",
+  "sound": "minecraft:block.slime_block.step",
+  "heal_items": {
+    "#tconstruct:slime_block": 0.5,
+    "#forge:slimeballs": 0.15
+  },
+  "multitexture": {
+	"texture_count": 6,
+	"textures": {
+	  "0": {
+		"blocks": "minecraft:slime_block",
+		"loot_table": "golems:slime/earth"
+	  },
+	  "1": {
+		"blocks": "tconstruct:sky_slime",
+		"loot_table": "golems:slime/sky"
+	  },
+	  "2": {
+		"blocks": "tconstruct:ichor_slime",
+		"loot_table": "golems:slime/ichor"
+	  },
+	  "3": {
+		"blocks": "tconstruct:ender_slime",
+		"loot_table": "golems:slime/ender"
+	  },
+	  "4": {
+		"blocks": "tconstruct:blood_slime",
+		"loot_table": "golems:slime/blood"
+	  }
+	}
+  },
+  "behavior": [
+	{
+	  "type": "golems:split_on_death",
+	  "children": 2
+	}
+  ]
+}

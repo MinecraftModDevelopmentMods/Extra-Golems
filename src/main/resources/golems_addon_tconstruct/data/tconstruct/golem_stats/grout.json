@@ -5,12 +5,23 @@
     "immune_to_fire": true
   },
   "sound": "minecraft:block.gravel.step",
-  "blocks": [
-    "tconstruct:grout"
-  ],
   "heal_items": {
     "tconstruct:grout": 0.5,
+    "tconstruct:nether_grout": 0.5,
     "#forge:gravel": 0.15
+  },
+  "multitexture": {
+	"texture_count": 2,
+	"textures": {
+	  "0": {
+		"blocks": "tconstruct:grout",
+		"loot_table": "tconstruct:grout/normal"
+	  },
+	  "1": {
+		"blocks": "tconstruct:nether_grout",
+		"loot_table": "tconstruct:grout/nether"
+	  }
+	}
   },
   "behavior": [ ]
 }

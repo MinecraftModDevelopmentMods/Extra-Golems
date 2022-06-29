@@ -5,21 +5,21 @@
 	  "entries": [
 		{
 		  "type": "item",
-		  "name": "tconstruct:ichor_slime_ball",
+		  "name": "tconstruct:earth_slime_crystal",
 		  "weight": 1,
 		  "functions": [
 			{
 			  "function": "set_count",
 			  "count": {
-				"min": 8,
-				"max": 16
+				"min": 4,
+				"max": 8
 			  }
 			},
 			{
 			  "function": "looting_enchant",
 			  "count": {
 				"min": 2,
-				"max": 6
+				"max": 4
 			  }
 			}
 		  ]
