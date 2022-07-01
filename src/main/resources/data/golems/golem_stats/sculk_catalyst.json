@@ -1,0 +1,41 @@
+{
+  "attributes": {
+    "health": 104.0,
+    "attack": 8.5,
+    "speed": 0.32,
+	"armor": 2.0,
+	"immune_to_fire": true
+  },
+  "blocks": "minecraft:sculk_catalyst",
+  "glow": 6,
+  "heal_items": {
+	"minecraft:sculk_catalyst": 0.5,
+    "minecraft:sculk": 0.15,
+	"minecraft:experience_bottle": 0.5
+  },
+  "behavior": [
+	{
+	  "type": "golems:attack",
+	  "effect": {
+		"target": "area",
+		"chance": 1.0,
+		"range": 6.0,
+		"effects": [
+		  {
+			"Potion": "minecraft:blindness",
+			"Amplifier": 0,
+			"Duration": 260
+		  }
+		]
+	  }
+	},
+	{
+	  "type": "golems:place_blocks",
+	  "interval": 30,
+	  "translation_key": "entitytip.places_sculk",
+	  "blocks": [
+		"minecraft:sculk_vein"
+	  ]
+	}
+  ]
+}

@@ -4,7 +4,6 @@ import com.mcmoddev.golems.entity.GolemBase;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.MobSpawnType;
@@ -69,6 +68,6 @@ public class SplitBehavior extends GolemBehavior {
 
 	@Override
 	public void onAddDescriptions(List<Component> list) {
-		list.add(new TranslatableComponent("entitytip.split_on_death").withStyle(ChatFormatting.GREEN));
+		list.add(Component.translatable("entitytip.split_on_death").withStyle(ChatFormatting.GREEN));
 	}
 }

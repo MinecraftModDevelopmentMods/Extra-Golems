@@ -5,8 +5,6 @@ import com.mcmoddev.golems.entity.GolemBase;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 
 import java.util.LinkedList;
@@ -41,8 +39,8 @@ public abstract class GolemDescriptionManager {
 		// add attack damage to tip enabled (usually checks if sneaking)
 		if (showAttack) {
 			double attack = (golem.getAttribute(Attributes.ATTACK_DAMAGE).getValue());
-			list.add(new TranslatableComponent("entitytip.attack").withStyle(ChatFormatting.GRAY).append(": ")
-					.append(new TextComponent(Double.toString(attack)).withStyle(ChatFormatting.WHITE)));
+			list.add(Component.translatable("entitytip.attack").withStyle(ChatFormatting.GRAY).append(": ")
+					.append(Component.literal(Double.toString(attack)).withStyle(ChatFormatting.WHITE)));
 		}
 		// add special descriptions
 		if (showSpecial) {
@@ -88,8 +86,8 @@ public abstract class GolemDescriptionManager {
 			fuelString = String.format("%.1f", percentFuel) + "%";
 		}
 		// actually add the description
-		list.add(new TranslatableComponent("entitytip.fuel").withStyle(ChatFormatting.GRAY).append(": ")
-				.append(new TextComponent(fuelString).withStyle(color)));
+		list.add(Component.translatable("entitytip.fuel").withStyle(ChatFormatting.GRAY).append(": ")
+				.append(Component.literal(fuelString).withStyle(color)));
 	}
 
 	/**
@@ -106,8 +104,8 @@ public abstract class GolemDescriptionManager {
 			// if sneaking, show exact value, otherwise show percentage value
 			final String arrowString = String.valueOf(arrows);
 			// actually add the description
-			list.add(new TranslatableComponent("entitytip.arrows").withStyle(ChatFormatting.GRAY).append(": ")
-					.append(new TextComponent(arrowString).withStyle(color)));
+			list.add(Component.translatable("entitytip.arrows").withStyle(ChatFormatting.GRAY).append(": ")
+					.append(Component.literal(arrowString).withStyle(color)));
 		}
 
 	}

@@ -13,13 +13,13 @@ import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.MobSpawnType;
 
 public class SummonGolemCommand {
 
-	private static final DynamicCommandExceptionType INVALID_ID = new DynamicCommandExceptionType(arg -> new TranslatableComponent("command.golem.invalid_id", arg));
+	private static final DynamicCommandExceptionType INVALID_ID = new DynamicCommandExceptionType(arg -> Component.translatable("command.golem.invalid_id", arg));
 
 	public static void register(CommandDispatcher<CommandSourceStack> commandSource) {
 		LiteralCommandNode<CommandSourceStack> commandNode = commandSource.register(
@@ -62,7 +62,7 @@ public class SummonGolemCommand {
 		entity.moveTo(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D);
 		source.getLevel().addFreshEntity(entity);
 		entity.finalizeSpawn(source.getLevel(), source.getLevel().getCurrentDifficultyAt(pos), MobSpawnType.COMMAND, null, tag);
-		source.sendSuccess(new TranslatableComponent("command.golem.success", id, pos.getX(), pos.getY(), pos.getZ()), true);
+		source.sendSuccess(Component.translatable("command.golem.success", id, pos.getX(), pos.getY(), pos.getZ()), true);
 		return 1;
 	}
 }

@@ -5,7 +5,6 @@ import com.mcmoddev.golems.entity.goal.AoeBlocksGoal;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
@@ -44,6 +43,6 @@ public class AoeGrowBehavior extends GolemBehavior {
 
 	@Override
 	public void onAddDescriptions(List<Component> list) {
-		list.add(new TranslatableComponent("entitytip.aoe_grow").withStyle(ChatFormatting.GOLD));
+		list.add(Component.translatable("entitytip.aoe_grow").withStyle(ChatFormatting.GOLD));
 	}
 }

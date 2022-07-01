@@ -6,7 +6,6 @@ import com.mcmoddev.golems.menu.PortableDispenserMenu;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
@@ -86,7 +85,7 @@ public class ShootArrowsBehavior extends GolemBehavior {
 
 	@Override
 	public void onAddDescriptions(List<Component> list) {
-		list.add(new TranslatableComponent("entitytip.shoot_arrows").withStyle(ChatFormatting.LIGHT_PURPLE));
-		list.add(new TranslatableComponent("entitytip.click_refill").withStyle(ChatFormatting.GRAY));
+		list.add(Component.translatable("entitytip.shoot_arrows").withStyle(ChatFormatting.LIGHT_PURPLE));
+		list.add(Component.translatable("entitytip.click_refill").withStyle(ChatFormatting.GRAY));
 	}
 }

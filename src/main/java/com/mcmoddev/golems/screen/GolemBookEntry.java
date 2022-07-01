@@ -5,17 +5,16 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * This class is used to easily connect golems and their blocks and other
@@ -49,16 +48,15 @@ public class GolemBookEntry {
 		// find the image to add to the book
 		final String modid = golemName.getNamespace();
 		final String name = golemName.getPath();
-		String img = (modid + ":textures/gui/info_book/").concat(name).concat(".png");
-		try {
-			this.imageLoc = Minecraft.getInstance().getResourceManager().getResource(new ResourceLocation(img)).getLocation();
-			// System.out.println("Image found, yay! Loading " + img.toString() + " for " + this.GOLEM_NAME);
-		} catch (IOException e) {
-			// System.out.println("No image found, skipping " + img.toString() + " for " + this.GOLEM_NAME);
+		ResourceLocation img = new ResourceLocation(modid, "textures/gui/info_book/".concat(name).concat(".png"));
+		Optional<Resource> imageResource = Minecraft.getInstance().getResourceManager().getResource(img);
+		if(imageResource.isPresent()) {
+			this.imageLoc = img;
+		} else {
+			this.imageLoc = null;
 		}
-
 		// create the mutable text components
-		this.name = new TranslatableComponent(nameString);
+		this.name = Component.translatable(nameString);
 		this.page = makePage();
 	}
 
@@ -138,16 +136,16 @@ public class GolemBookEntry {
 	 * Concatenates the entity's stats and specials into a single TextComponent
 	 **/
 	private MutableComponent makePage() {
-		TextComponent page = new TextComponent("");
+		MutableComponent page = Component.literal("");
 		// ADD (ROUNDED) HEALTH TIP
 		page.append("\n")
-				.append(new TranslatableComponent("entitytip.health").append(": ").withStyle(ChatFormatting.GRAY))
-				.append(new TextComponent(String.valueOf(this.health)).withStyle(ChatFormatting.BLACK))
-				.append(new TextComponent(" \u2764").withStyle(ChatFormatting.DARK_RED));
+				.append(Component.translatable("entitytip.health").append(": ").withStyle(ChatFormatting.GRAY))
+				.append(Component.literal(String.valueOf(this.health)).withStyle(ChatFormatting.BLACK))
+				.append(Component.literal(" \u2764").withStyle(ChatFormatting.DARK_RED));
 		// ADD ATTACK POWER TIP
 		page.append("\n")
-				.append(new TranslatableComponent("entitytip.attack").append(": ").withStyle(ChatFormatting.GRAY))
-				.append(new TextComponent(String.valueOf(this.attack)).withStyle(ChatFormatting.BLACK))
+				.append(Component.translatable("entitytip.attack").append(": ").withStyle(ChatFormatting.GRAY))
+				.append(Component.literal(String.valueOf(this.attack)).withStyle(ChatFormatting.BLACK))
 				.append(" \u2694").append("\n");
 		// ADD SPECIALS
 		for (Component s : this.specials) {

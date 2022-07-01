@@ -5,7 +5,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
-import net.minecraft.world.phys.AABB;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
@@ -52,12 +51,12 @@ public class FireBehaviorParameter extends BehaviorParameter {
 					List<LivingEntity> targets = self.level.getNearbyEntities(LivingEntity.class,
 							condition, self, self.getBoundingBox().inflate(inflate));
 					// apply to each entity in list
-					for(LivingEntity target : targets) {
+					for (LivingEntity target : targets) {
 						target.setSecondsOnFire(time);
 					}
 					break;
 				case ENEMY:
-					if(other != null) {
+					if (other != null) {
 						other.setSecondsOnFire(time);
 					}
 					break;

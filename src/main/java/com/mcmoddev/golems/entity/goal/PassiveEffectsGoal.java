@@ -7,7 +7,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
-import net.minecraft.world.phys.AABB;
 
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class PassiveEffectsGoal extends Goal {
 		this.nightOnly = nightOnlyIn;
 		this.target = targetIn;
 		this.chance = chanceIn;
-		if(rangeIn > 0) {
+		if (rangeIn > 0) {
 			this.range = rangeIn;
 		} else {
 			this.range = golemIn.getAttribute(Attributes.FOLLOW_RANGE).getBaseValue() * 0.5D;
@@ -37,13 +36,13 @@ public class PassiveEffectsGoal extends Goal {
 
 	@Override
 	public boolean canUse() {
-		if(effects.length <= 0) {
+		if (effects.length <= 0) {
 			return false;
 		}
-		if(nightOnly && golem.level.isDay() && golem.level.dimensionType().hasSkyLight()) {
+		if (nightOnly && golem.level.isDay() && golem.level.dimensionType().hasSkyLight()) {
 			return false;
 		}
-		if(target == BehaviorParameter.Target.ENEMY && null == golem.getTarget()) {
+		if (target == BehaviorParameter.Target.ENEMY && null == golem.getTarget()) {
 			return false;
 		}
 		return golem.getRandom().nextFloat() < chance;
@@ -67,7 +66,7 @@ public class PassiveEffectsGoal extends Goal {
 				List<LivingEntity> targets = this.golem.level.getNearbyEntities(LivingEntity.class,
 						condition, this.golem, this.golem.getBoundingBox().inflate(inflate));
 				// apply to each entity in the list
-				for(LivingEntity target : targets) {
+				for (LivingEntity target : targets) {
 					applyEffect(target, effect);
 				}
 				break;
@@ -82,12 +81,13 @@ public class PassiveEffectsGoal extends Goal {
 
 	/**
 	 * Applies a MobEffectInstance to the given entity
+	 *
 	 * @param target the entity
 	 * @param effect the effect instance
 	 */
 	private void applyEffect(final LivingEntity target, final MobEffectInstance effect) {
 		// only apply when target has no effects
-		if(effect != null && target != null && target.getActiveEffects().isEmpty()) {
+		if (effect != null && target != null && target.getActiveEffects().isEmpty()) {
 			target.addEffect(effect);
 		}
 	}

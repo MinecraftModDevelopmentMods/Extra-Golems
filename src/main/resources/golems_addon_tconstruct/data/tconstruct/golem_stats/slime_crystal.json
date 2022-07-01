@@ -35,7 +35,7 @@
 	  "type": "golems:passive_effect",
 	  "effect": {
 		"target": "self",
-		"chance": 0.0012,
+		"chance": 0.00012,
 		"effects": [
 		  {
 			"Potion": "minecraft:strength",

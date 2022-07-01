@@ -1,11 +1,13 @@
 package com.mcmoddev.golems.render.layer;
 
 import com.mcmoddev.golems.EGConfig;
+import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.render.GolemModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
@@ -24,7 +26,7 @@ public class GolemBannerLayer<T extends GolemBase> extends RenderLayer<T, GolemM
 					   float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
 		if (!entity.isInvisible() && entity.getBanner().getItem() instanceof BannerItem) {
 			// check for holiday tweaks
-			if (EGConfig.aprilFirst()) {
+			if (ExtraGolems.CONFIG.aprilFirst()) {
 				matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(180.0F));
 			}
 			matrixStackIn.pushPose();
@@ -41,7 +43,7 @@ public class GolemBannerLayer<T extends GolemBase> extends RenderLayer<T, GolemM
 			matrixStackIn.scale(2.6F, 2.3F, 2.6F);
 			getParentModel().root().translateAndRotate(matrixStackIn);
 			// Actually render the banner item
-			Minecraft.getInstance().getItemInHandRenderer().renderItem(entity, entity.getBanner(), ItemTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, false, matrixStackIn, bufferIn, packedLightIn);
+			Minecraft.getInstance().getEntityRenderDispatcher().getItemInHandRenderer().renderItem(entity, entity.getBanner(), ItemTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, false, matrixStackIn, bufferIn, packedLightIn);
 			matrixStackIn.popPose();
 		}
 	}

@@ -4,6 +4,7 @@ import com.mcmoddev.golems.entity.GolemBase;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -13,7 +14,6 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.AABB;
 
 import java.util.List;
-import java.util.Random;
 
 public class PowerBlock extends UtilityBlock {
 	public static final IntegerProperty POWER_LEVEL = IntegerProperty.create("power", 0, 15);
@@ -26,7 +26,7 @@ public class PowerBlock extends UtilityBlock {
 	}
 
 	@Override
-	public void tick(final BlockState state, final ServerLevel worldIn, final BlockPos pos, final Random random) {
+	public void tick(final BlockState state, final ServerLevel worldIn, final BlockPos pos, final RandomSource random) {
 		// make a slightly expanded AABB to check for the entity
 		AABB toCheck = new AABB(pos).inflate(0.25D);
 		List<GolemBase> list = worldIn.getEntitiesOfClass(GolemBase.class, toCheck);

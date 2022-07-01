@@ -20,7 +20,7 @@
 	  },
 	  "1": {
 		"loot_table": "golems:furnace",
-		"light": 8
+		"glow": 8
 	  }
     }
   },

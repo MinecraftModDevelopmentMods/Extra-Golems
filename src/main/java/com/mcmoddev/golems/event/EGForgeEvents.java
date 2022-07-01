@@ -68,7 +68,7 @@ public class EGForgeEvents {
 	@SubscribeEvent
 	public static void onPlacePumpkin(final BlockEvent.EntityPlaceEvent event) {
 		// if the config allows it, and the block is a CARVED pumpkin...
-		if (!event.isCanceled() && EGConfig.pumpkinBuildsGolems() && event.getPlacedBlock().getBlock() == Blocks.CARVED_PUMPKIN
+		if (!event.isCanceled() && ExtraGolems.CONFIG.pumpkinBuildsGolems() && event.getPlacedBlock().getBlock() == Blocks.CARVED_PUMPKIN
 				&& event.getWorld() instanceof Level) {
 			// try to spawn an entity!
 			GolemHeadBlock.trySpawnGolem(event.getEntity(), (Level) event.getWorld(), event.getPos());
@@ -93,7 +93,7 @@ public class EGForgeEvents {
 
 	@SubscribeEvent
 	public static void onLivingUpdate(final LivingEvent.LivingUpdateEvent event) {
-		if (EGConfig.villagerSummonChance() > 0 && event.getEntityLiving() instanceof Villager && event.getEntityLiving().isEffectiveAi()
+		if (ExtraGolems.CONFIG.villagerSummonChance() > 0 && event.getEntityLiving() instanceof Villager && event.getEntityLiving().isEffectiveAi()
 				&& !event.getEntityLiving().isSleeping() && event.getEntityLiving().tickCount % 50 == 0) {
 			Villager villager = (Villager) event.getEntityLiving();
 			VillagerData villagerdata = villager.getVillagerData();
@@ -109,11 +109,10 @@ public class EGForgeEvents {
 				final List<IronGolem> nearbyGolems = villager.getCommandSenderWorld().getEntitiesOfClass(IronGolem.class, aabb.inflate(10.0D));
 				if (nearbyVillagers.size() >= minNumVillagers && nearbyGolems.isEmpty()) {
 					// one last check (against config) to adjust frequency
-					if (villager.getRandom().nextInt(100) < EGConfig.villagerSummonChance()) {
+					if (villager.getRandom().nextInt(100) < ExtraGolems.CONFIG.villagerSummonChance()) {
 						// summon a entity
 						GolemBase golem = summonGolem(villager);
 						if (golem != null) {
-							ExtraGolems.LOGGER.debug("Villager summoned a entity! " + golem);
 							nearbyVillagers.forEach(GolemSensor::checkForNearbyGolem);
 						}
 					}
@@ -168,7 +167,7 @@ public class EGForgeEvents {
 
 	@Nullable
 	private static ResourceLocation getGolemToSpawn(final Level world, final BlockPos pos) {
-		final List<ResourceLocation> options = EGConfig.getVillagerGolems();
+		final List<ResourceLocation> options = ExtraGolems.CONFIG.getVillagerGolems();
 		final ResourceLocation choice = options.isEmpty() ? null : options.get(world.getRandom().nextInt(options.size()));
 		return choice;
 	}

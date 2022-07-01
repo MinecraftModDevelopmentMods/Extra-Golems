@@ -1,0 +1,53 @@
+{
+  "pools": [
+	{
+	  "rolls": 1,
+	  "entries": [
+		{
+		  "type": "item",
+		  "name": "minecraft:sculk_catalyst",
+		  "functions": [
+			{
+			  "function": "set_count",
+			  "count": {
+				"min": 1,
+				"max": 2
+			  }
+			},
+			{
+			  "function": "looting_enchant",
+			  "count": 1
+			}
+		  ]
+		}
+	  ]
+	},
+	{
+	  "rolls": 1,
+	  "entries": [
+		{
+		  "type": "item",
+		  "name": "minecraft:sculk",
+		  "functions": [
+			{
+			  "function": "set_count",
+			  "count": {
+				"min": 0,
+				"max": 2
+			  }
+			}
+		  ]
+		}
+	  ]
+	},
+	{
+	  "rolls": 1,
+	  "entries": [
+		{
+		  "type": "loot_table",
+		  "name": "golems:entities/_golem_base"
+		}
+	  ]
+	}
+  ]
+}

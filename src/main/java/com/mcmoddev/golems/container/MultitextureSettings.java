@@ -9,7 +9,6 @@ import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -110,15 +109,15 @@ public class MultitextureSettings {
 	 * @return the texture ID (defaults to 0)
 	 */
 	public int getTextureFromBlock(final Block block) {
-		ResourcePair key = new ResourcePair(block.getRegistryName(), false);
+		ResourcePair key = new ResourcePair(ForgeRegistries.BLOCKS.getKey(block), false);
 		// if the block is defined literally, use that to look up texture id
 		if (getBlockMap().containsKey(key)) {
 			return getBlockMap().get(key);
 		}
 		// otherwise, use each of the block's tags to look up texture id
 		BlockState blockState = block.defaultBlockState();
-		for(Map.Entry<ResourcePair, Integer> entry : getBlockMap().entrySet()) {
-			if(entry.getKey().flag() && blockState.is(ForgeRegistries.BLOCKS.tags().createTagKey(entry.getKey().resource()))) {
+		for (Map.Entry<ResourcePair, Integer> entry : getBlockMap().entrySet()) {
+			if (entry.getKey().flag() && blockState.is(ForgeRegistries.BLOCKS.tags().createTagKey(entry.getKey().resource()))) {
 				return entry.getValue();
 			}
 		}
@@ -149,7 +148,7 @@ public class MultitextureSettings {
 								list -> list.size() == 1 ? Either.left(list.get(0)) : Either.right(list))
 						.optionalFieldOf("blocks", Lists.newArrayList()).forGetter(TextureEntry::getBlocks),
 				ResourceLocation.CODEC.optionalFieldOf("loot_table").forGetter(TextureEntry::getLootTable),
-				Codec.INT.optionalFieldOf("light", 0).forGetter(TextureEntry::getLight)
+				Codec.INT.optionalFieldOf("glow", 0).forGetter(TextureEntry::getLight)
 		).apply(instance, TextureEntry::new));
 
 		private final List<ResourcePair> blocks;

@@ -17,7 +17,7 @@
 	  "type": "golems:passive_effect",
 	  "effect": {
 		"target": "self",
-		"chance": 0.2,
+		"chance": 0.02,
 		"effects": [
 		  {
 			"Potion": "minecraft:luck",

@@ -12,6 +12,8 @@ import com.mcmoddev.golems.util.GenericJsonReloadListener;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.InterModComms;
@@ -19,6 +21,7 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -40,6 +43,10 @@ public class ExtraGolems {
 
 	public static final Logger LOGGER = LogManager.getFormatterLogger(ExtraGolems.MODID);
 
+	private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
+	public static final EGConfig CONFIG = new EGConfig(BUILDER);
+	public static final ForgeConfigSpec SPEC = BUILDER.build();
+
 	private static final String PROTOCOL_VERSION = "1";
 	public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(new ResourceLocation(MODID, "channel"), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
 
@@ -50,18 +57,26 @@ public class ExtraGolems {
 			l -> l.getEntries().forEach(e -> e.getValue().ifPresent(c -> ExtraGolems.CHANNEL.send(PacketDistributor.ALL.noArg(), new SGolemModelPacket(e.getKey(), c)))));
 
 	public ExtraGolems() {
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
+		// register and load config
+		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, SPEC);
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(ExtraGolems::loadConfig);
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(ExtraGolems::reloadConfig);
 		// init registry
 		EGRegistry.init();
 		// init helper classes
 		GolemBehaviors.init();
 		// register event handlers
-		this.registerCommonEvents();
-		DistExecutor.runForDist(() -> () -> this.registerClientEvents(), () -> () -> this.registerServerEvents());
-		// set up config file
-		EGConfig.setupConfig();
-		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, EGConfig.COMMON_CONFIG);
+		ExtraGolems.LOGGER.debug(ExtraGolems.MODID + ":registerEventHandlers");
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
+		MinecraftForge.EVENT_BUS.register(EGForgeEvents.class);
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(AddonLoader::onAddPackFinders);
+		// register client event handlers
+		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+			MinecraftForge.EVENT_BUS.register(com.mcmoddev.golems.event.EGClientEvents.class);
+			FMLJavaModLoadingContext.get().getModEventBus().register(com.mcmoddev.golems.event.EGClientModEvents.class);
+			com.mcmoddev.golems.event.EGClientEvents.addResources();
+		});
 		// register messages
 		ExtraGolems.LOGGER.debug(ExtraGolems.MODID + ":registerNetwork");
 		int messageId = 0;
@@ -83,22 +98,12 @@ public class ExtraGolems {
 		}
 	}
 
-	private int registerCommonEvents() {
-		ExtraGolems.LOGGER.debug(ExtraGolems.MODID + ":registerEventHandlers");
-		MinecraftForge.EVENT_BUS.register(EGForgeEvents.class);
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(AddonLoader::onAddPackFinders);
-		return 0;
+	public static void loadConfig(final ModConfigEvent.Loading event) {
+		CONFIG.bake();
 	}
 
-	private int registerServerEvents() {
-		return 1;
-	}
-
-	private int registerClientEvents() {
-		MinecraftForge.EVENT_BUS.register(com.mcmoddev.golems.event.EGClientEvents.class);
-		FMLJavaModLoadingContext.get().getModEventBus().register(com.mcmoddev.golems.event.EGClientModEvents.class);
-		com.mcmoddev.golems.event.EGClientEvents.addResources();
-		return 2;
+	public static void reloadConfig(final ModConfigEvent.Reloading event) {
+		CONFIG.bake();
 	}
 
 	/**

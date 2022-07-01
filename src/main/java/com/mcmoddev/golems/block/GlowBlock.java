@@ -3,6 +3,7 @@ package com.mcmoddev.golems.block;
 import com.mcmoddev.golems.entity.GolemBase;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -11,7 +12,6 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.AABB;
 
 import java.util.List;
-import java.util.Random;
 
 public class GlowBlock extends UtilityBlock {
 
@@ -26,7 +26,7 @@ public class GlowBlock extends UtilityBlock {
 	}
 
 	@Override
-	public void tick(final BlockState state, final ServerLevel worldIn, final BlockPos pos, final Random random) {
+	public void tick(final BlockState state, final ServerLevel worldIn, final BlockPos pos, final RandomSource random) {
 		// make a slightly expanded AABB to check for the entity
 		final AABB toCheck = new AABB(pos).inflate(0.5D);
 		// we'll probably only ever get one entity, but it doesn't hurt to be safe and

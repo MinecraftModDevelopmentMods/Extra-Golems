@@ -20,13 +20,11 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.TagKey;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -34,9 +32,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.tags.IReverseTag;
 import net.minecraftforge.registries.tags.ITag;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -59,7 +55,7 @@ public final class GolemContainer {
 
 	public static final GolemContainer EMPTY = new GolemContainer(
 			AttributeSettings.EMPTY, SwimMode.SINK, 0, 0, true, SoundEvents.STONE_STEP, Optional.empty(),
-			ImmutableList.of(new ResourcePair(Blocks.AIR.getRegistryName(), false)),
+			ImmutableList.of(new ResourcePair(ForgeRegistries.BLOCKS.getKey(Blocks.AIR), false)),
 			ImmutableMap.of(), Optional.empty(), ImmutableList.of());
 
 	public static final Codec<GolemContainer> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -362,14 +358,14 @@ public final class GolemContainer {
 	 */
 	public double getHealAmount(final Item item) {
 		// first check the item ID map
-		final ResourceLocation id = item.getRegistryName();
+		final ResourceLocation id = ForgeRegistries.ITEMS.getKey(item);
 		if (healItems.containsKey(id)) {
 			return healItems.get(id);
 		}
 		// next check the item Tag map
-		for(Map.Entry<ResourceLocation, Double> entry : healItemTags.entrySet()) {
+		for (Map.Entry<ResourceLocation, Double> entry : healItemTags.entrySet()) {
 			ITag<Item> tag = ForgeRegistries.ITEMS.tags().getTag(ItemTags.create(entry.getKey()));
-			if(tag.contains(item)) {
+			if (tag.contains(item)) {
 				return entry.getValue();
 			}
 		}
@@ -492,31 +488,31 @@ public final class GolemContainer {
 		final List<Component> list = new ArrayList<>();
 		// add "fireproof" description
 		if (attributes.hasFireImmunity()) {
-			list.add(new TranslatableComponent("enchantment.minecraft.fire_protection").withStyle(ChatFormatting.GOLD));
+			list.add(Component.translatable("enchantment.minecraft.fire_protection").withStyle(ChatFormatting.GOLD));
 		}
 		// add "explosion-proof" description
 		if (attributes.hasExplosionImmunity()) {
-			list.add(new TranslatableComponent("enchantment.minecraft.blast_protection").withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD));
+			list.add(Component.translatable("enchantment.minecraft.blast_protection").withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD));
 		}
 		// add "provides light" description
 		if (glow > 0) {
-			list.add(new TranslatableComponent("entitytip.provides_light").withStyle(ChatFormatting.RED));
+			list.add(Component.translatable("entitytip.provides_light").withStyle(ChatFormatting.RED));
 		}
 		// add "provides power" description
 		if (power > 0) {
-			list.add(new TranslatableComponent("entitytip.provides_power").withStyle(ChatFormatting.RED));
+			list.add(Component.translatable("entitytip.provides_power").withStyle(ChatFormatting.RED));
 		}
 		// add "knockback" description
 		if (attributes.getAttackKnockback() > 0.39D) {
-			list.add(new TranslatableComponent("entitytip.has_knockback").withStyle(ChatFormatting.DARK_RED));
+			list.add(Component.translatable("entitytip.has_knockback").withStyle(ChatFormatting.DARK_RED));
 		}
 		// add "cycle textures" description
 		if (multitexture.isPresent() && multitexture.get().canCycle()) {
-			list.add(new TranslatableComponent("entitytip.click_change_texture").withStyle(ChatFormatting.BLUE));
+			list.add(Component.translatable("entitytip.click_change_texture").withStyle(ChatFormatting.BLUE));
 		}
 		// add "advanced swimmer" description
 		if (swimAbility == SwimMode.SWIM) {
-			list.add(new TranslatableComponent("entitytip.advanced_swim").withStyle(ChatFormatting.DARK_AQUA));
+			list.add(Component.translatable("entitytip.advanced_swim").withStyle(ChatFormatting.DARK_AQUA));
 		}
 		// add all other descriptions
 		behaviors.values().forEach(l -> l.forEach(b -> b.onAddDescriptions(list)));

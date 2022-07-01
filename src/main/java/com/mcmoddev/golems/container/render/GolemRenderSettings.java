@@ -10,9 +10,9 @@ import com.mojang.math.Vector3f;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
 import net.minecraftforge.fml.DistExecutor;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -79,11 +79,11 @@ public class GolemRenderSettings {
 		ImmutableList.Builder<LayerRenderSettings> builder = ImmutableList.builder();
 		builder.addAll(layers);
 		// optionally add eyes to list
-		if(eyes.isEnabled()) {
+		if (eyes.isEnabled()) {
 			builder.add(eyes);
 		}
 		// optionally add vines to list
-		if(vines.isEnabled()) {
+		if (vines.isEnabled()) {
 			builder.add(vines);
 		}
 		this.layers = builder.build();
@@ -240,9 +240,11 @@ public class GolemRenderSettings {
 	 * @return a ResourcePair containing the first texture that loads
 	 */
 	public static ResourcePair buildPreferredTexture(final List<ResourcePair> textureList) {
+		// attempt to locate each texture in the list until one is successful
 		for (final ResourcePair texture : textureList) {
 			ResourceLocation loaded = null;
 			loaded = DistExecutor.runForDist(() -> () -> {
+				// parse resource location
 				final ResourceLocation res;
 				if (texture.flag()) {
 					res = new ResourceLocation(texture.resource().getNamespace(), "textures/entity/golem/" + texture.resource().getPath() + ".png");
@@ -250,16 +252,13 @@ public class GolemRenderSettings {
 					res = new ResourceLocation(texture.resource().getNamespace(), "textures/block/" + texture.resource().getPath() + ".png");
 				}
 				// attempt to load the resource to ensure it exists
-				try {
-					final ResourceLocation r = net.minecraft.client.Minecraft.getInstance().getResourceManager().getResource(res).getLocation();
-					return r;
-				} catch (IOException e) {
-					if (ExtraGolems.LOGGER != null) {
-						ExtraGolems.LOGGER.error("GolemRenderSettings: Failed to locate resource " + res);
-					}
+				final Optional<Resource> r = net.minecraft.client.Minecraft.getInstance().getResourceManager().getResource(res);
+				if (r.isPresent()) {
 					return res;
 				}
+				return null;
 			}, () -> () -> new ResourceLocation("empty"));
+			// if the texture was loaded, return that texture
 			if (loaded != null) {
 				return new ResourcePair(loaded, texture.flag());
 			}

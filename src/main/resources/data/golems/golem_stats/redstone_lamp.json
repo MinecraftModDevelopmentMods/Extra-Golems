@@ -19,11 +19,11 @@
 	"textures": {
 	  "0": {
 		"blocks": "minecraft:redstone_lamp",
-		"light": 15,
+		"glow": 15,
 		"loot_table": "golems:redstone_lamp/lit"
 	  },
 	  "1": {
-	    "light": 0,
+	    "glow": 0,
 		"loot_table": "golems:redstone_lamp/unlit"
 	  }
     }

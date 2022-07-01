@@ -1,0 +1,17 @@
+{
+  "base": "minecraft:sculk_catalyst_side",
+  "base_template": "golems:sculk_catalyst/lower_template",
+  "eyes": {},
+  "vines": {},
+  "layers": [
+	{
+	  "texture": "minecraft:sculk_catalyst_top",
+	  "template": "golems:sculk_catalyst/upper_template"
+	},
+	{
+	  "texture": "#golems:sculk/bioluminescent",
+	  "translucent": true,
+	  "light": true
+	}
+  ]
+}

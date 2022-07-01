@@ -16,12 +16,10 @@ import com.mcmoddev.golems.entity.goal.PlaceUtilityBlocksGoal;
 import com.mcmoddev.golems.entity.goal.SwimUpGoal;
 import com.mcmoddev.golems.item.SpawnGolemItem;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -60,7 +58,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShearsItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
@@ -68,7 +65,6 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.network.NetworkHooks;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -409,7 +405,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 	@Override
 	public boolean canAttackType(final EntityType<?> type) {
 		if (type == EntityType.PLAYER && this.isPlayerCreated()) {
-			return EGConfig.enableFriendlyFire();
+			return ExtraGolems.CONFIG.enableFriendlyFire();
 		}
 		if (type == EntityType.VILLAGER || type == EGRegistry.GOLEM.get() || type == EntityType.IRON_GOLEM || type == EntityType.SNOW_GOLEM) {
 			return false;
@@ -505,7 +501,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 	 * @return true if the item was consumed
 	 */
 	protected boolean processInteractHeal(final Player player, final InteractionHand hand, final ItemStack stack, final float healAmount) {
-		if (EGConfig.enableHealGolems() && this.getHealth() < this.getMaxHealth()) {
+		if (ExtraGolems.CONFIG.enableHealGolems() && this.getHealth() < this.getMaxHealth()) {
 			heal(healAmount);
 			// update stack size/item
 			if (!player.isCreative()) {
@@ -536,14 +532,14 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 	}
 
 	@Override
-	public float getBrightness() {
-		return (this.isProvidingLight() || this.isProvidingPower()) ? 1.0F : super.getBrightness();
+	public float getLightLevelDependentMagicValue() {
+		return (this.isProvidingLight() || this.isProvidingPower()) ? 1.0F : super.getLightLevelDependentMagicValue();
 	}
 
 	@Override
 	protected Component getTypeName() {
-		if (description == null) {
-			description = new TranslatableComponent("entity." + material.getNamespace() + ".golem." + material.getPath());
+		if (null == description) {
+			description = Component.translatable("entity." + material.getNamespace() + ".golem." + material.getPath());
 		}
 		return description;
 	}

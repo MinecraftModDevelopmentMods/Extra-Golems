@@ -2,6 +2,7 @@ package com.mcmoddev.golems.event;
 
 import com.mcmoddev.golems.entity.GolemBase;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
@@ -35,7 +36,7 @@ public final class GolemModifyBlocksEvent extends Event {
 		this.center = center;
 		this.range = Math.min(radius, 16);
 		this.sphere = sphere;
-		this.updateFlag = 3;
+		this.updateFlag = Block.UPDATE_ALL;
 		this.setFunction(function, true);
 	}
 

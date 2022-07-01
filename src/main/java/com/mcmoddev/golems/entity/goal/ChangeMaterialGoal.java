@@ -23,8 +23,8 @@ public class ChangeMaterialGoal<T extends GolemBase> extends Goal {
 	protected int prevFuel;
 
 	public ChangeMaterialGoal(final T entity, ChangeMaterialBehaviorParameter tickTextures,
-                              ChangeMaterialBehaviorParameter wetTextures, ChangeMaterialBehaviorParameter dryTextures,
-                              ChangeMaterialBehaviorParameter fueledTextures, ChangeMaterialBehaviorParameter emptyTextures) {
+							  ChangeMaterialBehaviorParameter wetTextures, ChangeMaterialBehaviorParameter dryTextures,
+							  ChangeMaterialBehaviorParameter fueledTextures, ChangeMaterialBehaviorParameter emptyTextures) {
 		super();
 		this.setFlags(EnumSet.noneOf(Flag.class));
 		this.entity = entity;

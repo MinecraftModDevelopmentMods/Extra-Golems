@@ -1,6 +1,7 @@
 package com.mcmoddev.golems.render;
 
 import com.mcmoddev.golems.EGConfig;
+import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -40,7 +41,8 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> implement
 		MeshDefinition meshdefinition = new MeshDefinition();
 		PartDefinition partdefinition = meshdefinition.getRoot();
 
-		PartDefinition body = partdefinition.addOrReplaceChild("body", CubeListBuilder.create().texOffs(0, 40).addBox(-9.0F, -2.0F, -6.0F, 18.0F, 12.0F, 11.0F, new CubeDeformation(0.0F))
+		PartDefinition body = partdefinition.addOrReplaceChild("body", CubeListBuilder.create()
+				.texOffs(0, 40).addBox(-9.0F, -2.0F, -6.0F, 18.0F, 12.0F, 11.0F, new CubeDeformation(0.0F))
 				.texOffs(0, 85).addBox(-9.0F, -2.0F, -6.0F, 18.0F, 12.0F, 11.0F, new CubeDeformation(0.25F))
 				.texOffs(0, 70).addBox(-4.5F, 10.0F, -3.0F, 9.0F, 5.0F, 6.0F, new CubeDeformation(0.0F))
 				.texOffs(0, 109).addBox(-4.5F, 10.0F, -3.0F, 9.0F, 5.0F, 6.0F, new CubeDeformation(0.25F)), PartPose.offset(0.0F, -7.0F, 0.0F));
@@ -49,13 +51,16 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> implement
 		body_back_decor.addOrReplaceChild("body_back_decor1", CubeListBuilder.create().texOffs(106, 32).addBox(-5.5F, -6.0F, 0.0F, 10.0F, 8.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 1.0F, -1.5708F, 0.0F, -0.7854F));
 		body_back_decor.addOrReplaceChild("body_back_decor2", CubeListBuilder.create().texOffs(106, 32).addBox(-5.5F, -6.0F, 0.0F, 10.0F, 8.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 1.0F, -1.5708F, 0.0F, 0.7854F));
 
-		PartDefinition left_leg = partdefinition.addOrReplaceChild("left_leg", CubeListBuilder.create().texOffs(60, 0).mirror().addBox(-3.5F, -3.0F, -3.0F, 6.0F, 16.0F, 5.0F, new CubeDeformation(0.0F)).mirror(false)
+		PartDefinition left_leg = partdefinition.addOrReplaceChild("left_leg", CubeListBuilder.create()
+				.texOffs(60, 0).mirror().addBox(-3.5F, -3.0F, -3.0F, 6.0F, 16.0F, 5.0F, new CubeDeformation(0.0F)).mirror(false)
 				.texOffs(106, 0).mirror().addBox(-3.5F, -3.0F, -3.0F, 6.0F, 16.0F, 5.0F, new CubeDeformation(0.25F)).mirror(false), PartPose.offset(5.0F, 11.0F, 0.0F));
 
-		PartDefinition right_leg = partdefinition.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(37, 0).addBox(-3.5F, -3.0F, -3.0F, 6.0F, 16.0F, 5.0F, new CubeDeformation(0.0F))
+		PartDefinition right_leg = partdefinition.addOrReplaceChild("right_leg", CubeListBuilder.create()
+				.texOffs(37, 0).addBox(-3.5F, -3.0F, -3.0F, 6.0F, 16.0F, 5.0F, new CubeDeformation(0.0F))
 				.texOffs(83, 0).addBox(-3.5F, -3.0F, -3.0F, 6.0F, 16.0F, 5.0F, new CubeDeformation(0.25F)), PartPose.offset(-4.0F, 11.0F, 0.0F));
 
-		PartDefinition left_arm = partdefinition.addOrReplaceChild("left_arm", CubeListBuilder.create().texOffs(60, 58).addBox(9.0F, -2.5F, -3.0F, 4.0F, 30.0F, 6.0F, new CubeDeformation(0.0F))
+		PartDefinition left_arm = partdefinition.addOrReplaceChild("left_arm", CubeListBuilder.create()
+				.texOffs(60, 58).addBox(9.0F, -2.5F, -3.0F, 4.0F, 30.0F, 6.0F, new CubeDeformation(0.0F))
 				.texOffs(82, 58).addBox(9.0F, -2.5F, -3.0F, 4.0F, 30.0F, 6.0F, new CubeDeformation(0.25F))
 				.texOffs(61, 110).addBox(8.0F, 17.51F, -4.0F, 6.0F, 10.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -7.0F, 0.0F));
 
@@ -63,7 +68,8 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> implement
 		left_arm_cross.addOrReplaceChild("left_arm_cross1", CubeListBuilder.create().texOffs(106, 42).addBox(-5.5F, -5.0F, 0.0F, 10.0F, 8.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.7854F, 0.0F));
 		left_arm_cross.addOrReplaceChild("left_arm_cross2", CubeListBuilder.create().texOffs(106, 42).addBox(-5.5F, -5.0F, 0.0F, 10.0F, 8.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, -0.7854F, 0.0F));
 
-		PartDefinition right_arm = partdefinition.addOrReplaceChild("right_arm", CubeListBuilder.create().texOffs(60, 21).addBox(-13.0F, -2.5F, -3.0F, 4.0F, 30.0F, 6.0F, new CubeDeformation(0.0F))
+		PartDefinition right_arm = partdefinition.addOrReplaceChild("right_arm", CubeListBuilder.create()
+				.texOffs(60, 21).addBox(-13.0F, -2.5F, -3.0F, 4.0F, 30.0F, 6.0F, new CubeDeformation(0.0F))
 				.texOffs(82, 21).addBox(-13.0F, -2.5F, -3.0F, 4.0F, 30.0F, 6.0F, new CubeDeformation(0.25F))
 				.texOffs(32, 110).addBox(-14.0F, 17.51F, -4.0F, 6.0F, 10.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -7.0F, 0.0F));
 
@@ -71,12 +77,15 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> implement
 		right_arm_cross.addOrReplaceChild("right_arm_cross1", CubeListBuilder.create().texOffs(106, 42).addBox(-4.5F, -5.0F, 0.0F, 10.0F, 8.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.7854F, 0.0F));
 		right_arm_cross.addOrReplaceChild("right_arm_cross2", CubeListBuilder.create().texOffs(106, 42).addBox(-5.5F, -5.0F, -1.0F, 10.0F, 8.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, -0.7854F, 0.0F));
 
-		PartDefinition head = partdefinition.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -12.0F, -5.5F, 8.0F, 10.0F, 8.0F, new CubeDeformation(0.0F))
+		PartDefinition head = partdefinition.addOrReplaceChild("head", CubeListBuilder.create()
+				.texOffs(0, 0).addBox(-4.0F, -12.0F, -5.5F, 8.0F, 10.0F, 8.0F, new CubeDeformation(0.0F))
 				.texOffs(0, 20).addBox(-4.0F, -12.0F, -5.5F, 8.0F, 10.0F, 8.0F, new CubeDeformation(0.25F))
 				.texOffs(24, 0).addBox(-1.0F, -5.0F, -7.5F, 2.0F, 4.0F, 2.0F, new CubeDeformation(0.0F))
 				.texOffs(24, 20).addBox(-1.0F, -5.0F, -7.5F, 2.0F, 4.0F, 2.0F, new CubeDeformation(0.25F))
 				.texOffs(17, 123).addBox(-1.0F, -15.0F, -2.5F, 2.0F, 3.0F, 2.0F, new CubeDeformation(0.0F))
-				.texOffs(0, 121).addBox(-2.0F, -18.0F, -3.5F, 4.0F, 3.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -7.0F, -2.0F));
+				.texOffs(0, 121).addBox(-2.0F, -18.0F, -3.5F, 4.0F, 3.0F, 4.0F, new CubeDeformation(0.0F))
+				.texOffs(106, 52).mirror().addBox(4.0F, -15.0F, -1.5F, 10.0F, 8.0F, 1.0F, new CubeDeformation(0.0F)).mirror(false)
+				.texOffs(106, 52).addBox(-15.0F, -15.0F, -1.5F, 10.0F, 8.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -7.0F, -2.0F));
 
 		PartDefinition head_cross = head.addOrReplaceChild("head_cross", CubeListBuilder.create(), PartPose.offsetAndRotation(0.0F, -12.0F, -2.0F, -0.1745F, 0.0F, 0.0F));
 		head_cross.addOrReplaceChild("head_cross1", CubeListBuilder.create().texOffs(106, 22).addBox(-5.5F, -8.0F, 0.0F, 10.0F, 8.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.7854F, 0.0F));
@@ -103,7 +112,7 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> implement
 							   final float greenIn, final float blueIn, final float alphaIn) {
 		matrixStackIn.pushPose();
 		// check for holiday tweaks
-		if (EGConfig.aprilFirst()) {
+		if (ExtraGolems.CONFIG.aprilFirst()) {
 			matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(180.0F));
 		}
 		// render with custom colors

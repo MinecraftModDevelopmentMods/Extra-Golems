@@ -8,7 +8,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
-import java.util.Random;
 
 public class GoToWaterGoal extends Goal {
 
@@ -56,13 +55,14 @@ public class GoToWaterGoal extends Goal {
 	}
 
 	private Vec3 getNearbyWater() {
-		Random rand = this.golem.getRandom();
 
 		BlockPos pos1 = this.golem.getBlockBelow();
 
 		for (int i = 0; i < 10; i++) {
-			BlockPos pos2 = pos1.offset(rand.nextInt(detectWaterRadius * 2) - detectWaterRadius, 2 - rand.nextInt(8),
-					rand.nextInt(detectWaterRadius * 2) - detectWaterRadius);
+			BlockPos pos2 = pos1.offset(
+					this.golem.getRandom().nextInt(detectWaterRadius * 2) - detectWaterRadius,
+					2 - this.golem.getRandom().nextInt(8),
+					this.golem.getRandom().nextInt(detectWaterRadius * 2) - detectWaterRadius);
 
 			if (this.world.getBlockState(pos2).getBlock() == Blocks.WATER) {
 				return new Vec3(pos2.getX(), pos2.getY(), pos2.getZ());

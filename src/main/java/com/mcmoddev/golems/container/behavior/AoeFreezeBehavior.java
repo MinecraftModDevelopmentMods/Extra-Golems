@@ -5,7 +5,6 @@ import com.mcmoddev.golems.entity.goal.AoeBlocksGoal;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
@@ -50,6 +49,6 @@ public class AoeFreezeBehavior extends GolemBehavior {
 
 	@Override
 	public void onAddDescriptions(List<Component> list) {
-		list.add(new TranslatableComponent("entitytip.aoe_freeze").withStyle(ChatFormatting.AQUA));
+		list.add(Component.translatable("entitytip.aoe_freeze").withStyle(ChatFormatting.AQUA));
 	}
 }

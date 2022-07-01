@@ -2,6 +2,7 @@ package com.mcmoddev.golems.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -21,7 +22,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
-import java.util.Random;
 
 public abstract class UtilityBlock extends Block implements SimpleWaterloggedBlock {
 
@@ -91,7 +91,7 @@ public abstract class UtilityBlock extends Block implements SimpleWaterloggedBlo
 	}
 
 	@Override
-	public void tick(final BlockState state, final ServerLevel worldIn, final BlockPos pos, final Random rand) {
+	public void tick(final BlockState state, final ServerLevel worldIn, final BlockPos pos, final RandomSource rand) {
 		super.tick(state, worldIn, pos, rand);
 		if (this.isRandomlyTicking(state)) {
 			worldIn.scheduleTick(pos, this, tickRate);

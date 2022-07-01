@@ -6,10 +6,10 @@ import com.mcmoddev.golems.container.behavior.parameter.BehaviorParameter;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.entity.goal.PlaceBlocksGoal;
 import com.mcmoddev.golems.util.ResourcePair;
+import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 
@@ -56,10 +56,10 @@ public class PlaceBlocksBehavior extends GolemBehavior {
 			});
 		}
 		// translation component
-		if(tag.contains(BehaviorParameter.S_TRANSLATION_KEY)) {
-			this.component = new TranslatableComponent(tag.getString(BehaviorParameter.S_TRANSLATION_KEY));
+		if (tag.contains(BehaviorParameter.S_TRANSLATION_KEY)) {
+			this.component = Component.translatable(tag.getString(BehaviorParameter.S_TRANSLATION_KEY)).withStyle(ChatFormatting.GREEN);
 		} else {
-			this.component = new TranslatableComponent("entitytip.places_blocks");
+			this.component = Component.translatable("entitytip.places_blocks").withStyle(ChatFormatting.GREEN);
 		}
 	}
 

@@ -1,8 +1,6 @@
 package com.mcmoddev.golems.container.behavior;
 
 import com.google.common.collect.ImmutableMap;
-import com.mcmoddev.golems.ExtraGolems;
-import com.mcmoddev.golems.container.behavior.parameter.ChangeMaterialBehaviorParameter;
 import com.mcmoddev.golems.container.behavior.parameter.ChangeTexturesBehaviorParameter;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.entity.goal.ChangeTextureGoal;
@@ -18,7 +16,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * This behavior allows an entity to change its texture based on
@@ -79,19 +76,19 @@ public class ChangeTextureBehavior extends GolemBehavior {
 		ItemStack item = player.getItemInHand(hand);
 		int textureId = entity.getTextureId();
 		// attempt to find the item ID in the map
-		ResourcePair itemId = new ResourcePair(item.getItem().getRegistryName(), false);
-		if(itemParameters.containsKey(itemId) && apply(entity, player, hand, itemParameters.get(itemId), textureId)) {
+		ResourcePair itemId = new ResourcePair(ForgeRegistries.ITEMS.getKey(item.getItem()), false);
+		if (itemParameters.containsKey(itemId) && apply(entity, player, hand, itemParameters.get(itemId), textureId)) {
 			return;
 		}
 		// attempt to find the item tag in the item
-		for(Map.Entry<ResourcePair, ChangeTexturesBehaviorParameter> entry : itemParameters.entrySet()) {
+		for (Map.Entry<ResourcePair, ChangeTexturesBehaviorParameter> entry : itemParameters.entrySet()) {
 			// skip resources that are not tags
-			if(!entry.getKey().flag()) {
+			if (!entry.getKey().flag()) {
 				continue;
 			}
 			// check if item contains the given tag
 			TagKey<Item> tagKey = ForgeRegistries.ITEMS.tags().createTagKey(entry.getKey().resource());
-			if(item.is(tagKey) && apply(entity, player, hand, entry.getValue(), textureId)) {
+			if (item.is(tagKey) && apply(entity, player, hand, entry.getValue(), textureId)) {
 				return;
 			}
 		}
@@ -99,16 +96,17 @@ public class ChangeTextureBehavior extends GolemBehavior {
 
 	/**
 	 * Attempts to change the texture of the given entity, with a random chance
-	 * @param entity the entity
-	 * @param param the change texture parameter
+	 *
+	 * @param entity    the entity
+	 * @param param     the change texture parameter
 	 * @param textureId the current texture ID
 	 * @return true if the texture was changed
 	 */
 	private boolean apply(final GolemBase entity, final Player player, final InteractionHand hand, final ChangeTexturesBehaviorParameter param, final int textureId) {
-		if(entity.getRandom().nextFloat() < param.getChance()) {
+		if (entity.getRandom().nextFloat() < param.getChance()) {
 			// determine next texture and update the entity
 			int updateTextureId = param.getTextureId(String.valueOf(textureId), textureId);
-			if(updateTextureId != textureId) {
+			if (updateTextureId != textureId) {
 				entity.setTextureId((byte) updateTextureId);
 				sendParticles(entity, ParticleTypes.INSTANT_EFFECT, 12);
 				player.swing(hand);

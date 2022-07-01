@@ -5,7 +5,6 @@ import com.mcmoddev.golems.entity.goal.FollowGoal;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 
@@ -37,7 +36,7 @@ public class FollowBehavior extends GolemBehavior {
 		super(tag);
 		priority = tag.getInt("priority");
 		mobType = new ResourceLocation(tag.getString("entity"));
-		description = new TranslatableComponent("entitytip.follow_x", new TranslatableComponent("entity." + mobType.getNamespace() + "." + mobType.getPath())).withStyle(ChatFormatting.DARK_GREEN);
+		description = Component.translatable("entitytip.follow_x", Component.translatable("entity." + mobType.getNamespace() + "." + mobType.getPath())).withStyle(ChatFormatting.DARK_GREEN);
 	}
 
 	public int getPriority() {

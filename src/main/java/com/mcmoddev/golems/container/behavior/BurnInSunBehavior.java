@@ -5,7 +5,6 @@ import com.mcmoddev.golems.entity.goal.BurnInSunGoal;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.ai.goal.FleeSunGoal;
 import net.minecraft.world.entity.ai.goal.RestrictSunGoal;
 
@@ -47,6 +46,6 @@ public class BurnInSunBehavior extends GolemBehavior {
 
 	@Override
 	public void onAddDescriptions(List<Component> list) {
-		list.add(new TranslatableComponent("entitytip.burn_in_sun").withStyle(ChatFormatting.DARK_PURPLE));
+		list.add(Component.translatable("entitytip.burn_in_sun").withStyle(ChatFormatting.DARK_PURPLE));
 	}
 }

@@ -14,10 +14,11 @@
     "minecraft:birch_planks": 0.15,
     "minecraft:jungle_planks": 0.15,
     "minecraft:acacia_planks": 0.15,
-    "minecraft:dark_oak_planks": 0.15
+    "minecraft:dark_oak_planks": 0.15,
+	"minecraft:mangrove_planks": 0.15
   },
   "multitexture": {
-    "texture_count": 6,
+    "texture_count": 7,
 	"textures": {
 	  "0": {
 		"blocks": "#minecraft:dark_oak_logs",
@@ -42,6 +43,10 @@
 	  "5": {
 		"blocks": "#minecraft:spruce_logs",
 		"loot_table": "golems:log/spruce"
+	  },
+	  "6": {
+		"blocks": "#minecraft:mangrove_logs",
+		"loot_table": "golems:log/mangrove"
 	  }
     }
   }

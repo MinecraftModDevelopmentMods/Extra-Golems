@@ -12,7 +12,6 @@ import net.minecraft.world.entity.LivingEntity;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * This behavior allows an entity to react when actually hurt.
@@ -46,15 +45,15 @@ public class OnActuallyHurtBehavior extends GolemBehavior {
 	public void onActuallyHurt(final GolemBase entity, final DamageSource source, final float amount) {
 		if (!entity.isBaby()) {
 			// apply fire
-			if(fire != null) {
+			if (fire != null) {
 				fire.apply(entity, source.getEntity());
 			}
 			// apply effect
-			if(effect != null && source.getEntity() instanceof LivingEntity) {
+			if (effect != null && source.getEntity() instanceof LivingEntity) {
 				effect.apply(entity, (LivingEntity) source.getEntity());
 			}
 			// apply summon
-			if(summon != null) {
+			if (summon != null) {
 				summon.apply(entity, source.getEntity());
 			}
 		}
@@ -63,11 +62,11 @@ public class OnActuallyHurtBehavior extends GolemBehavior {
 	@Override
 	public void onAddDescriptions(List<Component> list) {
 		// add fire description
-		if(fire != null && fire.getTarget() != Target.SELF && !list.contains(FIRE_DESC)) {
+		if (fire != null && fire.getTarget() != Target.SELF && !list.contains(FIRE_DESC)) {
 			list.add(FIRE_DESC);
 		}
 		// add effect description
-		if(effect != null) {
+		if (effect != null) {
 			if (effect.getTarget() == Target.SELF && !list.contains(EFFECTS_SELF_DESC)) {
 				list.add(EFFECTS_SELF_DESC);
 			} else if (effect.getTarget() != Target.SELF && !list.contains(EFFECTS_ENEMY_DESC)) {
@@ -75,9 +74,9 @@ public class OnActuallyHurtBehavior extends GolemBehavior {
 			}
 		}
 		// add summon description
-		if(summon != null) {
+		if (summon != null) {
 			Component desc = summon.getDescription();
-			if(!list.contains(desc)) {
+			if (!list.contains(desc)) {
 				list.add(desc);
 			}
 		}

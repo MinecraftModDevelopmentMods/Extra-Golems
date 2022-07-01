@@ -108,7 +108,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
 		ResourceLocation texture = settings.getBase(golem).resource();
 		boolean disableLayers = false;
 		// special cases
-		if (EGConfig.halloween() && isNightTime(golem)) {
+		if (ExtraGolems.CONFIG.halloween() && isNightTime(golem)) {
 			texture = boneTexture;
 			disableLayers = true;
 		} else if (golem.hasCustomName()) {

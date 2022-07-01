@@ -7,7 +7,6 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
-import net.minecraft.world.phys.AABB;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
@@ -50,7 +49,8 @@ public class MobEffectBehaviorParameter extends BehaviorParameter {
 
 	/**
 	 * Applies the behavior based on its parameters
-	 * @param self the entity
+	 *
+	 * @param self  the entity
 	 * @param other the target entity, if any
 	 */
 	public void apply(GolemBase self, LivingEntity other) {
@@ -67,7 +67,7 @@ public class MobEffectBehaviorParameter extends BehaviorParameter {
 					List<LivingEntity> targets = self.level.getNearbyEntities(LivingEntity.class,
 							condition, self, self.getBoundingBox().inflate(inflate));
 					// apply to each entity in list
-					for(LivingEntity target : targets) {
+					for (LivingEntity target : targets) {
 						applyEffect(target, effect);
 					}
 					break;
@@ -83,11 +83,12 @@ public class MobEffectBehaviorParameter extends BehaviorParameter {
 
 	/**
 	 * Applies a MobEffectInstance to the given entity
+	 *
 	 * @param target the entity
 	 * @param effect the effect instance
 	 */
-	private void applyEffect(final LivingEntity target,final MobEffectInstance effect) {
-		if(effect != null && target != null) {
+	private void applyEffect(final LivingEntity target, final MobEffectInstance effect) {
+		if (effect != null && target != null) {
 			target.addEffect(effect);
 		}
 	}

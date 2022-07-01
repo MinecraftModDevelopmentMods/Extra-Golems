@@ -1,0 +1,45 @@
+{
+  "attributes": {
+    "health": 16.0,
+    "attack": 4.2,
+    "speed": 0.28,
+	"knockback_resistance": 0.0
+  },
+  "swim_ability": "float",
+  "sound": "minecraft:block.wood.step",
+  "heal_items": {
+	"minecraft:mangrove_roots": 0.5,
+	"minecraft:muddy_mangrove_roots": 0.5,
+    "minecraft:mud": 0.25,
+	"#forge:rods/wooden": 0.1
+  },
+  "multitexture": {
+	"texture_count": 2,
+	"textures": {
+	  "0": {
+		"blocks": "minecraft:mangrove_roots",
+		"loot_table": "golems:mangrove_roots/normal"
+	  },
+	  "1": {
+		"blocks": "minecraft:muddy_mangrove_roots",
+		"loot_table": "golems:mangrove_roots/muddy"
+	  }
+	}
+  },
+  "behavior": [
+    {
+	  "type": "golems:passive_effect",
+	  "effect": {
+		"target": "self",
+		"chance": 0.0006,
+		"effects": [
+		  {
+  	  	    "Potion": "minecraft:regeneration",
+  	  	    "Amplifier": 0,
+  	  	    "Duration": 300
+  	      }
+	    ]
+	  }
+	}
+  ]
+}

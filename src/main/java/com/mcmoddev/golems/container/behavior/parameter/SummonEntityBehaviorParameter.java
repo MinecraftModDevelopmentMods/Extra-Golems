@@ -5,7 +5,6 @@ import com.mcmoddev.golems.entity.GolemBase;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -39,11 +38,11 @@ public class SummonEntityBehaviorParameter extends BehaviorParameter {
 		this.chance = tag.getDouble("chance");
 		this.bonusChanceInRain = tag.getDouble("bonus_chance_in_rain");
 		// translation component
-		if(tag.contains(S_TRANSLATION_KEY)) {
-			this.component = new TranslatableComponent(tag.getString(S_TRANSLATION_KEY));
+		if (tag.contains(S_TRANSLATION_KEY)) {
+			this.component = Component.translatable(tag.getString(S_TRANSLATION_KEY));
 		} else {
-			this.component = new TranslatableComponent("entitytip.summon_x",
-					new TranslatableComponent("entity." + entityId.getNamespace() + "." + entityId.getPath()));
+			this.component = Component.translatable("entitytip.summon_x",
+					Component.translatable("entity." + entityId.getNamespace() + "." + entityId.getPath()));
 		}
 	}
 

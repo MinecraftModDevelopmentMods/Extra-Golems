@@ -7,7 +7,6 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 
 import java.util.EnumSet;
-import java.util.Optional;
 
 public class ChangeTextureGoal<T extends Mob & IMultitextured & IFuelConsumer> extends Goal {
 

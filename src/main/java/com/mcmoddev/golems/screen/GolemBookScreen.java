@@ -11,8 +11,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
@@ -34,26 +32,26 @@ public class GolemBookScreen extends Screen {
 	protected static final ResourceLocation TEXTURE = new ResourceLocation(ExtraGolems.MODID, "textures/gui/info_book.png");
 	protected static final ResourceLocation CONTENTS = new ResourceLocation(ExtraGolems.MODID, "textures/gui/info_book_contents.png");
 
-	protected static final Component INTRO_TITLE = new TranslatableComponent("item.golems.info_book");
-	protected static final Component INTRO_PAGE = new TranslatableComponent("golembook.intro1").append("\n").append(new TranslatableComponent("golembook.intro2"));
+	protected static final Component INTRO_TITLE = Component.translatable("item.golems.info_book");
+	protected static final Component INTRO_PAGE = Component.translatable("golembook.intro1").append("\n").append(Component.translatable("golembook.intro2"));
 
-	protected static final Component CONTENTS_TITLE = new TranslatableComponent("golembook.contents.title");
+	protected static final Component CONTENTS_TITLE = Component.translatable("golembook.contents.title");
 
-	protected static final Component BUILD_GOLEM_TITLE = new TranslatableComponent("golembook.build_golem.title");
-	protected static final Component BUILD_GOLEM_PAGE = new TranslatableComponent("golembook.build_golem.howto1").append(" ")
-			.append(new TranslatableComponent("golembook.build_golem.howto2")).append("\n\n")
-			.append(new TranslatableComponent("golembook.build_golem.howto3", new TranslatableComponent("block.golems.golem_head")));
+	protected static final Component BUILD_GOLEM_TITLE = Component.translatable("golembook.build_golem.title");
+	protected static final Component BUILD_GOLEM_PAGE = Component.translatable("golembook.build_golem.howto1").append(" ")
+			.append(Component.translatable("golembook.build_golem.howto2")).append("\n\n")
+			.append(Component.translatable("golembook.build_golem.howto3", Component.translatable("block.golems.golem_head")));
 
-	protected static final Component BUILD_HEAD_TITLE = new TranslatableComponent("block.golems.golem_head");
-	protected static final Component BUILD_HEAD_PAGE = new TextComponent("\n\n\n\n")
-			.append(new TranslatableComponent("golembook.recipe_head.recipe", BUILD_HEAD_TITLE,
-					new TranslatableComponent("item.golems.golem_spell"), new TranslatableComponent("block.minecraft.pumpkin")));
+	protected static final Component BUILD_HEAD_TITLE = Component.translatable("block.golems.golem_head");
+	protected static final Component BUILD_HEAD_PAGE = Component.literal("\n\n\n\n")
+			.append(Component.translatable("golembook.recipe_head.recipe", BUILD_HEAD_TITLE,
+					Component.translatable("item.golems.golem_spell"), Component.translatable("block.minecraft.pumpkin")));
 
-	protected static final Component BUILD_SPELL_TITLE = new TranslatableComponent("item.golems.golem_spell");
-	protected static final Component BUILD_SPELL_PAGE = new TextComponent("\n\n\n\n")
-			.append(new TranslatableComponent("golembook.recipe_spell.recipe", BUILD_SPELL_TITLE,
-					new TranslatableComponent("item.minecraft.paper"), new TranslatableComponent("item.minecraft.feather"),
-					new TranslatableComponent("item.minecraft.ink_sac"), new TranslatableComponent("item.minecraft.redstone")));
+	protected static final Component BUILD_SPELL_TITLE = Component.translatable("item.golems.golem_spell");
+	protected static final Component BUILD_SPELL_PAGE = Component.literal("\n\n\n\n")
+			.append(Component.translatable("golembook.recipe_spell.recipe", BUILD_SPELL_TITLE,
+					Component.translatable("item.minecraft.paper"), Component.translatable("item.minecraft.feather"),
+					Component.translatable("item.minecraft.ink_sac"), Component.translatable("item.minecraft.redstone")));
 
 	// book texture has these dimensions
 	protected static final int BOOK_HEIGHT = 164;
@@ -163,7 +161,7 @@ public class GolemBookScreen extends Screen {
 		int doneH = 20;
 		int doneX = (this.width - doneW) / 2;
 		int doneY = BOOK_HEIGHT + SCR_OFFSET_Y + 8;
-		this.addRenderableWidget(new Button(doneX, doneY, doneW, doneH, new TranslatableComponent("gui.done"), c -> this.minecraft.setScreen(null)));
+		this.addRenderableWidget(new Button(doneX, doneY, doneW, doneH, Component.translatable("gui.done"), c -> this.minecraft.setScreen(null)));
 		// locate and activate the "page change" arrows
 		int arrowX = (this.width - BOOK_WIDTH) / 2;
 		int arrowY = SCR_OFFSET_Y + BOOK_HEIGHT - (ARROW_HEIGHT * 3 / 2);
@@ -374,7 +372,7 @@ public class GolemBookScreen extends Screen {
 
 	private void drawTableOfContents(final PoseStack matrix, final int cornerX, final int cornerY, final Component title) {
 		// use this to draw the title
-		drawBasicPage(matrix, cornerX, cornerY, title, TextComponent.EMPTY);
+		drawBasicPage(matrix, cornerX, cornerY, title, Component.empty());
 
 		// draw background
 		RenderSystem.setShaderTexture(0, CONTENTS);
@@ -591,7 +589,7 @@ public class GolemBookScreen extends Screen {
 		private final GolemBookScreen gui;
 
 		public BlockButton(GolemBookScreen guiIn, Block[] blockValues, int x, int y, float scaleIn) {
-			super(x, y, (int) (scaleIn * 16.0F), (int) (scaleIn * 16.0F), TextComponent.EMPTY, b -> {
+			super(x, y, (int) (scaleIn * 16.0F), (int) (scaleIn * 16.0F), Component.empty(), b -> {
 			}, (b, p, mx, my) -> b.renderToolTip(p, mx, my));
 			this.gui = guiIn;
 			this.blocks = blockValues;
@@ -636,7 +634,7 @@ public class GolemBookScreen extends Screen {
 		private GolemBookEntry entry;
 
 		public GolemEntryButton(final GolemBookScreen guiIn, final GolemBookEntry entryIn, final int x, final int y) {
-			super(x, y, ENTRY_W, ENTRY_H, TextComponent.EMPTY, b -> {
+			super(x, y, ENTRY_W, ENTRY_H, Component.empty(), b -> {
 			});
 			this.gui = guiIn;
 			this.entry = entryIn;
@@ -703,7 +701,7 @@ public class GolemBookScreen extends Screen {
 		private final boolean isForward;
 
 		public NextPageButton(GolemBookScreen guiBook, int x, int y, boolean isForwardIn) {
-			super(x, y, ARROW_WIDTH, ARROW_HEIGHT, TextComponent.EMPTY, b -> {
+			super(x, y, ARROW_WIDTH, ARROW_HEIGHT, Component.empty(), b -> {
 			});
 			this.gui = guiBook;
 			this.isForward = isForwardIn;

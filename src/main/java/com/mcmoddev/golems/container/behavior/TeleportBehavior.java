@@ -5,7 +5,6 @@ import com.mcmoddev.golems.entity.goal.RandomTeleportGoal;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.IndirectEntityDamageSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -81,6 +80,6 @@ public class TeleportBehavior extends GolemBehavior {
 
 	@Override
 	public void onAddDescriptions(List<Component> list) {
-		list.add(new TranslatableComponent("entitytip.teleport").withStyle(ChatFormatting.LIGHT_PURPLE));
+		list.add(Component.translatable("entitytip.teleport").withStyle(ChatFormatting.LIGHT_PURPLE));
 	}
 }

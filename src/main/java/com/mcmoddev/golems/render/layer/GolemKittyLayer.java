@@ -27,7 +27,7 @@ public class GolemKittyLayer<T extends GolemBase> extends RenderLayer<T, GolemMo
 					   float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
 		if (!golem.isInvisible() && getParentModel().getKitty().visible) {
 			// check for holiday tweaks
-			if (EGConfig.aprilFirst()) {
+			if (ExtraGolems.CONFIG.aprilFirst()) {
 				matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(180.0F));
 			}
 			// get packed light and a vertex builder bound to the correct texture

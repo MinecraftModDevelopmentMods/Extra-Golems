@@ -6,11 +6,9 @@ import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.entity.goal.PassiveEffectsGoal;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.effect.MobEffectInstance;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * This behavior allows an entity to passively apply a mob effect
@@ -35,14 +33,14 @@ public class PassiveEffectBehavior extends GolemBehavior {
 
 	@Override
 	public void onRegisterGoals(final GolemBase entity) {
-		if(effect != null) {
+		if (effect != null) {
 			entity.goalSelector.addGoal(4, new PassiveEffectsGoal(entity, effect.getEffects(), nightOnly, effect.getTarget(), (float) effect.getChance(), effect.getRange()));
 		}
 	}
 
 	@Override
 	public void onAddDescriptions(List<Component> list) {
-		if(effect != null) {
+		if (effect != null) {
 			if (effect.getTarget() == Target.SELF && !list.contains(EFFECTS_SELF_DESC)) {
 				list.add(EFFECTS_SELF_DESC);
 			} else if (effect.getTarget() != Target.SELF && !list.contains(EFFECTS_ENEMY_DESC)) {

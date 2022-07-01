@@ -1,0 +1,23 @@
+{
+  "attributes": {
+    "health": 54.0,
+    "attack": 6.5,
+    "speed": 0.32,
+	"immune_to_fire": true
+  },
+  "blocks": "minecraft:sculk",
+  "heal_items": {
+    "minecraft:sculk": 0.5,
+	"minecraft:experience_bottle": 0.5
+  },
+  "behavior": [
+	{
+	  "type": "golems:place_blocks",
+	  "interval": 90,
+	  "translation_key": "entitytip.places_sculk",
+	  "blocks": [
+		"minecraft:sculk_vein"
+	  ]
+	}
+  ]
+}

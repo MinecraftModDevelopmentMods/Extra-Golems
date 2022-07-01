@@ -18,10 +18,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ColoredTextureLayer<T extends GolemBase> extends RenderLayer<T, GolemModel<T>> {
 
@@ -57,14 +53,15 @@ public class ColoredTextureLayer<T extends GolemBase> extends RenderLayer<T, Gol
 
 	/**
 	 * Renders an individual texture using the given LayerRenderSettings
-	 * @param entity the entity
-	 * @param model the parent model
-	 * @param settings the parent render settings
-	 * @param layer the layer render settings
+	 *
+	 * @param entity        the entity
+	 * @param model         the parent model
+	 * @param settings      the parent render settings
+	 * @param layer         the layer render settings
 	 * @param matrixStackIn the pose stack
-	 * @param bufferIn the buffer source
+	 * @param bufferIn      the buffer source
 	 * @param packedLightIn the packed light amount
-	 * @param <G> the golem entity
+	 * @param <G>           the golem entity
 	 */
 	protected static <G extends GolemBase> void renderTexture(G entity, GolemModel<G> model, GolemRenderSettings settings, LayerRenderSettings layer,
 															  PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, int packedOverlayIn) {

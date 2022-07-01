@@ -5,7 +5,6 @@ import com.mcmoddev.golems.menu.PortableCraftingMenu;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
@@ -38,6 +37,6 @@ public class CraftingMenuBehavior extends GolemBehavior {
 
 	@Override
 	public void onAddDescriptions(List<Component> list) {
-		list.add(new TranslatableComponent("entitytip.crafting_menu").withStyle(ChatFormatting.BLUE));
+		list.add(Component.translatable("entitytip.crafting_menu").withStyle(ChatFormatting.BLUE));
 	}
 }

@@ -11,7 +11,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -47,7 +46,7 @@ public final class SpawnGolemItem extends Item {
 		final BlockPos pos = context.getClickedPos();
 		final ItemStack stack = context.getItemInHand();
 
-		if ((EGConfig.bedrockGolemCreativeOnly() && !player.isCreative()) || facing == Direction.DOWN) {
+		if ((ExtraGolems.CONFIG.isBedrockGolemCreativeOnly() && !player.isCreative()) || facing == Direction.DOWN) {
 			return InteractionResult.FAIL;
 		}
 
@@ -116,17 +115,17 @@ public final class SpawnGolemItem extends Item {
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-		final Component loreCreativeOnly = new TranslatableComponent("tooltip.creative_only_item").withStyle(ChatFormatting.RED);
-		final Component lorePressShift = new TranslatableComponent("tooltip.press").withStyle(ChatFormatting.GRAY).append(" ")
-				.append(new TranslatableComponent("tooltip.shift").withStyle(ChatFormatting.YELLOW)).append(" ")
-				.append(new TranslatableComponent("tooltip.for_more_details").withStyle(ChatFormatting.GRAY));
+		final Component loreCreativeOnly = Component.translatable("tooltip.creative_only_item").withStyle(ChatFormatting.RED);
+		final Component lorePressShift = Component.translatable("tooltip.press").withStyle(ChatFormatting.GRAY).append(" ")
+				.append(Component.translatable("tooltip.shift").withStyle(ChatFormatting.YELLOW)).append(" ")
+				.append(Component.translatable("tooltip.for_more_details").withStyle(ChatFormatting.GRAY));
 		// "Creative-Mode Only"
 		tooltip.add(loreCreativeOnly);
 		// "Use to spawn Bedrock Golem. Use on existing Bedrock Golem to remove it"
 		if (Screen.hasShiftDown()) {
-			tooltip.add(new TranslatableComponent("tooltip.use_to_spawn", new TranslatableComponent("entity.golems.golem.bedrock")));
-			tooltip.add(new TranslatableComponent("tooltip.use_on_existing", new TranslatableComponent("entity.golems.golem.bedrock")));
-			tooltip.add(new TranslatableComponent("tooltip.to_remove_it"));
+			tooltip.add(Component.translatable("tooltip.use_to_spawn", Component.translatable("entity.golems.golem.bedrock")));
+			tooltip.add(Component.translatable("tooltip.use_on_existing", Component.translatable("entity.golems.golem.bedrock")));
+			tooltip.add(Component.translatable("tooltip.to_remove_it"));
 		} else {
 			// "Press SHIFT for more details"
 			tooltip.add(lorePressShift);

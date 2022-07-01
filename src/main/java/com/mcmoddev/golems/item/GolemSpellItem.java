@@ -1,12 +1,11 @@
 package com.mcmoddev.golems.item;
 
-import com.mcmoddev.golems.EGConfig;
 import com.mcmoddev.golems.EGRegistry;
+import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.block.GolemHeadBlock;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -28,7 +27,7 @@ public class GolemSpellItem extends Item {
 	 * @Override protected ItemStack dispenseStack(final IBlockSource source, final
 	 * ItemStack stack) { World world = source.getWorld(); BlockPos blockpos =
 	 * source.getBlockPos().offset(source.getBlockState().get(BlockDispenser.FACING)
-	 * ); if (EGConfig.enableUseSpellItem() &&
+	 * ); if (ExtraGolems.CONFIG.enableUseSpellItem() &&
 	 * world.getBlockState(blockpos).getBlock() == Blocks.CARVED_PUMPKIN) { if
 	 * (!world.isRemote) { final EnumFacing facing =
 	 * world.getBlockState(blockpos).get(BlockHorizontal.HORIZONTAL_FACING);
@@ -45,9 +44,9 @@ public class GolemSpellItem extends Item {
 
 	@Override
 	public InteractionResult useOn(UseOnContext cxt) {
-		if (EGConfig.enableUseSpellItem() && cxt.getClickedPos() != null && cxt.getItemInHand() != null && !cxt.getItemInHand().isEmpty()) {
+		if (ExtraGolems.CONFIG.enableUseSpellItem() && cxt.getClickedPos() != null && cxt.getItemInHand() != null && !cxt.getItemInHand().isEmpty()) {
 			final Block b = cxt.getLevel().getBlockState(cxt.getClickedPos()).getBlock();
-			if (b == Blocks.CARVED_PUMPKIN || (b == Blocks.PUMPKIN && EGConfig.pumpkinBuildsGolems())) {
+			if (b == Blocks.CARVED_PUMPKIN || (b == Blocks.PUMPKIN && ExtraGolems.CONFIG.pumpkinBuildsGolems())) {
 				if (!cxt.getLevel().isClientSide()) {
 					final Direction facing = cxt.getLevel().getBlockState(cxt.getClickedPos()).getValue(HorizontalDirectionalBlock.FACING);
 					cxt.getLevel().setBlock(cxt.getClickedPos(), EGRegistry.GOLEM_HEAD.get().defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, facing), 3);
@@ -62,6 +61,6 @@ public class GolemSpellItem extends Item {
 
 	@Override
 	public Component getName(ItemStack stack) {
-		return new TranslatableComponent(this.getDescriptionId(stack)).withStyle(ChatFormatting.RED);
+		return Component.translatable(this.getDescriptionId(stack)).withStyle(ChatFormatting.RED);
 	}
 }

@@ -36,7 +36,7 @@
 	  "night_only": true,
 	  "effect": {
 		"target": "self",
-		"chance": 0.08,
+		"chance": 0.0008,
 		"effects": [
 		  {
   	  	    "Potion": "minecraft:regeneration",
