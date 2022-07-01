@@ -13,7 +13,6 @@
 	"minecraft:nether_wart": 0.15
   },
   "multitexture": {
-	"texture_count": 2,
 	"textures": {
 	  "0": {
 		"blocks": "minecraft:nether_wart_block",

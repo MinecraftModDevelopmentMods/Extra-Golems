@@ -8,7 +8,7 @@
   "blocks": "#forge:storage_blocks/raw_copper",
   "heal_items": {
     "#forge:storage_blocks/raw_copper": 0.5,
-	"#forge:raw_ores/copper": 0.1,
+	"#forge:raw_materials/copper": 0.1,
 	"#forge:ingots/copper": 0.25
   }
 }

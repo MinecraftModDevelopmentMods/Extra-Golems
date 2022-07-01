@@ -5,9 +5,9 @@
     "speed": 0.28,
 	"knockback_resistance": 0.6
   },
-  "blocks": "#forge:quartz",
+  "blocks": "#forge:storage_blocks/quartz",
   "heal_items": {
-    "#forge:quartz": 0.5,
+    "#forge:storage_blocks/quartz": 0.5,
 	"#forge:gems/quartz": 0.15
   }
 }

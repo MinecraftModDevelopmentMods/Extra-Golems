@@ -14,7 +14,6 @@
 	"#forge:dusts/glowstone": 0.15
   },
   "multitexture": {
-    "texture_count": 2,
 	"cycle": true,
 	"textures": {
 	  "0": {

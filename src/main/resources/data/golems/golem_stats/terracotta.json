@@ -9,7 +9,6 @@
     "#forge:terracotta": 0.5
   },
   "multitexture": {
-    "texture_count": 17,
 	"textures": {
 	  "0": {
 		"blocks": "#forge:terracotta/colorless",

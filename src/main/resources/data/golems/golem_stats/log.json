@@ -17,7 +17,6 @@
     "minecraft:dark_oak_planks": 0.15
   },
   "multitexture": {
-    "texture_count": 6,
 	"textures": {
 	  "0": {
 		"blocks": "#minecraft:dark_oak_logs",

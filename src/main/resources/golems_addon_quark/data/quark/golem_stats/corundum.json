@@ -13,7 +13,6 @@
 	"#quark:corundum_cluster": 0.15
   },
   "multitexture": {
-    "texture_count": 9,
 	"textures": {
 	  "0": {
 		"blocks": "quark:red_corundum",

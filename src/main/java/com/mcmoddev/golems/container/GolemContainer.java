@@ -63,7 +63,7 @@ public final class GolemContainer {
 			ImmutableMap.of(), Optional.empty(), ImmutableList.of());
 
 	public static final Codec<GolemContainer> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			AttributeSettings.CODEC.fieldOf("attributes").forGetter(GolemContainer::getAttributes),
+			AttributeSettings.CODEC.optionalFieldOf("attributes", AttributeSettings.EMPTY).forGetter(GolemContainer::getAttributes),
 			SwimMode.CODEC.optionalFieldOf("swim_ability", SwimMode.SINK).forGetter(GolemContainer::getSwimAbility),
 			Codec.INT.optionalFieldOf("glow", 0).forGetter(GolemContainer::getMaxLightLevel),
 			Codec.INT.optionalFieldOf("power", 0).forGetter(GolemContainer::getMaxPowerLevel),

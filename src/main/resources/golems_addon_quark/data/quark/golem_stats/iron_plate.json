@@ -10,7 +10,6 @@
 	"minecraft:iron_ingot": 0.25
   },
   "multitexture": {
-	"texture_count": 2,
 	"textures": {
 	  "0": {
 		"blocks": "quark:iron_plate",

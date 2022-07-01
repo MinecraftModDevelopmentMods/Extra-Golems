@@ -5,13 +5,11 @@
     "speed": 0.26,
 	"immune_to_fire": true
   },
-  "sound": "minecraft:block.grass.step",
   "heal_items": {
     "#forge:sandstone": 0.5,
 	"#forge:sand": 0.15
   },
   "multitexture": {
-	"texture_count": 2,
 	"textures": {
 	  "0": {
 		"blocks": [

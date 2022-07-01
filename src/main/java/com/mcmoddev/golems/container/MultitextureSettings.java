@@ -21,10 +21,9 @@ import java.util.function.Function;
 
 public class MultitextureSettings {
 
-	public static final MultitextureSettings EMPTY = new MultitextureSettings(0, false, ImmutableMap.of());
+	public static final MultitextureSettings EMPTY = new MultitextureSettings(false, ImmutableMap.of());
 
 	public static final Codec<MultitextureSettings> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			Codec.INT.fieldOf("texture_count").forGetter(MultitextureSettings::getTextureCount),
 			Codec.BOOL.optionalFieldOf("cycle", false).forGetter(MultitextureSettings::canCycle),
 			Codec.unboundedMap(Codec.STRING.xmap(Integer::parseInt, i -> Integer.toString(i)), MultitextureSettings.TextureEntry.CODEC)
 					.fieldOf("textures").forGetter(MultitextureSettings::getTextureEntryMap)
@@ -35,8 +34,8 @@ public class MultitextureSettings {
 	private final ImmutableMap<Integer, MultitextureSettings.TextureEntry> entryMap;
 	private final ImmutableMap<ResourcePair, Integer> blockMap;
 
-	private MultitextureSettings(int textureCount, boolean cycle, Map<Integer, MultitextureSettings.TextureEntry> entryMap) {
-		this.textureCount = textureCount;
+	private MultitextureSettings(boolean cycle, Map<Integer, MultitextureSettings.TextureEntry> entryMap) {
+		this.textureCount = entryMap.size();
 		this.cycle = cycle;
 		this.entryMap = ImmutableMap.copyOf(entryMap);
 		// populate block-to-texture map and validate entry map
@@ -86,7 +85,7 @@ public class MultitextureSettings {
 
 
 	public int getLight(final GolemBase entity) {
-		return entryMap.getOrDefault(entity.getTextureId(), MultitextureSettings.TextureEntry.EMPTY).getLight();
+		return getEntry(entity.getTextureId()).getLight();
 	}
 
 	/**
@@ -95,8 +94,9 @@ public class MultitextureSettings {
 	 */
 	public ResourceLocation getLootTable(final GolemBase entity) {
 		ResourceLocation fallback = entity.getMaterial();
-		if (entryMap.containsKey(entity.getTextureId())) {
-			return entryMap.get(entity.getTextureId()).getLootTable().orElse(fallback);
+		int textureId = entity.getTextureId();
+		if (entryMap.containsKey(textureId)) {
+			return getEntry(textureId).getLootTable().orElse(fallback);
 		}
 		return fallback;
 	}

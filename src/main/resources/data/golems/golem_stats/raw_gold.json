@@ -8,7 +8,7 @@
   "blocks": "#forge:storage_blocks/raw_gold",
   "heal_items": {
     "#forge:storage_blocks/raw_gold": 0.5,
-	"#forge:raw_ores/gold": 0.1,
+	"#forge:raw_materials/gold": 0.1,
 	"#forge:ingots/gold": 0.25
   }
 }
