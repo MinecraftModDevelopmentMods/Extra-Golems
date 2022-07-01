@@ -170,6 +170,7 @@
   "entitytip.summon_rose_quartz": "Can drop rose quartz shards when hurt",
   "command.golem.invalid_id": "Invalid golem type %1$s",
   "command.golem.success": "Summoned golem with type \"%1$s\" at (%2$s, %3$s, %4$s)",
+  "command.golem.list": "There are %1$s golems registered: %2$s",
   "item.golems.info_book": "Extra Golems Guide",
   "golembook.intro1": "Welcome to Extra Golems! This guide will help you build your very own golem army.",
   "golembook.intro2": "Turn the page to get started!",

@@ -13,9 +13,14 @@ import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.MobSpawnType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SummonGolemCommand {
 
@@ -25,25 +30,38 @@ public class SummonGolemCommand {
 		LiteralCommandNode<CommandSourceStack> commandNode = commandSource.register(
 				Commands.literal("golem")
 						.requires(p -> p.hasPermission(2))
-						.then(Commands.argument("type", ResourceLocationArgument.id())
-								.executes(command -> summonGolem(command.getSource(),
-										ResourceLocationArgument.getId(command, "type"),
-										new BlockPos(command.getSource().getPosition()),
-										new CompoundTag()))
-								.then(Commands.argument("pos", BlockPosArgument.blockPos())
+						.then(Commands.literal("list")
+								.executes(command -> listGolems(command.getSource())))
+						.then(Commands.literal("summon")
+								.then(Commands.argument("type", ResourceLocationArgument.id())
 										.executes(command -> summonGolem(command.getSource(),
 												ResourceLocationArgument.getId(command, "type"),
-												BlockPosArgument.getLoadedBlockPos(command, "pos"),
+												new BlockPos(command.getSource().getPosition()),
 												new CompoundTag()))
-										.then(Commands.argument("tag", CompoundTagArgument.compoundTag())
+										.then(Commands.argument("pos", BlockPosArgument.blockPos())
 												.executes(command -> summonGolem(command.getSource(),
 														ResourceLocationArgument.getId(command, "type"),
 														BlockPosArgument.getLoadedBlockPos(command, "pos"),
-														CompoundTagArgument.getCompoundTag(command, "tag")))))));
+														new CompoundTag()))
+												.then(Commands.argument("tag", CompoundTagArgument.compoundTag())
+														.executes(command -> summonGolem(command.getSource(),
+																ResourceLocationArgument.getId(command, "type"),
+																BlockPosArgument.getLoadedBlockPos(command, "pos"),
+																CompoundTagArgument.getCompoundTag(command, "tag"))))))))
+						;
 
 		commandSource.register(Commands.literal("golem")
 				.requires(p -> p.hasPermission(2))
 				.redirect(commandNode));
+	}
+
+	private static int listGolems(CommandSourceStack source) {
+		// sort list of all golem id entries
+		List<ResourceLocation> golemIds = new ArrayList<>(ExtraGolems.GOLEM_CONTAINERS.getKeys());
+		golemIds.sort(ResourceLocation::compareNamespaced);
+		// send feedback
+		source.sendSuccess(new TranslatableComponent("command.golem.list", golemIds.size(), golemIds.toString()), true);
+		return golemIds.size();
 	}
 
 	private static int summonGolem(CommandSourceStack source, ResourceLocation id, BlockPos pos, CompoundTag tag) throws CommandSyntaxException {
@@ -62,6 +80,7 @@ public class SummonGolemCommand {
 		entity.moveTo(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D);
 		source.getLevel().addFreshEntity(entity);
 		entity.finalizeSpawn(source.getLevel(), source.getLevel().getCurrentDifficultyAt(pos), MobSpawnType.COMMAND, null, tag);
+		// send feedback
 		source.sendSuccess(new TranslatableComponent("command.golem.success", id, pos.getX(), pos.getY(), pos.getZ()), true);
 		return 1;
 	}
