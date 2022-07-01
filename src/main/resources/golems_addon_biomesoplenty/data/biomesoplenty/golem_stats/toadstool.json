@@ -1,0 +1,17 @@
+{
+  "attributes": {
+    "health": 30,
+    "attack": 7,
+    "speed": 0.3
+  },
+  "swim_ability": "float",
+  "sound": "minecraft:block.grass.step",
+  "blocks": [
+    "biomesoplenty:toadstool_block"
+  ],
+  "heal_items": {
+    "biomesoplenty:toadstool_block": 0.5,
+    "biomesoplenty:toadstool": 0.15
+  },
+  "behavior": [ ]
+}

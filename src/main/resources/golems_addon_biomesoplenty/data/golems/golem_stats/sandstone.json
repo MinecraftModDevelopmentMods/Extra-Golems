@@ -1,0 +1,61 @@
+{
+  "attributes": {
+    "health": 22.0,
+    "attack": 5.0,
+    "speed": 0.26,
+	"immune_to_fire": true
+  },
+  "heal_items": {
+    "#forge:sandstone": 0.5,
+	"#forge:sand": 0.15
+  },
+  "multitexture": {
+	"textures": {
+	  "0": {
+		"blocks": [
+		  "minecraft:sandstone",
+		  "minecraft:cut_sandstone",
+          "minecraft:chiseled_sandstone",
+          "minecraft:smooth_sandstone"
+		],
+		"loot_table": "golems:sandstone/colorless"
+	  },
+	  "1": {
+		"blocks": [
+		  "minecraft:red_sandstone",
+		  "minecraft:cut_red_sandstone",
+		  "minecraft:chiseled_red_sandstone",
+		  "minecraft:smooth_red_sandstone"
+		],
+		"loot_table": "golems:sandstone/red"
+	  },
+	  "2": {
+		"blocks": [
+		  "biomesoplenty:white_sandstone",
+		  "biomesoplenty:cut_white_sandstone",
+		  "biomesoplenty:chiseled_white_sandstone",
+		  "biomesoplenty:smooth_white_sandstone"
+		],
+		"loot_table": "golems:sandstone/white"
+	  },
+	  "3": {
+		"blocks": [
+		  "biomesoplenty:orange_sandstone",
+		  "biomesoplenty:cut_orange_sandstone",
+		  "biomesoplenty:chiseled_orange_sandstone",
+		  "biomesoplenty:smooth_orange_sandstone"
+		],
+		"loot_table": "golems:sandstone/orange"
+	  },
+	  "4": {
+		"blocks": [
+		  "biomesoplenty:black_sandstone",
+		  "biomesoplenty:cut_black_sandstone",
+		  "biomesoplenty:chiseled_black_sandstone",
+		  "biomesoplenty:smooth_black_sandstone"
+		],
+		"loot_table": "golems:sandstone/black"
+	  }
+	}
+  }
+}

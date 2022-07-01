@@ -1,0 +1,18 @@
+{
+  "attributes": {
+    "health": 30,
+    "attack": 7,
+    "speed": 0.3
+  },
+  "swim_ability": "float",
+  "glow": 10,
+  "sound": "minecraft:block.grass.step",
+  "blocks": [
+    "biomesoplenty:glowshroom_block"
+  ],
+  "heal_items": {
+    "biomesoplenty:glowshroom_block": 0.5,
+    "biomesoplenty:glowshroom": 0.15
+  },
+  "behavior": [ ]
+}

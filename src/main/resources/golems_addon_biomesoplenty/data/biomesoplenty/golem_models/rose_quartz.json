@@ -1,0 +1,5 @@
+{
+  "base": "biomesoplenty:rose_quartz_block",
+  "base_template": "golems:ice/ice_template",
+  "vines": {}
+}

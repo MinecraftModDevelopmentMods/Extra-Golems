@@ -1,0 +1,16 @@
+{
+  "multitexture": {
+    "base_map": {
+      "0": "biomesoplenty:fir_log",
+	  "1": "biomesoplenty:redwood_log",
+	  "2": "biomesoplenty:cherry_log",
+	  "3": "biomesoplenty:mahogany_log",
+	  "4": "biomesoplenty:jacaranda_log",
+	  "5": "biomesoplenty:palm_log",
+	  "6": "biomesoplenty:willow_log",
+	  "7": "biomesoplenty:dead_log",
+	  "8": "biomesoplenty:umbran_log",
+	  "9": "biomesoplenty:magic_log"
+    }
+  }
+}

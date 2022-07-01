@@ -1,0 +1,14 @@
+{
+  "attributes": {
+    "health": 28,
+    "attack": 9
+  },
+  "blocks": [
+    "biomesoplenty:mud_bricks"
+  ],
+  "heal_items": {
+    "biomesoplenty:mud_bricks": 0.5,
+    "#minecraft:dirt": 0.15
+  },
+  "behavior": [ ]
+}

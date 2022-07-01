@@ -1,0 +1,14 @@
+{
+  "base": "biomesoplenty:brimstone",
+  "vines": {
+	"texture": "#golems:layer/vines",
+	"color": 11543845,
+	"light": true
+  },
+  "layers": [
+	{
+	  "texture": "biomesoplenty:brimstone",
+	  "template": "golems:layer/hands_template"
+	}
+  ]
+}
