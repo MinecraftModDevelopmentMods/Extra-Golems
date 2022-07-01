@@ -15,6 +15,7 @@
 	"minecraft:red_mushroom": 0.15
   },
   "multitexture": {
+	"texture_count": 2,
 	"textures": {
 	  "0": {
 		"blocks": [
@@ -35,7 +36,7 @@
 	  "night_only": true,
 	  "effect": {
 		"target": "self",
-		"chance": 0.08,
+		"chance": 0.0008,
 		"effects": [
 		  {
   	  	    "Potion": "minecraft:regeneration",

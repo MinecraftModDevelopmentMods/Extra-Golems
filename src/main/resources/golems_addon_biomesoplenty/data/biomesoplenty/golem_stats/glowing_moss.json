@@ -6,13 +6,38 @@
   },
   "swim_ability": "float",
   "glow": 4,
-  "sound": "minecraft:block.grass.step",
+  "sound": "minecraft:block.moss.step",
   "blocks": [
     "biomesoplenty:glowing_moss_block"
   ],
   "heal_items": {
     "biomesoplenty:glowing_moss_block": 0.5,
-    "biomesoplenty:glowing_moss_carpet": 0.15
+    "biomesoplenty:glowing_moss_carpet": 0.15,
+	"minecraft:moss_block": 0.15,
+	"minecraft:moss_carpet": 0.1
   },
-  "behavior": [ ]
+  "behavior": [
+	{
+	  "type": "golems:passive_effect",
+	  "effect": {
+		"target": "self",
+		"chance": 0.00025,
+		"effects": [
+		  {
+			"Potion": "minecraft:regeneration",
+			"Amplifier": 0,
+			"Duration": 300
+		  }
+		]
+	  }
+	},
+	{
+	  "type": "golems:place_blocks",
+	  "interval": 80,
+	  "translation_key": "entitytip.places_moss",
+	  "blocks": [
+		"biomesoplenty:glowing_moss_carpet"
+	  ]
+	}
+  ]
 }

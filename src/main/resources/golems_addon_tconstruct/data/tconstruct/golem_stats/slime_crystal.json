@@ -10,6 +10,7 @@
     "#forge:slimeballs": 0.15
   },
   "multitexture": {
+	"texture_count": 4,
 	"textures": {
 	  "0": {
 		"blocks": "tconstruct:earth_slime_crystal_block",
@@ -34,7 +35,7 @@
 	  "type": "golems:passive_effect",
 	  "effect": {
 		"target": "self",
-		"chance": 0.0012,
+		"chance": 0.00012,
 		"effects": [
 		  {
 			"Potion": "minecraft:strength",

@@ -31,7 +31,13 @@
 	  "entries": [
 		{
 		  "type": "item",
-		  "name": "biomesoplenty:cherry_sapling",
+		  "name": "biomesoplenty:white_cherry_sapling",
+		  "weight": 1,
+		  "quality": 10
+		},
+		{
+		  "type": "item",
+		  "name": "biomesoplenty:pink_cherry_sapling",
 		  "weight": 1,
 		  "quality": 10
 		},

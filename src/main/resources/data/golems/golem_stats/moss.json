@@ -20,7 +20,7 @@
 	  "type": "golems:passive_effect",
 	  "effect": {
 		"target": "self",
-		"chance": 0.025,
+		"chance": 0.00025,
 		"effects": [
 		  {
   	  	    "Potion": "minecraft:regeneration",

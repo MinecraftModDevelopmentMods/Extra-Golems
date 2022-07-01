@@ -1,8 +1,8 @@
 {
   "attributes": {
-    "health": 30.0,
-    "attack": 7.0,
-    "speed": 0.3,
+	"health": 30.0,
+	"attack": 7.0,
+	"speed": 0.3,
 	"knockback_resistance": 0.2
   },
   "glow": 14,
@@ -18,26 +18,26 @@
 	"quark:glow_shroom": 0.15
   },
   "behavior": [
-    {
+	{
 	  "type": "golems:passive_effect",
 	  "night_only": true,
 	  "effect": {
 		"target": "self",
-		"chance": 0.08,
+		"chance": 0.0008,
 		"effects": [
 		  {
-  	  	    "Potion": "minecraft:regeneration",
-  	  	    "Amplifier": 0,
-  	  	    "Duration": 300
-  	      }
-	    ]
+			"Potion": "minecraft:regeneration",
+			"Amplifier": 0,
+			"Duration": 300
+		  }
+		]
 	  }
 	},
-    {
+	{
 	  "type": "golems:place_blocks",
 	  "interval": 1050,
 	  "blocks": [
-	    "quark:glow_shroom"
+		"quark:glow_shroom"
 	  ]
 	}
   ]

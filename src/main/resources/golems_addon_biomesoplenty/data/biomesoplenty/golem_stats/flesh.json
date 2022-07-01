@@ -5,7 +5,7 @@
     "armor": 1.5
   },
   "swim_ability": "float",
-  "sound": "minecraft:block.slime.step",
+  "sound": "minecraft:block.slime_block.step",
   "heal_items": {
     "#biomesoplenty:flesh": 0.5
   },
