@@ -5,7 +5,13 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 public class AttributeSettings {
 
-	public static final AttributeSettings EMPTY = new AttributeSettings(10, 0, 0, 0, 0, 0, false, false, false, false, false);
+	private static final double MAX_HEALTH = 1024;
+
+	/**
+	 * Attribute settings to apply before the container is officially loaded.
+	 * Health value is very high to ensure it does not interfere with actual health.
+	 **/
+	public static final AttributeSettings EMPTY = new AttributeSettings(MAX_HEALTH, 0, 0, 0, 0, 0, false, false, false, false, false);
 
 	public static final Codec<AttributeSettings> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			Codec.DOUBLE.optionalFieldOf("health", 100.0D).forGetter(AttributeSettings::getHealth),
@@ -37,7 +43,7 @@ public class AttributeSettings {
 	private AttributeSettings(double health, double attack, double speed, double knockbackResist, double armor,
 							  double attackKnockback, boolean fireImmunity, boolean explosionImmunity, boolean hurtByWater, boolean hurtByFall,
 							  boolean hurtByHeat) {
-		this.health = health;
+		this.health = Math.min(health, MAX_HEALTH);
 		this.attack = attack;
 		this.speed = speed;
 		this.knockbackResist = knockbackResist;

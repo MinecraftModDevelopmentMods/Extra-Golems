@@ -1,0 +1,14 @@
+{
+  "base": "minecraft:ancient_debris_side",
+  "vines": {
+	"texture": "#golems:layer/vines",
+	"color": 11543845,
+	"light": true
+  },
+  "layers": [
+	{
+	  "texture": "minecraft:ancient_debris_side",
+	  "template": "golems:layer/hands_template"
+	}
+  ]
+}

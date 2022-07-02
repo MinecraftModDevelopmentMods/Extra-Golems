@@ -8,6 +8,7 @@
   "block.golems.power_provider": "Dynamic Golem Power Source",
   "_comment": "Extra Golems",
   "entity.golems.golem.amethyst": "Amethyst Golem",
+  "entity.golems.golem.ancient_debris": "Ancient Debris Golem",
   "entity.golems.golem.andesite": "Polished Andesite Golem",
   "entity.golems.golem.basalt": "Polished Basalt Golem",
   "entity.golems.golem.bedrock": "Bedrock Golem",
