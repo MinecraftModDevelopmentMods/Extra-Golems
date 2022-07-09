@@ -1,0 +1,17 @@
+{
+  "attributes": {
+    "health": 20,
+    "attack": 5,
+    "speed": 0.21,
+    "knockback_resistance": 0.2
+  },
+  "sound": "minecraft:block.gravel.step",
+  "blocks": [
+    "biomesoplenty:mud"
+  ],
+  "heal_items": {
+    "biomesoplenty:mud": 0.5,
+    "#minecraft:dirt": 0.15
+  },
+  "behavior": [ ]
+}

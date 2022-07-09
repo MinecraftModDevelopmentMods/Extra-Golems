@@ -1,0 +1,29 @@
+{
+  "attributes": {
+    "health": 94,
+    "attack": 8.5,
+    "armor": 1.5
+  },
+  "swim_ability": "float",
+  "sound": "minecraft:block.slime_block.step",
+  "heal_items": {
+    "#biomesoplenty:flesh": 0.5
+  },
+  "multitexture": {
+	"textures": {
+	  "0": {
+		"blocks": [
+		  "biomesoplenty:flesh"
+		],
+		"loot_table": "biomesoplenty:flesh/normal"
+	  },
+	  "1": {
+		"blocks": [
+		  "biomesoplenty:porous_flesh"
+		],
+		"loot_table": "biomesoplenty:flesh/porous"
+	  }
+	}
+  },
+  "behavior": [ ]
+}

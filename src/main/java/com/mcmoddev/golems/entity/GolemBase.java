@@ -42,6 +42,7 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
@@ -83,6 +84,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 
 	public static final String KEY_MATERIAL = "Material";
 	public static final String KEY_CHILD = "IsChild";
+	private static final double MAX_ARMOR = ((RangedAttribute)Attributes.ARMOR).getMaxValue();
 
 	private ResourceLocation material = new ResourceLocation(ExtraGolems.MODID, "empty");
 	private GolemContainer container = GolemContainer.EMPTY;
@@ -131,6 +133,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 		this.material = materialIn;
 		this.container = ExtraGolems.GOLEM_CONTAINERS.get(materialIn).orElse(GolemContainer.EMPTY);
 		this.attributes = new AttributeMap(container.getAttributeSupplier().get().build());
+		this.setInvulnerable(container.getAttributes().getArmor() > MAX_ARMOR);
 		// clear description
 		this.description = null;
 		// update server data

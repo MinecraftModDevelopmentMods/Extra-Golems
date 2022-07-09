@@ -1,0 +1,39 @@
+{
+  "pools": [
+	{
+	  "rolls": 1,
+	  "entries": [
+		{
+		  "type": "item",
+		  "name": "biomesoplenty:rose_quartz_shard",
+		  "weight": 1,
+		  "functions": [
+			{
+			  "function": "set_count",
+			  "count": {
+				"min": 5,
+				"max": 12
+			  }
+			},
+			{
+			  "function": "looting_enchant",
+			  "count": {
+				"min": 1,
+				"max": 2
+			  }
+			}
+		  ]
+		}
+	  ]
+	},
+	{
+	  "rolls": 1,
+	  "entries": [
+		{
+		  "type": "loot_table",
+		  "name": "golems:entities/_golem_base"
+		}
+	  ]
+	}
+  ]
+}

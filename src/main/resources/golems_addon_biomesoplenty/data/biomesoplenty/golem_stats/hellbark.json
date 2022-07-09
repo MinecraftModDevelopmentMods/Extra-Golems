@@ -1,0 +1,18 @@
+{
+  "attributes": {
+    "health": 20,
+    "attack": 6,
+    "speed": 0.298,
+    "immune_to_fire": true
+  },
+  "swim_ability": "float",
+  "sound": "minecraft:block.wood.step",
+  "blocks": [
+    "#biomesoplenty:hellbark_logs"
+  ],
+  "heal_items": {
+    "#biomesoplenty:hellbark_logs": 0.5,
+    "#minecraft:planks": 0.15
+  },
+  "behavior": [ ]
+}

@@ -1,0 +1,34 @@
+{
+  "attributes": {
+    "health": 38,
+    "attack": 12.5,
+    "hurt_by_fall": true
+  },
+  "glow": 8,
+  "sound": "minecraft:block.glass.step",
+  "blocks": [
+    "biomesoplenty:rose_quartz_block"
+  ],
+  "heal_items": {
+    "biomesoplenty:rose_quartz_block": 0.5,
+    "biomesoplenty:rose_quartz_shard": 0.15
+  },
+  "behavior": [
+	{
+	  "type": "golems:hurt",
+	  "summon": {
+		"target": "self",
+		"summon_pos": "self",
+		"chance": 0.09,
+		"translation_key": "entitytip.summon_rose_quartz",
+		"entity": {
+		  "id": "minecraft:item",
+		  "Item": {
+			"id": "biomesoplenty:rose_quartz_shard",
+			"Count": 1
+		  }
+		}
+	  }
+	}
+  ]
+}

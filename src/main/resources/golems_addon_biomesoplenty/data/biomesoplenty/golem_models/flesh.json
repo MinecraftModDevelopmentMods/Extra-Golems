@@ -1,0 +1,18 @@
+{
+  "multitexture": {
+    "base_map": {
+      "0": "biomesoplenty:flesh",
+	  "1": "biomesoplenty:porous_flesh"
+    }
+  },
+  "vines": {},
+  "layers": [
+	{
+	  "texture": "biomesoplenty:flesh",
+	  "template": "golems:layer/hands_template"
+	},
+	{
+	  "texture": "#biomesoplenty:layer/flesh"
+	}
+  ]
+}

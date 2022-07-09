@@ -1,0 +1,5 @@
+{
+  "base": "biomesoplenty:glowing_moss_block",
+  "base_template": "golems:moss/moss_template",
+  "vines": {}
+}
