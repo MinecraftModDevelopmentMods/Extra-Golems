@@ -29,7 +29,7 @@ public class CraftingMenuBehavior extends GolemBehavior {
 	public void onMobInteract(final GolemBase entity, final Player player, final InteractionHand hand) {
 		if (!player.isCrouching() && player instanceof ServerPlayer) {
 			// display crafting grid by sending request to server
-			NetworkHooks.openGui((ServerPlayer) player, new PortableCraftingMenu.Provider());
+			NetworkHooks.openScreen((ServerPlayer) player, new PortableCraftingMenu.Provider());
 			player.awardStat(Stats.INTERACT_WITH_CRAFTING_TABLE);
 			player.swing(hand);
 		}

@@ -36,8 +36,8 @@ public final class EGRegistry {
 
 	private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, ExtraGolems.MODID);
 	private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, ExtraGolems.MODID);
-	private static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITIES, ExtraGolems.MODID);
-	private static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ForgeRegistries.CONTAINERS, ExtraGolems.MODID);
+	private static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, ExtraGolems.MODID);
+	private static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ForgeRegistries.MENU_TYPES, ExtraGolems.MODID);
 
 	public static void init() {
 		// deferred registers
@@ -73,12 +73,13 @@ public final class EGRegistry {
 
 
 	////// ENTITIES //////
-	public static final RegistryObject<? extends EntityType<?>> GOLEM = ENTITY_TYPES.register("golem", () -> {
-		ExtraGolems.LOGGER.debug(ExtraGolems.MODID + ":registerEntities");
-		EntityType.Builder<GolemBase> builder = EntityType.Builder.of(GolemBase::new, MobCategory.MISC)
-				.setTrackingRange(48).setUpdateInterval(3).setShouldReceiveVelocityUpdates(true).sized(1.4F, 2.9F).noSummon();
-		return builder.build("golem");
-	});
+	public static final RegistryObject<? extends EntityType<GolemBase>> GOLEM = ENTITY_TYPES.register("golem", () ->
+		EntityType.Builder.of(GolemBase::new, MobCategory.MISC)
+				.setTrackingRange(48).setUpdateInterval(3)
+				.setShouldReceiveVelocityUpdates(true)
+				.sized(1.4F, 2.9F).noSummon()
+				.build("golem")
+	);
 
 	////// MENU TYPES //////
 	public static final RegistryObject<MenuType<AbstractContainerMenu>> CRAFTING_GOLEM = MENU_TYPES.register("crafting_portable",

@@ -68,7 +68,7 @@ public class ShootArrowsBehavior extends GolemBehavior {
 	public void onMobInteract(final GolemBase entity, final Player player, final InteractionHand hand) {
 		if (!player.isCrouching() && player instanceof ServerPlayer) {
 			// open dispenser GUI by sending request to server
-			NetworkHooks.openGui((ServerPlayer) player, new PortableDispenserMenu.Provider(entity.getArrowInventory()));
+			NetworkHooks.openScreen((ServerPlayer) player, new PortableDispenserMenu.Provider(entity.getArrowInventory()));
 			player.swing(hand);
 		}
 	}

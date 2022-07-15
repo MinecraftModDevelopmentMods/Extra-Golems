@@ -7,6 +7,7 @@ import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -32,7 +33,7 @@ public class GolemFlowerLayer<T extends GolemBase> extends RenderLayer<T, GolemM
 			matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(-90.0F));
 			matrixStackIn.translate(-0.5D, -0.5D, -0.5D);
 			Minecraft.getInstance().getBlockRenderer().renderSingleBlock(Blocks.POPPY.defaultBlockState(), matrixStackIn, bufferIn,
-					packedLightIn, OverlayTexture.NO_OVERLAY, net.minecraftforge.client.model.data.EmptyModelData.INSTANCE);
+					packedLightIn, OverlayTexture.NO_OVERLAY, net.minecraftforge.client.model.data.ModelData.EMPTY, RenderType.cutout());
 			matrixStackIn.popPose();
 		}
 	}

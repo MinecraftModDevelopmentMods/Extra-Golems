@@ -1,6 +1,7 @@
 package com.mcmoddev.golems.event;
 
 import com.mcmoddev.golems.EGConfig;
+import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.block.GolemHeadBlock;
 import com.mcmoddev.golems.container.GolemContainer;
@@ -13,6 +14,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
+import net.minecraft.util.SpawnUtil;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.sensing.GolemSensor;
@@ -29,7 +33,7 @@ import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.network.PacketDistributor;
 
@@ -37,6 +41,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 public class EGForgeEvents {
 
@@ -48,7 +54,7 @@ public class EGForgeEvents {
 
 	@SubscribeEvent
 	public static void onPlayerLogin(final PlayerEvent.PlayerLoggedInEvent event) {
-		Player player = event.getPlayer();
+		Player player = event.getEntity();
 		// reload golem containers
 		if (player instanceof ServerPlayer) {
 			ExtraGolems.GOLEM_CONTAINERS.getEntries().forEach(e -> e.getValue().ifPresent(c -> ExtraGolems.CHANNEL.send(PacketDistributor.ALL.noArg(), new SGolemContainerPacket(e.getKey(), c))));
@@ -69,9 +75,9 @@ public class EGForgeEvents {
 	public static void onPlacePumpkin(final BlockEvent.EntityPlaceEvent event) {
 		// if the config allows it, and the block is a CARVED pumpkin...
 		if (!event.isCanceled() && ExtraGolems.CONFIG.pumpkinBuildsGolems() && event.getPlacedBlock().getBlock() == Blocks.CARVED_PUMPKIN
-				&& event.getWorld() instanceof Level) {
+				&& event.getLevel() instanceof Level) {
 			// try to spawn an entity!
-			GolemHeadBlock.trySpawnGolem(event.getEntity(), (Level) event.getWorld(), event.getPos());
+			GolemHeadBlock.trySpawnGolem(event.getEntity(), (Level) event.getLevel(), event.getPos());
 		}
 	}
 
@@ -80,9 +86,7 @@ public class EGForgeEvents {
 	 **/
 	@SubscribeEvent
 	public static void onTargetEvent(final LivingSetAttackTargetEvent event) {
-		if (event.getEntityLiving() instanceof Mob && event.getTarget() instanceof GolemBase) {
-			Mob mob = (Mob) event.getEntityLiving();
-			GolemBase target = (GolemBase) event.getTarget();
+		if (event.getEntity() instanceof Mob mob && event.getTarget() instanceof GolemBase target) {
 			// clear the attack target
 			if (target.getContainer().hasBehavior(GolemBehaviors.USE_FUEL) && !target.hasFuel()) {
 				mob.setTarget(null);
@@ -91,84 +95,58 @@ public class EGForgeEvents {
 		}
 	}
 
+	/**
+	 * Used to force villagers to spawn golems other than iron golems.
+	 * Checks if the villager is awake and wants to spawn a golem,
+	 * then checks for nearby villagers, following the same logic as
+	 * regular golem summoning.
+	 * @param event the living tick event
+	 */
 	@SubscribeEvent
-	public static void onLivingUpdate(final LivingEvent.LivingUpdateEvent event) {
-		if (ExtraGolems.CONFIG.villagerSummonChance() > 0 && event.getEntityLiving() instanceof Villager && event.getEntityLiving().isEffectiveAi()
-				&& !event.getEntityLiving().isSleeping() && event.getEntityLiving().tickCount % 50 == 0) {
-			Villager villager = (Villager) event.getEntityLiving();
-			VillagerData villagerdata = villager.getVillagerData();
-			// determine whether to spawn a entity this tick
-			if (villagerdata != null && !villager.isBaby() && villagerdata.getProfession() != VillagerProfession.NITWIT) {
-				final long time = villager.getCommandSenderWorld().getGameTime();
-				final int minNumVillagers = 3;
-				// here is some code that was used in VillagerEntity
-				final AABB aabb = villager.getBoundingBox().inflate(10.0D);
-				final List<Villager> nearbyVillagers = villager.getCommandSenderWorld().getEntitiesOfClass(Villager.class, aabb,
-						v -> v.wantsToSpawnGolem(time) && v.isAlive());
-				// also check if there are already nearby golems
-				final List<IronGolem> nearbyGolems = villager.getCommandSenderWorld().getEntitiesOfClass(IronGolem.class, aabb.inflate(10.0D));
-				if (nearbyVillagers.size() >= minNumVillagers && nearbyGolems.isEmpty()) {
-					// one last check (against config) to adjust frequency
-					if (villager.getRandom().nextInt(100) < ExtraGolems.CONFIG.villagerSummonChance()) {
-						// summon a entity
-						GolemBase golem = summonGolem(villager);
-						if (golem != null) {
-							nearbyVillagers.forEach(GolemSensor::checkForNearbyGolem);
-						}
+	public static void onLivingUpdate(final LivingEvent.LivingTickEvent event) {
+		if (event.getEntity().isEffectiveAi()
+				&& event.getEntity().level instanceof ServerLevel serverLevel
+				&& ExtraGolems.CONFIG.villagerSummonChance() > 0
+				&& event.getEntity() instanceof Villager villager
+				&& !villager.isSleeping()
+				&& villager.tickCount % 90L == 0L
+				&& villager.wantsToSpawnGolem(villager.tickCount)
+				&& villager.getRandom().nextInt(100) < ExtraGolems.CONFIG.villagerSummonChance()) {
+			// locate nearby villagers who also want to summon a golem
+			AABB aabb = villager.getBoundingBox().inflate(10.0D, 10.0D, 10.0D);
+			List<Villager> nearbyVillagers = serverLevel.getEntitiesOfClass(Villager.class, aabb)
+					.stream().filter((e) -> e.wantsToSpawnGolem(villager.tickCount))
+					.limit(5L).toList();
+			// ensure a minimum number of villagers to summon a golem
+			if (nearbyVillagers.size() >= 3) {
+				// attempt to summon a golem
+				Optional<GolemBase> entity = SpawnUtil.trySpawnMob(EGRegistry.GOLEM.get(), MobSpawnType.MOB_SUMMONED, serverLevel, villager.blockPosition(), 10, 8, 6, SpawnUtil.Strategy.LEGACY_IRON_GOLEM);
+				if(entity.isPresent()) {
+					GolemBase golem = entity.get();
+					// assign golem material
+					ResourceLocation material = getGolemToSpawn(villager.blockPosition(), villager.getRandom());
+					golem.setMaterial(material);
+					// randomize texture if applicable
+					if (golem.getTextureCount() > 0) {
+						golem.randomizeTexture(serverLevel, villager.blockPosition());
 					}
+					// finalize spawn (required to adjust current health to max health)
+					golem.finalizeSpawn(serverLevel, serverLevel.getCurrentDifficultyAt(villager.blockPosition()), MobSpawnType.MOB_SUMMONED, null, null);
+					// reset golem detected flags
+					nearbyVillagers.forEach(GolemSensor::golemDetected);
 				}
 			}
 		}
 	}
 
-	@Nullable
-	private static GolemBase summonGolem(@Nonnull Villager villager) {
-		// This is copied from the VillagerEntity summonGolem code
-		final ServerLevel world = (ServerLevel) villager.getCommandSenderWorld();
-		BlockPos blockpos = villager.blockPosition();
-
-		for (int i = 0; i < 10; ++i) {
-			double d0 = world.random.nextInt(16) - 8;
-			double d1 = world.random.nextInt(16) - 8;
-			double d2 = 6.0D;
-
-			for (int j = 0; j >= -12; --j) {
-				BlockPos blockpos1 = blockpos.offset(d0, d2 + (double) j, d1);
-				if ((world.isEmptyBlock(blockpos1) || world.getBlockState(blockpos1).getMaterial().isLiquid())
-						&& world.getBlockState(blockpos1.below()).getMaterial().isSolidBlocking()) {
-					d2 += j;
-					break;
-				}
-			}
-
-			BlockPos blockpos2 = blockpos.offset(d0, d2, d1);
-			ResourceLocation typeName = getGolemToSpawn(world, blockpos2);
-			Optional<GolemContainer> type = ExtraGolems.GOLEM_CONTAINERS.get(typeName);
-			if (type.isPresent()) {
-				GolemBase golem = GolemBase.create(world, typeName);
-				// randomize texture if applicable
-				if (golem.getTextureCount() > 0) {
-					golem.randomizeTexture(world, blockpos2);
-				}
-				// spawn the entity
-				if (golem.checkSpawnRules(world, MobSpawnType.MOB_SUMMONED) && golem.checkSpawnObstruction(world)) {
-					golem.setPos(blockpos2.getX(), blockpos2.getY(), blockpos2.getZ());
-					world.addFreshEntity(golem);
-					golem.finalizeSpawn(world, world.getCurrentDifficultyAt(blockpos2), MobSpawnType.MOB_SUMMONED, null, null);
-					return golem;
-				} else {
-					golem.discard();
-				}
-			}
-		}
-
-		return null;
-	}
-
-	@Nullable
-	private static ResourceLocation getGolemToSpawn(final Level world, final BlockPos pos) {
+	/**
+	 * @param pos an approximate block position for the entity
+	 * @param random a random generator
+	 * @return a random golem material from the config, or the empty material if the config is empty
+	 */
+	private static ResourceLocation getGolemToSpawn(final BlockPos pos, final RandomSource random) {
 		final List<ResourceLocation> options = ExtraGolems.CONFIG.getVillagerGolems();
-		final ResourceLocation choice = options.isEmpty() ? null : options.get(world.getRandom().nextInt(options.size()));
+		final ResourceLocation choice = options.isEmpty() ? GolemContainer.EMPTY_MATERIAL : options.get(random.nextInt(options.size()));
 		return choice;
 	}
 }

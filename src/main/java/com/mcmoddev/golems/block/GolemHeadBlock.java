@@ -73,23 +73,23 @@ public final class GolemHeadBlock extends HorizontalDirectionalBlock {
 	 * entity.
 	 *
 	 * @param placer  the living entity that triggered the golem spawning
-	 * @param world   current world
+	 * @param level   current world
 	 * @param headPos the position of the entity head block
 	 * @return if the entity was built and spawned
 	 */
-	public static boolean trySpawnGolem(@Nullable final Entity placer, final Level world, final BlockPos headPos) {
-		if (world.isClientSide()) {
+	public static boolean trySpawnGolem(@Nullable final Entity placer, final Level level, final BlockPos headPos) {
+		if (level.isClientSide()) {
 			return false;
 		}
 
 		// get all the block and state values that we will be using in the following
 		// code
-		final BlockState stateBelow1 = world.getBlockState(headPos.below(1));
-		final BlockState stateBelow2 = world.getBlockState(headPos.below(2));
-		final BlockState stateArmNorth = world.getBlockState(headPos.below(1).north(1));
-		final BlockState stateArmSouth = world.getBlockState(headPos.below(1).south(1));
-		final BlockState stateArmEast = world.getBlockState(headPos.below(1).east(1));
-		final BlockState stateArmWest = world.getBlockState(headPos.below(1).west(1));
+		final BlockState stateBelow1 = level.getBlockState(headPos.below(1));
+		final BlockState stateBelow2 = level.getBlockState(headPos.below(2));
+		final BlockState stateArmNorth = level.getBlockState(headPos.below(1).north(1));
+		final BlockState stateArmSouth = level.getBlockState(headPos.below(1).south(1));
+		final BlockState stateArmEast = level.getBlockState(headPos.below(1).east(1));
+		final BlockState stateArmWest = level.getBlockState(headPos.below(1).west(1));
 		final Block blockBelow1 = stateBelow1.getBlock();
 		final Block blockBelow2 = stateBelow2.getBlock();
 		final Block blockArmNorth = stateArmNorth.getBlock();
@@ -107,11 +107,11 @@ public final class GolemHeadBlock extends HorizontalDirectionalBlock {
 
 		////// Hard-coded support for Snow Golem //////
 		if (doBlocksMatch(Blocks.SNOW_BLOCK, blockBelow1, blockBelow2)) {
-			removeGolemBody(world, headPos);
-			final SnowGolem entitysnowman = EntityType.SNOW_GOLEM.create(world);
+			removeGolemBody(level, headPos);
+			final SnowGolem entitysnowman = EntityType.SNOW_GOLEM.create(level);
 			ExtraGolems.LOGGER.debug("[Extra Golems]: Building regular boring Snow Golem");
 			entitysnowman.moveTo(spawnX, spawnY, spawnZ, 0.0F, 0.0F);
-			world.addFreshEntity(entitysnowman);
+			level.addFreshEntity(entitysnowman);
 			return true;
 		}
 
@@ -125,13 +125,13 @@ public final class GolemHeadBlock extends HorizontalDirectionalBlock {
 		}
 
 		if (isIron) {
-			removeAllGolemBlocks(world, headPos, flagX);
+			removeAllGolemBlocks(level, headPos, flagX);
 			// build Iron Golem
-			final IronGolem ironGolem = EntityType.IRON_GOLEM.create(world);
+			final IronGolem ironGolem = EntityType.IRON_GOLEM.create(level);
 			ExtraGolems.LOGGER.debug("[Extra Golems]: Building regular boring Iron Golem");
 			ironGolem.setPlayerCreated(true);
 			ironGolem.moveTo(spawnX, spawnY, spawnZ, 0.0F, 0.0F);
-			world.addFreshEntity(ironGolem);
+			level.addFreshEntity(ironGolem);
 			return true;
 		}
 
@@ -140,23 +140,23 @@ public final class GolemHeadBlock extends HorizontalDirectionalBlock {
 		}
 
 		////// Attempt to spawn a Golem from this mod //////
-		GolemBase golem = ExtraGolems.getGolem(world, blockBelow1, blockBelow2, blockArmNorth, blockArmSouth);
+		GolemBase golem = ExtraGolems.getGolem(level, blockBelow1, blockBelow2, blockArmNorth, blockArmSouth);
 		flagX = false;
 		// if no entity found for North-South, try to find one for East-West pattern
 		if (golem == null) {
-			golem = ExtraGolems.getGolem(world, blockBelow1, blockBelow2, blockArmEast, blockArmWest);
+			golem = ExtraGolems.getGolem(level, blockBelow1, blockBelow2, blockArmEast, blockArmWest);
 			flagX = true;
 		}
 
 		if (golem != null) {
 			// spawn the entity!
-			removeAllGolemBlocks(world, headPos, flagX);
+			removeAllGolemBlocks(level, headPos, flagX);
 			golem.setPlayerCreated(true);
 			golem.moveTo(spawnX, spawnY, spawnZ, 0.0F, 0.0F);
 			ExtraGolems.LOGGER.debug("[Extra Golems]: Building golem " + golem);
-			world.addFreshEntity(golem);
+			level.addFreshEntity(golem);
 			if (placer != null && placer.getCommandSenderWorld() instanceof ServerLevel) {
-				golem.finalizeSpawn((ServerLevel) placer.getCommandSenderWorld(), world.getCurrentDifficultyAt(headPos), MobSpawnType.MOB_SUMMONED, null, null);
+				golem.finalizeSpawn((ServerLevel) placer.getCommandSenderWorld(), level.getCurrentDifficultyAt(headPos), MobSpawnType.MOB_SUMMONED, null, null);
 			}
 			golem.onBuilt(stateBelow1, stateBelow2, flagX ? stateArmEast : stateArmWest, flagX ? stateArmNorth : stateArmSouth);
 			return true;

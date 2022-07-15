@@ -22,11 +22,11 @@ public final class EGConfig {
 	private final ForgeConfigSpec.IntValue VILLAGER_GOLEM_SPAWN_CHANCE;
 	private final ForgeConfigSpec.ConfigValue<List<? extends String>> VILLAGER_GOLEM_SPAWN_LIST;
 	private static final String[] defaultVillagerGolemSpawns = {
-			"bookshelf", "clay", "coal", "crafting",
-			"glass", "glowstone", "hay", "leaves",
-			"log", "melon", "moss", "mushroom", "obsidian",
-			"quartz", "red_sandstone", "sandstone",
-			"terracotta", "wool"
+			"golems:bookshelf", "golems:clay", "golems:coal", "golems:crafting",
+			"golems:glass", "golems:glowstone", "golems:hay", "golems:leaves",
+			"golems:log", "golems:melon", "golems:moss", "golems:mushroom", "golems:obsidian",
+			"golems:quartz", "golems:red_sandstone", "golems:sandstone",
+			"golems:terracotta", "golems:wool"
 	};
 
 	private boolean aprilFirst;
@@ -39,7 +39,7 @@ public final class EGConfig {
 	private boolean enableHealGolems;
 	private boolean enableHolidays;
 	private int villagerGolemSpawnChance;
-	private List<? extends String> villagerGolemSpawnList;
+	private List<ResourceLocation> villagerGolemSpawnList;
 
 	public EGConfig(final ForgeConfigSpec.Builder builder) {
 		// Global values
@@ -60,35 +60,9 @@ public final class EGConfig {
 		this.ENABLE_HEAL_GOLEMS = builder.comment("When enabled, giving blocks and items to golems can restore health")
 				.define("heal_golems", true);
 		this.VILLAGER_GOLEM_SPAWN_LIST = builder.comment("Golems that can be summoned by villagers", "(Duplicate entries increase chances)")
-				.defineList("villager_summon_golems", initVillagerGolemList(defaultVillagerGolemSpawns), o -> o instanceof String);
+				.defineList("villager_summon_golems", List.of(defaultVillagerGolemSpawns), o -> o instanceof String);
 
 		builder.pop();
-	}
-
-	private static List<String> initVillagerGolemList(final String[] names) {
-		final List<String> list = new ArrayList<>();
-		for (final String s : names) {
-			list.add(ExtraGolems.MODID.concat(":").concat(s));
-		}
-		return list;
-	}
-
-	private List<ResourceLocation> loadVillagerGolemList() {
-		final List<ResourceLocation> list = new ArrayList<>();
-		// load all villager golem candidates from config
-		for (final String s : VILLAGER_GOLEM_SPAWN_LIST.get()) {
-			// parse each entry as resource location with error-catching
-			if (s != null && !s.isEmpty()) {
-				try {
-					ResourceLocation golemId = new ResourceLocation(s);
-					final Optional<GolemContainer> container = ExtraGolems.GOLEM_CONTAINERS.get(golemId);
-					container.ifPresent(c -> list.add(new ResourceLocation(s)));
-				} catch (ResourceLocationException e) {
-					ExtraGolems.LOGGER.error("Invalid golem ID in config file for villager_summon_golems: \"" + s + "\"");
-				}
-			}
-		}
-		return list;
 	}
 
 	public boolean isBedrockGolemCreativeOnly() {
@@ -116,7 +90,7 @@ public final class EGConfig {
 	}
 
 	public List<ResourceLocation> getVillagerGolems() {
-		return loadVillagerGolemList();
+		return villagerGolemSpawnList;
 	}
 
 	public boolean aprilFirst() {
@@ -140,6 +114,25 @@ public final class EGConfig {
 		enableHolidays = ENABLE_HOLIDAYS.get();
 		enableHealGolems = ENABLE_HEAL_GOLEMS.get();
 		villagerGolemSpawnChance = VILLAGER_GOLEM_SPAWN_CHANCE.get();
-		villagerGolemSpawnList = VILLAGER_GOLEM_SPAWN_LIST.get();
+		villagerGolemSpawnList = loadVillagerGolemList(VILLAGER_GOLEM_SPAWN_LIST.get());
+	}
+
+
+	private static List<ResourceLocation> loadVillagerGolemList(List<? extends String> config) {
+		final List<ResourceLocation> list = new ArrayList<>();
+		// load all villager golem candidates from config
+		for (final String s : config) {
+			// parse each entry as resource location with error-catching
+			if (s != null && !s.isEmpty()) {
+				try {
+					ResourceLocation golemId = ResourceLocation.tryParse(s);
+					final Optional<GolemContainer> container = ExtraGolems.GOLEM_CONTAINERS.get(golemId);
+					container.ifPresent(c -> list.add(new ResourceLocation(s)));
+				} catch (ResourceLocationException e) {
+					ExtraGolems.LOGGER.error("Invalid golem ID in config file for villager_summon_golems: \"" + s + "\"");
+				}
+			}
+		}
+		return list;
 	}
 }

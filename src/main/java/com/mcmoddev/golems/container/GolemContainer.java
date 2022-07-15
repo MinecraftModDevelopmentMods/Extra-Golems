@@ -53,6 +53,8 @@ import java.util.function.Supplier;
  **/
 public final class GolemContainer {
 
+	public static final ResourceLocation EMPTY_MATERIAL = new ResourceLocation(ExtraGolems.MODID, "clay");
+
 	public static final GolemContainer EMPTY = new GolemContainer(
 			AttributeSettings.EMPTY, SwimMode.SINK, 0, 0, true, SoundEvents.STONE_STEP, Optional.empty(),
 			ImmutableList.of(new ResourcePair(ForgeRegistries.BLOCKS.getKey(Blocks.AIR), false)),

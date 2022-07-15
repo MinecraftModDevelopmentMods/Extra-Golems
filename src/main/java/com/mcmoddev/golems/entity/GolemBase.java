@@ -119,7 +119,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 	}
 
 	public static GolemBase create(final Level world, final ResourceLocation material) {
-		GolemBase golem = new GolemBase((EntityType<? extends GolemBase>) EGRegistry.GOLEM.get(), world);
+		GolemBase golem = new GolemBase(EGRegistry.GOLEM.get(), world);
 		golem.setMaterial(material);
 		return golem;
 	}
@@ -192,12 +192,12 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 	@Override
 	protected void defineSynchedData() {
 		super.defineSynchedData();
-		this.getEntityData().define(MATERIAL, new ResourceLocation(ExtraGolems.MODID, "empty").toString());
-		this.getEntityData().define(CHILD, Boolean.valueOf(false));
-		this.getEntityData().define(TEXTURE, Byte.valueOf((byte) 0));
-		this.getEntityData().define(FUEL, Integer.valueOf(0));
-		this.getEntityData().define(FUSE_LIT, Boolean.valueOf(false));
-		this.getEntityData().define(ARROWS, Integer.valueOf(0));
+		this.getEntityData().define(MATERIAL, GolemContainer.EMPTY_MATERIAL.toString());
+		this.getEntityData().define(CHILD, Boolean.FALSE);
+		this.getEntityData().define(TEXTURE, (byte) 0);
+		this.getEntityData().define(FUEL, 0);
+		this.getEntityData().define(FUSE_LIT, Boolean.FALSE);
+		this.getEntityData().define(ARROWS, 0);
 	}
 
 	@Override
@@ -512,7 +512,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 					stack.shrink(1);
 				} else {
 					// update the player's held item
-					player.setItemInHand(hand, stack.getContainerItem());
+					player.setItemInHand(hand, stack.getCraftingRemainingItem());
 				}
 			}
 			// if currently attacking this player, stop

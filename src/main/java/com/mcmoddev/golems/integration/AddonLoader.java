@@ -6,7 +6,7 @@ import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraftforge.event.AddPackFindersEvent;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.resource.PathResourcePack;
+import net.minecraftforge.resource.PathPackResources;
 
 import java.nio.file.Path;
 
@@ -102,7 +102,7 @@ public final class AddonLoader {
 		event.addRepositorySource((packConsumer, constructor) -> {
 			Pack pack = Pack.create(ExtraGolems.MODID + ":" + packName, true, () -> {
 				Path path = ModList.get().getModFileById(ExtraGolems.MODID).getFile().findResource("/" + packName);
-				return new PathResourcePack(packName, path);
+				return new PathPackResources(packName, path);
 			}, constructor, Pack.Position.TOP, PackSource.DEFAULT);
 
 			if (pack != null) {

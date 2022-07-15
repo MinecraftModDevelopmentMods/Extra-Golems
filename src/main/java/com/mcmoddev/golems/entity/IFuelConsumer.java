@@ -80,14 +80,14 @@ public interface IFuelConsumer {
 			if (player.isCrouching()) {
 				// take entire ItemStack
 				this.addFuel(burnTime * stack.getCount());
-				stack = stack.getContainerItem();
+				stack = stack.getCraftingRemainingItem();
 			} else {
 				// take one item from ItemStack
 				this.addFuel(burnTime);
 				if (stack.getCount() > 1) {
 					stack.shrink(1);
 				} else {
-					stack = stack.getContainerItem();
+					stack = stack.getCraftingRemainingItem();
 				}
 			}
 			// update the player's held item
@@ -100,7 +100,7 @@ public interface IFuelConsumer {
 		// allow player to remove burn time by using a water bucket
 		if (stack.getItem() == Items.WATER_BUCKET) {
 			this.setFuel(0);
-			player.setItemInHand(hand, stack.getContainerItem());
+			player.setItemInHand(hand, stack.getCraftingRemainingItem());
 //      ItemBedrockGolem.spawnParticles(this.level, pos.x, pos.y + this.getBbHeight() / 2.0D, pos.z, 0.1D, ParticleTypes.LARGE_SMOKE, 15);
 //      return InteractionResult.CONSUME;
 		}
