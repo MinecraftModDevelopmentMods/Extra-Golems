@@ -15,7 +15,6 @@
 	"minecraft:red_mushroom": 0.15
   },
   "multitexture": {
-	"texture_count": 2,
 	"textures": {
 	  "0": {
 		"blocks": [

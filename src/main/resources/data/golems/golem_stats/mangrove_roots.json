@@ -14,7 +14,6 @@
 	"#forge:rods/wooden": 0.1
   },
   "multitexture": {
-	"texture_count": 2,
 	"textures": {
 	  "0": {
 		"blocks": "minecraft:mangrove_roots",

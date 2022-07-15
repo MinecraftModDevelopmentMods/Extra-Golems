@@ -7,5 +7,5 @@
 	  "3": "tconstruct:geode/ender/block"
 	}
   },
-  "base_template": "golems:ice/ice_template"
+  "base_template": "tconstruct:slime_crystal_template"
 }

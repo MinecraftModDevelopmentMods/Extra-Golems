@@ -1,5 +1,10 @@
 {
   "base": "biomesoplenty:rose_quartz_block",
-  "base_template": "golems:ice/ice_template",
-  "vines": {}
+  "vines": {},
+  "layers": [
+	{
+	  "texture": "biomesoplenty:rose_quartz_block",
+	  "template": "golems:layer/ice_template"
+	}
+  ]
 }

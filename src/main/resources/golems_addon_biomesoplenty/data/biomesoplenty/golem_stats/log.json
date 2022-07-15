@@ -12,7 +12,6 @@
 	"#minecraft:planks": 0.15
   },
   "multitexture": {
-    "texture_count": 7,
 	"textures": {
 	  "0": {
 		"blocks": "#biomesoplenty:fir_logs",

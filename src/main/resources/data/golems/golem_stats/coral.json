@@ -10,7 +10,6 @@
     "#forge:dead_coral_blocks": 0.25
   },
   "multitexture": {
-    "texture_count": 10,
 	"textures": {
 	  "0": {
 		"blocks": "minecraft:tube_coral_block",

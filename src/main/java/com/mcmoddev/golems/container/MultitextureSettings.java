@@ -3,6 +3,7 @@ package com.mcmoddev.golems.container;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.util.ResourcePair;
 import com.mojang.datafixers.util.Either;
@@ -20,10 +21,9 @@ import java.util.function.Function;
 
 public class MultitextureSettings {
 
-	public static final MultitextureSettings EMPTY = new MultitextureSettings(0, false, ImmutableMap.of());
+	public static final MultitextureSettings EMPTY = new MultitextureSettings(false, ImmutableMap.of());
 
 	public static final Codec<MultitextureSettings> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			Codec.INT.fieldOf("texture_count").forGetter(MultitextureSettings::getTextureCount),
 			Codec.BOOL.optionalFieldOf("cycle", false).forGetter(MultitextureSettings::canCycle),
 			Codec.unboundedMap(Codec.STRING.xmap(Integer::parseInt, i -> Integer.toString(i)), MultitextureSettings.TextureEntry.CODEC)
 					.fieldOf("textures").forGetter(MultitextureSettings::getTextureEntryMap)
@@ -34,8 +34,8 @@ public class MultitextureSettings {
 	private final ImmutableMap<Integer, MultitextureSettings.TextureEntry> entryMap;
 	private final ImmutableMap<ResourcePair, Integer> blockMap;
 
-	private MultitextureSettings(int textureCount, boolean cycle, Map<Integer, MultitextureSettings.TextureEntry> entryMap) {
-		this.textureCount = textureCount;
+	private MultitextureSettings(boolean cycle, Map<Integer, MultitextureSettings.TextureEntry> entryMap) {
+		this.textureCount = entryMap.size();
 		this.cycle = cycle;
 		this.entryMap = ImmutableMap.copyOf(entryMap);
 		// populate block-to-texture map and validate entry map
@@ -43,7 +43,8 @@ public class MultitextureSettings {
 		this.entryMap.forEach((num, entry) -> {
 			// validate num
 			if (num < 0 || num >= this.textureCount) {
-				throw new IllegalArgumentException("'textures' contains out of bounds texture ID '" + num + "' (max is " + (textureCount - 1));
+				ExtraGolems.LOGGER.error("Error parsing MultiTextureSettings: 'textures' contains out of bounds texture ID '"
+						+ num + "' (max is " + (textureCount - 1) + ")");
 			}
 			// add blocks to texture map
 			entry.getBlocks().forEach(resource -> builder.put(resource, num));

@@ -18,7 +18,6 @@
 	"minecraft:mangrove_planks": 0.15
   },
   "multitexture": {
-    "texture_count": 7,
 	"textures": {
 	  "0": {
 		"blocks": "#minecraft:dark_oak_logs",

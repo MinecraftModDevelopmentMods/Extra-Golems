@@ -1,8 +1,0 @@
-{
-  "base": "biomesoplenty:mud",
-  "layers": [
-	{
-	  "texture": "#golems:layer/mud"
-	}
-  ]
-}

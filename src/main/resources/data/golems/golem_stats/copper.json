@@ -9,7 +9,6 @@
 	"minecraft:copper_ingot": 0.15
   },
   "multitexture": {
-	"texture_count": 4,
 	"textures": {
 	  "0": {
 		"blocks": [

@@ -1,8 +1,13 @@
 {
   "base": "quark:permafrost",
-  "base_template": "golems:ice/ice_template",
   "vines": {},
   "eyes": {
 	"texture": "#golems:layer/eyes/white"
-  }
+  },
+  "layers": [
+	{
+	  "texture": "quark:permafrost",
+	  "template": "golems:layer/ice_template"
+	}
+  ]
 }

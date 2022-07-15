@@ -10,7 +10,6 @@
     "#forge:slimeballs": 0.15
   },
   "multitexture": {
-	"texture_count": 5,
 	"textures": {
 	  "0": {
 		"blocks": "tconstruct:earth_congealed_slime",

@@ -18,7 +18,6 @@
 	"#forge:slimeballs": 0.15
   },
   "multitexture": {
-    "texture_count": 3,
 	"textures": {
 	  "0": {
 		"blocks": "minecraft:ochre_froglight",

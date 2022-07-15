@@ -11,7 +11,6 @@
     "#forge:slimeballs": 0.15
   },
   "multitexture": {
-	"texture_count": 6,
 	"textures": {
 	  "0": {
 		"blocks": "minecraft:slime_block",

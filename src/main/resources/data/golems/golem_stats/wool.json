@@ -11,7 +11,6 @@
 	"#forge:string": 0.1
   },
   "multitexture": {
-    "texture_count": 16,
 	"textures": {
 	  "0": {
 		"blocks": "minecraft:white_wool",

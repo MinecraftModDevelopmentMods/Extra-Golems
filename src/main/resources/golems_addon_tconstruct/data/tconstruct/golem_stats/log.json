@@ -12,7 +12,6 @@
 	"#tconstruct:slimy_planks": 0.15
   },
   "multitexture": {
-	"texture_count": 3,
 	"textures": {
 	  "0": {
 		"blocks": "#tconstruct:bloodshroom_logs",

@@ -11,7 +11,6 @@
 	"#forge:glass_panes": 0.15
   },
   "multitexture": {
-    "texture_count": 18,
 	"textures": {
 	  "0": {
 		"blocks": "#forge:glass/colorless",

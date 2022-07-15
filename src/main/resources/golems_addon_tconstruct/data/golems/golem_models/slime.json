@@ -9,5 +9,6 @@
 	}
   },
   "translucent": true,
+  "base_template": "golems:translucent_template",
   "vines": {}
 }

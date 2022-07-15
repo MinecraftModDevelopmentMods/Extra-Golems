@@ -1,5 +1,6 @@
 {
   "base": "tconstruct:soul_glass",
+  "base_template": "golems:translucent_template",
   "translucent": true,
   "vines": {}
 }

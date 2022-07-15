@@ -1,5 +1,6 @@
 {
   "base": "minecraft:slime_block",
+  "base_template": "golems:translucent_template",
   "translucent": true,
   "vines": {}
 }
