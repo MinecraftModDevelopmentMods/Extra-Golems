@@ -8,7 +8,7 @@
   "blocks": "#forge:storage_blocks/raw_iron",
   "heal_items": {
     "#forge:storage_blocks/raw_iron": 0.5,
-	"#forge:raw_ores/iron": 0.1,
+	"#forge:raw_materials/iron": 0.1,
 	"#forge:ingots/iron": 0.25
   }
 }
