@@ -69,6 +69,7 @@ import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Base class for all golems in this mod.
@@ -128,10 +129,15 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 		if (materialIn.equals(material)) {
 			return;
 		}
+		Optional<GolemContainer> oContainer = ExtraGolems.GOLEM_CONTAINERS.get(materialIn);
+		if(!oContainer.isPresent()) {
+			ExtraGolems.LOGGER.error("Failed to load golem container for '" + materialIn.toString() + "'");
+			return;
+		}
 		// update material and container
 		this.getEntityData().set(MATERIAL, materialIn.toString());
 		this.material = materialIn;
-		this.container = ExtraGolems.GOLEM_CONTAINERS.get(materialIn).orElse(GolemContainer.EMPTY);
+		this.container = oContainer.get();
 		this.attributes = new AttributeMap(container.getAttributeSupplier().get().build());
 		this.setInvulnerable(container.getAttributes().getArmor() > MAX_ARMOR);
 		// clear description

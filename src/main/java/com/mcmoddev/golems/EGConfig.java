@@ -1,15 +1,11 @@
 package com.mcmoddev.golems;
 
-import com.mcmoddev.golems.container.GolemContainer;
-import net.minecraft.ResourceLocationException;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public final class EGConfig {
 
@@ -22,11 +18,21 @@ public final class EGConfig {
 	private final ForgeConfigSpec.IntValue VILLAGER_GOLEM_SPAWN_CHANCE;
 	private final ForgeConfigSpec.ConfigValue<List<? extends String>> VILLAGER_GOLEM_SPAWN_LIST;
 	private static final String[] defaultVillagerGolemSpawns = {
-			"golems:bookshelf", "golems:clay", "golems:coal", "golems:crafting",
-			"golems:glass", "golems:glowstone", "golems:hay", "golems:leaves",
-			"golems:log", "golems:melon", "golems:moss", "golems:mushroom", "golems:obsidian",
-			"golems:quartz", "golems:red_sandstone", "golems:sandstone",
-			"golems:terracotta", "golems:wool"
+			new ResourceLocation(ExtraGolems.MODID, "bookshelf").toString(),
+			new ResourceLocation(ExtraGolems.MODID, "clay").toString(),
+			new ResourceLocation(ExtraGolems.MODID, "coal").toString(),
+			new ResourceLocation(ExtraGolems.MODID, "crafting").toString(),
+			new ResourceLocation(ExtraGolems.MODID, "glass").toString(),
+			new ResourceLocation(ExtraGolems.MODID, "glowstone").toString(),
+			new ResourceLocation(ExtraGolems.MODID, "hay").toString(),
+			new ResourceLocation(ExtraGolems.MODID, "leaves").toString(),
+			new ResourceLocation(ExtraGolems.MODID, "log").toString(),
+			new ResourceLocation(ExtraGolems.MODID, "melon").toString(),
+			new ResourceLocation(ExtraGolems.MODID, "moss").toString(),
+			new ResourceLocation(ExtraGolems.MODID, "mushroom").toString(),
+			new ResourceLocation(ExtraGolems.MODID, "obsidian").toString(),
+			new ResourceLocation(ExtraGolems.MODID, "terracotta").toString(),
+			new ResourceLocation(ExtraGolems.MODID, "wool").toString()
 	};
 
 	private boolean aprilFirst;
@@ -44,23 +50,23 @@ public final class EGConfig {
 	public EGConfig(final ForgeConfigSpec.Builder builder) {
 		// Global values
 		builder.push("general");
-		this.BEDROCK_GOLEM_CREATIVE_ONLY = builder.comment("When true, only players in creative mode can use a Bedrock Golem spawn item")
+		BEDROCK_GOLEM_CREATIVE_ONLY = builder.comment("When true, only players in creative mode can use a Bedrock Golem spawn item")
 				.define("bedrock_golem_creative_only", true);
-		this.PUMPKIN_BUILDS_GOLEMS = builder.comment("When true, pumpkins can be used to build this mod's golems")
+		PUMPKIN_BUILDS_GOLEMS = builder.comment("When true, pumpkins can be used to build this mod's golems")
 				.define("pumpkin_builds_golems", false);
-		this.ENABLE_FRIENDLY_FIRE = builder.comment("When enabled, attacking a player-built entity will make it attack you")
+		ENABLE_FRIENDLY_FIRE = builder.comment("When enabled, attacking a player-built entity will make it attack you")
 				.define("friendly_fire", true);
-		this.ENABLE_USE_SPELL_ITEM = builder
+		ENABLE_USE_SPELL_ITEM = builder
 				.comment("When enabled, players can use the spell item on a carved pumpkin to convert it to a golem head in-world")
 				.define("use_spell", true);
-		this.ENABLE_HOLIDAYS = builder.comment("Super secret special days")
+		ENABLE_HOLIDAYS = builder.comment("Super secret special days")
 				.define("holidays", true);
-		this.VILLAGER_GOLEM_SPAWN_CHANCE = builder.comment("Percent chance for a villager to summon an Extra Golems entity")
+		VILLAGER_GOLEM_SPAWN_CHANCE = builder.comment("Percent chance for a villager to summon an Extra Golems entity")
 				.defineInRange("villager_summon_chance", 60, 0, 100);
-		this.ENABLE_HEAL_GOLEMS = builder.comment("When enabled, giving blocks and items to golems can restore health")
+		ENABLE_HEAL_GOLEMS = builder.comment("When enabled, giving blocks and items to golems can restore health")
 				.define("heal_golems", true);
-		this.VILLAGER_GOLEM_SPAWN_LIST = builder.comment("Golems that can be summoned by villagers", "(Duplicate entries increase chances)")
-				.defineList("villager_summon_golems", List.of(defaultVillagerGolemSpawns), o -> o instanceof String);
+		VILLAGER_GOLEM_SPAWN_LIST = builder.comment("Golems that can be summoned by villagers", "(Duplicate entries increase chances)")
+				.defineList("villager_summon_golems", List.of(defaultVillagerGolemSpawns), o -> o instanceof String s && ResourceLocation.tryParse(s) != null);
 
 		builder.pop();
 	}
@@ -114,25 +120,6 @@ public final class EGConfig {
 		enableHolidays = ENABLE_HOLIDAYS.get();
 		enableHealGolems = ENABLE_HEAL_GOLEMS.get();
 		villagerGolemSpawnChance = VILLAGER_GOLEM_SPAWN_CHANCE.get();
-		villagerGolemSpawnList = loadVillagerGolemList(VILLAGER_GOLEM_SPAWN_LIST.get());
-	}
-
-
-	private static List<ResourceLocation> loadVillagerGolemList(List<? extends String> config) {
-		final List<ResourceLocation> list = new ArrayList<>();
-		// load all villager golem candidates from config
-		for (final String s : config) {
-			// parse each entry as resource location with error-catching
-			if (s != null && !s.isEmpty()) {
-				try {
-					ResourceLocation golemId = ResourceLocation.tryParse(s);
-					final Optional<GolemContainer> container = ExtraGolems.GOLEM_CONTAINERS.get(golemId);
-					container.ifPresent(c -> list.add(new ResourceLocation(s)));
-				} catch (ResourceLocationException e) {
-					ExtraGolems.LOGGER.error("Invalid golem ID in config file for villager_summon_golems: \"" + s + "\"");
-				}
-			}
-		}
-		return list;
+		villagerGolemSpawnList = VILLAGER_GOLEM_SPAWN_LIST.get().stream().map(ResourceLocation::tryParse).toList();
 	}
 }

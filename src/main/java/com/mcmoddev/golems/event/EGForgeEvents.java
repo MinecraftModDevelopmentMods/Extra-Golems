@@ -17,8 +17,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.SpawnUtil;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.sensing.GolemSensor;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.npc.Villager;
@@ -110,6 +112,7 @@ public class EGForgeEvents {
 				&& event.getEntity() instanceof Villager villager
 				&& !villager.isSleeping()
 				&& villager.tickCount % 90L == 0L
+				&& !checkForNearbyGolem(villager)
 				&& villager.wantsToSpawnGolem(villager.tickCount)
 				&& villager.getRandom().nextInt(100) < ExtraGolems.CONFIG.villagerSummonChance()) {
 			// locate nearby villagers who also want to summon a golem
@@ -145,8 +148,26 @@ public class EGForgeEvents {
 	 * @return a random golem material from the config, or the empty material if the config is empty
 	 */
 	private static ResourceLocation getGolemToSpawn(final BlockPos pos, final RandomSource random) {
-		final List<ResourceLocation> options = ExtraGolems.CONFIG.getVillagerGolems();
+		final List<? extends ResourceLocation> options = ExtraGolems.CONFIG.getVillagerGolems();
 		final ResourceLocation choice = options.isEmpty() ? GolemContainer.EMPTY_MATERIAL : options.get(random.nextInt(options.size()));
 		return choice;
+	}
+
+	/**
+	 * Checks if the nearest living entity memory contains any golem or subclass.
+	 * Required because the version used by villagers only checks entity type.
+	 * @param villager the villager
+	 * @return true if a nearby golem was detected.
+	 */
+	private static boolean checkForNearbyGolem(LivingEntity villager) {
+		Optional<List<LivingEntity>> optional = villager.getBrain().getMemory(MemoryModuleType.NEAREST_LIVING_ENTITIES);
+		if (optional.isPresent()) {
+			boolean flag = optional.get().stream().anyMatch(e -> e instanceof IronGolem);
+			if (flag) {
+				GolemSensor.golemDetected(villager);
+				return true;
+			}
+		}
+		return false;
 	}
 }
