@@ -237,6 +237,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 	public SpawnGroupData finalizeSpawn(ServerLevelAccessor serverLevel, DifficultyInstance difficulty,
 										MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag tag) {
 		this.setHealth(this.getMaxHealth());
+		this.setInvulnerable(container.getAttributes().getArmor() > MAX_ARMOR);
 		return super.finalizeSpawn(serverLevel, difficulty, mobSpawnType, spawnGroupData, tag);
 	}
 

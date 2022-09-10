@@ -66,7 +66,7 @@ public final class GolemContainer {
 			Codec.INT.optionalFieldOf("glow", 0).forGetter(GolemContainer::getMaxLightLevel),
 			Codec.INT.optionalFieldOf("power", 0).forGetter(GolemContainer::getMaxPowerLevel),
 			Codec.BOOL.optionalFieldOf("hidden", false).forGetter(GolemContainer::isHidden),
-			SoundEvent.CODEC.optionalFieldOf("sound", SoundEvents.STONE_STEP).forGetter(GolemContainer::getSound),
+			ForgeRegistries.SOUND_EVENTS.getCodec().optionalFieldOf("sound", SoundEvents.STONE_STEP).forGetter(GolemContainer::getSound),
 			ParticleTypes.CODEC.optionalFieldOf("particle").forGetter(GolemContainer::getParticle),
 			Codec.either(ResourcePair.CODEC, ResourcePair.CODEC.listOf())
 					.xmap(either -> either.map(ImmutableList::of, Function.identity()),
