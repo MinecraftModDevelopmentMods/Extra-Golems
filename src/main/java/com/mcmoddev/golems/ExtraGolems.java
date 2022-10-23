@@ -1,5 +1,6 @@
 package com.mcmoddev.golems;
 
+import com.mcmoddev.golems.block.GolemHeadBlock;
 import com.mcmoddev.golems.container.GolemContainer;
 import com.mcmoddev.golems.container.behavior.GolemBehaviors;
 import com.mcmoddev.golems.container.render.GolemRenderSettings;
@@ -10,8 +11,10 @@ import com.mcmoddev.golems.network.SGolemContainerPacket;
 import com.mcmoddev.golems.network.SGolemModelPacket;
 import com.mcmoddev.golems.util.GenericJsonReloadListener;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
@@ -66,7 +69,6 @@ public class ExtraGolems {
 		// init helper classes
 		GolemBehaviors.init();
 		// register event handlers
-		ExtraGolems.LOGGER.debug(ExtraGolems.MODID + ":registerEventHandlers");
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
 		MinecraftForge.EVENT_BUS.register(EGForgeEvents.class);
@@ -78,7 +80,6 @@ public class ExtraGolems {
 			com.mcmoddev.golems.event.EGClientEvents.addResources();
 		});
 		// register messages
-		ExtraGolems.LOGGER.debug(ExtraGolems.MODID + ":registerNetwork");
 		int messageId = 0;
 		CHANNEL.registerMessage(messageId++, SGolemContainerPacket.class, SGolemContainerPacket::toBytes, SGolemContainerPacket::fromBytes, SGolemContainerPacket::handlePacket, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
 		CHANNEL.registerMessage(messageId++, SGolemModelPacket.class, SGolemModelPacket::toBytes, SGolemModelPacket::fromBytes, SGolemModelPacket::handlePacket, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
@@ -88,6 +89,9 @@ public class ExtraGolems {
 	private void setup(final FMLCommonSetupEvent event) {
 		// init addons
 		AddonLoader.init();
+		// register dispenser behavior
+		DispenserBlock.registerBehavior(EGRegistry.GOLEM_HEAD_ITEM.get(), GolemHeadBlock.GOLEM_HEAD_DISPENSER_BEHAVIOR);
+		DispenserBlock.registerBehavior(Items.CARVED_PUMPKIN, GolemHeadBlock.CARVED_PUMPKIN_DISPENSER_BEHAVIOR);
 	}
 
 	private void enqueueIMC(final InterModEnqueueEvent event) {
@@ -116,7 +120,25 @@ public class ExtraGolems {
 	 * @see GolemContainer#matches(Block, Block, Block, Block)
 	 **/
 	@Nullable
-	public static GolemBase getGolem(Level world, Block below1, Block below2, Block arm1, Block arm2) {
+	public static GolemBase getGolem(Level level, Block below1, Block below2, Block arm1, Block arm2) {
+		ResourceLocation id = getGolemId(below1, below2, arm1, arm2);
+		if (null == id) {
+			return null;
+		}
+		return GolemBase.create(level, id);
+	}
+
+	/**
+	 * Checks all registered GolemContainers until one is found that is constructed
+	 * out of the passed Blocks. Parameters are the current World and the 4 blocks
+	 * that will be used to calculate this Golem. It is okay to pass {@code null} or
+	 * Air.
+	 *
+	 * @return the constructed GolemBase instance if there is one for the passed blocks, otherwise null
+	 * @see GolemContainer#matches(Block, Block, Block, Block)
+	 **/
+	@Nullable
+	public static ResourceLocation getGolemId(Block below1, Block below2, Block arm1, Block arm2) {
 		ResourceLocation id = null;
 		for (Entry<ResourceLocation, Optional<GolemContainer>> entry : GOLEM_CONTAINERS.getEntries()) {
 			if (entry.getValue().isPresent() && entry.getValue().get().matches(below1, below2, arm1, arm2)) {
@@ -124,10 +146,6 @@ public class ExtraGolems {
 				break;
 			}
 		}
-		if (id == null) {
-			return null;
-		}
-		GolemBase entity = GolemBase.create(world, id);
-		return entity;
+		return id;
 	}
 }

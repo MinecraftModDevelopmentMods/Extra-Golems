@@ -16,19 +16,16 @@ public class EGClientModEvents {
 
 	@SubscribeEvent
 	public static void setupClient(final FMLClientSetupEvent event) {
-		ExtraGolems.LOGGER.debug(ExtraGolems.MODID + ":setupClient");
 		event.enqueueWork(() -> MenuScreens.register(EGRegistry.DISPENSER_GOLEM.get(), DispenserGolemScreen::new));
 	}
 
 	@SubscribeEvent
 	public static void registerEntityLayers(final EntityRenderersEvent.RegisterLayerDefinitions event) {
-		ExtraGolems.LOGGER.debug(ExtraGolems.MODID + ":registerEntityLayers");
 		event.registerLayerDefinition(GolemRenderer.GOLEM_MODEL_RESOURCE, GolemModel::createBodyLayer);
 	}
 
 	@SubscribeEvent
 	public static void registerEntityRenderers(final EntityRenderersEvent.RegisterRenderers event) {
-		ExtraGolems.LOGGER.debug(ExtraGolems.MODID + ":registerEntityRenderers");
-		event.registerEntityRenderer((EntityType<? extends GolemBase>) EGRegistry.GOLEM.get(), m -> (new GolemRenderer<GolemBase>(m)));
+		event.registerEntityRenderer(EGRegistry.GOLEM.get(), m -> (new GolemRenderer<GolemBase>(m)));
 	}
 }

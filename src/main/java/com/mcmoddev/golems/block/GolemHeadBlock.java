@@ -1,9 +1,14 @@
 package com.mcmoddev.golems.block;
 
+import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.entity.GolemBase;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
+import net.minecraft.core.dispenser.DispenseItemBehavior;
+import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -11,44 +16,89 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.animal.SnowGolem;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CarvedPumpkinBlock;
+import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.material.PushReaction;
 
 import javax.annotation.Nullable;
 
 public final class GolemHeadBlock extends HorizontalDirectionalBlock {
 
-//    This behavior is modified from that of CARVED_PUMPKIN, where the block is
-//    placed if a Golem pattern is found. Here we immediately spawn the entity and
-//    shrink the itemstack, without placing the block, meaning that if there is no
-//    entity to spawn then the block will be 'tossed' instead of placed.
-//    public static final IBehaviorDispenseItem DISPENSER_BEHAVIOR = new
-//    BehaviorDefaultDispenseItem() {
-//    
-//    @Override protected ItemStack dispenseStack(final IBlockSource source, final
-//    ItemStack stack) { final World world = source.getWorld(); final EnumFacing
-//    facing = source.getBlockState().get(BlockDispenser.FACING); final BlockPos
-//    blockpos = source.getBlockPos().offset(facing); if
-//    (world.isAirBlock(blockpos)) { System.out.println(blockpos.toString() +
-//    " IS AIR BLOCK"); if(!world.isRemote) { world.setBlockState(blockpos,
-//    EGRegistry.GOLEM_HEAD.getDefaultState().with(HORIZONTAL_FACING, facing), 3);
-//    } stack.shrink(1); } else { return super.dispenseStack(source, stack); }
-//    
-//    return stack; } };
+	/**
+	 * This behavior is modified from that of CARVED_PUMPKIN.
+	 * If a GolemBase can be spawned, the entity is spawned directly and skips the block placement.
+	 **/
+	public static final DispenseItemBehavior GOLEM_HEAD_DISPENSER_BEHAVIOR = new OptionalDispenseItemBehavior() {
+		@Override
+		public ItemStack execute(BlockSource blockSource, ItemStack itemStack) {
+			final Level level = blockSource.getLevel();
+			final Direction facing = blockSource.getBlockState().getValue(DispenserBlock.FACING);
+			final BlockPos blockpos = blockSource.getPos().relative(facing);
+			// check if the block can be placed
+			if(level.isEmptyBlock(blockpos) && canSpawnGolem(level, blockpos)) {
+				if (!level.isClientSide) {
+					// place the block
+					level.setBlock(blockpos, EGRegistry.GOLEM_HEAD.get().defaultBlockState().setValue(FACING, facing), Block.UPDATE_ALL);
+					level.gameEvent(null, GameEvent.BLOCK_PLACE, blockpos);
+				}
+				// shrink item stack
+				itemStack.shrink(1);
+				this.setSuccess(true);
+			}
+			return itemStack;
+		}
+	};
+
+	/**
+	 * This behavior is modified from that of CARVED_PUMPKIN.
+	 * If a GolemBase can be spawned, the entity is spawned directly and skips the block placement.
+	 **/
+	public static final DispenseItemBehavior CARVED_PUMPKIN_DISPENSER_BEHAVIOR = new OptionalDispenseItemBehavior() {
+		protected ItemStack execute(BlockSource blockSource, ItemStack itemStack) {
+			Level level = blockSource.getLevel();
+			BlockPos blockpos = blockSource.getPos().relative(blockSource.getBlockState().getValue(DispenserBlock.FACING));
+			CarvedPumpkinBlock carvedpumpkinblock = (CarvedPumpkinBlock)Blocks.CARVED_PUMPKIN;
+			// check if the block can be placed and a regular Golem would spawn
+			if (level.isEmptyBlock(blockpos) && (carvedpumpkinblock.canSpawnGolem(level, blockpos)
+					|| (ExtraGolems.CONFIG.pumpkinBuildsGolems() && canSpawnGolem(level, blockpos)))) {
+				if (!level.isClientSide) {
+					// place the block
+					level.setBlock(blockpos, carvedpumpkinblock.defaultBlockState(), Block.UPDATE_ALL);
+					level.gameEvent(null, GameEvent.BLOCK_PLACE, blockpos);
+				}
+				// shrink the item stack and set success
+				itemStack.shrink(1);
+				this.setSuccess(true);
+			} else {
+				// attempt to dispense pumpkin as armor
+				this.setSuccess(ArmorItem.dispenseArmor(blockSource, itemStack));
+			}
+
+			return itemStack;
+		}
+	};
 
 	public GolemHeadBlock(BlockBehaviour.Properties properties) {
 		super(properties);
 		this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
-		// dispenser behavior TODO: NOT WORKING
-		// BlockDispenser.registerDispenseBehavior(this.asItem(),
-		// GolemHeadBlock.DISPENSER_BEHAVIOR);
+	}
+
+	@Override
+	public PushReaction getPistonPushReaction(BlockState blockState) {
+		return PushReaction.NORMAL;
 	}
 
 	@Override
@@ -62,13 +112,67 @@ public final class GolemHeadBlock extends HorizontalDirectionalBlock {
 	}
 
 	@Override
-	public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-		super.setPlacedBy(worldIn, pos, state, placer, stack);
-		trySpawnGolem(placer, worldIn, pos);
+	public void onPlace(BlockState blockState, Level level, BlockPos blockPos, BlockState oldState, boolean isMoving) {
+		super.onPlace(blockState, level, blockPos, oldState, isMoving);
+		trySpawnGolem(null, level, blockPos);
+	}
+
+	@Override
+	public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+		super.setPlacedBy(level, pos, state, placer, stack);
+		trySpawnGolem(placer, level, pos);
 	}
 
 	/**
-	 * Attempts to build a entity with the given head position. Checks if a entity can
+	 * Checks if a GolemBase can be built the given position.
+	 *
+	 * @param level   current world
+	 * @param headPos the position of the entity head block
+	 * @return if the entity was built and spawned
+	 */
+	public static boolean canSpawnGolem(final Level level, final BlockPos headPos) {
+		// get all the block values that we will be using in the following
+		final Block blockBelow1 = level.getBlockState(headPos.below(1)).getBlock();
+		final Block blockBelow2 = level.getBlockState(headPos.below(2)).getBlock();
+		final Block blockArmNorth = level.getBlockState(headPos.below(1).north(1)).getBlock();
+		final Block blockArmSouth = level.getBlockState(headPos.below(1).south(1)).getBlock();
+		final Block blockArmEast = level.getBlockState(headPos.below(1).east(1)).getBlock();
+		final Block blockArmWest = level.getBlockState(headPos.below(1).west(1)).getBlock();
+		// true if the entity is completely Iron Blocks
+		boolean isIron;
+
+		////// Hard-coded support for Snow Golem //////
+		if (doBlocksMatch(Blocks.SNOW_BLOCK, blockBelow1, blockBelow2)) {
+			return true;
+		}
+
+		////// Hard-coded support for Iron Golem //////
+		isIron = doBlocksMatch(Blocks.IRON_BLOCK, blockBelow1, blockBelow2, blockArmNorth, blockArmSouth);
+		if (!isIron) {
+			// try to find an Iron Golem east-west aligned
+			isIron = doBlocksMatch(Blocks.IRON_BLOCK, blockBelow1, blockBelow2, blockArmEast, blockArmWest);
+		}
+
+		if (isIron) {
+			return true;
+		}
+
+		if (isInvalidBlock(blockBelow1) || isInvalidBlock(blockBelow2)) {
+			return false;
+		}
+
+		////// Attempt to locate a Golem from this mod //////
+		ResourceLocation golemId = ExtraGolems.getGolemId(blockBelow1, blockBelow2, blockArmNorth, blockArmSouth);
+		// if no entity found for North-South, try to find one for East-West pattern
+		if (golemId == null) {
+			golemId = ExtraGolems.getGolemId(blockBelow1, blockBelow2, blockArmEast, blockArmWest);
+		}
+
+		return golemId != null;
+	}
+
+	/**
+	 * Attempts to build a GolemBase with the given head position. Checks if a entity can
 	 * be built there and, if so, removes the blocks and spawns the corresponding
 	 * entity.
 	 *
@@ -78,12 +182,7 @@ public final class GolemHeadBlock extends HorizontalDirectionalBlock {
 	 * @return if the entity was built and spawned
 	 */
 	public static boolean trySpawnGolem(@Nullable final Entity placer, final Level level, final BlockPos headPos) {
-		if (level.isClientSide()) {
-			return false;
-		}
-
 		// get all the block and state values that we will be using in the following
-		// code
 		final BlockState stateBelow1 = level.getBlockState(headPos.below(1));
 		final BlockState stateBelow2 = level.getBlockState(headPos.below(2));
 		final BlockState stateArmNorth = level.getBlockState(headPos.below(1).north(1));
@@ -101,37 +200,39 @@ public final class GolemHeadBlock extends HorizontalDirectionalBlock {
 		final double spawnY = headPos.getY() - 1.95D;
 		final double spawnZ = headPos.getZ() + 0.5D;
 		// true if the entity is East-West aligned
-		boolean flagX;
+		boolean isEastWest;
 		// true if the entity is completely Iron Blocks
 		boolean isIron;
 
 		////// Hard-coded support for Snow Golem //////
 		if (doBlocksMatch(Blocks.SNOW_BLOCK, blockBelow1, blockBelow2)) {
-			removeGolemBody(level, headPos);
-			final SnowGolem entitysnowman = EntityType.SNOW_GOLEM.create(level);
-			ExtraGolems.LOGGER.debug("[Extra Golems]: Building regular boring Snow Golem");
-			entitysnowman.moveTo(spawnX, spawnY, spawnZ, 0.0F, 0.0F);
-			level.addFreshEntity(entitysnowman);
+			if(!level.isClientSide()) {
+				removeGolemBody(level, headPos);
+				final SnowGolem entitysnowman = EntityType.SNOW_GOLEM.create(level);
+				entitysnowman.moveTo(spawnX, spawnY, spawnZ, 0.0F, 0.0F);
+				level.addFreshEntity(entitysnowman);
+			}
 			return true;
 		}
 
 		////// Hard-coded support for Iron Golem //////
 		isIron = doBlocksMatch(Blocks.IRON_BLOCK, blockBelow1, blockBelow2, blockArmNorth, blockArmSouth);
-		flagX = false;
+		isEastWest = false;
 		if (!isIron) {
 			// try to find an Iron Golem east-west aligned
 			isIron = doBlocksMatch(Blocks.IRON_BLOCK, blockBelow1, blockBelow2, blockArmEast, blockArmWest);
-			flagX = true;
+			isEastWest = true;
 		}
 
 		if (isIron) {
-			removeAllGolemBlocks(level, headPos, flagX);
-			// build Iron Golem
-			final IronGolem ironGolem = EntityType.IRON_GOLEM.create(level);
-			ExtraGolems.LOGGER.debug("[Extra Golems]: Building regular boring Iron Golem");
-			ironGolem.setPlayerCreated(true);
-			ironGolem.moveTo(spawnX, spawnY, spawnZ, 0.0F, 0.0F);
-			level.addFreshEntity(ironGolem);
+			if(!level.isClientSide()) {
+				removeAllGolemBlocks(level, headPos, isEastWest);
+				// build Iron Golem
+				final IronGolem ironGolem = EntityType.IRON_GOLEM.create(level);
+				ironGolem.setPlayerCreated(true);
+				ironGolem.moveTo(spawnX, spawnY, spawnZ, 0.0F, 0.0F);
+				level.addFreshEntity(ironGolem);
+			}
 			return true;
 		}
 
@@ -140,25 +241,31 @@ public final class GolemHeadBlock extends HorizontalDirectionalBlock {
 		}
 
 		////// Attempt to spawn a Golem from this mod //////
-		GolemBase golem = ExtraGolems.getGolem(level, blockBelow1, blockBelow2, blockArmNorth, blockArmSouth);
-		flagX = false;
+		ResourceLocation golemId = ExtraGolems.getGolemId(blockBelow1, blockBelow2, blockArmNorth, blockArmSouth);
+		isEastWest = false;
 		// if no entity found for North-South, try to find one for East-West pattern
-		if (golem == null) {
-			golem = ExtraGolems.getGolem(level, blockBelow1, blockBelow2, blockArmEast, blockArmWest);
-			flagX = true;
+		if (golemId == null) {
+			golemId = ExtraGolems.getGolemId(blockBelow1, blockBelow2, blockArmEast, blockArmWest);
+			isEastWest = true;
 		}
 
-		if (golem != null) {
-			// spawn the entity!
-			removeAllGolemBlocks(level, headPos, flagX);
-			golem.setPlayerCreated(true);
-			golem.moveTo(spawnX, spawnY, spawnZ, 0.0F, 0.0F);
-			ExtraGolems.LOGGER.debug("[Extra Golems]: Building golem " + golem);
-			level.addFreshEntity(golem);
-			if (placer != null && placer.getCommandSenderWorld() instanceof ServerLevel) {
-				golem.finalizeSpawn((ServerLevel) placer.getCommandSenderWorld(), level.getCurrentDifficultyAt(headPos), MobSpawnType.MOB_SUMMONED, null, null);
+		if (golemId != null) {
+			if(!level.isClientSide()) {
+				final GolemBase golem = GolemBase.create(level, golemId);
+				// spawn the entity!
+				removeAllGolemBlocks(level, headPos, isEastWest);
+				golem.setPlayerCreated(true);
+				golem.moveTo(spawnX, spawnY, spawnZ, 0.0F, 0.0F);
+				level.addFreshEntity(golem);
+				if (level instanceof ServerLevel) {
+					golem.finalizeSpawn((ServerLevel) level, level.getCurrentDifficultyAt(headPos), MobSpawnType.MOB_SUMMONED, null, null);
+				}
+				if(isEastWest) {
+					golem.onBuilt(stateBelow1, stateBelow2, stateArmEast, stateArmWest);
+				} else {
+					golem.onBuilt(stateBelow1, stateBelow2, stateArmNorth, stateArmSouth);
+				}
 			}
-			golem.onBuilt(stateBelow1, stateBelow2, flagX ? stateArmEast : stateArmWest, flagX ? stateArmNorth : stateArmSouth);
 			return true;
 		}
 		// No Golems of any kind were spawned :(
@@ -212,6 +319,6 @@ public final class GolemHeadBlock extends HorizontalDirectionalBlock {
 	 * @return true if the block should not be considered a entity building block
 	 **/
 	private static boolean isInvalidBlock(final Block b) {
-		return b == null || b == Blocks.AIR || b == Blocks.WATER;
+		return b == null || b == Blocks.AIR || b == Blocks.WATER || b == Blocks.LAVA;
 	}
 }

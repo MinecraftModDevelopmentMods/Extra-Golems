@@ -295,30 +295,28 @@ public class GolemBookScreen extends Screen {
 
 	/**
 	 * Draws the given Block in the upper-left corner of the passed page
-	 * coordinates.
-	 *
-	 * @param blockIn the block to draw. If this is Blocks.AIR, a barrier will be
-	 *                drawn instead.
+	 * coordinates. Using Blocks.AIR will draw a barrier instead.
 	 **/
-	protected void drawBlock(final Block blockIn, final int cornerX, final int cornerY, final float scale) {
+	protected void drawBlock(final PoseStack poseStack, final Block blockIn, final int cornerX, final int cornerY, final float scale) {
 		// 'Blocks.AIR' is the flag for 'no block'
 		Block block = blockIn != Blocks.AIR ? blockIn : Blocks.BARRIER;
 		float blockX = (float) (cornerX + MARGIN + 4);
 		float blockY = (float) (cornerY + MARGIN);
 		// Render the Block with given scale
 		RenderSystem.getModelViewStack().pushPose();
-		// TODO ???
-//    RenderSystem.enableRescaleNormal();
-		Lighting.setupForFlatItems();
+		// Scale the pose stack that will be used by the item renderer
 		RenderSystem.getModelViewStack().scale(scale, scale, scale);
 
+		// prepare to render the item stack
+		Lighting.setupForFlatItems();
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		RenderSystem.setShaderTexture(0, STATS_ICON_LOCATION);
 
-
+		// render the item stack and ensure the x and y coordinates are un-scaled
 		this.itemRenderer.renderGuiItem(new ItemStack(block), (int) (blockX / scale), (int) (blockY / scale));
+
 		RenderSystem.getModelViewStack().popPose();
+		// re-apply the previous model view matrix, required to fully pop the view settings after scaling
+		RenderSystem.applyModelViewMatrix();
 	}
 
 	/**
@@ -454,22 +452,22 @@ public class GolemBookScreen extends Screen {
 		int startX = cornerX + (BOOK_WIDTH / 8);
 		int startY = cornerY + blockW;
 		// head
-		this.drawBlock(golemHead, startX, startY, scale);
+		this.drawBlock(matrix, golemHead, startX, startY, scale);
 		// middle-bottom
 		startY += blockW * 4;
-		this.drawBlock(golemBody, startX, startY, scale);
+		this.drawBlock(matrix, golemBody, startX, startY, scale);
 		// arm-right
 		startX += blockW * 2;
 		startY -= (blockW * 5) / 2;
-		this.drawBlock(golemBody, startX, startY, scale);
+		this.drawBlock(matrix, golemBody, startX, startY, scale);
 		// middle-top
 		startX -= blockW * 2;
 		startY += (blockW / 2);
-		this.drawBlock(golemBody, startX, startY, scale);
+		this.drawBlock(matrix, golemBody, startX, startY, scale);
 		// arm-left
 		startX -= blockW * 2;
 		startY += (blockW / 2);
-		this.drawBlock(golemBody, startX, startY, scale);
+		this.drawBlock(matrix, golemBody, startX, startY, scale);
 	}
 
 	/**
@@ -610,7 +608,7 @@ public class GolemBookScreen extends Screen {
 				}
 				// draw the block
 				matrix.pushPose();
-				this.gui.drawBlock(this.currentBlock, this.x - MARGIN - 4, this.y - MARGIN, this.scale);
+				this.gui.drawBlock(matrix, this.currentBlock, this.x - MARGIN - 4, this.y - MARGIN, this.scale);
 				matrix.popPose();
 			}
 		}
@@ -665,7 +663,7 @@ public class GolemBookScreen extends Screen {
 				this.blit(matrix, this.x, this.y, CONTENTS_W + ICON_SP, this.isHovered ? (ENTRY_H + ICON_SP) : 0, ENTRY_W, ENTRY_H); // drawTexturedModalRect
 				// draw the block and name of the entity
 				int index = (int) (gui.ticksOpen / 30);
-				gui.drawBlock(this.entry.getBlock(index), this.x - MARGIN - 2, this.y - 9, 1.0F);
+				gui.drawBlock(matrix, this.entry.getBlock(index), this.x - MARGIN - 2, this.y - 9, 1.0F);
 
 				// prepare to draw the entity's name
 				matrix.pushPose();

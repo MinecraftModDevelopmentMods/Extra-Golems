@@ -9,7 +9,7 @@ issueTrackerURL="https://github.com/MinecraftModDevelopmentMods/Extra-Golems/iss
 
 [[mods]]
     modId="golems"
-    version="19.2.3"
+    version="19.2.4"
     displayName="Extra Golems"
     credits="TheGlitch76, jriwanek, AtelierAmber, and translators - Thanks!"
     authors="skyjay1 and the MMD Team"
@@ -18,6 +18,6 @@ issueTrackerURL="https://github.com/MinecraftModDevelopmentMods/Extra-Golems/iss
 [[dependencies.golems]]
     modId="forge"
     mandatory=true
-    versionRange="[43.1,)"
+    versionRange="[43.1.10,)"
     ordering="NONE"
     side="BOTH"

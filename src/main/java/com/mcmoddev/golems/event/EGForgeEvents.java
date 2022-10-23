@@ -1,6 +1,5 @@
 package com.mcmoddev.golems.event;
 
-import com.mcmoddev.golems.EGConfig;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.block.GolemHeadBlock;
@@ -16,35 +15,31 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.SpawnUtil;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.sensing.GolemSensor;
 import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.Villager;
-import net.minecraft.world.entity.npc.VillagerData;
-import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.network.PacketDistributor;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
-import java.util.stream.Collectors;
 
 public class EGForgeEvents {
 
@@ -84,11 +79,24 @@ public class EGForgeEvents {
 	}
 
 	/**
+	 * Prevents arrow-shooting golems from hurting villagers
+	 * @param event the living hurt event
+	 */
+	@SubscribeEvent
+	public static void onLivingHurt(final LivingHurtEvent event) {
+		if(event.getEntity() instanceof AbstractVillager && event.getSource().isProjectile()
+				&& event.getSource().getEntity() instanceof GolemBase golem
+				&& golem.getContainer().hasBehavior(GolemBehaviors.SHOOT_ARROWS)) {
+			event.setCanceled(true);
+		}
+	}
+
+	/**
 	 * Prevents mobs from targeting inert Furnace Golems
 	 **/
 	@SubscribeEvent
-	public static void onTargetEvent(final LivingSetAttackTargetEvent event) {
-		if (event.getEntity() instanceof Mob mob && event.getTarget() instanceof GolemBase target) {
+	public static void onTargetEvent(final LivingChangeTargetEvent event) {
+		if (event.getEntity() instanceof Mob mob && event.getNewTarget() instanceof GolemBase target) {
 			// clear the attack target
 			if (target.getContainer().hasBehavior(GolemBehaviors.USE_FUEL) && !target.hasFuel()) {
 				mob.setTarget(null);
