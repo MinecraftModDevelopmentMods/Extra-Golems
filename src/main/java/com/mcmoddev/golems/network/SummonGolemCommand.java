@@ -52,7 +52,7 @@ public class SummonGolemCommand {
 			id = new ResourceLocation(ExtraGolems.MODID, id.getPath());
 		}
 		// validate the id
-		if (ExtraGolems.GOLEM_CONTAINERS.get(id).isEmpty()) {
+		if (!ExtraGolems.GOLEM_CONTAINER_MAP.containsKey(id)) {
 			throw INVALID_ID.create(id);
 		}
 		// create the golem

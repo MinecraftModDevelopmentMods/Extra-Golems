@@ -140,9 +140,9 @@ public class GolemBookScreen extends Screen {
 	 **/
 	private static final void initGolemBookEntries() {
 		GOLEMS.clear();
-		for (Entry<ResourceLocation, Optional<GolemContainer>> entry : ExtraGolems.GOLEM_CONTAINERS.getEntries()) {
-			if (entry.getValue().isPresent() && !entry.getValue().get().isHidden()) {
-				GOLEMS.add(new GolemBookEntry(entry.getKey(), entry.getValue().get()));
+		for (Entry<ResourceLocation, GolemContainer> entry : ExtraGolems.GOLEM_CONTAINER_MAP.entrySet()) {
+			if (!entry.getValue().isHidden()) {
+				GOLEMS.add(new GolemBookEntry(entry.getKey(), entry.getValue()));
 			}
 		}
 		// sort golems by attack power

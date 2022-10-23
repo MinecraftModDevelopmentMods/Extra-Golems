@@ -66,6 +66,15 @@ public abstract class GolemBehavior {
 	}
 
 	/**
+	 * Called when the Golem update method is called
+	 *
+	 * @param entity the Golem
+	 */
+	public void onTick(final GolemBase entity) {
+
+	}
+
+	/**
 	 * Called when the Golem hurts an entity
 	 *
 	 * @param entity the Golem

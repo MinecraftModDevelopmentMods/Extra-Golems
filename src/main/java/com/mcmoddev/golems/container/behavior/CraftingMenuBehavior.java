@@ -28,10 +28,30 @@ public class CraftingMenuBehavior extends GolemBehavior {
 	@Override
 	public void onMobInteract(final GolemBase entity, final Player player, final InteractionHand hand) {
 		if (!player.isCrouching() && player instanceof ServerPlayer) {
+			// update menu player
+			if(entity.getPlayerInMenu() != null) {
+				entity.getPlayerInMenu().closeContainer();
+			}
+			entity.setPlayerInMenu(player);
 			// display crafting grid by sending request to server
 			NetworkHooks.openScreen((ServerPlayer) player, new PortableCraftingMenu.Provider());
 			player.awardStat(Stats.INTERACT_WITH_CRAFTING_TABLE);
 			player.swing(hand);
+		}
+	}
+
+	@Override
+	public void onTick(GolemBase entity) {
+		if(null == entity.getPlayerInMenu()) {
+			return;
+		}
+		// stop moving and look at player
+		entity.getNavigation().stop();
+		entity.getLookControl().setLookAt(entity.getPlayerInMenu());
+		// ensure the container closes when the player is too far away
+		if(!entity.isPlayerInRangeForMenu(8.0D)) {
+			entity.getPlayerInMenu().closeContainer();
+			entity.setPlayerInMenu(null);
 		}
 	}
 

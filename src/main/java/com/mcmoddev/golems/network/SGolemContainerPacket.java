@@ -2,60 +2,59 @@ package com.mcmoddev.golems.network;
 
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.container.GolemContainer;
-import com.mojang.serialization.DataResult;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
+import com.mojang.serialization.Codec;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.network.NetworkEvent;
 
-import java.util.Optional;
+import java.util.Map;
 import java.util.function.Supplier;
 
 /**
  * Called when datapacks are (re)loaded.
- * Sent from the server to the client with a single ResourceLocation ID
- * and the corresponding Golem Container as it was read from JSON.
+ * Sent from the server to the client with a map of
+ * ResourceLocation IDs and Golem Containers
  **/
 public class SGolemContainerPacket {
 
-	protected ResourceLocation key;
-	protected GolemContainer golemContainer;
+	protected static final Codec<Map<ResourceLocation, GolemContainer>> CODEC = Codec.unboundedMap(ResourceLocation.CODEC, GolemContainer.CODEC);
+
+	protected Map<ResourceLocation, GolemContainer> data;
 
 	/**
-	 * @param key              the ResourceLocation ID of the Golem Container
-	 * @param golemContainerIn the Golem Container
+	 * @param data the data map
 	 **/
-	public SGolemContainerPacket(final ResourceLocation key, final GolemContainer golemContainerIn) {
-		this.key = key;
-		this.golemContainer = golemContainerIn;
+	public SGolemContainerPacket(final Map<ResourceLocation, GolemContainer> data) {
+		this.data = data;
+		if (FMLEnvironment.dist != Dist.CLIENT) {
+			// update server-side map
+			ExtraGolems.GOLEM_CONTAINER_MAP.clear();
+			ExtraGolems.GOLEM_CONTAINER_MAP.putAll(data);
+		}
 	}
 
 	/**
 	 * Reads the raw packet data from the data stream.
 	 *
-	 * @param buf the FriendlyByteBuf
-	 * @return a new instance of a SGolemContainerPacket based on the FriendlyByteBuf
+	 * @param buf the PacketBuffer
+	 * @return a new instance of a SGolemContainerPacket based on the PacketBuffer
 	 */
 	public static SGolemContainerPacket fromBytes(final FriendlyByteBuf buf) {
-		final ResourceLocation sKey = buf.readResourceLocation();
-		final CompoundTag sNBT = buf.readNbt();
-		final Optional<GolemContainer> sCont = ExtraGolems.GOLEM_CONTAINERS.readObject(sNBT).resultOrPartial(error -> ExtraGolems.LOGGER.error("Failed to read GolemContainer from NBT for packet\n" + error));
-		return new SGolemContainerPacket(sKey, sCont.orElse(GolemContainer.EMPTY));
+		final Map<ResourceLocation, GolemContainer> data = buf.readWithCodec(CODEC);
+		return new SGolemContainerPacket(data);
 	}
 
 	/**
 	 * Writes the raw packet data to the data stream.
 	 *
 	 * @param msg the SGolemContainerPacket
-	 * @param buf the FriendlyByteBuf
+	 * @param buf the PacketBuffer
 	 */
 	public static void toBytes(final SGolemContainerPacket msg, final FriendlyByteBuf buf) {
-		DataResult<Tag> nbtResult = ExtraGolems.GOLEM_CONTAINERS.writeObject(msg.golemContainer);
-		Tag tag = nbtResult.resultOrPartial(error -> ExtraGolems.LOGGER.error("Failed to write GolemContainer to NBT for packet\n" + error)).get();
-		buf.writeResourceLocation(msg.key);
-		buf.writeNbt((CompoundTag) tag);
+		buf.writeWithCodec(CODEC, msg.data);
 	}
 
 	/**
@@ -68,7 +67,9 @@ public class SGolemContainerPacket {
 		NetworkEvent.Context context = contextSupplier.get();
 		if (context.getDirection().getReceptionSide() == LogicalSide.CLIENT) {
 			context.enqueueWork(() -> {
-				ExtraGolems.GOLEM_CONTAINERS.put(message.key, message.golemContainer);
+				// update client-side map
+				ExtraGolems.GOLEM_CONTAINER_MAP.clear();
+				ExtraGolems.GOLEM_CONTAINER_MAP.putAll(message.data);
 			});
 		}
 		context.setPacketHandled(true);

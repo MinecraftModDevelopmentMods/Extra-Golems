@@ -1,6 +1,5 @@
 package com.mcmoddev.golems.entity;
 
-import com.mcmoddev.golems.EGConfig;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.block.GlowBlock;
@@ -104,6 +103,8 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 	protected final RangedAttackGoal aiArrowAttack;
 	protected final MeleeAttackGoal aiMeleeAttack;
 	private SimpleContainer inventory;
+	@Nullable
+	private Player playerInMenu;
 
 	// color
 	protected int biomeColor = 8626266;
@@ -129,7 +130,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 		if (materialIn.equals(material)) {
 			return;
 		}
-		Optional<GolemContainer> oContainer = ExtraGolems.GOLEM_CONTAINERS.get(materialIn);
+		Optional<GolemContainer> oContainer = Optional.ofNullable(ExtraGolems.GOLEM_CONTAINER_MAP.get(materialIn));
 		if(!oContainer.isPresent()) {
 			ExtraGolems.LOGGER.error("Failed to load golem container for '" + materialIn.toString() + "'");
 			return;
@@ -248,7 +249,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 
 	protected void registerGlowGoal() {
 		// register light level AI if enabled
-		int lightInt = container.getMaxLightLevel();
+		int lightInt = getContainer().getMaxLightLevel();
 		if (lightInt > 0) {
 			final BlockState state = EGRegistry.UTILITY_LIGHT.get().defaultBlockState().setValue(GlowBlock.LIGHT_LEVEL, lightInt);
 			this.goalSelector.addGoal(9, new PlaceUtilityBlocksGoal(this, state, GlowBlock.UPDATE_TICKS,
@@ -359,6 +360,8 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 	@Override
 	public void aiStep() {
 		super.aiStep();
+		// allow behaviors to update
+		getContainer().getBehaviors().values().forEach(list -> list.forEach(b -> b.onTick(this)));
 		// client-side updates
 		if (level.isClientSide()) {
 			// update biome color
@@ -536,6 +539,32 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 		return false;
 	}
 
+	/**
+	 * @param player the player who has opened a menu
+	 */
+	public void setPlayerInMenu(@Nullable final Player player) {
+		this.playerInMenu = player;
+	}
+
+	/**
+	 * @return the player who has opened a menu, if any
+	 */
+	@Nullable
+	public Player getPlayerInMenu() {
+		return playerInMenu;
+	}
+
+	/**
+	 * @param distance the maximum distance from the player to this entity
+	 * @return true if the player with an open menu exists and is within the given distance
+	 */
+	public boolean isPlayerInRangeForMenu(final double distance) {
+		if(null == this.playerInMenu) {
+			return false;
+		}
+		return this.distanceToSqr(this.playerInMenu) < distance * distance;
+	}
+
 	@Override
 	public boolean isSensitiveToWater() {
 		return this.getContainer().getAttributes().isHurtByWater();
@@ -588,7 +617,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 		super.readAdditionalSaveData(tag);
 		this.setMaterial(new ResourceLocation(tag.getString(KEY_MATERIAL)));
 		this.setBaby(tag.getBoolean(KEY_CHILD));
-		container.getMultitexture().ifPresent(m -> loadTextureId(tag));
+		getContainer().getMultitexture().ifPresent(m -> loadTextureId(tag));
 		// allow behaviors to process readData
 		initArrowInventory();
 		this.getContainer().getBehaviors().values().forEach(list -> list.forEach(b -> b.onReadData(this, tag)));
@@ -599,7 +628,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 		super.addAdditionalSaveData(tag);
 		tag.putString(KEY_MATERIAL, getMaterial().toString());
 		tag.putBoolean(KEY_CHILD, this.isBaby());
-		container.getMultitexture().ifPresent(m -> saveTextureId(tag));
+		getContainer().getMultitexture().ifPresent(m -> saveTextureId(tag));
 		// allow behaviors to process writeData
 		this.getContainer().getBehaviors().values().forEach(list -> list.forEach(b -> b.onWriteData(this, tag)));
 	}
@@ -642,14 +671,14 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 	 * on death
 	 **/
 	public final SoundEvent getGolemSound() {
-		return container.getSound();
+		return getContainer().getSound();
 	}
 
 	///////////////////// MULTITEXTURE ///////////////////////////
 
 	@Override
 	public int getTextureCount() {
-		return container.getMultitexture().isPresent() ? container.getMultitexture().get().getTextureCount() : 0;
+		return getContainer().getMultitexture().isPresent() ? container.getMultitexture().get().getTextureCount() : 0;
 	}
 
 	@Override
@@ -673,7 +702,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 	 * @param arm2 the second arm block
 	 */
 	public void onBuilt(final BlockState body, final BlockState legs, final BlockState arm1, final BlockState arm2) {
-		container.getMultitexture().ifPresent(m -> this.setTextureId((byte) m.getTextureFromBlock(body.getBlock())));
+		getContainer().getMultitexture().ifPresent(m -> this.setTextureId((byte) m.getTextureFromBlock(body.getBlock())));
 	}
 
 	/**
@@ -697,7 +726,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 
 	@Override
 	public int getMaxFuel() {
-		List<UseFuelBehavior> b = container.getBehaviors(GolemBehaviors.USE_FUEL);
+		List<UseFuelBehavior> b = getContainer().getBehaviors(GolemBehaviors.USE_FUEL);
 		return b.isEmpty() ? 0 : b.get(0).getMaxFuel();
 	}
 
@@ -711,7 +740,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 
 	@Override
 	public int getFuseLen() {
-		List<ExplodeBehavior> b = container.getBehaviors(GolemBehaviors.EXPLODE);
+		List<ExplodeBehavior> b = getContainer().getBehaviors(GolemBehaviors.EXPLODE);
 		return b.isEmpty() ? 0 : b.get(0).getFuseLen();
 	}
 
@@ -860,7 +889,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 
 	@Override
 	public void updateSwimming() {
-		if (container.getSwimAbility() != SwimMode.SWIM) {
+		if (getContainer().getSwimAbility() != SwimMode.SWIM) {
 			super.updateSwimming();
 			return;
 		}
@@ -877,7 +906,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 
 	@Override
 	protected float getWaterSlowDown() {
-		return container.getSwimAbility() == SwimMode.SWIM ? 0.88F : super.getWaterSlowDown();
+		return getContainer().getSwimAbility() == SwimMode.SWIM ? 0.88F : super.getWaterSlowDown();
 	}
 
 	@Override
@@ -886,11 +915,11 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 	}
 
 	public void setSwimmingUp(boolean isSwimmingUp) {
-		this.swimmingUp = (isSwimmingUp && container.getSwimAbility() == SwimMode.SWIM);
+		this.swimmingUp = (isSwimmingUp && getContainer().getSwimAbility() == SwimMode.SWIM);
 	}
 
 	public boolean isSwimmingUp() {
-		if (container.getSwimAbility() != SwimMode.SWIM) {
+		if (getContainer().getSwimAbility() != SwimMode.SWIM) {
 			return false;
 		}
 		if (this.swimmingUp) {
@@ -911,7 +940,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 	 * @return true if the entity should move towards the water
 	 **/
 	public boolean shouldMoveToWater(final Vec3 target) {
-		return container.getSwimAbility() == SwimMode.SWIM;
+		return getContainer().getSwimAbility() == SwimMode.SWIM;
 	}
 
 	static class SwimmingMovementController extends MoveControl {

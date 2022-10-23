@@ -90,7 +90,6 @@ public final class EGRegistry {
 	////// EVENTS //////
 
 	public static void registerEntityAttributes(final EntityAttributeCreationEvent event) {
-		ExtraGolems.LOGGER.debug(ExtraGolems.MODID + ":registerEntityAttributes");
 		event.put((EntityType<? extends LivingEntity>) EGRegistry.GOLEM.get(), GolemContainer.EMPTY.getAttributeSupplier().get().build());
 	}
 }

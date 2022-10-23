@@ -44,22 +44,6 @@ import java.util.Optional;
 public class EGForgeEvents {
 
 	@SubscribeEvent
-	public static void addReloadListeners(final AddReloadListenerEvent event) {
-		event.addListener(ExtraGolems.GOLEM_CONTAINERS);
-		event.addListener(ExtraGolems.GOLEM_RENDER_SETTINGS);
-	}
-
-	@SubscribeEvent
-	public static void onPlayerLogin(final PlayerEvent.PlayerLoggedInEvent event) {
-		Player player = event.getEntity();
-		// reload golem containers
-		if (player instanceof ServerPlayer) {
-			ExtraGolems.GOLEM_CONTAINERS.getEntries().forEach(e -> e.getValue().ifPresent(c -> ExtraGolems.CHANNEL.send(PacketDistributor.ALL.noArg(), new SGolemContainerPacket(e.getKey(), c))));
-			ExtraGolems.GOLEM_RENDER_SETTINGS.getEntries().forEach(e -> e.getValue().ifPresent(c -> ExtraGolems.CHANNEL.send(PacketDistributor.ALL.noArg(), new SGolemModelPacket(e.getKey(), c))));
-		}
-	}
-
-	@SubscribeEvent
 	public static void onAddCommands(final RegisterCommandsEvent event) {
 		SummonGolemCommand.register(event.getDispatcher());
 	}

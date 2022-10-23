@@ -72,7 +72,6 @@ public final class AddonLoader {
 
 	public static void onAddPackFinders(final AddPackFindersEvent event) {
 		if(event.getPackType() == PackType.SERVER_DATA) {
-			ExtraGolems.LOGGER.debug(ExtraGolems.MODID + ": addPackFinders");
 			// register Quark data pack
 			if(isQuarkLoaded()) {
 				ExtraGolems.LOGGER.info("Extra Golems detected Quark, registering data pack now");

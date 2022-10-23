@@ -2,60 +2,59 @@ package com.mcmoddev.golems.network;
 
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.container.render.GolemRenderSettings;
-import com.mojang.serialization.DataResult;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
+import com.mojang.serialization.Codec;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.network.NetworkEvent;
 
-import java.util.Optional;
+import java.util.Map;
 import java.util.function.Supplier;
 
 /**
  * Called when datapacks are (re)loaded.
- * Sent from the server to the client with a single ResourceLocation ID
- * and the corresponding Golem Render Settings as it was read from JSON.
+ * Sent from the server to the client with a map of
+ * ResourceLocation IDs and Golem Containers
  **/
 public class SGolemModelPacket {
 
-	protected ResourceLocation key;
-	protected GolemRenderSettings golemModel;
+	protected static final Codec<Map<ResourceLocation, GolemRenderSettings>> CODEC = Codec.unboundedMap(ResourceLocation.CODEC, GolemRenderSettings.CODEC);
+
+	protected Map<ResourceLocation, GolemRenderSettings> data;
 
 	/**
-	 * @param key          the ResourceLocation ID of the Golem Render Settings
-	 * @param golemModelIn the Golem Render Settings
+	 * @param data the data map
 	 **/
-	public SGolemModelPacket(final ResourceLocation key, final GolemRenderSettings golemModelIn) {
-		this.key = key;
-		this.golemModel = golemModelIn;
+	public SGolemModelPacket(final Map<ResourceLocation, GolemRenderSettings> data) {
+		this.data = data;
+		if (FMLEnvironment.dist != Dist.CLIENT) {
+			// update server-side map
+			ExtraGolems.GOLEM_MODEL_MAP.clear();
+			ExtraGolems.GOLEM_MODEL_MAP.putAll(data);
+		}
 	}
 
 	/**
 	 * Reads the raw packet data from the data stream.
 	 *
-	 * @param buf the FriendlyByteBuf
-	 * @return a new instance of a SGolemModelPacket based on the FriendlyByteBuf
+	 * @param buf the PacketBuffer
+	 * @return a new instance of a SGolemModelPacket based on the PacketBuffer
 	 */
 	public static SGolemModelPacket fromBytes(final FriendlyByteBuf buf) {
-		final ResourceLocation sKey = buf.readResourceLocation();
-		final CompoundTag sNBT = buf.readNbt();
-		final Optional<GolemRenderSettings> sCont = ExtraGolems.GOLEM_RENDER_SETTINGS.readObject(sNBT).resultOrPartial(error -> ExtraGolems.LOGGER.error("Failed to read GolemRenderSettings from NBT for packet\n" + error));
-		return new SGolemModelPacket(sKey, sCont.orElse(GolemRenderSettings.EMPTY));
+		final Map<ResourceLocation, GolemRenderSettings> data = buf.readWithCodec(CODEC);
+		return new SGolemModelPacket(data);
 	}
 
 	/**
 	 * Writes the raw packet data to the data stream.
 	 *
 	 * @param msg the SGolemModelPacket
-	 * @param buf the FriendlyByteBuf
+	 * @param buf the PacketBuffer
 	 */
 	public static void toBytes(final SGolemModelPacket msg, final FriendlyByteBuf buf) {
-		DataResult<Tag> nbtResult = ExtraGolems.GOLEM_RENDER_SETTINGS.writeObject(msg.golemModel);
-		Tag tag = nbtResult.resultOrPartial(error -> ExtraGolems.LOGGER.error("Failed to write GolemRenderSettings to NBT for packet\n" + error)).get();
-		buf.writeResourceLocation(msg.key);
-		buf.writeNbt((CompoundTag) tag);
+		buf.writeWithCodec(CODEC, msg.data);
 	}
 
 	/**
@@ -68,8 +67,10 @@ public class SGolemModelPacket {
 		NetworkEvent.Context context = contextSupplier.get();
 		if (context.getDirection().getReceptionSide() == LogicalSide.CLIENT) {
 			context.enqueueWork(() -> {
-				ExtraGolems.GOLEM_RENDER_SETTINGS.put(message.key, message.golemModel);
-				message.golemModel.load();
+				// finalize each entry before adding it to the client-side map
+				message.data.values().forEach(GolemRenderSettings::load);
+				ExtraGolems.GOLEM_MODEL_MAP.clear();
+				ExtraGolems.GOLEM_MODEL_MAP.putAll(message.data);
 			});
 		}
 		context.setPacketHandled(true);

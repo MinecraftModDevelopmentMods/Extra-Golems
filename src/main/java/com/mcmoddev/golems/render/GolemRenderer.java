@@ -1,6 +1,5 @@
 package com.mcmoddev.golems.render;
 
-import com.mcmoddev.golems.EGConfig;
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.container.render.GolemRenderSettings;
 import com.mcmoddev.golems.entity.GolemBase;
@@ -21,7 +20,6 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
-import java.util.Optional;
 
 /**
  * GolemRenderer is the same as RenderIronGolem but with casting to GolemBase
@@ -58,12 +56,11 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
 			return;
 		}
 		// get render settings
-		Optional<GolemRenderSettings> settings = ExtraGolems.GOLEM_RENDER_SETTINGS.get(golem.getMaterial());
-		if (!settings.isPresent()) {
-			final ResourceLocation m = golem.getMaterial();
-			ExtraGolems.LOGGER.error("Missing GolemRenderSettings at " + ExtraGolems.GOLEM_RENDER_SETTINGS.getPreparedPath(m));
-			ExtraGolems.GOLEM_RENDER_SETTINGS.put(golem.getMaterial(), GolemRenderSettings.EMPTY);
-			settings = Optional.of(GolemRenderSettings.EMPTY);
+		GolemRenderSettings settings = ExtraGolems.GOLEM_MODEL_MAP.get(golem.getMaterial());
+		if (null == settings) {
+			ExtraGolems.LOGGER.error("Missing golem_model for golem with ID '" + golem.getMaterial() + "'");
+			ExtraGolems.GOLEM_MODEL_MAP.put(golem.getMaterial(), GolemRenderSettings.EMPTY);
+			settings = GolemRenderSettings.EMPTY;
 		}
 		matrixStackIn.pushPose();
 		// scale
@@ -73,22 +70,22 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
 		}
 		// colors
 		final Vector3f colors;
-		if (settings.get().getBaseColor().isPresent() && settings.get().getBaseColor().get() > 0) {
-			colors = GolemRenderSettings.unpackColor(settings.get().getBaseColor().get());
-		} else if (settings.get().useBiomeColor()) {
+		if (settings.getBaseColor().isPresent() && settings.getBaseColor().get() > 0) {
+			colors = GolemRenderSettings.unpackColor(settings.getBaseColor().get());
+		} else if (settings.useBiomeColor()) {
 			colors = GolemRenderSettings.unpackColor(golem.getBiomeColor());
 		} else {
 			colors = ONE;
 		}
 		this.getModel().setColor(colors.x(), colors.y(), colors.z());
 		// transparency flag
-		isAlphaLayer = settings.get().isTranslucent();
+		isAlphaLayer = settings.isTranslucent();
 		if (isAlphaLayer) {
 			RenderSystem.enableBlend();
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.5F);
 		}
 		// packed light
-		final int packedLight = settings.get().getBaseLight().orElse(settings.get().getBaseLight().orElse(false)) ? 15728880 : packedLightIn;
+		final int packedLight = settings.getBaseLight().orElse(settings.getBaseLight().orElse(false)) ? 15728880 : packedLightIn;
 		// render the entity
 		super.render(golem, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLight);
 		if (isAlphaLayer) {
@@ -104,7 +101,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
 	 */
 	@Override
 	public ResourceLocation getTextureLocation(final T golem) {
-		final GolemRenderSettings settings = ExtraGolems.GOLEM_RENDER_SETTINGS.get(golem.getMaterial()).orElse(GolemRenderSettings.EMPTY);
+		final GolemRenderSettings settings = ExtraGolems.GOLEM_MODEL_MAP.getOrDefault(golem.getMaterial(), GolemRenderSettings.EMPTY);
 		ResourceLocation texture = settings.getBase(golem).resource();
 		boolean disableLayers = false;
 		// special cases
@@ -129,7 +126,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
 	@Override
 	@Nullable
 	protected RenderType getRenderType(final T golem, boolean isVisible, boolean isVisibleToPlayer, boolean isGlowing) {
-		final GolemRenderSettings settings = ExtraGolems.GOLEM_RENDER_SETTINGS.get(golem.getMaterial()).orElse(GolemRenderSettings.EMPTY);
+		final GolemRenderSettings settings = ExtraGolems.GOLEM_MODEL_MAP.getOrDefault(golem.getMaterial(), GolemRenderSettings.EMPTY);
 		ResourceLocation texture = this.getTextureLocation(golem);
 		ResourceLocation template = settings.getBaseTemplate();
 		boolean dynamic = isDynamic(golem, texture, settings);
