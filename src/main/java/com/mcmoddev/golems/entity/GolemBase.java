@@ -14,6 +14,7 @@ import com.mcmoddev.golems.entity.goal.GoToWaterGoal;
 import com.mcmoddev.golems.entity.goal.PlaceUtilityBlocksGoal;
 import com.mcmoddev.golems.entity.goal.SwimUpGoal;
 import com.mcmoddev.golems.item.SpawnGolemItem;
+import com.mcmoddev.golems.util.GolemAttributes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -39,7 +40,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.SpawnGroupData;
-import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.entity.ai.control.MoveControl;
@@ -139,7 +139,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 		this.getEntityData().set(MATERIAL, materialIn.toString());
 		this.material = materialIn;
 		this.container = oContainer.get();
-		this.attributes = new AttributeMap(container.getAttributeSupplier().get().build());
+		this.attributes = GolemAttributes.getAttributes(materialIn);
 		this.setInvulnerable(container.getAttributes().getArmor() > MAX_ARMOR);
 		// clear description
 		this.description = null;

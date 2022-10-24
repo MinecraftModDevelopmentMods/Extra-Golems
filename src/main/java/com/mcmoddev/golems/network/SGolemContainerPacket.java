@@ -2,6 +2,7 @@ package com.mcmoddev.golems.network;
 
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.container.GolemContainer;
+import com.mcmoddev.golems.util.GolemAttributes;
 import com.mojang.serialization.Codec;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -33,6 +34,8 @@ public class SGolemContainerPacket {
 			// update server-side map
 			ExtraGolems.GOLEM_CONTAINER_MAP.clear();
 			ExtraGolems.GOLEM_CONTAINER_MAP.putAll(data);
+			// update server-side attributes
+			GolemAttributes.clear();
 		}
 	}
 
@@ -70,6 +73,8 @@ public class SGolemContainerPacket {
 				// update client-side map
 				ExtraGolems.GOLEM_CONTAINER_MAP.clear();
 				ExtraGolems.GOLEM_CONTAINER_MAP.putAll(message.data);
+				// update client-side attributes (probably redundant)
+				GolemAttributes.clear();
 			});
 		}
 		context.setPacketHandled(true);

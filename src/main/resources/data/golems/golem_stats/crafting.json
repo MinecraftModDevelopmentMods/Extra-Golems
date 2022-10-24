@@ -6,9 +6,9 @@
   },
   "swim_ability": "float",
   "sound": "minecraft:block.wood.step",
-  "blocks": "minecraft:crafting_table",
+  "blocks": "#forge:workbench",
   "heal_items": {
-    "minecraft:crafting_table": 0.5,
+    "#forge:workbench": 0.5,
 	"#minecraft:planks": 0.15
   },
   "behavior": [ 
