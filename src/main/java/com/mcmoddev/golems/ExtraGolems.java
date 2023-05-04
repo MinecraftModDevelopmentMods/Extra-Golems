@@ -59,11 +59,17 @@ public class ExtraGolems {
 	private static final String PROTOCOL_VERSION = "2";
 	public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(new ResourceLocation(MODID, "channel"), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
 
-	private static final CodecJsonDataManager<GolemContainer> GOLEM_CONTAINER_JSON_MANAGER = new CodecJsonDataManager<>("golem_stats", GolemContainer.CODEC);
 	public static final Map<ResourceLocation, GolemContainer> GOLEM_CONTAINER_MAP = new HashMap<>();
+	private static final CodecJsonDataManager<GolemContainer> GOLEM_CONTAINER_JSON_MANAGER = new CodecJsonDataManager<>("golem_stats", GolemContainer.CODEC, map -> {
+		GOLEM_CONTAINER_MAP.clear();
+		GOLEM_CONTAINER_MAP.putAll(map);
+	});
 
-	private static final CodecJsonDataManager<GolemRenderSettings> GOLEM_MODEL_JSON_MANAGER = new CodecJsonDataManager<>("golem_models", GolemRenderSettings.CODEC);
 	public static final Map<ResourceLocation, GolemRenderSettings> GOLEM_MODEL_MAP = new HashMap<>();
+	private static final CodecJsonDataManager<GolemRenderSettings> GOLEM_MODEL_JSON_MANAGER = new CodecJsonDataManager<>("golem_models", GolemRenderSettings.CODEC, map -> {
+		GOLEM_MODEL_MAP.clear();
+		GOLEM_MODEL_MAP.putAll(map);
+	});
 
 	public ExtraGolems() {
 		// register and load config

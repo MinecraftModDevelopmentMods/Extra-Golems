@@ -69,6 +69,8 @@ public class CodecJsonDataManager<T> extends SimpleJsonResourceReloadListener
 
     /** The raw data that we parsed from json last time resources were reloaded **/
     protected Map<ResourceLocation, T> data = new HashMap<>();
+    
+    private Consumer<Map<ResourceLocation, T>> applyConsumer;
 
     /**
      * Creates a data manager with a standard gson parser
@@ -77,9 +79,9 @@ public class CodecJsonDataManager<T> extends SimpleJsonResourceReloadListener
      * folderName can include subfolders, e.g. "some_mod_that_adds_lots_of_data_loaders/cheeses"
      * @param codec A codec to deserialize the json into your T, see javadocs above class
      */
-    public CodecJsonDataManager(String folderName, Codec<T> codec)
+    public CodecJsonDataManager(String folderName, Codec<T> codec, Consumer<Map<ResourceLocation, T>> applyConsumer)
     {
-        this(folderName, codec, STANDARD_GSON);
+        this(folderName, codec, applyConsumer, STANDARD_GSON);
     }
 
     /**
@@ -91,11 +93,12 @@ public class CodecJsonDataManager<T> extends SimpleJsonResourceReloadListener
      * @param gson A gson for parsing the raw json data into JsonElements. JsonElement-to-T conversion will be done by the codec,
      * so gson type adapters shouldn't be necessary here
      */
-    public CodecJsonDataManager(String folderName, Codec<T> codec, Gson gson)
+    public CodecJsonDataManager(String folderName, Codec<T> codec, Consumer<Map<ResourceLocation, T>> applyConsumer, Gson gson)
     {
         super(gson, folderName);
         this.folderName = folderName; // superclass has this but it's a private field
         this.codec = codec;
+        this.applyConsumer = applyConsumer;
     }
 
     /**
@@ -125,6 +128,11 @@ public class CodecJsonDataManager<T> extends SimpleJsonResourceReloadListener
         }
 
         this.data = newMap;
+        
+        if(this.applyConsumer != null) {
+        	this.applyConsumer.accept(this.data);
+        }
+        
         LOGGER.info("Data loader for {} loaded {} jsons", this.folderName, this.data.size());
     }
 
