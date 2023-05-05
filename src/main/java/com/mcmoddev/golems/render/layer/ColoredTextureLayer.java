@@ -19,6 +19,8 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 
+import java.util.Optional;
+
 public class ColoredTextureLayer<T extends GolemBase> extends RenderLayer<T, GolemModel<T>> {
 
 	private static final Vector3f ONE = new Vector3f(1.0F, 1.0F, 1.0F);
@@ -39,7 +41,7 @@ public class ColoredTextureLayer<T extends GolemBase> extends RenderLayer<T, Gol
 	@Override
 	public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, T entity,
 					   float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-		GolemRenderSettings settings = ExtraGolems.GOLEM_MODEL_MAP.getOrDefault(entity.getMaterial(), GolemRenderSettings.EMPTY);
+		GolemRenderSettings settings = Optional.ofNullable(ExtraGolems.GOLEM_MODELS_SUPPLIER.get().getValue(entity.getMaterial())).orElse(GolemRenderSettings.EMPTY);;
 		// prepare to render each layer
 		if (!entity.isInvisible() && !getParentModel().disableLayers() && !settings.getLayers().isEmpty()) {
 			getParentModel().copyPropertiesTo(layerModel);

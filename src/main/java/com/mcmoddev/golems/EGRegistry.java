@@ -11,7 +11,6 @@ import com.mcmoddev.golems.item.SpawnGolemItem;
 import com.mcmoddev.golems.menu.PortableCraftingMenu;
 import com.mcmoddev.golems.menu.PortableDispenserMenu;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
@@ -23,9 +22,11 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.NewRegistryEvent;
 import net.minecraftforge.registries.RegistryObject;
 
 public final class EGRegistry {
@@ -40,13 +41,17 @@ public final class EGRegistry {
 	private static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ForgeRegistries.MENU_TYPES, ExtraGolems.MODID);
 
 	public static void init() {
+		final IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 		// deferred registers
-		BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
-		ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
-		ENTITY_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
-		MENU_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
+		BLOCKS.register(eventBus);
+		ITEMS.register(eventBus);
+		ENTITY_TYPES.register(eventBus);
+		MENU_TYPES.register(eventBus);
+		ExtraGolems.GOLEM_CONTAINERS.register(eventBus);
+		ExtraGolems.GOLEM_MODELS.register(eventBus);
 		// event listeners
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(EGRegistry::registerEntityAttributes);
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(EGRegistry::registerNewRegistries);
 	}
 
 	////// BLOCKS //////
@@ -82,14 +87,25 @@ public final class EGRegistry {
 	);
 
 	////// MENU TYPES //////
-	public static final RegistryObject<MenuType<AbstractContainerMenu>> CRAFTING_GOLEM = MENU_TYPES.register("crafting_portable",
+	public static final RegistryObject<MenuType<AbstractContainerMenu>> CRAFTING_GOLEM_MENU = MENU_TYPES.register("crafting_portable",
 			() -> new MenuType<>(PortableCraftingMenu::new));
-	public static final RegistryObject<MenuType<PortableDispenserMenu>> DISPENSER_GOLEM = MENU_TYPES.register("dispenser_portable",
+	public static final RegistryObject<MenuType<PortableDispenserMenu>> DISPENSER_GOLEM_MENU = MENU_TYPES.register("dispenser_portable",
 			() -> new MenuType<>(PortableDispenserMenu::new));
 
 	////// EVENTS //////
 
 	public static void registerEntityAttributes(final EntityAttributeCreationEvent event) {
-		event.put((EntityType<? extends LivingEntity>) EGRegistry.GOLEM.get(), GolemContainer.EMPTY.getAttributeSupplier().get().build());
+		event.put(EGRegistry.GOLEM.get(), GolemContainer.EMPTY.getAttributeSupplier().get().build());
+	}
+
+	public static void registerNewRegistries(NewRegistryEvent event) {
+		/*GOLEM_CONTAINERS_SUPPLIER = event.create(new RegistryBuilder<GolemContainer>()
+				.setName(GOLEM_CONTAINERS_KEY.location())
+				.dataPackRegistry(GolemContainer.CODEC, GolemContainer.CODEC)
+				.hasTags());
+		GOLEM_MODELS_SUPPLIER = event.create(new RegistryBuilder<GolemRenderSettings>()
+				.setName(GOLEM_MODELS_KEY.location())
+				.dataPackRegistry(GolemRenderSettings.CODEC, GolemRenderSettings.CODEC)
+				.hasTags());*/
 	}
 }

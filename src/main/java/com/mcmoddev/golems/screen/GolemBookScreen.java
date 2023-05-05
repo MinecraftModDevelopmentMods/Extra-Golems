@@ -8,9 +8,9 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Optional;
 
 public class GolemBookScreen extends Screen {
 
@@ -140,9 +139,9 @@ public class GolemBookScreen extends Screen {
 	 **/
 	private static final void initGolemBookEntries() {
 		GOLEMS.clear();
-		for (Entry<ResourceLocation, GolemContainer> entry : ExtraGolems.GOLEM_CONTAINER_MAP.entrySet()) {
+		for (Entry<ResourceKey<GolemContainer>, GolemContainer> entry : ExtraGolems.GOLEM_CONTAINERS_SUPPLIER.get().getEntries()) {
 			if (!entry.getValue().isHidden()) {
-				GOLEMS.add(new GolemBookEntry(entry.getKey(), entry.getValue()));
+				GOLEMS.add(new GolemBookEntry(entry.getKey().location(), entry.getValue()));
 			}
 		}
 		// sort golems by attack power

@@ -10,6 +10,7 @@ import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Provides safe and re-usable attribute maps for golems with different materials.
@@ -26,7 +27,7 @@ public final class GolemAttributes {
 	 */
 	public static AttributeMap getAttributes(final ResourceLocation material) {
 		if (!materialToAttributeMap.containsKey(material)) {
-			GolemContainer container = ExtraGolems.GOLEM_CONTAINER_MAP.getOrDefault(material, GolemContainer.EMPTY);
+			GolemContainer container = Optional.ofNullable(ExtraGolems.GOLEM_CONTAINERS_SUPPLIER.get().getValue(material)).orElse(GolemContainer.EMPTY);
 			AttributeSupplier supplier = buildAttributes(container.getAttributeSupplier().get());
 			materialToAttributeMap.put(material, supplier);
 		}

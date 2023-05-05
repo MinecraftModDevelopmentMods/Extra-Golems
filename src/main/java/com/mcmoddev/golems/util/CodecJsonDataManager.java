@@ -56,6 +56,7 @@ import java.util.function.Function;
  * to the forge events necessary for syncing datapack data to clients.
  * @param <T> The type of the objects that the codec is parsing jsons as
  */
+@Deprecated
 public class CodecJsonDataManager<T> extends SimpleJsonResourceReloadListener
 {
     // default gson if unspecified

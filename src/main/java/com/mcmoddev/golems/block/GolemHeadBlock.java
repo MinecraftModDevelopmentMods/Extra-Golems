@@ -6,6 +6,7 @@ import com.mcmoddev.golems.entity.GolemBase;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
+import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
 import net.minecraft.resources.ResourceLocation;
@@ -18,6 +19,7 @@ import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.animal.SnowGolem;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -121,6 +123,37 @@ public final class GolemHeadBlock extends HorizontalDirectionalBlock {
 	public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
 		super.setPlacedBy(level, pos, state, placer, stack);
 		trySpawnGolem(placer, level, pos);
+	}
+
+	public static void registerDispenserBehavior() {
+		// load carved pumpkin behavior
+		final DispenseItemBehavior carvedPumpkinBehavior = DispenserBlock.DISPENSER_REGISTRY.getOrDefault(Items.CARVED_PUMPKIN, new DefaultDispenseItemBehavior());
+		final DispenseItemBehavior wrappedBehavior = new OptionalDispenseItemBehavior() {
+			protected ItemStack execute(BlockSource blockSource, ItemStack itemStack) {
+				final Level level = blockSource.getLevel();
+				final Direction facing = blockSource.getBlockState().getValue(DispenserBlock.FACING);
+				final BlockPos blockpos = blockSource.getPos().relative(facing);
+				// check if the block can be placed
+				if(level.isEmptyBlock(blockpos) && GolemHeadBlock.canSpawnGolem(level, blockpos)) {
+					if (!level.isClientSide) {
+						// place the block
+						level.setBlock(blockpos, EGRegistry.GOLEM_HEAD.get().defaultBlockState().setValue(FACING, facing), Block.UPDATE_ALL);
+						level.gameEvent(null, GameEvent.BLOCK_PLACE, blockpos);
+					}
+					// shrink item stack
+					itemStack.shrink(1);
+					this.setSuccess(true);
+				}
+				if(itemStack.is(Items.CARVED_PUMPKIN) || ExtraGolems.CONFIG.pumpkinBuildsGolems()) {
+					return carvedPumpkinBehavior.dispense(blockSource, itemStack);
+				}
+				return itemStack;
+			}
+		};
+
+		// register dispenser behaviors
+		DispenserBlock.registerBehavior(EGRegistry.GOLEM_HEAD_ITEM.get(), wrappedBehavior);
+		DispenserBlock.registerBehavior(Items.CARVED_PUMPKIN, wrappedBehavior);
 	}
 
 	/**

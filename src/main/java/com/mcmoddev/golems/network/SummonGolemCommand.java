@@ -5,9 +5,11 @@ import com.mcmoddev.golems.entity.GolemBase;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
+import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.CompoundTagArgument;
 import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
@@ -22,10 +24,14 @@ public class SummonGolemCommand {
 	private static final DynamicCommandExceptionType INVALID_ID = new DynamicCommandExceptionType(arg -> Component.translatable("command.golem.invalid_id", arg));
 
 	public static void register(CommandDispatcher<CommandSourceStack> commandSource) {
+
+		final SuggestionProvider<CommandSourceStack> SUGGEST_GOLEM_ID = (context, builder) -> SharedSuggestionProvider.suggestResource(ExtraGolems.GOLEM_CONTAINERS_SUPPLIER.get().getKeys(), builder);
+
 		LiteralCommandNode<CommandSourceStack> commandNode = commandSource.register(
-				Commands.literal("golem")
+				Commands.literal("summongolem")
 						.requires(p -> p.hasPermission(2))
 						.then(Commands.argument("type", ResourceLocationArgument.id())
+								.suggests(SUGGEST_GOLEM_ID)
 								.executes(command -> summonGolem(command.getSource(),
 										ResourceLocationArgument.getId(command, "type"),
 										new BlockPos(command.getSource().getPosition()),
@@ -41,7 +47,7 @@ public class SummonGolemCommand {
 														BlockPosArgument.getLoadedBlockPos(command, "pos"),
 														CompoundTagArgument.getCompoundTag(command, "tag")))))));
 
-		commandSource.register(Commands.literal("golem")
+		commandSource.register(Commands.literal("summongolem")
 				.requires(p -> p.hasPermission(2))
 				.redirect(commandNode));
 	}
@@ -52,7 +58,7 @@ public class SummonGolemCommand {
 			id = new ResourceLocation(ExtraGolems.MODID, id.getPath());
 		}
 		// validate the id
-		if (!ExtraGolems.GOLEM_CONTAINER_MAP.containsKey(id)) {
+		if (!ExtraGolems.GOLEM_CONTAINERS_SUPPLIER.get().containsKey(id)) {
 			throw INVALID_ID.create(id);
 		}
 		// create the golem

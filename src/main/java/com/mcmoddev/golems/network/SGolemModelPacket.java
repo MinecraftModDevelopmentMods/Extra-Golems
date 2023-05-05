@@ -18,6 +18,7 @@ import java.util.function.Supplier;
  * Sent from the server to the client with a map of
  * ResourceLocation IDs and Golem Containers
  **/
+@Deprecated
 public class SGolemModelPacket {
 
 	protected static final Codec<Map<ResourceLocation, GolemRenderSettings>> CODEC = Codec.unboundedMap(ResourceLocation.CODEC, GolemRenderSettings.CODEC);

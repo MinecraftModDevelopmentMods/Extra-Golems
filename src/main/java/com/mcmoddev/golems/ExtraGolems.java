@@ -5,18 +5,15 @@ import com.mcmoddev.golems.container.GolemContainer;
 import com.mcmoddev.golems.container.behavior.GolemBehaviors;
 import com.mcmoddev.golems.container.render.GolemRenderSettings;
 import com.mcmoddev.golems.entity.GolemBase;
-import com.mcmoddev.golems.event.EGForgeEvents;
 import com.mcmoddev.golems.integration.AddonLoader;
-import com.mcmoddev.golems.network.SGolemContainerPacket;
-import com.mcmoddev.golems.network.SGolemModelPacket;
 import com.mcmoddev.golems.util.CodecJsonDataManager;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
@@ -32,10 +29,11 @@ import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.RegistryBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -43,7 +41,7 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Optional;
+import java.util.function.Supplier;
 
 @Mod(ExtraGolems.MODID)
 public class ExtraGolems {
@@ -59,10 +57,28 @@ public class ExtraGolems {
 	private static final String PROTOCOL_VERSION = "2";
 	public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(new ResourceLocation(MODID, "channel"), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
 
+	////// GOLEM CONTAINERS //////
+	public static final ResourceKey<Registry<GolemContainer>> GOLEM_CONTAINERS_KEY = ResourceKey.createRegistryKey(new ResourceLocation(MODID, "golem_stats"));
+	public static final DeferredRegister<GolemContainer> GOLEM_CONTAINERS = DeferredRegister.create(GOLEM_CONTAINERS_KEY, MODID);
+	public static final Supplier<IForgeRegistry<GolemContainer>> GOLEM_CONTAINERS_SUPPLIER = GOLEM_CONTAINERS.makeRegistry(() -> new RegistryBuilder<GolemContainer>()
+			.dataPackRegistry(GolemContainer.CODEC, GolemContainer.CODEC)
+			.onBake((owner, stage) -> CONFIG.bakeVillagerGolemList())
+			.hasTags());
+
+	////// GOLEM MODELS //////
+	public static final ResourceKey<Registry<GolemRenderSettings>> GOLEM_MODELS_KEY = ResourceKey.createRegistryKey(new ResourceLocation(MODID, "golem_models"));
+	public static final DeferredRegister<GolemRenderSettings> GOLEM_MODELS = DeferredRegister.create(GOLEM_MODELS_KEY, MODID);
+	public static final Supplier<IForgeRegistry<GolemRenderSettings>> GOLEM_MODELS_SUPPLIER = GOLEM_MODELS.makeRegistry(() -> new RegistryBuilder<GolemRenderSettings>()
+			.dataPackRegistry(GolemRenderSettings.CODEC, GolemRenderSettings.CODEC));
+
+	@Deprecated
 	private static final CodecJsonDataManager<GolemContainer> GOLEM_CONTAINER_JSON_MANAGER = new CodecJsonDataManager<>("golem_stats", GolemContainer.CODEC);
+	@Deprecated
 	public static final Map<ResourceLocation, GolemContainer> GOLEM_CONTAINER_MAP = new HashMap<>();
 
+	@Deprecated
 	private static final CodecJsonDataManager<GolemRenderSettings> GOLEM_MODEL_JSON_MANAGER = new CodecJsonDataManager<>("golem_models", GolemRenderSettings.CODEC);
+	@Deprecated
 	public static final Map<ResourceLocation, GolemRenderSettings> GOLEM_MODEL_MAP = new HashMap<>();
 
 	public ExtraGolems() {
@@ -75,34 +91,29 @@ public class ExtraGolems {
 		// init helper classes
 		GolemBehaviors.init();
 		// register event handlers
+		EGEvents.register();
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(AddonLoader::onAddPackFinders);
 		MinecraftForge.EVENT_BUS.addListener(this::addReloadListeners);
 		MinecraftForge.EVENT_BUS.addListener(this::onPlayerLogin);
-		MinecraftForge.EVENT_BUS.register(EGForgeEvents.class);
 		// register client event handlers
-		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-			MinecraftForge.EVENT_BUS.register(com.mcmoddev.golems.event.EGClientEvents.class);
-			FMLJavaModLoadingContext.get().getModEventBus().register(com.mcmoddev.golems.event.EGClientModEvents.class);
-			com.mcmoddev.golems.event.EGClientEvents.addResources();
-		});
+		DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> EGClientEvents::register);
 		// register messages
 		int messageId = 0;
-		CHANNEL.registerMessage(messageId++, SGolemContainerPacket.class, SGolemContainerPacket::toBytes, SGolemContainerPacket::fromBytes, SGolemContainerPacket::handlePacket, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-		CHANNEL.registerMessage(messageId++, SGolemModelPacket.class, SGolemModelPacket::toBytes, SGolemModelPacket::fromBytes, SGolemModelPacket::handlePacket, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+		//CHANNEL.registerMessage(messageId++, SGolemContainerPacket.class, SGolemContainerPacket::toBytes, SGolemContainerPacket::fromBytes, SGolemContainerPacket::handlePacket, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+		//CHANNEL.registerMessage(messageId++, SGolemModelPacket.class, SGolemModelPacket::toBytes, SGolemModelPacket::fromBytes, SGolemModelPacket::handlePacket, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
 
 		// data managers
-		GOLEM_CONTAINER_JSON_MANAGER.subscribeAsSyncable(CHANNEL, SGolemContainerPacket::new);
-		GOLEM_MODEL_JSON_MANAGER.subscribeAsSyncable(CHANNEL, SGolemModelPacket::new);
+		// GOLEM_CONTAINER_JSON_MANAGER.subscribeAsSyncable(CHANNEL, SGolemContainerPacket::new);
+		// GOLEM_MODEL_JSON_MANAGER.subscribeAsSyncable(CHANNEL, SGolemModelPacket::new);
 	}
 
 	private void setup(final FMLCommonSetupEvent event) {
 		// init addons
 		AddonLoader.init();
 		// register dispenser behavior
-		DispenserBlock.registerBehavior(EGRegistry.GOLEM_HEAD_ITEM.get(), GolemHeadBlock.GOLEM_HEAD_DISPENSER_BEHAVIOR);
-		DispenserBlock.registerBehavior(Items.CARVED_PUMPKIN, GolemHeadBlock.CARVED_PUMPKIN_DISPENSER_BEHAVIOR);
+		GolemHeadBlock.registerDispenserBehavior();
 	}
 
 	private void enqueueIMC(final InterModEnqueueEvent event) {
@@ -113,17 +124,19 @@ public class ExtraGolems {
 		}
 	}
 
+	@Deprecated
 	private void addReloadListeners(final AddReloadListenerEvent event) {
-		event.addListener(GOLEM_CONTAINER_JSON_MANAGER);
-		event.addListener(GOLEM_MODEL_JSON_MANAGER);
+		//event.addListener(GOLEM_CONTAINER_JSON_MANAGER);
+		//event.addListener(GOLEM_MODEL_JSON_MANAGER);
 	}
 
+	@Deprecated
 	private void onPlayerLogin(final PlayerEvent.PlayerLoggedInEvent event) {
 		final Player player = event.getEntity();
 		// early-load golem containers
 		if (player instanceof final ServerPlayer serverPlayer) {
-			ExtraGolems.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new SGolemContainerPacket(GOLEM_CONTAINER_JSON_MANAGER.getData()));
-			ExtraGolems.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new SGolemModelPacket(GOLEM_MODEL_JSON_MANAGER.getData()));
+			//ExtraGolems.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new SGolemContainerPacket(GOLEM_CONTAINER_JSON_MANAGER.getData()));
+			//ExtraGolems.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new SGolemModelPacket(GOLEM_MODEL_JSON_MANAGER.getData()));
 		}
 	}
 
@@ -165,9 +178,9 @@ public class ExtraGolems {
 	@Nullable
 	public static ResourceLocation getGolemId(Block below1, Block below2, Block arm1, Block arm2) {
 		ResourceLocation id = null;
-		for (Entry<ResourceLocation, GolemContainer> entry : GOLEM_CONTAINER_MAP.entrySet()) {
+		for (Entry<ResourceKey<GolemContainer>, GolemContainer> entry : GOLEM_CONTAINERS_SUPPLIER.get().getEntries()) {
 			if (entry.getValue().matches(below1, below2, arm1, arm2)) {
-				id = entry.getKey();
+				id = entry.getKey().location();
 				break;
 			}
 		}

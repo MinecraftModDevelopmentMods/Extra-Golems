@@ -20,6 +20,7 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 /**
  * GolemRenderer is the same as RenderIronGolem but with casting to GolemBase
@@ -56,12 +57,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
 			return;
 		}
 		// get render settings
-		GolemRenderSettings settings = ExtraGolems.GOLEM_MODEL_MAP.get(golem.getMaterial());
-		if (null == settings) {
-			ExtraGolems.LOGGER.error("Missing golem_model for golem with ID '" + golem.getMaterial() + "'");
-			ExtraGolems.GOLEM_MODEL_MAP.put(golem.getMaterial(), GolemRenderSettings.EMPTY);
-			settings = GolemRenderSettings.EMPTY;
-		}
+		GolemRenderSettings settings = Optional.ofNullable(ExtraGolems.GOLEM_MODELS_SUPPLIER.get().getValue(golem.getMaterial())).orElse(GolemRenderSettings.EMPTY);
 		matrixStackIn.pushPose();
 		// scale
 		if (golem.isBaby()) {
@@ -101,7 +97,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
 	 */
 	@Override
 	public ResourceLocation getTextureLocation(final T golem) {
-		final GolemRenderSettings settings = ExtraGolems.GOLEM_MODEL_MAP.getOrDefault(golem.getMaterial(), GolemRenderSettings.EMPTY);
+		final GolemRenderSettings settings = Optional.ofNullable(ExtraGolems.GOLEM_MODELS_SUPPLIER.get().getValue(golem.getMaterial())).orElse(GolemRenderSettings.EMPTY);
 		ResourceLocation texture = settings.getBase(golem).resource();
 		boolean disableLayers = false;
 		// special cases
@@ -110,14 +106,14 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
 			disableLayers = true;
 		} else if (golem.hasCustomName()) {
 			final String s = ChatFormatting.stripFormatting(golem.getName().getString());
-			if ("Ganondorf".equals(s)) {
+			if ("Ganondorf".equalsIgnoreCase(s)) {
 				texture = specialTexture;
 				disableLayers = true;
-			}
-			if ("Cookie".equals(s)) {
+			} else if ("Cookie".equalsIgnoreCase(s)) {
 				texture = specialTexture2;
 				disableLayers = true;
 			}
+			// TODO trans rights golem
 		}
 		this.getModel().disableLayers(disableLayers);
 		return texture;
@@ -126,7 +122,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
 	@Override
 	@Nullable
 	protected RenderType getRenderType(final T golem, boolean isVisible, boolean isVisibleToPlayer, boolean isGlowing) {
-		final GolemRenderSettings settings = ExtraGolems.GOLEM_MODEL_MAP.getOrDefault(golem.getMaterial(), GolemRenderSettings.EMPTY);
+		final GolemRenderSettings settings = Optional.ofNullable(ExtraGolems.GOLEM_MODELS_SUPPLIER.get().getValue(golem.getMaterial())).orElse(GolemRenderSettings.EMPTY);
 		ResourceLocation texture = this.getTextureLocation(golem);
 		ResourceLocation template = settings.getBaseTemplate();
 		boolean dynamic = isDynamic(golem, texture, settings);
