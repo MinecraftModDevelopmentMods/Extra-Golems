@@ -1,13 +1,19 @@
 package com.mcmoddev.golems;
 
+import com.mcmoddev.golems.container.GolemContainer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.registries.ForgeRegistry;
+import net.minecraftforge.registries.RegistryManager;
 
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.List;
 
 public final class EGConfig {
+
+	private static final TagKey<GolemContainer> VILLAGER_SUMMONABLE = TagKey.create(ExtraGolems.Keys.GOLEM_CONTAINERS, new ResourceLocation(ExtraGolems.MODID, "villager_summonable"));
 
 	private final ForgeConfigSpec.BooleanValue BEDROCK_GOLEM_CREATIVE_ONLY;
 	private final ForgeConfigSpec.BooleanValue PUMPKIN_BUILDS_GOLEMS;
@@ -16,27 +22,10 @@ public final class EGConfig {
 	private final ForgeConfigSpec.BooleanValue ENABLE_HEAL_GOLEMS;
 	private final ForgeConfigSpec.BooleanValue ENABLE_HOLIDAYS;
 	private final ForgeConfigSpec.IntValue VILLAGER_GOLEM_SPAWN_CHANCE;
-	private final ForgeConfigSpec.ConfigValue<List<? extends String>> VILLAGER_GOLEM_SPAWN_LIST;
-	private static final String[] defaultVillagerGolemSpawns = {
-			new ResourceLocation(ExtraGolems.MODID, "bookshelf").toString(),
-			new ResourceLocation(ExtraGolems.MODID, "clay").toString(),
-			new ResourceLocation(ExtraGolems.MODID, "coal").toString(),
-			new ResourceLocation(ExtraGolems.MODID, "crafting").toString(),
-			new ResourceLocation(ExtraGolems.MODID, "glass").toString(),
-			new ResourceLocation(ExtraGolems.MODID, "glowstone").toString(),
-			new ResourceLocation(ExtraGolems.MODID, "hay").toString(),
-			new ResourceLocation(ExtraGolems.MODID, "leaves").toString(),
-			new ResourceLocation(ExtraGolems.MODID, "log").toString(),
-			new ResourceLocation(ExtraGolems.MODID, "melon").toString(),
-			new ResourceLocation(ExtraGolems.MODID, "moss").toString(),
-			new ResourceLocation(ExtraGolems.MODID, "mushroom").toString(),
-			new ResourceLocation(ExtraGolems.MODID, "obsidian").toString(),
-			new ResourceLocation(ExtraGolems.MODID, "terracotta").toString(),
-			new ResourceLocation(ExtraGolems.MODID, "wool").toString()
-	};
 
 	private boolean aprilFirst;
 	private boolean halloween;
+	private boolean pride;
 
 	private boolean bedrockGolemCreativeOnly;
 	private boolean pumpkinBuildsGolems;
@@ -65,9 +54,6 @@ public final class EGConfig {
 				.defineInRange("villager_summon_chance", 60, 0, 100);
 		ENABLE_HEAL_GOLEMS = builder.comment("When enabled, giving blocks and items to golems can restore health")
 				.define("heal_golems", true);
-		VILLAGER_GOLEM_SPAWN_LIST = builder.comment("Golems that can be summoned by villagers", "(Duplicate entries increase chances)")
-				.defineList("villager_summon_golems", List.of(defaultVillagerGolemSpawns), o -> o instanceof String s && ResourceLocation.tryParse(s) != null);
-
 		builder.pop();
 	}
 
@@ -95,10 +81,6 @@ public final class EGConfig {
 		return villagerGolemSpawnChance;
 	}
 
-	public List<ResourceLocation> getVillagerGolems() {
-		return villagerGolemSpawnList;
-	}
-
 	public boolean aprilFirst() {
 		return enableHolidays && aprilFirst;
 	}
@@ -107,11 +89,16 @@ public final class EGConfig {
 		return enableHolidays && halloween;
 	}
 
+	public boolean pride() {
+		return enableHolidays && pride;
+	}
+
 	public void bake() {
 		// update the holiday configs
 		final LocalDateTime now = LocalDateTime.now();
 		aprilFirst = (now.getMonth() == Month.MARCH && now.getDayOfMonth() >= 31) || (now.getMonth() == Month.APRIL && now.getDayOfMonth() <= 2);
 		halloween = (now.getMonth() == Month.OCTOBER && now.getDayOfMonth() >= 30) || (now.getMonth() == Month.NOVEMBER && now.getDayOfMonth() <= 2);
+		pride = (now.getMonth() == Month.JUNE && now.getDayOfMonth() <= 3);
 		// update config values
 		bedrockGolemCreativeOnly = BEDROCK_GOLEM_CREATIVE_ONLY.get();
 		pumpkinBuildsGolems = PUMPKIN_BUILDS_GOLEMS.get();
@@ -120,6 +107,5 @@ public final class EGConfig {
 		enableHolidays = ENABLE_HOLIDAYS.get();
 		enableHealGolems = ENABLE_HEAL_GOLEMS.get();
 		villagerGolemSpawnChance = VILLAGER_GOLEM_SPAWN_CHANCE.get();
-		villagerGolemSpawnList = VILLAGER_GOLEM_SPAWN_LIST.get().stream().map(ResourceLocation::tryParse).toList();
 	}
 }

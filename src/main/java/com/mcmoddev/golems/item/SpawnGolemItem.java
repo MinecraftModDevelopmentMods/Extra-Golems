@@ -1,6 +1,5 @@
 package com.mcmoddev.golems.item;
 
-import com.mcmoddev.golems.EGConfig;
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.container.GolemContainer;
 import com.mcmoddev.golems.entity.GolemBase;
@@ -28,7 +27,6 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Optional;
 
 public final class SpawnGolemItem extends Item {
 
@@ -51,7 +49,7 @@ public final class SpawnGolemItem extends Item {
 		}
 
 		// check if the entity is enabled
-		final GolemContainer container = ExtraGolems.GOLEM_CONTAINER_MAP.get(new ResourceLocation(ExtraGolems.MODID, "bedrock"));
+		final GolemContainer container = worldIn.registryAccess().registryOrThrow(ExtraGolems.Keys.GOLEM_CONTAINERS).get(BEDROCK_GOLEM);
 		if (container != null) {
 			// make sure the entity can be spawned here (empty block)
 			BlockState state = worldIn.getBlockState(pos);

@@ -1,17 +1,18 @@
 package com.mcmoddev.golems.container.render;
 
 import com.google.common.collect.ImmutableList;
+import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.util.ResourcePair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.DistExecutor;
 
 import java.util.Optional;
 
 public class LayerRenderSettings {
 
 	public static final LayerRenderSettings EMPTY = new LayerRenderSettings(ResourcePair.EMPTY, Optional.empty());
+	public static final LayerRenderSettings RAINBOW = new LayerRenderSettings(new ResourcePair(new ResourceLocation(ExtraGolems.MODID, "layer/vines_rainbow"), true), Optional.empty());
 
 	public static final LayerRenderSettings EYES = new LayerRenderSettings(
 			new ResourcePair(new ResourceLocation("golems:layer/eyes/eyes"), true),
@@ -47,20 +48,13 @@ public class LayerRenderSettings {
 		super();
 		this.textureRaw = textureRaw;
 		this.templateRaw = templateRaw;
+		this.texture = GolemRenderSettings.NOT_LOADED;
 		this.color = color;
 		this.light = light;
 		this.translucent = translucent;
 		this.enabled = !(null == textureRaw || null == textureRaw.resource()
 				|| ResourcePair.EMPTY.equals(textureRaw)
 				|| textureRaw.resource().getPath().isEmpty());
-	}
-
-	public boolean load() {
-		return DistExecutor.runForDist(() -> () -> {
-			this.texture = GolemRenderSettings.buildPreferredTexture(ImmutableList.of(textureRaw));
-			this.template = new ResourceLocation(templateRaw.getNamespace(), "textures/entity/golem/" + templateRaw.getPath() + ".png");
-			return true;
-		}, () -> () -> false);
 	}
 
 	public ResourcePair getTextureRaw() {
@@ -123,5 +117,13 @@ public class LayerRenderSettings {
 		b.append("light[").append(light).append("] ");
 		b.append("translucent[").append(translucent).append("] ");
 		return b.toString();
+	}
+
+	public static class ClientUtil {
+
+		public static void loadLayerRenderSettings(final LayerRenderSettings settings) {
+			settings.texture = GolemRenderSettings.ClientUtils.buildPreferredTexture(ImmutableList.of(settings.textureRaw));
+			settings.template = new ResourceLocation(settings.templateRaw.getNamespace(), "textures/entity/golem/" + settings.templateRaw.getPath() + ".png");
+		}
 	}
 }

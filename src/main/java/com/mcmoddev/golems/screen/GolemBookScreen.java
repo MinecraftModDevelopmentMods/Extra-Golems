@@ -6,11 +6,13 @@ import com.mcmoddev.golems.container.GolemContainer;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
@@ -24,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Optional;
 
 public class GolemBookScreen extends Screen {
 
@@ -140,9 +141,10 @@ public class GolemBookScreen extends Screen {
 	 **/
 	private static final void initGolemBookEntries() {
 		GOLEMS.clear();
-		for (Entry<ResourceLocation, GolemContainer> entry : ExtraGolems.GOLEM_CONTAINER_MAP.entrySet()) {
+		final Registry<GolemContainer> registry = Minecraft.getInstance().level.registryAccess().registryOrThrow(ExtraGolems.Keys.GOLEM_CONTAINERS);
+		for (Entry<ResourceKey<GolemContainer>, GolemContainer> entry : registry.entrySet()) {
 			if (!entry.getValue().isHidden()) {
-				GOLEMS.add(new GolemBookEntry(entry.getKey(), entry.getValue()));
+				GOLEMS.add(new GolemBookEntry(entry.getKey().location(), entry.getValue()));
 			}
 		}
 		// sort golems by attack power
@@ -399,16 +401,14 @@ public class GolemBookScreen extends Screen {
 		/** texture location and size of 2x2 crafting **/
 		final int gridW = 84;
 		final int gridH = 46;
-		RenderSystem.getModelViewStack().pushPose();
-		RenderSystem.getModelViewStack().scale(scale, scale, scale);
+		matrix.pushPose();
+		matrix.scale(scale, scale, scale);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		// draw 2x2 grid background
 		RenderSystem.setShaderTexture(0, TEXTURE);
 		this.blit(matrix, startX, startY, BOOK_WIDTH - gridW, BOOK_HEIGHT + ICON_SP, gridW, gridH); // drawTexturedModalRect
 
 		// draw itemstacks
-		// TODO ???
-//    RenderSystem.enableRescaleNormal();
 		Lighting.setupForFlatItems();
 		float posX;
 		float posY;
@@ -441,7 +441,7 @@ public class GolemBookScreen extends Screen {
 		this.itemRenderer.renderGuiItem(result, (int) (posX / scale), (int) (posY / scale));
 
 		// reset scale
-		RenderSystem.getModelViewStack().popPose();
+		matrix.popPose();
 	}
 
 	private void drawGolemDiagram(final PoseStack matrix, int cornerX, int cornerY) {
@@ -616,7 +616,7 @@ public class GolemBookScreen extends Screen {
 		@Override
 		public void renderToolTip(final PoseStack matrix, int mouseX, int mouseY) {
 			if (this.currentBlock != Blocks.AIR) {
-				matrix.scale(1 / scale, 1 / scale, 1 / scale);
+				//matrix.scale(1 / scale, 1 / scale, 1 / scale);
 				this.gui.renderTooltip(matrix, this.currentBlock.getName(), mouseX, mouseY);
 			}
 		}

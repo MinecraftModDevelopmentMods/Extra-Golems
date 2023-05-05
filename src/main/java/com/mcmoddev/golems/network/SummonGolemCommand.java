@@ -1,31 +1,40 @@
 package com.mcmoddev.golems.network;
 
 import com.mcmoddev.golems.ExtraGolems;
+import com.mcmoddev.golems.container.GolemContainer;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
+import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.CompoundTagArgument;
 import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.MobSpawnType;
 
+import java.util.HashSet;
+
 public class SummonGolemCommand {
 
 	private static final DynamicCommandExceptionType INVALID_ID = new DynamicCommandExceptionType(arg -> Component.translatable("command.golem.invalid_id", arg));
+	private static final SuggestionProvider<CommandSourceStack> SUGGEST_ID = ((context, builder) -> SharedSuggestionProvider.suggestResource(context.getSource().registryAccess().registryOrThrow(ExtraGolems.Keys.GOLEM_CONTAINERS).keySet(), builder));
 
 	public static void register(CommandDispatcher<CommandSourceStack> commandSource) {
+
 		LiteralCommandNode<CommandSourceStack> commandNode = commandSource.register(
-				Commands.literal("golem")
+				Commands.literal("summongolem")
 						.requires(p -> p.hasPermission(2))
 						.then(Commands.argument("type", ResourceLocationArgument.id())
+								.suggests(SUGGEST_ID)
 								.executes(command -> summonGolem(command.getSource(),
 										ResourceLocationArgument.getId(command, "type"),
 										new BlockPos(command.getSource().getPosition()),
@@ -41,7 +50,7 @@ public class SummonGolemCommand {
 														BlockPosArgument.getLoadedBlockPos(command, "pos"),
 														CompoundTagArgument.getCompoundTag(command, "tag")))))));
 
-		commandSource.register(Commands.literal("golem")
+		commandSource.register(Commands.literal("summongolem")
 				.requires(p -> p.hasPermission(2))
 				.redirect(commandNode));
 	}
@@ -52,7 +61,8 @@ public class SummonGolemCommand {
 			id = new ResourceLocation(ExtraGolems.MODID, id.getPath());
 		}
 		// validate the id
-		if (!ExtraGolems.GOLEM_CONTAINER_MAP.containsKey(id)) {
+		final Registry<GolemContainer> registry = source.registryAccess().registryOrThrow(ExtraGolems.Keys.GOLEM_CONTAINERS);
+		if (!registry.containsKey(id)) {
 			throw INVALID_ID.create(id);
 		}
 		// create the golem

@@ -1,5 +1,6 @@
 package com.mcmoddev.golems.menu;
 
+import com.mcmoddev.golems.EGRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
@@ -8,6 +9,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.CraftingMenu;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.block.Blocks;
 
 public class PortableCraftingMenu extends CraftingMenu {
@@ -23,6 +25,11 @@ public class PortableCraftingMenu extends CraftingMenu {
 	@Override
 	public boolean stillValid(final Player playerIn) {
 		return true;
+	}
+
+	@Override
+	public MenuType<?> getType() {
+		return EGRegistry.CRAFTING_GOLEM_MENU.get();
 	}
 
 	public static class Provider implements MenuProvider {

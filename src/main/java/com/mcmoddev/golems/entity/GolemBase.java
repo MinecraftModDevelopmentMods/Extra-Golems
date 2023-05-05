@@ -16,6 +16,7 @@ import com.mcmoddev.golems.entity.goal.SwimUpGoal;
 import com.mcmoddev.golems.item.SpawnGolemItem;
 import com.mcmoddev.golems.util.GolemAttributes;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -84,12 +85,13 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 
 	public static final String KEY_MATERIAL = "Material";
 	public static final String KEY_CHILD = "IsChild";
-	private static final double MAX_ARMOR = ((RangedAttribute)Attributes.ARMOR).getMaxValue();
+	private static final double MAX_ARMOR = ((RangedAttribute)Attributes.ARMOR).getMaxValue() - 0.01D;
 
 	private ResourceLocation material = new ResourceLocation(ExtraGolems.MODID, "empty");
 	private GolemContainer container = GolemContainer.EMPTY;
 
 	protected Component description;
+	protected boolean isMaterialDirty;
 
 	// swimming helpers
 	protected final WaterBoundPathNavigation waterNavigator;
@@ -127,19 +129,22 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 	}
 
 	public void setMaterial(final ResourceLocation materialIn) {
-		if (materialIn.equals(material)) {
-			return;
-		}
-		Optional<GolemContainer> oContainer = Optional.ofNullable(ExtraGolems.GOLEM_CONTAINER_MAP.get(materialIn));
-		if(!oContainer.isPresent()) {
-			ExtraGolems.LOGGER.error("Failed to load golem container for '" + materialIn.toString() + "'");
-			return;
-		}
+		this.isMaterialDirty = true;
 		// update material and container
 		this.getEntityData().set(MATERIAL, materialIn.toString());
 		this.material = materialIn;
+		// load container
+		final Registry<GolemContainer> registry = level.registryAccess().registryOrThrow(ExtraGolems.Keys.GOLEM_CONTAINERS);
+		final Optional<GolemContainer> oContainer = registry.getOptional(materialIn);
+		if(!oContainer.isPresent()) {
+			// log single error message when failing to load
+			ExtraGolems.LOGGER.error("Failed to load golem container for '" + materialIn.toString() + "'");
+			return;
+		}
+		// container was loaded successfully
+		this.isMaterialDirty = false;
 		this.container = oContainer.get();
-		this.attributes = GolemAttributes.getAttributes(materialIn);
+		this.attributes = GolemAttributes.getAttributes(level.registryAccess(), materialIn);
 		this.setInvulnerable(container.getAttributes().getArmor() > MAX_ARMOR);
 		// clear description
 		this.description = null;
@@ -172,7 +177,9 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 			if (container.getAttributes().isHurtByWater()) {
 				this.setPathfindingMalus(BlockPathTypes.WATER, -1.0F);
 			}
-
+			if(container.hasBehavior(GolemBehaviors.BURN_IN_SUN)) {
+				this.groundNavigator.setAvoidSun(true);
+			}
 			// register goals
 			registerGlowGoal();
 			registerPowerGoal();
@@ -245,6 +252,11 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 	@Override
 	protected void registerGoals() {
 		super.registerGoals();
+	}
+
+	@Override
+	public boolean isSunBurnTick() {
+		return super.isSunBurnTick();
 	}
 
 	protected void registerGlowGoal() {
@@ -339,6 +351,10 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 	@Override
 	public void customServerAiStep() {
 		super.customServerAiStep();
+		// update material
+		if(isMaterialDirty && tickCount > 0) {
+			setMaterial(this.material);
+		}
 		// take damage from water
 		if (getContainer().getAttributes().isHurtByWater() && this.isInWaterRainOrBubble()) {
 			this.hurt(DamageSource.DROWN, 1.0F);

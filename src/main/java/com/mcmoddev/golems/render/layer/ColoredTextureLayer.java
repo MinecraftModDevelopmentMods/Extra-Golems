@@ -12,6 +12,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -19,9 +20,12 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 
+import java.util.regex.Pattern;
+
 public class ColoredTextureLayer<T extends GolemBase> extends RenderLayer<T, GolemModel<T>> {
 
 	private static final Vector3f ONE = new Vector3f(1.0F, 1.0F, 1.0F);
+	private static final Pattern LGB_NAME_PATTERN = Pattern.compile("(?i).*lgb.*");
 
 	private final GolemModel<T> layerModel;
 
@@ -39,15 +43,19 @@ public class ColoredTextureLayer<T extends GolemBase> extends RenderLayer<T, Gol
 	@Override
 	public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, T entity,
 					   float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-		GolemRenderSettings settings = ExtraGolems.GOLEM_MODEL_MAP.getOrDefault(entity.getMaterial(), GolemRenderSettings.EMPTY);
+		GolemRenderSettings settings = getParentModel().getSettings();
 		// prepare to render each layer
 		if (!entity.isInvisible() && !getParentModel().disableLayers() && !settings.getLayers().isEmpty()) {
 			getParentModel().copyPropertiesTo(layerModel);
 			layerModel.prepareMobModel(entity, limbSwing, limbSwingAmount, partialTicks);
 			layerModel.setupAnim(entity, limbSwing, limbSwingAmount, partialTicks, netHeadYaw, headPitch);
-			// render all of the layers in the LayerRenderSettings
+			// render all layers in the LayerRenderSettings
 			int packedOverlay = LivingEntityRenderer.getOverlayCoords(entity, 0.0F);
 			settings.getLayers().forEach(l -> renderTexture(entity, layerModel, settings, l, matrixStackIn, bufferIn, packedLightIn, packedOverlay));
+			// render special layers
+			if(ExtraGolems.CONFIG.pride() || LGB_NAME_PATTERN.matcher(ChatFormatting.stripFormatting(entity.getName().getString())).matches()) {
+				renderTexture(entity, layerModel, settings, LayerRenderSettings.RAINBOW, matrixStackIn, bufferIn, packedLightIn, packedOverlay);
+			}
 		}
 	}
 
