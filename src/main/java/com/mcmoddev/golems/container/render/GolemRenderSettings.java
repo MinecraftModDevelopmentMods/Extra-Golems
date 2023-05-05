@@ -239,8 +239,6 @@ public class GolemRenderSettings {
 
 		/**
 		 * Called by the packet handler when this class is received on the client
-		 *
-		 * @return true if this method was called client-side
 		 */
 		public static void loadSettings(final GolemRenderSettings settings) {
 			// load base

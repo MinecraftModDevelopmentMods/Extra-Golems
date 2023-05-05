@@ -21,14 +21,17 @@
 	"textures": {
 	  "0": {
 		"blocks": "minecraft:ochre_froglight",
+		"glow": 15,
 		"loot_table": "golems:froglight/ochre"
 	  },
 	  "1": {
 		"blocks": "minecraft:verdant_froglight",
+		"glow": 15,
 		"loot_table": "golems:froglight/verdant"
 	  },
 	  "2": {
 		"blocks": "minecraft:pearlescent_froglight",
+		"glow": 15,
 		"loot_table": "golems:froglight/pearlescent"
 	  }
     }

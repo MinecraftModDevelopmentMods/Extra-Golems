@@ -155,8 +155,6 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 			this.registerGoals();
 			// define behavior for the given swimming ability
 			switch (container.getSwimAbility()) {
-
-
 				case FLOAT:
 					// basic swimming AI
 					goalSelector.addGoal(0, new FloatGoal(this));
