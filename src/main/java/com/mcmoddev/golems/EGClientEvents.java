@@ -11,9 +11,11 @@ import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
@@ -23,6 +25,10 @@ public final class EGClientEvents {
 		MinecraftForge.EVENT_BUS.register(EGClientEvents.ForgeHandler.class);
 		FMLJavaModLoadingContext.get().getModEventBus().register(EGClientEvents.ModHandler.class);
 		EGClientEvents.ForgeHandler.addResources();
+	}
+
+	public static void onClearGolemModels() {
+		GolemRenderType.clearLoadedRenderSettings();
 	}
 
 	public static class ModHandler {

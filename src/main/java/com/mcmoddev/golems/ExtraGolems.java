@@ -54,14 +54,13 @@ public class ExtraGolems {
 	public static final DeferredRegister<GolemContainer> GOLEM_CONTAINERS = DeferredRegister.create(Keys.GOLEM_CONTAINERS, MODID);
 	private static final Supplier<IForgeRegistry<GolemContainer>> GOLEM_CONTAINERS_SUPPLIER = GOLEM_CONTAINERS.makeRegistry(() -> new RegistryBuilder<GolemContainer>()
 			.dataPackRegistry(GolemContainer.CODEC, GolemContainer.CODEC)
-			.onBake((owner, manager) -> CONFIG.bakeVillagerGolemList(manager))
 			.hasTags());
 
 	////// GOLEM MODELS //////
 	public static final DeferredRegister<GolemRenderSettings> GOLEM_MODELS = DeferredRegister.create(Keys.GOLEM_MODELS, MODID);
 	private static final Supplier<IForgeRegistry<GolemRenderSettings>> GOLEM_MODELS_SUPPLIER = GOLEM_MODELS.makeRegistry(() -> new RegistryBuilder<GolemRenderSettings>()
 			.dataPackRegistry(GolemRenderSettings.CODEC, GolemRenderSettings.CODEC)
-			.onClear(((owner, stage) -> DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> com.mcmoddev.golems.render.GolemRenderType::clearLoadedRenderSettings))));
+			.onClear(((owner, stage) -> DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> EGClientEvents.onClearGolemModels()))));
 
 	public ExtraGolems() {
 		// register and load config

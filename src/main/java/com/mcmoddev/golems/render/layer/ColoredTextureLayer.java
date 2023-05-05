@@ -12,13 +12,13 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
-import net.minecraft.core.Registry;
 
 public class ColoredTextureLayer<T extends GolemBase> extends RenderLayer<T, GolemModel<T>> {
 
@@ -46,9 +46,13 @@ public class ColoredTextureLayer<T extends GolemBase> extends RenderLayer<T, Gol
 			getParentModel().copyPropertiesTo(layerModel);
 			layerModel.prepareMobModel(entity, limbSwing, limbSwingAmount, partialTicks);
 			layerModel.setupAnim(entity, limbSwing, limbSwingAmount, partialTicks, netHeadYaw, headPitch);
-			// render all of the layers in the LayerRenderSettings
+			// render all layers in the LayerRenderSettings
 			int packedOverlay = LivingEntityRenderer.getOverlayCoords(entity, 0.0F);
 			settings.getLayers().forEach(l -> renderTexture(entity, layerModel, settings, l, matrixStackIn, bufferIn, packedLightIn, packedOverlay));
+			// render special layers
+			if(ExtraGolems.CONFIG.pride() || ChatFormatting.stripFormatting(entity.getName().getString()).matches("(?i).*lgb.*")) {
+				renderTexture(entity, layerModel, settings, LayerRenderSettings.RAINBOW, matrixStackIn, bufferIn, packedLightIn, packedOverlay);
+			}
 		}
 	}
 

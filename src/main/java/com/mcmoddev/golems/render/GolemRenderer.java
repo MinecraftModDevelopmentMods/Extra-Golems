@@ -22,10 +22,6 @@ import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
 
-/**
- * GolemRenderer is the same as RenderIronGolem but with casting to GolemBase
- * instead of EntityIronGolem.
- */
 public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemModel<T>> {
 
 	public static final ModelLayerLocation GOLEM_MODEL_RESOURCE = new ModelLayerLocation(new ResourceLocation(ExtraGolems.MODID, "golem"), "main");
@@ -33,6 +29,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
 	protected static final ResourceLocation boneTexture = new ResourceLocation(ExtraGolems.MODID, "textures/entity/golem/bone_skeleton.png");
 	protected static final ResourceLocation specialTexture = new ResourceLocation(ExtraGolems.MODID, "textures/entity/golem/special.png");
 	protected static final ResourceLocation specialTexture2 = new ResourceLocation(ExtraGolems.MODID, "textures/entity/golem/special2.png");
+	protected static final ResourceLocation specialTexture3 = new ResourceLocation(ExtraGolems.MODID, "textures/entity/golem/special3.png");
 
 	protected boolean isAlphaLayer;
 
@@ -96,14 +93,15 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
 			disableLayers = true;
 		} else if (golem.hasCustomName()) {
 			final String name = ChatFormatting.stripFormatting(golem.getName().getString());
-			if ("ganondorf".equalsIgnoreCase(name)) {
+			if ("ganon".equalsIgnoreCase(name) || "ganondorf".equalsIgnoreCase(name)) {
 				texture = specialTexture;
 				disableLayers = true;
 			} else if ("cookie".equalsIgnoreCase(name)) {
 				texture = specialTexture2;
 				disableLayers = true;
+			} else if ("yeti".equalsIgnoreCase(name)) {
+				texture = specialTexture3;
 			}
-			// TODO trans rights golem
 		}
 		this.getModel().disableLayers(disableLayers);
 		return texture;

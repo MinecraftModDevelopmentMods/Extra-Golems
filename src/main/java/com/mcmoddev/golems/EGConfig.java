@@ -25,6 +25,7 @@ public final class EGConfig {
 
 	private boolean aprilFirst;
 	private boolean halloween;
+	private boolean pride;
 
 	private boolean bedrockGolemCreativeOnly;
 	private boolean pumpkinBuildsGolems;
@@ -80,10 +81,6 @@ public final class EGConfig {
 		return villagerGolemSpawnChance;
 	}
 
-	public List<ResourceLocation> getVillagerGolems() {
-		return villagerGolemSpawnList;
-	}
-
 	public boolean aprilFirst() {
 		return enableHolidays && aprilFirst;
 	}
@@ -92,11 +89,16 @@ public final class EGConfig {
 		return enableHolidays && halloween;
 	}
 
+	public boolean pride() {
+		return enableHolidays && pride;
+	}
+
 	public void bake() {
 		// update the holiday configs
 		final LocalDateTime now = LocalDateTime.now();
 		aprilFirst = (now.getMonth() == Month.MARCH && now.getDayOfMonth() >= 31) || (now.getMonth() == Month.APRIL && now.getDayOfMonth() <= 2);
 		halloween = (now.getMonth() == Month.OCTOBER && now.getDayOfMonth() >= 30) || (now.getMonth() == Month.NOVEMBER && now.getDayOfMonth() <= 2);
+		pride = (now.getMonth() == Month.JUNE && now.getDayOfMonth() <= 3);
 		// update config values
 		bedrockGolemCreativeOnly = BEDROCK_GOLEM_CREATIVE_ONLY.get();
 		pumpkinBuildsGolems = PUMPKIN_BUILDS_GOLEMS.get();
@@ -105,12 +107,5 @@ public final class EGConfig {
 		enableHolidays = ENABLE_HOLIDAYS.get();
 		enableHealGolems = ENABLE_HEAL_GOLEMS.get();
 		villagerGolemSpawnChance = VILLAGER_GOLEM_SPAWN_CHANCE.get();
-	}
-
-	public void bakeVillagerGolemList(final RegistryManager registryManager) {
-		final ForgeRegistry<GolemContainer> registry = registryManager.getRegistry(ExtraGolems.Keys.GOLEM_CONTAINERS);
-		villagerGolemSpawnList = registry.tags().getTag(VILLAGER_SUMMONABLE).stream()
-				.map(registry::getKey)
-				.toList();
 	}
 }

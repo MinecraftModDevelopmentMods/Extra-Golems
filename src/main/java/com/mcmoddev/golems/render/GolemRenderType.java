@@ -2,6 +2,7 @@ package com.mcmoddev.golems.render;
 
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.container.render.GolemRenderSettings;
+import com.mcmoddev.golems.container.render.LayerRenderSettings;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.renderer.RenderType;
@@ -37,6 +38,7 @@ public class GolemRenderType extends RenderType {
 		if(!loadedRenderSettings.contains(material)) {
 			loadedRenderSettings.add(material);
 			GolemRenderSettings.ClientUtils.loadSettings(settings);
+			LayerRenderSettings.ClientUtil.loadLayerRenderSettings(LayerRenderSettings.RAINBOW);
 		}
 		return settings;
 	}

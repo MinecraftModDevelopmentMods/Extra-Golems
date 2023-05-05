@@ -1,6 +1,7 @@
 package com.mcmoddev.golems.container.render;
 
 import com.google.common.collect.ImmutableList;
+import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.util.ResourcePair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -11,6 +12,7 @@ import java.util.Optional;
 public class LayerRenderSettings {
 
 	public static final LayerRenderSettings EMPTY = new LayerRenderSettings(ResourcePair.EMPTY, Optional.empty());
+	public static final LayerRenderSettings RAINBOW = new LayerRenderSettings(new ResourcePair(new ResourceLocation(ExtraGolems.MODID, "layer/vines_rainbow"), true), Optional.empty());
 
 	public static final LayerRenderSettings EYES = new LayerRenderSettings(
 			new ResourcePair(new ResourceLocation("golems:layer/eyes/eyes"), true),
