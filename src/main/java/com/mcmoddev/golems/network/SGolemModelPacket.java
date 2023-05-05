@@ -69,7 +69,7 @@ public class SGolemModelPacket {
 		if (context.getDirection().getReceptionSide() == LogicalSide.CLIENT) {
 			context.enqueueWork(() -> {
 				// finalize each entry before adding it to the client-side map
-				message.data.values().forEach(GolemRenderSettings::load);
+				message.data.values().forEach(GolemRenderSettings.ClientUtils::loadSettings);
 				ExtraGolems.GOLEM_MODEL_MAP.clear();
 				ExtraGolems.GOLEM_MODEL_MAP.putAll(message.data);
 			});

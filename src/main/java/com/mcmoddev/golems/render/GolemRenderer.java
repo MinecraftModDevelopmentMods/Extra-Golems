@@ -17,10 +17,10 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
-import java.util.Optional;
 
 /**
  * GolemRenderer is the same as RenderIronGolem but with casting to GolemBase
@@ -33,8 +33,6 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
 	protected static final ResourceLocation boneTexture = new ResourceLocation(ExtraGolems.MODID, "textures/entity/golem/bone_skeleton.png");
 	protected static final ResourceLocation specialTexture = new ResourceLocation(ExtraGolems.MODID, "textures/entity/golem/special.png");
 	protected static final ResourceLocation specialTexture2 = new ResourceLocation(ExtraGolems.MODID, "textures/entity/golem/special2.png");
-
-	private static final Vector3f ONE = new Vector3f(1.0F, 1.0F, 1.0F);
 
 	protected boolean isAlphaLayer;
 
@@ -57,23 +55,15 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
 			return;
 		}
 		// get render settings
-		GolemRenderSettings settings = Optional.ofNullable(ExtraGolems.GOLEM_MODELS_SUPPLIER.get().getValue(golem.getMaterial())).orElse(GolemRenderSettings.EMPTY);
+		GolemRenderSettings settings = GolemRenderType.loadRenderSettings(golem.level.registryAccess(), golem.getMaterial());
 		matrixStackIn.pushPose();
 		// scale
 		if (golem.isBaby()) {
 			float scaleChild = 0.5F;
 			matrixStackIn.scale(scaleChild, scaleChild, scaleChild);
 		}
-		// colors
-		final Vector3f colors;
-		if (settings.getBaseColor().isPresent() && settings.getBaseColor().get() > 0) {
-			colors = GolemRenderSettings.unpackColor(settings.getBaseColor().get());
-		} else if (settings.useBiomeColor()) {
-			colors = GolemRenderSettings.unpackColor(golem.getBiomeColor());
-		} else {
-			colors = ONE;
-		}
-		this.getModel().setColor(colors.x(), colors.y(), colors.z());
+		// settings
+		this.getModel().setSettings(settings, golem);
 		// transparency flag
 		isAlphaLayer = settings.isTranslucent();
 		if (isAlphaLayer) {
@@ -97,7 +87,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
 	 */
 	@Override
 	public ResourceLocation getTextureLocation(final T golem) {
-		final GolemRenderSettings settings = Optional.ofNullable(ExtraGolems.GOLEM_MODELS_SUPPLIER.get().getValue(golem.getMaterial())).orElse(GolemRenderSettings.EMPTY);
+		GolemRenderSettings settings = getModel().getSettings();
 		ResourceLocation texture = settings.getBase(golem).resource();
 		boolean disableLayers = false;
 		// special cases
@@ -105,11 +95,11 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
 			texture = boneTexture;
 			disableLayers = true;
 		} else if (golem.hasCustomName()) {
-			final String s = ChatFormatting.stripFormatting(golem.getName().getString());
-			if ("Ganondorf".equalsIgnoreCase(s)) {
+			final String name = ChatFormatting.stripFormatting(golem.getName().getString());
+			if ("ganondorf".equalsIgnoreCase(name)) {
 				texture = specialTexture;
 				disableLayers = true;
-			} else if ("Cookie".equalsIgnoreCase(s)) {
+			} else if ("cookie".equalsIgnoreCase(name)) {
 				texture = specialTexture2;
 				disableLayers = true;
 			}
@@ -122,7 +112,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
 	@Override
 	@Nullable
 	protected RenderType getRenderType(final T golem, boolean isVisible, boolean isVisibleToPlayer, boolean isGlowing) {
-		final GolemRenderSettings settings = Optional.ofNullable(ExtraGolems.GOLEM_MODELS_SUPPLIER.get().getValue(golem.getMaterial())).orElse(GolemRenderSettings.EMPTY);
+		GolemRenderSettings settings = getModel().getSettings();
 		ResourceLocation texture = this.getTextureLocation(golem);
 		ResourceLocation template = settings.getBaseTemplate();
 		boolean dynamic = isDynamic(golem, texture, settings);

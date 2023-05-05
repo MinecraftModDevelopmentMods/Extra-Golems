@@ -51,7 +51,6 @@ public final class EGRegistry {
 		ExtraGolems.GOLEM_MODELS.register(eventBus);
 		// event listeners
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(EGRegistry::registerEntityAttributes);
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(EGRegistry::registerNewRegistries);
 	}
 
 	////// BLOCKS //////
@@ -82,7 +81,7 @@ public final class EGRegistry {
 		EntityType.Builder.of(GolemBase::new, MobCategory.MISC)
 				.setTrackingRange(48).setUpdateInterval(3)
 				.setShouldReceiveVelocityUpdates(true)
-				.sized(1.4F, 2.9F).noSummon()
+				.sized(1.4F, 2.7F).noSummon()
 				.build("golem")
 	);
 
@@ -96,16 +95,5 @@ public final class EGRegistry {
 
 	public static void registerEntityAttributes(final EntityAttributeCreationEvent event) {
 		event.put(EGRegistry.GOLEM.get(), GolemContainer.EMPTY.getAttributeSupplier().get().build());
-	}
-
-	public static void registerNewRegistries(NewRegistryEvent event) {
-		/*GOLEM_CONTAINERS_SUPPLIER = event.create(new RegistryBuilder<GolemContainer>()
-				.setName(GOLEM_CONTAINERS_KEY.location())
-				.dataPackRegistry(GolemContainer.CODEC, GolemContainer.CODEC)
-				.hasTags());
-		GOLEM_MODELS_SUPPLIER = event.create(new RegistryBuilder<GolemRenderSettings>()
-				.setName(GOLEM_MODELS_KEY.location())
-				.dataPackRegistry(GolemRenderSettings.CODEC, GolemRenderSettings.CODEC)
-				.hasTags());*/
 	}
 }

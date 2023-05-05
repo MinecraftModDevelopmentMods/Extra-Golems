@@ -195,10 +195,10 @@ public final class GolemHeadBlock extends HorizontalDirectionalBlock {
 		}
 
 		////// Attempt to locate a Golem from this mod //////
-		ResourceLocation golemId = ExtraGolems.getGolemId(blockBelow1, blockBelow2, blockArmNorth, blockArmSouth);
+		ResourceLocation golemId = ExtraGolems.getGolemId(level, blockBelow1, blockBelow2, blockArmNorth, blockArmSouth);
 		// if no entity found for North-South, try to find one for East-West pattern
 		if (golemId == null) {
-			golemId = ExtraGolems.getGolemId(blockBelow1, blockBelow2, blockArmEast, blockArmWest);
+			golemId = ExtraGolems.getGolemId(level, blockBelow1, blockBelow2, blockArmEast, blockArmWest);
 		}
 
 		return golemId != null;
@@ -274,11 +274,11 @@ public final class GolemHeadBlock extends HorizontalDirectionalBlock {
 		}
 
 		////// Attempt to spawn a Golem from this mod //////
-		ResourceLocation golemId = ExtraGolems.getGolemId(blockBelow1, blockBelow2, blockArmNorth, blockArmSouth);
+		ResourceLocation golemId = ExtraGolems.getGolemId(level, blockBelow1, blockBelow2, blockArmNorth, blockArmSouth);
 		isEastWest = false;
 		// if no entity found for North-South, try to find one for East-West pattern
 		if (golemId == null) {
-			golemId = ExtraGolems.getGolemId(blockBelow1, blockBelow2, blockArmEast, blockArmWest);
+			golemId = ExtraGolems.getGolemId(level, blockBelow1, blockBelow2, blockArmEast, blockArmWest);
 			isEastWest = true;
 		}
 

@@ -1,6 +1,7 @@
 package com.mcmoddev.golems.network;
 
 import com.mcmoddev.golems.ExtraGolems;
+import com.mcmoddev.golems.container.GolemContainer;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -14,24 +15,26 @@ import net.minecraft.commands.arguments.CompoundTagArgument;
 import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.MobSpawnType;
 
+import java.util.HashSet;
+
 public class SummonGolemCommand {
 
 	private static final DynamicCommandExceptionType INVALID_ID = new DynamicCommandExceptionType(arg -> Component.translatable("command.golem.invalid_id", arg));
+	private static final SuggestionProvider<CommandSourceStack> SUGGEST_ID = ((context, builder) -> SharedSuggestionProvider.suggestResource(context.getSource().registryAccess().registryOrThrow(ExtraGolems.Keys.GOLEM_CONTAINERS).keySet(), builder));
 
 	public static void register(CommandDispatcher<CommandSourceStack> commandSource) {
-
-		final SuggestionProvider<CommandSourceStack> SUGGEST_GOLEM_ID = (context, builder) -> SharedSuggestionProvider.suggestResource(ExtraGolems.GOLEM_CONTAINERS_SUPPLIER.get().getKeys(), builder);
 
 		LiteralCommandNode<CommandSourceStack> commandNode = commandSource.register(
 				Commands.literal("summongolem")
 						.requires(p -> p.hasPermission(2))
 						.then(Commands.argument("type", ResourceLocationArgument.id())
-								.suggests(SUGGEST_GOLEM_ID)
+								.suggests(SUGGEST_ID)
 								.executes(command -> summonGolem(command.getSource(),
 										ResourceLocationArgument.getId(command, "type"),
 										new BlockPos(command.getSource().getPosition()),
@@ -58,7 +61,8 @@ public class SummonGolemCommand {
 			id = new ResourceLocation(ExtraGolems.MODID, id.getPath());
 		}
 		// validate the id
-		if (!ExtraGolems.GOLEM_CONTAINERS_SUPPLIER.get().containsKey(id)) {
+		final Registry<GolemContainer> registry = source.registryAccess().registry(ExtraGolems.Keys.GOLEM_CONTAINERS).orElseThrow();
+		if (!registry.containsKey(id)) {
 			throw INVALID_ID.create(id);
 		}
 		// create the golem

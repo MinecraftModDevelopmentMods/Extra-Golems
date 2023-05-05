@@ -58,17 +58,15 @@ public class ExtraGolems {
 	public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(new ResourceLocation(MODID, "channel"), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
 
 	////// GOLEM CONTAINERS //////
-	public static final ResourceKey<Registry<GolemContainer>> GOLEM_CONTAINERS_KEY = ResourceKey.createRegistryKey(new ResourceLocation(MODID, "golem_stats"));
-	public static final DeferredRegister<GolemContainer> GOLEM_CONTAINERS = DeferredRegister.create(GOLEM_CONTAINERS_KEY, MODID);
-	public static final Supplier<IForgeRegistry<GolemContainer>> GOLEM_CONTAINERS_SUPPLIER = GOLEM_CONTAINERS.makeRegistry(() -> new RegistryBuilder<GolemContainer>()
+	public static final DeferredRegister<GolemContainer> GOLEM_CONTAINERS = DeferredRegister.create(Keys.GOLEM_CONTAINERS, MODID);
+	private static final Supplier<IForgeRegistry<GolemContainer>> GOLEM_CONTAINERS_SUPPLIER = GOLEM_CONTAINERS.makeRegistry(() -> new RegistryBuilder<GolemContainer>()
 			.dataPackRegistry(GolemContainer.CODEC, GolemContainer.CODEC)
-			.onBake((owner, stage) -> CONFIG.bakeVillagerGolemList())
+			.onBake((owner, manager) -> CONFIG.bakeVillagerGolemList(manager))
 			.hasTags());
 
 	////// GOLEM MODELS //////
-	public static final ResourceKey<Registry<GolemRenderSettings>> GOLEM_MODELS_KEY = ResourceKey.createRegistryKey(new ResourceLocation(MODID, "golem_models"));
-	public static final DeferredRegister<GolemRenderSettings> GOLEM_MODELS = DeferredRegister.create(GOLEM_MODELS_KEY, MODID);
-	public static final Supplier<IForgeRegistry<GolemRenderSettings>> GOLEM_MODELS_SUPPLIER = GOLEM_MODELS.makeRegistry(() -> new RegistryBuilder<GolemRenderSettings>()
+	public static final DeferredRegister<GolemRenderSettings> GOLEM_MODELS = DeferredRegister.create(Keys.GOLEM_MODELS, MODID);
+	private static final Supplier<IForgeRegistry<GolemRenderSettings>> GOLEM_MODELS_SUPPLIER = GOLEM_MODELS.makeRegistry(() -> new RegistryBuilder<GolemRenderSettings>()
 			.dataPackRegistry(GolemRenderSettings.CODEC, GolemRenderSettings.CODEC));
 
 	@Deprecated
@@ -154,12 +152,17 @@ public class ExtraGolems {
 	 * that will be used to calculate this Golem. It is okay to pass {@code null} or
 	 * Air.
 	 *
+	 * @param level the level
+	 * @param bodyBlock the block directly below the head
+	 * @param bodySupportBlock the block 2 positions below the head
+	 * @param leftArmBlock the block adjacent to {@code bodyBlock}
+	 * @param rightArmBlock the block adjacent to {@code bodyBlock} and opposite {@code leftArmBlock}
 	 * @return the constructed GolemBase instance if there is one for the passed blocks, otherwise null
 	 * @see GolemContainer#matches(Block, Block, Block, Block)
 	 **/
 	@Nullable
-	public static GolemBase getGolem(Level level, Block below1, Block below2, Block arm1, Block arm2) {
-		ResourceLocation id = getGolemId(below1, below2, arm1, arm2);
+	public static GolemBase getGolem(Level level, Block bodyBlock, Block bodySupportBlock, Block leftArmBlock, Block rightArmBlock) {
+		ResourceLocation id = getGolemId(level, bodyBlock, bodySupportBlock, leftArmBlock, rightArmBlock);
 		if (null == id) {
 			return null;
 		}
@@ -172,18 +175,31 @@ public class ExtraGolems {
 	 * that will be used to calculate this Golem. It is okay to pass {@code null} or
 	 * Air.
 	 *
+	 * @param level the level
+	 * @param bodyBlock the block directly below the head
+	 * @param bodySupportBlock the block 2 positions below the head
+	 * @param leftArmBlock the block adjacent to {@code bodyBlock}
+	 * @param rightArmBlock the block adjacent to {@code bodyBlock} and opposite {@code leftArmBlock}
 	 * @return the constructed GolemBase instance if there is one for the passed blocks, otherwise null
 	 * @see GolemContainer#matches(Block, Block, Block, Block)
 	 **/
 	@Nullable
-	public static ResourceLocation getGolemId(Block below1, Block below2, Block arm1, Block arm2) {
+	public static ResourceLocation getGolemId(Level level, Block bodyBlock, Block bodySupportBlock, Block leftArmBlock, Block rightArmBlock) {
 		ResourceLocation id = null;
-		for (Entry<ResourceKey<GolemContainer>, GolemContainer> entry : GOLEM_CONTAINERS_SUPPLIER.get().getEntries()) {
-			if (entry.getValue().matches(below1, below2, arm1, arm2)) {
+		final Registry<GolemContainer> registry = level.registryAccess().registry(Keys.GOLEM_CONTAINERS).orElseThrow();
+		for (Entry<ResourceKey<GolemContainer>, GolemContainer> entry : registry.entrySet()) {
+			if (entry.getValue().matches(bodyBlock, bodySupportBlock, leftArmBlock, rightArmBlock)) {
 				id = entry.getKey().location();
 				break;
 			}
 		}
 		return id;
+	}
+
+	public static class Keys {
+
+		public static final ResourceKey<Registry<GolemContainer>> GOLEM_CONTAINERS = ResourceKey.createRegistryKey(new ResourceLocation(MODID, "golem_stats"));
+
+		public static final ResourceKey<Registry<GolemRenderSettings>> GOLEM_MODELS = ResourceKey.createRegistryKey(new ResourceLocation(MODID, "golem_models"));
 	}
 }

@@ -2,10 +2,12 @@ package com.mcmoddev.golems.render;
 
 import com.mcmoddev.golems.EGConfig;
 import com.mcmoddev.golems.ExtraGolems;
+import com.mcmoddev.golems.container.render.GolemRenderSettings;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.model.ArmedModel;
 import net.minecraft.client.model.IronGolemModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -20,11 +22,14 @@ import net.minecraft.world.entity.HumanoidArm;
 
 public class GolemModel<T extends GolemBase> extends IronGolemModel<T> implements ArmedModel {
 
+	private static final Vector3f ONE = new Vector3f(1.0F, 1.0F, 1.0F);
+
 	private final ModelPart kitty = createKittyLayer().bakeRoot();
 	private final ModelPart tail;
 	private final ModelPart tail1;
 	private final ModelPart ears;
 
+	private GolemRenderSettings settings = GolemRenderSettings.EMPTY;
 	private float red = 1.0f;
 	private float green = 1.0f;
 	private float blue = 1.0f;
@@ -120,7 +125,25 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> implement
 		matrixStackIn.popPose();
 	}
 
-	// COLOR HELPERS
+	// SETTINGS AND COLORS
+
+	public void setSettings(final GolemRenderSettings settings, final GolemBase entity) {
+		this.settings = settings;
+		// colors
+		final Vector3f colors;
+		if (settings.getBaseColor().isPresent() && settings.getBaseColor().get() > 0) {
+			colors = GolemRenderSettings.unpackColor(settings.getBaseColor().get());
+		} else if (settings.useBiomeColor()) {
+			colors = GolemRenderSettings.unpackColor(entity.getBiomeColor());
+		} else {
+			colors = ONE;
+		}
+		this.setColor(colors.x(), colors.y(), colors.z());
+	}
+
+	public GolemRenderSettings getSettings() {
+		return settings;
+	}
 
 	public void setColor(final float r, final float g, final float b) {
 		red = r;
@@ -128,6 +151,9 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> implement
 		blue = b;
 	}
 
+	public void resetSettings() {
+		this.settings = GolemRenderSettings.EMPTY;
+	}
 
 	public void resetColor() {
 		red = green = blue = 1.0F;
@@ -158,7 +184,8 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> implement
 	@Override
 	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float partialTicks, float netHeadYaw, float headPitch) {
 		super.setupAnim(entity, limbSwing, limbSwingAmount, partialTicks, netHeadYaw, headPitch);
-		final boolean earsAndTail = entity.hasCustomName() && "Kitty".equals(entity.getName().getContents());
+		final String name = ChatFormatting.stripFormatting(entity.getName().getString());
+		final boolean earsAndTail = entity.hasCustomName() && "kitty".equalsIgnoreCase(name);
 		// animate tail
 		if (earsAndTail) {
 			// ears
@@ -176,28 +203,6 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> implement
 		}
 		// show or hide ears/tail
 		this.kitty.visible = earsAndTail;
-	}
-
-	public void renderKittyEars(T golem, PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn,
-								int packedOverlayIn) {
-		this.ears.copyFrom(this.head);
-		this.ears.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn);
-	}
-
-	public void renderKittyTail(T golem, PoseStack matrixStackIn, VertexConsumer bufferIn, int packedLightIn,
-								int packedOverlayIn, float limbSwing, float limbSwingAmount) {
-		// tail angles
-		this.tail.copyFrom(this.root());
-		this.tail.y = 2.0F;
-		this.tail.z = 4.0F;
-		// tail animation
-		float idleSwing = Mth.cos((golem.tickCount) * 0.058F);
-		float tailSwing = Mth.cos(limbSwing) * limbSwingAmount;
-		tail.xRot = -2.4435F + 0.38F * tailSwing;
-		tail1.xRot = 0.2618F + 0.48F * tailSwing;
-		tail.zRot = 0.06F * idleSwing;
-		tail1.zRot = -0.05F * idleSwing;
-		this.tail.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn);
 	}
 
 	@Override

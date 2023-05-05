@@ -16,6 +16,7 @@ import com.mcmoddev.golems.entity.goal.SwimUpGoal;
 import com.mcmoddev.golems.item.SpawnGolemItem;
 import com.mcmoddev.golems.util.GolemAttributes;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -132,22 +133,18 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 		// update material and container
 		this.getEntityData().set(MATERIAL, materialIn.toString());
 		this.material = materialIn;
-		if(null == ExtraGolems.GOLEM_CONTAINERS_SUPPLIER.get()) {
-			return;
-		}
 		// load container
-		Optional<GolemContainer> oContainer = Optional.ofNullable(ExtraGolems.GOLEM_CONTAINERS_SUPPLIER.get().getValue(materialIn));
+		final Registry<GolemContainer> registry = level.registryAccess().registry(ExtraGolems.Keys.GOLEM_CONTAINERS).orElseThrow();
+		final Optional<GolemContainer> oContainer = registry.getOptional(materialIn);
 		if(!oContainer.isPresent()) {
 			// log single error message when failing to load
-			if(tickCount == 10) {
-				ExtraGolems.LOGGER.error("Failed to load golem container for '" + materialIn.toString() + "'");
-			}
+			ExtraGolems.LOGGER.error("Failed to load golem container for '" + materialIn.toString() + "'");
 			return;
 		}
 		// container was loaded successfully
 		this.isMaterialDirty = false;
 		this.container = oContainer.get();
-		this.attributes = GolemAttributes.getAttributes(materialIn);
+		this.attributes = GolemAttributes.getAttributes(level.registryAccess(), materialIn);
 		this.setInvulnerable(container.getAttributes().getArmor() > MAX_ARMOR);
 		// clear description
 		this.description = null;

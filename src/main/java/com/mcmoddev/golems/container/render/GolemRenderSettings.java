@@ -1,6 +1,7 @@
 package com.mcmoddev.golems.container.render;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.entity.GolemBase;
@@ -12,6 +13,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.registries.IForgeRegistryInternal;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +26,7 @@ public class GolemRenderSettings {
 	public static final ResourceLocation BASE_TEMPLATE = new ResourceLocation(ExtraGolems.MODID, "template");
 
 	public static final ResourcePair FALLBACK_TEXTURE = new ResourcePair(FALLBACK_PREFAB, true);
+	public static final ResourcePair NOT_LOADED = new ResourcePair(new ResourceLocation("not_loaded"), true);
 
 	public static final GolemRenderSettings EMPTY = new GolemRenderSettings(
 			ImmutableList.of(new ResourcePair(new ResourceLocation("minecraft", "iron_golem/iron_golem"), true)),
@@ -65,7 +68,7 @@ public class GolemRenderSettings {
 								Optional<MultitextureRenderSettings> multitexture,
 								LayerRenderSettings eyes, LayerRenderSettings vines,
 								List<LayerRenderSettings> layers) {
-		this.base = new ResourcePair(new ResourceLocation("not_loaded"), true);
+		this.base = NOT_LOADED;
 		this.baseList = baseList;
 		this.baseColor = baseColor;
 		this.baseTemplateRaw = baseTemplate;
@@ -95,26 +98,6 @@ public class GolemRenderSettings {
 		if (!getBaseList().isEmpty() && getMultitexture().isPresent()) {
 			ExtraGolems.LOGGER.warn("Found both 'base' and 'multitexture' in GolemRenderSettings. Ignoring 'base'");
 		}
-	}
-
-	/**
-	 * Called by the packet handler when this class is received on the client
-	 *
-	 * @return true if this method was called client-side
-	 */
-	public boolean load() {
-		return DistExecutor.runForDist(() -> () -> {
-			// load base
-			this.base = multitexture.isPresent()
-					? new ResourcePair(new ResourceLocation("multitexture"), true)
-					: buildPreferredTexture(this.baseList);
-			// load template
-			this.baseTemplate = new ResourceLocation(baseTemplateRaw.getNamespace(), "textures/entity/golem/" + baseTemplateRaw.getPath() + ".png");
-			// load multitexture
-			this.multitexture.ifPresent(m -> m.load());
-			this.layers.forEach(l -> l.load());
-			return true;
-		}, () -> () -> false);
 	}
 
 	/**
@@ -234,40 +217,6 @@ public class GolemRenderSettings {
 	}
 
 	/**
-	 * Accepts a list of texture strings and loads the first one that actually exists
-	 *
-	 * @param textureList the texture list
-	 * @return a ResourcePair containing the first texture that loads
-	 */
-	public static ResourcePair buildPreferredTexture(final List<ResourcePair> textureList) {
-		// attempt to locate each texture in the list until one is successful
-		for (final ResourcePair texture : textureList) {
-			ResourceLocation loaded = null;
-			loaded = DistExecutor.runForDist(() -> () -> {
-				// parse resource location
-				final ResourceLocation res;
-				if (texture.flag()) {
-					res = new ResourceLocation(texture.resource().getNamespace(), "textures/entity/golem/" + texture.resource().getPath() + ".png");
-				} else {
-					res = new ResourceLocation(texture.resource().getNamespace(), "textures/block/" + texture.resource().getPath() + ".png");
-				}
-				// attempt to load the resource to ensure it exists
-				final Optional<Resource> r = net.minecraft.client.Minecraft.getInstance().getResourceManager().getResource(res);
-				if (r.isPresent()) {
-					return res;
-				}
-				return null;
-			}, () -> () -> new ResourceLocation("empty"));
-			// if the texture was loaded, return that texture
-			if (loaded != null) {
-				return new ResourcePair(loaded, texture.flag());
-			}
-		}
-		// if none of the resources loaded, return fallback texture
-		return new ResourcePair(FALLBACK_PREFAB, true);
-	}
-
-	/**
 	 * Separates a hex color into RGB components.
 	 * If the color int is less than 0, returns
 	 * a Vector3f with all 1.0s
@@ -284,5 +233,52 @@ public class GolemRenderSettings {
 		float colorGreen = (float) (tmpColor >> 8 & 255) / 255.0F;
 		float colorBlue = (float) (tmpColor & 255) / 255.0F;
 		return new Vector3f(colorRed, colorGreen, colorBlue);
+	}
+
+	public static class ClientUtils {
+
+		/**
+		 * Called by the packet handler when this class is received on the client
+		 *
+		 * @return true if this method was called client-side
+		 */
+		public static void loadSettings(final GolemRenderSettings settings) {
+			// load base
+			settings.base = settings.multitexture.isPresent()
+					? new ResourcePair(new ResourceLocation("multitexture"), true)
+					: buildPreferredTexture(settings.baseList);
+			// load template
+			settings.baseTemplate = new ResourceLocation(settings.baseTemplateRaw.getNamespace(), "textures/entity/golem/" + settings.baseTemplateRaw.getPath() + ".png");
+			// load multitexture
+			settings.multitexture.ifPresent(MultitextureRenderSettings.ClientUtils::loadMultitextureSettings);
+			settings.layers.forEach(LayerRenderSettings.ClientUtil::loadLayerRenderSettings);
+		}
+
+		/**
+		 * Accepts a list of texture strings and loads the first one that actually exists
+		 *
+		 * @param textureList the texture list
+		 * @return a ResourcePair containing the first texture that loads
+		 */
+		public static ResourcePair buildPreferredTexture(final List<ResourcePair> textureList) {
+			// attempt to locate each texture in the list until one is successful
+			for (final ResourcePair texture : textureList) {
+				ResourceLocation loadedTexture = null;
+				// parse resource location
+				if (texture.flag()) {
+					loadedTexture = new ResourceLocation(texture.resource().getNamespace(), "textures/entity/golem/" + texture.resource().getPath() + ".png");
+				} else {
+					loadedTexture = new ResourceLocation(texture.resource().getNamespace(), "textures/block/" + texture.resource().getPath() + ".png");
+				}
+				// attempt to load the resource to ensure it exists
+				final Optional<Resource> r = net.minecraft.client.Minecraft.getInstance().getResourceManager().getResource(loadedTexture);
+				if (r.isPresent()) {
+					return new ResourcePair(loadedTexture, texture.flag());
+				}
+			}
+			// if none of the resources loaded, return fallback texture
+			return new ResourcePair(FALLBACK_PREFAB, true);
+		}
+
 	}
 }

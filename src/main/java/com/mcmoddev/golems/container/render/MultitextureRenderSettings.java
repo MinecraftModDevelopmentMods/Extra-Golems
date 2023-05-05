@@ -6,6 +6,7 @@ import com.google.common.collect.Maps;
 import com.mcmoddev.golems.util.ResourcePair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.DistExecutor;
 
 import java.util.Map;
@@ -23,18 +24,9 @@ public class MultitextureRenderSettings {
 
 	private MultitextureRenderSettings(Map<Integer, ResourcePair> baseMapRaw) {
 		this.baseMapRaw = ImmutableMap.copyOf(baseMapRaw);
+		this.baseMap = ImmutableMap.of();
 	}
 
-	public boolean load() {
-		return DistExecutor.runForDist(() -> () -> {
-			ImmutableMap.Builder<Integer, ResourcePair> builder = ImmutableMap.builder();
-			baseMapRaw.forEach((num, pair) -> {
-				builder.put(num, GolemRenderSettings.buildPreferredTexture(ImmutableList.of(pair)));
-			});
-			this.baseMap = builder.build();
-			return true;
-		}, () -> () -> false);
-	}
 
 	/**
 	 * @return a map of unresolved texture IDs and ResourceLocation/Boolean pairs
@@ -56,5 +48,16 @@ public class MultitextureRenderSettings {
 	@Override
 	public String toString() {
 		return "MultitextureRenderSettings: ".concat("base_map[").concat(baseMapRaw.toString()).concat("] ");
+	}
+
+	public static class ClientUtils {
+
+		public static void loadMultitextureSettings(final MultitextureRenderSettings settings) {
+			ImmutableMap.Builder<Integer, ResourcePair> builder = ImmutableMap.builder();
+			settings.baseMapRaw.forEach((num, pair) -> {
+				builder.put(num, GolemRenderSettings.ClientUtils.buildPreferredTexture(ImmutableList.of(pair)));
+			});
+			settings.baseMap = builder.build();
+		}
 	}
 }

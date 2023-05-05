@@ -1,6 +1,5 @@
 package com.mcmoddev.golems;
 
-import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.render.GolemModel;
 import com.mcmoddev.golems.render.GolemRenderType;
 import com.mcmoddev.golems.render.GolemRenderer;
@@ -40,7 +39,7 @@ public final class EGClientEvents {
 
 		@SubscribeEvent
 		public static void registerEntityRenderers(final EntityRenderersEvent.RegisterRenderers event) {
-			event.registerEntityRenderer(EGRegistry.GOLEM.get(), m -> (new GolemRenderer<GolemBase>(m)));
+			event.registerEntityRenderer(EGRegistry.GOLEM.get(), GolemRenderer::new);
 		}
 	}
 

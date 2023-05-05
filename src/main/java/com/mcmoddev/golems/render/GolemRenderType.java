@@ -1,15 +1,22 @@
 package com.mcmoddev.golems.render;
 
+import com.mcmoddev.golems.ExtraGolems;
+import com.mcmoddev.golems.container.render.GolemRenderSettings;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class GolemRenderType extends RenderType {
 
+	private static final Set<ResourceLocation> loadedRenderSettings = new HashSet<>();
 	private static final Map<ResourceLocation, DynamicTextureState> dynamicTextureMap = new HashMap<>();
 
 	public GolemRenderType(String name, VertexFormat vertexFormat, VertexFormat.Mode glQuads, int i2, boolean b1,
@@ -17,7 +24,28 @@ public class GolemRenderType extends RenderType {
 		super(name, vertexFormat, glQuads, i2, b1, b2, r1, r2);
 	}
 
+	/**
+	 * Lazy-loads the render settings using the registry access and the material ID.
+	 * If this is the first time the settings are loaded, some preprocessing is performed.
+	 * @param access the registry access
+	 * @param material the material ID
+	 * @return the golem render settings after some pre-processing
+	 */
+	public static GolemRenderSettings loadRenderSettings(final RegistryAccess access, final ResourceLocation material) {
+		final Registry<GolemRenderSettings> registry = access.registry(ExtraGolems.Keys.GOLEM_MODELS).orElseThrow();
+		GolemRenderSettings settings = registry.getOptional(material).orElse(GolemRenderSettings.EMPTY);
+		if(!loadedRenderSettings.contains(material)) {
+			loadedRenderSettings.add(material);
+			GolemRenderSettings.ClientUtils.loadSettings(settings);
+		}
+		return settings;
+	}
+
+	/**
+	 * Called when the user reloads assets. Re-builds each texture currently in the dynamic texture map.
+	 */
 	public static void reloadDynamicTextureMap() {
+		loadedRenderSettings.clear();
 		final Map<ResourceLocation, DynamicTextureState> copy = new HashMap<>(dynamicTextureMap);
 		copy.entrySet().forEach(e -> dynamicTextureMap.put(e.getKey(), new DynamicTextureState(e.getKey(), e.getValue().sourceImage, e.getValue().templateImage)));
 	}

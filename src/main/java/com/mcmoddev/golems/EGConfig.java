@@ -4,6 +4,8 @@ import com.mcmoddev.golems.container.GolemContainer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.registries.ForgeRegistry;
+import net.minecraftforge.registries.RegistryManager;
 
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -11,7 +13,7 @@ import java.util.List;
 
 public final class EGConfig {
 
-	private static final TagKey<GolemContainer> VILLAGER_SUMMONABLE = TagKey.create(ExtraGolems.GOLEM_CONTAINERS_KEY, new ResourceLocation(ExtraGolems.MODID, "villager_summonable"));
+	private static final TagKey<GolemContainer> VILLAGER_SUMMONABLE = TagKey.create(ExtraGolems.Keys.GOLEM_CONTAINERS, new ResourceLocation(ExtraGolems.MODID, "villager_summonable"));
 
 	private final ForgeConfigSpec.BooleanValue BEDROCK_GOLEM_CREATIVE_ONLY;
 	private final ForgeConfigSpec.BooleanValue PUMPKIN_BUILDS_GOLEMS;
@@ -105,10 +107,10 @@ public final class EGConfig {
 		villagerGolemSpawnChance = VILLAGER_GOLEM_SPAWN_CHANCE.get();
 	}
 
-	public void bakeVillagerGolemList() {
-		villagerGolemSpawnList = ExtraGolems.GOLEM_CONTAINERS_SUPPLIER.get().tags()
-				.getTag(VILLAGER_SUMMONABLE).stream()
-				.map(ExtraGolems.GOLEM_CONTAINERS_SUPPLIER.get()::getKey)
+	public void bakeVillagerGolemList(final RegistryManager registryManager) {
+		final ForgeRegistry<GolemContainer> registry = registryManager.getRegistry(ExtraGolems.Keys.GOLEM_CONTAINERS);
+		villagerGolemSpawnList = registry.tags().getTag(VILLAGER_SUMMONABLE).stream()
+				.map(registry::getKey)
 				.toList();
 	}
 }
