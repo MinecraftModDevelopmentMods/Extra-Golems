@@ -10,14 +10,12 @@ import com.mcmoddev.golems.render.layer.GolemFlowerLayer;
 import com.mcmoddev.golems.render.layer.GolemKittyLayer;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;

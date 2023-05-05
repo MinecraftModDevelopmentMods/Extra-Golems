@@ -17,11 +17,14 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Material;
+import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -52,6 +55,7 @@ public final class EGRegistry {
 		ExtraGolems.GOLEM_MODELS.register(eventBus);
 		// event listeners
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(EGRegistry::registerEntityAttributes);
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(EGRegistry::onBuildTabContents);
 	}
 
 	////// BLOCKS //////
@@ -64,12 +68,12 @@ public final class EGRegistry {
 
 	////// ITEM BLOCKS //////
 	public static final RegistryObject<Item> GOLEM_HEAD_ITEM = ITEMS.register("golem_head",
-			() -> new GolemHeadItem(EGRegistry.GOLEM_HEAD.get(), new Item.Properties().tab(CreativeModeTab.TAB_MISC)));
+			() -> new GolemHeadItem(EGRegistry.GOLEM_HEAD.get(), new Item.Properties()));
 
 	////// ITEMS //////
-	public static final RegistryObject<GolemSpellItem> GOLEM_SPELL = ITEMS.register("golem_spell", () -> new GolemSpellItem());
-	public static final RegistryObject<SpawnGolemItem> SPAWN_BEDROCK_GOLEM = ITEMS.register("spawn_bedrock_golem", () -> new SpawnGolemItem());
-	public static final RegistryObject<GuideBookItem> GOLEM_BOOK = ITEMS.register("info_book", () -> new GuideBookItem());
+	public static final RegistryObject<GolemSpellItem> GOLEM_SPELL = ITEMS.register("golem_spell", () -> new GolemSpellItem(new Item.Properties()));
+	public static final RegistryObject<SpawnGolemItem> SPAWN_BEDROCK_GOLEM = ITEMS.register("spawn_bedrock_golem", () -> new SpawnGolemItem(new Item.Properties()));
+	public static final RegistryObject<GuideBookItem> GOLEM_BOOK = ITEMS.register("info_book", () -> new GuideBookItem(new Item.Properties().stacksTo(1)));
 
 
 	////// ENTITIES //////
@@ -88,6 +92,21 @@ public final class EGRegistry {
 			() -> new MenuType<>(PortableDispenserMenu::new));
 
 	////// EVENTS //////
+
+	public static void onBuildTabContents(final CreativeModeTabEvent.BuildContents event) {
+		if(event.getTab() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
+			event.accept(GOLEM_SPELL);
+			event.accept(GOLEM_BOOK);
+			event.accept(GOLEM_HEAD_ITEM);
+		}
+		if(event.getTab() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
+			event.accept(GOLEM_HEAD_ITEM);
+		}
+		if(event.getTab() == CreativeModeTabs.NATURAL_BLOCKS) {
+			// insert golem head item after jack o lantern
+			event.getEntries().putAfter(Items.JACK_O_LANTERN.getDefaultInstance(), GOLEM_HEAD_ITEM.get().getDefaultInstance(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+		}
+	}
 
 	public static void registerEntityAttributes(final EntityAttributeCreationEvent event) {
 		event.put(EGRegistry.GOLEM.get(), GolemContainer.EMPTY.getAttributeSupplier().get().build());

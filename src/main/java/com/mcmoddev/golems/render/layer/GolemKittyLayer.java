@@ -1,12 +1,11 @@
 package com.mcmoddev.golems.render.layer;
 
-import com.mcmoddev.golems.EGConfig;
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.render.GolemModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
@@ -28,7 +27,7 @@ public class GolemKittyLayer<T extends GolemBase> extends RenderLayer<T, GolemMo
 		if (!golem.isInvisible() && getParentModel().getKitty().visible) {
 			// check for holiday tweaks
 			if (ExtraGolems.CONFIG.aprilFirst()) {
-				matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(180.0F));
+				matrixStackIn.mulPose(Axis.ZP.rotationDegrees(180.0F));
 			}
 			// get packed light and a vertex builder bound to the correct texture
 			VertexConsumer vertexBuilder = bufferIn.getBuffer(RenderType.entityCutoutNoCull(kittyTexture));

@@ -6,6 +6,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.level.Explosion.BlockInteraction;
 import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.Collection;
@@ -103,9 +104,8 @@ public interface IRandomExploder {
 	default void explode(float range) {
 		final GolemBase entity = getGolemEntity();
 		if (!entity.level.isClientSide()) {
-			final boolean flag = entity.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING);
 			final Vec3 pos = entity.position();
-			entity.level.explode(entity, pos.x, pos.y, pos.z, range, flag ? BlockInteraction.BREAK : BlockInteraction.NONE);
+			entity.level.explode(entity, pos.x, pos.y, pos.z, range, Level.ExplosionInteraction.MOB);
 			entity.discard();
 			spawnLingeringCloud();
 		}

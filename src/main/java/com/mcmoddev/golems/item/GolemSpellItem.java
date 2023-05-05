@@ -11,7 +11,6 @@ import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -25,8 +24,8 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class GolemSpellItem extends Item {
 
-	public GolemSpellItem() {
-		super(new Item.Properties().stacksTo(64).tab(CreativeModeTab.TAB_MISC));
+	public GolemSpellItem(final Item.Properties properties) {
+		super(properties);
 	}
 
 	public static void registerDispenserBehavior() {

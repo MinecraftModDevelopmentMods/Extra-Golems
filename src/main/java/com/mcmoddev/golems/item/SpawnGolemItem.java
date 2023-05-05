@@ -17,7 +17,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -32,8 +31,8 @@ public final class SpawnGolemItem extends Item {
 
 	public static final ResourceLocation BEDROCK_GOLEM = new ResourceLocation(ExtraGolems.MODID, "bedrock");
 
-	public SpawnGolemItem() {
-		super(new Properties().tab(CreativeModeTab.TAB_MISC));
+	public SpawnGolemItem(final Item.Properties properties) {
+		super(properties);
 	}
 
 	@Override

@@ -5,7 +5,7 @@ import com.mcmoddev.golems.container.render.GolemRenderSettings;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.model.ArmedModel;
 import net.minecraft.client.model.IronGolemModel;
@@ -18,6 +18,7 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
+import org.joml.Vector3f;
 
 public class GolemModel<T extends GolemBase> extends IronGolemModel<T> implements ArmedModel {
 
@@ -123,7 +124,7 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> implement
 		matrixStackIn.pushPose();
 		// check for holiday tweaks
 		if (ExtraGolems.CONFIG.aprilFirst()) {
-			matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(180.0F));
+			matrixStackIn.mulPose(Axis.ZP.rotationDegrees(180.0F));
 		}
 		// render with custom colors
 		super.renderToBuffer(matrixStackIn, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, alphaIn);

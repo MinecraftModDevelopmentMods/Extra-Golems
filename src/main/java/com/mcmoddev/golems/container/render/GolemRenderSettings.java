@@ -1,19 +1,16 @@
 package com.mcmoddev.golems.container.render;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.util.ResourcePair;
 import com.mojang.datafixers.util.Either;
-import com.mojang.math.Vector3f;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.registries.IForgeRegistryInternal;
+import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.Optional;

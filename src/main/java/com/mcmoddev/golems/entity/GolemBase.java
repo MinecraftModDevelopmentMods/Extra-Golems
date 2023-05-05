@@ -22,6 +22,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -151,7 +152,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 		// update server data
 		if (!level.isClientSide()) {
 			// remove and re-instantiate goals
-			this.goalSelector.removeAllGoals();
+			this.goalSelector.getAvailableGoals().clear();
 			this.registerGoals();
 			// define behavior for the given swimming ability
 			switch (container.getSwimAbility()) {
@@ -650,7 +651,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 	}
 
 	@Override
-	public Packet<?> getAddEntityPacket() {
+	public Packet<ClientGamePacketListener> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 
@@ -867,13 +868,12 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 	}
 
 	@Override
-	public boolean equipItemIfPossible(ItemStack stack) {
+	public ItemStack equipItemIfPossible(ItemStack stack) {
 		if (!stack.isEmpty() && stack.getItem() instanceof ArrowItem
 				&& getContainer().hasBehavior(GolemBehaviors.SHOOT_ARROWS)
 				&& getArrowInventory().canAddItem(stack)) {
 			// attempt to add the arrows to the inventory
-			getArrowInventory().addItem(stack);
-			return true;
+			return getArrowInventory().addItem(stack);
 		} else {
 			return super.equipItemIfPossible(stack);
 		}

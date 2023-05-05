@@ -69,7 +69,7 @@ public final class GolemHeadBlock extends HorizontalDirectionalBlock {
 
 	public static void registerDispenserBehavior() {
 		// load carved pumpkin behavior
-		final DispenseItemBehavior carvedPumpkinBehavior = DispenserBlock.DISPENSER_REGISTRY.getOrDefault(Items.CARVED_PUMPKIN, new DefaultDispenseItemBehavior());
+		final DispenseItemBehavior carvedPumpkinBehavior = DispenseItemBehavior.NOOP; // TODO fix dispenser behavior //DispenserBlock.DISPENSER_REGISTRY.getOrDefault(Items.CARVED_PUMPKIN, new DefaultDispenseItemBehavior());
 		final DispenseItemBehavior wrappedBehavior = new OptionalDispenseItemBehavior() {
 			protected ItemStack execute(BlockSource blockSource, ItemStack itemStack) {
 				final Level level = blockSource.getLevel();

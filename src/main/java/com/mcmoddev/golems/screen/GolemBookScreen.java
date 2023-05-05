@@ -163,7 +163,10 @@ public class GolemBookScreen extends Screen {
 		int doneH = 20;
 		int doneX = (this.width - doneW) / 2;
 		int doneY = BOOK_HEIGHT + SCR_OFFSET_Y + 8;
-		this.addRenderableWidget(new Button(doneX, doneY, doneW, doneH, Component.translatable("gui.done"), c -> this.minecraft.setScreen(null)));
+		this.addRenderableWidget(Button.builder(Component.translatable("gui.done"), c -> this.minecraft.setScreen(null))
+				.pos(doneX, doneY)
+				.size(doneW, doneH)
+				.build());
 		// locate and activate the "page change" arrows
 		int arrowX = (this.width - BOOK_WIDTH) / 2;
 		int arrowY = SCR_OFFSET_Y + BOOK_HEIGHT - (ARROW_HEIGHT * 3 / 2);
@@ -213,11 +216,11 @@ public class GolemBookScreen extends Screen {
 		// hovering text has to be the last thing you do or else rendering breaks
 		if (isPageGolemEntry(this.curPage, this.totalPages) && this.buttonBlockLeft.isHoveredOrFocused()) {
 			// hover-over on left side
-			this.buttonBlockLeft.renderToolTip(matrix, mouseX, mouseY);
+			//this.buttonBlockLeft.renderToolTip(matrix, mouseX, mouseY);
 		}
 		if (isPageGolemEntry(this.curPage + 1, this.totalPages) && this.buttonBlockRight.isHoveredOrFocused()) {
 			// hover-over on right side
-			this.buttonBlockRight.renderToolTip(matrix, mouseX, mouseY);
+			//this.buttonBlockRight.renderToolTip(matrix, mouseX, mouseY);
 		}
 	}
 
@@ -587,8 +590,9 @@ public class GolemBookScreen extends Screen {
 		private final GolemBookScreen gui;
 
 		public BlockButton(GolemBookScreen guiIn, Block[] blockValues, int x, int y, float scaleIn) {
-			super(x, y, (int) (scaleIn * 16.0F), (int) (scaleIn * 16.0F), Component.empty(), b -> {
-			}, (b, p, mx, my) -> b.renderToolTip(p, mx, my));
+			super(Button.builder(Component.empty(), b -> {})
+					.pos(x, y)
+					.size((int) (scaleIn * 16.0F), (int) (scaleIn * 16.0F)));
 			this.gui = guiIn;
 			this.blocks = blockValues;
 			this.scale = scaleIn;
@@ -598,7 +602,7 @@ public class GolemBookScreen extends Screen {
 		public void renderButton(final PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 			if (this.visible) {
 				// update hovered flag
-				this.isHovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
+				this.isHovered = mouseX >= this.getX() && mouseY >= this.getY() && mouseX < this.getX() + this.width && mouseY < this.getY() + this.height;
 				// update the block to draw
 				if (blocks != null && blocks.length > 0) {
 					int index = (int) (gui.ticksOpen / 30) % blocks.length;
@@ -608,18 +612,18 @@ public class GolemBookScreen extends Screen {
 				}
 				// draw the block
 				matrix.pushPose();
-				this.gui.drawBlock(matrix, this.currentBlock, this.x - MARGIN - 4, this.y - MARGIN, this.scale);
+				this.gui.drawBlock(matrix, this.currentBlock, this.getX() - MARGIN - 4, this.getY() - MARGIN, this.scale);
 				matrix.popPose();
 			}
 		}
 
-		@Override
+		/*@Override
 		public void renderToolTip(final PoseStack matrix, int mouseX, int mouseY) {
 			if (this.currentBlock != Blocks.AIR) {
 				//matrix.scale(1 / scale, 1 / scale, 1 / scale);
 				this.gui.renderTooltip(matrix, this.currentBlock.getName(), mouseX, mouseY);
 			}
-		}
+		}*/
 
 		public void updateBlocks(final Block[] blocksToDraw) {
 			this.blocks = blocksToDraw;
@@ -632,8 +636,7 @@ public class GolemBookScreen extends Screen {
 		private GolemBookEntry entry;
 
 		public GolemEntryButton(final GolemBookScreen guiIn, final GolemBookEntry entryIn, final int x, final int y) {
-			super(x, y, ENTRY_W, ENTRY_H, Component.empty(), b -> {
-			});
+			super(Button.builder(Component.empty(), b -> {}).pos(x, y).size(ENTRY_W, ENTRY_H));
 			this.gui = guiIn;
 			this.entry = entryIn;
 		}
@@ -657,13 +660,13 @@ public class GolemBookScreen extends Screen {
 		@Override
 		public void renderButton(final PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 			if (this.visible) {
-				this.isHovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
+				this.isHovered = mouseX >= this.getX() && mouseY >= this.getY() && mouseX < this.getX() + this.width && mouseY < this.getY() + this.height;
 				RenderSystem.setShaderTexture(0, CONTENTS);
 				// draw the background of the button
-				this.blit(matrix, this.x, this.y, CONTENTS_W + ICON_SP, this.isHovered ? (ENTRY_H + ICON_SP) : 0, ENTRY_W, ENTRY_H); // drawTexturedModalRect
+				this.blit(matrix, this.getX(), this.getY(), CONTENTS_W + ICON_SP, this.isHovered ? (ENTRY_H + ICON_SP) : 0, ENTRY_W, ENTRY_H); // drawTexturedModalRect
 				// draw the block and name of the entity
 				int index = (int) (gui.ticksOpen / 30);
-				gui.drawBlock(matrix, this.entry.getBlock(index), this.x - MARGIN - 2, this.y - 9, 1.0F);
+				gui.drawBlock(matrix, this.entry.getBlock(index), this.getX() - MARGIN - 2, this.getY() - 9, 1.0F);
 
 				// prepare to draw the entity's name
 				matrix.pushPose();
@@ -676,8 +679,8 @@ public class GolemBookScreen extends Screen {
 					scale = 0.78F;
 					nameH = (int) (scale * gui.font.wordWrapHeight(name.getString(), (int) (wrap / scale)));
 				}
-				int nameX = this.x + 20;
-				int nameY = this.y + ((this.height - nameH) / 2) + 1;
+				int nameX = this.getX() + 20;
+				int nameY = this.getY() + ((this.height - nameH) / 2) + 1;
 				// re-scale and draw the entity name
 				matrix.scale(scale, scale, scale);
 				//gui.font.drawWordWrap(name, (int) ((nameX) / scale), (int) (nameY / scale), (int) (wrap / scale), 0);
@@ -699,8 +702,7 @@ public class GolemBookScreen extends Screen {
 		private final boolean isForward;
 
 		public NextPageButton(GolemBookScreen guiBook, int x, int y, boolean isForwardIn) {
-			super(x, y, ARROW_WIDTH, ARROW_HEIGHT, Component.empty(), b -> {
-			});
+			super(Button.builder(Component.empty(), b -> {}).pos(x, y).size(ARROW_WIDTH, ARROW_HEIGHT));
 			this.gui = guiBook;
 			this.isForward = isForwardIn;
 		}
@@ -721,7 +723,7 @@ public class GolemBookScreen extends Screen {
 		@Override
 		public void renderButton(final PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 			if (this.visible) {
-				boolean mouseOver = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
+				boolean mouseOver = mouseX >= this.getX() && mouseY >= this.getY() && mouseX < this.getX() + this.width && mouseY < this.getY() + this.height;
 				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 				RenderSystem.setShaderTexture(0, GolemBookScreen.TEXTURE);
 				int tx = 0;
@@ -735,7 +737,7 @@ public class GolemBookScreen extends Screen {
 					ty += ARROW_HEIGHT;
 				}
 
-				this.blit(matrix, this.x, this.y, tx, ty, ARROW_WIDTH, ARROW_HEIGHT);
+				this.blit(matrix, this.getX(), this.getY(), tx, ty, ARROW_WIDTH, ARROW_HEIGHT);
 			}
 		}
 	}

@@ -3,7 +3,7 @@ package com.mcmoddev.golems.render.layer;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.render.GolemModel;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -30,7 +30,7 @@ public class GolemFlowerLayer<T extends GolemBase> extends RenderLayer<T, GolemM
 			matrixStackIn.translate(-1.1875D, 1.0625D, -0.9375D);
 			matrixStackIn.translate(0.5D, 0.5D, 0.5D);
 			matrixStackIn.scale(0.5F, 0.5F, 0.5F);
-			matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(-90.0F));
+			matrixStackIn.mulPose(Axis.XP.rotationDegrees(-90.0F));
 			matrixStackIn.translate(-0.5D, -0.5D, -0.5D);
 			Minecraft.getInstance().getBlockRenderer().renderSingleBlock(Blocks.POPPY.defaultBlockState(), matrixStackIn, bufferIn,
 					packedLightIn, OverlayTexture.NO_OVERLAY, net.minecraftforge.client.model.data.ModelData.EMPTY, RenderType.cutout());

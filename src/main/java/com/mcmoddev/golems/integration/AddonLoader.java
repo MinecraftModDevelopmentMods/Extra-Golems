@@ -1,14 +1,19 @@
 package com.mcmoddev.golems.integration;
 
 import com.mcmoddev.golems.ExtraGolems;
+import net.minecraft.SharedConstants;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
+import net.minecraft.server.packs.repository.RepositorySource;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraftforge.event.AddPackFindersEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.resource.PathPackResources;
 
 import java.nio.file.Path;
+import java.util.function.Consumer;
 
 /**
  * Tracks which mods are loaded and registered the associated data pack, if any
@@ -98,17 +103,17 @@ public final class AddonLoader {
 	}
 
 	private static void registerAddon(final AddPackFindersEvent event, final String packName) {
-		event.addRepositorySource((packConsumer, constructor) -> {
-			Pack pack = Pack.create(ExtraGolems.MODID + ":" + packName, true, () -> {
-				Path path = ModList.get().getModFileById(ExtraGolems.MODID).getFile().findResource("/" + packName);
-				return new PathPackResources(packName, path);
-			}, constructor, Pack.Position.TOP, PackSource.DEFAULT);
-
-			if (pack != null) {
-				packConsumer.accept(pack);
-			} else {
-				ExtraGolems.LOGGER.error(ExtraGolems.MODID + ": Failed to register data pack \"" + packName + "\"");
-			}
+		event.addRepositorySource(packConsumer -> {
+			// create pack data
+			final String packId = ExtraGolems.MODID + ":" + packName;
+			final Component packTitle = Component.literal(packName);
+			final Path path = ModList.get().getModFileById(ExtraGolems.MODID).getFile().findResource("/" + packName);
+			final Pack.Info info = new Pack.Info(packTitle, SharedConstants.DATA_PACK_FORMAT, FeatureFlagSet.of());
+			// create the pack
+			Pack pack = Pack.create(packId, packTitle, true, s -> new PathPackResources(packName, false, path), info,
+					PackType.SERVER_DATA, Pack.Position.TOP, true, PackSource.DEFAULT);
+			// consume the pack
+			packConsumer.accept(pack);
 		});
 	}
 
