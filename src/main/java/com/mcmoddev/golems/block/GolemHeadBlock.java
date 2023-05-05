@@ -17,16 +17,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.animal.SnowGolem;
-import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.CarvedPumpkinBlock;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -38,60 +34,6 @@ import net.minecraft.world.level.material.PushReaction;
 import javax.annotation.Nullable;
 
 public final class GolemHeadBlock extends HorizontalDirectionalBlock {
-
-	/**
-	 * This behavior is modified from that of CARVED_PUMPKIN.
-	 * If a GolemBase can be spawned, the entity is spawned directly and skips the block placement.
-	 **/
-	public static final DispenseItemBehavior GOLEM_HEAD_DISPENSER_BEHAVIOR = new OptionalDispenseItemBehavior() {
-		@Override
-		public ItemStack execute(BlockSource blockSource, ItemStack itemStack) {
-			final Level level = blockSource.getLevel();
-			final Direction facing = blockSource.getBlockState().getValue(DispenserBlock.FACING);
-			final BlockPos blockpos = blockSource.getPos().relative(facing);
-			// check if the block can be placed
-			if(level.isEmptyBlock(blockpos) && canSpawnGolem(level, blockpos)) {
-				if (!level.isClientSide) {
-					// place the block
-					level.setBlock(blockpos, EGRegistry.GOLEM_HEAD.get().defaultBlockState().setValue(FACING, facing), Block.UPDATE_ALL);
-					level.gameEvent(null, GameEvent.BLOCK_PLACE, blockpos);
-				}
-				// shrink item stack
-				itemStack.shrink(1);
-				this.setSuccess(true);
-			}
-			return itemStack;
-		}
-	};
-
-	/**
-	 * This behavior is modified from that of CARVED_PUMPKIN.
-	 * If a GolemBase can be spawned, the entity is spawned directly and skips the block placement.
-	 **/
-	public static final DispenseItemBehavior CARVED_PUMPKIN_DISPENSER_BEHAVIOR = new OptionalDispenseItemBehavior() {
-		protected ItemStack execute(BlockSource blockSource, ItemStack itemStack) {
-			Level level = blockSource.getLevel();
-			BlockPos blockpos = blockSource.getPos().relative(blockSource.getBlockState().getValue(DispenserBlock.FACING));
-			CarvedPumpkinBlock carvedpumpkinblock = (CarvedPumpkinBlock)Blocks.CARVED_PUMPKIN;
-			// check if the block can be placed and a regular Golem would spawn
-			if (level.isEmptyBlock(blockpos) && (carvedpumpkinblock.canSpawnGolem(level, blockpos)
-					|| (ExtraGolems.CONFIG.pumpkinBuildsGolems() && canSpawnGolem(level, blockpos)))) {
-				if (!level.isClientSide) {
-					// place the block
-					level.setBlock(blockpos, carvedpumpkinblock.defaultBlockState(), Block.UPDATE_ALL);
-					level.gameEvent(null, GameEvent.BLOCK_PLACE, blockpos);
-				}
-				// shrink the item stack and set success
-				itemStack.shrink(1);
-				this.setSuccess(true);
-			} else {
-				// attempt to dispense pumpkin as armor
-				this.setSuccess(ArmorItem.dispenseArmor(blockSource, itemStack));
-			}
-
-			return itemStack;
-		}
-	};
 
 	public GolemHeadBlock(BlockBehaviour.Properties properties) {
 		super(properties);

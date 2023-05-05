@@ -6,8 +6,13 @@ import com.mcmoddev.golems.container.behavior.GolemBehaviors;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.network.SummonGolemCommand;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.SpawnUtil;
 import net.minecraft.world.entity.LivingEntity;
@@ -29,6 +34,7 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,6 +51,8 @@ public final class EGEvents {
 	}
 
 	public static class ForgeHandler {
+
+		private static final TagKey<GolemContainer> VILLAGER_SUMMONABLE = TagKey.create(ExtraGolems.Keys.GOLEM_CONTAINERS, new ResourceLocation(ExtraGolems.MODID, "villager_summonable"));
 
 		@SubscribeEvent
 		public static void onAddCommands(final RegisterCommandsEvent event) {
@@ -121,8 +129,12 @@ public final class EGEvents {
 					Optional<GolemBase> entity = SpawnUtil.trySpawnMob(EGRegistry.GOLEM.get(), MobSpawnType.MOB_SUMMONED, serverLevel, villager.blockPosition(), 10, 8, 6, SpawnUtil.Strategy.LEGACY_IRON_GOLEM);
 					if(entity.isPresent()) {
 						GolemBase golem = entity.get();
-						// assign golem material
-						ResourceLocation material = getGolemToSpawn(villager.blockPosition(), villager.getRandom());
+						// determine material
+						ResourceLocation material = getGolemToSpawn(villager.getLevel(), villager.blockPosition(), villager.getRandom());
+						if(null == material) {
+							golem.discard();
+							return;
+						}
 						golem.setMaterial(material);
 						// randomize texture if applicable
 						if (golem.getTextureCount() > 0) {
@@ -138,14 +150,16 @@ public final class EGEvents {
 		}
 
 		/**
+		 * @param level the level
 		 * @param pos an approximate block position for the entity
 		 * @param random a random generator
 		 * @return a random golem material from the config, or the empty material if the config is empty
 		 */
-		private static ResourceLocation getGolemToSpawn(final BlockPos pos, final RandomSource random) {
-			final List<? extends ResourceLocation> options = ExtraGolems.CONFIG.getVillagerGolems();
-			final ResourceLocation choice = options.isEmpty() ? GolemContainer.EMPTY_MATERIAL : options.get(random.nextInt(options.size()));
-			return choice;
+		private static ResourceLocation getGolemToSpawn(final Level level, final BlockPos pos, final RandomSource random) {
+			final Registry<GolemContainer> registry = level.registryAccess().registryOrThrow(ExtraGolems.Keys.GOLEM_CONTAINERS);
+			final Optional<Holder<GolemContainer>> oHolder = registry.getOrCreateTag(VILLAGER_SUMMONABLE).getRandomElement(random);
+			final GolemContainer container = oHolder.orElse(Holder.direct(GolemContainer.EMPTY)).get();
+			return registry.getKey(container);
 		}
 
 		/**

@@ -5,6 +5,7 @@ import com.mcmoddev.golems.block.GolemHeadBlock;
 import com.mcmoddev.golems.block.PowerBlock;
 import com.mcmoddev.golems.container.GolemContainer;
 import com.mcmoddev.golems.entity.GolemBase;
+import com.mcmoddev.golems.item.GolemHeadItem;
 import com.mcmoddev.golems.item.GolemSpellItem;
 import com.mcmoddev.golems.item.GuideBookItem;
 import com.mcmoddev.golems.item.SpawnGolemItem;
@@ -63,12 +64,7 @@ public final class EGRegistry {
 
 	////// ITEM BLOCKS //////
 	public static final RegistryObject<Item> GOLEM_HEAD_ITEM = ITEMS.register("golem_head",
-			() -> new BlockItem(EGRegistry.GOLEM_HEAD.get(), new Item.Properties().tab(CreativeModeTab.TAB_MISC)) {
-				@Override
-				public boolean isFoil(final ItemStack stack) {
-					return true;
-				}
-			});
+			() -> new GolemHeadItem(EGRegistry.GOLEM_HEAD.get(), new Item.Properties().tab(CreativeModeTab.TAB_MISC)));
 
 	////// ITEMS //////
 	public static final RegistryObject<GolemSpellItem> GOLEM_SPELL = ITEMS.register("golem_spell", () -> new GolemSpellItem());

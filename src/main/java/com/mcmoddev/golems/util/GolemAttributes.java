@@ -28,7 +28,7 @@ public final class GolemAttributes {
 	 */
 	public static AttributeMap getAttributes(final RegistryAccess access, final ResourceLocation material) {
 		if (!materialToAttributeMap.containsKey(material)) {
-			final Registry<GolemContainer> registry = access.registry(ExtraGolems.Keys.GOLEM_CONTAINERS).orElseThrow();
+			final Registry<GolemContainer> registry = access.registryOrThrow(ExtraGolems.Keys.GOLEM_CONTAINERS);
 			GolemContainer container = registry.getOptional(material).orElse(GolemContainer.EMPTY);
 			AttributeSupplier supplier = buildAttributes(container.getAttributeSupplier().get());
 			materialToAttributeMap.put(material, supplier);

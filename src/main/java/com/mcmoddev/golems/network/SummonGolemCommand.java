@@ -61,7 +61,7 @@ public class SummonGolemCommand {
 			id = new ResourceLocation(ExtraGolems.MODID, id.getPath());
 		}
 		// validate the id
-		final Registry<GolemContainer> registry = source.registryAccess().registry(ExtraGolems.Keys.GOLEM_CONTAINERS).orElseThrow();
+		final Registry<GolemContainer> registry = source.registryAccess().registryOrThrow(ExtraGolems.Keys.GOLEM_CONTAINERS);
 		if (!registry.containsKey(id)) {
 			throw INVALID_ID.create(id);
 		}

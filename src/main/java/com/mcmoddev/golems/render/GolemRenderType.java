@@ -32,7 +32,7 @@ public class GolemRenderType extends RenderType {
 	 * @return the golem render settings after some pre-processing
 	 */
 	public static GolemRenderSettings loadRenderSettings(final RegistryAccess access, final ResourceLocation material) {
-		final Registry<GolemRenderSettings> registry = access.registry(ExtraGolems.Keys.GOLEM_MODELS).orElseThrow();
+		final Registry<GolemRenderSettings> registry = access.registryOrThrow(ExtraGolems.Keys.GOLEM_MODELS);
 		GolemRenderSettings settings = registry.getOptional(material).orElse(GolemRenderSettings.EMPTY);
 		if(!loadedRenderSettings.contains(material)) {
 			loadedRenderSettings.add(material);
@@ -42,10 +42,17 @@ public class GolemRenderType extends RenderType {
 	}
 
 	/**
+	 * Called when the user reloads render settings.
+	 */
+	public static void clearLoadedRenderSettings() {
+		loadedRenderSettings.clear();
+	}
+
+	/**
 	 * Called when the user reloads assets. Re-builds each texture currently in the dynamic texture map.
 	 */
 	public static void reloadDynamicTextureMap() {
-		loadedRenderSettings.clear();
+		clearLoadedRenderSettings();
 		final Map<ResourceLocation, DynamicTextureState> copy = new HashMap<>(dynamicTextureMap);
 		copy.entrySet().forEach(e -> dynamicTextureMap.put(e.getKey(), new DynamicTextureState(e.getKey(), e.getValue().sourceImage, e.getValue().templateImage)));
 	}

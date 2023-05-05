@@ -141,7 +141,7 @@ public class GolemBookScreen extends Screen {
 	 **/
 	private static final void initGolemBookEntries() {
 		GOLEMS.clear();
-		final Registry<GolemContainer> registry = Minecraft.getInstance().level.registryAccess().registry(ExtraGolems.Keys.GOLEM_CONTAINERS).orElseThrow();
+		final Registry<GolemContainer> registry = Minecraft.getInstance().level.registryAccess().registryOrThrow(ExtraGolems.Keys.GOLEM_CONTAINERS);
 		for (Entry<ResourceKey<GolemContainer>, GolemContainer> entry : registry.entrySet()) {
 			if (!entry.getValue().isHidden()) {
 				GOLEMS.add(new GolemBookEntry(entry.getKey().location(), entry.getValue()));

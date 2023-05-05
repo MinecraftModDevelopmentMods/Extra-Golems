@@ -134,7 +134,7 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 		this.getEntityData().set(MATERIAL, materialIn.toString());
 		this.material = materialIn;
 		// load container
-		final Registry<GolemContainer> registry = level.registryAccess().registry(ExtraGolems.Keys.GOLEM_CONTAINERS).orElseThrow();
+		final Registry<GolemContainer> registry = level.registryAccess().registryOrThrow(ExtraGolems.Keys.GOLEM_CONTAINERS);
 		final Optional<GolemContainer> oContainer = registry.getOptional(materialIn);
 		if(!oContainer.isPresent()) {
 			// log single error message when failing to load
@@ -155,6 +155,8 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 			this.registerGoals();
 			// define behavior for the given swimming ability
 			switch (container.getSwimAbility()) {
+
+
 				case FLOAT:
 					// basic swimming AI
 					goalSelector.addGoal(0, new FloatGoal(this));
@@ -177,7 +179,9 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 			if (container.getAttributes().isHurtByWater()) {
 				this.setPathfindingMalus(BlockPathTypes.WATER, -1.0F);
 			}
-
+			if(container.hasBehavior(GolemBehaviors.BURN_IN_SUN)) {
+				this.groundNavigator.setAvoidSun(true);
+			}
 			// register goals
 			registerGlowGoal();
 			registerPowerGoal();
@@ -250,6 +254,11 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 	@Override
 	protected void registerGoals() {
 		super.registerGoals();
+	}
+
+	@Override
+	public boolean isSunBurnTick() {
+		return super.isSunBurnTick();
 	}
 
 	protected void registerGlowGoal() {
