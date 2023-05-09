@@ -16,6 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -25,23 +26,10 @@ public final class EGClientEvents {
 	public static void register() {
 		MinecraftForge.EVENT_BUS.register(EGClientEvents.ForgeHandler.class);
 		FMLJavaModLoadingContext.get().getModEventBus().register(EGClientEvents.ModHandler.class);
-		EGClientEvents.ForgeHandler.addResources();
+		ModHandler.addResources();
 	}
 
-	public static void onClearGolemModels() {
-		GolemRenderType.clearLoadedRenderSettings();
-	}
-
-    public static void loadBookGui(final Player playerIn, final ItemStack itemstack) {
-        // only load client-side, of course
-        if (!playerIn.getCommandSenderWorld().isClientSide()) {
-            return;
-        }
-        // open the gui
-        Minecraft.getInstance().setScreen(new GolemBookScreen(playerIn, itemstack));
-    }
-
-    public static class ModHandler {
+	public static class ModHandler {
 
 		@SubscribeEvent
 		public static void setupClient(final FMLClientSetupEvent event) {
@@ -57,9 +45,6 @@ public final class EGClientEvents {
 		public static void registerEntityRenderers(final EntityRenderersEvent.RegisterRenderers event) {
 			event.registerEntityRenderer(EGRegistry.GOLEM.get(), GolemRenderer::new);
 		}
-	}
-
-	public static final class ForgeHandler {
 
 		public static void addResources() {
 			ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
@@ -83,6 +68,26 @@ public final class EGClientEvents {
 				});
 			}
 		}
+	}
 
+	public static final class ForgeHandler {
+
+		@SubscribeEvent
+		public static void onDatapackSync(final OnDatapackSyncEvent event) {
+			EGClientEvents.ForgeHandler.onClearGolemModels();
+		}
+
+		public static void onClearGolemModels() {
+			GolemRenderType.clearLoadedRenderSettings();
+		}
+
+		public static void loadBookGui(final Player playerIn, final ItemStack itemstack) {
+			// only load client-side, of course
+			if (!playerIn.getCommandSenderWorld().isClientSide()) {
+				return;
+			}
+			// open the gui
+			Minecraft.getInstance().setScreen(new GolemBookScreen(playerIn, itemstack));
+		}
 	}
 }

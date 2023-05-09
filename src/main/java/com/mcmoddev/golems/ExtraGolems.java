@@ -64,7 +64,6 @@ public class ExtraGolems {
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(ExtraGolems::enqueueIMC);
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(ExtraGolems::onNewRegistry);
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(AddonLoader::onAddPackFinders);
-		MinecraftForge.EVENT_BUS.addListener(ExtraGolems::onDatapackSync);
 		// register client event handlers
 		DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> EGClientEvents::register);
 		// register messages
@@ -98,10 +97,6 @@ public class ExtraGolems {
 	private static void onNewRegistry(final DataPackRegistryEvent.NewRegistry event) {
 		event.dataPackRegistry(Keys.GOLEM_CONTAINERS, GolemContainer.CODEC, GolemContainer.CODEC);
 		event.dataPackRegistry(Keys.GOLEM_MODELS, GolemRenderSettings.CODEC, GolemRenderSettings.CODEC);
-	}
-
-	private static void onDatapackSync(final OnDatapackSyncEvent event) {
-		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> EGClientEvents.onClearGolemModels());
 	}
 
 	/**

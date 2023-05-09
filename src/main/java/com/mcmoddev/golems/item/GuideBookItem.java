@@ -19,7 +19,7 @@ public class GuideBookItem extends Item {
 	public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
 		ItemStack itemstack = playerIn.getItemInHand(handIn);
 		if (playerIn.getCommandSenderWorld().isClientSide()) {
-			EGClientEvents.loadBookGui(playerIn, itemstack);
+			EGClientEvents.ForgeHandler.loadBookGui(playerIn, itemstack);
 		}
 		return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemstack);
 	}
