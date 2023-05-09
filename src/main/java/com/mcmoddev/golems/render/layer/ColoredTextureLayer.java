@@ -20,12 +20,12 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 public class ColoredTextureLayer<T extends GolemBase> extends RenderLayer<T, GolemModel<T>> {
 
 	private static final Vector3f ONE = new Vector3f(1.0F, 1.0F, 1.0F);
-	private static final Pattern LGB_NAME_PATTERN = Pattern.compile("(?i).*lgb.*");
 
 	private final GolemModel<T> layerModel;
 
@@ -53,7 +53,7 @@ public class ColoredTextureLayer<T extends GolemBase> extends RenderLayer<T, Gol
 			int packedOverlay = LivingEntityRenderer.getOverlayCoords(entity, 0.0F);
 			settings.getLayers().forEach(l -> renderTexture(entity, layerModel, settings, l, matrixStackIn, bufferIn, packedLightIn, packedOverlay));
 			// render special layers
-			if(ExtraGolems.CONFIG.pride() || LGB_NAME_PATTERN.matcher(ChatFormatting.stripFormatting(entity.getName().getString())).matches()) {
+			if(ExtraGolems.CONFIG.pride() || ChatFormatting.stripFormatting(entity.getName().getString()).toLowerCase(Locale.ENGLISH).contains("lgb")) {
 				renderTexture(entity, layerModel, settings, LayerRenderSettings.RAINBOW, matrixStackIn, bufferIn, packedLightIn, packedOverlay);
 			}
 		}

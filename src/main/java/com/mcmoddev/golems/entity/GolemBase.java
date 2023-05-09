@@ -52,6 +52,7 @@ import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.WaterBoundPathNavigation;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.npc.InventoryCarrier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.BannerItem;
@@ -815,26 +816,13 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 	public boolean wantsToPickUp(ItemStack stack) {
 		if (stack != null && !stack.isEmpty() && stack.getItem() instanceof ArrowItem
 				&& getContainer().hasBehavior(GolemBehaviors.SHOOT_ARROWS)) {
-			// make sure the entity can pick up this stack
-			for (int i = 0, l = getArrowInventory().getContainerSize(); i < l; i++) {
-				final ItemStack invStack = getArrowInventory().getItem(i);
-				if (invStack.isEmpty() || (invStack.getItem() == stack.getItem() && ItemStack.tagMatches(invStack, stack)
-						&& invStack.getCount() + stack.getCount() <= invStack.getMaxStackSize())) {
-					return true;
-				}
-			}
-			return false;
+			return inventory.canAddItem(stack);
 		}
 		return this.canHoldItem(stack);
 	}
 
 	@Override
-	public boolean canPickUpLoot() {
-		return getContainer().hasBehavior(GolemBehaviors.SHOOT_ARROWS) || super.canPickUpLoot();
-	}
-
-	@Override
-	public SimpleContainer getArrowInventory() {
+	public SimpleContainer getInventory() {
 		return inventory;
 	}
 
@@ -867,22 +855,14 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 	}
 
 	@Override
-	public boolean equipItemIfPossible(ItemStack stack) {
-		if (!stack.isEmpty() && stack.getItem() instanceof ArrowItem
-				&& getContainer().hasBehavior(GolemBehaviors.SHOOT_ARROWS)
-				&& getArrowInventory().canAddItem(stack)) {
-			// attempt to add the arrows to the inventory
-			getArrowInventory().addItem(stack);
-			return true;
-		} else {
-			return super.equipItemIfPossible(stack);
-		}
+	protected void pickUpItem(ItemEntity item) {
+		InventoryCarrier.pickUpItem(this, this, item);
 	}
 
 	@Override
 	public void onItemPickup(ItemEntity itemEntity) {
 		super.onItemPickup(itemEntity);
-		containerChanged(getArrowInventory());
+		containerChanged(getInventory());
 	}
 
 	@Override

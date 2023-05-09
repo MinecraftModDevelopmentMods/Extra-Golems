@@ -4,6 +4,7 @@ import com.mcmoddev.golems.render.GolemModel;
 import com.mcmoddev.golems.render.GolemRenderType;
 import com.mcmoddev.golems.render.GolemRenderer;
 import com.mcmoddev.golems.screen.DispenserGolemScreen;
+import com.mcmoddev.golems.screen.GolemBookScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.resources.model.ModelBakery;
@@ -11,11 +12,11 @@ import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraftforge.api.distmarker.Dist;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
@@ -25,10 +26,6 @@ public final class EGClientEvents {
 		MinecraftForge.EVENT_BUS.register(EGClientEvents.ForgeHandler.class);
 		FMLJavaModLoadingContext.get().getModEventBus().register(EGClientEvents.ModHandler.class);
 		EGClientEvents.ForgeHandler.addResources();
-	}
-
-	public static void onClearGolemModels() {
-		GolemRenderType.clearLoadedRenderSettings();
 	}
 
 	public static class ModHandler {
@@ -74,5 +71,17 @@ public final class EGClientEvents {
 			}
 		}
 
+		public static void onClearGolemModels() {
+			GolemRenderType.clearLoadedRenderSettings();
+		}
+
+		public static void loadBookGui(final Player playerIn, final ItemStack itemstack) {
+			// only load client-side, of course
+			if (!playerIn.getCommandSenderWorld().isClientSide()) {
+				return;
+			}
+			// open the gui
+			Minecraft.getInstance().setScreen(new GolemBookScreen(playerIn, itemstack));
+		}
 	}
 }

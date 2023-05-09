@@ -82,8 +82,6 @@ public final class EGRegistry {
 	);
 
 	////// MENU TYPES //////
-	public static final RegistryObject<MenuType<AbstractContainerMenu>> CRAFTING_GOLEM_MENU = MENU_TYPES.register("crafting_portable",
-			() -> new MenuType<>(PortableCraftingMenu::new));
 	public static final RegistryObject<MenuType<PortableDispenserMenu>> DISPENSER_GOLEM_MENU = MENU_TYPES.register("dispenser_portable",
 			() -> new MenuType<>(PortableDispenserMenu::new));
 

@@ -60,7 +60,7 @@ public class ExtraGolems {
 	public static final DeferredRegister<GolemRenderSettings> GOLEM_MODELS = DeferredRegister.create(Keys.GOLEM_MODELS, MODID);
 	private static final Supplier<IForgeRegistry<GolemRenderSettings>> GOLEM_MODELS_SUPPLIER = GOLEM_MODELS.makeRegistry(() -> new RegistryBuilder<GolemRenderSettings>()
 			.dataPackRegistry(GolemRenderSettings.CODEC, GolemRenderSettings.CODEC)
-			.onClear(((owner, stage) -> DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> EGClientEvents.onClearGolemModels()))));
+			.onClear(((owner, stage) -> DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> EGClientEvents.ForgeHandler.onClearGolemModels()))));
 
 	public ExtraGolems() {
 		// register and load config

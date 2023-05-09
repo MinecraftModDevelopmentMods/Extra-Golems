@@ -29,7 +29,7 @@ public class PortableCraftingMenu extends CraftingMenu {
 
 	@Override
 	public MenuType<?> getType() {
-		return EGRegistry.CRAFTING_GOLEM_MENU.get();
+		return super.getType();
 	}
 
 	public static class Provider implements MenuProvider {
