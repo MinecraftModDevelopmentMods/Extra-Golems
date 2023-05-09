@@ -1,4 +1,4 @@
-package com.mcmoddev.golems.screen;
+package com.mcmoddev.golems.screen.guide_book;
 
 import com.mcmoddev.golems.container.GolemContainer;
 import net.minecraft.ChatFormatting;
@@ -21,6 +21,9 @@ import java.util.Optional;
  * info to use in the Golem Book.
  **/
 public class GolemBookEntry {
+
+	public static final int IMAGE_WIDTH = 100;
+	public static final int IMAGE_HEIGHT = 50;
 
 	private final Block[] buildingBlocks;
 	private final String nameString;

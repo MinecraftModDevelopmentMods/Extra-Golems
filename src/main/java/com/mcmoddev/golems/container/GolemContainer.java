@@ -7,6 +7,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.container.behavior.GolemBehavior;
+import com.mcmoddev.golems.container.behavior.GolemBehaviorKey;
 import com.mcmoddev.golems.container.behavior.GolemBehaviors;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.util.ResourcePair;
@@ -379,8 +380,8 @@ public final class GolemContainer {
 	 * @param name the behavior ID
 	 * @return true if the requested behavior is present in the Golem
 	 */
-	public boolean hasBehavior(final ResourceLocation name) {
-		return !this.getBehaviors().getOrDefault(name, ImmutableList.of()).isEmpty();
+	public boolean hasBehavior(final GolemBehaviorKey<?> name) {
+		return !this.getBehaviors().getOrDefault(name.getId(), ImmutableList.of()).isEmpty();
 	}
 
 	/**
@@ -389,9 +390,9 @@ public final class GolemContainer {
 	 * @return a typed list of the GolemBehaviors, may be empty
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends GolemBehavior> List<T> getBehaviors(final ResourceLocation name) {
-		List<GolemBehavior> behaviorList = behaviors.get(name);
-		if (!behaviorList.isEmpty() && behaviorList.get(0).getClass().isAssignableFrom(GolemBehaviors.CLASS_MAP.get(name))) {
+	public <T extends GolemBehavior> List<T> getBehaviors(final GolemBehaviorKey<T> name) {
+		List<? extends GolemBehavior> behaviorList = behaviors.getOrDefault(name.getId(), ImmutableList.of());
+		if (!behaviorList.isEmpty() && behaviorList.get(0).getClass().isAssignableFrom(name.getClazz())) {
 			return (List<T>) behaviorList;
 		}
 		return ImmutableList.of();

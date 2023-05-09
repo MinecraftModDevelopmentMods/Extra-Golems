@@ -53,6 +53,7 @@ import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.WaterBoundPathNavigation;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.npc.InventoryCarrier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.BannerItem;
@@ -75,7 +76,7 @@ import java.util.Optional;
 /**
  * Base class for all golems in this mod.
  **/
-public class GolemBase extends IronGolem implements IMultitextured, IFuelConsumer, IRandomTeleporter, IRandomExploder, IArrowShooter, IEntityAdditionalSpawnData {
+public class GolemBase extends IronGolem implements InventoryCarrier, IMultitextured, IFuelConsumer, IRandomTeleporter, IRandomExploder, IArrowShooter, IEntityAdditionalSpawnData {
 
 	protected static final EntityDataAccessor<String> MATERIAL = SynchedEntityData.defineId(GolemBase.class, EntityDataSerializers.STRING);
 	protected static final EntityDataAccessor<Boolean> CHILD = SynchedEntityData.defineId(GolemBase.class, EntityDataSerializers.BOOLEAN);
@@ -807,35 +808,22 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 	public double getArrowDamage() {
 		if (getContainer().hasBehavior(GolemBehaviors.SHOOT_ARROWS)) {
 			double multiplier = isBaby() ? 0.5D : 1.0D;
-			return multiplier * getContainer().<ShootArrowsBehavior>getBehaviors(GolemBehaviors.SHOOT_ARROWS).get(0).getDamage();
+			return multiplier * getContainer().getBehaviors(GolemBehaviors.SHOOT_ARROWS).get(0).getDamage();
 		}
 		return 0;
 	}
 
 	@Override
 	public boolean wantsToPickUp(ItemStack stack) {
-		if (stack != null && !stack.isEmpty() && stack.getItem() instanceof ArrowItem
+		if (!stack.isEmpty() && stack.getItem() instanceof ArrowItem
 				&& getContainer().hasBehavior(GolemBehaviors.SHOOT_ARROWS)) {
-			// make sure the entity can pick up this stack
-			for (int i = 0, l = getArrowInventory().getContainerSize(); i < l; i++) {
-				final ItemStack invStack = getArrowInventory().getItem(i);
-				if (invStack.isEmpty() || (invStack.getItem() == stack.getItem() && ItemStack.tagMatches(invStack, stack)
-						&& invStack.getCount() + stack.getCount() <= invStack.getMaxStackSize())) {
-					return true;
-				}
-			}
-			return false;
+			return getInventory().canAddItem(stack);
 		}
 		return this.canHoldItem(stack);
 	}
 
 	@Override
-	public boolean canPickUpLoot() {
-		return getContainer().hasBehavior(GolemBehaviors.SHOOT_ARROWS) || super.canPickUpLoot();
-	}
-
-	@Override
-	public SimpleContainer getArrowInventory() {
+	public SimpleContainer getInventory() {
 		return inventory;
 	}
 
@@ -868,21 +856,27 @@ public class GolemBase extends IronGolem implements IMultitextured, IFuelConsume
 	}
 
 	@Override
+	protected void pickUpItem(ItemEntity item) {
+		InventoryCarrier.pickUpItem(this, this, item);
+	}
+
+	@Override
 	public ItemStack equipItemIfPossible(ItemStack stack) {
-		if (!stack.isEmpty() && stack.getItem() instanceof ArrowItem
+		/*if (!stack.isEmpty() && stack.getItem() instanceof ArrowItem
 				&& getContainer().hasBehavior(GolemBehaviors.SHOOT_ARROWS)
 				&& getArrowInventory().canAddItem(stack)) {
 			// attempt to add the arrows to the inventory
 			return getArrowInventory().addItem(stack);
 		} else {
-			return super.equipItemIfPossible(stack);
-		}
+
+		}*/
+		return super.equipItemIfPossible(stack);
 	}
 
 	@Override
 	public void onItemPickup(ItemEntity itemEntity) {
 		super.onItemPickup(itemEntity);
-		containerChanged(getArrowInventory());
+		containerChanged(getInventory());
 	}
 
 	@Override

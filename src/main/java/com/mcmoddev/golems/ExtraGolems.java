@@ -14,6 +14,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.ModList;
@@ -26,15 +28,12 @@ import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.RegistryBuilder;
+import net.minecraftforge.registries.DataPackRegistryEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.Map.Entry;
-import java.util.function.Supplier;
 
 @Mod(ExtraGolems.MODID)
 public class ExtraGolems {
@@ -50,18 +49,6 @@ public class ExtraGolems {
 	private static final String PROTOCOL_VERSION = "3";
 	public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(new ResourceLocation(MODID, "channel"), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
 
-	////// GOLEM CONTAINERS //////
-	public static final DeferredRegister<GolemContainer> GOLEM_CONTAINERS = DeferredRegister.create(Keys.GOLEM_CONTAINERS, MODID);
-	private static final Supplier<IForgeRegistry<GolemContainer>> GOLEM_CONTAINERS_SUPPLIER = GOLEM_CONTAINERS.makeRegistry(() -> new RegistryBuilder<GolemContainer>()
-			.dataPackRegistry(GolemContainer.CODEC, GolemContainer.CODEC)
-			.hasTags());
-
-	////// GOLEM MODELS //////
-	public static final DeferredRegister<GolemRenderSettings> GOLEM_MODELS = DeferredRegister.create(Keys.GOLEM_MODELS, MODID);
-	private static final Supplier<IForgeRegistry<GolemRenderSettings>> GOLEM_MODELS_SUPPLIER = GOLEM_MODELS.makeRegistry(() -> new RegistryBuilder<GolemRenderSettings>()
-			.dataPackRegistry(GolemRenderSettings.CODEC, GolemRenderSettings.CODEC)
-			.onClear(((owner, stage) -> DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> EGClientEvents.onClearGolemModels()))));
-
 	public ExtraGolems() {
 		// register and load config
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, SPEC);
@@ -73,16 +60,18 @@ public class ExtraGolems {
 		GolemBehaviors.init();
 		// register event handlers
 		EGEvents.register();
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(ExtraGolems::setup);
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(ExtraGolems::enqueueIMC);
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(ExtraGolems::onNewRegistry);
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(AddonLoader::onAddPackFinders);
+		MinecraftForge.EVENT_BUS.addListener(ExtraGolems::onDatapackSync);
 		// register client event handlers
 		DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> EGClientEvents::register);
 		// register messages
 		int messageId = 0;
 	}
 
-	private void setup(final FMLCommonSetupEvent event) {
+	private static void setup(final FMLCommonSetupEvent event) {
 		// init addons
 		AddonLoader.init();
 		// register dispenser behavior
@@ -90,7 +79,7 @@ public class ExtraGolems {
 		GolemHeadBlock.registerDispenserBehavior();
 	}
 
-	private void enqueueIMC(final InterModEnqueueEvent event) {
+	private static void enqueueIMC(final InterModEnqueueEvent event) {
 		// register TheOneProbe integration
 		if (ModList.get().isLoaded("theoneprobe")) {
 			ExtraGolems.LOGGER.info("Extra Golems detected TheOneProbe, registering plugin now");
@@ -98,12 +87,21 @@ public class ExtraGolems {
 		}
 	}
 
-	public static void loadConfig(final ModConfigEvent.Loading event) {
+	private static void loadConfig(final ModConfigEvent.Loading event) {
 		CONFIG.bake();
 	}
 
-	public static void reloadConfig(final ModConfigEvent.Reloading event) {
+	private static void reloadConfig(final ModConfigEvent.Reloading event) {
 		CONFIG.bake();
+	}
+
+	private static void onNewRegistry(final DataPackRegistryEvent.NewRegistry event) {
+		event.dataPackRegistry(Keys.GOLEM_CONTAINERS, GolemContainer.CODEC, GolemContainer.CODEC);
+		event.dataPackRegistry(Keys.GOLEM_MODELS, GolemRenderSettings.CODEC, GolemRenderSettings.CODEC);
+	}
+
+	private static void onDatapackSync(final OnDatapackSyncEvent event) {
+		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> EGClientEvents.onClearGolemModels());
 	}
 
 	/**

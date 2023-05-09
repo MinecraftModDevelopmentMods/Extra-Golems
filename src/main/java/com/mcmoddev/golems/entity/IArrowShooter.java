@@ -11,6 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RangedAttackGoal;
 import net.minecraft.world.entity.monster.RangedAttackMob;
+import net.minecraft.world.entity.npc.InventoryCarrier;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.AbstractArrow.Pickup;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
@@ -21,7 +22,7 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.function.BiPredicate;
 
-public interface IArrowShooter extends RangedAttackMob, ContainerListener {
+public interface IArrowShooter extends RangedAttackMob, ContainerListener, InventoryCarrier {
 
 	String KEY_INVENTORY = "Items";
 	String KEY_SLOT = "Slot";
@@ -62,11 +63,6 @@ public interface IArrowShooter extends RangedAttackMob, ContainerListener {
 	void initArrowInventory();
 
 	/**
-	 * @return the arrow inventory container
-	 **/
-	SimpleContainer getArrowInventory();
-
-	/**
 	 * @return the RangedAttackGoal
 	 **/
 	RangedAttackGoal getRangedGoal();
@@ -93,7 +89,7 @@ public interface IArrowShooter extends RangedAttackMob, ContainerListener {
 	@Override
 	default void performRangedAttack(LivingEntity target, float distanceFactor) {
 		final GolemBase entity = getGolemEntity();
-		ItemStack itemstack = findArrowsInInventory(getArrowInventory());
+		ItemStack itemstack = findArrowsInInventory(getInventory());
 		if (!itemstack.isEmpty()) {
 			// first, raytrace to ensure no other creatures are in the way
 			Vec3 pos = entity.position().add(0, entity.getBbHeight() * 0.55F, 0);
@@ -131,36 +127,8 @@ public interface IArrowShooter extends RangedAttackMob, ContainerListener {
 			entity.level.addFreshEntity(arrow);
 			// update itemstack and inventory
 			itemstack.shrink(1);
-			containerChanged(getArrowInventory());
+			containerChanged(getInventory());
 		}
-	}
-
-	default void saveArrowInventory(final CompoundTag tag) {
-		ListTag listNBT = new ListTag();
-		// write inventory slots to NBT
-		for (int i = 0; i < getArrowInventory().getContainerSize(); i++) {
-			ItemStack stack = getArrowInventory().getItem(i);
-			if (!stack.isEmpty()) {
-				CompoundTag slotNBT = new CompoundTag();
-				slotNBT.putByte(KEY_SLOT, (byte) i);
-				stack.save(slotNBT);
-				listNBT.add(slotNBT);
-			}
-		}
-		tag.put(KEY_INVENTORY, listNBT);
-	}
-
-	default void loadArrowInventory(final CompoundTag tag) {
-		final ListTag list = tag.getList(KEY_INVENTORY, 10);
-		// read inventory slots from NBT
-		for (int i = 0; i < list.size(); i++) {
-			CompoundTag slotNBT = list.getCompound(i);
-			int slotNum = slotNBT.getByte(KEY_SLOT) & 0xFF;
-			if (slotNum >= 0 && slotNum < getArrowInventory().getContainerSize()) {
-				getArrowInventory().setItem(slotNum, ItemStack.of(slotNBT));
-			}
-		}
-		containerChanged(getArrowInventory());
 	}
 
 	default void updateCombatTask(final boolean forceMelee) {
@@ -190,12 +158,10 @@ public interface IArrowShooter extends RangedAttackMob, ContainerListener {
 	}
 
 	default void dropArrowInventory() {
-		if (this.getArrowInventory() != null) {
-			for (int i = 0; i < this.getArrowInventory().getContainerSize(); ++i) {
-				ItemStack itemstack = this.getArrowInventory().getItem(i);
-				if (!itemstack.isEmpty()) {
-					this.getGolemEntity().spawnAtLocation(itemstack);
-				}
+		for (int i = 0; i < this.getInventory().getContainerSize(); ++i) {
+			ItemStack itemstack = this.getInventory().getItem(i);
+			if (!itemstack.isEmpty()) {
+				this.getGolemEntity().spawnAtLocation(itemstack);
 			}
 		}
 	}
@@ -203,8 +169,8 @@ public interface IArrowShooter extends RangedAttackMob, ContainerListener {
 	default int countArrowsInInventory() {
 		int arrowCount = 0;
 		// add up the size of each itemstack in inventory
-		for (int i = 0, l = getArrowInventory().getContainerSize(); i < l; i++) {
-			final ItemStack stack = getArrowInventory().getItem(i);
+		for (int i = 0, l = getInventory().getContainerSize(); i < l; i++) {
+			final ItemStack stack = getInventory().getItem(i);
 			if (!stack.isEmpty() && stack.getItem() instanceof ArrowItem) {
 				arrowCount += stack.getCount();
 			}

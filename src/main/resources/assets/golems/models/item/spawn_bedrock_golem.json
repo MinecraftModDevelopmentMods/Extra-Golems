@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-	"layer0": "golems:items/spawn_bedrock"
+	"layer0": "golems:item/spawn_bedrock_golem"
   }
 }

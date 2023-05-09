@@ -1,6 +1,6 @@
 package com.mcmoddev.golems.item;
 
-import com.mcmoddev.golems.screen.EGScreenLoader;
+import com.mcmoddev.golems.EGClientEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -19,7 +19,7 @@ public class GuideBookItem extends Item {
 	public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
 		ItemStack itemstack = playerIn.getItemInHand(handIn);
 		if (playerIn.getCommandSenderWorld().isClientSide()) {
-			EGScreenLoader.loadBookGui(playerIn, itemstack);
+			EGClientEvents.loadBookGui(playerIn, itemstack);
 		}
 		return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemstack);
 	}

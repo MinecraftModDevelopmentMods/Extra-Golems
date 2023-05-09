@@ -52,6 +52,7 @@ public class ShootArrowsBehavior extends GolemBehavior {
 		// modify follow range
 		entity.getAttribute(Attributes.FOLLOW_RANGE).addPermanentModifier(rangeModifier);
 		entity.goalSelector.addGoal(4, new MoveToItemGoal(entity, 10.0D, 30, 1.0D));
+		entity.setCanPickUpLoot(true);
 	}
 
 	@Override
@@ -73,7 +74,7 @@ public class ShootArrowsBehavior extends GolemBehavior {
 			}
 			entity.setPlayerInMenu(player);
 			// open dispenser GUI by sending request to server
-			NetworkHooks.openScreen((ServerPlayer) player, new PortableDispenserMenu.Provider(entity.getArrowInventory()));
+			NetworkHooks.openScreen((ServerPlayer) player, new PortableDispenserMenu.Provider(entity.getInventory()));
 			player.swing(hand);
 		}
 	}
@@ -95,12 +96,12 @@ public class ShootArrowsBehavior extends GolemBehavior {
 
 	@Override
 	public void onWriteData(final GolemBase entity, final CompoundTag tag) {
-		entity.saveArrowInventory(tag);
+		entity.writeInventoryToTag(tag);
 	}
 
 	@Override
 	public void onReadData(final GolemBase entity, final CompoundTag tag) {
-		entity.loadArrowInventory(tag);
+		entity.readInventoryFromTag(tag);
 	}
 
 	@Override

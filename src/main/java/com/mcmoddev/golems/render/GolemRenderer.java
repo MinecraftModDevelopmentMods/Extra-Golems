@@ -99,6 +99,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
 				disableLayers = true;
 			} else if ("yeti".equalsIgnoreCase(name)) {
 				texture = specialTexture3;
+				disableLayers = true;
 			}
 		}
 		this.getModel().disableLayers(disableLayers);
@@ -122,7 +123,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
 	}
 
 	protected static boolean isSpecial(final ResourceLocation texture) {
-		return texture == boneTexture || texture == specialTexture || texture == specialTexture2;
+		return texture == boneTexture || texture == specialTexture || texture == specialTexture2 || texture == specialTexture3;
 	}
 
 	protected static <T extends GolemBase> boolean isDynamic(final T entity, final ResourceLocation texture, final GolemRenderSettings settings) {

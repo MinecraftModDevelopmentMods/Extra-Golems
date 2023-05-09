@@ -1,6 +1,5 @@
 package com.mcmoddev.golems.menu;
 
-import com.mcmoddev.golems.EGRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
@@ -29,7 +28,7 @@ public class PortableCraftingMenu extends CraftingMenu {
 
 	@Override
 	public MenuType<?> getType() {
-		return EGRegistry.CRAFTING_GOLEM_MENU.get();
+		return super.getType();
 	}
 
 	public static class Provider implements MenuProvider {
