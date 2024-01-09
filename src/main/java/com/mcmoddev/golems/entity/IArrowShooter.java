@@ -33,7 +33,7 @@ public interface IArrowShooter extends RangedAttackMob, ContainerListener, Inven
 			// make sure the entity can pick up this stack
 			for (int i = 0, l = inventory.getContainerSize(); i < l; i++) {
 				final ItemStack invStack = inventory.getItem(i);
-				if (invStack.isEmpty() || (invStack.getItem() == stack.getItem() && ItemStack.tagMatches(invStack, stack)
+				if (invStack.isEmpty() || (ItemStack.isSameItemSameTags(invStack, stack)
 						&& invStack.getCount() + stack.getCount() <= invStack.getMaxStackSize())) {
 					return true;
 				}
@@ -80,7 +80,7 @@ public interface IArrowShooter extends RangedAttackMob, ContainerListener, Inven
 	@Override
 	default void containerChanged(Container container) {
 		GolemBase entity = getGolemEntity();
-		if (!entity.level.isClientSide()) {
+		if (!entity.level().isClientSide()) {
 			entity.setArrowsInInventory(countArrowsInInventory());
 			entity.updateCombatTask(false);
 		}
@@ -104,7 +104,7 @@ public interface IArrowShooter extends RangedAttackMob, ContainerListener, Inven
 				final double z = pos.z + scaled.z;
 				final AABB aabb = new AABB(x - 0.2D, y - 0.2D, z - 0.2D, x + 0.2D, y + 0.2D, z + 0.2D);
 				// if any entity at this location cannot be attacked, exit the function
-				for (final Entity e : entity.level.getEntities(entity, aabb)) {
+				for (final Entity e : entity.level().getEntities(entity, aabb)) {
 					if (!entity.canAttackType(e.getType())) {
 						return;
 					}
@@ -118,13 +118,13 @@ public interface IArrowShooter extends RangedAttackMob, ContainerListener, Inven
 			double d2 = target.getZ() - entity.getZ();
 			double d3 = Math.sqrt(d0 * d0 + d2 * d2);
 			// set location and attributes
-			arrow.shoot(d0, d1 + d3 * (double) 0.2F, d2, 1.6F, (float) (14 - entity.level.getDifficulty().getId() * 4));
+			arrow.shoot(d0, d1 + d3 * (double) 0.2F, d2, 1.6F, (float) (14 - entity.level().getDifficulty().getId() * 4));
 			arrow.pickup = Pickup.ALLOWED;
 			arrow.setOwner(entity);
 			arrow.setBaseDamage(getArrowDamage());
 			// play sound and add arrow to world
 			entity.playSound(SoundEvents.ARROW_SHOOT, 1.0F, 1.0F / (entity.getRandom().nextFloat() * 0.4F + 0.8F));
-			entity.level.addFreshEntity(arrow);
+			entity.level().addFreshEntity(arrow);
 			// update itemstack and inventory
 			itemstack.shrink(1);
 			containerChanged(getInventory());
@@ -133,7 +133,7 @@ public interface IArrowShooter extends RangedAttackMob, ContainerListener, Inven
 
 	default void updateCombatTask(final boolean forceMelee) {
 		final GolemBase entity = getGolemEntity();
-		if (!entity.level.isClientSide()) {
+		if (!entity.level().isClientSide()) {
 			// remove both goals (clean slate)
 			entity.goalSelector.removeGoal(getMeleeGoal());
 			entity.goalSelector.removeGoal(getRangedGoal());

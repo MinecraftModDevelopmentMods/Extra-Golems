@@ -39,7 +39,7 @@ public class PassiveEffectsGoal extends Goal {
 		if (effects.length <= 0) {
 			return false;
 		}
-		if (nightOnly && golem.level.isDay() && golem.level.dimensionType().hasSkyLight()) {
+		if (nightOnly && golem.level().isDay() && golem.level().dimensionType().hasSkyLight()) {
 			return false;
 		}
 		if (target == BehaviorParameter.Target.ENEMY && null == golem.getTarget()) {
@@ -63,7 +63,7 @@ public class PassiveEffectsGoal extends Goal {
 				double inflate = range > 0 ? range : 2.0D;
 				TargetingConditions condition = TargetingConditions.forNonCombat()
 						.ignoreLineOfSight().ignoreInvisibilityTesting();
-				List<LivingEntity> targets = this.golem.level.getNearbyEntities(LivingEntity.class,
+				List<LivingEntity> targets = this.golem.level().getNearbyEntities(LivingEntity.class,
 						condition, this.golem, this.golem.getBoundingBox().inflate(inflate));
 				// apply to each entity in the list
 				for (LivingEntity target : targets) {

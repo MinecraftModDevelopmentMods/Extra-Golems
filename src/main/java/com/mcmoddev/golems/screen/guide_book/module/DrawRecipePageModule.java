@@ -3,7 +3,9 @@ package com.mcmoddev.golems.screen.guide_book.module;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.core.NonNullList;
@@ -19,8 +21,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class DrawRecipePageModule extends DrawPageModule {
-
-	protected final ItemRenderer itemRenderer;
 	protected final ResourceLocation texture;
 	protected final int imageWidth;
 	protected final int imageHeight;
@@ -31,11 +31,9 @@ public class DrawRecipePageModule extends DrawPageModule {
 	protected CraftingRecipe recipe;
 	protected ItemStack[] ingredients;
 
-	public DrawRecipePageModule(Font font, int width, int height, int margin,
-								ItemRenderer itemRenderer, ResourceLocation texture,
+	public DrawRecipePageModule(Font font, int width, int height, int margin, ResourceLocation texture,
 								int imageWidth, int imageHeight, int u, int v) {
 		super(font, width, height, margin);
-		this.itemRenderer = itemRenderer;
 		this.texture = texture;
 		this.imageWidth = imageWidth;
 		this.imageHeight = imageHeight;
@@ -87,29 +85,24 @@ public class DrawRecipePageModule extends DrawPageModule {
 	}
 
 	@Override
-	public void render(Screen parent, PoseStack poseStack, float partialTicks) {
-		drawBasicPage(poseStack, title, body);
-		drawRecipe(parent, poseStack);
-		drawPageNum(poseStack);
+	public void render(Screen parent, GuiGraphics graphics, float partialTicks) {
+		drawBasicPage(graphics, title, body);
+		drawRecipe(parent, graphics);
+		drawPageNum(graphics);
 	}
 
-	protected void drawRecipe(final Screen parent, final PoseStack matrix) {
+	protected void drawRecipe(final Screen parent, final GuiGraphics graphics) {
 		final int startX = x + margin * 2;
 		final int startY = y + margin * 2;
 		final int frameWidth = 3;
-		/** texture location and size of 2x2 crafting **/
-		matrix.pushPose();
-		matrix.scale(scale, scale, scale);
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		// draw 2x2 grid background
-		RenderSystem.setShaderTexture(0, texture);
-		parent.blit(matrix, startX, startY, u, v, imageWidth, imageHeight);
+		graphics.pose().pushPose();
+		graphics.pose().scale(scale, scale, scale);
+		graphics.blit(texture, startX, startY, u, v, imageWidth, imageHeight);
 
 		// draw itemstacks
 		if(null == recipe) {
 			return;
 		}
-		Lighting.setupForFlatItems();
 		float posX;
 		float posY;
 		int iconW = 15;
@@ -119,19 +112,19 @@ public class DrawRecipePageModule extends DrawPageModule {
 			case 4:
 				posX = startX + iconW + frameWidth * 3.0F;
 				posY = startY  + iconW + frameWidth * 3.0F;
-				this.itemRenderer.renderGuiItem(ingredients[3], (int) (posX / scale), (int) (posY / scale));
+				graphics.renderItem(ingredients[3], (int) (posX / scale), (int) (posY / scale));
 			case 3:
 				posX = startX + frameWidth * 2.0F;
 				posY = startY  + iconW + frameWidth * 3.0F;
-				this.itemRenderer.renderGuiItem(ingredients[2], (int) (posX / scale), (int) (posY / scale));
+				graphics.renderItem(ingredients[2], (int) (posX / scale), (int) (posY / scale));
 			case 2:
 				posX = startX + iconW + frameWidth * 3.0F;
 				posY = startY  + frameWidth * 2.0F;
-				this.itemRenderer.renderGuiItem(ingredients[1], (int) (posX / scale), (int) (posY / scale));
+				graphics.renderItem(ingredients[1], (int) (posX / scale), (int) (posY / scale));
 			case 1:
 				posX = startX + frameWidth * 2.0F;
 				posY = startY  + frameWidth * 2.0F;
-				this.itemRenderer.renderGuiItem(ingredients[0], (int) (posX / scale), (int) (posY / scale));
+				graphics.renderItem(ingredients[0], (int) (posX / scale), (int) (posY / scale));
 			default:
 				break;
 		}
@@ -139,10 +132,10 @@ public class DrawRecipePageModule extends DrawPageModule {
 		// draw result itemstack
 		posX = startX + imageWidth - 16.0F - frameWidth * 2.0F;
 		posY = startY  + 16.0F;
-		this.itemRenderer.renderGuiItem(recipe.getResultItem(), (int) (posX / scale), (int) (posY / scale));
-		this.itemRenderer.renderGuiItemDecorations(font, recipe.getResultItem(), (int) (posX / scale), (int) (posY / scale));
+		graphics.renderItem(recipe.getResultItem(Minecraft.getInstance().level.registryAccess()), (int) (posX / scale), (int) (posY / scale));
+		graphics.renderItemDecorations(font, recipe.getResultItem(Minecraft.getInstance().level.registryAccess()), (int) (posX / scale), (int) (posY / scale));
 		// reset scale
-		matrix.popPose();
+		graphics.pose().popPose();
 	}
 
 }

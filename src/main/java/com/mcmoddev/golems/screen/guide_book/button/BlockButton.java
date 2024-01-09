@@ -3,6 +3,7 @@ package com.mcmoddev.golems.screen.guide_book.button;
 import com.mcmoddev.golems.screen.guide_book.GolemBookScreen;
 import com.mcmoddev.golems.screen.guide_book.module.DrawBlockModule;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
@@ -34,19 +35,14 @@ public class BlockButton extends Button {
 	}
 
 	@Override
-	public void renderButton(final PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
-		if (this.visible) {
-			// update hovered flag
-			this.isHovered = mouseX >= this.getX() && mouseY >= this.getY() && mouseX < this.getX() + this.width && mouseY < this.getY() + this.height;
-			// draw the block
-			matrix.pushPose();
-			this.drawBlockModule
-					.withBlock(this.currentBlock)
-					.withScale(this.scale)
-					.withPos(this.getX() - margin - 4, this.getY() - margin)
-					.render(parent, matrix, partialTicks);
-			matrix.popPose();
-		}
+	public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		this.isHovered = mouseX >= this.getX() && mouseY >= this.getY() && mouseX < this.getX() + this.width && mouseY < this.getY() + this.height;
+		// draw the block
+		this.drawBlockModule
+			.withBlock(this.currentBlock)
+			.withScale(this.scale)
+			.withPos(this.getX() - margin - 4, this.getY() - margin)
+			.render(parent, graphics, partialTicks);
 	}
 
 	public void tick(final Screen parent, final int ticksOpen) {

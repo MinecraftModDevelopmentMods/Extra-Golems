@@ -7,10 +7,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.AABB;
 
 import java.util.List;
@@ -21,7 +21,7 @@ public class PowerBlock extends UtilityBlock {
 	public static final int UPDATE_TICKS = 4;
 
 	public PowerBlock(final int powerLevel) {
-		super(Properties.of(Material.GLASS).randomTicks(), UPDATE_TICKS);
+		super(Properties.copy(Blocks.GLASS).randomTicks(), UPDATE_TICKS);
 		this.registerDefaultState(this.defaultBlockState().setValue(POWER_LEVEL, powerLevel));
 	}
 

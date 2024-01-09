@@ -15,6 +15,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.SpawnUtil;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
@@ -79,7 +80,7 @@ public final class EGEvents {
 		 */
 		@SubscribeEvent
 		public static void onLivingHurt(final LivingHurtEvent event) {
-			if(event.getEntity() instanceof AbstractVillager && event.getSource().isProjectile()
+			if(event.getEntity() instanceof AbstractVillager && event.getSource().is(DamageTypes.MOB_PROJECTILE)
 					&& event.getSource().getEntity() instanceof GolemBase golem
 					&& golem.getContainer().hasBehavior(GolemBehaviors.SHOOT_ARROWS)) {
 				event.setCanceled(true);
@@ -110,7 +111,7 @@ public final class EGEvents {
 		@SubscribeEvent
 		public static void onLivingUpdate(final LivingEvent.LivingTickEvent event) {
 			if (event.getEntity().isEffectiveAi()
-					&& event.getEntity().level instanceof ServerLevel serverLevel
+					&& event.getEntity().level() instanceof ServerLevel serverLevel
 					&& ExtraGolems.CONFIG.villagerSummonChance() > 0
 					&& event.getEntity() instanceof Villager villager
 					&& !villager.isSleeping()
@@ -130,7 +131,7 @@ public final class EGEvents {
 					if(entity.isPresent()) {
 						GolemBase golem = entity.get();
 						// determine material
-						ResourceLocation material = getGolemToSpawn(villager.getLevel(), villager.blockPosition(), villager.getRandom());
+						ResourceLocation material = getGolemToSpawn(villager.level(), villager.blockPosition(), villager.getRandom());
 						if(null == material) {
 							golem.discard();
 							return;

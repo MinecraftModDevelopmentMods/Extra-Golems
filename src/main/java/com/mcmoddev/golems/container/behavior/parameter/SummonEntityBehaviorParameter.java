@@ -77,23 +77,23 @@ public class SummonEntityBehaviorParameter extends BehaviorParameter {
 	public void apply(final GolemBase self, @Nullable final Entity angerTarget) {
 		// determine the random chance of trigger, taking rain into account
 		double chanceApply = chance;
-		if (self.level.isRainingAt(self.blockPosition())) {
+		if (self.level().isRainingAt(self.blockPosition())) {
 			chanceApply += bonusChanceInRain;
 		}
-		if (!self.level.isClientSide() && self.getRandom().nextFloat() < chanceApply) {
+		if (!self.level().isClientSide() && self.getRandom().nextFloat() < chanceApply) {
 			// create an entity to add to the level
-			Optional<Entity> entity = EntityType.create(compoundTag, self.level);
-			if (entity.isPresent() && self.level instanceof ServerLevel) {
+			Optional<Entity> entity = EntityType.create(compoundTag, self.level());
+			if (entity.isPresent() && self.level() instanceof ServerLevel) {
 				// read entity from compound tag
 				entity.get().load(compoundTag);
 				// determine spawn position for the entity
 				Vec3 pos = (targetPos == Target.SELF || angerTarget == null ? self.position() : angerTarget.position());
 				entity.get().moveTo(pos.x, pos.y, pos.z);
 				// add the entity to the level
-				self.level.addFreshEntity(entity.get());
+				self.level().addFreshEntity(entity.get());
 				// process mob entity
 				if (entity.get() instanceof Mob) {
-					((Mob) entity.get()).finalizeSpawn((ServerLevel) self.level, self.level.getCurrentDifficultyAt(new BlockPos(pos)), MobSpawnType.MOB_SUMMONED, null, null);
+					((Mob) entity.get()).finalizeSpawn((ServerLevel) self.level(), self.level().getCurrentDifficultyAt(BlockPos.containing(pos)), MobSpawnType.MOB_SUMMONED, null, null);
 					if (target == Target.ENEMY && angerTarget != null) {
 						((Mob) entity.get()).setTarget(self.getTarget());
 					}

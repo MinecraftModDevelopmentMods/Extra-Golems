@@ -20,7 +20,7 @@ public class SwimUpGoal extends Goal {
 	}
 
 	public boolean canUse() {
-		return (!golem.level.isDay() && golem.isInWater() && golem.getY() < (this.targetY - 2.5D));
+		return (!golem.level().isDay() && golem.isInWater() && golem.getY() < (this.targetY - 2.5D));
 	}
 
 	@Override

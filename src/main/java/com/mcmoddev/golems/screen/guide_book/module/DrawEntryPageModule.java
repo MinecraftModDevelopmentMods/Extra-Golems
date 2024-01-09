@@ -4,6 +4,7 @@ import com.mcmoddev.golems.screen.guide_book.GolemBookEntry;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.MutableComponent;
 
@@ -27,33 +28,31 @@ public class DrawEntryPageModule extends DrawPageModule {
 	}
 
 	@Override
-	public void render(Screen parent, PoseStack poseStack, float partialTicks) {
-		drawEntry(parent, poseStack);
-		drawPageNum(poseStack);
+	public void render(Screen parent, GuiGraphics graphics, float partialTicks) {
+		drawEntry(parent, graphics);
+		drawPageNum(graphics);
 	}
 
-	protected void drawEntry(final Screen parent, final PoseStack poseStack) {
+	protected void drawEntry(final Screen parent, final GuiGraphics graphics) {
 		// 'entity name' text box
 		int nameX = x + margin * 4;
 		int nameY = y + margin;
-		this.font.drawWordWrap(title, nameX, nameY, (width / 2) - margin * 5, 0);
+		graphics.drawWordWrap(font, title, nameX, nameY, (width / 2) - margin * 5, 0);
 
 		// 'entity stats' text box
 		int statsX = x + margin;
 		int statsY = nameY + margin * 2;
 		MutableComponent stats = entry.getDescriptionPage();
-		this.font.drawWordWrap(stats, statsX, statsY, (width / 2) - (margin * 2), 0);
+		graphics.drawWordWrap(font, stats, statsX, statsY, (width / 2) - (margin * 2), 0);
 
 		// 'screenshot' (supplemental image)
 		if (entry.hasImage()) {
-			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 			float scale = 0.9F;
 			int imgX = x + (width / 4) - (int) ((imageWidth * scale) / 2.0F);
 			int imgY = x + width - (int) (imageHeight * scale) - (margin * 2);
-			RenderSystem.setShaderTexture(0, entry.getImageResource());
 			int w = (int) (imageWidth * scale);
 			int h = (int) (imageHeight * scale);
-			Screen.blit(poseStack, imgX, imgY, 0, 0, w, h, w, h);
+			graphics.blit(entry.getImageResource(), imgX, imgY, 0, 0, w, h, w, h);
 		}
 	}
 

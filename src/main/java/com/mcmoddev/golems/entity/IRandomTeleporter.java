@@ -42,7 +42,7 @@ public interface IRandomTeleporter {
 		final boolean flag = mob.randomTeleport(event.getTargetX(), event.getTargetY(), event.getTargetZ(), true);
 
 		if (flag) {
-			mob.level.playSound(null, mob.xo, mob.yo, mob.zo, SoundEvents.ENDERMAN_TELEPORT, mob.getSoundSource(), 1.0F, 1.0F);
+			mob.level().playSound(null, mob.xo, mob.yo, mob.zo, SoundEvents.ENDERMAN_TELEPORT, mob.getSoundSource(), 1.0F, 1.0F);
 			mob.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
 		}
 

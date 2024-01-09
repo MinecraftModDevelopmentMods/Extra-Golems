@@ -5,10 +5,16 @@ import com.mcmoddev.golems.entity.goal.ExplodeGoal;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
+import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -67,7 +73,7 @@ public class ExplodeBehavior extends GolemBehavior {
 
 	@Override
 	public void onActuallyHurt(final GolemBase entity, final DamageSource source, final float amount) {
-		if (source.isFire() || entity.getRandom().nextFloat() < chanceOnHurt) {
+		if (source.is(DamageTypes.ON_FIRE) || source.is(DamageTypes.IN_FIRE) || entity.getRandom().nextFloat() < chanceOnHurt) {
 			entity.lightFuse();
 		}
 	}
@@ -80,10 +86,11 @@ public class ExplodeBehavior extends GolemBehavior {
 	@Override
 	public void onMobInteract(final GolemBase entity, final Player player, final InteractionHand hand) {
 		final ItemStack itemstack = player.getItemInHand(hand);
-		if (!itemstack.isEmpty() && itemstack.getItem() == Items.FLINT_AND_STEEL) {
+		if (itemstack.is(ItemTags.CREEPER_IGNITERS)) {
 			// play sound and swing hand
 			final Vec3 pos = entity.position();
-			entity.level.playSound(player, pos.x, pos.y, pos.z, SoundEvents.FLINTANDSTEEL_USE, entity.getSoundSource(), 1.0F,
+			SoundEvent sound = itemstack.is(Items.FIRE_CHARGE) ? SoundEvents.FIRECHARGE_USE : SoundEvents.FLINTANDSTEEL_USE;
+			entity.level().playSound(player, pos.x, pos.y, pos.z, sound, entity.getSoundSource(), 1.0F,
 					entity.getRandom().nextFloat() * 0.4F + 0.8F);
 			player.swing(hand);
 

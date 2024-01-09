@@ -3,6 +3,7 @@ package com.mcmoddev.golems.screen.guide_book.module;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
 
@@ -25,20 +26,18 @@ public class DrawTableOfContentsPageModule extends DrawPageModule {
 	}
 
 	@Override
-	public void render(Screen parent, PoseStack poseStack, float partialTicks) {
-		drawBackground(parent, poseStack);
-		drawBasicPage(poseStack, title, body);
-		drawPageNum(poseStack);
+	public void render(Screen parent, GuiGraphics graphics, float partialTicks) {
+		drawBackground(parent, graphics);
+		drawBasicPage(graphics, title, body);
+		drawPageNum(graphics);
 	}
 
-	protected void drawPageNum(final PoseStack poseStack) {
-		super.drawPageNum(poseStack);
+	protected void drawPageNum(final GuiGraphics graphics) {
+		super.drawPageNum(graphics);
 	}
 
-	protected void drawBackground(final Screen parent, final PoseStack poseStack) {
+	protected void drawBackground(final Screen parent, final GuiGraphics graphics) {
 		// draw background
-		RenderSystem.setShaderTexture(0, texture);
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		parent.blit(poseStack, x + margin + 1, y + margin * 2 - 1, u, v, tableWidth, tableHeight);
+		graphics.blit(texture, x + margin + 1, y + margin * 2 - 1, u, v, tableWidth, tableHeight);
 	}
 }

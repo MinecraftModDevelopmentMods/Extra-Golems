@@ -12,10 +12,9 @@ import com.mcmoddev.golems.screen.guide_book.module.DrawEntryPageModule;
 import com.mcmoddev.golems.screen.guide_book.module.DrawPageModule;
 import com.mcmoddev.golems.screen.guide_book.module.DrawRecipePageModule;
 import com.mcmoddev.golems.screen.guide_book.module.DrawTableOfContentsPageModule;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.Screen;
@@ -134,8 +133,8 @@ public class GolemBookScreen extends Screen implements ScrollButton.IScrollListe
 		super(EGRegistry.INFO_BOOK.get().getDescription());
 		this.initGolemBookEntries();
 		// init variables
-		this.spellRecipe = DrawRecipePageModule.loadRecipe(playerIn.level.getRecipeManager(), SPELL_RECIPE);
-		this.headRecipe = DrawRecipePageModule.loadRecipe(playerIn.level.getRecipeManager(), HEAD_RECIPE);
+		this.spellRecipe = DrawRecipePageModule.loadRecipe(playerIn.level().getRecipeManager(), SPELL_RECIPE);
+		this.headRecipe = DrawRecipePageModule.loadRecipe(playerIn.level().getRecipeManager(), HEAD_RECIPE);
 		this.page = 0;
 		this.totalPages = INTRO_PAGE_COUNT + golemBookEntryList.size();
 		this.tableOfContentsBtns = new GolemEntryButton[GOLEM_BOOK_ENTRY_COUNT];
@@ -146,10 +145,10 @@ public class GolemBookScreen extends Screen implements ScrollButton.IScrollListe
 	@Override
 	public void init() {
 		// init modules
-		this.drawBlockModule = new DrawBlockModule(this.itemRenderer, MARGIN);
+		this.drawBlockModule = new DrawBlockModule(MARGIN);
 		this.drawPageModule = new DrawPageModule(this.font, BOOK_WIDTH, BOOK_HEIGHT, MARGIN);
 		this.drawDiagramPageModule = new DrawDiagramPageModule(drawBlockModule, this.font, BOOK_WIDTH, BOOK_HEIGHT, MARGIN);
-		this.drawRecipePageModule = new DrawRecipePageModule(this.font, BOOK_WIDTH, BOOK_HEIGHT, MARGIN, this.itemRenderer, CONTENTS, 84, 46, 111, 54);
+		this.drawRecipePageModule = new DrawRecipePageModule(this.font, BOOK_WIDTH, BOOK_HEIGHT, MARGIN, CONTENTS, 84, 46, 111, 54);
 		this.drawTableOfContentsPageModule = new DrawTableOfContentsPageModule(this.font, BOOK_WIDTH, BOOK_HEIGHT, MARGIN, CONTENTS, 0, 0, CONTENTS_WIDTH, CONTENTS_HEIGHT);
 		this.drawdrawEntryPageModule = new DrawEntryPageModule(this.font, BOOK_WIDTH, BOOK_HEIGHT, MARGIN, GolemBookEntry.IMAGE_WIDTH, GolemBookEntry.IMAGE_HEIGHT);
 
@@ -215,32 +214,31 @@ public class GolemBookScreen extends Screen implements ScrollButton.IScrollListe
 	}
 
 	@Override
-	public void render(final PoseStack matrix, final int mouseX, final int mouseY, final float partialTicks) {
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		// draw background
-		RenderSystem.setShaderTexture(0, TEXTURE);
 		int bookX = (this.width - BOOK_WIDTH) / 2;
 		int bookY = SCR_OFFSET_Y;
-		this.blit(matrix, bookX, bookY, 0, 0, BOOK_WIDTH, BOOK_HEIGHT);
+		graphics.blit(TEXTURE, bookX, bookY, 0, 0, BOOK_WIDTH, BOOK_HEIGHT);
 
 		// draw pages: left and right
-		this.drawPageAt(matrix, bookX + 1, bookY, this.page, partialTicks);
-		this.drawPageAt(matrix, bookX + (BOOK_WIDTH / 2) - 2, bookY, this.page + 1, partialTicks);
+		this.drawPageAt(graphics, bookX + 1, bookY, this.page, partialTicks);
+		this.drawPageAt(graphics, bookX + (BOOK_WIDTH / 2) - 2, bookY, this.page + 1, partialTicks);
 
 		// draw buttons, etc.
-		super.render(matrix, mouseX, mouseY, partialTicks);
+		super.render(graphics, mouseX, mouseY, partialTicks);
 	}
 
 	/**
 	 * Uses the given page number to calculate which page to draw and calls the
 	 * appropriate methods to do so.
 	 *
-	 * @param matrix       the current PoseStack
+	 * @param graphics       the graphics manager
 	 * @param cornerX      the left corner of the page
 	 * @param cornerY      the upper corner of the page
 	 * @param pageNum      the page to draw
 	 * @param partialTicks the partial tick count
 	 **/
-	private void drawPageAt(final PoseStack matrix, final int cornerX, final int cornerY, final int pageNum, final float partialTicks) {
+	private void drawPageAt(final GuiGraphics graphics, final int cornerX, final int cornerY, final int pageNum, final float partialTicks) {
 		// declare these for the following switch statement
 		Component title;
 		Component body;
@@ -252,7 +250,7 @@ public class GolemBookScreen extends Screen implements ScrollButton.IScrollListe
 						.withTitle(INTRO_TITLE)
 						.withBody(INTRO_PAGE)
 						.withPos(cornerX, cornerY)
-						.render(this, matrix, partialTicks);
+						.render(this, graphics, partialTicks);
 				return;
 			case 1:
 				// draw Table of Contents
@@ -260,7 +258,7 @@ public class GolemBookScreen extends Screen implements ScrollButton.IScrollListe
 						.withPage(pageNum)
 						.withTitle(CONTENTS_TITLE)
 						.withPos(cornerX, cornerY)
-						.render(this, matrix, partialTicks);
+						.render(this, graphics, partialTicks);
 				return;
 			case 2:
 				// draw Golem Spell instructions
@@ -272,7 +270,7 @@ public class GolemBookScreen extends Screen implements ScrollButton.IScrollListe
 						.withTitle(BUILD_SPELL_TITLE)
 						.withBody(BUILD_SPELL_PAGE)
 						.withPos(cornerX, cornerY)
-						.render(this, matrix, partialTicks);
+						.render(this, graphics, partialTicks);
 				return;
 			case 3:
 				// draw Golem Head instructions
@@ -284,7 +282,7 @@ public class GolemBookScreen extends Screen implements ScrollButton.IScrollListe
 						.withTitle(BUILD_HEAD_TITLE)
 						.withBody(BUILD_HEAD_PAGE)
 						.withPos(cornerX, cornerY)
-						.render(this, matrix, partialTicks);
+						.render(this, graphics, partialTicks);
 				return;
 			case 4:
 				// draw Make Golem instructions
@@ -293,14 +291,14 @@ public class GolemBookScreen extends Screen implements ScrollButton.IScrollListe
 						.withTitle(BUILD_GOLEM_TITLE)
 						.withBody(BUILD_GOLEM_PAGE)
 						.withPos(cornerX, cornerY)
-						.render(this, matrix, partialTicks);
+						.render(this, graphics, partialTicks);
 				return;
 			case 5:
 				// draw Golem diagram
 				drawDiagramPageModule
 						.withPage(pageNum)
 						.withPos(cornerX, cornerY)
-						.render(this, matrix, partialTicks);
+						.render(this, graphics, partialTicks);
 				return;
 			case 6:
 			default:
@@ -311,7 +309,7 @@ public class GolemBookScreen extends Screen implements ScrollButton.IScrollListe
 							.withEntry(entry)
 							.withPage(pageNum)
 							.withPos(cornerX, cornerY)
-							.render(this, matrix, partialTicks);
+							.render(this, graphics, partialTicks);
 				}
 				return;
 		}
@@ -417,7 +415,7 @@ public class GolemBookScreen extends Screen implements ScrollButton.IScrollListe
 	public void onScroll(ScrollButton button, float percent) {
 		scrollOffset = Mth.floor(percent * (golemBookEntryListSorted.size() - GOLEM_BOOK_ENTRY_COUNT));
 		updateButtons();
-		if(tableOfContentsBtns != null && tableOfContentsBtns.length > 0 && golemBookEntryListSorted.size() > 0) {
+		if(tableOfContentsBtns != null && tableOfContentsBtns.length > 0 && !golemBookEntryListSorted.isEmpty()) {
 			for(int i = 0, n = GOLEM_BOOK_ENTRY_COUNT; i < n; i++) {
 				boolean outOfBounds = n >= golemBookEntryListSorted.size();
 				if(outOfBounds) {

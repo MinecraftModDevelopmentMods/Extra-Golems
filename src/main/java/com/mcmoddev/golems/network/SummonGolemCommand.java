@@ -37,7 +37,7 @@ public class SummonGolemCommand {
 								.suggests(SUGGEST_ID)
 								.executes(command -> summonGolem(command.getSource(),
 										ResourceLocationArgument.getId(command, "type"),
-										new BlockPos(command.getSource().getPosition()),
+										BlockPos.containing(command.getSource().getPosition()),
 										new CompoundTag()))
 								.then(Commands.argument("pos", BlockPosArgument.blockPos())
 										.executes(command -> summonGolem(command.getSource(),
@@ -72,7 +72,8 @@ public class SummonGolemCommand {
 		entity.moveTo(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D);
 		source.getLevel().addFreshEntity(entity);
 		entity.finalizeSpawn(source.getLevel(), source.getLevel().getCurrentDifficultyAt(pos), MobSpawnType.COMMAND, null, tag);
-		source.sendSuccess(Component.translatable("command.golem.success", id, pos.getX(), pos.getY(), pos.getZ()), true);
+		ResourceLocation finalId = id;
+		source.sendSuccess(() -> Component.translatable("command.golem.success", finalId, pos.getX(), pos.getY(), pos.getZ()), true);
 		return 1;
 	}
 }

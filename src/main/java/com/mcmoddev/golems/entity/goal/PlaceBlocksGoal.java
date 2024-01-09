@@ -27,19 +27,19 @@ public class PlaceBlocksGoal extends Goal {
 
 	@Override
 	public boolean canUse() {
-		return !golem.isBaby() && interval > 0 && golem.level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)
+		return !golem.isBaby() && interval > 0 && golem.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)
 				&& golem.getRandom().nextInt(interval) == 0;
 	}
 
 	@Override
 	public void start() {
 		final BlockPos in = golem.getBlockBelow().above(1);
-		final BlockState replace = golem.level.getBlockState(in);
-		final BlockState below = golem.level.getBlockState(in.below());
+		final BlockState replace = golem.level().getBlockState(in);
+		final BlockState below = golem.level().getBlockState(in.below());
 		// only replace air or water-source above a solid face
 		if ((replace.isAir() || (replace.getBlock() == Blocks.WATER && replace.getValue(LiquidBlock.LEVEL) == 0))
-				&& below.isFaceSturdy(golem.level, in.below(), Direction.UP, SupportType.FULL)) {
-			place(golem.level, replace, in);
+				&& below.isFaceSturdy(golem.level(), in.below(), Direction.UP, SupportType.FULL)) {
+			place(golem.level(), replace, in);
 		}
 	}
 

@@ -3,6 +3,7 @@ package com.mcmoddev.golems.screen.guide_book.module;
 import com.mcmoddev.golems.EGRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -17,12 +18,12 @@ public class DrawDiagramPageModule extends DrawPageModule {
 	}
 
 	@Override
-	public void render(Screen parent, PoseStack poseStack, float partialTicks) {
-		drawGolemDiagram(parent, poseStack);
-		drawPageNum(poseStack);
+	public void render(Screen parent, GuiGraphics graphics, float partialTicks) {
+		drawGolemDiagram(parent, graphics);
+		drawPageNum(graphics);
 	}
 
-	protected void drawGolemDiagram(final Screen parent, final PoseStack matrix) {
+	protected void drawGolemDiagram(final Screen parent, final GuiGraphics graphics) {
 		Block golemBody = Blocks.IRON_BLOCK;
 		Block golemHead = EGRegistry.GOLEM_HEAD.get();
 		float scale = 2.0F;
@@ -31,23 +32,23 @@ public class DrawDiagramPageModule extends DrawPageModule {
 		int startY = y + blockW;
 		// head
 		this.drawBlockModule.withScale(scale);
-		this.drawBlockModule.withBlock(golemHead).withPos(startX, startY).render(parent, matrix, 0);
+		this.drawBlockModule.withBlock(golemHead).withPos(startX, startY).render(parent, graphics, 0);
 		// middle-bottom
 		startY += blockW * 4;
 		this.drawBlockModule.withBlock(golemBody);
-		this.drawBlockModule.withPos(startX, startY).render(parent, matrix, 0);
+		this.drawBlockModule.withPos(startX, startY).render(parent, graphics, 0);
 		// arm-right
 		startX += blockW * 2;
 		startY -= (blockW * 5) / 2;
-		this.drawBlockModule.withPos(startX, startY).render(parent, matrix, 0);
+		this.drawBlockModule.withPos(startX, startY).render(parent, graphics, 0);
 		// middle-top
 		startX -= blockW * 2;
 		startY += (blockW / 2);
-		this.drawBlockModule.withPos(startX, startY).render(parent, matrix, 0);
+		this.drawBlockModule.withPos(startX, startY).render(parent, graphics, 0);
 		// arm-left
 		startX -= blockW * 2;
 		startY += (blockW / 2);
-		this.drawBlockModule.withPos(startX, startY).render(parent, matrix, 0);
+		this.drawBlockModule.withPos(startX, startY).render(parent, graphics, 0);
 	}
 
 }

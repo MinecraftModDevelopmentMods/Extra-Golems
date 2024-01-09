@@ -36,7 +36,7 @@ public class MoveToItemGoal extends Goal {
 	@Override
 	public void tick() {
 		// make a list of arrow itemstacks in nearby area
-		final List<ItemEntity> items = entity.level.getEntities(EntityType.ITEM, entity.getBoundingBox().inflate(range),
+		final List<ItemEntity> items = entity.level().getEntities(EntityType.ITEM, entity.getBoundingBox().inflate(range),
 				e -> !e.isRemoved() && !e.getItem().isEmpty() && !e.hasPickUpDelay() && entity.wantsToPickUp(e.getItem()));
 
 		if (!items.isEmpty()) {

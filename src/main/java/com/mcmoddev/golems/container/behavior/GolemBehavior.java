@@ -154,8 +154,8 @@ public abstract class GolemBehavior {
 	 */
 	public static void sendParticles(final Entity entity, final ParticleOptions particle, final int count) {
 		Vec3 pos = entity.position().add(0, entity.getBbHeight() * 0.5D, 0);
-		if (entity.level instanceof ServerLevel) {
-			((ServerLevel) entity.level).sendParticles(particle, pos.x, pos.y, pos.z, count, 0.5D, 0.5D, 0.5D, 0);
+		if (entity.level() instanceof ServerLevel) {
+			((ServerLevel) entity.level()).sendParticles(particle, pos.x, pos.y, pos.z, count, 0.5D, 0.5D, 0.5D, 0);
 		}
 	}
 
