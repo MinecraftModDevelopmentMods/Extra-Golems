@@ -158,7 +158,7 @@ public abstract class UtilityBlock extends Block implements SimpleWaterloggedBlo
 	}
 
 	@Override
-	public boolean isPossibleToRespawnInThis() {
+	public boolean isPossibleToRespawnInThis(BlockState p_279289_) {
 		return true;
 	}
 }

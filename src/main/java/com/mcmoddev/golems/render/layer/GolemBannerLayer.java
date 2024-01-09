@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.BannerItem;
+import net.minecraft.world.item.ItemDisplayContext;
 
 public class GolemBannerLayer<T extends GolemBase> extends RenderLayer<T, GolemModel<T>> {
 
@@ -41,7 +42,7 @@ public class GolemBannerLayer<T extends GolemBase> extends RenderLayer<T, GolemM
 			matrixStackIn.scale(2.6F, 2.3F, 2.6F);
 			getParentModel().root().translateAndRotate(matrixStackIn);
 			// Actually render the banner item
-			Minecraft.getInstance().getEntityRenderDispatcher().getItemInHandRenderer().renderItem(entity, entity.getBanner(), ItemTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, false, matrixStackIn, bufferIn, packedLightIn);
+			Minecraft.getInstance().getEntityRenderDispatcher().getItemInHandRenderer().renderItem(entity, entity.getBanner(), ItemDisplayContext.FIRST_PERSON_RIGHT_HAND, false, matrixStackIn, bufferIn, packedLightIn);
 			matrixStackIn.popPose();
 		}
 	}

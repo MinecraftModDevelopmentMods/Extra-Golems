@@ -43,7 +43,7 @@ public class FollowGoal extends Goal {
 
 	@Override
 	public boolean canUse() {
-		List<LivingEntity> mobEntityList = this.entity.level.getEntitiesOfClass(LivingEntity.class,
+		List<LivingEntity> mobEntityList = this.entity.level().getEntitiesOfClass(LivingEntity.class,
 				this.entity.getBoundingBox().inflate(this.areaSize), this.followPredicate);
 		if (!mobEntityList.isEmpty()) {
 			for (LivingEntity mobEntity : mobEntityList) {

@@ -9,7 +9,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.IndirectEntityDamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -58,7 +57,7 @@ public class ShootArrowsBehavior extends GolemBehavior {
 	@Override
 	public void onActuallyHurt(final GolemBase entity, final DamageSource source, final float amount) {
 		// if it's an arrow or other projectile, set the attacker as revenge target
-		if (source instanceof IndirectEntityDamageSource && source.getEntity() instanceof LivingEntity) {
+		if (source.isIndirect() && source.getEntity() instanceof LivingEntity) {
 			entity.setTarget((LivingEntity) source.getEntity());
 		}
 		final boolean forceMelee = (entity.getTarget() != null && entity.getTarget().distanceToSqr(entity) < 8.0D);

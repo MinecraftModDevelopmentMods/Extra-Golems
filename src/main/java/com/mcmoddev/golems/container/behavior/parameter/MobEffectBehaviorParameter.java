@@ -64,7 +64,7 @@ public class MobEffectBehaviorParameter extends BehaviorParameter {
 					double inflate = range > 0 ? range : 2.0D;
 					TargetingConditions condition = TargetingConditions.forNonCombat()
 							.ignoreLineOfSight().ignoreInvisibilityTesting();
-					List<LivingEntity> targets = self.level.getNearbyEntities(LivingEntity.class,
+					List<LivingEntity> targets = self.level().getNearbyEntities(LivingEntity.class,
 							condition, self, self.getBoundingBox().inflate(inflate));
 					// apply to each entity in list
 					for (LivingEntity target : targets) {

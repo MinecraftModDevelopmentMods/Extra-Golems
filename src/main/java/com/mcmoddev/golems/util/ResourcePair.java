@@ -80,7 +80,7 @@ public final class ResourcePair {
 			}
 			return DataResult.success(new ResourcePair(res, dyn));
 		} catch (ResourceLocationException resourcelocationexception) {
-			return DataResult.error("Not a valid resource location: " + string + " " + resourcelocationexception.getMessage());
+			return DataResult.error(() -> "Not a valid resource location: " + string + " " + resourcelocationexception.getMessage());
 		}
 	}
 

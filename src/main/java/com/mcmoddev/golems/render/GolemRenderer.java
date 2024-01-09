@@ -50,7 +50,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
 			return;
 		}
 		// get render settings
-		GolemRenderSettings settings = GolemRenderType.loadRenderSettings(golem.level.registryAccess(), golem.getMaterial());
+		GolemRenderSettings settings = GolemRenderType.loadRenderSettings(golem.level().registryAccess(), golem.getMaterial());
 		matrixStackIn.pushPose();
 		// scale
 		if (golem.isBaby()) {
@@ -131,7 +131,7 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
 	}
 
 	public static boolean isNightTime(final GolemBase golem) {
-		final long time = golem.level.getDayTime() % 24000L;
+		final long time = golem.level().getDayTime() % 24000L;
 		return time > 13000L && time < 23000L;
 	}
 }

@@ -4,6 +4,7 @@ import com.mcmoddev.golems.screen.guide_book.GolemBookEntry;
 import com.mcmoddev.golems.screen.guide_book.module.DrawBlockModule;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.MutableComponent;
@@ -46,18 +47,18 @@ public class GolemEntryButton extends ImageButton {
 	}
 
 	@Override
-	public void renderButton(final PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-		super.renderButton(poseStack, mouseX, mouseY, partialTicks);
+	public void renderWidget(final GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		super.renderWidget(graphics, mouseX, mouseY, partialTicks);
 		// draw the block and name of the entity
 		int index = (int) (ticksOpenSupplier.get() / 30);
 		drawBlockModule
 				.withBlock(this.entry.getBlock(index))
 				.withScale(1.0F)
 				.withPos(this.getX() - margin - 2, this.getY() - 9)
-				.render(parent, poseStack, partialTicks);
+				.render(parent, graphics, partialTicks);
 
 		// prepare to draw the entity's name
-		poseStack.pushPose();
+		graphics.pose().pushPose();
 
 		final MutableComponent name = entry.getGolemName();
 		final int wrap = this.width - 20;
@@ -70,11 +71,11 @@ public class GolemEntryButton extends ImageButton {
 		int nameX = this.getX() + 20;
 		int nameY = this.getY() + ((this.height - nameH) / 2) + 1;
 		// re-scale and draw the entity name
-		poseStack.scale(scale, scale, scale);
+		graphics.pose().scale(scale, scale, scale);
 		for (final FormattedCharSequence word : font.split(name, (int) (wrap / scale))) {
-			font.draw(poseStack, word, nameX / scale, nameY / scale, 0);
+			graphics.drawString(font, word, nameX / scale, nameY / scale, 0, false);
 			nameY += font.lineHeight;
 		}
-		poseStack.popPose();
+		graphics.pose().popPose();
 	}
 }

@@ -23,7 +23,7 @@ public class GoToWaterGoal extends Goal {
 		this.golem = golemBase;
 		this.detectWaterRadius = radius;
 		this.speed = speed;
-		this.world = golemBase.level;
+		this.world = golemBase.level();
 		setFlags(EnumSet.of(Goal.Flag.MOVE));
 	}
 

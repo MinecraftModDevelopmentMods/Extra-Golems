@@ -1,6 +1,7 @@
 package com.mcmoddev.golems.screen.guide_book.module;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 
 public abstract class DrawModule {
@@ -14,5 +15,5 @@ public abstract class DrawModule {
 		return this;
 	}
 
-	public abstract void render(final Screen parent, final PoseStack poseStack, final float partialTicks);
+	public abstract void render(final Screen parent, final GuiGraphics graphics, final float partialTicks);
 }

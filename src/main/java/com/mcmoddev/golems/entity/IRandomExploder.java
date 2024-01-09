@@ -103,9 +103,9 @@ public interface IRandomExploder {
 	 */
 	default void explode(float range) {
 		final GolemBase entity = getGolemEntity();
-		if (!entity.level.isClientSide()) {
+		if (!entity.level().isClientSide()) {
 			final Vec3 pos = entity.position();
-			entity.level.explode(entity, pos.x, pos.y, pos.z, range, Level.ExplosionInteraction.MOB);
+			entity.level().explode(entity, pos.x, pos.y, pos.z, range, Level.ExplosionInteraction.MOB);
 			entity.discard();
 			spawnLingeringCloud();
 		}
@@ -118,7 +118,7 @@ public interface IRandomExploder {
 		final GolemBase entity = getGolemEntity();
 		Collection<MobEffectInstance> collection = entity.getActiveEffects();
 		if (!collection.isEmpty()) {
-			AreaEffectCloud areaeffectcloud = new AreaEffectCloud(entity.level, entity.getX(), entity.getY(), entity.getZ());
+			AreaEffectCloud areaeffectcloud = new AreaEffectCloud(entity.level(), entity.getX(), entity.getY(), entity.getZ());
 			areaeffectcloud.setRadius(2.5F);
 			areaeffectcloud.setRadiusOnUse(-0.5F);
 			areaeffectcloud.setWaitTime(10);
@@ -129,7 +129,7 @@ public interface IRandomExploder {
 				areaeffectcloud.addEffect(new MobEffectInstance(mobeffectinstance));
 			}
 
-			entity.level.addFreshEntity(areaeffectcloud);
+			entity.level().addFreshEntity(areaeffectcloud);
 		}
 	}
 }

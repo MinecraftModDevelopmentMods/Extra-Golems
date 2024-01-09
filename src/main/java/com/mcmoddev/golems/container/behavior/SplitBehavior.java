@@ -46,10 +46,10 @@ public class SplitBehavior extends GolemBehavior {
 	 **/
 	protected Collection<GolemBase> attemptAddChildren(final GolemBase entity, final int count) {
 		final List<GolemBase> children = new ArrayList<>();
-		if (entity.level instanceof ServerLevelAccessor && !entity.isBaby() && count > 0) {
-			final DifficultyInstance diff = entity.level.getCurrentDifficultyAt(entity.blockPosition());
+		if (entity.level() instanceof ServerLevelAccessor && !entity.isBaby() && count > 0) {
+			final DifficultyInstance diff = entity.level().getCurrentDifficultyAt(entity.blockPosition());
 			for (int i = 0; i < count; i++) {
-				GolemBase child = GolemBase.create(entity.level, entity.getMaterial());
+				GolemBase child = GolemBase.create(entity.level(), entity.getMaterial());
 				child.setBaby(true);
 				if (entity.getTarget() != null) {
 					child.setTarget(entity.getTarget());
@@ -57,8 +57,8 @@ public class SplitBehavior extends GolemBehavior {
 				// set location
 				child.copyPosition(entity);
 				// spawn the entity
-				entity.level.addFreshEntity(child);
-				child.finalizeSpawn((ServerLevelAccessor) entity.level, diff, MobSpawnType.MOB_SUMMONED, null, null);
+				entity.level().addFreshEntity(child);
+				child.finalizeSpawn((ServerLevelAccessor) entity.level(), diff, MobSpawnType.MOB_SUMMONED, null, null);
 				// add to the list
 				children.add(child);
 			}

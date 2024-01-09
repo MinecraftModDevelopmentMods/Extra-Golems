@@ -29,12 +29,14 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -136,9 +138,9 @@ public class GolemBase extends IronGolem implements InventoryCarrier, IMultitext
 		this.getEntityData().set(MATERIAL, materialIn.toString());
 		this.material = materialIn;
 		// load container
-		final Registry<GolemContainer> registry = level.registryAccess().registryOrThrow(ExtraGolems.Keys.GOLEM_CONTAINERS);
+		final Registry<GolemContainer> registry = this.level().registryAccess().registryOrThrow(ExtraGolems.Keys.GOLEM_CONTAINERS);
 		final Optional<GolemContainer> oContainer = registry.getOptional(materialIn);
-		if(!oContainer.isPresent()) {
+		if(oContainer.isEmpty()) {
 			// log single error message when failing to load
 			ExtraGolems.LOGGER.error("Failed to load golem container for '" + materialIn.toString() + "'");
 			return;
@@ -146,12 +148,12 @@ public class GolemBase extends IronGolem implements InventoryCarrier, IMultitext
 		// container was loaded successfully
 		this.isMaterialDirty = false;
 		this.container = oContainer.get();
-		this.attributes = GolemAttributes.getAttributes(level.registryAccess(), materialIn);
+		this.attributes = GolemAttributes.getAttributes(this.level().registryAccess(), materialIn);
 		this.setInvulnerable(container.getAttributes().getArmor() > MAX_ARMOR);
 		// clear description
 		this.description = null;
 		// update server data
-		if (!level.isClientSide()) {
+		if (!this.level().isClientSide()) {
 			// remove and re-instantiate goals
 			this.goalSelector.getAvailableGoals().clear();
 			this.registerGoals();
@@ -163,12 +165,12 @@ public class GolemBase extends IronGolem implements InventoryCarrier, IMultitext
 					break;
 				case SWIM:
 					// advanced swimming AI
-					maxUpStep = 1.0F;
+					setMaxUpStep(1.0f);
 					moveControl = new SwimmingMovementController(this);
 					setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
 					goalSelector.addGoal(1, new GoToWaterGoal(this, 14, 1.0D));
 					goalSelector.addGoal(4, new RandomSwimmingGoal(this, 0.8F, 200));
-					goalSelector.addGoal(5, new SwimUpGoal(this, 1.0D, level.getSeaLevel() + 1));
+					goalSelector.addGoal(5, new SwimUpGoal(this, 1.0D, level().getSeaLevel() + 1));
 					break;
 				case SINK:
 				default:
@@ -359,13 +361,12 @@ public class GolemBase extends IronGolem implements InventoryCarrier, IMultitext
 		}
 		// take damage from water
 		if (getContainer().getAttributes().isHurtByWater() && this.isInWaterRainOrBubble()) {
-			this.hurt(DamageSource.DROWN, 1.0F);
+			this.hurt(this.damageSources().drown(), 1.0F);
 		}
 		// take damage from heat
 		if (getContainer().getAttributes().isHurtByHeat()) {
-			final BlockPos pos = this.getBlockPosBelowThatAffectsMyMovement().above(2);
-			if (this.level.getBiome(pos).value().shouldSnowGolemBurn(pos)) {
-				this.hurt(DamageSource.ON_FIRE, 1.0F);
+			if (this.level().getBiome(this.blockPosition()).is(BiomeTags.SNOW_GOLEM_MELTS)) {
+				this.hurt(this.damageSources().onFire(), 1.0F);
 			}
 		}
 		// update combat goal when arrows behavior is enabled
@@ -381,18 +382,18 @@ public class GolemBase extends IronGolem implements InventoryCarrier, IMultitext
 		// allow behaviors to update
 		getContainer().getBehaviors().values().forEach(list -> list.forEach(b -> b.onTick(this)));
 		// client-side updates
-		if (level.isClientSide()) {
+		if (this.level().isClientSide()) {
 			// update biome color
 			if (this.tickCount % 15 == 1) {
-				biomeColor = this.level.getBiome(this.blockPosition()).value().getFoliageColor();
+				biomeColor = this.level().getBiome(this.blockPosition()).value().getFoliageColor();
 			}
 			// spawn fuse particles
 			if (isFuseLit()) {
-				level.addParticle(ParticleTypes.SMOKE, getX() + getRandom().nextDouble() - 0.5D, getY() + (getRandom().nextDouble() * getBbHeight()), getZ() + getRandom().nextDouble() - 0.5D, 0.0D, 0.0D, 0.0D);
+				this.level().addParticle(ParticleTypes.SMOKE, getX() + getRandom().nextDouble() - 0.5D, getY() + (getRandom().nextDouble() * getBbHeight()), getZ() + getRandom().nextDouble() - 0.5D, 0.0D, 0.0D, 0.0D);
 			}
 			// spawn particles based on container
 			getContainer().getParticle().ifPresent(particle -> {
-				level.addParticle(particle, getX() + getRandom().nextDouble() - 0.5D, getY() + (getRandom().nextDouble() * getEyeHeight()), getZ() + getRandom().nextDouble() - 0.5D,
+				this.level().addParticle(particle, getX() + getRandom().nextDouble() - 0.5D, getY() + (getRandom().nextDouble() * getEyeHeight()), getZ() + getRandom().nextDouble() - 0.5D,
 						0.1D * (getRandom().nextDouble() - 0.5D), 0.1D * (getRandom().nextDouble() - 0.5D), 0.1D * (getRandom().nextDouble() - 0.5D));
 			});
 		}
@@ -416,7 +417,7 @@ public class GolemBase extends IronGolem implements InventoryCarrier, IMultitext
 			SoundEvent sound = i > 4 ? this.getFallSounds().big() : this.getFallSounds().small();
 			this.playSound(sound, 1.0F, 1.0F);
 			this.playBlockFallSound();
-			this.hurt(DamageSource.FALL, (float) i);
+			this.hurt(this.damageSources().fall(), (float) i);
 			return true;
 		} else {
 			return flag;
@@ -496,7 +497,7 @@ public class GolemBase extends IronGolem implements InventoryCarrier, IMultitext
 		// Cycle texture when server-side player interacts with the entity.
 		// This only runs for one hand, whether or not the hand is empty,
 		// to avoid double-interaction that causes double texture cycles.
-		if (hand == InteractionHand.MAIN_HAND && !level.isClientSide() && !player.isCrouching()
+		if (hand == InteractionHand.MAIN_HAND && !level().isClientSide() && !player.isCrouching()
 				&& canInteractChangeTexture() && cycleTexture()) {
 			player.swing(hand);
 			return InteractionResult.CONSUME;
@@ -550,7 +551,7 @@ public class GolemBase extends IronGolem implements InventoryCarrier, IMultitext
 			}
 			// spawn particles and play sound
 			final Vec3 pos = this.position();
-			SpawnGolemItem.spawnParticles(this.level, pos.x, pos.y + this.getBbHeight() / 2.0D, pos.z, 0.15D, ParticleTypes.INSTANT_EFFECT, 30);
+			SpawnGolemItem.spawnParticles(this.level(), pos.x, pos.y + this.getBbHeight() / 2.0D, pos.z, 0.15D, ParticleTypes.INSTANT_EFFECT, 30);
 			this.playSound(SoundEvents.STONE_PLACE, 0.85F, 1.1F + random.nextFloat() * 0.2F);
 			return true;
 		}
@@ -903,7 +904,7 @@ public class GolemBase extends IronGolem implements InventoryCarrier, IMultitext
 			super.updateSwimming();
 			return;
 		}
-		if (!this.level.isClientSide) {
+		if (!this.level().isClientSide) {
 			if (isEffectiveAi() && isInWater() && isSwimmingUp()) {
 				this.navigation = this.waterNavigator;
 				setSwimming(true);
@@ -987,7 +988,7 @@ public class GolemBase extends IronGolem implements InventoryCarrier, IMultitext
 				this.golem.setDeltaMovement(
 						this.golem.getDeltaMovement().add((double) f2 * d0 * 0.005D, (double) f2 * d1 * 0.1D, (double) f2 * d2 * 0.005D));
 			} else {
-				if (!this.golem.onGround) {
+				if (!this.golem.onGround()) {
 					this.golem.setDeltaMovement(this.golem.getDeltaMovement().add(0.0D, -0.008D, 0.0D));
 				}
 

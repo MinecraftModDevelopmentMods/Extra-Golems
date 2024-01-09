@@ -2,6 +2,7 @@ package com.mcmoddev.golems.screen.guide_book.button;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -40,26 +41,23 @@ public class ScrollButton extends Button {
 	}
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        if (this.visible) {
-            RenderSystem.setShaderTexture(0, resourceLocation);
-            // determine v coordinate
-            int v = iconV;
-            if(!isActive()) {
-                v += iconDeltaV;
-            }
-            // determine icon position
-            int renderX = this.getX();
-            int renderY = this.getY();
-            if(isVertical) {
-                renderY += Mth.floor((float) (height - iconHeight) * scrollPercent);
-            } else {
-                renderX += Mth.floor((float) (width - iconWidth) * scrollPercent);
-            }
-            // draw button icon
-            fill(poseStack, renderX, renderY, renderX + iconWidth, renderY + iconHeight, 0xFFFF00);
-            blit(poseStack, renderX, renderY, iconU, v, iconWidth, iconHeight);
-        }
+    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+		// determine v coordinate
+		int v = iconV;
+		if(!isActive()) {
+			v += iconDeltaV;
+		}
+		// determine icon position
+		int renderX = this.getX();
+		int renderY = this.getY();
+		if(isVertical) {
+			renderY += Mth.floor((float) (height - iconHeight) * scrollPercent);
+		} else {
+			renderX += Mth.floor((float) (width - iconWidth) * scrollPercent);
+		}
+		// draw button icon
+		graphics.fill(renderX, renderY, renderX + iconWidth, renderY + iconHeight, 0xFFFF00);
+		graphics.blit(resourceLocation, renderX, renderY, iconU, v, iconWidth, iconHeight);
     }
 
     @Override

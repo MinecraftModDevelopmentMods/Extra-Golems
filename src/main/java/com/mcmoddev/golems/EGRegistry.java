@@ -11,8 +11,10 @@ import com.mcmoddev.golems.item.GolemSpellItem;
 import com.mcmoddev.golems.item.GuideBookItem;
 import com.mcmoddev.golems.item.SpawnGolemItem;
 import com.mcmoddev.golems.menu.PortableDispenserMenu;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -20,8 +22,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.material.Material;
-import net.minecraftforge.event.CreativeModeTabEvent;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -52,16 +53,16 @@ public final class EGRegistry {
 		MENU_TYPES.register(eventBus);
 		GOLEM_CONTAINERS.register(eventBus);
 		GOLEM_MODELS.register(eventBus);
+
 		// event listeners
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(EGRegistry::registerEntityAttributes);
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(EGRegistry::onBuildTabContents);
 	}
 
 	////// BLOCKS //////
 	public static final RegistryObject<Block> GOLEM_HEAD = BLOCKS.register("golem_head",
 			() -> new GolemHeadBlock(Block.Properties.copy(Blocks.CARVED_PUMPKIN)));
 	public static final RegistryObject<GlowBlock> UTILITY_LIGHT = BLOCKS.register("light_provider",
-			() -> new GlowBlock(Material.GLASS, 1.0F));
+			() -> new GlowBlock(Blocks.GLASS, 1.0F));
 	public static final RegistryObject<PowerBlock> UTILITY_POWER = BLOCKS.register("power_provider",
 			() -> new PowerBlock(15));
 
@@ -85,20 +86,20 @@ public final class EGRegistry {
 
 	////// MENU TYPES //////
 	public static final RegistryObject<MenuType<PortableDispenserMenu>> DISPENSER_GOLEM_MENU = MENU_TYPES.register("dispenser_portable",
-			() -> new MenuType<>(PortableDispenserMenu::new));
+			() -> new MenuType<>(PortableDispenserMenu::new, FeatureFlagSet.of()));
 
 	////// EVENTS //////
 
-	public static void onBuildTabContents(final CreativeModeTabEvent.BuildContents event) {
-		if(event.getTab() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
+	public static void onBuildTabContents(final BuildCreativeModeTabContentsEvent event) {
+		if(event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
 			event.accept(GOLEM_SPELL);
 			event.accept(INFO_BOOK);
 			event.accept(GOLEM_HEAD_ITEM);
 		}
-		if(event.getTab() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
+		if(event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
 			event.accept(GOLEM_HEAD_ITEM);
 		}
-		if(event.getTab() == CreativeModeTabs.NATURAL_BLOCKS) {
+		if(event.getTabKey() == CreativeModeTabs.NATURAL_BLOCKS) {
 			// insert golem head item after jack o lantern
 			event.getEntries().putAfter(Items.JACK_O_LANTERN.getDefaultInstance(), GOLEM_HEAD_ITEM.get().getDefaultInstance(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
 		}

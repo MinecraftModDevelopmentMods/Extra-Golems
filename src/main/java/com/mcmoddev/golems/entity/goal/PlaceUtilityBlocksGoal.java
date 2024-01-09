@@ -24,9 +24,9 @@ public class PlaceUtilityBlocksGoal extends Goal {
 	public final BiPredicate<GolemBase, BlockPos> predicate;
 
 	public static final BiPredicate<GolemBase, BlockPos> ABOVE_AIR_PRED =
-			(g, pos) -> g.level.isEmptyBlock(pos.below());
+			(g, pos) -> g.level().isEmptyBlock(pos.below());
 	public static final BiPredicate<GolemBase, BlockPos> ABOVE_WATER_PRED =
-			(g, pos) -> g.level.getBlockState(pos.below()).getBlock() == Blocks.WATER;
+			(g, pos) -> g.level().getBlockState(pos.below()).getBlock() == Blocks.WATER;
 
 
 	/**
@@ -72,13 +72,13 @@ public class PlaceUtilityBlocksGoal extends Goal {
 			// when it passes, place the block and return
 			for (int i = 0; i < 4; i++) {
 				BlockPos pos = blockPosIn.above(i);
-				final BlockState cur = golem.level.getBlockState(pos);
+				final BlockState cur = golem.level().getBlockState(pos);
 				// if there's already a matching block, stop here
 				if (cur.getBlock() == stateToPlace.getBlock()) {
 					return;
 				}
 				if (this.predicate.test(golem, pos)) {
-					this.golem.level.setBlock(pos, getStateToPlace(cur), Block.UPDATE_CLIENTS | Block.UPDATE_INVISIBLE);
+					this.golem.level().setBlock(pos, getStateToPlace(cur), Block.UPDATE_CLIENTS | Block.UPDATE_INVISIBLE);
 					return;
 				}
 			}
@@ -120,11 +120,11 @@ public class PlaceUtilityBlocksGoal extends Goal {
 		// whether or not the utility block can be waterlogged
 		final boolean canBeWaterlogged = canBeWaterlogged(stateIn);
 		// the main purpose of the predicate is to make sure the block can be replaced
-		BiPredicate<GolemBase, BlockPos> pred = (golem, pos) -> golem.level.isEmptyBlock(pos);
+		BiPredicate<GolemBase, BlockPos> pred = (golem, pos) -> golem.level().isEmptyBlock(pos);
 		// if the utility block can be waterlogged, allow replacing water as well as air
 		if (canBeWaterlogged) {
 			pred = pred.or((golem, pos) -> {
-				final BlockState toReplace = golem.level.getBlockState(pos);
+				final BlockState toReplace = golem.level().getBlockState(pos);
 				return toReplace.getBlock() == Blocks.WATER && toReplace.getValue(LiquidBlock.LEVEL) == 0;
 			});
 		}

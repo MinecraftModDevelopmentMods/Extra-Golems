@@ -52,7 +52,7 @@ public final class GolemModifyBlocksEvent extends Event {
 				for (int k = -range; k <= range; k++) {
 					currentPos.setWithOffset(this.center, i, j, k);
 					if (center.distSqr(currentPos) <= maxDis) {
-						final BlockState state = this.entity.level.getBlockState(currentPos);
+						final BlockState state = this.entity.level().getBlockState(currentPos);
 						final BlockState replace = this.function.map(entity, currentPos, state);
 						if (replace != state) {
 							this.affectedBlocks.add(currentPos.immutable());

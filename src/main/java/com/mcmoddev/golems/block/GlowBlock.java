@@ -5,10 +5,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.AABB;
 
 import java.util.List;
@@ -19,8 +19,8 @@ public class GlowBlock extends UtilityBlock {
 	/* Default value for TICK_RATE. Not necessary to define through config. */
 	public static final int UPDATE_TICKS = 6;
 
-	public GlowBlock(final Material m, final float defaultLight) {
-		super(Properties.of(m).randomTicks().lightLevel(state -> state.getValue(LIGHT_LEVEL)), UPDATE_TICKS);
+	public GlowBlock(final BlockBehaviour copy, final float defaultLight) {
+		super(Properties.copy(copy).randomTicks().lightLevel(state -> state.getValue(LIGHT_LEVEL)), UPDATE_TICKS);
 		int light = (int) (defaultLight * 15.0F);
 		this.registerDefaultState(this.defaultBlockState().setValue(LIGHT_LEVEL, light));
 	}

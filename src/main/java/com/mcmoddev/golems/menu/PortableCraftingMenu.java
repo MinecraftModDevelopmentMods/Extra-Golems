@@ -42,7 +42,7 @@ public class PortableCraftingMenu extends CraftingMenu {
 			if (player.isSpectator()) {
 				return null;
 			} else {
-				return new PortableCraftingMenu(i, playerInv, ContainerLevelAccess.create(player.level, new BlockPos(player.position())));
+				return new PortableCraftingMenu(i, playerInv, ContainerLevelAccess.create(player.level(), player.blockPosition()));
 			}
 		}
 

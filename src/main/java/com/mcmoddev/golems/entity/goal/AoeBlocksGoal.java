@@ -10,11 +10,15 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.SpongeBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.material.Material;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
+
+import javax.swing.plaf.basic.BasicListUI;
 
 public class AoeBlocksGoal extends Goal {
 	protected final GolemBase entity;
@@ -51,7 +55,7 @@ public class AoeBlocksGoal extends Goal {
 		final BlockPos below = entity.getBlockBelow();
 		final GolemModifyBlocksEvent event = new GolemModifyBlocksEvent(entity, below, range, sphere, modifyFunction);
 		if (!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Event.Result.DENY) {
-			event.getAffectedPositions().forEach(pos -> entity.level.setBlock(pos, event.getFunction().map(entity, pos, entity.level.getBlockState(pos)), event.updateFlag));
+			event.getAffectedPositions().forEach(pos -> entity.level().setBlock(pos, event.getFunction().map(entity, pos, entity.level().getBlockState(pos)), event.updateFlag));
 		}
 	}
 
@@ -70,10 +74,18 @@ public class AoeBlocksGoal extends Goal {
 			if (input.hasProperty(BlockStateProperties.WATERLOGGED)) {
 				return input.setValue(BlockStateProperties.WATERLOGGED, false);
 			}
-			if (input.getMaterial() == Material.WATER || input.getMaterial() == Material.REPLACEABLE_WATER_PLANT) {
+			if (input.getBlock() instanceof LiquidBlock) {
+				return Blocks.AIR.defaultBlockState();
+			} else {
+				// copied from SpongeBlock
+				if (!input.is(Blocks.KELP) && !input.is(Blocks.KELP_PLANT) && !input.is(Blocks.SEAGRASS) && !input.is(Blocks.TALL_SEAGRASS)) {
+					return input;
+				}
+
+				BlockEntity blockentity = input.hasBlockEntity() ? entity.level().getBlockEntity(pos) : null;
+				Block.dropResources(input, entity.level(), pos, blockentity);
 				return Blocks.AIR.defaultBlockState();
 			}
-			return input;
 		}
 	}
 
@@ -100,17 +112,13 @@ public class AoeBlocksGoal extends Goal {
 		public BlockState map(final LivingEntity entity, final BlockPos pos, final BlockState input) {
 			final BlockState cobbleState = Blocks.COBBLESTONE.defaultBlockState();
 			final BlockState iceState = this.frostedIce ? Blocks.FROSTED_ICE.defaultBlockState() : Blocks.ICE.defaultBlockState();
-			final Material material = input.getMaterial();
-			if (material.isLiquid()) {
-				final Block block = input.getBlock();
-
-				if (block == Blocks.WATER) {
-					final boolean isNotPacked = this.frostedIce || entity.getRandom().nextInt(100) < this.iceChance;
-					return isNotPacked ? iceState : Blocks.PACKED_ICE.defaultBlockState();
-				} else if (block == Blocks.LAVA) {
-					final boolean isNotObsidian = entity.getRandom().nextInt(100) < this.cobbleChance;
-					return isNotObsidian ? cobbleState : Blocks.OBSIDIAN.defaultBlockState();
-				}
+			final Block block = input.getBlock();
+			if (block == Blocks.WATER) {
+				final boolean isNotPacked = this.frostedIce || entity.getRandom().nextInt(100) < this.iceChance;
+				return isNotPacked ? iceState : Blocks.PACKED_ICE.defaultBlockState();
+			} else if (block == Blocks.LAVA) {
+				final boolean isNotObsidian = entity.getRandom().nextInt(100) < this.cobbleChance;
+				return isNotObsidian ? cobbleState : Blocks.OBSIDIAN.defaultBlockState();
 			}
 
 			return input;
@@ -132,7 +140,7 @@ public class AoeBlocksGoal extends Goal {
 				CropBlock crop = (CropBlock) input.getBlock();
 				if (!crop.isMaxAge(input) && entity.getRandom().nextFloat() < growChance) {
 					// determine the next grow stage for the crop
-					int growAge = input.getValue(crop.getAgeProperty()) + Mth.nextInt(entity.getRandom(), 2, 5);
+					int growAge = crop.getAge(input) + Mth.nextInt(entity.getRandom(), 2, 5);
 					int maxAge = crop.getMaxAge();
 					if (growAge > maxAge) {
 						growAge = maxAge;

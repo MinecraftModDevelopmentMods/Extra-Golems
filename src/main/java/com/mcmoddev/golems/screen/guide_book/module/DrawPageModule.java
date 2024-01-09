@@ -2,6 +2,7 @@ package com.mcmoddev.golems.screen.guide_book.module;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
@@ -51,21 +52,21 @@ public class DrawPageModule extends DrawModule {
 	}
 
 	@Override
-	public void render(Screen parent, PoseStack poseStack, float partialTicks) {
-		drawBasicPage(poseStack, title, body);
-		drawPageNum(poseStack);
+	public void render(Screen parent, GuiGraphics graphics, float partialTicks) {
+		drawBasicPage(graphics, title, body);
+		drawPageNum(graphics);
 	}
 
-	protected void drawPageNum(final PoseStack poseStack) {
+	protected void drawPageNum(GuiGraphics graphics) {
 		final boolean isRight = (page % 2) == 1;
 		final int posX = isRight ? x + margin * 2 : x + width / 2 - margin * 2;
 		final int posY = y + height - 18;
 		final String sPage = String.valueOf(page + 1);
 		final int sWidth = isRight ? this.font.width(sPage) : 0;
-		this.font.draw(poseStack, sPage, posX - sWidth, posY, 0);
+		graphics.drawString(font, sPage, posX - sWidth, posY, 0, false);
 	}
 
-	protected void drawBasicPage(final PoseStack poseStack, Component title, Component body) {
+	protected void drawBasicPage(GuiGraphics graphics, Component title, Component body) {
 		final int maxWidth = (width / 2) - (margin * 2);
 
 		int titleX = x + margin + 4;
@@ -73,14 +74,15 @@ public class DrawPageModule extends DrawModule {
 		int sWidth = this.font.width(title.getString());
 		if (sWidth > maxWidth) {
 			// draw title wrapped
-			this.font.drawWordWrap(title, titleX, titleY, maxWidth, 0);
+			graphics.drawWordWrap(font, title, titleX, titleY, maxWidth, 0);
 		} else {
 			// draw title centered
-			this.font.draw(poseStack, title.getString(), titleX + ((maxWidth - sWidth) / 2.0F), titleY, 0);
+			// TODO: use draw centered method
+			graphics.drawString(font, title.getVisualOrderText(), titleX + ((maxWidth - sWidth) / 2.0F), (float) titleY, 0, false);
 		}
 
 		int bodyX = titleX;
 		int bodyY = titleY + margin * 2;
-		this.font.drawWordWrap(body, bodyX, bodyY, maxWidth, 0);
+		graphics.drawWordWrap(font, body, bodyX, bodyY, maxWidth, 0);
 	}
 }

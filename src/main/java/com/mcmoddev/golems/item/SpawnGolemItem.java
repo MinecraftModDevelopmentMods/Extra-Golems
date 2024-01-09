@@ -84,11 +84,11 @@ public final class SpawnGolemItem extends Item {
 			// determine if the entity is a Bedrock golem
 			if (golem.getMaterial().equals(BEDROCK_GOLEM)) {
 				// attempt to remove the entity
-				if (!entity.level.isClientSide()) {
+				if (!entity.level().isClientSide()) {
 					golem.discard();
 				}
 				// spawn particles
-				spawnParticles(playerIn.level, entity.getX(), entity.getY() + 0.5D, entity.getZ(), 0.12D);
+				spawnParticles(playerIn.level(), entity.getX(), entity.getY() + 0.5D, entity.getZ(), 0.12D);
 				return InteractionResult.SUCCESS;
 			}
 		}
