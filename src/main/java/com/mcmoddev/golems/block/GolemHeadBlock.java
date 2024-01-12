@@ -79,7 +79,7 @@ public final class GolemHeadBlock extends HorizontalDirectionalBlock {
 				if(level.isEmptyBlock(blockpos) && GolemHeadBlock.canSpawnGolem(level, blockpos)) {
 					if (!level.isClientSide) {
 						// place the block
-						level.setBlock(blockpos, EGRegistry.GOLEM_HEAD.get().defaultBlockState().setValue(FACING, facing), Block.UPDATE_ALL);
+						level.setBlock(blockpos, EGRegistry.BlockReg.GOLEM_HEAD.get().defaultBlockState().setValue(FACING, facing), Block.UPDATE_ALL);
 						level.gameEvent(null, GameEvent.BLOCK_PLACE, blockpos);
 					}
 					// shrink item stack
@@ -94,7 +94,7 @@ public final class GolemHeadBlock extends HorizontalDirectionalBlock {
 		};
 
 		// register dispenser behaviors
-		DispenserBlock.registerBehavior(EGRegistry.GOLEM_HEAD_ITEM.get(), wrappedBehavior);
+		DispenserBlock.registerBehavior(EGRegistry.ItemReg.GOLEM_HEAD.get(), wrappedBehavior);
 		DispenserBlock.registerBehavior(Items.CARVED_PUMPKIN, wrappedBehavior);
 	}
 

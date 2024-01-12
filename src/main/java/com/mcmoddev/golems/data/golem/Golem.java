@@ -2,64 +2,69 @@ package com.mcmoddev.golems.data.golem;
 
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
-import com.mcmoddev.golems.data.behavior.Behaviors;
+import com.mcmoddev.golems.data.behavior.BehaviorList;
 import com.mcmoddev.golems.data.model.Model;
 import com.mcmoddev.golems.util.DeferredHolderSet;
+import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.RegistryFileCodec;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 @Immutable
 public class Golem {
 
 	public static final Codec<Golem> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			Golem.HOLDER_CODEC.optionalFieldOf("parent").forGetter(o -> Optional.ofNullable(o.parent)),
-			Attributes.HOLDER_CODEC.optionalFieldOf("attributes").forGetter(o -> Optional.ofNullable(o.attributes)),
-			DeferredHolderSet.codec(ForgeRegistries.BLOCKS.getRegistryKey()).optionalFieldOf("blocks", new DeferredHolderSet<>(ImmutableList.of())).forGetter(Golem::getBlocks),
+			Attributes.CODEC.optionalFieldOf("attributes").forGetter(o -> Optional.ofNullable(o.attributes)),
+			EGCodecUtils.listOrElementCodec(DeferredHolderSet.codec(ForgeRegistries.BLOCKS.getRegistryKey())).optionalFieldOf("blocks", ImmutableList.of()).forGetter(Golem::getBlocks),
+			RepairItems.CODEC.optionalFieldOf("repair_items", RepairItems.EMPTY).forGetter(Golem::getRepairItems),
 			Codec.intRange(1, 127).optionalFieldOf("variants", 1).forGetter(Golem::getVariants),
 			Codec.BOOL.optionalFieldOf("hidden", false).forGetter(Golem::isHidden),
 			ParticleTypes.CODEC.optionalFieldOf("particle").forGetter(o -> Optional.ofNullable(o.particle)),
 			Model.HOLDER_CODEC.optionalFieldOf("model", Holder.direct(new Model(ImmutableList.of()))).forGetter(Golem::getModel),
-			Behaviors.HOLDER_CODEC.optionalFieldOf("brain", Holder.direct(new Behaviors(ImmutableList.of()))).forGetter(Golem::getBehaviors)
+			BehaviorList.HOLDER_CODEC.optionalFieldOf("brain", Holder.direct(new BehaviorList(ImmutableList.of()))).forGetter(Golem::getBehaviors),
+			ResourceLocation.CODEC.optionalFieldOf("group").forGetter(o -> Optional.ofNullable(o.group))
 	).apply(instance, Golem::new));
-	public static final Codec<Holder<Golem>> HOLDER_CODEC = RegistryFileCodec.create(EGRegistry.Keys.GOLEM, CODEC, true);
+	public static final Codec<Holder<Golem>> HOLDER_CODEC = RegistryFileCodec.create(EGRegistry.Keys.GOLEMS, CODEC, true);
 
-	@Nullable
-	private final Holder<Golem> parent;
-	@Nullable
-	private final Holder<Attributes> attributes;
-	private final DeferredHolderSet<Block> blocks;
-	// TODO RepairItems
-	// TODO sound type
-	private final SoundType soundType;
+	private final @Nullable Holder<Golem> parent;
+	private final @Nullable Attributes attributes;
+	private final List<DeferredHolderSet<Block>> blocks;
+	private final RepairItems repairItems;
 	private final int variants;
 	private final boolean hidden;
-	@Nullable
-	private final ParticleOptions particle;
+	private final @Nullable ParticleOptions particle;
 	private final Holder<Model> model;
-	private final Holder<Behaviors> behaviors;
+	private final Holder<BehaviorList> behaviors;
+	private final @Nullable ResourceLocation group;
 
-	public Golem(Optional<Holder<Golem>> parent, Optional<Holder<Attributes>> attributes,
-				 DeferredHolderSet<Block> blocks, int variants, boolean hidden, Optional<ParticleOptions> particle,
-				 Holder<Model> model, Holder<Behaviors> behaviors) {
+	public Golem(Optional<Holder<Golem>> parent, Optional<Attributes> attributes,
+				 List<DeferredHolderSet<Block>> blocks, RepairItems repairItems,
+				 int variants, boolean hidden, Optional<ParticleOptions> particle,
+				 Holder<Model> model, Holder<BehaviorList> behaviors, Optional<ResourceLocation> group) {
 		this.parent = parent.orElse(null);
 		this.attributes = attributes.orElse(null);
-		this.blocks = blocks;
+		this.blocks = ImmutableList.copyOf(blocks);
+		this.repairItems = repairItems;
 		this.variants = variants;
 		this.hidden = hidden;
 		this.particle = particle.orElse(null);
 		this.model = model;
 		this.behaviors = behaviors;
+		this.group = group.orElse(null);
 	}
 
 	//// GETTERS ////
@@ -70,12 +75,16 @@ public class Golem {
 	}
 
 	@Nullable
-	public Holder<Attributes> getAttributes() {
+	public Attributes getAttributes() {
 		return attributes;
 	}
 
-	public DeferredHolderSet<Block> getBlocks() {
+	public List<DeferredHolderSet<Block>> getBlocks() {
 		return blocks;
+	}
+
+	public RepairItems getRepairItems() {
+		return repairItems;
 	}
 
 	public int getVariants() {
@@ -95,45 +104,67 @@ public class Golem {
 		return model;
 	}
 
-	public Holder<Behaviors> getBehaviors() {
+	public Holder<BehaviorList> getBehaviors() {
 		return behaviors;
+	}
+
+	@Nullable
+	public ResourceLocation getGroup() {
+		return group;
 	}
 
 	//// BUILDER ////
 
 	public static class Builder {
-		@Nullable
 		private Holder<Golem> parent;
-		private Holder<Attributes> attributes;
+		private Attributes.Builder attributes;
+		private List<DeferredHolderSet<Block>> blocks;
+		private RepairItems.Builder repairItems;
 		private int variants;
 		private boolean hidden;
-		@Nullable
 		private ParticleOptions particle;
-		private Holder<Model> model;
-		private Holder<Behaviors> behaviors;
+		private Model.Builder model;
+		private BehaviorList.Builder behaviors;
+		private ResourceLocation group;
 
 		//// CONSTRUCTOR ////
 
-		private Builder() {}
+		private Builder() {
+			this.blocks = new ArrayList<>();
+			this.attributes = new Attributes.Builder();
+			this.repairItems = new RepairItems.Builder();
+			this.model = new Model.Builder();
+			this.behaviors = new BehaviorList.Builder();
+		}
 
 		public static Builder from(final Golem golem) {
 			final Builder builder = new Golem.Builder();
 			final boolean hasParent = golem.getParent() != null;
-			Golem parent = null;
+			final Golem parent = hasParent ? golem.getParent().get() : null;
 			// apply settings from parent
 			if(hasParent) {
-				parent = golem.getParent().get();
 				builder.parent(golem.getParent())
-						.attributes(parent.getAttributes())
+						.attributes(b -> b.copy(parent.getAttributes()))
+						.blocks(parent.getBlocks())
+						.repairItems(b -> b.addAll(parent.getRepairItems().getMap()))
 						.variants(parent.getVariants())
 						.hidden(parent.isHidden())
 						.particle(parent.getParticle())
-						.model(parent.getModel())
-						.behaviors(parent.getBehaviors());
+						.model(b -> b.addAll(parent.getModel().get().getLayers()))
+						.behaviors(b -> b.addAll(parent.getBehaviors().get().getBehaviors()))
+						.group(parent.getGroup());
 			}
 			// attributes
 			if(golem.getAttributes() != null) {
-				builder.attributes(golem.getAttributes());
+				builder.attributes(b -> b.copy(golem.getAttributes()));
+			}
+			// blocks
+			if(!hasParent || !golem.getBlocks().equals(parent.getBlocks())) {
+				builder.blocks(golem.getBlocks());
+			}
+			// repair items
+			if(!hasParent || !golem.getRepairItems().getMap().equals(parent.getRepairItems().getMap())) {
+				builder.repairItems(b -> b.addAll(golem.getRepairItems().getMap()));
 			}
 			// variants
 			if(!hasParent || golem.getVariants() != parent.getVariants()) {
@@ -149,25 +180,24 @@ public class Golem {
 			}
 			// model
 			if(!hasParent || !golem.getModel().get().equals(parent.getModel().get())) {
-				builder.model(golem.getModel());
+				builder.model(b -> b.addAll(golem.getModel().get().getLayers()));
 			}
 			// behaviors
 			if(!hasParent || !golem.getBehaviors().get().equals(parent.getBehaviors().get())) {
-				builder.behaviors(golem.getBehaviors());
+				builder.behaviors(b -> b.addAll(golem.getBehaviors().get().getBehaviors()));
+			}
+			// group
+			if(golem.getGroup() != null) {
+				builder.group(golem.getGroup());
 			}
 			return builder;
 		}
 
 		//// GETTERS ////
 
-		public Holder<Model> getModel() {
-			return model;
+		public int getVariants() {
+			return variants;
 		}
-
-		public Holder<Behaviors> getBehaviors() {
-			return behaviors;
-		}
-
 
 		//// METHODS ////
 
@@ -181,11 +211,29 @@ public class Golem {
 		}
 
 		/**
-		 * @param attributes the golem attributes
+		 * @param action the action to perform on the attributes builder
 		 * @return the builder instance
 		 */
-		public Builder attributes(final Holder<Attributes> attributes) {
-			this.attributes = attributes;
+		public Builder attributes(final Consumer<Attributes.Builder> action) {
+			action.accept(this.attributes);
+			return this;
+		}
+
+		/**
+		 * @param blocks the golem building blocks
+		 * @return the builder instance
+		 */
+		public Builder blocks(final List<DeferredHolderSet<Block>> blocks) {
+			this.blocks = blocks;
+			return this;
+		}
+
+		/**
+		 * @param action the action to perform on the repair items builder
+		 * @return the builder instance
+		 */
+		public Builder repairItems(final Consumer<RepairItems.Builder> action) {
+			action.accept(this.repairItems);
 			return this;
 		}
 
@@ -217,20 +265,29 @@ public class Golem {
 		}
 
 		/**
-		 * @param model the model holder
+		 * @param action the action to perform on the model builder
 		 * @return the builder instance
 		 */
-		public Builder model(final Holder<Model> model) {
-			this.model = model;
+		public Builder model(final Consumer<Model.Builder> action) {
+			action.accept(this.model);
 			return this;
 		}
 
 		/**
-		 * @param behaviors the behaviors holder
+		 * @param action the action to perform on the behavior list builder
 		 * @return the builder instance
 		 */
-		public Builder behaviors(final Holder<Behaviors> behaviors) {
-			this.behaviors = behaviors;
+		public Builder behaviors(final Consumer<BehaviorList.Builder> action) {
+			action.accept(this.behaviors);
+			return this;
+		}
+
+		/**
+		 * @param group the group for the UI
+		 * @return the builder instance
+		 */
+		public Builder group(final ResourceLocation group) {
+			this.group = group;
 			return this;
 		}
 
@@ -238,7 +295,9 @@ public class Golem {
 		 * @return a new {@link Golem} instance
 		 */
 		public Golem build() {
-			return new Golem(Optional.ofNullable(parent), Optional.ofNullable(attributes), blocks, variants, hidden, Optional.ofNullable(particle), model, behaviors);
+			return new Golem(Optional.ofNullable(parent), Optional.of(attributes.build()), blocks,
+					repairItems.build(), variants, hidden, Optional.ofNullable(particle),
+					Holder.direct(model.build()), Holder.direct(behaviors.build()), Optional.ofNullable(group));
 		}
 	}
 }

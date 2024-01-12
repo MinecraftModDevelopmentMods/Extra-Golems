@@ -33,7 +33,7 @@ public final class EGClientEvents {
 
 		@SubscribeEvent
 		public static void setupClient(final FMLClientSetupEvent event) {
-			event.enqueueWork(() -> MenuScreens.register(EGRegistry.DISPENSER_GOLEM_MENU.get(), DispenserGolemScreen::new));
+			event.enqueueWork(() -> MenuScreens.register(EGRegistry.MenuReg.DISPENSER_GOLEM_MENU.get(), DispenserGolemScreen::new));
 		}
 
 		@SubscribeEvent
@@ -43,7 +43,7 @@ public final class EGClientEvents {
 
 		@SubscribeEvent
 		public static void registerEntityRenderers(final EntityRenderersEvent.RegisterRenderers event) {
-			event.registerEntityRenderer(EGRegistry.GOLEM.get(), GolemRenderer::new);
+			event.registerEntityRenderer(EGRegistry.EntityReg.GOLEM.get(), GolemRenderer::new);
 		}
 
 		public static void addResources() {

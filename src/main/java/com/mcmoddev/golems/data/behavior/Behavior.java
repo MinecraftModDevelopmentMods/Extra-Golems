@@ -32,7 +32,7 @@ public abstract class Behavior {
 	 * @param instance the record codec builder with additional parameters, if any
 	 */
 	protected static <T extends Behavior> Products.P1<RecordCodecBuilder.Mu<T>, MinMaxBounds.Ints> codecStart(RecordCodecBuilder.Instance<T> instance) {
-		return instance.group(EGCodecUtils.INTS_CODEC.optionalFieldOf("variant", MinMaxBounds.Ints.ANY).forGetter(Behavior::getVariant));
+		return instance.group(EGCodecUtils.MIN_MAX_INTS_CODEC.optionalFieldOf("variant", MinMaxBounds.Ints.ANY).forGetter(Behavior::getVariant));
 	}
 
 	//// GETTERS ////

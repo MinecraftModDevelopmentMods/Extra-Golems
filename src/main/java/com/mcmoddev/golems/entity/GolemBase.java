@@ -8,7 +8,6 @@ import com.mcmoddev.golems.container.GolemContainer;
 import com.mcmoddev.golems.container.GolemContainer.SwimMode;
 import com.mcmoddev.golems.container.behavior.ExplodeBehavior;
 import com.mcmoddev.golems.container.behavior.GolemBehaviors;
-import com.mcmoddev.golems.container.behavior.ShootArrowsBehavior;
 import com.mcmoddev.golems.container.behavior.UseFuelBehavior;
 import com.mcmoddev.golems.entity.goal.GoToWaterGoal;
 import com.mcmoddev.golems.entity.goal.PlaceUtilityBlocksGoal;
@@ -36,7 +35,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -127,7 +125,7 @@ public class GolemBase extends IronGolem implements InventoryCarrier, IMultitext
 	}
 
 	public static GolemBase create(final Level world, final ResourceLocation material) {
-		GolemBase golem = new GolemBase(EGRegistry.GOLEM.get(), world);
+		GolemBase golem = new GolemBase(EGRegistry.EntityReg.GOLEM.get(), world);
 		golem.setMaterial(material);
 		return golem;
 	}
@@ -267,7 +265,7 @@ public class GolemBase extends IronGolem implements InventoryCarrier, IMultitext
 		// register light level AI if enabled
 		int lightInt = getContainer().getMaxLightLevel();
 		if (lightInt > 0) {
-			final BlockState state = EGRegistry.UTILITY_LIGHT.get().defaultBlockState().setValue(GlowBlock.LIGHT_LEVEL, lightInt);
+			final BlockState state = EGRegistry.BlockReg.LIGHT_PROVIDER.get().defaultBlockState().setValue(GlowBlock.LIGHT_LEVEL, lightInt);
 			this.goalSelector.addGoal(9, new PlaceUtilityBlocksGoal(this, state, GlowBlock.UPDATE_TICKS,
 					true, (golem, pos) -> golem.isProvidingLight()));
 		}
@@ -277,7 +275,7 @@ public class GolemBase extends IronGolem implements InventoryCarrier, IMultitext
 		// register power level AI if enabled
 		int powerInt = getContainer().getMaxPowerLevel();
 		if (powerInt > 0) {
-			final BlockState state = EGRegistry.UTILITY_POWER.get().defaultBlockState().setValue(PowerBlock.POWER_LEVEL, powerInt);
+			final BlockState state = EGRegistry.BlockReg.POWER_PROVIDER.get().defaultBlockState().setValue(PowerBlock.POWER_LEVEL, powerInt);
 			final int freq = PowerBlock.UPDATE_TICKS;
 			this.goalSelector.addGoal(9, new PlaceUtilityBlocksGoal(this, state, freq, false, (golem, pos) -> golem.isProvidingPower()));
 		}
@@ -439,7 +437,7 @@ public class GolemBase extends IronGolem implements InventoryCarrier, IMultitext
 		if (type == EntityType.PLAYER && this.isPlayerCreated()) {
 			return ExtraGolems.CONFIG.enableFriendlyFire();
 		}
-		if (type == EntityType.VILLAGER || type == EGRegistry.GOLEM.get() || type == EntityType.IRON_GOLEM || type == EntityType.SNOW_GOLEM) {
+		if (type == EntityType.VILLAGER || type == EGRegistry.EntityReg.GOLEM.get() || type == EntityType.IRON_GOLEM || type == EntityType.SNOW_GOLEM) {
 			return false;
 		}
 		return super.canAttackType(type);

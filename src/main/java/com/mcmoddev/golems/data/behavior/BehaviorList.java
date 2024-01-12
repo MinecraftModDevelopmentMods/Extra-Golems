@@ -1,7 +1,7 @@
 package com.mcmoddev.golems.data.behavior;
 
+import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
-import com.mcmoddev.golems.data.model.Layer;
 import com.mcmoddev.golems.data.model.Model;
 import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mojang.serialization.Codec;
@@ -17,16 +17,16 @@ import java.util.Objects;
 import java.util.function.Predicate;
 
 @Immutable
-public class Behaviors {
+public class BehaviorList {
 
-	public static final Codec<Behaviors> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			EGCodecUtils.listOrElementCodec(Behavior.DIRECT_CODEC).optionalFieldOf("behaviors").forGetter(Behaviors::getBehaviors)
-	).apply(instance, Behaviors::new));
-	public static final Codec<Holder<Behaviors>> HOLDER_CODEC = RegistryFileCodec.create(EGRegistry.Keys.BEHAVIORS, CODEC, true);
+	public static final Codec<BehaviorList> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+			EGCodecUtils.listOrElementCodec(Behavior.DIRECT_CODEC).optionalFieldOf("behaviors", ImmutableList.of()).forGetter(BehaviorList::getBehaviors)
+	).apply(instance, BehaviorList::new));
+	public static final Codec<Holder<BehaviorList>> HOLDER_CODEC = RegistryFileCodec.create(EGRegistry.Keys.BEHAVIOR_LISTS, CODEC, true);
 
 	private final List<Behavior> behaviors;
 
-	public Behaviors(List<Behavior> behaviors) {
+	public BehaviorList(List<Behavior> behaviors) {
 		this.behaviors = behaviors;
 	}
 
@@ -41,8 +41,8 @@ public class Behaviors {
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
-		if (!(o instanceof Behaviors)) return false;
-		Behaviors other = (Behaviors) o;
+		if (!(o instanceof BehaviorList)) return false;
+		BehaviorList other = (BehaviorList) o;
 		return Objects.equals(behaviors, other.behaviors);
 	}
 
@@ -93,8 +93,8 @@ public class Behaviors {
 		/**
 		 * @return a new {@link Model} instance
 		 */
-		public Behaviors build() {
-			return new Behaviors(this.behaviors);
+		public BehaviorList build() {
+			return new BehaviorList(this.behaviors);
 		}
 	}
 }

@@ -7,6 +7,7 @@ import com.mcmoddev.golems.container.render.GolemRenderSettings;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.integration.AddonLoader;
 import com.mcmoddev.golems.item.GolemSpellItem;
+import com.mcmoddev.golems.util.SoundTypeRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -55,14 +56,14 @@ public class ExtraGolems {
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(ExtraGolems::loadConfig);
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(ExtraGolems::reloadConfig);
 		// init registry
-		EGRegistry.init();
+		EGRegistry.register();
 		// init helper classes
+		SoundTypeRegistry.register();
 		GolemBehaviors.init();
 		// register event handlers
 		EGEvents.register();
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(ExtraGolems::setup);
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(ExtraGolems::enqueueIMC);
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(ExtraGolems::onNewRegistry);
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(AddonLoader::onAddPackFinders);
 		// register client event handlers
 		DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> EGClientEvents::register);
@@ -94,10 +95,7 @@ public class ExtraGolems {
 		CONFIG.bake();
 	}
 
-	private static void onNewRegistry(final DataPackRegistryEvent.NewRegistry event) {
-		event.dataPackRegistry(Keys.GOLEM_CONTAINERS, GolemContainer.CODEC, GolemContainer.CODEC);
-		event.dataPackRegistry(Keys.GOLEM_MODELS, GolemRenderSettings.CODEC, GolemRenderSettings.CODEC);
-	}
+
 
 	/**
 	 * Checks all registered GolemContainers until one is found that is constructed

@@ -7,9 +7,7 @@ import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.network.SummonGolemCommand;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
@@ -35,7 +33,6 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 import java.util.Optional;
@@ -127,7 +124,7 @@ public final class EGEvents {
 				// ensure a minimum number of villagers to summon a golem
 				if (nearbyVillagers.size() >= 3) {
 					// attempt to summon a golem
-					Optional<GolemBase> entity = SpawnUtil.trySpawnMob(EGRegistry.GOLEM.get(), MobSpawnType.MOB_SUMMONED, serverLevel, villager.blockPosition(), 10, 8, 6, SpawnUtil.Strategy.LEGACY_IRON_GOLEM);
+					Optional<GolemBase> entity = SpawnUtil.trySpawnMob(EGRegistry.EntityReg.GOLEM.get(), MobSpawnType.MOB_SUMMONED, serverLevel, villager.blockPosition(), 10, 8, 6, SpawnUtil.Strategy.LEGACY_IRON_GOLEM);
 					if(entity.isPresent()) {
 						GolemBase golem = entity.get();
 						// determine material

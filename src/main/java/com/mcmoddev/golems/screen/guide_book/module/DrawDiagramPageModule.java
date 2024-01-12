@@ -1,7 +1,6 @@
 package com.mcmoddev.golems.screen.guide_book.module;
 
 import com.mcmoddev.golems.EGRegistry;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -25,7 +24,7 @@ public class DrawDiagramPageModule extends DrawPageModule {
 
 	protected void drawGolemDiagram(final Screen parent, final GuiGraphics graphics) {
 		Block golemBody = Blocks.IRON_BLOCK;
-		Block golemHead = EGRegistry.GOLEM_HEAD.get();
+		Block golemHead = EGRegistry.BlockReg.GOLEM_HEAD.get();
 		float scale = 2.0F;
 		final int blockW = (int) (8.0F * scale);
 		int startX = x + (width / 8);

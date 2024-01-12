@@ -130,7 +130,7 @@ public class GolemBookScreen extends Screen implements ScrollButton.IScrollListe
 	private final CraftingRecipe headRecipe;
 
 	public GolemBookScreen(Player playerIn, ItemStack itemIn) {
-		super(EGRegistry.INFO_BOOK.get().getDescription());
+		super(EGRegistry.ItemReg.GUIDE_BOOK.get().getDescription());
 		this.initGolemBookEntries();
 		// init variables
 		this.spellRecipe = DrawRecipePageModule.loadRecipe(playerIn.level().getRecipeManager(), SPELL_RECIPE);

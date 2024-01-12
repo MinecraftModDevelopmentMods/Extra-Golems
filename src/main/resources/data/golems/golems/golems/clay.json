@@ -1,0 +1,26 @@
+{
+  "attributes": {
+    "health": 20.0,
+    "attack": 5.0,
+    "speed": 0.25,
+    "knockback_resistance": 0.4,
+    "armor": 0,
+    "knockback": 0.0,
+    "immune_to_fire": false,
+    "immune_to_explosions": false,
+	"immune_to_freeze": false,
+    "hurt_by_water": false,
+    "hurt_by_fall": false,
+	"hurt_by_heat": false,
+	"swim_ability": "sink",
+	"sound": "gravel"
+  },
+  "hidden": false,
+  "blocks": "minecraft:clay",
+  "repair_items": {
+    "minecraft:clay": 0.5,
+	"minecraft:clay_ball": 0.1
+  },
+  "model": "golems:clay",
+  "brain": "golems:empty"
+}

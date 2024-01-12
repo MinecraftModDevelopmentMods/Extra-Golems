@@ -45,7 +45,7 @@ public final class GolemAttributes {
 	private static AttributeSupplier buildAttributes(final AttributeSupplier.Builder materialAttributes) {
 		// Merges the registered attributes with the material attributes
 		// Required to allow attribute modification event to modify golem attributes (#109)
-		final AttributeSupplier master = DefaultAttributes.getSupplier(EGRegistry.GOLEM.get());
+		final AttributeSupplier master = DefaultAttributes.getSupplier(EGRegistry.EntityReg.GOLEM.get());
 		AttributeSupplier.Builder builder = new AttributeSupplier.Builder(master);
 		builder.combine(materialAttributes);
 		return builder.build();

@@ -18,6 +18,7 @@ import net.minecraft.tags.TagKey;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -26,7 +27,9 @@ import java.util.Optional;
  */
 public class DeferredHolderSet<T> {
 
+	// the either backing the holder set
     private final Either<TagKey<T>, List<ResourceKey<T>>> either;
+	// the cached holder set
     private HolderSet<T> holderSet;
 
     public DeferredHolderSet(TagKey<T> tagKey) {
@@ -100,4 +103,17 @@ public class DeferredHolderSet<T> {
         }
         throw new IllegalStateException("[ModifierCondition#asHolderSet] Either has neither left nor right! " + either);
     }
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof DeferredHolderSet)) return false;
+		DeferredHolderSet<?> other = (DeferredHolderSet<?>) o;
+		return Objects.equals(either, other.either);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(either);
+	}
 }

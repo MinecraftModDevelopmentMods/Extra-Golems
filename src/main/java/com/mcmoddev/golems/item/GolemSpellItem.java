@@ -37,14 +37,14 @@ public class GolemSpellItem extends Item {
 				final BlockState blockState = level.getBlockState(blockPos);
 				if (ExtraGolems.CONFIG.enableUseSpellItem() && blockState.is(Blocks.CARVED_PUMPKIN)) {
 					final Direction facing = blockState.getValue(CarvedPumpkinBlock.FACING);
-					level.setBlock(blockPos, EGRegistry.GOLEM_HEAD.get().defaultBlockState().setValue(GolemHeadBlock.FACING, facing), Block.UPDATE_ALL);
+					level.setBlock(blockPos, EGRegistry.BlockReg.GOLEM_HEAD.get().defaultBlockState().setValue(GolemHeadBlock.FACING, facing), Block.UPDATE_ALL);
 					itemStack.shrink(1);
 					return itemStack;
 				}
 				return super.execute(blockSource, itemStack);
 			}
 		};
-		DispenserBlock.registerBehavior(EGRegistry.GOLEM_SPELL.get(), behavior);
+		DispenserBlock.registerBehavior(EGRegistry.ItemReg.GOLEM_SPELL.get(), behavior);
 	}
 
 	@Override
@@ -54,7 +54,7 @@ public class GolemSpellItem extends Item {
 			if (b == Blocks.CARVED_PUMPKIN || (b == Blocks.PUMPKIN && ExtraGolems.CONFIG.pumpkinBuildsGolems())) {
 				if (!cxt.getLevel().isClientSide()) {
 					final Direction facing = cxt.getLevel().getBlockState(cxt.getClickedPos()).getValue(HorizontalDirectionalBlock.FACING);
-					cxt.getLevel().setBlock(cxt.getClickedPos(), EGRegistry.GOLEM_HEAD.get().defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, facing), 3);
+					cxt.getLevel().setBlock(cxt.getClickedPos(), EGRegistry.BlockReg.GOLEM_HEAD.get().defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, facing), 3);
 					GolemHeadBlock.trySpawnGolem(cxt.getPlayer(), cxt.getLevel(), cxt.getClickedPos());
 					cxt.getItemInHand().shrink(1);
 				}

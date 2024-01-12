@@ -2,7 +2,6 @@ package com.mcmoddev.golems.data.model;
 
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
-import com.mcmoddev.golems.data.behavior.Behaviors;
 import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -22,7 +21,7 @@ public class Model {
 	public static final Codec<Model> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			EGCodecUtils.listOrElementCodec(Layer.CODEC).optionalFieldOf("layers", ImmutableList.of()).forGetter(Model::getLayers)
 	).apply(instance, Model::new));
-	public static final Codec<Holder<Model>> HOLDER_CODEC = RegistryFileCodec.create(EGRegistry.Keys.MODEL, CODEC, true);
+	public static final Codec<Holder<Model>> HOLDER_CODEC = RegistryFileCodec.create(EGRegistry.Keys.MODELS, CODEC, true);
 
 	private final List<Layer> layers;
 
@@ -95,7 +94,7 @@ public class Model {
 		 * @param predicate the predicate for layers to remove
 		 * @return the builder instance
 		 */
-		public Builder removeAll(final Predicate<Layer> predicate) {
+		public Builder remove(final Predicate<Layer> predicate) {
 			this.layers.removeIf(predicate);
 			return this;
 		}

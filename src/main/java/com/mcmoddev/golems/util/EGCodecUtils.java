@@ -7,7 +7,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.MinMaxBounds;
-import net.minecraft.core.Vec3i;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -26,14 +25,13 @@ public class EGCodecUtils {
 							: Either.right(stack));
 
 	/** Codec to validate and read an integer as a hex string **/
-	public static final Codec<Integer> HEX_INT_CODEC = hexIntCodec();
+	public static final Codec<Integer> HEX_CODEC = hexIntCodec();
 	/** Codec to accept either a hex string or a raw integer **/
-	public static final Codec<Integer> HEX_OR_INT_CODEC = Codec.either(HEX_INT_CODEC, Codec.INT)
-			.xmap(either -> either.map(Function.identity(), Function.identity()),
-					i -> Either.right(i));
+	public static final Codec<Integer> HEX_OR_INT_CODEC = Codec.either(HEX_CODEC, Codec.intRange(0, 0xFFFFFF))
+			.xmap(either -> either.map(Function.identity(), Function.identity()), Either::right);
 
 	/** {@link MinMaxBounds.Ints} codec **/
-	public static final Codec<MinMaxBounds.Ints> INTS_DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
+	public static final Codec<MinMaxBounds.Ints> MIN_MAX_INTS_DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			Codec.INT.optionalFieldOf("min").forGetter(o -> Optional.ofNullable(o.getMin())),
 			Codec.INT.optionalFieldOf("max").forGetter(o -> Optional.ofNullable(o.getMax()))
 	).apply(instance, (p1, p2) -> {
@@ -43,13 +41,24 @@ public class EGCodecUtils {
 		return MinMaxBounds.Ints.between(p1.get(), p2.get());
 	}));
 	/** {@link MinMaxBounds.Ints} or {@link Codec#INT} codec **/
-	public static final Codec<MinMaxBounds.Ints> INTS_CODEC = Codec.either(Codec.INT, INTS_DIRECT_CODEC)
+	public static final Codec<MinMaxBounds.Ints> MIN_MAX_INTS_CODEC = Codec.either(Codec.INT, MIN_MAX_INTS_DIRECT_CODEC)
 			.xmap(either -> either.map(MinMaxBounds.Ints::exactly, Function.identity()),
 					o -> (o.getMin() != null && o.getMax() != null && o.getMin().equals(o.getMax())) ? Either.left(o.getMin()) : Either.right(o));
-	/** {@link MinMaxBounds.Ints} or {@link Codec#INT} codec that requires the value to be 0 or greater **/
-	public static final Codec<MinMaxBounds.Ints> NON_NEGATIVE_INTS_CODEC = boundedIntCodec(0, Integer.MAX_VALUE);
-	/** {@link MinMaxBounds.Ints} or {@link Codec#INT} codec that requires the value to be 1 or greater **/
-	public static final Codec<MinMaxBounds.Ints> POSITIVE_INTS_CODEC = boundedIntCodec(1, Integer.MAX_VALUE);
+
+	/** {@link MinMaxBounds.Ints} codec **/
+	public static final Codec<MinMaxBounds.Doubles> MIN_MAX_DOUBLES_DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
+			Codec.DOUBLE.optionalFieldOf("min").forGetter(o -> Optional.ofNullable(o.getMin())),
+			Codec.DOUBLE.optionalFieldOf("max").forGetter(o -> Optional.ofNullable(o.getMax()))
+	).apply(instance, (p1, p2) -> {
+		if(p1.isPresent() && p2.isEmpty()) return MinMaxBounds.Doubles.atLeast(p1.get());
+		if(p1.isEmpty() && p2.isPresent()) return MinMaxBounds.Doubles.atMost(p2.get());
+		if(p1.isEmpty() && p2.isEmpty()) return MinMaxBounds.Doubles.ANY;
+		return MinMaxBounds.Doubles.between(p1.get(), p2.get());
+	}));
+	/** {@link MinMaxBounds.Doubles} or {@link Codec#DOUBLE} codec **/
+	public static final Codec<MinMaxBounds.Doubles> MIN_MAX_DOUBLES_CODEC = Codec.either(Codec.DOUBLE, MIN_MAX_DOUBLES_DIRECT_CODEC)
+			.xmap(either -> either.map(MinMaxBounds.Doubles::exactly, Function.identity()),
+					o -> (o.getMin() != null && o.getMax() != null && o.getMin().equals(o.getMax())) ? Either.left(o.getMin()) : Either.right(o));
 
 	public static final Pattern RESOURCE_LOCATION_PATTERN = Pattern.compile("(?:[a-z0-9_.]+:)?[a-z0-9_./-]+");
 	private static final Pattern HEX_PATTERN = Pattern.compile("[0-9a-fA-F]+");
@@ -107,6 +116,6 @@ public class EGCodecUtils {
 				return DataResult.success(instance);
 			}
 		};
-		return INTS_CODEC.flatXmap(function, function);
+		return MIN_MAX_INTS_CODEC.flatXmap(function, function);
 	}
 }
