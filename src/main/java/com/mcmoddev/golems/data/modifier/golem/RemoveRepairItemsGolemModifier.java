@@ -11,25 +11,32 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.Immutable;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+/**
+ * Removes all repair item entries from the {@link com.mcmoddev.golems.data.golem.RepairItems.Builder}
+ * that pass any of the given {@link RemovePredicate}s
+ */
+@Immutable
 public class RemoveRepairItemsGolemModifier extends GolemModifier {
 
-	public static final Codec<RemoveRepairItemsGolemModifier> CODEC = RemovePredicate.CODEC
-			.xmap(RemoveRepairItemsGolemModifier::new, RemoveRepairItemsGolemModifier::getPredicate)
+	public static final Codec<RemoveRepairItemsGolemModifier> CODEC = EGCodecUtils.listOrElementCodec(RemovePredicate.CODEC)
+			.xmap(RemoveRepairItemsGolemModifier::new, RemoveRepairItemsGolemModifier::getPredicates)
 			.fieldOf("predicate").codec();
 
-	private final RemovePredicate predicate;
+	private final List<RemovePredicate> predicate;
 
-	public RemoveRepairItemsGolemModifier(RemovePredicate predicate) {
+	public RemoveRepairItemsGolemModifier(List<RemovePredicate> predicate) {
 		this.predicate = predicate;
 	}
 
 	//// GETTERS ////
 
-	public RemovePredicate getPredicate() {
+	public List<RemovePredicate> getPredicates() {
 		return predicate;
 	}
 
@@ -37,7 +44,7 @@ public class RemoveRepairItemsGolemModifier extends GolemModifier {
 
 	@Override
 	public void apply(Golem.Builder builder) {
-		builder.repairItems(b -> b.remove(getPredicate()));
+		builder.repairItems(b -> getPredicates().forEach(b::remove));
 	}
 
 	@Override

@@ -57,7 +57,6 @@ public class Layer {
 
 	//// GETTERS ////
 
-
 	public ResourcePair getRawTexture() {
 		return rawTexture;
 	}

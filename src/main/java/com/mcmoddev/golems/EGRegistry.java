@@ -7,15 +7,26 @@ import com.mcmoddev.golems.container.GolemContainer;
 import com.mcmoddev.golems.container.render.GolemRenderSettings;
 import com.mcmoddev.golems.data.behavior.Behavior;
 import com.mcmoddev.golems.data.behavior.BehaviorList;
+import com.mcmoddev.golems.data.behavior.CraftMenuBehavior;
+import com.mcmoddev.golems.data.behavior.FollowBehavior;
+import com.mcmoddev.golems.data.behavior.SplitBehavior;
+import com.mcmoddev.golems.data.behavior.TeleportBehavior;
+import com.mcmoddev.golems.data.behavior.TemptBehavior;
+import com.mcmoddev.golems.data.behavior.TickUpdateGolemBehavior;
+import com.mcmoddev.golems.data.behavior.ItemUpdateGolemBehavior;
 import com.mcmoddev.golems.data.golem.Golem;
 import com.mcmoddev.golems.data.model.Model;
 import com.mcmoddev.golems.data.modifier.GolemModifier;
 import com.mcmoddev.golems.data.modifier.GolemModifierList;
+import com.mcmoddev.golems.data.modifier.golem.AddBlocksGolemModifier;
 import com.mcmoddev.golems.data.modifier.golem.AddRepairItemsGolemModifier;
-import com.mcmoddev.golems.data.modifier.golem.AddVariantsGolemModifier;
 import com.mcmoddev.golems.data.modifier.golem.AttributesGolemModifier;
+import com.mcmoddev.golems.data.modifier.golem.RemoveBlocksGolemModifier;
 import com.mcmoddev.golems.data.modifier.golem.RemoveRepairItemsGolemModifier;
-import com.mcmoddev.golems.data.modifier.golem.SetVariantsGolemModifier;
+import com.mcmoddev.golems.data.modifier.golem.GroupGolemModifier;
+import com.mcmoddev.golems.data.modifier.golem.HiddenGolemModifier;
+import com.mcmoddev.golems.data.modifier.golem.ParticleGolemModifier;
+import com.mcmoddev.golems.data.modifier.golem.VariantsGolemModifier;
 import com.mcmoddev.golems.data.modifier.model.AddLayersGolemModifier;
 import com.mcmoddev.golems.data.modifier.model.RemoveLayersGolemModifier;
 import com.mcmoddev.golems.entity.GolemBase;
@@ -191,6 +202,16 @@ public final class EGRegistry {
 			BEHAVIORS.register(FMLJavaModLoadingContext.get().getModEventBus());
 			BEHAVIOR_LISTS.register(FMLJavaModLoadingContext.get().getModEventBus());
 		}
+
+		// SERIALIZERS //
+		public static final RegistryObject<Codec<CraftMenuBehavior>> CRAFT_MENU = BEHAVIOR_SERIALIZERS.register("craft_menu", () -> CraftMenuBehavior.CODEC);
+		public static final RegistryObject<Codec<FollowBehavior>> FOLLOW = BEHAVIOR_SERIALIZERS.register("follow", () -> FollowBehavior.CODEC);
+		public static final RegistryObject<Codec<ItemUpdateGolemBehavior>> ITEM_UPDATE_GOLEM = BEHAVIOR_SERIALIZERS.register("item_update_golem", () -> ItemUpdateGolemBehavior.CODEC);
+		public static final RegistryObject<Codec<SplitBehavior>> SPLIT = BEHAVIOR_SERIALIZERS.register("split", () -> SplitBehavior.CODEC);
+		public static final RegistryObject<Codec<TeleportBehavior>> TELEPORT = BEHAVIOR_SERIALIZERS.register("teleport", () -> TeleportBehavior.CODEC);
+		public static final RegistryObject<Codec<TemptBehavior>> TEMPT = BEHAVIOR_SERIALIZERS.register("tempt", () -> TemptBehavior.CODEC);
+		public static final RegistryObject<Codec<TickUpdateGolemBehavior>> TICK_UPDATE_GOLEM = BEHAVIOR_SERIALIZERS.register("tick_update_golem", () -> TickUpdateGolemBehavior.CODEC);
+
 	}
 
 	public static final class GolemModifierReg {
@@ -206,10 +227,14 @@ public final class EGRegistry {
 		public static final RegistryObject<Codec<RemoveLayersGolemModifier>> REMOVE_LAYERS = GOLEM_MODIFIER_SERIALIZERS.register("remove_layers", () -> RemoveLayersGolemModifier.CODEC);
 		// GOLEM //
 		public static final RegistryObject<Codec<AttributesGolemModifier>> ATTRIBUTES = GOLEM_MODIFIER_SERIALIZERS.register("attributes", () -> AttributesGolemModifier.CODEC);
-		public static final RegistryObject<Codec<AddVariantsGolemModifier>> ADD_VARIANTS = GOLEM_MODIFIER_SERIALIZERS.register("add_variants", () -> AddVariantsGolemModifier.CODEC);
-		public static final RegistryObject<Codec<SetVariantsGolemModifier>> SET_VARIANTS = GOLEM_MODIFIER_SERIALIZERS.register("set_variants", () -> SetVariantsGolemModifier.CODEC);
+		public static final RegistryObject<Codec<VariantsGolemModifier>> VARIANTS = GOLEM_MODIFIER_SERIALIZERS.register("variants", () -> VariantsGolemModifier.CODEC);
+		public static final RegistryObject<Codec<HiddenGolemModifier>> HIDDEN = GOLEM_MODIFIER_SERIALIZERS.register("hidden", () -> HiddenGolemModifier.CODEC);
+		public static final RegistryObject<Codec<GroupGolemModifier>> GROUP = GOLEM_MODIFIER_SERIALIZERS.register("group", () -> GroupGolemModifier.CODEC);
+		public static final RegistryObject<Codec<ParticleGolemModifier>> PARTICLE = GOLEM_MODIFIER_SERIALIZERS.register("particle", () -> ParticleGolemModifier.CODEC);
 		public static final RegistryObject<Codec<AddRepairItemsGolemModifier>> ADD_REPAIR_ITEMS = GOLEM_MODIFIER_SERIALIZERS.register("add_repair_items", () -> AddRepairItemsGolemModifier.CODEC);
 		public static final RegistryObject<Codec<RemoveRepairItemsGolemModifier>> REMOVE_REPAIR_ITEMS = GOLEM_MODIFIER_SERIALIZERS.register("remove_repair_items", () -> RemoveRepairItemsGolemModifier.CODEC);
+		public static final RegistryObject<Codec<AddBlocksGolemModifier>> ADD_BLOCKS = GOLEM_MODIFIER_SERIALIZERS.register("add_blocks", () -> AddBlocksGolemModifier.CODEC);
+		public static final RegistryObject<Codec<RemoveBlocksGolemModifier>> REMOVE_BLOCKS = GOLEM_MODIFIER_SERIALIZERS.register("remove_blocks", () -> RemoveBlocksGolemModifier.CODEC);
 
 	}
 

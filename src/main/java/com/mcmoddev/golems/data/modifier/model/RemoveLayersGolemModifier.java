@@ -3,13 +3,16 @@ package com.mcmoddev.golems.data.modifier.model;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.golem.Golem;
 import com.mcmoddev.golems.data.model.Layer;
+import com.mcmoddev.golems.data.model.Model;
 import com.mcmoddev.golems.data.model.RenderTypes;
 import com.mcmoddev.golems.data.modifier.GolemModifier;
 import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mcmoddev.golems.util.ResourcePair;
+import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
@@ -17,6 +20,9 @@ import javax.annotation.concurrent.Immutable;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+/**
+ * Removes all layers from the {@link Model.Builder} that pass any of the given {@link RemovePredicate}s
+ */
 @Immutable
 public class RemoveLayersGolemModifier extends GolemModifier {
 
@@ -50,9 +56,10 @@ public class RemoveLayersGolemModifier extends GolemModifier {
 
 	//// CLASSES ////
 
-	public static class RemovePredicate implements Predicate<Layer> {
+	public static class RemovePredicate implements Predicate<Either<Layer, Holder<Model>>> {
 
 		public static final Codec<RemovePredicate> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+				ResourceLocation.CODEC.optionalFieldOf("model").forGetter(o -> Optional.ofNullable(o.model)),
 				ResourcePair.CODEC.optionalFieldOf("texture").forGetter(o -> Optional.ofNullable(o.texture)),
 				ResourceLocation.CODEC.optionalFieldOf("template").forGetter(o -> Optional.ofNullable(o.template)),
 				Codec.BOOL.optionalFieldOf("emissive").forGetter(o -> Optional.ofNullable(o.emissive)),
@@ -61,7 +68,7 @@ public class RemoveLayersGolemModifier extends GolemModifier {
 				EGCodecUtils.MIN_MAX_INTS_CODEC.optionalFieldOf("variant").forGetter(o -> Optional.ofNullable(o.variant))
 		).apply(instance, RemovePredicate::new));
 
-
+		private final @Nullable ResourceLocation model;
 		private final @Nullable ResourcePair texture;
 		private final @Nullable ResourceLocation template;
 		private final @Nullable Boolean emissive;
@@ -69,8 +76,9 @@ public class RemoveLayersGolemModifier extends GolemModifier {
 		private final @Nullable RenderTypes renderType;
 		private final @Nullable MinMaxBounds.Ints variant;
 
-		public RemovePredicate(Optional<ResourcePair> texture, Optional<ResourceLocation> template, Optional<Boolean> emissive,
+		public RemovePredicate(Optional<ResourceLocation> model, Optional<ResourcePair> texture, Optional<ResourceLocation> template, Optional<Boolean> emissive,
 							   Optional<Boolean> useBiomeColor, Optional<RenderTypes> renderType, Optional<MinMaxBounds.Ints> variant) {
+			this.model = model.orElse(null);
 			this.texture = texture.orElse(null);
 			this.template = template.orElse(null);
 			this.emissive = emissive.orElse(null);
@@ -79,9 +87,17 @@ public class RemoveLayersGolemModifier extends GolemModifier {
 			this.variant = variant.orElse(null);
 		}
 
-
 		@Override
-		public boolean test(Layer layer) {
+		public boolean test(Either<Layer, Holder<Model>> either) {
+			// check model
+			if(either.right().isPresent()) {
+				return this.model != null && either.right().get().is(this.model);
+			}
+			// check layer
+			if(either.left().isEmpty()) {
+				return false;
+			}
+			final Layer layer = either.left().get();
 			if(texture != null && !texture.equals(layer.getRawTexture())) {
 				return false;
 			}

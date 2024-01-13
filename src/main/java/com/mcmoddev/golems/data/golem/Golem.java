@@ -4,8 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.behavior.BehaviorList;
 import com.mcmoddev.golems.data.model.Model;
-import com.mcmoddev.golems.util.DeferredHolderSet;
-import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
@@ -13,13 +11,9 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.RegistryFileCodec;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.Block;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -29,7 +23,7 @@ public class Golem {
 	public static final Codec<Golem> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			Golem.HOLDER_CODEC.optionalFieldOf("parent").forGetter(o -> Optional.ofNullable(o.parent)),
 			Attributes.CODEC.optionalFieldOf("attributes").forGetter(o -> Optional.ofNullable(o.attributes)),
-			EGCodecUtils.listOrElementCodec(DeferredHolderSet.codec(ForgeRegistries.BLOCKS.getRegistryKey())).optionalFieldOf("blocks", ImmutableList.of()).forGetter(Golem::getBlocks),
+			BuildingBlocks.CODEC.optionalFieldOf("blocks", BuildingBlocks.EMPTY).forGetter(Golem::getBlocks),
 			RepairItems.CODEC.optionalFieldOf("repair_items", RepairItems.EMPTY).forGetter(Golem::getRepairItems),
 			Codec.intRange(1, 127).optionalFieldOf("variants", 1).forGetter(Golem::getVariants),
 			Codec.BOOL.optionalFieldOf("hidden", false).forGetter(Golem::isHidden),
@@ -42,7 +36,7 @@ public class Golem {
 
 	private final @Nullable Holder<Golem> parent;
 	private final @Nullable Attributes attributes;
-	private final List<DeferredHolderSet<Block>> blocks;
+	private final BuildingBlocks blocks;
 	private final RepairItems repairItems;
 	private final int variants;
 	private final boolean hidden;
@@ -52,12 +46,12 @@ public class Golem {
 	private final @Nullable ResourceLocation group;
 
 	public Golem(Optional<Holder<Golem>> parent, Optional<Attributes> attributes,
-				 List<DeferredHolderSet<Block>> blocks, RepairItems repairItems,
+				 BuildingBlocks blocks, RepairItems repairItems,
 				 int variants, boolean hidden, Optional<ParticleOptions> particle,
 				 Holder<Model> model, Holder<BehaviorList> behaviors, Optional<ResourceLocation> group) {
 		this.parent = parent.orElse(null);
 		this.attributes = attributes.orElse(null);
-		this.blocks = ImmutableList.copyOf(blocks);
+		this.blocks = blocks;
 		this.repairItems = repairItems;
 		this.variants = variants;
 		this.hidden = hidden;
@@ -79,7 +73,7 @@ public class Golem {
 		return attributes;
 	}
 
-	public List<DeferredHolderSet<Block>> getBlocks() {
+	public BuildingBlocks getBlocks() {
 		return blocks;
 	}
 
@@ -118,7 +112,7 @@ public class Golem {
 	public static class Builder {
 		private Holder<Golem> parent;
 		private Attributes.Builder attributes;
-		private List<DeferredHolderSet<Block>> blocks;
+		private BuildingBlocks.Builder blocks;
 		private RepairItems.Builder repairItems;
 		private int variants;
 		private boolean hidden;
@@ -130,7 +124,7 @@ public class Golem {
 		//// CONSTRUCTOR ////
 
 		private Builder() {
-			this.blocks = new ArrayList<>();
+			this.blocks = new BuildingBlocks.Builder();
 			this.attributes = new Attributes.Builder();
 			this.repairItems = new RepairItems.Builder();
 			this.model = new Model.Builder();
@@ -145,7 +139,7 @@ public class Golem {
 			if(hasParent) {
 				builder.parent(golem.getParent())
 						.attributes(b -> b.copy(parent.getAttributes()))
-						.blocks(parent.getBlocks())
+						.blocks(b -> b.addAll(parent.getBlocks().getList()))
 						.repairItems(b -> b.addAll(parent.getRepairItems().getMap()))
 						.variants(parent.getVariants())
 						.hidden(parent.isHidden())
@@ -154,39 +148,48 @@ public class Golem {
 						.behaviors(b -> b.addAll(parent.getBehaviors().get().getBehaviors()))
 						.group(parent.getGroup());
 			}
-			// attributes
+			// attributes (merges parent)
 			if(golem.getAttributes() != null) {
 				builder.attributes(b -> b.copy(golem.getAttributes()));
 			}
-			// blocks
+			// blocks (replaces parent)
 			if(!hasParent || !golem.getBlocks().equals(parent.getBlocks())) {
-				builder.blocks(golem.getBlocks());
+				builder.blocks(b -> {
+					b.clear();
+					b.addAll(golem.getBlocks().getList());
+				});
 			}
-			// repair items
+			// repair items (replaces parent)
 			if(!hasParent || !golem.getRepairItems().getMap().equals(parent.getRepairItems().getMap())) {
-				builder.repairItems(b -> b.addAll(golem.getRepairItems().getMap()));
+				builder.repairItems(b -> {
+					b.clear();
+					b.addAll(golem.getRepairItems().getMap());
+				});
 			}
-			// variants
+			// variants (replaces parent)
 			if(!hasParent || golem.getVariants() != parent.getVariants()) {
 				builder.variants(golem.getVariants());
 			}
-			// hidden
+			// hidden (replaces parent)
 			if(!hasParent || golem.isHidden() != parent.isHidden()) {
 				builder.hidden(golem.isHidden());
 			}
-			// particle
+			// particle (replaces parent)
 			if(golem.getParticle() != null) {
 				builder.particle(golem.getParticle());
 			}
-			// model
+			// model (replaces parent)
 			if(!hasParent || !golem.getModel().get().equals(parent.getModel().get())) {
-				builder.model(b -> b.addAll(golem.getModel().get().getLayers()));
+				builder.model(b -> {
+					b.clear();
+					b.addAll(golem.getModel().get().getLayers());
+				});
 			}
-			// behaviors
+			// behaviors (merges parent)
 			if(!hasParent || !golem.getBehaviors().get().equals(parent.getBehaviors().get())) {
 				builder.behaviors(b -> b.addAll(golem.getBehaviors().get().getBehaviors()));
 			}
-			// group
+			// group (replaces parent)
 			if(golem.getGroup() != null) {
 				builder.group(golem.getGroup());
 			}
@@ -220,11 +223,11 @@ public class Golem {
 		}
 
 		/**
-		 * @param blocks the golem building blocks
+		 * @param action the action to perform on the blocks
 		 * @return the builder instance
 		 */
-		public Builder blocks(final List<DeferredHolderSet<Block>> blocks) {
-			this.blocks = blocks;
+		public Builder blocks(final Consumer<BuildingBlocks.Builder> action) {
+			action.accept(this.blocks);
 			return this;
 		}
 
@@ -295,7 +298,7 @@ public class Golem {
 		 * @return a new {@link Golem} instance
 		 */
 		public Golem build() {
-			return new Golem(Optional.ofNullable(parent), Optional.of(attributes.build()), blocks,
+			return new Golem(Optional.ofNullable(parent), Optional.of(attributes.build()), blocks.build(),
 					repairItems.build(), variants, hidden, Optional.ofNullable(particle),
 					Holder.direct(model.build()), Holder.direct(behaviors.build()), Optional.ofNullable(group));
 		}

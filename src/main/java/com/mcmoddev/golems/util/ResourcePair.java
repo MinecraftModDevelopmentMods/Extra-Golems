@@ -5,6 +5,8 @@ import com.mojang.serialization.DataResult;
 import net.minecraft.ResourceLocationException;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.Objects;
+
 /**
  * Contains a ResourceLocation and a boolean that is FALSE when the ResourceLocation is a dynamic texture
  */
@@ -44,27 +46,15 @@ public final class ResourcePair {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (flag ? 1231 : 1237);
-		result = prime * result + ((resource == null) ? 0 : resource.hashCode());
-		return result;
+		return Objects.hash(resource, flag);
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ResourcePair other = (ResourcePair) obj;
-		if (flag != other.flag)
-			return false;
-		if (resource == null) {
-			return other.resource == null;
-		} else return resource.equals(other.resource);
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof ResourcePair)) return false;
+		ResourcePair other = (ResourcePair) o;
+		return flag == other.flag && Objects.equals(resource, other.resource);
 	}
 
 	public static DataResult<ResourcePair> read(String string) {

@@ -3,7 +3,6 @@ package com.mcmoddev.golems.data.golem;
 import com.google.common.collect.ImmutableMap;
 import com.mcmoddev.golems.util.ResourcePair;
 import com.mojang.serialization.Codec;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -33,11 +32,17 @@ public class RepairItems {
 	private final Map<ResourceLocation, Double> itemMap;
 
 	public RepairItems(Map<ResourcePair, Double> map) {
-		this.map = map;
+		this.map = ImmutableMap.copyOf(map);
 		// parse maps
 		final ImmutableMap.Builder<TagKey<Item>, Double> tagMapBuilder = ImmutableMap.builder();
 		final ImmutableMap.Builder<ResourceLocation, Double> itemMapBuilder = ImmutableMap.builder();
-
+		for(Map.Entry<ResourcePair, Double> entry : map.entrySet()) {
+			if(entry.getKey().flag()) {
+				tagMapBuilder.put(ForgeRegistries.ITEMS.tags().createTagKey(entry.getKey().resource()), entry.getValue());
+			} else {
+				itemMapBuilder.put(entry.getKey().resource(), entry.getValue());
+			}
+		}
 		this.tagMap = tagMapBuilder.build();
 		this.itemMap = itemMapBuilder.build();
 	}
@@ -46,6 +51,14 @@ public class RepairItems {
 
 	public Map<ResourcePair, Double> getMap() {
 		return map;
+	}
+
+	public Map<TagKey<Item>, Double> getTagMap() {
+		return tagMap;
+	}
+
+	public Map<ResourceLocation, Double> getItemMap() {
+		return itemMap;
 	}
 
 	/**
@@ -119,7 +132,13 @@ public class RepairItems {
 			return this;
 		}
 
-		//// METHODS ////
+		/**
+		 * @return the builder instance
+		 */
+		public Builder clear() {
+			this.map.clear();
+			return this;
+		}
 
 		/**
 		 * @return a new {@link RepairItems} instance

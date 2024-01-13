@@ -6,6 +6,12 @@ import com.mcmoddev.golems.data.golem.Golem;
 import com.mcmoddev.golems.data.modifier.GolemModifier;
 import com.mojang.serialization.Codec;
 
+import javax.annotation.concurrent.Immutable;
+
+/**
+ * Merges the given {@link Attributes} with the existing ones by replacing values with the ones specified here, if any
+ */
+@Immutable
 public class AttributesGolemModifier extends GolemModifier {
 
 	public static final Codec<AttributesGolemModifier> CODEC = Attributes.CODEC.xmap(AttributesGolemModifier::new, AttributesGolemModifier::getAttributes)

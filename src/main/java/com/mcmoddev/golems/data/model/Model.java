@@ -3,6 +3,7 @@ package com.mcmoddev.golems.data.model;
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.util.EGCodecUtils;
+import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
@@ -19,19 +20,20 @@ import java.util.function.Predicate;
 public class Model {
 
 	public static final Codec<Model> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			EGCodecUtils.listOrElementCodec(Layer.CODEC).optionalFieldOf("layers", ImmutableList.of()).forGetter(Model::getLayers)
+			EGCodecUtils.listOrElementCodec(Model.EITHER_CODEC).optionalFieldOf("layers", ImmutableList.of()).forGetter(Model::getLayers)
 	).apply(instance, Model::new));
-	public static final Codec<Holder<Model>> HOLDER_CODEC = RegistryFileCodec.create(EGRegistry.Keys.MODELS, CODEC, true);
+	public static final Codec<Holder<Model>> HOLDER_CODEC = RegistryFileCodec.create(EGRegistry.Keys.MODELS, Model.CODEC, true);
+	public static final Codec<Either<Layer, Holder<Model>>> EITHER_CODEC = Codec.either(Layer.CODEC, Model.HOLDER_CODEC);
 
-	private final List<Layer> layers;
+	private final List<Either<Layer, Holder<Model>>> layers;
 
-	public Model(List<Layer> layers) {
+	public Model(List<Either<Layer, Holder<Model>>> layers) {
 		this.layers = ImmutableList.copyOf(layers);
 	}
 
 	//// GETTERS ////
 
-	public List<Layer> getLayers() {
+	public List<Either<Layer, Holder<Model>>> getLayers() {
 		return layers;
 	}
 
@@ -55,7 +57,7 @@ public class Model {
 
 	public static class Builder {
 
-		private List<Layer> layers;
+		private List<Either<Layer, Holder<Model>>> layers;
 
 		/**
 		 * Creates a builder with an empty list of layers
@@ -68,7 +70,7 @@ public class Model {
 		 * Creates a builder with the given list of layers
 		 * @param layers a list of layers
 		 */
-		public Builder(final List<Layer> layers) {
+		public Builder(final List<Either<Layer, Holder<Model>>> layers) {
 			this.layers = new ArrayList<>(layers);
 		}
 
@@ -77,7 +79,16 @@ public class Model {
 		 * @return the builder instance
 		 */
 		public Builder add(final Layer layer) {
-			this.layers.add(layer);
+			this.layers.add(Either.left(layer));
+			return this;
+		}
+
+		/**
+		 * @param model the model to add
+		 * @return the builder instance
+		 */
+		public Builder add(final Holder<Model> model) {
+			this.layers.add(Either.right(model));
 			return this;
 		}
 
@@ -85,7 +96,7 @@ public class Model {
 		 * @param collection the layers to add
 		 * @return the builder instance
 		 */
-		public Builder addAll(final Collection<Layer> collection) {
+		public Builder addAll(final Collection<Either<Layer, Holder<Model>>> collection) {
 			this.layers.addAll(collection);
 			return this;
 		}
@@ -94,8 +105,16 @@ public class Model {
 		 * @param predicate the predicate for layers to remove
 		 * @return the builder instance
 		 */
-		public Builder remove(final Predicate<Layer> predicate) {
+		public Builder remove(final Predicate<Either<Layer, Holder<Model>>> predicate) {
 			this.layers.removeIf(predicate);
+			return this;
+		}
+
+		/**
+		 * @return the builder instance
+		 */
+		public Builder clear() {
+			this.layers.clear();
 			return this;
 		}
 

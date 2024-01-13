@@ -80,7 +80,7 @@ public class GolemBase extends IronGolem implements InventoryCarrier, IMultitext
 
 	protected static final EntityDataAccessor<String> MATERIAL = SynchedEntityData.defineId(GolemBase.class, EntityDataSerializers.STRING);
 	protected static final EntityDataAccessor<Boolean> CHILD = SynchedEntityData.defineId(GolemBase.class, EntityDataSerializers.BOOLEAN);
-	protected static final EntityDataAccessor<Byte> TEXTURE = SynchedEntityData.defineId(GolemBase.class, EntityDataSerializers.BYTE);
+	protected static final EntityDataAccessor<Byte> VARIANT = SynchedEntityData.defineId(GolemBase.class, EntityDataSerializers.BYTE);
 	protected static final EntityDataAccessor<Integer> FUEL = SynchedEntityData.defineId(GolemBase.class, EntityDataSerializers.INT);
 	protected static final EntityDataAccessor<Boolean> FUSE_LIT = SynchedEntityData.defineId(GolemBase.class, EntityDataSerializers.BOOLEAN);
 	protected static final EntityDataAccessor<Integer> ARROWS = SynchedEntityData.defineId(GolemBase.class, EntityDataSerializers.INT);
@@ -210,7 +210,7 @@ public class GolemBase extends IronGolem implements InventoryCarrier, IMultitext
 		super.defineSynchedData();
 		this.getEntityData().define(MATERIAL, GolemContainer.EMPTY_MATERIAL.toString());
 		this.getEntityData().define(CHILD, Boolean.FALSE);
-		this.getEntityData().define(TEXTURE, (byte) 0);
+		this.getEntityData().define(VARIANT, (byte) 0);
 		this.getEntityData().define(FUEL, 0);
 		this.getEntityData().define(FUSE_LIT, Boolean.FALSE);
 		this.getEntityData().define(ARROWS, 0);
@@ -238,7 +238,7 @@ public class GolemBase extends IronGolem implements InventoryCarrier, IMultitext
 			}
 			// recalculate size
 			this.refreshDimensions();
-		} else if (TEXTURE.equals(key)) {
+		} else if (VARIANT.equals(key)) {
 			this.setTextureId((byte) this.getTextureId());
 		}
 	}
@@ -699,15 +699,15 @@ public class GolemBase extends IronGolem implements InventoryCarrier, IMultitext
 	}
 
 	@Override
-	public void setTextureId(byte toSet) {
+	public void setTextureId(int toSet) {
 		if (toSet >= 0) {
-			this.getEntityData().set(TEXTURE, toSet);
+			this.getEntityData().set(VARIANT, (byte)toSet);
 		}
 	}
 
 	@Override
 	public int getTextureId() {
-		return this.getEntityData().get(TEXTURE);
+		return this.getEntityData().get(VARIANT);
 	}
 
 	/**

@@ -11,7 +11,7 @@ public interface IMultitextured {
 	/**
 	 * @param toSet the index of the new texture
 	 **/
-	void setTextureId(final byte toSet);
+	void setTextureId(final int toSet);
 
 	/**
 	 * @return the index of the current texture
