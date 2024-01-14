@@ -41,6 +41,8 @@ public final class GolemModifyBlocksEvent extends Event {
 	}
 
 	public void initAffectedBlockList(final int range) {
+		// TODO use mutable block pos stream here, and allow the event to blacklist block positions.
+		// TODO also add "from" and "to" block positions to this event
 		this.affectedBlocks = new ArrayList<>(range * range * 2 * 4);
 		final int maxDis = range * range;
 		// check 3-layer circle around this entity (disc, not sphere)

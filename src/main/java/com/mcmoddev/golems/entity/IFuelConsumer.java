@@ -92,17 +92,14 @@ public interface IFuelConsumer {
 			}
 			// update the player's held item
 			player.setItemInHand(hand, stack);
-			// add particles
-//      ItemBedrockGolem.spawnParticles(this.level, pos.x, pos.y + this.getBbHeight() / 2.0D, pos.z, 0.03D, ParticleTypes.FLAME, 10);
-//      return InteractionResult.CONSUME;
+			// TODO spawn particles
 		}
 
 		// allow player to remove burn time by using a water bucket
 		if (stack.getItem() == Items.WATER_BUCKET) {
 			this.setFuel(0);
 			player.setItemInHand(hand, stack.getCraftingRemainingItem());
-//      ItemBedrockGolem.spawnParticles(this.level, pos.x, pos.y + this.getBbHeight() / 2.0D, pos.z, 0.1D, ParticleTypes.LARGE_SMOKE, 15);
-//      return InteractionResult.CONSUME;
+			// TODO spawn particles, play extinguish sound
 		}
 	}
 }

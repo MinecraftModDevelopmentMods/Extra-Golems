@@ -1,28 +1,21 @@
 package com.mcmoddev.golems.data.behavior;
 
 import com.mcmoddev.golems.EGRegistry;
-import com.mcmoddev.golems.container.behavior.parameter.ChangeMaterialBehaviorParameter;
+import com.mcmoddev.golems.data.behavior.util.GolemVariantCombo;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.util.DeferredHolderSet;
-import com.mcmoddev.golems.util.ResourcePair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.MinMaxBounds;
-import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.concurrent.Immutable;
-import java.util.Map;
 import java.util.Optional;
 
 
@@ -46,8 +39,7 @@ public class ItemUpdateGolemBehavior extends Behavior<GolemBase> {
 	}
 
 	//// GETTERS ////
-
-
+	
 	public UpdateOnUseItem getUpdateOnUseItem() {
 		return updateOnUseItem;
 	}
@@ -74,7 +66,6 @@ public class ItemUpdateGolemBehavior extends Behavior<GolemBase> {
 			}
 		}
 	}
-
 
 	//// CLASSES ////
 

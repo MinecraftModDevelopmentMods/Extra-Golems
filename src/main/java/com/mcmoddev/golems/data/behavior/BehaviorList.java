@@ -14,8 +14,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Predicate;
 
+@SuppressWarnings("rawtypes")
 @Immutable
 public class BehaviorList {
 
@@ -34,6 +36,29 @@ public class BehaviorList {
 
 	public List<Behavior> getBehaviors() {
 		return behaviors;
+	}
+
+	public <T extends Behavior> List<T> getBehaviors(final Class<T> clazz) {
+		final ImmutableList.Builder<T> builder = ImmutableList.builder();
+		for(Behavior b : behaviors) {
+			if(b.getClass().isAssignableFrom(clazz)) {
+				builder.add((T) b);
+			}
+		}
+		return builder.build();
+	}
+
+	/**
+	 * @param clazz the {@link Behavior} class
+	 * @return true if there is at least one behavior with the given class
+	 */
+	public boolean hasBehavior(final Class<? extends Behavior> clazz) {
+		for(Behavior b : behaviors) {
+			if(b.getClass().isAssignableFrom(clazz)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	//// EQUALITY ////

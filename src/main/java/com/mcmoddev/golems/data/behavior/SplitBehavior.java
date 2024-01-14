@@ -1,5 +1,6 @@
 package com.mcmoddev.golems.data.behavior;
 
+import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.entity.goal.FollowGoal;
@@ -27,13 +28,10 @@ public class SplitBehavior extends Behavior<GolemBase> {
 
 	/** The number of children to spawn **/
 	private final int children;
-	/** The behavior description **/
-	private final Component description;
 
 	public SplitBehavior(MinMaxBounds.Ints variant, int children) {
 		super(variant);
 		this.children = children;
-		this.description = Component.translatable("entitytip.split_on_death").withStyle(ChatFormatting.GREEN);
 	}
 
 	//// GETTERS ////
@@ -89,7 +87,7 @@ public class SplitBehavior extends Behavior<GolemBase> {
 	}
 
 	@Override
-	public void onAddDescriptions(List<Component> list) {
-		list.add(this.description);
+	public List<Component> createDescriptions() {
+		return ImmutableList.of(Component.translatable("entitytip.split_on_death").withStyle(ChatFormatting.GREEN));
 	}
 }

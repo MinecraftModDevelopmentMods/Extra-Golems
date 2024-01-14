@@ -7,6 +7,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -60,8 +61,20 @@ public class EGCodecUtils {
 			.xmap(either -> either.map(MinMaxBounds.Doubles::exactly, Function.identity()),
 					o -> (o.getMin() != null && o.getMax() != null && o.getMin().equals(o.getMax())) ? Either.left(o.getMin()) : Either.right(o));
 
+	/** {@link MobEffectInstance} codec **/
+	public static final Codec<MobEffectInstance> MOB_EFFECT_INSTANCE_CODEC = RecordCodecBuilder.create(instance -> instance.group(
+			ForgeRegistries.MOB_EFFECTS.getCodec().fieldOf("effect").forGetter(MobEffectInstance::getEffect),
+			Codec.INT.optionalFieldOf("duration", 0).forGetter(MobEffectInstance::getDuration),
+			Codec.INT.optionalFieldOf("amplifier", 0).forGetter(MobEffectInstance::getAmplifier),
+			Codec.BOOL.optionalFieldOf("ambient", false).forGetter(MobEffectInstance::isAmbient),
+			Codec.BOOL.optionalFieldOf("visible", true).forGetter(MobEffectInstance::isVisible),
+			Codec.BOOL.optionalFieldOf("show_icon", true).forGetter(MobEffectInstance::showIcon)
+	).apply(instance, MobEffectInstance::new));
+
+	public static final Codec<String> AS_STRING_CODEC = Codec.STRING.comapFlatMap(DataResult::success, Object::toString);
+
 	public static final Pattern RESOURCE_LOCATION_PATTERN = Pattern.compile("(?:[a-z0-9_.]+:)?[a-z0-9_./-]+");
-	private static final Pattern HEX_PATTERN = Pattern.compile("[0-9a-fA-F]+");
+	public static final Pattern HEX_PATTERN = Pattern.compile("[0-9a-fA-F]+");
 
 	/**
 	 * @param codec an element codec

@@ -1,5 +1,6 @@
 package com.mcmoddev.golems.data.behavior;
 
+import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.entity.goal.FollowGoal;
@@ -30,14 +31,11 @@ public class FollowBehavior extends Behavior<GolemBase> {
 	private final EntityType<?> entity;
 	/** The goal priority **/
 	private final int priority;
-	/** The behavior description **/
-	private final Component description;
 
 	public FollowBehavior(MinMaxBounds.Ints variant, EntityType<?> entity, int priority) {
 		super(variant);
 		this.entity = entity;
 		this.priority = priority;
-		this.description = Component.translatable("entitytip.follow_x", entity.getDescription()).withStyle(ChatFormatting.DARK_GREEN);
 	}
 
 	//// GETTERS ////
@@ -64,7 +62,7 @@ public class FollowBehavior extends Behavior<GolemBase> {
 	}
 
 	@Override
-	public void onAddDescriptions(List<Component> list) {
-		list.add(description);
+	public List<Component> createDescriptions() {
+		return ImmutableList.of(Component.translatable("entitytip.follow_x", entity.getDescription()).withStyle(ChatFormatting.DARK_GREEN));
 	}
 }

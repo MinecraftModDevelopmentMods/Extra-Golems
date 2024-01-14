@@ -1,8 +1,8 @@
 package com.mcmoddev.golems.data.behavior;
 
 import com.mcmoddev.golems.EGRegistry;
+import com.mcmoddev.golems.data.behavior.util.GolemVariantCombo;
 import com.mcmoddev.golems.entity.GolemBase;
-import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.MinMaxBounds;
@@ -10,7 +10,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 
 import javax.annotation.concurrent.Immutable;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -50,9 +49,6 @@ public class TickUpdateGolemBehavior extends Behavior<GolemBase> {
 
 	@Override
 	public void onTick(GolemBase entity) {
-		if(!canApply(entity)) {
-			return;
-		}
 		if(updateOnTick.getPredicate().test(entity) && entity.getRandom().nextDouble() < updateOnTick.getChance()) {
 			updateOnTick.update(entity);
 		}
@@ -66,7 +62,13 @@ public class TickUpdateGolemBehavior extends Behavior<GolemBase> {
 		WET("wet", e -> e.isInWaterRainOrBubble()),
 		DRY("dry", e -> !e.isInWaterRainOrBubble()),
 		FUELED("fuel", e -> e.hasFuel()),
-		FUEL_EMPTY("fuel_empty", e -> !e.hasFuel());
+		FUEL_EMPTY("fuel_empty", e -> !e.hasFuel()),
+		ARROWS("arrows", e -> e.getArrowsInInventory() > 0),
+		ARROWS_EMPTY("arrows_empty", e -> e.getArrowsInInventory() <= 0),
+		FUSE_LIT("fuse_lit", e -> e.isFuseLit()),
+		FUSE_UNLIT("fuse_unlit", e -> !e.isFuseLit()),
+		BABY("baby", e -> e.isBaby()),
+		ADULT("adult", e -> !e.isBaby());
 
 		public static final Codec<UpdatePredicate> CODEC = StringRepresentable.fromEnum(UpdatePredicate::values);
 

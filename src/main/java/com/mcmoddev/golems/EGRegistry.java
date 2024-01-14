@@ -5,15 +5,27 @@ import com.mcmoddev.golems.block.GolemHeadBlock;
 import com.mcmoddev.golems.block.PowerBlock;
 import com.mcmoddev.golems.container.GolemContainer;
 import com.mcmoddev.golems.container.render.GolemRenderSettings;
+import com.mcmoddev.golems.data.behavior.ActiveEffectBehavior;
+import com.mcmoddev.golems.data.behavior.AoeDryBehavior;
+import com.mcmoddev.golems.data.behavior.AoeFreezeBehavior;
+import com.mcmoddev.golems.data.behavior.AoeGrowBehavior;
 import com.mcmoddev.golems.data.behavior.Behavior;
 import com.mcmoddev.golems.data.behavior.BehaviorList;
+import com.mcmoddev.golems.data.behavior.BurnInSunBehavior;
 import com.mcmoddev.golems.data.behavior.CraftMenuBehavior;
+import com.mcmoddev.golems.data.behavior.ExplodeBehavior;
 import com.mcmoddev.golems.data.behavior.FollowBehavior;
+import com.mcmoddev.golems.data.behavior.PassiveEffectBehavior;
+import com.mcmoddev.golems.data.behavior.PlaceBlockBehavior;
+import com.mcmoddev.golems.data.behavior.SetFireBehavior;
+import com.mcmoddev.golems.data.behavior.ShootArrowsBehavior;
 import com.mcmoddev.golems.data.behavior.SplitBehavior;
+import com.mcmoddev.golems.data.behavior.SummonEntityBehavior;
 import com.mcmoddev.golems.data.behavior.TeleportBehavior;
 import com.mcmoddev.golems.data.behavior.TemptBehavior;
 import com.mcmoddev.golems.data.behavior.TickUpdateGolemBehavior;
 import com.mcmoddev.golems.data.behavior.ItemUpdateGolemBehavior;
+import com.mcmoddev.golems.data.behavior.UseFuelBehavior;
 import com.mcmoddev.golems.data.golem.Golem;
 import com.mcmoddev.golems.data.model.Model;
 import com.mcmoddev.golems.data.modifier.GolemModifier;
@@ -204,13 +216,25 @@ public final class EGRegistry {
 		}
 
 		// SERIALIZERS //
+		public static final RegistryObject<Codec<ActiveEffectBehavior>> ACTIVE_EFFECT = BEHAVIOR_SERIALIZERS.register("active_effect", () -> ActiveEffectBehavior.CODEC);
+		public static final RegistryObject<Codec<AoeDryBehavior>> AOE_DRY = BEHAVIOR_SERIALIZERS.register("aoe_dry", () -> AoeDryBehavior.CODEC);
+		public static final RegistryObject<Codec<AoeFreezeBehavior>> AOE_FREEZE = BEHAVIOR_SERIALIZERS.register("aoe_freeze", () -> AoeFreezeBehavior.CODEC);
+		public static final RegistryObject<Codec<AoeGrowBehavior>> AOE_GROW = BEHAVIOR_SERIALIZERS.register("aoe_grow", () -> AoeGrowBehavior.CODEC);
+		public static final RegistryObject<Codec<BurnInSunBehavior>> BURN_IN_SUN = BEHAVIOR_SERIALIZERS.register("burn_in_sun", () -> BurnInSunBehavior.CODEC);
 		public static final RegistryObject<Codec<CraftMenuBehavior>> CRAFT_MENU = BEHAVIOR_SERIALIZERS.register("craft_menu", () -> CraftMenuBehavior.CODEC);
+		public static final RegistryObject<Codec<ExplodeBehavior>> EXPLODE = BEHAVIOR_SERIALIZERS.register("explode", () -> ExplodeBehavior.CODEC);
 		public static final RegistryObject<Codec<FollowBehavior>> FOLLOW = BEHAVIOR_SERIALIZERS.register("follow", () -> FollowBehavior.CODEC);
 		public static final RegistryObject<Codec<ItemUpdateGolemBehavior>> ITEM_UPDATE_GOLEM = BEHAVIOR_SERIALIZERS.register("item_update_golem", () -> ItemUpdateGolemBehavior.CODEC);
+		public static final RegistryObject<Codec<PassiveEffectBehavior>> PASSIVE_EFFECT = BEHAVIOR_SERIALIZERS.register("passive_effect", () -> PassiveEffectBehavior.CODEC);
+		public static final RegistryObject<Codec<PlaceBlockBehavior>> PLACE_BLOCK = BEHAVIOR_SERIALIZERS.register("place_block", () -> PlaceBlockBehavior.CODEC);
+		public static final RegistryObject<Codec<ShootArrowsBehavior>> SHOOT_ARROWS = BEHAVIOR_SERIALIZERS.register("shoot_arrows", () -> ShootArrowsBehavior.CODEC);
 		public static final RegistryObject<Codec<SplitBehavior>> SPLIT = BEHAVIOR_SERIALIZERS.register("split", () -> SplitBehavior.CODEC);
+		public static final RegistryObject<Codec<SetFireBehavior>> SET_FIRE = BEHAVIOR_SERIALIZERS.register("set_fire", () -> SetFireBehavior.CODEC);
+		public static final RegistryObject<Codec<SummonEntityBehavior>> SUMMON = BEHAVIOR_SERIALIZERS.register("summon", () -> SummonEntityBehavior.CODEC);
 		public static final RegistryObject<Codec<TeleportBehavior>> TELEPORT = BEHAVIOR_SERIALIZERS.register("teleport", () -> TeleportBehavior.CODEC);
 		public static final RegistryObject<Codec<TemptBehavior>> TEMPT = BEHAVIOR_SERIALIZERS.register("tempt", () -> TemptBehavior.CODEC);
 		public static final RegistryObject<Codec<TickUpdateGolemBehavior>> TICK_UPDATE_GOLEM = BEHAVIOR_SERIALIZERS.register("tick_update_golem", () -> TickUpdateGolemBehavior.CODEC);
+		public static final RegistryObject<Codec<UseFuelBehavior>> USE_FUEL = BEHAVIOR_SERIALIZERS.register("use_fuel", () -> UseFuelBehavior.CODEC);
 
 	}
 

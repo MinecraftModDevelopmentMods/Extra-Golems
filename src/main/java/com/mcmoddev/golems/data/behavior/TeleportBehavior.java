@@ -1,5 +1,6 @@
 package com.mcmoddev.golems.data.behavior;
 
+import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.entity.goal.RandomTeleportGoal;
@@ -37,8 +38,6 @@ public class TeleportBehavior extends Behavior<GolemBase> {
 	private final double chanceOnHurt;
 	/** The percent chance [0,1] to apply each tick that the entity has an attack target **/
 	private final double chanceOnTarget;
-	/** The behavior description **/
-	private final Component description;
 
 	public TeleportBehavior(MinMaxBounds.Ints variant, double range, double chanceOnIdle, double chanceOnHurt, double chanceOnTarget) {
 		super(variant);
@@ -46,7 +45,6 @@ public class TeleportBehavior extends Behavior<GolemBase> {
 		this.chanceOnIdle = chanceOnIdle;
 		this.chanceOnHurt = chanceOnHurt;
 		this.chanceOnTarget = chanceOnTarget;
-		this.description = Component.translatable("entitytip.teleport").withStyle(ChatFormatting.LIGHT_PURPLE);
 	}
 
 	//// GETTERS ////
@@ -110,7 +108,7 @@ public class TeleportBehavior extends Behavior<GolemBase> {
 	}
 
 	@Override
-	public void onAddDescriptions(List<Component> list) {
-		list.add(this.description);
+	public List<Component> createDescriptions() {
+		return ImmutableList.of(Component.translatable("entitytip.teleport").withStyle(ChatFormatting.LIGHT_PURPLE));
 	}
 }

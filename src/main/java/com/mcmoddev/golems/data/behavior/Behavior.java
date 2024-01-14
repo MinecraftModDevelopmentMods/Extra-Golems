@@ -1,5 +1,7 @@
 package com.mcmoddev.golems.data.behavior;
 
+import com.google.common.base.Suppliers;
+import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.entity.IMultitextured;
@@ -15,11 +17,14 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
 
 import javax.annotation.concurrent.Immutable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 @Immutable
 public abstract class Behavior<T extends LivingEntity & IMultitextured> {
@@ -28,9 +33,11 @@ public abstract class Behavior<T extends LivingEntity & IMultitextured> {
 			.dispatch(Behavior::getCodec, Function.identity());
 
 	private final MinMaxBounds.Ints variant;
+	private final Supplier<List<Component>> descriptions;
 
 	public Behavior(MinMaxBounds.Ints variant) {
 		this.variant = variant;
+		this.descriptions = Suppliers.memoize(this::createDescriptions);
 	}
 
 	//// GETTERS ////
@@ -42,27 +49,20 @@ public abstract class Behavior<T extends LivingEntity & IMultitextured> {
 		return variant;
 	}
 
-	//// METHODS ////
-
 	/**
 	 * @return the {@link Codec} for this behavior
 	 */
 	public abstract Codec<? extends Behavior<?>> getCodec();
 
-	/**
-	 * Simplifies codec creation, especially if no other fields are added
-	 * @param instance the record codec builder with additional parameters, if any
-	 */
-	protected static <T extends Behavior<?>> Products.P1<RecordCodecBuilder.Mu<T>, MinMaxBounds.Ints> codecStart(RecordCodecBuilder.Instance<T> instance) {
-		return instance.group(EGCodecUtils.MIN_MAX_INTS_CODEC.optionalFieldOf("variant", MinMaxBounds.Ints.ANY).forGetter(Behavior::getVariant));
-	}
+	//// METHODS ////
 
 	/**
 	 * @param entity the entity
 	 * @return true if the variant is in the range defined by {@link #getVariant()}
-	 * @see
+	 * @see #canApply(int)
 	 */
 	public boolean canApply(final T entity) {
+		// TODO make sure all users call this before the onX methods
 		return this.getVariant().matches(entity.getTextureId());
 	}
 
@@ -139,9 +139,40 @@ public abstract class Behavior<T extends LivingEntity & IMultitextured> {
 	public void onReadData(final T entity, final CompoundTag tag) { }
 
 	/**
+	 * @return a list of description text components to cache for later use
+	 */
+	public List<Component> createDescriptions() {
+		return ImmutableList.of();
+	}
+
+	/**
 	 * Called when building the Guide Book to add descriptions
 	 *
 	 * @param list the current description list
 	 */
-	public void onAddDescriptions(List<Component> list) { }
+	public void onAddDescriptions(List<Component> list) {
+		list.addAll(this.descriptions.get());
+	}
+
+	//// HELPER METHODS ////
+
+	/**
+	 * Simplifies codec creation, especially if no other fields are added
+	 * @param instance the record codec builder with additional parameters, if any
+	 */
+	protected static <T extends Behavior<?>> Products.P1<RecordCodecBuilder.Mu<T>, MinMaxBounds.Ints> codecStart(RecordCodecBuilder.Instance<T> instance) {
+		return instance.group(EGCodecUtils.MIN_MAX_INTS_CODEC.optionalFieldOf("variant", MinMaxBounds.Ints.ANY).forGetter(Behavior::getVariant));
+	}
+
+	protected static boolean removeGoal(final GolemBase entity, final Class<? extends Goal> goalToRemove) {
+		final List<Goal> goalsToRemove = new ArrayList<>();
+		entity.goalSelector.availableGoals.forEach(g -> {
+			if (g.getGoal().getClass() == goalToRemove) {
+				goalsToRemove.add(g.getGoal());
+			}
+		});
+		// remove the matching goals
+		goalsToRemove.forEach(entity.goalSelector::removeGoal);
+		return !goalsToRemove.isEmpty();
+	}
 }

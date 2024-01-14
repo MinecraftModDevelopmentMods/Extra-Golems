@@ -1,4 +1,4 @@
-package com.mcmoddev.golems.data.behavior;
+package com.mcmoddev.golems.data.behavior.util;
 
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mojang.datafixers.Products;
@@ -45,12 +45,12 @@ public class GolemVariantCombo {
 	public boolean update(final GolemBase entity) {
 		boolean flag = false;
 		// update golem
-		if(golem != null) {
+		if(golem != null && !golem.equals(entity.getMaterial())) {
 			entity.setMaterial(golem);
 			flag = true;
 		}
 		// update variant
-		if(variant != null) {
+		if(variant != null && variant != entity.getTextureId()) {
 			entity.setTextureId(variant);
 			flag = true;
 		}

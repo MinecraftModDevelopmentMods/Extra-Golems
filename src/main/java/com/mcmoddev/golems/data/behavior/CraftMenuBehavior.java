@@ -1,5 +1,6 @@
 package com.mcmoddev.golems.data.behavior;
 
+import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.menu.PortableCraftingMenu;
@@ -27,12 +28,8 @@ public class CraftMenuBehavior extends Behavior<GolemBase> {
 	public static final Codec<CraftMenuBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
 			.apply(instance, CraftMenuBehavior::new));
 
-	/** The behavior description **/
-	private final Component description;
-
 	public CraftMenuBehavior(MinMaxBounds.Ints variant) {
 		super(variant);
-		this.description = Component.translatable("entitytip.crafting_menu").withStyle(ChatFormatting.BLUE);
 	}
 
 	//// GETTERS ////
@@ -46,9 +43,6 @@ public class CraftMenuBehavior extends Behavior<GolemBase> {
 
 	@Override
 	public void onMobInteract(final GolemBase entity, final Player player, final InteractionHand hand) {
-		if(!canApply(entity.getTextureId())) {
-			return;
-		}
 		if (!player.isCrouching() && player instanceof ServerPlayer) {
 			// update menu player
 			if(entity.getPlayerInMenu() != null) {
@@ -64,9 +58,6 @@ public class CraftMenuBehavior extends Behavior<GolemBase> {
 
 	@Override
 	public void onTick(GolemBase entity) {
-		if(!canApply(entity.getTextureId())) {
-			return;
-		}
 		if(null == entity.getPlayerInMenu()) {
 			return;
 		}
@@ -81,7 +72,7 @@ public class CraftMenuBehavior extends Behavior<GolemBase> {
 	}
 
 	@Override
-	public void onAddDescriptions(List<Component> list) {
-		list.add(this.description);
+	public List<Component> createDescriptions() {
+		return ImmutableList.of(Component.translatable("entitytip.crafting_menu").withStyle(ChatFormatting.BLUE));
 	}
 }

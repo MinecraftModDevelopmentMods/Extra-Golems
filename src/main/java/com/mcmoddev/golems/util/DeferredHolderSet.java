@@ -48,6 +48,10 @@ public class DeferredHolderSet<T> {
         this.either = either;
     }
 
+	public static <T> DeferredHolderSet<T> empty() {
+		return new DeferredHolderSet<T>(ImmutableList.of());
+	}
+
     public Either<TagKey<T>, List<ResourceKey<T>>> unwrap() {
         return either;
     }
