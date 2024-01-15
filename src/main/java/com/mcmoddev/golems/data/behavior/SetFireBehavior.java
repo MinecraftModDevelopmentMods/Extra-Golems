@@ -2,37 +2,26 @@ package com.mcmoddev.golems.data.behavior;
 
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
-import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.data.behavior.util.TargetType;
 import com.mcmoddev.golems.data.behavior.util.TriggerType;
 import com.mcmoddev.golems.data.behavior.util.WorldPredicate;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.util.EGCodecUtils;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mcmoddev.golems.util.PredicateUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.MinMaxBounds;
-import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.TagParser;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.NeutralMob;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
-import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.registries.ForgeRegistries;
 
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 /**
@@ -71,7 +60,7 @@ public class SetFireBehavior extends Behavior<GolemBase> {
 		this.target = target;
 		this.trigger = trigger;
 		this.predicates = predicates;
-		this.predicate = WorldPredicate.and(predicates);
+		this.predicate = PredicateUtils.and(predicates);
 		this.radius = radius;
 		this.chance = chance;
 	}
@@ -166,5 +155,21 @@ public class SetFireBehavior extends Behavior<GolemBase> {
 
 		}
 		return false;
+	}
+
+	//// EQUALITY ////
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof SetFireBehavior)) return false;
+		if (!super.equals(o)) return false;
+		SetFireBehavior that = (SetFireBehavior) o;
+		return Double.compare(that.radius, radius) == 0 && Double.compare(that.chance, chance) == 0 && seconds.equals(that.seconds) && target == that.target && trigger == that.trigger && predicates.equals(that.predicates);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), seconds, target, trigger, predicates, radius, chance);
 	}
 }

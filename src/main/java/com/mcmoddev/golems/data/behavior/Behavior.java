@@ -23,6 +23,7 @@ import net.minecraft.world.entity.player.Player;
 import javax.annotation.concurrent.Immutable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -152,6 +153,21 @@ public abstract class Behavior<T extends LivingEntity & IMultitextured> {
 	 */
 	public void onAddDescriptions(List<Component> list) {
 		list.addAll(this.descriptions.get());
+	}
+
+	//// EQUALITY ////
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Behavior)) return false;
+		Behavior<?> behavior = (Behavior<?>) o;
+		return variant.equals(behavior.variant);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(variant);
 	}
 
 	//// HELPER METHODS ////

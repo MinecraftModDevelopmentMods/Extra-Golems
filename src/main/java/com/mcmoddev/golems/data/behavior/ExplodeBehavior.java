@@ -24,6 +24,7 @@ import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * This behavior allows an entity to light a fuse, save/load the fuse,
@@ -136,5 +137,20 @@ public class ExplodeBehavior extends Behavior<GolemBase> {
 	@Override
 	public List<Component> createDescriptions() {
 		return ImmutableList.of(Component.translatable("entitytip.explode").withStyle(ChatFormatting.RED));
+	}
+
+	//// EQUALITY ////
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof ExplodeBehavior)) return false;
+		ExplodeBehavior that = (ExplodeBehavior) o;
+		return Double.compare(that.radius, radius) == 0 && fuse == that.fuse && Double.compare(that.chanceOnHurt, chanceOnHurt) == 0 && Double.compare(that.chanceOnAttack, chanceOnAttack) == 0;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), radius, fuse, chanceOnHurt, chanceOnAttack);
 	}
 }

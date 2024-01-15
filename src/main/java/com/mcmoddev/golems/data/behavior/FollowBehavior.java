@@ -14,6 +14,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * This behavior allows an entity to detect nearby entities
@@ -64,5 +65,21 @@ public class FollowBehavior extends Behavior<GolemBase> {
 	@Override
 	public List<Component> createDescriptions() {
 		return ImmutableList.of(Component.translatable("entitytip.follow_x", entity.getDescription()).withStyle(ChatFormatting.DARK_GREEN));
+	}
+
+	//// EQUALITY ////
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof FollowBehavior)) return false;
+		if (!super.equals(o)) return false;
+		FollowBehavior that = (FollowBehavior) o;
+		return priority == that.priority && entity.equals(that.entity);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), entity, priority);
 	}
 }

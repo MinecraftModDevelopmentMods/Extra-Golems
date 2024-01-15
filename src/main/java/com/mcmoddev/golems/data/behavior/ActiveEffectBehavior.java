@@ -6,8 +6,8 @@ import com.mcmoddev.golems.data.behavior.util.TargetedMobEffects;
 import com.mcmoddev.golems.data.behavior.util.TriggerType;
 import com.mcmoddev.golems.data.behavior.util.WorldPredicate;
 import com.mcmoddev.golems.entity.GolemBase;
-import com.mcmoddev.golems.entity.goal.PassiveEffectsGoal;
 import com.mcmoddev.golems.util.EGCodecUtils;
+import com.mcmoddev.golems.util.PredicateUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.MinMaxBounds;
@@ -18,6 +18,7 @@ import net.minecraft.world.entity.Entity;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 /**
@@ -49,7 +50,7 @@ public class ActiveEffectBehavior extends Behavior<GolemBase> {
 		this.targetedMobEffects = targetedMobEffects;
 		this.trigger = trigger;
 		this.predicates = predicates;
-		this.predicate = WorldPredicate.and(predicates);
+		this.predicate = PredicateUtils.and(predicates);
 		this.chance = chance;
 	}
 
@@ -118,5 +119,21 @@ public class ActiveEffectBehavior extends Behavior<GolemBase> {
 			builder.add(Component.translatable(key, effect.getEffect().getDisplayName(), predicateText));
 		}
 		return builder.build();
+	}
+
+	//// EQUALITY ////
+
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof ActiveEffectBehavior)) return false;
+		ActiveEffectBehavior other = (ActiveEffectBehavior) o;
+		return Double.compare(other.chance, chance) == 0 && targetedMobEffects.equals(other.targetedMobEffects) && trigger == other.trigger && predicates.equals(other.predicates);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), targetedMobEffects, trigger, predicates, chance);
 	}
 }

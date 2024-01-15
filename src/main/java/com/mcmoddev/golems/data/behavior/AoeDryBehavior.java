@@ -23,6 +23,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * This behavior allows an entity to remove water or
@@ -82,6 +83,21 @@ public class AoeDryBehavior extends Behavior<GolemBase> {
 	@Override
 	public List<Component> createDescriptions() {
 		return ImmutableList.of(Component.translatable("entitytip.aoe_dry").withStyle(ChatFormatting.GOLD));
+	}
+
+	//// EQUALITY ////
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof AoeDryBehavior)) return false;
+		AoeDryBehavior that = (AoeDryBehavior) o;
+		return radius == that.radius && interval == that.interval && shape == that.shape;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), radius, interval, shape);
 	}
 
 	//// CLASSES ////

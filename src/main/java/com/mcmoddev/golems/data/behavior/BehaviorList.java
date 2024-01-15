@@ -3,27 +3,27 @@ package com.mcmoddev.golems.data.behavior;
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.model.Model;
+import com.mcmoddev.golems.entity.IMultitextured;
 import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.RegistryFileCodec;
+import net.minecraft.world.entity.LivingEntity;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Predicate;
 
 @SuppressWarnings("rawtypes")
 @Immutable
 public class BehaviorList {
 
-	public static final Codec<BehaviorList> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			EGCodecUtils.listOrElementCodec(Behavior.DIRECT_CODEC).optionalFieldOf("behaviors", ImmutableList.of()).forGetter(BehaviorList::getBehaviors)
-	).apply(instance, BehaviorList::new));
+	public static final Codec<BehaviorList> CODEC = EGCodecUtils.listOrElementCodec(Behavior.DIRECT_CODEC)
+			.xmap(BehaviorList::new, BehaviorList::getBehaviors);
 	public static final Codec<Holder<BehaviorList>> HOLDER_CODEC = RegistryFileCodec.create(EGRegistry.Keys.BEHAVIOR_LISTS, CODEC, true);
 
 	private final List<Behavior> behaviors;
@@ -38,7 +38,31 @@ public class BehaviorList {
 		return behaviors;
 	}
 
-	public <T extends Behavior> List<T> getBehaviors(final Class<T> clazz) {
+	/**
+	 * @param clazz the {@link Behavior} class
+	 * @param <U> the entity class
+	 * @param <T> the behavior class
+	 * @return a list of active behaviors with the given class
+	 * @see #getBehaviors(Class)
+	 */
+	public <U extends LivingEntity & IMultitextured, T extends Behavior<U>> List<T> getActiveBehaviors(final Class<T> clazz, final U entity) {
+		final ImmutableList.Builder<T> builder = ImmutableList.builder();
+		for(Behavior b : behaviors) {
+			if(b.getClass().isAssignableFrom(clazz) && b.canApply(entity)) {
+				builder.add((T) b);
+			}
+		}
+		return builder.build();
+	}
+
+	/**
+	 * @param clazz the {@link Behavior} class
+	 * @param <U> the entity class
+	 * @param <T> the behavior class
+	 * @return a list of behaviors with the given class
+	 * @see #getActiveBehaviors(Class, LivingEntity)
+	 */
+	public <U extends LivingEntity & IMultitextured, T extends Behavior<U>> List<T> getBehaviors(final Class<T> clazz) {
 		final ImmutableList.Builder<T> builder = ImmutableList.builder();
 		for(Behavior b : behaviors) {
 			if(b.getClass().isAssignableFrom(clazz)) {
@@ -50,7 +74,22 @@ public class BehaviorList {
 
 	/**
 	 * @param clazz the {@link Behavior} class
+	 * @return true if there is at least one active behavior with the given class
+	 * @see #hasBehavior(Class)
+	 */
+	public <T extends LivingEntity & IMultitextured> boolean hasActiveBehavior(final Class<? extends Behavior<T>> clazz, final T entity) {
+		for(Behavior b : behaviors) {
+			if(b.getClass().isAssignableFrom(clazz) && b.canApply(entity)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * @param clazz the {@link Behavior} class
 	 * @return true if there is at least one behavior with the given class
+	 * @see #hasActiveBehavior(Class, LivingEntity)
 	 */
 	public boolean hasBehavior(final Class<? extends Behavior> clazz) {
 		for(Behavior b : behaviors) {
@@ -76,6 +115,7 @@ public class BehaviorList {
 		return Objects.hash(behaviors);
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static class Builder {
 
 		private List<Behavior> behaviors;
@@ -110,8 +150,16 @@ public class BehaviorList {
 		 * @param predicate the predicate for behaviors to remove
 		 * @return the builder instance
 		 */
-		public Builder removeAll(final Predicate<Behavior> predicate) {
+		public Builder remove(final Predicate<Behavior> predicate) {
 			this.behaviors.removeIf(predicate);
+			return this;
+		}
+
+		/**
+		 * @return the builder instance
+		 */
+		public Builder clear() {
+			this.behaviors.clear();
 			return this;
 		}
 
@@ -121,5 +169,6 @@ public class BehaviorList {
 		public BehaviorList build() {
 			return new BehaviorList(this.behaviors);
 		}
+
 	}
 }

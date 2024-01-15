@@ -24,6 +24,7 @@ import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * This behavior allows an entity to pick up and shoot arrows,
@@ -124,5 +125,21 @@ public class ShootArrowsBehavior extends Behavior<GolemBase> {
 	public List<Component> createDescriptions() {
 		return ImmutableList.of(Component.translatable("entitytip.shoot_arrows").withStyle(ChatFormatting.LIGHT_PURPLE),
 				Component.translatable("entitytip.click_refill").withStyle(ChatFormatting.GRAY));
+	}
+
+	//// EQUALITY ////
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof ShootArrowsBehavior)) return false;
+		if (!super.equals(o)) return false;
+		ShootArrowsBehavior that = (ShootArrowsBehavior) o;
+		return Double.compare(that.damage, damage) == 0;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), damage);
 	}
 }

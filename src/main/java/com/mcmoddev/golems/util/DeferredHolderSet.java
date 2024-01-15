@@ -69,6 +69,14 @@ public class DeferredHolderSet<T> {
         return this.holderSet;
     }
 
+	public boolean isEmpty() {
+		final Optional<List<ResourceKey<T>>> oList = unwrap().right();
+		if(oList.isPresent() && oList.get().isEmpty()) {
+			return true;
+		}
+		return false;
+	}
+
     public static <T> Codec<DeferredHolderSet<T>> codec(final ResourceKey<? extends Registry<T>> registry) {
         return eitherCodec(registry).xmap(DeferredHolderSet::new, DeferredHolderSet::unwrap);
     }
@@ -107,6 +115,8 @@ public class DeferredHolderSet<T> {
         }
         throw new IllegalStateException("[ModifierCondition#asHolderSet] Either has neither left nor right! " + either);
     }
+
+	//// EQUALITY ////
 
 	@Override
 	public boolean equals(Object o) {

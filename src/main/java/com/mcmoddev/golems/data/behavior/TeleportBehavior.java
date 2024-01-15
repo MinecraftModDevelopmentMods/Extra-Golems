@@ -15,6 +15,7 @@ import net.minecraft.world.entity.LivingEntity;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * This behavior allows an entity to teleport randomly,
@@ -110,5 +111,21 @@ public class TeleportBehavior extends Behavior<GolemBase> {
 	@Override
 	public List<Component> createDescriptions() {
 		return ImmutableList.of(Component.translatable("entitytip.teleport").withStyle(ChatFormatting.LIGHT_PURPLE));
+	}
+
+	//// EQUALITY ////
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof TeleportBehavior)) return false;
+		if (!super.equals(o)) return false;
+		TeleportBehavior that = (TeleportBehavior) o;
+		return Double.compare(that.range, range) == 0 && Double.compare(that.chanceOnIdle, chanceOnIdle) == 0 && Double.compare(that.chanceOnHurt, chanceOnHurt) == 0 && Double.compare(that.chanceOnTarget, chanceOnTarget) == 0;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), range, chanceOnIdle, chanceOnHurt, chanceOnTarget);
 	}
 }

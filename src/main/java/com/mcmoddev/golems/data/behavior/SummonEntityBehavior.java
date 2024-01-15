@@ -3,18 +3,15 @@ package com.mcmoddev.golems.data.behavior;
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.ExtraGolems;
-import com.mcmoddev.golems.container.behavior.parameter.BehaviorParameter;
 import com.mcmoddev.golems.data.behavior.util.TargetType;
 import com.mcmoddev.golems.data.behavior.util.TriggerType;
 import com.mcmoddev.golems.data.behavior.util.WorldPredicate;
 import com.mcmoddev.golems.entity.GolemBase;
-import com.mcmoddev.golems.entity.goal.FollowGoal;
 import com.mcmoddev.golems.util.EGCodecUtils;
-import com.mojang.brigadier.StringReader;
+import com.mcmoddev.golems.util.PredicateUtils;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -34,7 +31,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 /**
@@ -80,7 +77,7 @@ public class SummonEntityBehavior extends Behavior<GolemBase> {
 		this.position = position;
 		this.trigger = trigger;
 		this.predicates = predicates;
-		this.predicate = WorldPredicate.and(predicates);
+		this.predicate = PredicateUtils.and(predicates);
 		this.chance = chance;
 		CompoundTag tag;
 		try {
@@ -191,5 +188,21 @@ public class SummonEntityBehavior extends Behavior<GolemBase> {
 			});
 		}
 		return amount > 0;
+	}
+
+	//// EQUALITY ////
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof SummonEntityBehavior)) return false;
+		if (!super.equals(o)) return false;
+		SummonEntityBehavior that = (SummonEntityBehavior) o;
+		return amount == that.amount && Double.compare(that.chance, chance) == 0 && entity.equals(that.entity) && nbt.equals(that.nbt) && position == that.position && trigger == that.trigger && predicates.equals(that.predicates);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), entity, nbt, amount, position, trigger, predicates, chance);
 	}
 }

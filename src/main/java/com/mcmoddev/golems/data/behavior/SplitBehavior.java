@@ -19,6 +19,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 public class SplitBehavior extends Behavior<GolemBase> {
 
@@ -89,5 +90,21 @@ public class SplitBehavior extends Behavior<GolemBase> {
 	@Override
 	public List<Component> createDescriptions() {
 		return ImmutableList.of(Component.translatable("entitytip.split_on_death").withStyle(ChatFormatting.GREEN));
+	}
+
+	//// EQUALITY ////
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof SplitBehavior)) return false;
+		if (!super.equals(o)) return false;
+		SplitBehavior that = (SplitBehavior) o;
+		return children == that.children;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), children);
 	}
 }

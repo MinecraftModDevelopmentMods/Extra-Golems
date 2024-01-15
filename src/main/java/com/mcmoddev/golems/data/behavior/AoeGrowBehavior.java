@@ -20,6 +20,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * This behavior allows an entity to remove water or
@@ -97,6 +98,21 @@ public class AoeGrowBehavior extends Behavior<GolemBase> {
 	@Override
 	public List<Component> createDescriptions() {
 		return ImmutableList.of(Component.translatable("entitytip.aoe_grow").withStyle(ChatFormatting.GOLD));
+	}
+
+	//// EQUALITY ////
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof AoeGrowBehavior)) return false;
+		AoeGrowBehavior that = (AoeGrowBehavior) o;
+		return radius == that.radius && interval == that.interval && Double.compare(that.chance, chance) == 0 && shape == that.shape && amount.equals(that.amount);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), radius, interval, shape, chance, amount);
 	}
 
 	//// CLASSES ////

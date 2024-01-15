@@ -23,6 +23,7 @@ import net.minecraft.world.entity.player.Player;
 import javax.annotation.concurrent.Immutable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * This behavior allows an entity to use fuel, accept fuel items,
@@ -95,5 +96,21 @@ public class UseFuelBehavior extends Behavior<GolemBase> {
 	@Override
 	public List<Component> createDescriptions() {
 		return ImmutableList.of(Component.translatable("entitytip.use_fuel").withStyle(ChatFormatting.GRAY));
+	}
+
+	//// EQUALITY ////
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof UseFuelBehavior)) return false;
+		if (!super.equals(o)) return false;
+		UseFuelBehavior that = (UseFuelBehavior) o;
+		return maxFuel == that.maxFuel && burnTime == that.burnTime;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), maxFuel, burnTime);
 	}
 }

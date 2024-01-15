@@ -29,7 +29,7 @@ public class Golem {
 			Codec.BOOL.optionalFieldOf("hidden", false).forGetter(Golem::isHidden),
 			ParticleTypes.CODEC.optionalFieldOf("particle").forGetter(o -> Optional.ofNullable(o.particle)),
 			Model.HOLDER_CODEC.optionalFieldOf("model", Holder.direct(new Model(ImmutableList.of()))).forGetter(Golem::getModel),
-			BehaviorList.HOLDER_CODEC.optionalFieldOf("brain", Holder.direct(new BehaviorList(ImmutableList.of()))).forGetter(Golem::getBehaviors),
+			BehaviorList.HOLDER_CODEC.optionalFieldOf("behavior", Holder.direct(new BehaviorList(ImmutableList.of()))).forGetter(Golem::getBehaviors),
 			ResourceLocation.CODEC.optionalFieldOf("group").forGetter(o -> Optional.ofNullable(o.group))
 	).apply(instance, Golem::new));
 	public static final Codec<Holder<Golem>> HOLDER_CODEC = RegistryFileCodec.create(EGRegistry.Keys.GOLEMS, CODEC, true);

@@ -3,22 +3,19 @@ package com.mcmoddev.golems.data.behavior;
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.behavior.util.TargetedMobEffects;
-import com.mcmoddev.golems.data.behavior.util.TriggerType;
 import com.mcmoddev.golems.data.behavior.util.WorldPredicate;
 import com.mcmoddev.golems.entity.GolemBase;
-import com.mcmoddev.golems.entity.goal.PassiveEffectsGoal;
 import com.mcmoddev.golems.util.EGCodecUtils;
+import com.mcmoddev.golems.util.PredicateUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.effect.MobEffectInstance;
 
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 /**
@@ -46,7 +43,7 @@ public class PassiveEffectBehavior extends Behavior<GolemBase> {
 		super(variant);
 		this.targetedMobEffects = targetedMobEffects;
 		this.predicates = predicates;
-		this.predicate = WorldPredicate.and(predicates);
+		this.predicate = PredicateUtils.and(predicates);
 		this.chance = chance;
 	}
 
@@ -97,5 +94,22 @@ public class PassiveEffectBehavior extends Behavior<GolemBase> {
 			builder.add(Component.translatable(key, effect.getEffect().getDisplayName(), predicateText));
 		}
 		return builder.build();
+	}
+
+	//// EQUALITY ////
+
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof PassiveEffectBehavior)) return false;
+		if (!super.equals(o)) return false;
+		PassiveEffectBehavior that = (PassiveEffectBehavior) o;
+		return Double.compare(that.chance, chance) == 0 && targetedMobEffects.equals(that.targetedMobEffects) && predicates.equals(that.predicates);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), targetedMobEffects, predicates, chance);
 	}
 }

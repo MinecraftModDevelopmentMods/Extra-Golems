@@ -4,10 +4,10 @@ import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.golem.Golem;
 import com.mcmoddev.golems.data.modifier.GolemModifier;
 import com.mcmoddev.golems.util.EGCodecUtils;
+import com.mcmoddev.golems.util.PredicateUtils;
 import com.mcmoddev.golems.util.ResourcePair;
 import com.mojang.serialization.Codec;
 
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
 import java.util.function.Predicate;
@@ -23,23 +23,25 @@ public class RemoveBlocksGolemModifier extends GolemModifier {
 			.xmap(RemoveBlocksGolemModifier::new, RemoveBlocksGolemModifier::getPredicates)
 			.fieldOf("predicate").codec();
 
-	private final List<RemovePredicate> predicate;
+	private final List<RemovePredicate> predicates;
+	private final Predicate<ResourcePair> predicate;
 
-	public RemoveBlocksGolemModifier(List<RemovePredicate> predicate) {
-		this.predicate = predicate;
+	public RemoveBlocksGolemModifier(List<RemovePredicate> predicates) {
+		this.predicates = predicates;
+		this.predicate = PredicateUtils.or(predicates);
 	}
 
 	//// GETTERS ////
 
 	public List<RemovePredicate> getPredicates() {
-		return predicate;
+		return predicates;
 	}
 
 	//// METHODS ////
 
 	@Override
 	public void apply(Golem.Builder builder) {
-		builder.blocks(b -> getPredicates().forEach(b::remove));
+		builder.blocks(b -> b.remove(predicate));
 	}
 
 	@Override

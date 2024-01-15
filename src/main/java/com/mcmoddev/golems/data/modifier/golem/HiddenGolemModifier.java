@@ -15,7 +15,7 @@ public class HiddenGolemModifier extends GolemModifier {
 
 	public static final Codec<HiddenGolemModifier> CODEC = Codec.BOOL
 			.xmap(HiddenGolemModifier::new, HiddenGolemModifier::isHidden)
-			.fieldOf("amount").codec();
+			.fieldOf("hidden").codec();
 
 	private final boolean hidden;
 

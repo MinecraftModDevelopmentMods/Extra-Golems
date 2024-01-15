@@ -1,16 +1,18 @@
 package com.mcmoddev.golems.data.behavior;
 
 import com.mcmoddev.golems.EGRegistry;
-import com.mcmoddev.golems.data.behavior.util.GolemVariantCombo;
+import com.mcmoddev.golems.data.behavior.util.GolemVariant;
+import com.mcmoddev.golems.data.behavior.util.UpdatePredicate;
 import com.mcmoddev.golems.entity.GolemBase;
+import com.mcmoddev.golems.util.EGCodecUtils;
+import com.mcmoddev.golems.util.PredicateUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.MinMaxBounds;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.StringRepresentable;
 
 import javax.annotation.concurrent.Immutable;
-import java.util.Optional;
+import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 
@@ -22,22 +24,43 @@ import java.util.function.Predicate;
 public class TickUpdateGolemBehavior extends Behavior<GolemBase> {
 
 	public static final Codec<TickUpdateGolemBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
-			.and(UpdateOnTick.CODEC.fieldOf("target").forGetter(TickUpdateGolemBehavior::getUpdateOnTick))
+			.and(GolemVariant.EITHER_CODEC.fieldOf("apply").forGetter(TickUpdateGolemBehavior::getApply))
+			.and(EGCodecUtils.listOrElementCodec(UpdatePredicate.CODEC).fieldOf("predicate").forGetter(TickUpdateGolemBehavior::getPredicates))
+			.and(Codec.doubleRange(0.0D, 1.0D).optionalFieldOf("chance", 1.0D).forGetter(TickUpdateGolemBehavior::getChance))
 			.apply(instance, TickUpdateGolemBehavior::new));
 
-	public final UpdateOnTick updateOnTick;
+	/** The golem and variant **/
+	private final GolemVariant apply;
+	/** The conditions to update the golem and variant **/
+	private final List<UpdatePredicate> predicates;
+	/** The conditions to update the golem and variant as a single predicate **/
+	private final Predicate<GolemBase> predicate;
+	/** The percent chance **/
+	private final double chance;
 
-	public TickUpdateGolemBehavior(MinMaxBounds.Ints variant, UpdateOnTick updateOnTick) {
+	public TickUpdateGolemBehavior(MinMaxBounds.Ints variant, GolemVariant apply, List<UpdatePredicate> predicates, double chance) {
 		super(variant);
-
-		this.updateOnTick = updateOnTick;
-	}
+		this.apply = apply;
+		this.predicates = predicates;
+		this.predicate = PredicateUtils.and(predicates);
+		this.chance = chance;	}
 
 	//// GETTERS ////
 
+	public GolemVariant getApply() {
+		return apply;
+	}
 
-	public UpdateOnTick getUpdateOnTick() {
-		return updateOnTick;
+	public List<UpdatePredicate> getPredicates() {
+		return predicates;
+	}
+
+	public Predicate<GolemBase> getPredicate() {
+		return predicate;
+	}
+
+	public double getChance() {
+		return chance;
 	}
 
 	@Override
@@ -49,71 +72,24 @@ public class TickUpdateGolemBehavior extends Behavior<GolemBase> {
 
 	@Override
 	public void onTick(GolemBase entity) {
-		if(updateOnTick.getPredicate().test(entity) && entity.getRandom().nextDouble() < updateOnTick.getChance()) {
-			updateOnTick.update(entity);
+		if(getPredicate().test(entity) && entity.getRandom().nextDouble() < getChance()) {
+			getApply().apply(entity);
 		}
 	}
 
+	//// EQUALITY ////
 
-	//// CLASSES ////
-
-	public static enum UpdatePredicate implements Predicate<GolemBase>, StringRepresentable {
-		TICK("tick", e -> true),
-		WET("wet", e -> e.isInWaterRainOrBubble()),
-		DRY("dry", e -> !e.isInWaterRainOrBubble()),
-		FUELED("fuel", e -> e.hasFuel()),
-		FUEL_EMPTY("fuel_empty", e -> !e.hasFuel()),
-		ARROWS("arrows", e -> e.getArrowsInInventory() > 0),
-		ARROWS_EMPTY("arrows_empty", e -> e.getArrowsInInventory() <= 0),
-		FUSE_LIT("fuse_lit", e -> e.isFuseLit()),
-		FUSE_UNLIT("fuse_unlit", e -> !e.isFuseLit()),
-		BABY("baby", e -> e.isBaby()),
-		ADULT("adult", e -> !e.isBaby());
-
-		public static final Codec<UpdatePredicate> CODEC = StringRepresentable.fromEnum(UpdatePredicate::values);
-
-		private final String name;
-		private final Predicate<GolemBase> predicate;
-
-		private UpdatePredicate(String name, Predicate<GolemBase> predicate) {
-			this.name = name;
-			this.predicate = predicate;
-		}
-
-		@Override
-		public String getSerializedName() {
-			return this.name;
-		}
-
-		@Override
-		public boolean test(GolemBase golemBase) {
-			return this.predicate.test(golemBase);
-		}
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof TickUpdateGolemBehavior)) return false;
+		if (!super.equals(o)) return false;
+		TickUpdateGolemBehavior that = (TickUpdateGolemBehavior) o;
+		return Double.compare(that.chance, chance) == 0 && apply.equals(that.apply) && predicates.equals(that.predicates);
 	}
 
-	public static class UpdateOnTick extends GolemVariantCombo {
-
-		public static final Codec<UpdateOnTick> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
-				.and(UpdatePredicate.CODEC.fieldOf("predicate").forGetter(UpdateOnTick::getPredicate))
-				.and(Codec.doubleRange(0.0D, 1.0D).optionalFieldOf("chance", 1.0D).forGetter(UpdateOnTick::getChance))
-				.apply(instance, UpdateOnTick::new));
-
-		private final UpdatePredicate predicate;
-		/** The percent chance **/
-		private final double chance;
-
-		public UpdateOnTick(Optional<ResourceLocation> golem, Optional<Integer> variant, UpdatePredicate predicate, double chance) {
-			super(golem, variant);
-			this.predicate = predicate;
-			this.chance = chance;
-		}
-
-		public UpdatePredicate getPredicate() {
-			return predicate;
-		}
-
-		public double getChance() {
-			return chance;
-		}
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), apply, predicates, chance);
 	}
 }

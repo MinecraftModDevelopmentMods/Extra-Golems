@@ -15,6 +15,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.concurrent.Immutable;
+import java.util.Objects;
 
 /**
  * This behavior allows an entity to follow players that are holding
@@ -55,5 +56,21 @@ public class TemptBehavior extends Behavior<GolemBase> {
 		final HolderSet<Item> holderSet = items.get(BuiltInRegistries.ITEM);
 		Ingredient ingredient = holderSet.unwrap().map(Ingredient::of, list -> Ingredient.of(list.stream().map(Holder::get).toArray(Item[]::new)));
 		entity.goalSelector.addGoal(1, new TemptGoal(entity, 0.75D, ingredient, false));
+	}
+
+	//// EQUALITY ////
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof TemptBehavior)) return false;
+		if (!super.equals(o)) return false;
+		TemptBehavior that = (TemptBehavior) o;
+		return Objects.equals(items, that.items);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), items);
 	}
 }

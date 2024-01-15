@@ -10,6 +10,7 @@ import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
+import java.util.Objects;
 
 @Immutable
 public class TargetedMobEffects {
@@ -90,4 +91,18 @@ public class TargetedMobEffects {
 		}
 	}
 
+	//// EQUALITY ////
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof TargetedMobEffects)) return false;
+		TargetedMobEffects that = (TargetedMobEffects) o;
+		return Double.compare(that.radius, radius) == 0 && targetType == that.targetType && effects.equals(that.effects);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(targetType, radius, effects);
+	}
 }

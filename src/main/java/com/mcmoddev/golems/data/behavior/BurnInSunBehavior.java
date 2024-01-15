@@ -15,6 +15,7 @@ import net.minecraft.world.entity.ai.goal.RestrictSunGoal;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * This behavior allows an entity to burn in sunlight
@@ -59,5 +60,21 @@ public class BurnInSunBehavior extends Behavior<GolemBase> {
 	@Override
 	public List<Component> createDescriptions() {
 		return ImmutableList.of(Component.translatable("entitytip.burn_in_sun").withStyle(ChatFormatting.DARK_RED));
+	}
+
+	//// EQUALITY ////
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof BurnInSunBehavior)) return false;
+		if (!super.equals(o)) return false;
+		BurnInSunBehavior that = (BurnInSunBehavior) o;
+		return Double.compare(that.chance, chance) == 0;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), chance);
 	}
 }

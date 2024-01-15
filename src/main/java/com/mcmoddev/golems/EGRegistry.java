@@ -13,10 +13,12 @@ import com.mcmoddev.golems.data.behavior.Behavior;
 import com.mcmoddev.golems.data.behavior.BehaviorList;
 import com.mcmoddev.golems.data.behavior.BurnInSunBehavior;
 import com.mcmoddev.golems.data.behavior.CraftMenuBehavior;
+import com.mcmoddev.golems.data.behavior.LightBehavior;
 import com.mcmoddev.golems.data.behavior.ExplodeBehavior;
 import com.mcmoddev.golems.data.behavior.FollowBehavior;
 import com.mcmoddev.golems.data.behavior.PassiveEffectBehavior;
 import com.mcmoddev.golems.data.behavior.PlaceBlockBehavior;
+import com.mcmoddev.golems.data.behavior.PowerBehavior;
 import com.mcmoddev.golems.data.behavior.SetFireBehavior;
 import com.mcmoddev.golems.data.behavior.ShootArrowsBehavior;
 import com.mcmoddev.golems.data.behavior.SplitBehavior;
@@ -30,9 +32,11 @@ import com.mcmoddev.golems.data.golem.Golem;
 import com.mcmoddev.golems.data.model.Model;
 import com.mcmoddev.golems.data.modifier.GolemModifier;
 import com.mcmoddev.golems.data.modifier.GolemModifierList;
+import com.mcmoddev.golems.data.modifier.golem.AddBehaviorGolemModifier;
 import com.mcmoddev.golems.data.modifier.golem.AddBlocksGolemModifier;
 import com.mcmoddev.golems.data.modifier.golem.AddRepairItemsGolemModifier;
 import com.mcmoddev.golems.data.modifier.golem.AttributesGolemModifier;
+import com.mcmoddev.golems.data.modifier.golem.RemoveBehaviorGolemModifier;
 import com.mcmoddev.golems.data.modifier.golem.RemoveBlocksGolemModifier;
 import com.mcmoddev.golems.data.modifier.golem.RemoveRepairItemsGolemModifier;
 import com.mcmoddev.golems.data.modifier.golem.GroupGolemModifier;
@@ -88,10 +92,10 @@ public final class EGRegistry {
 	//// CUSTOM REGISTRIES ////
 	public static final DeferredRegister<Golem> GOLEMS = DeferredRegister.create(Keys.GOLEMS, ExtraGolems.MODID);
 	public static final DeferredRegister<Model> MODELS = DeferredRegister.create(Keys.MODELS, ExtraGolems.MODID);
-	public static final DeferredRegister<Codec<? extends Behavior>> BEHAVIOR_SERIALIZERS = DeferredRegister.create(Keys.BEHAVIOR_SERIALIZERS, ExtraGolems.MODID);
-	public static final Supplier<IForgeRegistry<Codec<? extends Behavior>>> BEHAVIOR_SERIALIZERS_SUPPLIER = BEHAVIOR_SERIALIZERS.makeRegistry(() -> new RegistryBuilder<>());
-	public static final DeferredRegister<Behavior> BEHAVIORS = DeferredRegister.create(Keys.BEHAVIORS, ExtraGolems.MODID);
-	public static final Supplier<IForgeRegistry<Behavior>> BEHAVIORS_SUPPLIER = BEHAVIORS.makeRegistry(() -> new RegistryBuilder<>());
+	public static final DeferredRegister<Codec<? extends Behavior<?>>> BEHAVIOR_SERIALIZERS = DeferredRegister.create(Keys.BEHAVIOR_SERIALIZERS, ExtraGolems.MODID);
+	public static final Supplier<IForgeRegistry<Codec<? extends Behavior<?>>>> BEHAVIOR_SERIALIZERS_SUPPLIER = BEHAVIOR_SERIALIZERS.makeRegistry(() -> new RegistryBuilder<>());
+	public static final DeferredRegister<Behavior<?>> BEHAVIORS = DeferredRegister.create(Keys.BEHAVIORS, ExtraGolems.MODID);
+	public static final Supplier<IForgeRegistry<Behavior<?>>> BEHAVIORS_SUPPLIER = BEHAVIORS.makeRegistry(() -> new RegistryBuilder<>());
 	public static final DeferredRegister<BehaviorList> BEHAVIOR_LISTS = DeferredRegister.create(Keys.BEHAVIOR_LISTS, ExtraGolems.MODID);
 
 	public static final DeferredRegister<Codec<? extends GolemModifier>> GOLEM_MODIFIER_SERIALIZERS = DeferredRegister.create(Keys.GOLEM_MODIFIER_SERIALIZERS, ExtraGolems.MODID);
@@ -117,8 +121,10 @@ public final class EGRegistry {
 	}
 
 	private static void onNewDatapackRegistry(final DataPackRegistryEvent.NewRegistry event) {
-		event.dataPackRegistry(ExtraGolems.Keys.GOLEM_CONTAINERS, GolemContainer.CODEC, GolemContainer.CODEC);
-		event.dataPackRegistry(ExtraGolems.Keys.GOLEM_MODELS, GolemRenderSettings.CODEC, GolemRenderSettings.CODEC);
+		event.dataPackRegistry(Keys.GOLEMS, Golem.CODEC, Golem.CODEC);
+		event.dataPackRegistry(Keys.MODELS, Model.CODEC, Model.CODEC);
+		event.dataPackRegistry(Keys.BEHAVIOR_LISTS, BehaviorList.CODEC, BehaviorList.CODEC);
+		event.dataPackRegistry(Keys.GOLEM_MODIFIER_LISTS, GolemModifierList.CODEC, GolemModifierList.CODEC);
 	}
 
 	public static final class BlockReg {
@@ -225,8 +231,10 @@ public final class EGRegistry {
 		public static final RegistryObject<Codec<ExplodeBehavior>> EXPLODE = BEHAVIOR_SERIALIZERS.register("explode", () -> ExplodeBehavior.CODEC);
 		public static final RegistryObject<Codec<FollowBehavior>> FOLLOW = BEHAVIOR_SERIALIZERS.register("follow", () -> FollowBehavior.CODEC);
 		public static final RegistryObject<Codec<ItemUpdateGolemBehavior>> ITEM_UPDATE_GOLEM = BEHAVIOR_SERIALIZERS.register("item_update_golem", () -> ItemUpdateGolemBehavior.CODEC);
+		public static final RegistryObject<Codec<LightBehavior>> LIGHT = BEHAVIOR_SERIALIZERS.register("light", () -> LightBehavior.CODEC);
 		public static final RegistryObject<Codec<PassiveEffectBehavior>> PASSIVE_EFFECT = BEHAVIOR_SERIALIZERS.register("passive_effect", () -> PassiveEffectBehavior.CODEC);
 		public static final RegistryObject<Codec<PlaceBlockBehavior>> PLACE_BLOCK = BEHAVIOR_SERIALIZERS.register("place_block", () -> PlaceBlockBehavior.CODEC);
+		public static final RegistryObject<Codec<PowerBehavior>> POWER = BEHAVIOR_SERIALIZERS.register("power", () -> PowerBehavior.CODEC);
 		public static final RegistryObject<Codec<ShootArrowsBehavior>> SHOOT_ARROWS = BEHAVIOR_SERIALIZERS.register("shoot_arrows", () -> ShootArrowsBehavior.CODEC);
 		public static final RegistryObject<Codec<SplitBehavior>> SPLIT = BEHAVIOR_SERIALIZERS.register("split", () -> SplitBehavior.CODEC);
 		public static final RegistryObject<Codec<SetFireBehavior>> SET_FIRE = BEHAVIOR_SERIALIZERS.register("set_fire", () -> SetFireBehavior.CODEC);
@@ -259,6 +267,8 @@ public final class EGRegistry {
 		public static final RegistryObject<Codec<RemoveRepairItemsGolemModifier>> REMOVE_REPAIR_ITEMS = GOLEM_MODIFIER_SERIALIZERS.register("remove_repair_items", () -> RemoveRepairItemsGolemModifier.CODEC);
 		public static final RegistryObject<Codec<AddBlocksGolemModifier>> ADD_BLOCKS = GOLEM_MODIFIER_SERIALIZERS.register("add_blocks", () -> AddBlocksGolemModifier.CODEC);
 		public static final RegistryObject<Codec<RemoveBlocksGolemModifier>> REMOVE_BLOCKS = GOLEM_MODIFIER_SERIALIZERS.register("remove_blocks", () -> RemoveBlocksGolemModifier.CODEC);
+		public static final RegistryObject<Codec<AddBehaviorGolemModifier>> ADD_BEHAVIOR = GOLEM_MODIFIER_SERIALIZERS.register("add_behavior", () -> AddBehaviorGolemModifier.CODEC);
+		public static final RegistryObject<Codec<RemoveBehaviorGolemModifier>> REMOVE_BEHAVIOR = GOLEM_MODIFIER_SERIALIZERS.register("remove_behavior", () -> RemoveBehaviorGolemModifier.CODEC);
 
 	}
 
@@ -267,8 +277,8 @@ public final class EGRegistry {
 		public static final ResourceKey<Registry<Golem>> GOLEMS = ResourceKey.createRegistryKey(new ResourceLocation(ExtraGolems.MODID, "golems"));
 		public static final ResourceKey<Registry<Model>> MODELS = ResourceKey.createRegistryKey(new ResourceLocation(ExtraGolems.MODID, "models"));
 
-		public static final ResourceKey<Registry<Codec<? extends Behavior>>> BEHAVIOR_SERIALIZERS = ResourceKey.createRegistryKey(new ResourceLocation(ExtraGolems.MODID, "golem_behavior_serializers"));
-		public static final ResourceKey<Registry<Behavior>> BEHAVIORS = ResourceKey.createRegistryKey(new ResourceLocation(ExtraGolems.MODID, "golem_behaviors"));
+		public static final ResourceKey<Registry<Codec<? extends Behavior<?>>>> BEHAVIOR_SERIALIZERS = ResourceKey.createRegistryKey(new ResourceLocation(ExtraGolems.MODID, "golem_behavior_serializers"));
+		public static final ResourceKey<Registry<Behavior<?>>> BEHAVIORS = ResourceKey.createRegistryKey(new ResourceLocation(ExtraGolems.MODID, "golem_behaviors"));
 		public static final ResourceKey<Registry<BehaviorList>> BEHAVIOR_LISTS = ResourceKey.createRegistryKey(new ResourceLocation(ExtraGolems.MODID, "behaviors"));
 
 		public static final ResourceKey<Registry<Codec<? extends GolemModifier>>> GOLEM_MODIFIER_SERIALIZERS = ResourceKey.createRegistryKey(new ResourceLocation(ExtraGolems.MODID, "golem_modifier_serializers"));

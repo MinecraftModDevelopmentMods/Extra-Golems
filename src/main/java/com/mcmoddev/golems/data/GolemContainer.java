@@ -9,6 +9,7 @@ import com.mcmoddev.golems.data.model.Model;
 import com.mcmoddev.golems.data.modifier.GolemModifierList;
 import com.mcmoddev.golems.data.modifier.Priority;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 
@@ -17,15 +18,22 @@ import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Map;
 
+/**
+ * Contains the ID and values of a {@link Golem} after applying {@link GolemModifierList}s
+ * for the given ID
+ */
 public class GolemContainer {
 
 	private final ResourceLocation id;
+	private final Holder<Golem> holder;
 	private final Golem golem;
 
 	public GolemContainer(final RegistryAccess registryAccess, final ResourceLocation id) {
 		this.id = id;
 		// load golem
-		final Golem wrapped = registryAccess.registryOrThrow(EGRegistry.Keys.GOLEMS).getOptional(id).orElseThrow();
+		final Registry<Golem> golemRegistry = registryAccess.registryOrThrow(EGRegistry.Keys.GOLEMS);
+		final Golem wrapped = golemRegistry.getOptional(id).orElseThrow();
+		this.holder = golemRegistry.wrapAsHolder(wrapped);
 		// load modifiers
 		final Map<Priority, Collection<GolemModifierList>> modifiers = new EnumMap<>(Priority.class);
 		registryAccess.registryOrThrow(EGRegistry.Keys.GOLEM_MODIFIER_LISTS).entrySet()
@@ -42,33 +50,37 @@ public class GolemContainer {
 			}
 		}
 		// create golem
-		this.golem = builder
-				.model(Holder.direct(modelBuilder.build()))
-				.behaviors(Holder.direct(behaviorsBuilder.build()))
-				.build();
+		this.golem = builder.build();
 	}
 
 	//// GETTERS ////
 
-	/**
-	 * @return the ID of the golem object
-	 */
+	/** @return the ID of the golem object **/
 	public ResourceLocation getId() {
 		return id;
 	}
 
+	/** @return the reconstructed {@link Golem} instance **/
 	public Golem getGolem() {
 		return golem;
 	}
 
-	public Attributes getAttributes() {
-		return golem.getAttributes().get();
+	/** @return the holder for the original {@link Golem} instance **/
+	public Holder<Golem> getHolder() {
+		return holder;
 	}
 
+	/** @return the reconstructed {@link Attributes} instance **/
+	public Attributes getAttributes() {
+		return golem.getAttributes();
+	}
+
+	/** @return the reconstructed {@link Model} instance **/
 	public Model getModel() {
 		return golem.getModel().get();
 	}
 
+	/** @return the reconstructed {@link BehaviorList} instance **/
 	public BehaviorList getBehaviors() {
 		return golem.getBehaviors().get();
 	}
