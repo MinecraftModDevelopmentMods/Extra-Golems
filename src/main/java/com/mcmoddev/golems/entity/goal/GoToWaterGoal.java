@@ -20,11 +20,11 @@ public class GoToWaterGoal extends Goal {
 	private final Level world;
 
 	public GoToWaterGoal(final GolemBase golemBase, final int radius, final double speed) {
+		setFlags(EnumSet.of(Goal.Flag.MOVE));
 		this.golem = golemBase;
 		this.detectWaterRadius = radius;
 		this.speed = speed;
 		this.world = golemBase.level();
-		setFlags(EnumSet.of(Goal.Flag.MOVE));
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.event.GolemTeleportEvent;
+import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
@@ -32,14 +33,37 @@ public interface IRandomTeleporter {
 	}
 
 	/**
-	 * Teleport the entity.
+	 * Teleport the entity to a random position near the given position
+	 **/
+	default boolean teleportNear(final Mob mob, final BlockPos pos, final int attempts, final int dx, final int dy, final int dz) {
+		BlockPos.MutableBlockPos target = pos.mutable();
+		for(int i = attempts; i > 0; i--) {
+			target.setWithOffset(pos, mob.getRandom().nextInt(dx * 2) - dx,
+					mob.getRandom().nextInt(dy * 2) - dy,
+					mob.getRandom().nextInt(dz * 2) - dz);
+			// attempt to teleport
+			if(attemptTeleportTo(mob, pos.getX() + 0.5D, pos.getY() + 0.01D, pos.getZ())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Teleport the position
 	 **/
 	default boolean attemptTeleportTo(final Mob mob, final double x, final double y, final double z) {
-		final GolemTeleportEvent event = new GolemTeleportEvent(mob, x, y, z, 0);
-		if (MinecraftForge.EVENT_BUS.post(event)) {
-			return false;
+		Vec3 target = new Vec3(x, y, z);
+		// fire event
+		if(mob instanceof GolemBase golem) {
+			final GolemTeleportEvent event = new GolemTeleportEvent(golem, x, y, z);
+			if (MinecraftForge.EVENT_BUS.post(event)) {
+				return false;
+			}
+			target = event.getTarget();
 		}
-		final boolean flag = mob.randomTeleport(event.getTargetX(), event.getTargetY(), event.getTargetZ(), true);
+		// random teleport (checks for collisions)
+		final boolean flag = mob.randomTeleport(target.x(), target.y(), target.z(), true);
 
 		if (flag) {
 			mob.level().playSound(null, mob.xo, mob.yo, mob.zo, SoundEvents.ENDERMAN_TELEPORT, mob.getSoundSource(), 1.0F, 1.0F);

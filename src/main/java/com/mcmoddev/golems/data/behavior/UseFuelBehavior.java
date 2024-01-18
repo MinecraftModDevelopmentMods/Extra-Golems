@@ -6,22 +6,18 @@ import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.entity.goal.InertGoal;
 import com.mcmoddev.golems.entity.goal.LookAtWhenActiveGoal;
 import com.mcmoddev.golems.entity.goal.LookRandomlyWhenActiveGoal;
-import com.mcmoddev.golems.entity.goal.UseFuelGoal;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.player.Player;
 
 import javax.annotation.concurrent.Immutable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -71,9 +67,15 @@ public class UseFuelBehavior extends Behavior<GolemBase> {
 		removeGoal(entity, RandomLookAroundGoal.class);
 		// TODO adjust goals to account for texture variant
 		entity.goalSelector.addGoal(0, new InertGoal<>(entity));
-		entity.goalSelector.addGoal(1, new UseFuelGoal<>(entity, burnTime));
 		entity.goalSelector.addGoal(7, new LookAtWhenActiveGoal<>(entity, Player.class, 6.0F));
 		entity.goalSelector.addGoal(8, new LookRandomlyWhenActiveGoal<>(entity));
+	}
+
+	@Override
+	public void onTick(GolemBase entity) {
+		if(entity.hasFuel() && entity.tickCount % burnTime == 0) {
+			entity.addFuel(-1);
+		}
 	}
 
 	@Override

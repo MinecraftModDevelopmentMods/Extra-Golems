@@ -3,7 +3,6 @@ package com.mcmoddev.golems.data.behavior;
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.entity.GolemBase;
-import com.mcmoddev.golems.entity.goal.RandomTeleportGoal;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
@@ -25,14 +24,14 @@ import java.util.Objects;
 public class TeleportBehavior extends Behavior<GolemBase> {
 
 	public static final Codec<TeleportBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
-			.and(Codec.doubleRange(0.0D, 255.0D).optionalFieldOf("range", 0.0D).forGetter(TeleportBehavior::getRange))
+			.and(Codec.doubleRange(0.0D, 128.0D).optionalFieldOf("radius", 0.0D).forGetter(TeleportBehavior::getRadius))
 			.and(Codec.doubleRange(0.0D, 1.0D).optionalFieldOf("idle_chance", 0.0D).forGetter(TeleportBehavior::getChanceOnIdle))
 			.and(Codec.doubleRange(0.0D, 1.0D).optionalFieldOf("hurt_chance", 0.0D).forGetter(TeleportBehavior::getChanceOnHurt))
 			.and(Codec.doubleRange(0.0D, 1.0D).optionalFieldOf("target_chance", 0.0D).forGetter(TeleportBehavior::getChanceOnTarget))
 			.apply(instance, TeleportBehavior::new));
 
 	/** The maximum distance the entity can teleport **/
-	private final double range;
+	private final double radius;
 	/** The percent chance [0,1] to apply when the entity is doing nothing **/
 	private final double chanceOnIdle;
 	/** The percent chance [0,1] to apply when the entity is hurt **/
@@ -40,9 +39,9 @@ public class TeleportBehavior extends Behavior<GolemBase> {
 	/** The percent chance [0,1] to apply each tick that the entity has an attack target **/
 	private final double chanceOnTarget;
 
-	public TeleportBehavior(MinMaxBounds.Ints variant, double range, double chanceOnIdle, double chanceOnHurt, double chanceOnTarget) {
+	public TeleportBehavior(MinMaxBounds.Ints variant, double radius, double chanceOnIdle, double chanceOnHurt, double chanceOnTarget) {
 		super(variant);
-		this.range = range;
+		this.radius = radius;
 		this.chanceOnIdle = chanceOnIdle;
 		this.chanceOnHurt = chanceOnHurt;
 		this.chanceOnTarget = chanceOnTarget;
@@ -50,8 +49,8 @@ public class TeleportBehavior extends Behavior<GolemBase> {
 
 	//// GETTERS ////
 
-	public double getRange() {
-		return range;
+	public double getRadius() {
+		return radius;
 	}
 
 	public double getChanceOnIdle() {
@@ -76,7 +75,31 @@ public class TeleportBehavior extends Behavior<GolemBase> {
 	@Override
 	public void onRegisterGoals(final GolemBase entity) {
 		// TODO adjust goal to account for entity variant
-		entity.goalSelector.addGoal(1, new RandomTeleportGoal<>(entity, range, chanceOnIdle, chanceOnTarget));
+		entity.goalSelector.addGoal(1, new RandomTeleportGoal<>(entity, radius, chanceOnIdle, chanceOnTarget));
+	}
+
+	@Override
+	public void onTick(GolemBase entity) {
+		if(entity.isBaby()) {
+			return;
+		}
+		// teleport to target
+		final LivingEntity target = entity.getTarget();
+		if(target != null && entity.getRandom().nextFloat() < chanceOnTarget) {
+			entity.lookAt(target, 100.0F, 100.0F);
+			if(target.position().closerThan(entity.position(), radius)) {
+				// when within radius, teleport near the target
+				entity.teleportNear(entity, target.blockPosition(), 20, 4, 1, 4);
+			} else {
+				// otherwise, teleport toward the target
+				entity.teleportToEntity(entity, target, radius);
+			}
+			return;
+		}
+		// teleport randomly
+		if(null == target && entity.getRandom().nextFloat() < chanceOnIdle) {
+			entity.teleportRandomly(entity, radius);
+		}
 	}
 
 	@Override
@@ -90,7 +113,7 @@ public class TeleportBehavior extends Behavior<GolemBase> {
 			}
 			// attempt random teleport
 			for (int i = 0; i < 16; ++i) {
-				if (entity.teleportRandomly(entity, range)) {
+				if (entity.teleportRandomly(entity, radius)) {
 					return;
 				}
 			}
@@ -100,7 +123,7 @@ public class TeleportBehavior extends Behavior<GolemBase> {
 					|| (entity.getContainer().getAttributes().isHurtByWater() && source.is(DamageTypes.DROWN))) {
 				// attempt random teleport
 				for (int i = 0; i < 16; ++i) {
-					if (entity.teleportRandomly(entity, range)) {
+					if (entity.teleportRandomly(entity, radius)) {
 						return;
 					}
 				}
@@ -121,11 +144,11 @@ public class TeleportBehavior extends Behavior<GolemBase> {
 		if (!(o instanceof TeleportBehavior)) return false;
 		if (!super.equals(o)) return false;
 		TeleportBehavior that = (TeleportBehavior) o;
-		return Double.compare(that.range, range) == 0 && Double.compare(that.chanceOnIdle, chanceOnIdle) == 0 && Double.compare(that.chanceOnHurt, chanceOnHurt) == 0 && Double.compare(that.chanceOnTarget, chanceOnTarget) == 0;
+		return Double.compare(that.radius, radius) == 0 && Double.compare(that.chanceOnIdle, chanceOnIdle) == 0 && Double.compare(that.chanceOnHurt, chanceOnHurt) == 0 && Double.compare(that.chanceOnTarget, chanceOnTarget) == 0;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(super.hashCode(), range, chanceOnIdle, chanceOnHurt, chanceOnTarget);
+		return Objects.hash(super.hashCode(), radius, chanceOnIdle, chanceOnHurt, chanceOnTarget);
 	}
 }

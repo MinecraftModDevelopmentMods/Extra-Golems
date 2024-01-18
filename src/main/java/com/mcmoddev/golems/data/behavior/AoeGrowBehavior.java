@@ -4,8 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.behavior.util.AoeShape;
 import com.mcmoddev.golems.entity.GolemBase;
-import com.mcmoddev.golems.entity.goal.AoeBlocksGoal;
-import com.mcmoddev.golems.event.AoeFunction;
+import com.mcmoddev.golems.util.AoeMapper;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
@@ -23,55 +22,40 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * This behavior allows an entity to remove water or
- * waterlogged blocks in an area
+ * This behavior allows an entity to grow crops in an area
  **/
 @Immutable
-public class AoeGrowBehavior extends Behavior<GolemBase> {
+public class AoeGrowBehavior extends AoeBehavior {
 
 	private static final IntProvider DEFAULT_AMOUNT = UniformInt.of(2, 5);
 
-	public static final Codec<AoeGrowBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
-			.and(Codec.intRange(0, 127).optionalFieldOf("radius", 3).forGetter(AoeGrowBehavior::getRadius))
-			.and(Codec.intRange(0, Integer.MAX_VALUE).optionalFieldOf("interval", 4).forGetter(AoeGrowBehavior::getInterval))
-			.and(AoeShape.CODEC.optionalFieldOf("shape", AoeShape.SPHERE).forGetter(AoeGrowBehavior::getShape))
+	public static final Codec<AoeGrowBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStartAoe(instance)
 			.and(Codec.doubleRange(0.0D, 1.0D).optionalFieldOf("chance", 0.05D).forGetter(AoeGrowBehavior::getChance))
 			.and(IntProvider.NON_NEGATIVE_CODEC.optionalFieldOf("amount", DEFAULT_AMOUNT).forGetter(AoeGrowBehavior::getAmount))
 			.apply(instance, AoeGrowBehavior::new));
 
-	/** The radius for which the behavior will apply **/
-	private final int radius;
-	/** The average number of ticks between application of this behavior **/
-	private final int interval;
-	/** The shape of the affected area **/
-	private final AoeShape shape;
 	/** The chance to apply per block **/
 	private final double chance;
 	/** The number of grow stages to add to each block **/
 	private final IntProvider amount;
+	/** The AoeMapper instance **/
+	private final AoeMapper mapper;
 
 	public AoeGrowBehavior(MinMaxBounds.Ints variant, int radius, int interval, AoeShape shape, double chance, IntProvider amount) {
-		super(variant);
-		this.radius = radius;
-		this.interval = interval;
-		this.shape = shape;
+		super(variant, radius, interval, shape);
 		this.chance = chance;
 		this.amount = amount;
+		this.mapper = new AoeGrowMapper(chance, amount);
+	}
+
+	//// AOE BEHAVIOR ////
+
+	@Override
+	public AoeMapper getMapper() {
+		return this.mapper;
 	}
 
 	//// GETTERS ////
-
-	public int getRadius() {
-		return radius;
-	}
-
-	public int getInterval() {
-		return interval;
-	}
-
-	public AoeShape getShape() {
-		return shape;
-	}
 
 	public double getChance() {
 		return chance;
@@ -89,13 +73,6 @@ public class AoeGrowBehavior extends Behavior<GolemBase> {
 	//// METHODS ////
 
 	@Override
-	public void onRegisterGoals(final GolemBase entity) {
-		// TODO adjust goal to use variant
-		// TODO adjust goal to use AoeShape
-		entity.goalSelector.addGoal(1, new AoeBlocksGoal(entity, radius, interval, shape, new AoeGrowFunction(chance, amount)));
-	}
-
-	@Override
 	public List<Component> createDescriptions() {
 		return ImmutableList.of(Component.translatable("entitytip.aoe_grow").withStyle(ChatFormatting.GOLD));
 	}
@@ -106,24 +83,27 @@ public class AoeGrowBehavior extends Behavior<GolemBase> {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (!(o instanceof AoeGrowBehavior)) return false;
+		if (!super.equals(o)) return false;
 		AoeGrowBehavior that = (AoeGrowBehavior) o;
-		return radius == that.radius && interval == that.interval && Double.compare(that.chance, chance) == 0 && shape == that.shape && amount.equals(that.amount);
+		return Double.compare(that.chance, chance) == 0 && amount.equals(that.amount);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(super.hashCode(), radius, interval, shape, chance, amount);
+		return Objects.hash(super.hashCode(), chance, amount);
 	}
 
 	//// CLASSES ////
 
 	@Immutable
-	public static class AoeGrowFunction implements AoeFunction {
+	private static class AoeGrowMapper implements AoeMapper {
 
+		/** The percent chance [0,1] to grow an individual block **/
 		private final double chance;
+		/** An int provider for the number of grow stages to add to a block **/
 		private final IntProvider growStages;
 
-		public AoeGrowFunction(double chance, IntProvider growStages) {
+		private AoeGrowMapper(double chance, IntProvider growStages) {
 			this.chance = chance;
 			this.growStages = growStages;
 		}

@@ -4,7 +4,6 @@ import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.container.GolemContainer;
 import com.mcmoddev.golems.container.behavior.parameter.BehaviorParameter;
 import com.mcmoddev.golems.entity.GolemBase;
-import com.mcmoddev.golems.entity.goal.PlaceBlocksGoal;
 import com.mcmoddev.golems.util.ResourcePair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;

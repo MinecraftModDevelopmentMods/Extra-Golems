@@ -1,7 +1,7 @@
 package com.mcmoddev.golems.data.behavior;
 
 import com.mcmoddev.golems.EGRegistry;
-import com.mcmoddev.golems.data.behavior.util.GolemVariant;
+import com.mcmoddev.golems.data.behavior.util.UpdateTarget;
 import com.mcmoddev.golems.data.behavior.util.UpdatePredicate;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.util.DeferredHolderSet;
@@ -23,21 +23,21 @@ import java.util.function.Predicate;
 
 
 /**
- * This behavior allows an entity to change its container
- * when an item is used on the entity or when it ticks based on several conditions
+ * This behavior allows an entity to change its golem or variant
+ * when an item is used on the entity
  **/
 @Immutable
 public class ItemUpdateGolemBehavior extends Behavior<GolemBase> {
 
 	public static final Codec<ItemUpdateGolemBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
-			.and(GolemVariant.EITHER_CODEC.fieldOf("apply").forGetter(ItemUpdateGolemBehavior::getApply))
+			.and(UpdateTarget.CODEC.fieldOf("apply").forGetter(ItemUpdateGolemBehavior::getApply))
 			.and(DeferredHolderSet.codec(BuiltInRegistries.ITEM.key()).optionalFieldOf("item", DeferredHolderSet.empty()).forGetter(ItemUpdateGolemBehavior::getItems))
 			.and(EGCodecUtils.listOrElementCodec(UpdatePredicate.CODEC).fieldOf("predicate").forGetter(ItemUpdateGolemBehavior::getPredicates))
 			.and(Codec.doubleRange(0.0D, 1.0D).optionalFieldOf("chance", 1.0D).forGetter(ItemUpdateGolemBehavior::getChance))
 			.apply(instance, ItemUpdateGolemBehavior::new));
 
 	/** The golem and variant **/
-	private final GolemVariant apply;
+	private final UpdateTarget apply;
 	/** The items associated with the update **/
 	private final DeferredHolderSet<Item> items;
 	/** The conditions to update the golem and variant **/
@@ -47,7 +47,7 @@ public class ItemUpdateGolemBehavior extends Behavior<GolemBase> {
 	/** The percent chance **/
 	private final double chance;
 
-	public ItemUpdateGolemBehavior(MinMaxBounds.Ints variant, GolemVariant apply, DeferredHolderSet<Item> items, List<UpdatePredicate> predicates, double chance) {
+	public ItemUpdateGolemBehavior(MinMaxBounds.Ints variant, UpdateTarget apply, DeferredHolderSet<Item> items, List<UpdatePredicate> predicates, double chance) {
 		super(variant);
 		this.apply = apply;
 		this.items = items;
@@ -58,7 +58,7 @@ public class ItemUpdateGolemBehavior extends Behavior<GolemBase> {
 
 	//// GETTERS ////
 
-	public GolemVariant getApply() {
+	public UpdateTarget getApply() {
 		return apply;
 	}
 

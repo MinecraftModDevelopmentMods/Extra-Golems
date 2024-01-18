@@ -3,7 +3,6 @@ package com.mcmoddev.golems.data.behavior;
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.entity.GolemBase;
-import com.mcmoddev.golems.entity.goal.ExplodeGoal;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
@@ -83,12 +82,6 @@ public class ExplodeBehavior extends Behavior<GolemBase> {
 	//// METHODS ////
 
 	@Override
-	public void onRegisterGoals(final GolemBase entity) {
-		// TODO add variant to goal
-		entity.goalSelector.addGoal(0, new ExplodeGoal<>(entity, (float) radius));
-	}
-
-	@Override
 	public void onHurtTarget(final GolemBase entity, final Entity target) {
 		if (target.isOnFire() || entity.getRandom().nextFloat() < chanceOnAttack) {
 			entity.lightFuse();
@@ -99,6 +92,28 @@ public class ExplodeBehavior extends Behavior<GolemBase> {
 	public void onActuallyHurt(final GolemBase entity, final DamageSource source, final float amount) {
 		if (source.is(DamageTypes.ON_FIRE) || source.is(DamageTypes.IN_FIRE) || entity.getRandom().nextFloat() < chanceOnHurt) {
 			entity.lightFuse();
+		}
+	}
+
+	@Override
+	public void onTick(GolemBase entity) {
+		// verify fuse is lit
+		if(!entity.isFuseLit()) {
+			return;
+		}
+		// decrease fuse
+		entity.setFuse(entity.getFuse() - 1);
+		// TODO add fuse particles?
+		// stop navigation
+		entity.getNavigation().stop();
+		// reset fuse when wet
+		if (entity.isInWaterRainOrBubble()) {
+			entity.resetFuseLit();
+			entity.playSound(SoundEvents.FIRE_EXTINGUISH, 0.9F, entity.getRandom().nextFloat());
+		}
+		// explode when fuse reaches zero
+		if (entity.getFuse() <= 0) {
+			entity.explode((float) radius);
 		}
 	}
 

@@ -3,7 +3,6 @@ package com.mcmoddev.golems.container.behavior;
 import com.mcmoddev.golems.container.behavior.parameter.BehaviorParameter.Target;
 import com.mcmoddev.golems.container.behavior.parameter.MobEffectBehaviorParameter;
 import com.mcmoddev.golems.entity.GolemBase;
-import com.mcmoddev.golems.entity.goal.PassiveEffectsGoal;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 

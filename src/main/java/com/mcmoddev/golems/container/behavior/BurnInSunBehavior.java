@@ -1,7 +1,6 @@
 package com.mcmoddev.golems.container.behavior;
 
 import com.mcmoddev.golems.entity.GolemBase;
-import com.mcmoddev.golems.entity.goal.BurnInSunGoal;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;

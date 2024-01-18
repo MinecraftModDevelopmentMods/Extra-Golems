@@ -4,8 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.behavior.util.AoeShape;
 import com.mcmoddev.golems.entity.GolemBase;
-import com.mcmoddev.golems.entity.goal.AoeBlocksGoal;
-import com.mcmoddev.golems.event.AoeFunction;
+import com.mcmoddev.golems.util.AoeMapper;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
@@ -25,49 +24,35 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * This behavior allows an entity to remove water or
- * waterlogged blocks in an area
+ * This behavior allows an entity to transform water and lava in an area
  **/
 @Immutable
-public class AoeFreezeBehavior extends Behavior<GolemBase> {
+public class AoeFreezeBehavior extends AoeBehavior {
 
-	public static final Codec<AoeFreezeBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
-			.and(Codec.intRange(0, 127).optionalFieldOf("radius", 3).forGetter(AoeFreezeBehavior::getRadius))
-			.and(Codec.intRange(0, Integer.MAX_VALUE).optionalFieldOf("interval", 4).forGetter(AoeFreezeBehavior::getInterval))
-			.and(AoeShape.CODEC.optionalFieldOf("shape", AoeShape.SPHERE).forGetter(AoeFreezeBehavior::getShape))
+	public static final Codec<AoeFreezeBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStartAoe(instance)
 			.and(Codec.BOOL.optionalFieldOf("frosted", false).forGetter(AoeFreezeBehavior::useFrostedIce))
 			.apply(instance, AoeFreezeBehavior::new));
 
-	/** The radius for which the behavior will apply **/
-	private final int radius;
-	/** The average number of ticks between application of this behavior **/
-	private final int interval;
-	/** The shape of the affected area **/
-	private final AoeShape shape;
 	/** True to use frosted ice, false to use regular/packed ice **/
 	private final boolean useFrostedIce;
+	/** The AoeMapper instance **/
+	private final AoeMapper mapper;
 
 	public AoeFreezeBehavior(MinMaxBounds.Ints variant, int radius, int interval, AoeShape shape, boolean useFrostedIce) {
-		super(variant);
-		this.radius = radius;
-		this.interval = interval;
-		this.shape = shape;
+		super(variant, radius, interval, shape);
 		this.useFrostedIce = useFrostedIce;
+		this.mapper = new AoeFreezeMapper(useFrostedIce);
 	}
+
+	//// AOE BEHAVIOR ////
+
+	@Override
+	public AoeMapper getMapper() {
+		return mapper;
+	}
+
 
 	//// GETTERS ////
-
-	public int getRadius() {
-		return radius;
-	}
-
-	public int getInterval() {
-		return interval;
-	}
-
-	public AoeShape getShape() {
-		return shape;
-	}
 
 	public boolean useFrostedIce() {
 		return useFrostedIce;
@@ -81,13 +66,6 @@ public class AoeFreezeBehavior extends Behavior<GolemBase> {
 	//// METHODS ////
 
 	@Override
-	public void onRegisterGoals(final GolemBase entity) {
-		// TODO adjust goal to use variant
-		// TODO adjust goal to use AoeShape
-		entity.goalSelector.addGoal(1, new AoeBlocksGoal(entity, radius, interval, shape, new AoeFreezeFunction(useFrostedIce)));
-	}
-
-	@Override
 	public List<Component> createDescriptions() {
 		return ImmutableList.of(Component.translatable("entitytip.aoe_freeze").withStyle(ChatFormatting.AQUA));
 	}
@@ -98,28 +76,30 @@ public class AoeFreezeBehavior extends Behavior<GolemBase> {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (!(o instanceof AoeFreezeBehavior)) return false;
+		if (!super.equals(o)) return false;
 		AoeFreezeBehavior that = (AoeFreezeBehavior) o;
-		return radius == that.radius && interval == that.interval && useFrostedIce == that.useFrostedIce && shape == that.shape;
+		return useFrostedIce == that.useFrostedIce;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(super.hashCode(), radius, interval, shape, useFrostedIce);
+		return Objects.hash(super.hashCode(), useFrostedIce);
 	}
+
 
 	//// CLASSES ////
 
 	@Immutable
-	public static class AoeFreezeFunction implements AoeFunction {
+	private static class AoeFreezeMapper implements AoeMapper {
 
 		/** This percentage of Packed Ice placed will become regular ice instead. **/
-		public final float iceChance = 0.52F;
+		private final float iceChance = 0.52F;
 		/** This percentage of Obsidian placed will become cobblestone instead. **/
-		public final float cobbleChance = 0.29F;
+		private final float cobbleChance = 0.29F;
 		/** When true, all water will turn to Frosted Ice **/
-		public final boolean useFrostedIce;
+		private final boolean useFrostedIce;
 
-		public AoeFreezeFunction(final boolean useFrost) {
+		private AoeFreezeMapper(final boolean useFrost) {
 			this.useFrostedIce = useFrost;
 		}
 

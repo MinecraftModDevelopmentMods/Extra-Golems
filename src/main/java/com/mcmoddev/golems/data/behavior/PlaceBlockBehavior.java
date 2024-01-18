@@ -15,13 +15,17 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SupportType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
@@ -39,7 +43,7 @@ public class PlaceBlockBehavior extends Behavior<GolemBase> {
 			TriggerType.CODEC.optionalFieldOf("trigger", TriggerType.TICK).forGetter(PlaceBlockBehavior::getTrigger),
 			TargetType.CODEC.optionalFieldOf("position", TargetType.SELF).forGetter(PlaceBlockBehavior::getPosition),
 			Codec.intRange(0, 8).optionalFieldOf("radius", 0).forGetter(PlaceBlockBehavior::getRadius),
-			Codec.doubleRange(0.0D, 1.0D).optionalFieldOf("chance", 0.25D).forGetter(PlaceBlockBehavior::getChance),
+			Codec.doubleRange(0.0D, 1.0D).optionalFieldOf("chance", 1.0D).forGetter(PlaceBlockBehavior::getChance),
 			EGCodecUtils.listOrElementCodec(DeferredBlockState.CODEC).fieldOf("block").forGetter(PlaceBlockBehavior::getBlocks),
 			Codec.STRING.fieldOf("display_name").forGetter(PlaceBlockBehavior::getDisplayNameKey),
 			EGCodecUtils.listOrElementCodec(WorldPredicate.CODEC).optionalFieldOf("predicate", ImmutableList.of(WorldPredicate.ALWAYS)).forGetter(PlaceBlockBehavior::getPredicates),
@@ -200,9 +204,13 @@ public class PlaceBlockBehavior extends Behavior<GolemBase> {
 			return false;
 		}
 		// determine the block to place
-		final BlockState blockState = Util.getRandom(blocks, random).get();
+		BlockState blockState = Util.getRandom(blocks, random).get();
+		// update waterlogged property if applicable
+		if(blockState.hasProperty(BlockStateProperties.WATERLOGGED) && replace.is(Blocks.WATER) && replace.getFluidState().isSource()) {
+			blockState = blockState.setValue(BlockStateProperties.WATERLOGGED, true);
+		}
 		// validate block can survive
-		if(mustSurvive && !blockState.canSurvive(level, pos)) {
+		if(mustSurvive && !(blockState.canSurvive(level, pos) && level.getBlockState(pos.below()).isFaceSturdy(level, pos.below(), Direction.UP, SupportType.FULL))) {
 			return false;
 		}
 		// place the block

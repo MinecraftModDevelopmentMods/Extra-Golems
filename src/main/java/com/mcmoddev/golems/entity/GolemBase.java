@@ -10,10 +10,9 @@ import com.mcmoddev.golems.container.behavior.ExplodeBehavior;
 import com.mcmoddev.golems.container.behavior.GolemBehaviors;
 import com.mcmoddev.golems.container.behavior.UseFuelBehavior;
 import com.mcmoddev.golems.entity.goal.GoToWaterGoal;
-import com.mcmoddev.golems.entity.goal.PlaceUtilityBlocksGoal;
 import com.mcmoddev.golems.entity.goal.SwimUpGoal;
 import com.mcmoddev.golems.item.SpawnGolemItem;
-import com.mcmoddev.golems.util.GolemAttributes;
+import com.mcmoddev.golems.util.GolemAttributeManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
@@ -146,7 +145,7 @@ public class GolemBase extends IronGolem implements InventoryCarrier, IMultitext
 		// container was loaded successfully
 		this.isMaterialDirty = false;
 		this.container = oContainer.get();
-		this.attributes = GolemAttributes.getAttributes(this.level().registryAccess(), materialIn);
+		this.attributes = GolemAttributeManager.getAttributes(this.level().registryAccess(), materialIn);
 		this.setInvulnerable(container.getAttributes().getArmor() > MAX_ARMOR);
 		// clear description
 		this.description = null;

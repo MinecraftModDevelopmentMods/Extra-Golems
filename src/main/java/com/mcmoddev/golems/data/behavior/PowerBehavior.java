@@ -2,6 +2,7 @@ package com.mcmoddev.golems.data.behavior;
 
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
+import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.block.GlowBlock;
 import com.mcmoddev.golems.block.PowerBlock;
 import com.mcmoddev.golems.entity.GolemBase;
@@ -11,10 +12,13 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
@@ -25,6 +29,8 @@ import java.util.Objects;
  **/
 @Immutable
 public class PowerBehavior extends Behavior<GolemBase> {
+
+	private static final TagKey<Block> CANNOT_SUPPORT = ForgeRegistries.BLOCKS.tags().createTagKey(new ResourceLocation(ExtraGolems.MODID, "cannot_support_utility_blocks"));
 
 	public static final Codec<PowerBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
 			.and(Codec.intRange(1, Integer.MAX_VALUE).optionalFieldOf("interval", 4).forGetter(PowerBehavior::getInterval))
@@ -85,6 +91,10 @@ public class PowerBehavior extends Behavior<GolemBase> {
 		int count = 0;
 		for(int i = 0; i < 4; i++) {
 			BlockState replace = level.getBlockState(blockPos);
+			// verify block below is not blacklisted
+			if(level.getBlockState(blockPos.below()).is(CANNOT_SUPPORT)) {
+				continue;
+			}
 			// attempt to replace air
 			if(replace.isAir()) {
 				level.setBlock(pos, blockState, Block.UPDATE_ALL);

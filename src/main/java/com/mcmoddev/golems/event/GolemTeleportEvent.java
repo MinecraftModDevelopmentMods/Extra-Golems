@@ -6,7 +6,7 @@ import net.minecraftforge.event.entity.EntityTeleportEvent;
 import net.minecraftforge.eventbus.api.Cancelable;
 
 /**
- * Fired when a entity tries to teleport.
+ * Fired when an entity tries to teleport.
  * The destination can be modified, or the event can be canceled entirely.
  *
  * @see EntityTeleportEvent
@@ -16,9 +16,8 @@ public class GolemTeleportEvent extends EntityTeleportEvent {
 
 	public final GolemBase entityGolem;
 
-	public GolemTeleportEvent(final Mob entity, final double targetX, final double targetY, final double targetZ,
-							  final float attackDamage) {
+	public GolemTeleportEvent(final GolemBase entity, final double targetX, final double targetY, final double targetZ) {
 		super(entity, targetX, targetY, targetZ);
-		this.entityGolem = entity instanceof GolemBase ? (GolemBase) entity : null;
+		this.entityGolem = entity;
 	}
 }

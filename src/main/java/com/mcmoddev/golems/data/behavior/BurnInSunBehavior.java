@@ -3,13 +3,12 @@ package com.mcmoddev.golems.data.behavior;
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.entity.GolemBase;
-import com.mcmoddev.golems.entity.goal.BurnInSunGoal;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.MinMaxBounds;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.goal.FleeSunGoal;
 import net.minecraft.world.entity.ai.goal.RestrictSunGoal;
 
@@ -53,8 +52,15 @@ public class BurnInSunBehavior extends Behavior<GolemBase> {
 	public void onRegisterGoals(final GolemBase entity) {
 		// TODO adjust goals to use variant
 		entity.goalSelector.addGoal(1, new RestrictSunGoal(entity));
-		entity.goalSelector.addGoal(1, new BurnInSunGoal(entity, (float) chance));
 		entity.goalSelector.addGoal(2, new FleeSunGoal(entity, 1.1D));
+	}
+
+	@Override
+	public void onTick(GolemBase entity) {
+		// set on fire
+		if(entity.isSunBurnTick() && entity.getRandom().nextFloat() < chance && entity.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
+			entity.setSecondsOnFire(3);
+		}
 	}
 
 	@Override

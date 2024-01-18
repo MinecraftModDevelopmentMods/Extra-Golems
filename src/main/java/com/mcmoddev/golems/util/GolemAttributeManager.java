@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * Provides safe and re-usable attribute maps for golems with different materials.
  */
-public final class GolemAttributes {
+public final class GolemAttributeManager {
 
 	/** Caches attribute suppliers based on material **/
 	private static final Map<ResourceLocation, AttributeSupplier> materialToAttributeMap = new HashMap<>();
@@ -52,7 +52,7 @@ public final class GolemAttributes {
 	}
 
 	/**
-	 * Used to reset the attribute cache when datapacks are (re)loaded
+	 * Resets the attribute supplier cache (unused)
 	 */
 	public static void clear() {
 		materialToAttributeMap.clear();

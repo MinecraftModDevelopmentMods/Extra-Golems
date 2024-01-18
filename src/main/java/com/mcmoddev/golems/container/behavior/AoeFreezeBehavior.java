@@ -1,7 +1,6 @@
 package com.mcmoddev.golems.container.behavior;
 
 import com.mcmoddev.golems.entity.GolemBase;
-import com.mcmoddev.golems.entity.goal.AoeBlocksGoal;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -44,7 +43,7 @@ public class AoeFreezeBehavior extends GolemBehavior {
 	@Override
 	public void onRegisterGoals(final GolemBase entity) {
 		entity.goalSelector.addGoal(1, new AoeBlocksGoal(entity, range, interval, sphere,
-				new AoeBlocksGoal.FreezeFunction(frosted)));
+				new AoeBlocksGoal.FreezeMapper(frosted)));
 	}
 
 	@Override

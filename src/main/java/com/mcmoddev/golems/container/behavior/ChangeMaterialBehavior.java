@@ -3,7 +3,6 @@ package com.mcmoddev.golems.container.behavior;
 import com.google.common.collect.ImmutableMap;
 import com.mcmoddev.golems.container.behavior.parameter.ChangeMaterialBehaviorParameter;
 import com.mcmoddev.golems.entity.GolemBase;
-import com.mcmoddev.golems.entity.goal.ChangeMaterialGoal;
 import com.mcmoddev.golems.util.ResourcePair;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
