@@ -1,11 +1,10 @@
 package com.mcmoddev.golems.data.behavior;
 
 import com.mcmoddev.golems.data.behavior.util.AoeShape;
-import com.mcmoddev.golems.entity.GolemBase;
+import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mcmoddev.golems.event.GolemModifyBlocksEvent;
 import com.mcmoddev.golems.util.AoeMapper;
 import com.mojang.datafixers.Products;
-import com.mojang.datafixers.util.Function4;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.MinMaxBounds;
@@ -21,7 +20,7 @@ import java.util.Objects;
  * This behavior allows an entity to modify blocks in an area
  **/
 @Immutable
-public abstract class AoeBehavior extends Behavior<GolemBase> {
+public abstract class AoeBehavior extends Behavior {
 
 	/** The radius for which the behavior will apply **/
 	private final int radius;
@@ -63,12 +62,11 @@ public abstract class AoeBehavior extends Behavior<GolemBase> {
 	}
 
 	@Override
-	public void onTick(GolemBase entity) {
-		if(entity.tickCount % this.interval != 0) {
+	public void onTick(IExtraGolem entity) {
+		if(entity.asMob().tickCount % this.interval != 0) {
 			return;
 		}
-		final BlockPos below = entity.getBlockBelow();
-		final GolemModifyBlocksEvent event = new GolemModifyBlocksEvent(entity, below, getRadius(), getShape(), getMapper());
+		final GolemModifyBlocksEvent event = new GolemModifyBlocksEvent(entity.asMob(), entity.asMob().blockPosition(), getRadius(), getShape(), getMapper());
 		// verify the event was not canceled or denied
 		if (!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Event.Result.DENY) {
 			// Apply the mapper to each position in the shape
@@ -78,11 +76,11 @@ public abstract class AoeBehavior extends Behavior<GolemBase> {
 					continue;
 				}
 				// determine the new block state using the mapper
-				BlockState oldState = entity.level().getBlockState(pos);
-				BlockState newState = event.getMapper().map(entity, pos, oldState);
+				BlockState oldState = entity.asMob().level().getBlockState(pos);
+				BlockState newState = event.getMapper().map(entity.asMob(), pos, oldState);
 				// update the block state
 				if(oldState != newState) {
-					entity.level().setBlock(pos, newState, event.getUpdateFlag());
+					entity.asMob().level().setBlock(pos, newState, event.getUpdateFlag());
 				}
 			}
 		}

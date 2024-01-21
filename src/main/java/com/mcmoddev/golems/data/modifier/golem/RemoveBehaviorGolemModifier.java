@@ -78,7 +78,7 @@ public class RemoveBehaviorGolemModifier extends GolemModifier {
 			if(type != null && !this.type.equals(EGRegistry.BEHAVIOR_SERIALIZERS_SUPPLIER.get().getKey(behavior.getCodec()))) {
 				return false;
 			}
-			return variant.equals(behavior.getVariant());
+			return variant.equals(behavior.getVariantBounds());
 		}
 	}
 }

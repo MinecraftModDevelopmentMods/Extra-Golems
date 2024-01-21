@@ -3,7 +3,7 @@ package com.mcmoddev.golems.data.modifier.model;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.golem.Golem;
 import com.mcmoddev.golems.data.model.Layer;
-import com.mcmoddev.golems.data.model.Model;
+import com.mcmoddev.golems.data.model.LayerList;
 import com.mcmoddev.golems.data.model.RenderTypes;
 import com.mcmoddev.golems.data.modifier.GolemModifier;
 import com.mcmoddev.golems.util.EGCodecUtils;
@@ -21,7 +21,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
- * Removes all layers from the {@link Model.Builder} that pass any of the given {@link RemovePredicate}s
+ * Removes all layers from the {@link LayerList.Builder} that pass any of the given {@link RemovePredicate}s
  */
 @Immutable
 public class RemoveLayersGolemModifier extends GolemModifier {
@@ -46,7 +46,7 @@ public class RemoveLayersGolemModifier extends GolemModifier {
 
 	@Override
 	public void apply(Golem.Builder builder) {
-		builder.model(b -> b.remove(this.getPredicate()));
+		builder.layers(b -> b.remove(this.getPredicate()));
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public class RemoveLayersGolemModifier extends GolemModifier {
 
 	//// CLASSES ////
 
-	public static class RemovePredicate implements Predicate<Either<Layer, Holder<Model>>> {
+	public static class RemovePredicate implements Predicate<Either<Layer, Holder<LayerList>>> {
 
 		public static final Codec<RemovePredicate> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 				ResourceLocation.CODEC.optionalFieldOf("model").forGetter(o -> Optional.ofNullable(o.model)),
@@ -88,7 +88,7 @@ public class RemoveLayersGolemModifier extends GolemModifier {
 		}
 
 		@Override
-		public boolean test(Either<Layer, Holder<Model>> either) {
+		public boolean test(Either<Layer, Holder<LayerList>> either) {
 			// check model
 			if(either.right().isPresent()) {
 				return this.model != null && either.right().get().is(this.model);

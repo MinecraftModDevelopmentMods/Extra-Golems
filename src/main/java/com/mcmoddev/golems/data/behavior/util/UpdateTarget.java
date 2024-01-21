@@ -1,6 +1,7 @@
 package com.mcmoddev.golems.data.behavior.util;
 
 import com.mcmoddev.golems.entity.GolemBase;
+import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
@@ -38,26 +39,26 @@ public class UpdateTarget {
 	 * @param entity the golem entity
 	 * @return true if either the golem or the variant changed
 	 */
-	public boolean apply(final GolemBase entity) {
+	public boolean apply(final IExtraGolem entity) {
 		boolean flag = false;
 		// update golem
-		if(golem != null && !golem.equals(entity.getMaterial())) {
-			entity.setMaterial(golem);
+		if(golem != null && !golem.equals(entity.getGolemId())) {
+			entity.setGolemId(golem);
 			flag = true;
 		}
 		// update variant
 		if(variant != null) {
 			// sample the int provider
-			int sample = variant.sample(entity.getRandom());
+			int sample = variant.sample(entity.asMob().getRandom());
 			// update the variant if necessary
-			if(sample != entity.getTextureId()) {
-				entity.setTextureId(sample);
+			if(sample != entity.getVariant()) {
+				entity.setVariant(sample);
 				flag = true;
 			}
 		}
 		// cycle variant (only when golem and variant are both unspecified)
 		if(null == golem && null == variant && cycle != null && cycle) {
-			entity.cycleTexture();
+			entity.cycleVariant();
 			flag = true;
 		}
 		return flag;

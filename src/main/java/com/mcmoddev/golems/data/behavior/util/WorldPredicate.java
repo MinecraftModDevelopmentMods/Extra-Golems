@@ -1,27 +1,27 @@
 package com.mcmoddev.golems.data.behavior.util;
 
-import com.mcmoddev.golems.entity.GolemBase;
+import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mojang.serialization.Codec;
 import net.minecraft.util.StringRepresentable;
 
 import java.util.function.Predicate;
 
-public enum WorldPredicate implements StringRepresentable, Predicate<GolemBase> {
+public enum WorldPredicate implements StringRepresentable, Predicate<IExtraGolem> {
 	ALWAYS("always", e -> true),
 	NEVER("never", e -> false),
-	DAY("day", e -> e.level().isDay()),
-	NIGHT("night", e -> e.level().isNight()),
-	CLEAR("clear", e -> !e.level().isRainingAt(e.blockPosition().above())),
-	RAIN("rain", e -> e.level().isRainingAt(e.blockPosition().above())),
-	THUNDER("thunder", e -> e.level().isThundering() && e.level().isRainingAt(e.blockPosition().above()));
+	DAY("day", e -> e.asMob().level().isDay()),
+	NIGHT("night", e -> e.asMob().level().isNight()),
+	CLEAR("clear", e -> !e.asMob().level().isRainingAt(e.asMob().blockPosition().above())),
+	RAIN("rain", e -> e.asMob().level().isRainingAt(e.asMob().blockPosition().above())),
+	THUNDER("thunder", e -> e.asMob().level().isThundering() && e.asMob().level().isRainingAt(e.asMob().blockPosition().above()));
 
 	public static final Codec<WorldPredicate> CODEC = StringRepresentable.fromEnum(WorldPredicate::values);
 
 	private final String name;
 	private final String descriptionId;
-	private final Predicate<GolemBase> predicate;
+	private final Predicate<IExtraGolem> predicate;
 
-	WorldPredicate(String name, Predicate<GolemBase> predicate) {
+	WorldPredicate(String name, Predicate<IExtraGolem> predicate) {
 		this.name = name;
 		this.descriptionId = "predicate." + name;
 		this.predicate = predicate;
@@ -32,7 +32,7 @@ public enum WorldPredicate implements StringRepresentable, Predicate<GolemBase> 
 	}
 
 	@Override
-	public boolean test(GolemBase entity) {
+	public boolean test(IExtraGolem entity) {
 		return this.predicate.test(entity);
 	}
 

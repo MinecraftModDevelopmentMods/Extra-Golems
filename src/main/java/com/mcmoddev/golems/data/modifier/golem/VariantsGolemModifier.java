@@ -44,7 +44,7 @@ public class VariantsGolemModifier extends GolemModifier {
 		if(replace()) {
 			builder.variants(getAmount());
 		} else {
-			builder.variants(builder.getVariants() + getAmount());
+			builder.addVariants(getAmount());
 		}
 	}
 

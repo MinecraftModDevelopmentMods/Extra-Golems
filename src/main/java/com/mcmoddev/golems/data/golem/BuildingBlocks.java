@@ -11,11 +11,16 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 @Immutable
-public class BuildingBlocks {
+public class BuildingBlocks implements Supplier<Collection<Block>> {
 
 	public static final BuildingBlocks EMPTY = new BuildingBlocks(ImmutableList.of());
 
@@ -43,6 +48,14 @@ public class BuildingBlocks {
 		this.blockList = blockMapBuilder.build();
 	}
 
+	//// SUPPLIER ////
+
+	@Override
+	public Collection<Block> get() {
+		final Set<Block> set = new HashSet<>();
+		for(final )
+	}
+
 	//// GETTERS ////
 
 	public List<ResourcePair> getList() {
@@ -56,6 +69,22 @@ public class BuildingBlocks {
 	public List<ResourceLocation> getBlockList() {
 		return blockList;
 	}
+
+	//// EQUALITY ////
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof BuildingBlocks)) return false;
+		BuildingBlocks that = (BuildingBlocks) o;
+		return list.equals(that.list);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(list);
+	}
+
 
 	//// CLASSES ////
 

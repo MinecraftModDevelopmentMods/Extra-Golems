@@ -66,7 +66,7 @@ public class AoeGrowBehavior extends AoeBehavior {
 	}
 
 	@Override
-	public Codec<? extends Behavior<?>> getCodec() {
+	public Codec<? extends Behavior> getCodec() {
 		return EGRegistry.BehaviorReg.AOE_GROW.get();
 	}
 

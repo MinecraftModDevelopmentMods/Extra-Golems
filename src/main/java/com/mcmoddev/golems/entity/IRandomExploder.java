@@ -1,11 +1,10 @@
 package com.mcmoddev.golems.entity;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.AreaEffectCloud;
-import net.minecraft.world.level.Explosion.BlockInteraction;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
@@ -13,13 +12,10 @@ import java.util.Collection;
 
 public interface IRandomExploder {
 
-	String KEY_FUSE = "Fuse";
-	String KEY_FUSE_LIT = "FuseLit";
-
 	/**
 	 * @return the minimum fuse length
 	 **/
-	int getFuseLen();
+	int getMinFuse();
 
 	/**
 	 * @return the current fuse length
@@ -42,50 +38,29 @@ public interface IRandomExploder {
 	boolean isFuseLit();
 
 	/**
-	 * @return the Golem
-	 **/
-	GolemBase getGolemEntity();
-
-	/**
 	 * Sets the fuse to the minimum fuse length
 	 **/
 	default void resetFuse() {
-		setFuse(getFuseLen());
+		setFuse(getMinFuse());
 	}
 
 	/**
 	 * Lights the fuse
 	 **/
-	default void lightFuse() {
-		if (!isFuseLit() && !getGolemEntity().isInWaterOrRain()) {
+	default void lightFuse(final LivingEntity entity) {
+		if (!isFuseLit() && !entity.isInWaterOrRain()) {
 			resetFuse();
 			setFuseLit(true);
 			// play sounds
-			getGolemEntity().playSound(SoundEvents.CREEPER_PRIMED, 0.9F, getGolemEntity().getRandom().nextFloat());
+			entity.playSound(SoundEvents.CREEPER_PRIMED, 0.9F, 0.5F + entity.getRandom().nextFloat() * 0.5F);
 		}
-	}
-
-	/**
-	 * @param tag the CompoundTag to write to
-	 **/
-	default void saveFuse(final CompoundTag tag) {
-		tag.putInt(KEY_FUSE, getFuse());
-		tag.putBoolean(KEY_FUSE_LIT, isFuseLit());
-	}
-
-	/**
-	 * @param tag the CompoundTag to read from
-	 **/
-	default void loadFuse(final CompoundTag tag) {
-		setFuse(tag.getInt(KEY_FUSE));
-		setFuseLit(tag.getBoolean(KEY_FUSE_LIT));
 	}
 
 	/**
 	 * @return a number between 0.0 and 1.0 to indicate fuse progress
 	 **/
 	default float getFusePercentage() {
-		return (float) getFuse() / (float) getFuseLen();
+		return (float) getFuse() / (float) getMinFuse();
 	}
 
 	/**
@@ -101,21 +76,19 @@ public interface IRandomExploder {
 	 *
 	 * @param range the explosion size
 	 */
-	default void explode(float range) {
-		final GolemBase entity = getGolemEntity();
+	default void explode(LivingEntity entity, float range) {
 		if (!entity.level().isClientSide()) {
 			final Vec3 pos = entity.position();
 			entity.level().explode(entity, pos.x, pos.y, pos.z, range, Level.ExplosionInteraction.MOB);
 			entity.discard();
-			spawnLingeringCloud();
+			spawnLingeringCloud(entity);
 		}
 	}
 
 	/**
 	 * Creates an AreaEffectCloud if applicable
 	 **/
-	default void spawnLingeringCloud() {
-		final GolemBase entity = getGolemEntity();
+	default void spawnLingeringCloud(LivingEntity entity) {
 		Collection<MobEffectInstance> collection = entity.getActiveEffects();
 		if (!collection.isEmpty()) {
 			AreaEffectCloud areaeffectcloud = new AreaEffectCloud(entity.level(), entity.getX(), entity.getY(), entity.getZ());

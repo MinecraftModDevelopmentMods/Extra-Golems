@@ -3,7 +3,7 @@ package com.mcmoddev.golems.data.golem;
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.behavior.BehaviorList;
-import com.mcmoddev.golems.data.model.Model;
+import com.mcmoddev.golems.data.model.LayerList;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
@@ -28,7 +28,7 @@ public class Golem {
 			Codec.intRange(1, 127).optionalFieldOf("variants", 1).forGetter(Golem::getVariants),
 			Codec.BOOL.optionalFieldOf("hidden", false).forGetter(Golem::isHidden),
 			ParticleTypes.CODEC.optionalFieldOf("particle").forGetter(o -> Optional.ofNullable(o.particle)),
-			Model.HOLDER_CODEC.optionalFieldOf("model", Holder.direct(new Model(ImmutableList.of()))).forGetter(Golem::getModel),
+			LayerList.HOLDER_CODEC.optionalFieldOf("model", Holder.direct(new LayerList(ImmutableList.of()))).forGetter(Golem::getLayers),
 			BehaviorList.HOLDER_CODEC.optionalFieldOf("behavior", Holder.direct(new BehaviorList(ImmutableList.of()))).forGetter(Golem::getBehaviors),
 			ResourceLocation.CODEC.optionalFieldOf("group").forGetter(o -> Optional.ofNullable(o.group))
 	).apply(instance, Golem::new));
@@ -41,14 +41,14 @@ public class Golem {
 	private final int variants;
 	private final boolean hidden;
 	private final @Nullable ParticleOptions particle;
-	private final Holder<Model> model;
+	private final Holder<LayerList> layers;
 	private final Holder<BehaviorList> behaviors;
 	private final @Nullable ResourceLocation group;
 
 	public Golem(Optional<Holder<Golem>> parent, Optional<Attributes> attributes,
 				 BuildingBlocks blocks, RepairItems repairItems,
 				 int variants, boolean hidden, Optional<ParticleOptions> particle,
-				 Holder<Model> model, Holder<BehaviorList> behaviors, Optional<ResourceLocation> group) {
+				 Holder<LayerList> layers, Holder<BehaviorList> behaviors, Optional<ResourceLocation> group) {
 		this.parent = parent.orElse(null);
 		this.attributes = attributes.orElse(null);
 		this.blocks = blocks;
@@ -56,7 +56,7 @@ public class Golem {
 		this.variants = variants;
 		this.hidden = hidden;
 		this.particle = particle.orElse(null);
-		this.model = model;
+		this.layers = layers;
 		this.behaviors = behaviors;
 		this.group = group.orElse(null);
 	}
@@ -94,8 +94,8 @@ public class Golem {
 		return particle;
 	}
 
-	public Holder<Model> getModel() {
-		return model;
+	public Holder<LayerList> getLayers() {
+		return layers;
 	}
 
 	public Holder<BehaviorList> getBehaviors() {
@@ -117,7 +117,7 @@ public class Golem {
 		private int variants;
 		private boolean hidden;
 		private ParticleOptions particle;
-		private Model.Builder model;
+		private LayerList.Builder layers;
 		private BehaviorList.Builder behaviors;
 		private ResourceLocation group;
 
@@ -127,7 +127,7 @@ public class Golem {
 			this.blocks = new BuildingBlocks.Builder();
 			this.attributes = new Attributes.Builder();
 			this.repairItems = new RepairItems.Builder();
-			this.model = new Model.Builder();
+			this.layers = new LayerList.Builder();
 			this.behaviors = new BehaviorList.Builder();
 		}
 
@@ -137,14 +137,14 @@ public class Golem {
 			final Golem parent = hasParent ? golem.getParent().get() : null;
 			// apply settings from parent
 			if(hasParent) {
-				builder.parent(golem.getParent())
-						.attributes(b -> b.copy(parent.getAttributes()))
+				builder.parent = golem.getParent();
+				builder.attributes(b -> b.copy(parent.getAttributes()))
 						.blocks(b -> b.addAll(parent.getBlocks().getList()))
 						.repairItems(b -> b.addAll(parent.getRepairItems().getMap()))
 						.variants(parent.getVariants())
 						.hidden(parent.isHidden())
 						.particle(parent.getParticle())
-						.model(b -> b.addAll(parent.getModel().get().getLayers()))
+						.layers(b -> b.addAll(parent.getLayers().get().getLayers()))
 						.behaviors(b -> b.addAll(parent.getBehaviors().get().getBehaviors()))
 						.group(parent.getGroup());
 			}
@@ -179,15 +179,18 @@ public class Golem {
 				builder.particle(golem.getParticle());
 			}
 			// model (replaces parent)
-			if(!hasParent || !golem.getModel().get().equals(parent.getModel().get())) {
-				builder.model(b -> {
+			if(!hasParent || !golem.getLayers().get().equals(parent.getLayers().get())) {
+				builder.layers(b -> {
 					b.clear();
-					b.addAll(golem.getModel().get().getLayers());
+					b.addAll(golem.getLayers().get().getLayers());
 				});
 			}
-			// behaviors (merges parent)
+			// behaviors (replaces parent)
 			if(!hasParent || !golem.getBehaviors().get().equals(parent.getBehaviors().get())) {
-				builder.behaviors(b -> b.addAll(golem.getBehaviors().get().getBehaviors()));
+				builder.behaviors(b -> {
+					b.clear();
+					b.addAll(golem.getBehaviors().get().getBehaviors());
+				});
 			}
 			// group (replaces parent)
 			if(golem.getGroup() != null) {
@@ -196,22 +199,7 @@ public class Golem {
 			return builder;
 		}
 
-		//// GETTERS ////
-
-		public int getVariants() {
-			return variants;
-		}
-
 		//// METHODS ////
-
-		/**
-		 * @param parent the parent golem
-		 * @return the builder instance
-		 */
-		public Builder parent(final Holder<Golem> parent) {
-			this.parent = parent;
-			return this;
-		}
 
 		/**
 		 * @param action the action to perform on the attributes builder
@@ -219,6 +207,17 @@ public class Golem {
 		 */
 		public Builder attributes(final Consumer<Attributes.Builder> action) {
 			action.accept(this.attributes);
+			return this;
+		}
+
+		/**
+		 * @param attributes the new builder to use.
+		 * Warning: this causes previous calls to {@link #attributes(Consumer)} to be rendered useless.
+		 * @return the builder instance
+		 * @see #attributes(Consumer)
+		 */
+		public Builder attributes(final Attributes.Builder attributes) {
+			this.attributes = attributes;
 			return this;
 		}
 
@@ -232,6 +231,17 @@ public class Golem {
 		}
 
 		/**
+		 * @param blocks the new builder to use.
+		 * Warning: this causes previous calls to {@link #blocks(Consumer)} to be rendered useless.
+		 * @return the builder instance
+		 * @see #blocks(Consumer)
+		 */
+		public Builder blocks(final BuildingBlocks.Builder blocks) {
+			this.blocks = blocks;
+			return this;
+		}
+
+		/**
 		 * @param action the action to perform on the repair items builder
 		 * @return the builder instance
 		 */
@@ -241,11 +251,31 @@ public class Golem {
 		}
 
 		/**
+		 * @param repairItems the new builder to use.
+		 * Warning: this causes previous calls to {@link #repairItems(Consumer)} to be rendered useless.
+		 * @return the builder instance
+		 * @see #repairItems(Consumer)
+		 */
+		public Builder repairItems(final RepairItems.Builder repairItems) {
+			this.repairItems = repairItems;
+			return this;
+		}
+
+		/**
 		 * @param variants the maximum variants
 		 * @return the builder instance
 		 */
 		public Builder variants(final int variants) {
 			this.variants = variants;
+			return this;
+		}
+
+		/**
+		 * @param amount the amount of maximum variants to add
+		 * @return the builder instance
+		 */
+		public Builder addVariants(final int amount) {
+			this.variants += amount;
 			return this;
 		}
 
@@ -271,8 +301,19 @@ public class Golem {
 		 * @param action the action to perform on the model builder
 		 * @return the builder instance
 		 */
-		public Builder model(final Consumer<Model.Builder> action) {
-			action.accept(this.model);
+		public Builder layers(final Consumer<LayerList.Builder> action) {
+			action.accept(this.layers);
+			return this;
+		}
+
+		/**
+		 * @param layers the new builder to use.
+		 * Warning: this causes previous calls to {@link #layers(Consumer)} to be rendered useless.
+		 * @return the builder instance
+		 * @see #layers(Consumer)
+		 */
+		public Builder layers(final LayerList.Builder layers) {
+			this.layers = layers;
 			return this;
 		}
 
@@ -282,6 +323,17 @@ public class Golem {
 		 */
 		public Builder behaviors(final Consumer<BehaviorList.Builder> action) {
 			action.accept(this.behaviors);
+			return this;
+		}
+
+		/**
+		 * @param behaviors the new builder to use.
+		 * Warning: this causes previous calls to {@link #behaviors(Consumer)} to be rendered useless.
+		 * @return the builder instance
+		 * @see #behaviors(Consumer)
+		 */
+		public Builder behaviors(final BehaviorList.Builder behaviors) {
+			this.behaviors = behaviors;
 			return this;
 		}
 
@@ -300,7 +352,7 @@ public class Golem {
 		public Golem build() {
 			return new Golem(Optional.ofNullable(parent), Optional.of(attributes.build()), blocks.build(),
 					repairItems.build(), variants, hidden, Optional.ofNullable(particle),
-					Holder.direct(model.build()), Holder.direct(behaviors.build()), Optional.ofNullable(group));
+					Holder.direct(layers.build()), Holder.direct(behaviors.build()), Optional.ofNullable(group));
 		}
 	}
 }

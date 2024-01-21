@@ -1,7 +1,7 @@
 package com.mcmoddev.golems.event;
 
 import com.mcmoddev.golems.data.behavior.util.AoeShape;
-import com.mcmoddev.golems.entity.GolemBase;
+import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mcmoddev.golems.util.AoeMapper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
@@ -23,7 +23,7 @@ public final class GolemModifyBlocksEvent extends LivingEvent {
 	private Set<BlockPos> blacklist;
 	private AoeMapper aoeMapper;
 
-	private final GolemBase entity;
+	private final IExtraGolem entity;
 	private final BlockPos from;
 	private final BlockPos to;
 	private final BlockPos center;
@@ -31,8 +31,8 @@ public final class GolemModifyBlocksEvent extends LivingEvent {
 	private final AoeShape shape;
 	private int updateFlag;
 
-	public GolemModifyBlocksEvent(final GolemBase golem, final BlockPos center, final int radius, final AoeShape shape, final AoeMapper aoeMapper) {
-		super(golem);
+	public GolemModifyBlocksEvent(final IExtraGolem golem, final BlockPos center, final int radius, final AoeShape shape, final AoeMapper aoeMapper) {
+		super(golem.asMob());
 		this.setResult(Result.ALLOW);
 		this.blacklist = new HashSet<>();
 		this.entity = golem;
@@ -47,8 +47,7 @@ public final class GolemModifyBlocksEvent extends LivingEvent {
 
 	//// GETTERS ////
 
-	@Override
-	public GolemBase getEntity() {
+	public IExtraGolem getGolem() {
 		return entity;
 	}
 

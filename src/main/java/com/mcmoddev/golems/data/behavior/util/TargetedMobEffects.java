@@ -1,11 +1,13 @@
 package com.mcmoddev.golems.data.behavior.util;
 
 import com.mcmoddev.golems.entity.GolemBase;
+import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 
 import javax.annotation.concurrent.Immutable;
@@ -51,9 +53,10 @@ public class TargetedMobEffects {
 	/**
 	 * Applies the effects based on the target
 	 *
-	 * @param self  the entity
+	 * @param entity  the entity
 	 */
-	public void apply(GolemBase self) {
+	public void apply(IExtraGolem entity) {
+		final Mob mob = entity.asMob();
 		if(effects.isEmpty()) {
 			return;
 		}
@@ -61,19 +64,19 @@ public class TargetedMobEffects {
 			case AREA:
 				TargetingConditions condition = TargetingConditions.forNonCombat()
 						.ignoreLineOfSight().ignoreInvisibilityTesting();
-				List<LivingEntity> targets = self.level().getNearbyEntities(LivingEntity.class,
-						condition, self, self.getBoundingBox().inflate(radius));
+				List<LivingEntity> targets = mob.level().getNearbyEntities(LivingEntity.class,
+						condition, mob, mob.getBoundingBox().inflate(radius));
 				// apply to each entity in list
 				for (LivingEntity target : targets) {
 					copyEffects(target, effects);
 				}
 				break;
 			case SELF:
-				copyEffects(self, effects);
+				copyEffects(mob, effects);
 				break;
 			case ENEMY:
-				if(self.getTarget() != null) {
-					copyEffects(self.getTarget(), effects);
+				if(mob.getTarget() != null) {
+					copyEffects(mob.getTarget(), effects);
 				}
 				break;
 		}

@@ -2,7 +2,7 @@ package com.mcmoddev.golems.data.behavior;
 
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
-import com.mcmoddev.golems.entity.GolemBase;
+import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
@@ -16,6 +16,8 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -30,7 +32,7 @@ import java.util.Objects;
  * and create an explosion when the fuse reaches 0
  **/
 @Immutable
-public class ExplodeBehavior extends Behavior<GolemBase> {
+public class ExplodeBehavior extends Behavior {
 
 	public static final Codec<ExplodeBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
 			.and(Codec.doubleRange(0.0D, 127.0D).optionalFieldOf("radius", 2.0D).forGetter(ExplodeBehavior::getRadius))
@@ -75,28 +77,29 @@ public class ExplodeBehavior extends Behavior<GolemBase> {
 	}
 
 	@Override
-	public Codec<? extends Behavior<?>> getCodec() {
+	public Codec<? extends Behavior> getCodec() {
 		return EGRegistry.BehaviorReg.EXPLODE.get();
 	}
 
 	//// METHODS ////
 
 	@Override
-	public void onHurtTarget(final GolemBase entity, final Entity target) {
-		if (target.isOnFire() || entity.getRandom().nextFloat() < chanceOnAttack) {
-			entity.lightFuse();
+	public void onHurtTarget(final IExtraGolem entity, final Entity target) {
+		if (target.isOnFire() || entity.asMob().getRandom().nextFloat() < chanceOnAttack) {
+			entity.lightFuse(entity.asMob());
 		}
 	}
 
 	@Override
-	public void onActuallyHurt(final GolemBase entity, final DamageSource source, final float amount) {
-		if (source.is(DamageTypes.ON_FIRE) || source.is(DamageTypes.IN_FIRE) || entity.getRandom().nextFloat() < chanceOnHurt) {
-			entity.lightFuse();
+	public void onActuallyHurt(final IExtraGolem entity, final DamageSource source, final float amount) {
+		if (source.is(DamageTypes.ON_FIRE) || source.is(DamageTypes.IN_FIRE) || entity.asMob().getRandom().nextFloat() < chanceOnHurt) {
+			entity.lightFuse(entity.asMob());
 		}
 	}
 
 	@Override
-	public void onTick(GolemBase entity) {
+	public void onTick(IExtraGolem entity) {
+		final PathfinderMob mob = entity.asMob();
 		// verify fuse is lit
 		if(!entity.isFuseLit()) {
 			return;
@@ -105,53 +108,60 @@ public class ExplodeBehavior extends Behavior<GolemBase> {
 		entity.setFuse(entity.getFuse() - 1);
 		// TODO add fuse particles?
 		// stop navigation
-		entity.getNavigation().stop();
+		mob.getNavigation().stop();
 		// reset fuse when wet
-		if (entity.isInWaterRainOrBubble()) {
+		if (mob.isInWaterRainOrBubble()) {
 			entity.resetFuseLit();
-			entity.playSound(SoundEvents.FIRE_EXTINGUISH, 0.9F, entity.getRandom().nextFloat());
+			mob.playSound(SoundEvents.FIRE_EXTINGUISH, 0.9F, mob.getRandom().nextFloat());
 		}
 		// explode when fuse reaches zero
 		if (entity.getFuse() <= 0) {
-			entity.explode((float) radius);
+			entity.explode(mob, (float) radius);
 		}
 	}
 
 	@Override
-	public void onDie(final GolemBase entity, final DamageSource source) {
-		entity.explode((float) radius);
+	public void onDie(final IExtraGolem entity, final DamageSource source) {
+		entity.explode(entity.asMob(), (float) radius);
 	}
 
 	@Override
-	public void onMobInteract(final GolemBase entity, final Player player, final InteractionHand hand) {
+	public void onMobInteract(final IExtraGolem entity, final Player player, final InteractionHand hand) {
+		final Mob mob = entity.asMob();
 		final ItemStack itemstack = player.getItemInHand(hand);
 		if (itemstack.is(ItemTags.CREEPER_IGNITERS)) {
 			// play sound and swing hand
-			final Vec3 pos = entity.position();
+			final Vec3 pos = mob.position();
 			SoundEvent sound = itemstack.is(Items.FIRE_CHARGE) ? SoundEvents.FIRECHARGE_USE : SoundEvents.FLINTANDSTEEL_USE;
-			entity.level().playSound(player, pos.x, pos.y, pos.z, sound, entity.getSoundSource(), 1.0F,
-					entity.getRandom().nextFloat() * 0.4F + 0.8F);
+			mob.level().playSound(player, pos.x, pos.y, pos.z, sound, mob.getSoundSource(), 1.0F, mob.getRandom().nextFloat() * 0.4F + 0.8F);
 			player.swing(hand);
 
-			entity.setSecondsOnFire(Math.floorDiv(getMinFuse(), 20));
-			entity.lightFuse();
+			mob.setSecondsOnFire(Math.floorDiv(getMinFuse(), 20));
+			entity.lightFuse(mob);
 			itemstack.hurtAndBreak(1, player, c -> c.broadcastBreakEvent(hand));
 		}
 	}
 
 	@Override
-	public void onWriteData(final GolemBase entity, final CompoundTag tag) {
-		entity.saveFuse(tag);
-	}
-
-	@Override
-	public void onReadData(final GolemBase entity, final CompoundTag tag) {
-		entity.loadFuse(tag);
-	}
-
-	@Override
 	public List<Component> createDescriptions() {
 		return ImmutableList.of(Component.translatable("entitytip.explode").withStyle(ChatFormatting.RED));
+	}
+
+	///// NBT ////
+
+	private static final String KEY_FUSE = "Fuse";
+	private static final String KEY_FUSE_LIT = "FuseLit";
+
+	@Override
+	public void onWriteData(final IExtraGolem entity, final CompoundTag tag) {
+		tag.putInt(KEY_FUSE, entity.getFuse());
+		tag.putBoolean(KEY_FUSE_LIT, entity.isFuseLit());
+	}
+
+	@Override
+	public void onReadData(final IExtraGolem entity, final CompoundTag tag) {
+		entity.setFuse(tag.getInt(KEY_FUSE));
+		entity.setFuseLit(tag.getBoolean(KEY_FUSE_LIT));
 	}
 
 	//// EQUALITY ////

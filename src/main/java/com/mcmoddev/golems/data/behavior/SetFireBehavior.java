@@ -6,6 +6,7 @@ import com.mcmoddev.golems.data.behavior.util.TargetType;
 import com.mcmoddev.golems.data.behavior.util.TriggerType;
 import com.mcmoddev.golems.data.behavior.util.WorldPredicate;
 import com.mcmoddev.golems.entity.GolemBase;
+import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mcmoddev.golems.util.PredicateUtils;
 import com.mojang.serialization.Codec;
@@ -28,7 +29,7 @@ import java.util.function.Predicate;
  * This behavior allows an entity to set entities on fire under specific conditions
  **/
 @Immutable
-public class SetFireBehavior extends Behavior<GolemBase> {
+public class SetFireBehavior extends Behavior {
 
 	public static final Codec<SetFireBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
 			.and(IntProvider.NON_NEGATIVE_CODEC.optionalFieldOf("seconds", ConstantInt.of(3)).forGetter(SetFireBehavior::getSeconds))
@@ -48,7 +49,7 @@ public class SetFireBehavior extends Behavior<GolemBase> {
 	/** The conditions to set fire **/
 	private final List<WorldPredicate> predicates;
 	/** The conditions to set fire as a single predicate **/
-	private final Predicate<GolemBase> predicate;
+	private final Predicate<IExtraGolem> predicate;
 	/** The radius to set fire, only used when {@link #target} is {@link TargetType#AREA} **/
 	private final double radius;
 	/** The percent chance [0,1] to apply **/
@@ -92,30 +93,30 @@ public class SetFireBehavior extends Behavior<GolemBase> {
 	}
 
 	@Override
-	public Codec<? extends Behavior<?>> getCodec() {
+	public Codec<? extends Behavior> getCodec() {
 		return EGRegistry.BehaviorReg.SET_FIRE.get();
 	}
 
 	//// METHODS ////
 
 	@Override
-	public void onActuallyHurt(GolemBase entity, DamageSource source, float amount) {
+	public void onActuallyHurt(IExtraGolem entity, DamageSource source, float amount) {
 		if(this.trigger == TriggerType.HURT) {
-			setFire(entity);
+			setFire(entity.asMob());
 		}
 	}
 
 	@Override
-	public void onHurtTarget(GolemBase entity, Entity target) {
+	public void onHurtTarget(IExtraGolem entity, Entity target) {
 		if(this.trigger == TriggerType.ATTACK) {
-			setFire(entity);
+			setFire(entity.asMob());
 		}
 	}
 
 	@Override
-	public void onTick(GolemBase entity) {
+	public void onTick(IExtraGolem entity) {
 		if(this.trigger == TriggerType.TICK) {
-			setFire(entity);
+			setFire(entity.asMob());
 		}
 	}
 
@@ -125,7 +126,7 @@ public class SetFireBehavior extends Behavior<GolemBase> {
 		return ImmutableList.of(description);
 	}
 
-	public boolean setFire(final GolemBase self) {
+	protected boolean setFire(final GolemBase self) {
 		if(!this.predicate.test(self)) {
 			return false;
 		}

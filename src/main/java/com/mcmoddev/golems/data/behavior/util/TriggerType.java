@@ -6,7 +6,8 @@ import net.minecraft.util.StringRepresentable;
 public enum TriggerType implements StringRepresentable {
 	HURT("hurt"),
 	ATTACK("attack"),
-	TICK("tick");
+	TICK("tick"),
+	LIGHTNING("lightning");
 
 	public static final Codec<TriggerType> CODEC = StringRepresentable.fromEnum(TriggerType::values);
 

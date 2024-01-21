@@ -6,6 +6,7 @@ import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.block.GlowBlock;
 import com.mcmoddev.golems.data.behavior.util.TriggerType;
 import com.mcmoddev.golems.entity.GolemBase;
+import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
@@ -19,6 +20,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -33,7 +35,7 @@ import java.util.Objects;
  * This behavior allows an entity to place light blocks
  **/
 @Immutable
-public class LightBehavior extends Behavior<GolemBase> {
+public class LightBehavior extends Behavior {
 
 	private static final TagKey<Block> CANNOT_SUPPORT = ForgeRegistries.BLOCKS.tags().createTagKey(new ResourceLocation(ExtraGolems.MODID, "cannot_support_utility_blocks"));
 
@@ -64,16 +66,17 @@ public class LightBehavior extends Behavior<GolemBase> {
 	}
 
 	@Override
-	public Codec<? extends Behavior<?>> getCodec() {
+	public Codec<? extends Behavior> getCodec() {
 		return EGRegistry.BehaviorReg.LIGHT.get();
 	}
 
 	//// METHODS ////
 
 	@Override
-	public void onTick(GolemBase entity) {
-		if(entity.tickCount % interval == 0) {
-			placeBlockAt(entity.level(), entity.blockPosition());
+	public void onTick(IExtraGolem entity) {
+		final Mob mob = entity.asMob();
+		if(mob.tickCount % interval == 0) {
+			placeBlockAt(mob.level(), mob.blockPosition());
 		}
 	}
 

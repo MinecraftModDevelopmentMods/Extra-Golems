@@ -2,7 +2,7 @@ package com.mcmoddev.golems.data.behavior;
 
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
-import com.mcmoddev.golems.entity.GolemBase;
+import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mcmoddev.golems.menu.PortableCraftingMenu;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -23,7 +23,7 @@ import java.util.List;
  * when the player interacts with it
  **/
 @Immutable
-public class CraftMenuBehavior extends Behavior<GolemBase> {
+public class CraftMenuBehavior extends Behavior {
 
 	public static final Codec<CraftMenuBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
 			.apply(instance, CraftMenuBehavior::new));
@@ -42,7 +42,7 @@ public class CraftMenuBehavior extends Behavior<GolemBase> {
 	//// METHODS ////
 
 	@Override
-	public void onMobInteract(final GolemBase entity, final Player player, final InteractionHand hand) {
+	public void onMobInteract(final IExtraGolem entity, final Player player, final InteractionHand hand) {
 		if (!player.isCrouching() && player instanceof ServerPlayer) {
 			// update menu player
 			if(entity.getPlayerInMenu() != null) {
@@ -57,13 +57,13 @@ public class CraftMenuBehavior extends Behavior<GolemBase> {
 	}
 
 	@Override
-	public void onTick(GolemBase entity) {
+	public void onTick(IExtraGolem entity) {
 		if(null == entity.getPlayerInMenu()) {
 			return;
 		}
 		// stop moving and look at player
-		entity.getNavigation().stop();
-		entity.getLookControl().setLookAt(entity.getPlayerInMenu());
+		entity.asMob().getNavigation().stop();
+		entity.asMob().getLookControl().setLookAt(entity.getPlayerInMenu());
 		// ensure the container closes when the player is too far away
 		if(!entity.isPlayerInRangeForMenu(8.0D)) {
 			entity.getPlayerInMenu().closeContainer();

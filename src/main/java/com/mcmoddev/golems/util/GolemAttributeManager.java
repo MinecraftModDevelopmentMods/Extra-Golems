@@ -2,7 +2,7 @@ package com.mcmoddev.golems.util;
 
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.ExtraGolems;
-import com.mcmoddev.golems.container.GolemContainer;
+import com.mcmoddev.golems.data.GolemContainer;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
@@ -12,6 +12,7 @@ import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Provides safe and re-usable attribute maps for golems with different materials.
@@ -23,17 +24,16 @@ public final class GolemAttributeManager {
 
 	/**
 	 * @param access the registry access
-	 * @param material the material
+	 * @param id the material
 	 * @return a new AttributeMap
 	 */
-	public static AttributeMap getAttributes(final RegistryAccess access, final ResourceLocation material) {
-		if (!materialToAttributeMap.containsKey(material)) {
-			final Registry<GolemContainer> registry = access.registryOrThrow(ExtraGolems.Keys.GOLEM_CONTAINERS);
-			GolemContainer container = registry.getOptional(material).orElse(GolemContainer.EMPTY);
+	public static AttributeMap getAttributes(final RegistryAccess access, final ResourceLocation id) {
+		if (!materialToAttributeMap.containsKey(id)) {
+			final GolemContainer container = GolemContainer.getOrCreate(access, id);
 			AttributeSupplier supplier = buildAttributes(container.getAttributeSupplier().get());
-			materialToAttributeMap.put(material, supplier);
+			materialToAttributeMap.put(id, supplier);
 		}
-		return new AttributeMap(materialToAttributeMap.get(material));
+		return new AttributeMap(materialToAttributeMap.get(id));
 	}
 
 	/**

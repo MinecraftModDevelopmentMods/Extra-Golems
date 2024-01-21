@@ -23,7 +23,7 @@ public class RepairItems {
 
 	public static final RepairItems EMPTY = new RepairItems(ImmutableMap.of());
 
-	public static final Codec<RepairItems> CODEC = Codec.unboundedMap(ResourcePair.CODEC, Codec.DOUBLE)
+	public static final Codec<RepairItems> CODEC = Codec.unboundedMap(ResourcePair.CODEC, Codec.doubleRange(0.0D, 1.0D))
 			.xmap(RepairItems::new, RepairItems::getMap);
 
 	private final Map<ResourcePair, Double> map;
@@ -94,6 +94,10 @@ public class RepairItems {
 
 		public Builder(Map<ResourcePair, Double> map) {
 			this.map = new HashMap<>(map);
+		}
+
+		public Builder(RepairItems repairItems) {
+			this(repairItems.getMap());
 		}
 
 		/**

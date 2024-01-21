@@ -4,7 +4,9 @@ import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.entity.GolemBase;
-import com.mcmoddev.golems.entity.IMultitextured;
+import com.mcmoddev.golems.entity.IExtraGolem;
+import com.mcmoddev.golems.entity.IVariantProvider;
+import com.mcmoddev.golems.entity.goal.IVariantPredicate;
 import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mojang.datafixers.Products;
 import com.mojang.serialization.Codec;
@@ -13,10 +15,13 @@ import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ExtraCodecs;
+import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
 
@@ -28,7 +33,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 @Immutable
-public abstract class Behavior<T extends LivingEntity & IMultitextured> {
+public abstract class Behavior implements IVariantPredicate {
 
 	public static final Codec<Behavior> DIRECT_CODEC = ExtraCodecs.lazyInitializedCodec(() -> EGRegistry.BEHAVIOR_SERIALIZERS_SUPPLIER.get().getCodec())
 			.dispatch(Behavior::getCodec, Function.identity());
@@ -41,53 +46,35 @@ public abstract class Behavior<T extends LivingEntity & IMultitextured> {
 		this.descriptions = Suppliers.memoize(this::createDescriptions);
 	}
 
-	//// GETTERS ////
+	//// VARIANT PREDICATE ////
 
-	/**
-	 * @return the range of variant IDs required for this behavior
-	 */
-	public MinMaxBounds.Ints getVariant() {
+	@Override
+	public MinMaxBounds.Ints getVariantBounds() {
 		return variant;
 	}
+
+	//// GETTERS ////
 
 	/**
 	 * @return the {@link Codec} for this behavior
 	 */
-	public abstract Codec<? extends Behavior<?>> getCodec();
+	public abstract Codec<? extends Behavior> getCodec();
 
 	//// METHODS ////
-
-	/**
-	 * @param entity the entity
-	 * @return true if the variant is in the range defined by {@link #getVariant()}
-	 * @see #canApply(int)
-	 */
-	public boolean canApply(final T entity) {
-		// TODO make sure all users call this before the onX methods
-		return this.getVariant().matches(entity.getTextureId());
-	}
-
-	/**
-	 * @param variant the golem variant
-	 * @return true if the variant is in the range defined by {@link #getVariant()}
-	 */
-	public boolean canApply(final int variant) {
-		return this.getVariant().matches(variant);
-	}
 
 	/**
 	 * Called when the Golem registers goals
 	 *
 	 * @param entity the Golem
 	 */
-	public void onRegisterGoals(final T entity) { }
+	public void onRegisterGoals(final IExtraGolem entity) { }
 
 	/**
 	 * Called when the Golem update method is called
 	 *
 	 * @param entity the Golem
 	 */
-	public void onTick(final T entity) { }
+	public void onTick(final IExtraGolem entity) { }
 
 	/**
 	 * Called when the Golem hurts an entity
@@ -95,7 +82,7 @@ public abstract class Behavior<T extends LivingEntity & IMultitextured> {
 	 * @param entity the Golem
 	 * @param target the entity that was hurt
 	 */
-	public void onHurtTarget(final T entity, final Entity target) { }
+	public void onHurtTarget(final IExtraGolem entity, final Entity target) { }
 
 	/**
 	 * Called when the entity is hurt
@@ -104,7 +91,7 @@ public abstract class Behavior<T extends LivingEntity & IMultitextured> {
 	 * @param source the source of the damage
 	 * @param amount the amount of damage
 	 */
-	public void onActuallyHurt(final T entity, final DamageSource source, final float amount) { }
+	public void onActuallyHurt(final IExtraGolem entity, final DamageSource source, final float amount) { }
 
 	/**
 	 * Called when a player interacts and the interaction was not already consumed
@@ -113,7 +100,15 @@ public abstract class Behavior<T extends LivingEntity & IMultitextured> {
 	 * @param player the Player
 	 * @param hand the Player's hand
 	 */
-	public void onMobInteract(final T entity, final Player player, final InteractionHand hand) { }
+	public void onMobInteract(final IExtraGolem entity, final Player player, final InteractionHand hand) { }
+
+	/**
+	 * Called when the entity is struck by lightning
+	 *
+	 * @param entity the entity
+	 * @param lightningBolt the Lightning Bolt entity
+	 */
+	public void onStruckByLightning(final IExtraGolem entity, final LightningBolt lightningBolt) { }
 
 	/**
 	 * Called when the entity dies, before it is marked as removed
@@ -121,7 +116,7 @@ public abstract class Behavior<T extends LivingEntity & IMultitextured> {
 	 * @param entity the entity
 	 * @param source the DamageSource that killed the entity
 	 */
-	public void onDie(final T entity, final DamageSource source) { }
+	public void onDie(final IExtraGolem entity, final DamageSource source) { }
 
 	/**
 	 * Called after reading additional data from NBT
@@ -129,7 +124,7 @@ public abstract class Behavior<T extends LivingEntity & IMultitextured> {
 	 * @param entity the entity
 	 * @param tag    the entity NBT tag
 	 */
-	public void onWriteData(final T entity, final CompoundTag tag) { }
+	public void onWriteData(final IExtraGolem entity, final CompoundTag tag) { }
 
 	/**
 	 * Called after writing additional data to NBT
@@ -137,7 +132,7 @@ public abstract class Behavior<T extends LivingEntity & IMultitextured> {
 	 * @param entity the entity
 	 * @param tag    the entity NBT tag
 	 */
-	public void onReadData(final T entity, final CompoundTag tag) { }
+	public void onReadData(final IExtraGolem entity, final CompoundTag tag) { }
 
 	/**
 	 * @return a list of description text components to cache for later use
@@ -161,7 +156,7 @@ public abstract class Behavior<T extends LivingEntity & IMultitextured> {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (!(o instanceof Behavior)) return false;
-		Behavior<?> behavior = (Behavior<?>) o;
+		Behavior behavior = (Behavior) o;
 		return variant.equals(behavior.variant);
 	}
 
@@ -176,11 +171,11 @@ public abstract class Behavior<T extends LivingEntity & IMultitextured> {
 	 * Simplifies codec creation, especially if no other fields are added
 	 * @param instance the record codec builder with additional parameters, if any
 	 */
-	protected static <T extends Behavior<?>> Products.P1<RecordCodecBuilder.Mu<T>, MinMaxBounds.Ints> codecStart(RecordCodecBuilder.Instance<T> instance) {
-		return instance.group(EGCodecUtils.MIN_MAX_INTS_CODEC.optionalFieldOf("variant", MinMaxBounds.Ints.ANY).forGetter(Behavior::getVariant));
+	protected static <T extends Behavior> Products.P1<RecordCodecBuilder.Mu<T>, MinMaxBounds.Ints> codecStart(RecordCodecBuilder.Instance<T> instance) {
+		return instance.group(EGCodecUtils.MIN_MAX_INTS_CODEC.optionalFieldOf("variant", MinMaxBounds.Ints.ANY).forGetter(Behavior::getVariantBounds));
 	}
 
-	protected static boolean removeGoal(final GolemBase entity, final Class<? extends Goal> goalToRemove) {
+	protected static boolean removeGoal(final Mob entity, final Class<? extends Goal> goalToRemove) {
 		final List<Goal> goalsToRemove = new ArrayList<>();
 		entity.goalSelector.availableGoals.forEach(g -> {
 			if (g.getGoal().getClass() == goalToRemove) {

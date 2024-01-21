@@ -59,7 +59,7 @@ public class AoeFreezeBehavior extends AoeBehavior {
 	}
 
 	@Override
-	public Codec<? extends Behavior<?>> getCodec() {
+	public Codec<? extends Behavior> getCodec() {
 		return EGRegistry.BehaviorReg.AOE_FREEZE.get();
 	}
 

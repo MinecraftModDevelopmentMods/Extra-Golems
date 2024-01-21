@@ -3,14 +3,18 @@ package com.mcmoddev.golems.data.behavior;
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.entity.GolemBase;
+import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.FleeSunGoal;
 import net.minecraft.world.entity.ai.goal.RestrictSunGoal;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
@@ -21,7 +25,7 @@ import java.util.Objects;
  * and seek shelter from the sun during the day
  **/
 @Immutable
-public class BurnInSunBehavior extends Behavior<GolemBase> {
+public class BurnInSunBehavior extends Behavior {
 
 	public static final Codec<BurnInSunBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
 			.and(Codec.doubleRange(0.0D, 1.0D).optionalFieldOf("chance", 0.25D).forGetter(BurnInSunBehavior::getChance))
@@ -42,24 +46,26 @@ public class BurnInSunBehavior extends Behavior<GolemBase> {
 	}
 
 	@Override
-	public Codec<? extends Behavior<?>> getCodec() {
+	public Codec<? extends Behavior> getCodec() {
 		return EGRegistry.BehaviorReg.BURN_IN_SUN.get();
 	}
 
 	//// METHODS ////
 
 	@Override
-	public void onRegisterGoals(final GolemBase entity) {
+	public void onRegisterGoals(final IExtraGolem entity) {
+		final PathfinderMob mob = entity.asMob();
 		// TODO adjust goals to use variant
-		entity.goalSelector.addGoal(1, new RestrictSunGoal(entity));
-		entity.goalSelector.addGoal(2, new FleeSunGoal(entity, 1.1D));
+		mob.goalSelector.addGoal(1, new RestrictSunGoal(mob));
+		mob.goalSelector.addGoal(2, new FleeSunGoal(mob, 1.1D));
 	}
 
 	@Override
-	public void onTick(GolemBase entity) {
+	public void onTick(IExtraGolem entity) {
+		final Mob mob = entity.asMob();
 		// set on fire
-		if(entity.isSunBurnTick() && entity.getRandom().nextFloat() < chance && entity.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
-			entity.setSecondsOnFire(3);
+		if(entity.isSunBurnTick() && mob.getRandom().nextFloat() < chance && mob.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
+			mob.setSecondsOnFire(3);
 		}
 	}
 

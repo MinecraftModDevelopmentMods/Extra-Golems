@@ -57,9 +57,6 @@ public class ExtraGolems {
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(ExtraGolems::reloadConfig);
 		// init registry
 		EGRegistry.register();
-		// init helper classes
-		SoundTypeRegistry.register();
-		GolemBehaviors.init();
 		// register event handlers
 		EGEvents.register();
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(ExtraGolems::setup);
@@ -67,8 +64,6 @@ public class ExtraGolems {
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(AddonLoader::onAddPackFinders);
 		// register client event handlers
 		DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> EGClientEvents::register);
-		// register messages
-		int messageId = 0;
 	}
 
 	private static void setup(final FMLCommonSetupEvent event) {

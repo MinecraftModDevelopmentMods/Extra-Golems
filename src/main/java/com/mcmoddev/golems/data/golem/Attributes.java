@@ -1,15 +1,22 @@
 package com.mcmoddev.golems.data.golem;
 
+import com.mcmoddev.golems.data.behavior.BurnInSunBehavior;
 import com.mcmoddev.golems.util.DeferredHolderSet;
 import com.mcmoddev.golems.util.SoundTypeRegistry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
 
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
@@ -116,24 +123,48 @@ public class Attributes {
 
 	/**
 	 * @param registryAccess the registry access
-	 * @param damageSource the damage source
-	 * @return true if the Golem is immune to the given damage source
+	 * @param damageTypes one or more damage types
+	 * @return true if the Golem is immune to any of the given damage types
 	 */
-	public boolean isImmuneTo(final RegistryAccess registryAccess, final DamageSource damageSource) {
+	public boolean isImmuneTo(final RegistryAccess registryAccess, final ResourceKey<DamageType>... damageTypes) {
+		if(null == damageImmune) {
+			return false;
+		}
+		// resolve registry and holder set
 		final Registry<DamageType> registry = registryAccess.registryOrThrow(Registries.DAMAGE_TYPE);
-		return damageImmune != null && damageImmune.get(registry).contains(damageSource.typeHolder())
-				&& (null == damageWeak || !damageWeak.get(registry).contains(damageSource.typeHolder()));
+		final HolderSet<DamageType> immune = damageImmune.get(registry);
+		// iterate damage types until one is found in the set
+		for(ResourceKey<DamageType> key : damageTypes) {
+			Holder<DamageType> holder = registry.getHolderOrThrow(key);
+			if(immune.contains(holder)) {
+				return true;
+			}
+		}
+		// no checks passed
+		return false;
 	}
 
 	/**
 	 * @param registryAccess the registry access
-	 * @param damageSource the damage source
-	 * @return true if the Golem is weak to the given damage source
+	 * @param damageTypes one or more damage types
+	 * @return true if the Golem is weak to any of the given damage types
 	 */
-	public boolean isWeakTo(final RegistryAccess registryAccess, final DamageSource damageSource) {
+	public boolean isWeakTo(final RegistryAccess registryAccess, final ResourceKey<DamageType>... damageTypes) {
+		if(null == damageWeak) {
+			return false;
+		}
+		// resolve registry and holder set
 		final Registry<DamageType> registry = registryAccess.registryOrThrow(Registries.DAMAGE_TYPE);
-		return damageWeak != null && damageWeak.get(registry).contains(damageSource.typeHolder())
-				&& (null == damageImmune || !damageImmune.get(registry).contains(damageSource.typeHolder()));
+		final HolderSet<DamageType> weak = damageWeak.get(registry);
+		// iterate damage types until one is found in the set
+		for(ResourceKey<DamageType> key : damageTypes) {
+			Holder<DamageType> holder = registry.getHolderOrThrow(key);
+			if(weak.contains(holder)) {
+				return true;
+			}
+		}
+		// no checks passed
+		return false;
 	}
 
 	public DeferredHolderSet<DamageType> getDamageImmune() {
@@ -162,16 +193,26 @@ public class Attributes {
 		return sound != null ? sound : SoundType.STONE;
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder b = new StringBuilder("AttributeSettings: ");
-		b.append("health[").append(health).append("] ");
-		b.append("attack[").append(attack).append("] ");
-		b.append("speed[").append(speed).append("] ");
-		b.append("resist[").append(knockbackResistance).append("] ");
-		b.append("armor[").append(armor).append("] ");
-		b.append("knockback[").append(attackKnockback).append("] ");
-		return b.toString();
+	//// HELPER METHODS ////
+
+	public void updatePathfinding(final PathfinderMob mob) {
+		final RegistryAccess registryAccess = mob.level().registryAccess();
+		// water damage
+		if(isWeakTo(registryAccess, DamageTypes.DROWN)) {
+			mob.setPathfindingMalus(BlockPathTypes.WATER, -1.0F);
+		} else {
+			mob.setPathfindingMalus(BlockPathTypes.WATER, 8.0F);
+		}
+		// fire damage
+		if(isImmuneTo(registryAccess, DamageTypes.IN_FIRE, DamageTypes.ON_FIRE)) {
+			mob.setPathfindingMalus(BlockPathTypes.LAVA, 8.0F);
+			mob.setPathfindingMalus(BlockPathTypes.DAMAGE_FIRE, 0.0F);
+			mob.setPathfindingMalus(BlockPathTypes.DANGER_FIRE, 0.0F);
+		} else {
+			mob.setPathfindingMalus(BlockPathTypes.LAVA, -1.0F);
+			mob.setPathfindingMalus(BlockPathTypes.DAMAGE_FIRE, -1.0F);
+			mob.setPathfindingMalus(BlockPathTypes.DANGER_FIRE, -1.0F);
+		}
 	}
 
 	//// EQUALITY ////

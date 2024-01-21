@@ -236,9 +236,9 @@ public final class GolemHeadBlock extends HorizontalDirectionalBlock {
 					golem.finalizeSpawn((ServerLevel) level, level.getCurrentDifficultyAt(headPos), MobSpawnType.MOB_SUMMONED, null, null);
 				}
 				if(isEastWest) {
-					golem.onBuilt(stateBelow1, stateBelow2, stateArmEast, stateArmWest);
+					golem.onBuilt(stateBelow1, stateBelow2, stateArmEast, stateArmWest, placer);
 				} else {
-					golem.onBuilt(stateBelow1, stateBelow2, stateArmNorth, stateArmSouth);
+					golem.onBuilt(stateBelow1, stateBelow2, stateArmNorth, stateArmSouth, placer);
 				}
 			}
 			return true;

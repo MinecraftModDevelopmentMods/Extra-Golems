@@ -2,6 +2,7 @@ package com.mcmoddev.golems.data.behavior;
 
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.entity.GolemBase;
+import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mcmoddev.golems.util.DeferredHolderSet;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -22,7 +23,7 @@ import java.util.Objects;
  * specific items.
  **/
 @Immutable
-public class TemptBehavior extends Behavior<GolemBase> {
+public class TemptBehavior extends Behavior {
 
 	public static final Codec<TemptBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
 			.and(DeferredHolderSet.codec(ForgeRegistries.ITEMS.getRegistryKey()).fieldOf("item").forGetter(TemptBehavior::getItems))
@@ -44,18 +45,19 @@ public class TemptBehavior extends Behavior<GolemBase> {
 	}
 
 	@Override
-	public Codec<? extends Behavior<?>> getCodec() {
+	public Codec<? extends Behavior> getCodec() {
 		return EGRegistry.BehaviorReg.TEMPT.get();
 	}
 
 	//// METHODS ////
 
 	@Override
-	public void onRegisterGoals(final GolemBase entity) {
+	public void onRegisterGoals(final IExtraGolem entity) {
 		// TODO adjust tempt goal to account for entity variant
+		// resolve holder set and convert to ingredient
 		final HolderSet<Item> holderSet = items.get(BuiltInRegistries.ITEM);
 		Ingredient ingredient = holderSet.unwrap().map(Ingredient::of, list -> Ingredient.of(list.stream().map(Holder::get).toArray(Item[]::new)));
-		entity.goalSelector.addGoal(1, new TemptGoal(entity, 0.75D, ingredient, false));
+		entity.asMob().goalSelector.addGoal(1, new TemptGoal(entity.asMob(), 0.75D, ingredient, false));
 	}
 
 	//// EQUALITY ////

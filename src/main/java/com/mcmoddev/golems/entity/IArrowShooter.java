@@ -1,13 +1,12 @@
 package com.mcmoddev.golems.entity;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerListener;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RangedAttackGoal;
 import net.minecraft.world.entity.monster.RangedAttackMob;
@@ -20,27 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.function.BiPredicate;
-
-public interface IArrowShooter extends RangedAttackMob, ContainerListener, InventoryCarrier {
-
-	String KEY_INVENTORY = "Items";
-	String KEY_SLOT = "Slot";
-	int INVENTORY_SIZE = 9;
-	BiPredicate<Container, ItemStack> PICK_UP_ARROW_PRED = (inventory, stack) -> {
-		// make sure the item is an arrow
-		if (stack != null && !stack.isEmpty() && stack.getItem() instanceof ArrowItem) {
-			// make sure the entity can pick up this stack
-			for (int i = 0, l = inventory.getContainerSize(); i < l; i++) {
-				final ItemStack invStack = inventory.getItem(i);
-				if (invStack.isEmpty() || (ItemStack.isSameItemSameTags(invStack, stack)
-						&& invStack.getCount() + stack.getCount() <= invStack.getMaxStackSize())) {
-					return true;
-				}
-			}
-		}
-		return false;
-	};
+public interface IArrowShooter extends RangedAttackMob, InventoryCarrier {
 
 	/**
 	 * @return the base damage per arrow
@@ -73,22 +52,14 @@ public interface IArrowShooter extends RangedAttackMob, ContainerListener, Inven
 	MeleeAttackGoal getMeleeGoal();
 
 	/**
-	 * @return the Golem
-	 **/
-	GolemBase getGolemEntity();
-
-	@Override
-	default void containerChanged(Container container) {
-		GolemBase entity = getGolemEntity();
-		if (!entity.level().isClientSide()) {
-			entity.setArrowsInInventory(countArrowsInInventory());
-			entity.updateCombatTask(false);
-		}
-	}
+	 * @param <T> Pathfinder Mob & IExtraGolem
+	 * @return the IExtraGolem as a mob
+	 */
+	<T extends PathfinderMob & IExtraGolem> T asMob();
 
 	@Override
 	default void performRangedAttack(LivingEntity target, float distanceFactor) {
-		final GolemBase entity = getGolemEntity();
+		final Mob entity = asMob();
 		ItemStack itemstack = findArrowsInInventory(getInventory());
 		if (!itemstack.isEmpty()) {
 			// first, raytrace to ensure no other creatures are in the way
@@ -127,26 +98,11 @@ public interface IArrowShooter extends RangedAttackMob, ContainerListener, Inven
 			entity.level().addFreshEntity(arrow);
 			// update itemstack and inventory
 			itemstack.shrink(1);
-			containerChanged(getInventory());
+			getInventory().setChanged();
 		}
 	}
 
-	default void updateCombatTask(final boolean forceMelee) {
-		final GolemBase entity = getGolemEntity();
-		if (!entity.level().isClientSide()) {
-			// remove both goals (clean slate)
-			entity.goalSelector.removeGoal(getMeleeGoal());
-			entity.goalSelector.removeGoal(getRangedGoal());
-			// check if target is close enough to attack
-			if (forceMelee || getArrowsInInventory() == 0) {
-				entity.goalSelector.addGoal(0, getMeleeGoal());
-			} else {
-				entity.goalSelector.addGoal(0, getRangedGoal());
-			}
-		}
-	}
-
-	static ItemStack findArrowsInInventory(final Container inv) {
+	default ItemStack findArrowsInInventory(final Container inv) {
 		// search inventory to find suitable arrow itemstack
 		for (int i = 0, l = inv.getContainerSize(); i < l; i++) {
 			final ItemStack stack = inv.getItem(i);
@@ -155,27 +111,5 @@ public interface IArrowShooter extends RangedAttackMob, ContainerListener, Inven
 			}
 		}
 		return ItemStack.EMPTY;
-	}
-
-	default void dropArrowInventory() {
-		for (int i = 0; i < this.getInventory().getContainerSize(); ++i) {
-			ItemStack itemstack = this.getInventory().getItem(i);
-			if (!itemstack.isEmpty()) {
-				this.getGolemEntity().spawnAtLocation(itemstack);
-			}
-		}
-	}
-
-	default int countArrowsInInventory() {
-		int arrowCount = 0;
-		// add up the size of each itemstack in inventory
-		for (int i = 0, l = getInventory().getContainerSize(); i < l; i++) {
-			final ItemStack stack = getInventory().getItem(i);
-			if (!stack.isEmpty() && stack.getItem() instanceof ArrowItem) {
-				arrowCount += stack.getCount();
-			}
-		}
-		// return arrow count
-		return arrowCount;
 	}
 }

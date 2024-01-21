@@ -3,6 +3,7 @@ package com.mcmoddev.golems.data.behavior;
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.entity.GolemBase;
+import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mcmoddev.golems.entity.goal.FollowGoal;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -21,7 +22,7 @@ import java.util.Objects;
  * of a specific type and move to follow them
  **/
 @Immutable
-public class FollowBehavior extends Behavior<GolemBase> {
+public class FollowBehavior extends Behavior {
 
 	public static final Codec<FollowBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
 			.and(ForgeRegistries.ENTITY_TYPES.getCodec().fieldOf("entity").forGetter(FollowBehavior::getEntity))
@@ -50,16 +51,15 @@ public class FollowBehavior extends Behavior<GolemBase> {
 	}
 
 	@Override
-	public Codec<? extends Behavior<?>> getCodec() {
+	public Codec<? extends Behavior> getCodec() {
 		return EGRegistry.BehaviorReg.FOLLOW.get();
 	}
 
 	//// METHODS ////
 
 	@Override
-	public void onRegisterGoals(GolemBase entity) {
-		// TODO change FollowGoal to respect Variant min max bounds
-		entity.goalSelector.addGoal(this.priority, new FollowGoal(entity, 1.0D, 4.0F, 8.0F, e -> e.getType().equals(this.entity)));
+	public void onRegisterGoals(IExtraGolem entity) {
+		entity.asMob().goalSelector.addGoal(this.priority, new FollowGoal<>(entity.asMob(), 1.0D, 4.0F, 8.0F, e -> e.getType().equals(this.entity), getVariantBounds()));
 	}
 
 	@Override

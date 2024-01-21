@@ -46,7 +46,7 @@ public class AoeDryBehavior extends AoeBehavior {
 	//// GETTERS ////
 
 	@Override
-	public Codec<? extends Behavior<?>> getCodec() {
+	public Codec<? extends Behavior> getCodec() {
 		return EGRegistry.BehaviorReg.AOE_DRY.get();
 	}
 

@@ -2,25 +2,29 @@ package com.mcmoddev.golems.data.behavior;
 
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
-import com.mcmoddev.golems.data.model.Model;
-import com.mcmoddev.golems.entity.IMultitextured;
+import com.mcmoddev.golems.data.model.LayerList;
+import com.mcmoddev.golems.entity.IExtraGolem;
+import com.mcmoddev.golems.entity.IVariantProvider;
 import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.RegistryFileCodec;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 @SuppressWarnings("rawtypes")
 @Immutable
-public class BehaviorList {
+public class BehaviorList implements Iterable<Behavior> {
 
 	public static final Codec<BehaviorList> CODEC = EGCodecUtils.listOrElementCodec(Behavior.DIRECT_CODEC)
 			.xmap(BehaviorList::new, BehaviorList::getBehaviors);
@@ -32,6 +36,24 @@ public class BehaviorList {
 		this.behaviors = behaviors;
 	}
 
+	//// ITERABLE ////
+
+	@Override
+	public void forEach(Consumer<? super Behavior> action) {
+		behaviors.forEach(action);
+	}
+
+	@Override
+	public Spliterator<Behavior> spliterator() {
+		return behaviors.spliterator();
+	}
+
+	@NotNull
+	@Override
+	public Iterator<Behavior> iterator() {
+		return behaviors.iterator();
+	}
+
 	//// GETTERS ////
 
 	public List<Behavior> getBehaviors() {
@@ -40,15 +62,14 @@ public class BehaviorList {
 
 	/**
 	 * @param clazz the {@link Behavior} class
-	 * @param <U> the entity class
 	 * @param <T> the behavior class
 	 * @return a list of active behaviors with the given class
 	 * @see #getBehaviors(Class)
 	 */
-	public <U extends LivingEntity & IMultitextured, T extends Behavior<U>> List<T> getActiveBehaviors(final Class<T> clazz, final U entity) {
+	public <T extends Behavior> List<T> getActiveBehaviors(final Class<T> clazz, final IExtraGolem entity) {
 		final ImmutableList.Builder<T> builder = ImmutableList.builder();
 		for(Behavior b : behaviors) {
-			if(b.getClass().isAssignableFrom(clazz) && b.canApply(entity)) {
+			if(b.getClass().isAssignableFrom(clazz) && b.isVariantInBounds(entity)) {
 				builder.add((T) b);
 			}
 		}
@@ -57,12 +78,11 @@ public class BehaviorList {
 
 	/**
 	 * @param clazz the {@link Behavior} class
-	 * @param <U> the entity class
 	 * @param <T> the behavior class
 	 * @return a list of behaviors with the given class
-	 * @see #getActiveBehaviors(Class, LivingEntity)
+	 * @see #getActiveBehaviors(Class, IExtraGolem)
 	 */
-	public <U extends LivingEntity & IMultitextured, T extends Behavior<U>> List<T> getBehaviors(final Class<T> clazz) {
+	public <T extends Behavior> List<T> getBehaviors(final Class<T> clazz) {
 		final ImmutableList.Builder<T> builder = ImmutableList.builder();
 		for(Behavior b : behaviors) {
 			if(b.getClass().isAssignableFrom(clazz)) {
@@ -77,9 +97,9 @@ public class BehaviorList {
 	 * @return true if there is at least one active behavior with the given class
 	 * @see #hasBehavior(Class)
 	 */
-	public <T extends LivingEntity & IMultitextured> boolean hasActiveBehavior(final Class<? extends Behavior<T>> clazz, final T entity) {
+	public boolean hasActiveBehavior(final Class<? extends Behavior> clazz, final IExtraGolem entity) {
 		for(Behavior b : behaviors) {
-			if(b.getClass().isAssignableFrom(clazz) && b.canApply(entity)) {
+			if(b.getClass().isAssignableFrom(clazz) && b.isVariantInBounds(entity)) {
 				return true;
 			}
 		}
@@ -89,7 +109,7 @@ public class BehaviorList {
 	/**
 	 * @param clazz the {@link Behavior} class
 	 * @return true if there is at least one behavior with the given class
-	 * @see #hasActiveBehavior(Class, LivingEntity)
+	 * @see #hasActiveBehavior(Class, IExtraGolem)
 	 */
 	public boolean hasBehavior(final Class<? extends Behavior> clazz) {
 		for(Behavior b : behaviors) {
@@ -128,6 +148,10 @@ public class BehaviorList {
 			this.behaviors = new ArrayList<>(behaviors);
 		}
 
+		public Builder(BehaviorList behaviorList) {
+			this(behaviorList.getBehaviors());
+		}
+
 		/**
 		 * @param behavior the behavior to add
 		 * @return the builder instance
@@ -164,7 +188,7 @@ public class BehaviorList {
 		}
 
 		/**
-		 * @return a new {@link Model} instance
+		 * @return a new {@link LayerList} instance
 		 */
 		public BehaviorList build() {
 			return new BehaviorList(this.behaviors);

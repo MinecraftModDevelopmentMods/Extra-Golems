@@ -4,6 +4,7 @@ import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.behavior.util.UpdateTarget;
 import com.mcmoddev.golems.data.behavior.util.UpdatePredicate;
 import com.mcmoddev.golems.entity.GolemBase;
+import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mcmoddev.golems.util.DeferredHolderSet;
 import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mcmoddev.golems.util.PredicateUtils;
@@ -27,7 +28,7 @@ import java.util.function.Predicate;
  * when an item is used on the entity
  **/
 @Immutable
-public class ItemUpdateGolemBehavior extends Behavior<GolemBase> {
+public class ItemUpdateGolemBehavior extends Behavior {
 
 	public static final Codec<ItemUpdateGolemBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
 			.and(UpdateTarget.CODEC.fieldOf("apply").forGetter(ItemUpdateGolemBehavior::getApply))
@@ -43,7 +44,7 @@ public class ItemUpdateGolemBehavior extends Behavior<GolemBase> {
 	/** The conditions to update the golem and variant **/
 	private final List<UpdatePredicate> predicates;
 	/** The conditions to update the golem and variant as a single predicate **/
-	private final Predicate<GolemBase> predicate;
+	private final Predicate<IExtraGolem> predicate;
 	/** The percent chance **/
 	private final double chance;
 
@@ -66,10 +67,6 @@ public class ItemUpdateGolemBehavior extends Behavior<GolemBase> {
 		return predicates;
 	}
 
-	public Predicate<GolemBase> getPredicate() {
-		return predicate;
-	}
-
 	public DeferredHolderSet<Item> getItems() {
 		return items;
 	}
@@ -79,20 +76,21 @@ public class ItemUpdateGolemBehavior extends Behavior<GolemBase> {
 	}
 
 	@Override
-	public Codec<? extends Behavior<?>> getCodec() {
+	public Codec<? extends Behavior> getCodec() {
 		return EGRegistry.BehaviorReg.ITEM_UPDATE_GOLEM.get();
 	}
 
 	//// METHODS ////
 
 	@Override
-	public void onMobInteract(GolemBase entity, Player player, InteractionHand hand) {
+	public void onMobInteract(IExtraGolem entity, Player player, InteractionHand hand) {
 		// TODO verify this does not fire for both hands
 		// determine held item
 		ItemStack item = player.getItemInHand(hand);
 		// validate and use item
 		if((getItems().isEmpty() || getItems().get(BuiltInRegistries.ITEM).contains(item.getItemHolder()))
-				&& entity.getRandom().nextDouble() < getChance()
+				&& this.predicate.test(entity)
+				&& entity.asMob().getRandom().nextDouble() < getChance()
 				&& getApply().apply(entity)) {
 			player.swing(hand);
 		}

@@ -6,6 +6,7 @@ import com.mcmoddev.golems.data.behavior.util.TargetType;
 import com.mcmoddev.golems.data.behavior.util.TriggerType;
 import com.mcmoddev.golems.data.behavior.util.WorldPredicate;
 import com.mcmoddev.golems.entity.GolemBase;
+import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mcmoddev.golems.util.DeferredBlockState;
 import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mcmoddev.golems.util.PredicateUtils;
@@ -36,10 +37,10 @@ import java.util.function.Predicate;
  * This behavior allows an entity to place blocks nearby
  **/
 @Immutable
-public class PlaceBlockBehavior extends Behavior<GolemBase> {
+public class PlaceBlockBehavior extends Behavior {
 
 	public static final Codec<PlaceBlockBehavior> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			EGCodecUtils.MIN_MAX_INTS_CODEC.optionalFieldOf("variant", MinMaxBounds.Ints.ANY).forGetter(Behavior::getVariant),
+			EGCodecUtils.MIN_MAX_INTS_CODEC.optionalFieldOf("variant", MinMaxBounds.Ints.ANY).forGetter(Behavior::getVariantBounds),
 			TriggerType.CODEC.optionalFieldOf("trigger", TriggerType.TICK).forGetter(PlaceBlockBehavior::getTrigger),
 			TargetType.CODEC.optionalFieldOf("position", TargetType.SELF).forGetter(PlaceBlockBehavior::getPosition),
 			Codec.intRange(0, 8).optionalFieldOf("radius", 0).forGetter(PlaceBlockBehavior::getRadius),
@@ -65,7 +66,7 @@ public class PlaceBlockBehavior extends Behavior<GolemBase> {
 	/** The conditions to place a block **/
 	private final List<WorldPredicate> predicates;
 	/** The conditions to place a block as a single predicate **/
-	private final Predicate<GolemBase> predicate;
+	private final Predicate<IExtraGolem> predicate;
 	/** True to call the mustSurvive method of the blocks **/
 	private final boolean mustSurvive;
 
@@ -117,30 +118,30 @@ public class PlaceBlockBehavior extends Behavior<GolemBase> {
 	}
 
 	@Override
-	public Codec<? extends Behavior<?>> getCodec() {
+	public Codec<? extends Behavior> getCodec() {
 		return EGRegistry.BehaviorReg.PLACE_BLOCK.get();
 	}
 
 	//// METHODS ////
 
 	@Override
-	public void onTick(GolemBase entity) {
+	public void onTick(IExtraGolem entity) {
 		if(trigger == TriggerType.TICK) {
-			placeBlock(entity);
+			placeBlock(entity.asMob());
 		}
 	}
 
 	@Override
-	public void onHurtTarget(GolemBase entity, Entity target) {
+	public void onHurtTarget(IExtraGolem entity, Entity target) {
 		if(trigger == TriggerType.ATTACK) {
-			placeBlock(entity);
+			placeBlock(entity.asMob());
 		}
 	}
 
 	@Override
-	public void onActuallyHurt(GolemBase entity, DamageSource source, float amount) {
+	public void onActuallyHurt(IExtraGolem entity, DamageSource source, float amount) {
 		if(trigger == TriggerType.HURT) {
-			placeBlock(entity);
+			placeBlock(entity.asMob());
 		}
 	}
 

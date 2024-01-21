@@ -3,7 +3,7 @@ package com.mcmoddev.golems.data.modifier.model;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.golem.Golem;
 import com.mcmoddev.golems.data.model.Layer;
-import com.mcmoddev.golems.data.model.Model;
+import com.mcmoddev.golems.data.model.LayerList;
 import com.mcmoddev.golems.data.modifier.GolemModifier;
 import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mojang.datafixers.util.Either;
@@ -14,24 +14,24 @@ import javax.annotation.concurrent.Immutable;
 import java.util.List;
 
 /**
- * Adds the given layers or model references to the {@link Model.Builder}
+ * Adds the given layers or model references to the {@link LayerList.Builder}
  */
 @Immutable
 public class AddLayersGolemModifier extends GolemModifier {
 
-	public static final Codec<AddLayersGolemModifier> CODEC = EGCodecUtils.listOrElementCodec(Model.EITHER_CODEC)
+	public static final Codec<AddLayersGolemModifier> CODEC = EGCodecUtils.listOrElementCodec(LayerList.EITHER_CODEC)
 			.xmap(AddLayersGolemModifier::new, AddLayersGolemModifier::getLayers)
 			.fieldOf("layers").codec();
 
-	private final List<Either<Layer, Holder<Model>>> layers;
+	private final List<Either<Layer, Holder<LayerList>>> layers;
 
-	public AddLayersGolemModifier(List<Either<Layer, Holder<Model>>> layers) {
+	public AddLayersGolemModifier(List<Either<Layer, Holder<LayerList>>> layers) {
 		this.layers = layers;
 	}
 
 	//// GETTERS ////
 
-	public List<Either<Layer, Holder<Model>>> getLayers() {
+	public List<Either<Layer, Holder<LayerList>>> getLayers() {
 		return layers;
 	}
 
@@ -39,7 +39,7 @@ public class AddLayersGolemModifier extends GolemModifier {
 
 	@Override
 	public void apply(Golem.Builder builder) {
-		builder.model(b -> b.addAll(this.getLayers()));
+		builder.layers(b -> b.addAll(this.getLayers()));
 	}
 
 	@Override
