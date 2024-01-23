@@ -3,7 +3,6 @@ package com.mcmoddev.golems;
 import com.mcmoddev.golems.block.GlowBlock;
 import com.mcmoddev.golems.block.GolemHeadBlock;
 import com.mcmoddev.golems.block.PowerBlock;
-import com.mcmoddev.golems.container.GolemContainer;
 import com.mcmoddev.golems.data.behavior.EffectBehavior;
 import com.mcmoddev.golems.data.behavior.AoeDryBehavior;
 import com.mcmoddev.golems.data.behavior.AoeFreezeBehavior;
@@ -27,6 +26,7 @@ import com.mcmoddev.golems.data.behavior.TickUpdateGolemBehavior;
 import com.mcmoddev.golems.data.behavior.ItemUpdateGolemBehavior;
 import com.mcmoddev.golems.data.behavior.UseFuelBehavior;
 import com.mcmoddev.golems.data.behavior.WearBannerBehavior;
+import com.mcmoddev.golems.data.golem.Attributes;
 import com.mcmoddev.golems.data.golem.Golem;
 import com.mcmoddev.golems.data.model.LayerList;
 import com.mcmoddev.golems.data.modifier.GolemModifier;
@@ -98,13 +98,11 @@ public final class EGRegistry {
 	public static final DeferredRegister<Codec<? extends Behavior>> BEHAVIOR_SERIALIZERS = DeferredRegister.create(Keys.BEHAVIOR_SERIALIZERS, ExtraGolems.MODID);
 	public static final Supplier<IForgeRegistry<Codec<? extends Behavior>>> BEHAVIOR_SERIALIZERS_SUPPLIER = BEHAVIOR_SERIALIZERS.makeRegistry(() -> new RegistryBuilder<>());
 	public static final DeferredRegister<Behavior> BEHAVIORS = DeferredRegister.create(Keys.BEHAVIORS, ExtraGolems.MODID);
-	public static final Supplier<IForgeRegistry<Behavior>> BEHAVIORS_SUPPLIER = BEHAVIORS.makeRegistry(() -> new RegistryBuilder<>());
 	public static final DeferredRegister<BehaviorList> BEHAVIOR_LISTS = DeferredRegister.create(Keys.BEHAVIOR_LISTS, ExtraGolems.MODID);
 
 	public static final DeferredRegister<Codec<? extends GolemModifier>> GOLEM_MODIFIER_SERIALIZERS = DeferredRegister.create(Keys.GOLEM_MODIFIER_SERIALIZERS, ExtraGolems.MODID);
 	public static final Supplier<IForgeRegistry<Codec<? extends GolemModifier>>> GOLEM_MODIFIER_SERIALIZERS_SUPPLIER = GOLEM_MODIFIER_SERIALIZERS.makeRegistry(() -> new RegistryBuilder<>());
 	public static final DeferredRegister<GolemModifier> GOLEM_MODIFIERS = DeferredRegister.create(Keys.GOLEM_MODIFIERS, ExtraGolems.MODID);
-	public static final Supplier<IForgeRegistry<GolemModifier>> GOLEM_MODIFIERS_SUPPLIER = GOLEM_MODIFIERS.makeRegistry(() -> new RegistryBuilder<>());
 	public static final DeferredRegister<GolemModifierList> GOLEM_MODIFIER_LISTS = DeferredRegister.create(Keys.GOLEM_MODIFIER_LISTS, ExtraGolems.MODID);
 
 	public static void register() {
@@ -187,7 +185,7 @@ public final class EGRegistry {
 		}
 
 		public static void registerEntityAttributes(final EntityAttributeCreationEvent event) {
-			event.put(GOLEM.get(), GolemContainer.EMPTY.getAttributeSupplier().get().build());
+			event.put(GOLEM.get(), Attributes.EMPTY.getAttributeSupplier().get().build());
 		}
 
 		public static final RegistryObject<? extends EntityType<GolemBase>> GOLEM = ENTITY_TYPES.register("golem", () ->

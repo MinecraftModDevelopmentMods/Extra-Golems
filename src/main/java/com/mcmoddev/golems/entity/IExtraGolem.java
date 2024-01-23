@@ -1,6 +1,7 @@
 package com.mcmoddev.golems.entity;
 
 import com.mcmoddev.golems.data.GolemContainer;
+import com.mcmoddev.golems.data.behavior.data.IBehaviorData;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -9,27 +10,30 @@ import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.ContainerListener;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.npc.InventoryCarrier;
+import net.minecraft.world.entity.animal.AbstractGolem;
+import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 
 import javax.annotation.Nullable;
+import java.util.Map;
 import java.util.Optional;
 
-public interface IExtraGolem extends IVariantProvider, IFuelConsumer, IArrowShooter,
-		IRandomExploder, ILightProvider, IPowerProvider, IMenuProvider,
-		InventoryCarrier, ContainerListener, IEntityAdditionalSpawnData {
+public interface IExtraGolem extends IVariantProvider, ILightProvider, IPowerProvider,
+		IInventoryProvider, ContainerListener, RangedAttackMob, IEntityAdditionalSpawnData {
 
 	public static final EntityDataSerializer<Optional<ResourceLocation>> OPTIONAL_RESOURCE_LOCATION = EntityDataSerializer.optional(FriendlyByteBuf::writeResourceLocation, FriendlyByteBuf::readResourceLocation);
 
 	//// ENTITY ////
 
 	/**
-	 * @param <T> Pathfinder Mob & IExtraGolem
+	 * @param <T> AbstractGolem Mob & IExtraGolem
 	 * @return the IExtraGolem as a mob
 	 */
-	<T extends PathfinderMob & IExtraGolem> T asMob();
+	<T extends AbstractGolem & IExtraGolem> T asMob();
+
+	/** Set up the inventory **/
+	void setupInventory();
 
 	//// CONTAINER ////
 
@@ -55,6 +59,18 @@ public interface IExtraGolem extends IVariantProvider, IFuelConsumer, IArrowShoo
 		}
 		// all checks passed
 		return Optional.of(GolemContainer.getOrCreate(registryAccess, oId.get()));
+	}
+
+	//// GOLEM HELPER ////
+
+	Map<Class<? extends IBehaviorData>, IBehaviorData> getBehaviorData();
+
+	default <T extends IBehaviorData> void attachBehaviorData(final T data) {
+		getBehaviorData().put(data.getClass(), data);
+	}
+
+	default <T extends IBehaviorData> Optional<T> getBehaviorData(final Class<T> clazz) {
+		return Optional.ofNullable((T)getBehaviorData().get(clazz));
 	}
 
 	//// GOLEM ////

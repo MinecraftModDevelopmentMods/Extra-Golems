@@ -30,7 +30,7 @@ public final class GolemAttributeManager {
 	public static AttributeMap getAttributes(final RegistryAccess access, final ResourceLocation id) {
 		if (!materialToAttributeMap.containsKey(id)) {
 			final GolemContainer container = GolemContainer.getOrCreate(access, id);
-			AttributeSupplier supplier = buildAttributes(container.getAttributeSupplier().get());
+			AttributeSupplier supplier = buildAttributes(container.getAttributes().getAttributeSupplier().get());
 			materialToAttributeMap.put(id, supplier);
 		}
 		return new AttributeMap(materialToAttributeMap.get(id));

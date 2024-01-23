@@ -16,6 +16,8 @@ import java.util.Optional;
 @Immutable
 public class Layer {
 
+	public static final Layer RAINBOW = new Layer.Builder().texture(new ResourcePair(new ResourceLocation(ExtraGolems.MODID, "layer/vines_rainbow"), true)).build();
+
 	public static final Codec<Layer> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			ResourcePair.CODEC.optionalFieldOf("texture", ResourcePair.EMPTY).forGetter(o -> o.rawTexture),
 			ResourceLocation.CODEC.optionalFieldOf("template").forGetter(o -> Optional.ofNullable(o.rawTemplate)),
@@ -97,5 +99,94 @@ public class Layer {
 
 	public MinMaxBounds.Ints getVariantBounds() {
 		return variant;
+	}
+	
+	//// CLASSES ////
+	
+	public static class Builder {
+		private ResourcePair texture;
+		private Optional<ResourceLocation> template;
+		private boolean emissive;
+		private int color;
+		private boolean useBiomeColor;
+		private RenderTypes renderType;
+		private MinMaxBounds.Ints variant;
+
+		public Builder() {
+			this.texture = ResourcePair.EMPTY;
+			this.template = Optional.empty();
+			this.emissive = false;
+			this.color = 0xFFFFFF;
+			this.useBiomeColor = false;
+			this.renderType = RenderTypes.CUTOUT;
+			this.variant = MinMaxBounds.Ints.ANY;
+		}
+
+		/**
+		 * @param texture the texture resource pair
+		 * @return the builder instance
+		 */
+		public Builder texture(ResourcePair texture) {
+			this.texture = texture;
+			return this;
+		}
+
+		/**
+		 * @param template the template resource location
+		 * @return the builder instance
+		 */
+		public Builder template(@Nullable ResourceLocation template) {
+			this.template = Optional.ofNullable(template);
+			return this;
+		}
+
+		/**
+		 * @param emissive true to render as an emissive texture
+		 * @return the builder instance
+		 */
+		public Builder emissive(boolean emissive) {
+			this.emissive = emissive;
+			return this;
+		}
+
+		/**
+		 * @param color the layer color, defaults to 0xFFFFFF
+		 * @return the builder instance
+		 */
+		public Builder color(int color) {
+			this.color = color;
+			return this;
+		}
+
+		/**
+		 * @param useBiomeColor {@code true} to use the biome color instead of the layer color
+		 * @return the builder instance
+		 */
+		public Builder useBiomeColor(boolean useBiomeColor) {
+			this.useBiomeColor = useBiomeColor;
+			return this;
+		}
+
+		/**
+		 * @param renderType the render type identifier
+		 * @return the builder instance
+		 */
+		public Builder renderType(RenderTypes renderType) {
+			this.renderType = renderType;
+			return this;
+		}
+
+		/**
+		 * @param variant the variant bounds to render this layer
+		 * @return the builder instance
+		 */
+		public Builder variant(MinMaxBounds.Ints variant) {
+			this.variant = variant;
+			return this;
+		}
+
+		public Layer build() {
+			return new Layer(texture, template, emissive, color, useBiomeColor, renderType, variant);
+		}
 	}
 }

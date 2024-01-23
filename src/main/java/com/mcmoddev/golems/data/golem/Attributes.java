@@ -1,6 +1,6 @@
 package com.mcmoddev.golems.data.golem;
 
-import com.mcmoddev.golems.data.behavior.BurnInSunBehavior;
+import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.util.DeferredHolderSet;
 import com.mcmoddev.golems.util.SoundTypeRegistry;
 import com.mojang.serialization.Codec;
@@ -11,10 +11,11 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 
@@ -22,6 +23,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 @Immutable
 public class Attributes {
@@ -31,7 +33,7 @@ public class Attributes {
 	 * Health value is very high to ensure it does not interfere with actual health.
 	 **/
 	public static final Attributes EMPTY = new Attributes(Optional.of(1024.0D), Optional.empty(), Optional.empty(),
-			Optional.empty(), Optional.empty(), Optional.empty(), 
+			Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
 			Optional.empty(), Optional.empty(), Optional.empty(),
 			Optional.empty(), Optional.empty());
 
@@ -42,6 +44,7 @@ public class Attributes {
 			Codec.doubleRange(0, 1.0D).optionalFieldOf("knockback_resistance").forGetter(o -> Optional.ofNullable(o.knockbackResistance)),
 			Codec.doubleRange(0, 30.0D).optionalFieldOf("armor").forGetter(o -> Optional.ofNullable(o.armor)),
 			Codec.doubleRange(0, 2.0D).optionalFieldOf("attack_knockback").forGetter(o -> Optional.ofNullable(o.attackKnockback)),
+			DeferredHolderSet.codec(Registries.MOB_EFFECT).optionalFieldOf("ignore").forGetter(o -> Optional.ofNullable(o.potionIgnore)),
 			DeferredHolderSet.codec(Registries.DAMAGE_TYPE).optionalFieldOf("immune").forGetter(o -> Optional.ofNullable(o.damageImmune)),
 			DeferredHolderSet.codec(Registries.DAMAGE_TYPE).optionalFieldOf("weak").forGetter(o -> Optional.ofNullable(o.damageWeak)),
 			Codec.BOOL.optionalFieldOf("invulnerable").forGetter(o -> Optional.ofNullable(o.invulnerable)),
@@ -56,6 +59,7 @@ public class Attributes {
 	private final @Nullable Double armor;
 	private final @Nullable Double attackKnockback;
 
+	private final @Nullable DeferredHolderSet<MobEffect> potionIgnore;
 	private final @Nullable DeferredHolderSet<DamageType> damageImmune;
 	private final @Nullable DeferredHolderSet<DamageType> damageWeak;
 	private final @Nullable Boolean invulnerable;
@@ -64,7 +68,8 @@ public class Attributes {
 	private final @Nullable SoundType sound;
 
 	private Attributes(Optional<Double> health, Optional<Double> attack, Optional<Double> speed, Optional<Double> knockbackResistance, Optional<Double> armor,
-					   Optional<Double> attackKnockback, Optional<DeferredHolderSet<DamageType>> damageImmune, Optional<DeferredHolderSet<DamageType>> damageWeak,
+					   Optional<Double> attackKnockback, Optional<DeferredHolderSet<MobEffect>> potionIgnore,
+					   Optional<DeferredHolderSet<DamageType>> damageImmune, Optional<DeferredHolderSet<DamageType>> damageWeak,
 					   Optional<Boolean> invulnerable, Optional<SwimAbility> swimAbility, Optional<SoundType> sound) {
 		this.health = health.orElse(null);
 		this.attack = attack.orElse(null);
@@ -72,12 +77,26 @@ public class Attributes {
 		this.knockbackResistance = knockbackResistance.orElse(null);
 		this.armor = armor.orElse(null);
 		this.attackKnockback = attackKnockback.orElse(null);
+		this.potionIgnore = potionIgnore.orElse(null);
 		this.damageImmune = damageImmune.orElse(null);
 		this.damageWeak = damageWeak.orElse(null);
 		this.invulnerable = invulnerable.orElse(null);
 		this.swimAbility = swimAbility.orElse(null);
 		this.sound = sound.orElse(null);
 	}
+
+	/** @return a new attribute supplier builder **/
+	public Supplier<AttributeSupplier.Builder> getAttributeSupplier() {
+		return () -> GolemBase.createMobAttributes()
+				.add(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH, this.getHealth())
+				.add(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED, this.getSpeed())
+				.add(net.minecraft.world.entity.ai.attributes.Attributes.KNOCKBACK_RESISTANCE, this.getKnockbackResistance())
+				.add(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_KNOCKBACK, this.getAttackKnockback())
+				.add(net.minecraft.world.entity.ai.attributes.Attributes.ARMOR, this.getArmor())
+				.add(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE, this.getAttack());
+	}
+
+	//// GETTERS ////
 
 	/**
 	 * @return the Golem's default health
@@ -119,6 +138,17 @@ public class Attributes {
 	 **/
 	public double getAttackKnockback() {
 		return attackKnockback != null ? this.attackKnockback : 0;
+	}
+
+	public boolean isImmuneTo(final RegistryAccess registryAccess, final MobEffect mobEffect) {
+		if(null == potionIgnore) {
+			return false;
+		}
+		// resolve registry and holder set
+		final Registry<MobEffect> registry = registryAccess.registryOrThrow(Registries.MOB_EFFECT);
+		final HolderSet<MobEffect> ignore = potionIgnore.get(registry);
+		final Holder<MobEffect> holder = registry.wrapAsHolder(mobEffect);
+		return ignore.contains(holder);
 	}
 
 	/**
@@ -165,6 +195,10 @@ public class Attributes {
 		}
 		// no checks passed
 		return false;
+	}
+
+	public DeferredHolderSet<MobEffect> getPotionIgnore() {
+		return potionIgnore != null ? potionIgnore : DeferredHolderSet.empty();
 	}
 
 	public DeferredHolderSet<DamageType> getDamageImmune() {
@@ -224,14 +258,14 @@ public class Attributes {
 		Attributes other = (Attributes) o;
 		return Objects.equals(health, other.health) && Objects.equals(attack, other.attack) && Objects.equals(speed, other.speed)
 				&& Objects.equals(knockbackResistance, other.knockbackResistance) && Objects.equals(armor, other.armor)
-				&& Objects.equals(attackKnockback, other.attackKnockback) && Objects.equals(damageImmune, other.damageImmune)
-				&& Objects.equals(damageWeak, other.damageWeak) && Objects.equals(invulnerable, other.invulnerable)
-				&& swimAbility == other.swimAbility && Objects.equals(sound, other.sound);
+				&& Objects.equals(attackKnockback, other.attackKnockback) && Objects.equals(potionIgnore, other.potionIgnore)
+				&& Objects.equals(damageImmune, other.damageImmune) && Objects.equals(damageWeak, other.damageWeak)
+				&& Objects.equals(invulnerable, other.invulnerable) && swimAbility == other.swimAbility && Objects.equals(sound, other.sound);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(health, attack, speed, knockbackResistance, armor, attackKnockback, damageImmune, damageWeak, invulnerable, swimAbility, sound);
+		return Objects.hash(health, attack, speed, knockbackResistance, armor, attackKnockback, potionIgnore, damageImmune, damageWeak, invulnerable, swimAbility, sound);
 	}
 
 
@@ -245,6 +279,7 @@ public class Attributes {
 		private Optional<Double> armor;
 		private Optional<Double> attackKnockback;
 
+		private Optional<DeferredHolderSet<MobEffect>> ignore;
 		private Optional<DeferredHolderSet<DamageType>> immune;
 		private Optional<DeferredHolderSet<DamageType>> weak;
 		private Optional<Boolean> invulnerable;
@@ -260,6 +295,7 @@ public class Attributes {
 			this.armor = Optional.empty();
 			this.attackKnockback = Optional.empty();
 
+			this.ignore = Optional.empty();
 			this.immune = Optional.empty();
 			this.weak = Optional.empty();
 			this.invulnerable = Optional.empty();
@@ -282,6 +318,7 @@ public class Attributes {
 			if(attributes.knockbackResistance != null) this.knockbackResistance(attributes.knockbackResistance);
 			if(attributes.armor != null) this.armor(attributes.armor);
 			if(attributes.attackKnockback != null) this.attackKnockback(attributes.attackKnockback);
+			if(attributes.potionIgnore != null) this.ignore(attributes.potionIgnore);
 			if(attributes.damageImmune != null) this.immune(attributes.damageImmune);
 			if(attributes.damageWeak != null) this.weak(attributes.damageWeak);
 			if(attributes.invulnerable != null) this.invulnerable(attributes.invulnerable);
@@ -345,6 +382,15 @@ public class Attributes {
 		}
 
 		/**
+		 * @param ignore the mob effects to which the entity is immune
+		 * @return the builder instance
+		 */
+		public Builder ignore(final DeferredHolderSet<MobEffect> ignore) {
+			this.ignore = Optional.of(ignore);
+			return this;
+		}
+
+		/**
 		 * @param immune the damage types to which the entity is immune
 		 * @return the builder instance
 		 */
@@ -393,7 +439,7 @@ public class Attributes {
 		 * @return a new {@link Attributes} instance
 		 */
 		public Attributes build() {
-			return new Attributes(health, attack, speed, knockbackResist, armor, attackKnockback, immune, weak, invulnerable, swimAbility, sound);
+			return new Attributes(health, attack, speed, knockbackResist, armor, attackKnockback, ignore, immune, weak, invulnerable, swimAbility, sound);
 		}
 	}
 }

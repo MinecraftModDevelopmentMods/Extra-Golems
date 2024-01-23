@@ -2,13 +2,16 @@ package com.mcmoddev.golems.data.behavior;
 
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
+import com.mcmoddev.golems.data.behavior.data.ExplodeBehaviorData;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.ItemTags;
@@ -84,45 +87,42 @@ public class ExplodeBehavior extends Behavior {
 	//// METHODS ////
 
 	@Override
-	public void onHurtTarget(final IExtraGolem entity, final Entity target) {
+	public void onAttack(final IExtraGolem entity, final Entity target) {
 		if (target.isOnFire() || entity.asMob().getRandom().nextFloat() < chanceOnAttack) {
-			entity.lightFuse(entity.asMob());
+			entity.getBehaviorData(ExplodeBehaviorData.class).ifPresent(data -> data.lightFuse());
 		}
 	}
 
 	@Override
 	public void onActuallyHurt(final IExtraGolem entity, final DamageSource source, final float amount) {
 		if (source.is(DamageTypes.ON_FIRE) || source.is(DamageTypes.IN_FIRE) || entity.asMob().getRandom().nextFloat() < chanceOnHurt) {
-			entity.lightFuse(entity.asMob());
+			entity.getBehaviorData(ExplodeBehaviorData.class).ifPresent(data -> data.lightFuse());
 		}
 	}
 
 	@Override
 	public void onTick(IExtraGolem entity) {
 		final PathfinderMob mob = entity.asMob();
-		// verify fuse is lit
-		if(!entity.isFuseLit()) {
-			return;
-		}
-		// decrease fuse
-		entity.setFuse(entity.getFuse() - 1);
-		// TODO add fuse particles?
-		// stop navigation
-		mob.getNavigation().stop();
-		// reset fuse when wet
-		if (mob.isInWaterRainOrBubble()) {
-			entity.resetFuseLit();
-			mob.playSound(SoundEvents.FIRE_EXTINGUISH, 0.9F, mob.getRandom().nextFloat());
-		}
-		// explode when fuse reaches zero
-		if (entity.getFuse() <= 0) {
-			entity.explode(mob, (float) radius);
-		}
+		entity.getBehaviorData(ExplodeBehaviorData.class).ifPresent(data -> {
+			// reset fuse when wet
+			if (mob.isInWaterRainOrBubble()) {
+				data.resetFuseLit();
+			}
+			// verify fuse is lit
+			if(data.isFuseLit()) {
+				// send fuse particles
+				((ServerLevel) mob.level()).sendParticles(ParticleTypes.SMOKE, mob.getX(), mob.getY() + mob.getEyeHeight(mob.getPose()), mob.getZ(), 2, 0.25D, 0.25D, 0.25D, 0);
+				// stop navigation
+				mob.getNavigation().stop();
+				// update fuse
+				data.updateFuse();
+			}
+		});
 	}
 
 	@Override
 	public void onDie(final IExtraGolem entity, final DamageSource source) {
-		entity.explode(entity.asMob(), (float) radius);
+		entity.getBehaviorData(ExplodeBehaviorData.class).ifPresent(data -> data.explode());
 	}
 
 	@Override
@@ -137,7 +137,7 @@ public class ExplodeBehavior extends Behavior {
 			player.swing(hand);
 
 			mob.setSecondsOnFire(Math.floorDiv(getMinFuse(), 20));
-			entity.lightFuse(mob);
+			entity.getBehaviorData(ExplodeBehaviorData.class).ifPresent(data -> data.lightFuse());
 			itemstack.hurtAndBreak(1, player, c -> c.broadcastBreakEvent(hand));
 		}
 	}
@@ -149,19 +149,17 @@ public class ExplodeBehavior extends Behavior {
 
 	///// NBT ////
 
-	private static final String KEY_FUSE = "Fuse";
-	private static final String KEY_FUSE_LIT = "FuseLit";
+	private static final String KEY_EXPLOSION_HELPER = "ExplodeData";
 
 	@Override
 	public void onWriteData(final IExtraGolem entity, final CompoundTag tag) {
-		tag.putInt(KEY_FUSE, entity.getFuse());
-		tag.putBoolean(KEY_FUSE_LIT, entity.isFuseLit());
+		entity.getBehaviorData(ExplodeBehaviorData.class).ifPresent(data -> tag.put(KEY_EXPLOSION_HELPER, data.serializeNBT()));
+
 	}
 
 	@Override
 	public void onReadData(final IExtraGolem entity, final CompoundTag tag) {
-		entity.setFuse(tag.getInt(KEY_FUSE));
-		entity.setFuseLit(tag.getBoolean(KEY_FUSE_LIT));
+		entity.getBehaviorData(ExplodeBehaviorData.class).ifPresent(data -> data.deserializeNBT(tag.getCompound(KEY_EXPLOSION_HELPER)));
 	}
 
 	//// EQUALITY ////

@@ -1,7 +1,6 @@
 package com.mcmoddev.golems.render;
 
 import com.mcmoddev.golems.ExtraGolems;
-import com.mcmoddev.golems.container.render.GolemRenderSettings;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -22,14 +21,11 @@ import org.joml.Vector3f;
 
 public class GolemModel<T extends GolemBase> extends IronGolemModel<T> implements ArmedModel {
 
-	private static final Vector3f ONE = new Vector3f(1.0F, 1.0F, 1.0F);
-
 	private final ModelPart kitty = createKittyLayer().bakeRoot();
 	private final ModelPart tail;
 	private final ModelPart tail1;
 	private final ModelPart ears;
 
-	private GolemRenderSettings settings = GolemRenderSettings.EMPTY;
 	private float red = 1.0f;
 	private float green = 1.0f;
 	private float blue = 1.0f;
@@ -133,32 +129,10 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> implement
 
 	// SETTINGS AND COLORS
 
-	public void setSettings(final GolemRenderSettings settings, final GolemBase entity) {
-		this.settings = settings;
-		// colors
-		final Vector3f colors;
-		if (settings.getBaseColor().isPresent() && settings.getBaseColor().get() > 0) {
-			colors = GolemRenderSettings.unpackColor(settings.getBaseColor().get());
-		} else if (settings.useBiomeColor()) {
-			colors = GolemRenderSettings.unpackColor(entity.getBiomeColor());
-		} else {
-			colors = ONE;
-		}
-		this.setColor(colors.x(), colors.y(), colors.z());
-	}
-
-	public GolemRenderSettings getSettings() {
-		return settings;
-	}
-
 	public void setColor(final float r, final float g, final float b) {
 		red = r;
 		green = g;
 		blue = b;
-	}
-
-	public void resetSettings() {
-		this.settings = GolemRenderSettings.EMPTY;
 	}
 
 	public void resetColor() {

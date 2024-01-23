@@ -116,18 +116,6 @@ public class GolemContainer {
 		return golem.getBehaviors().get();
 	}
 
-	/** @return a new attribute supplier builder **/
-	public Supplier<AttributeSupplier.Builder> getAttributeSupplier() {
-		final Attributes attributes = getAttributes();
-		return () -> GolemBase.createMobAttributes()
-				.add(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH, attributes.getHealth())
-				.add(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED, attributes.getSpeed())
-				.add(net.minecraft.world.entity.ai.attributes.Attributes.KNOCKBACK_RESISTANCE, attributes.getKnockbackResistance())
-				.add(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_KNOCKBACK, attributes.getAttackKnockback())
-				.add(net.minecraft.world.entity.ai.attributes.Attributes.ARMOR, attributes.getArmor())
-				.add(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE, attributes.getAttack());
-	}
-
 	/**
 	 * @param body the body block
 	 * @param legs the legs block

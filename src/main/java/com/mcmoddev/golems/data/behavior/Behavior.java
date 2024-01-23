@@ -3,9 +3,7 @@ package com.mcmoddev.golems.data.behavior;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
-import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.entity.IExtraGolem;
-import com.mcmoddev.golems.entity.IVariantProvider;
 import com.mcmoddev.golems.entity.goal.IVariantPredicate;
 import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mojang.datafixers.Products;
@@ -14,8 +12,9 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.ExtraCodecs;
-import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -63,11 +62,33 @@ public abstract class Behavior implements IVariantPredicate {
 	//// METHODS ////
 
 	/**
+	 * Called when the Golem registers behavior data
+	 *
+	 * @param entity the Golem
+	 */
+	public void onAttachData(final IExtraGolem entity) { }
+
+	/**
 	 * Called when the Golem registers goals
 	 *
 	 * @param entity the Golem
 	 */
 	public void onRegisterGoals(final IExtraGolem entity) { }
+
+	/**
+	 * Called when the Golem registers goals, not when it normally registers synched data.
+	 * Use {@link #defineSynchedData(SynchedEntityData, EntityDataAccessor, Object)} to safely add data accessors.
+	 *
+	 * @param entity the Golem
+	 */
+	public void onRegisterSynchedData(final IExtraGolem entity) { }
+
+	/**
+	 * Called when any synched data is updated
+	 *
+	 * @param entity the Golem
+	 */
+	public void onSyncedDataUpdated(final IExtraGolem entity, final EntityDataAccessor<?> key) { }
 
 	/**
 	 * Called when the Golem update method is called
@@ -77,12 +98,20 @@ public abstract class Behavior implements IVariantPredicate {
 	public void onTick(final IExtraGolem entity) { }
 
 	/**
-	 * Called when the Golem hurts an entity
+	 * Called when the Golem attacks an entity
 	 *
 	 * @param entity the Golem
 	 * @param target the entity that was hurt
 	 */
-	public void onHurtTarget(final IExtraGolem entity, final Entity target) { }
+	public void onAttack(final IExtraGolem entity, final Entity target) { }
+
+	/**
+	 * Called when the Golem performs a ranged attack on an entity
+	 *
+	 * @param entity the Golem
+	 * @param target the entity that was hurt
+	 */
+	public void onRangedAttack(final IExtraGolem entity, final LivingEntity target, final float distanceFactor) { }
 
 	/**
 	 * Called when the entity is hurt
@@ -166,6 +195,20 @@ public abstract class Behavior implements IVariantPredicate {
 	}
 
 	//// HELPER METHODS ////
+
+	/**
+	 * Defines synched data after verifying that it is not already defined.
+	 * @param data the synched entity data
+	 * @param key the entity data accessor key
+	 * @param value the default value
+	 * @param <T> the entity data accessor type
+	 */
+	protected static <T> void defineSynchedData(final SynchedEntityData data, final EntityDataAccessor<T> key, T value) {
+		if(data.hasItem(key)) {
+			return;
+		}
+		data.define(key, value);
+	}
 
 	/**
 	 * Simplifies codec creation, especially if no other fields are added

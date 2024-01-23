@@ -132,7 +132,7 @@ public class PlaceBlockBehavior extends Behavior {
 	}
 
 	@Override
-	public void onHurtTarget(IExtraGolem entity, Entity target) {
+	public void onAttack(IExtraGolem entity, Entity target) {
 		if(trigger == TriggerType.ATTACK) {
 			placeBlock(entity.asMob());
 		}

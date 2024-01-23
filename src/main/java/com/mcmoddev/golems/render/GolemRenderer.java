@@ -1,7 +1,9 @@
 package com.mcmoddev.golems.render;
 
 import com.mcmoddev.golems.ExtraGolems;
-import com.mcmoddev.golems.container.render.GolemRenderSettings;
+import com.mcmoddev.golems.data.GolemContainer;
+import com.mcmoddev.golems.data.model.Layer;
+import com.mcmoddev.golems.data.model.LayerList;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.render.layer.ColoredTextureLayer;
 import com.mcmoddev.golems.render.layer.GolemBannerLayer;
@@ -11,6 +13,7 @@ import com.mcmoddev.golems.render.layer.GolemKittyLayer;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -19,6 +22,8 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Optional;
 
 public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemModel<T>> {
 
@@ -44,36 +49,20 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
 	}
 
 	@Override
-	public void render(final T golem, final float entityYaw, final float partialTicks, final PoseStack matrixStackIn,
-					   final MultiBufferSource bufferIn, final int packedLightIn) {
-		if (golem.isInvisible()) {
+	public void render(final T entity, final float entityYaw, final float partialTicks, final PoseStack poseStack,
+					   final MultiBufferSource bufferSource, final int pPackedLight) {
+		// validate not invisible
+		final Minecraft mc = Minecraft.getInstance();
+		if (mc.player != null && entity.isInvisibleTo(mc.player)) {
 			return;
 		}
-		// get render settings
-		GolemRenderSettings settings = GolemRenderType.loadRenderSettings(golem.level().registryAccess(), golem.getMaterial());
-		matrixStackIn.pushPose();
-		// scale
-		if (golem.isBaby()) {
-			float scaleChild = 0.5F;
-			matrixStackIn.scale(scaleChild, scaleChild, scaleChild);
+		final Optional<GolemContainer> oContainer = entity.getContainer();
+		if(oContainer.isEmpty()) {
+			return;
 		}
-		// settings
-		this.getModel().setSettings(settings, golem);
-		// transparency flag
-		isAlphaLayer = settings.isTranslucent();
-		if (isAlphaLayer) {
-			RenderSystem.enableBlend();
-			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.5F);
-		}
-		// packed light
-		final int packedLight = settings.getBaseLight().orElse(settings.getBaseLight().orElse(false)) ? 15728880 : packedLightIn;
 		// render the entity
-		super.render(golem, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLight);
-		if (isAlphaLayer) {
-			RenderSystem.disableBlend();
-			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		}
-		matrixStackIn.popPose();
+		super.render(entity, entityYaw, partialTicks, poseStack, bufferSource, pPackedLight);
+		poseStack.popPose();
 	}
 
 	/**

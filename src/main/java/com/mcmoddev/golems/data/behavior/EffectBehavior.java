@@ -87,7 +87,7 @@ public class EffectBehavior extends Behavior {
 	}
 
 	@Override
-	public void onHurtTarget(IExtraGolem entity, Entity target) {
+	public void onAttack(IExtraGolem entity, Entity target) {
 		if(this.trigger == TriggerType.ATTACK && this.predicate.test(entity) && entity.asMob().getRandom().nextDouble() < chance) {
 			targetedMobEffects.apply(entity.asMob());
 		}

@@ -1,10 +1,11 @@
 package com.mcmoddev.golems.entity;
 
+import net.minecraft.world.entity.npc.InventoryCarrier;
 import net.minecraft.world.entity.player.Player;
 
 import javax.annotation.Nullable;
 
-public interface IMenuProvider {
+public interface IInventoryProvider extends InventoryCarrier {
 
 	/** @param player the player who has opened a menu **/
 	void setPlayerInMenu(@Nullable final Player player);

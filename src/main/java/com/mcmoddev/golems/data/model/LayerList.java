@@ -20,9 +20,10 @@ import java.util.Objects;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 @Immutable
-public class LayerList implements Iterable<Either<Layer, Holder<LayerList>>> {
+public class LayerList implements Iterable<Either<Layer, Holder<LayerList>>>, Supplier<List<Layer>> {
 
 	public static final Codec<LayerList> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			EGCodecUtils.listOrElementCodec(LayerList.EITHER_CODEC).optionalFieldOf("layers", ImmutableList.of()).forGetter(LayerList::getLayers)
@@ -58,10 +59,10 @@ public class LayerList implements Iterable<Either<Layer, Holder<LayerList>>> {
 	 * DO NOT CALL UNTIL THE SERVER IS RUNNING
 	 * @return the lazy-populated list of layers where all holders have been resolved into layer lists.
 	 */
-	public List<Layer> getFlattenedLayers() {
+	public List<Layer> get() {
 		if(this.flatList.isEmpty()) {
 			for(Either<Layer, Holder<LayerList>> either : this.layers) {
-				either.map(this.flatList::add, holder -> this.flatList.addAll(holder.get().getFlattenedLayers()));
+				either.map(this.flatList::add, holder -> this.flatList.addAll(holder.get().get()));
 			}
 		}
 		return this.flatListView;

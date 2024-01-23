@@ -4,23 +4,20 @@ import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.data.GolemContainer;
 import com.mcmoddev.golems.data.behavior.BurnInSunBehavior;
-import com.mcmoddev.golems.data.behavior.ExplodeBehavior;
 import com.mcmoddev.golems.data.behavior.LightBehavior;
 import com.mcmoddev.golems.data.behavior.PowerBehavior;
 import com.mcmoddev.golems.data.behavior.ShootArrowsBehavior;
-import com.mcmoddev.golems.data.behavior.UseFuelBehavior;
+import com.mcmoddev.golems.data.behavior.data.IBehaviorData;
 import com.mcmoddev.golems.data.golem.SwimAbility;
 import com.mcmoddev.golems.entity.goal.GoToWaterGoal;
 import com.mcmoddev.golems.entity.goal.SwimUpGoal;
 import com.mcmoddev.golems.item.SpawnGolemItem;
 import com.mcmoddev.golems.util.GolemAttributeManager;
-import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
@@ -28,6 +25,7 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -35,7 +33,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
-import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.Containers;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
@@ -44,20 +41,18 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomSwimmingGoal;
-import net.minecraft.world.entity.ai.goal.RangedAttackGoal;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.WaterBoundPathNavigation;
 import net.minecraft.world.entity.animal.IronGolem;
@@ -77,7 +72,9 @@ import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -89,14 +86,9 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 	private static final EntityDataAccessor<Optional<ResourceLocation>> GOLEM = SynchedEntityData.defineId(GolemBase.class, IExtraGolem.OPTIONAL_RESOURCE_LOCATION);
 	private static final EntityDataAccessor<Boolean> CHILD = SynchedEntityData.defineId(GolemBase.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Byte> VARIANT = SynchedEntityData.defineId(GolemBase.class, EntityDataSerializers.BYTE);
-	private static final EntityDataAccessor<Integer> FUEL = SynchedEntityData.defineId(GolemBase.class, EntityDataSerializers.INT);
-	private static final EntityDataAccessor<Integer> ARROWS = SynchedEntityData.defineId(GolemBase.class, EntityDataSerializers.INT);
 
 	// KEYS //
 	private static final String KEY_CHILD = "IsChild";
-
-	// EVENTS //
-	private static final byte LIGHT_FUSE_EVENT = (byte) 13;
 
 	// CONTAINER //
 	@Nullable
@@ -112,16 +104,13 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 	private final GroundPathNavigation groundNavigator;
 	private boolean swimmingUp;
 
-	// RANDOM EXPLODER //
-	private int fuse;
-	private boolean fuseLit;
+	// GOLEM HELPERS //
+	private final Map<Class<? extends IBehaviorData>, IBehaviorData> behaviorData;
 
-	// shoot arrows behavior
-	private boolean isInventoryDirty;
-	private final RangedAttackGoal aiArrowAttack;
-	private final MeleeAttackGoal aiMeleeAttack;
+	// INVENTORY //
+	private boolean isInventoryChanged;
 
-	// color
+	// COLOR //
 	private int biomeColor = 0x83A05A;
 
 	//// CONSTRUCTOR ////
@@ -131,10 +120,9 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 		// the following will be unused if swimming is not enabled
 		this.waterNavigator = new WaterBoundPathNavigation(this, world);
 		this.groundNavigator = new GroundPathNavigation(this, world);
-		// the following will only be used if ShootArrowsBehavior is added
-		aiArrowAttack = new RangedAttackGoal(this, 1.0D, 28, 32.0F);
-		aiMeleeAttack = new MeleeAttackGoal(this, 1.0D, true);
-		initArrowInventory();
+		setupInventory();
+		// create helpers
+		this.behaviorData = new HashMap<>();
 	}
 
 	public static GolemBase create(final Level world, final ResourceLocation material) {
@@ -222,9 +210,14 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 			container.getAttributes().updatePathfinding(this);
 			// update ground navigator
 			this.groundNavigator.setAvoidSun(container.getBehaviors().hasBehavior(BurnInSunBehavior.class));
-
+			// reset behavior data
+			this.behaviorData.clear();
+			// allow behaviors to register synched data
+			container.getBehaviors().forEach(b -> b.onAttachData(this));
 			// allow behaviors to register goals
 			container.getBehaviors().forEach(b -> b.onRegisterGoals(this));
+			// allow behaviors to register synched data
+			container.getBehaviors().forEach(b -> b.onRegisterSynchedData(this));
 		}
 	}
 
@@ -250,8 +243,6 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 		this.getEntityData().define(GOLEM, Optional.empty());
 		this.getEntityData().define(CHILD, Boolean.FALSE);
 		this.getEntityData().define(VARIANT, (byte) 0);
-		this.getEntityData().define(FUEL, 0);
-		this.getEntityData().define(ARROWS, 0);
 	}
 
 	@Override
@@ -286,6 +277,15 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 		} else if (VARIANT.equals(key)) {
 			this.setVariant((byte) this.getVariant());
 		}
+		// update behaviors
+		oContainer.ifPresent(container -> container.getBehaviors().forEach(b -> b.onSyncedDataUpdated(this, key)));
+	}
+
+	//// BEHAVIOR DATA ////
+
+	@Override
+	public Map<Class<? extends IBehaviorData>, IBehaviorData> getBehaviorData() {
+		return this.behaviorData;
 	}
 
 	//// LIVING ENTITY ////
@@ -422,8 +422,6 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 			return;
 		}
 		final GolemContainer container = oContainer.get();
-		// process damage weakness
-		final Registry<DamageType> registry = level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE);
 		// take damage from water
 		if(this.isInWaterRainOrBubble() && container.getAttributes().isWeakTo(level().registryAccess(), DamageTypes.DROWN)) {
 			this.hurt(this.damageSources().drown(), 1.0F);
@@ -445,10 +443,6 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 			if (this.tickCount % 15 == 1) {
 				biomeColor = this.level().getBiome(this.blockPosition()).value().getFoliageColor();
 			}
-			// spawn fuse particles
-			if (isFuseLit()) {
-				this.level().addParticle(ParticleTypes.SMOKE, getX() + getRandom().nextDouble() - 0.5D, getY() + getEyeHeight(getPose()), getZ() + getRandom().nextDouble() - 0.5D, 0.0D, 0.0D, 0.0D);
-			}
 			// spawn golem container particles
 			getContainer().ifPresent(container -> {
 				final ParticleOptions options = container.getGolem().getParticle();
@@ -461,6 +455,32 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 	}
 
 	//// ATTRIBUTE HOOKS ////
+
+	@Override
+	public boolean canBeAffected(MobEffectInstance pEffectInstance) {
+		final Optional<GolemContainer> oContainer = getContainer();
+		if(oContainer.isEmpty()) {
+			return super.canBeAffected(pEffectInstance);
+		}
+		return !oContainer.get().getAttributes().isImmuneTo(level().registryAccess(), pEffectInstance.getEffect());
+	}
+
+	@Override
+	public boolean isInvulnerableTo(DamageSource pSource) {
+		if(super.isInvulnerableTo(pSource)) {
+			return true;
+		}
+		final Optional<GolemContainer> oContainer = getContainer();
+		if(oContainer.isEmpty()) {
+			return false;
+		}
+		final RegistryAccess registryAccess = level().registryAccess();
+		final Optional<ResourceKey<DamageType>> oTypeKey = pSource.typeHolder().unwrapKey();
+		if(oTypeKey.isPresent() && oContainer.get().getAttributes().isImmuneTo(registryAccess, oTypeKey.get())) {
+			return true;
+		}
+		return false;
+	}
 
 	@Override
 	public boolean causeFallDamage(float distance, float damageMultiplier, DamageSource source) {
@@ -535,7 +555,7 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 					target.setDeltaMovement(target.getDeltaMovement().add(dX, knockback / 2, dZ));
 				}
 				// allow behaviors to process doHurtTarget
-				container.getBehaviors().forEach(b -> b.onHurtTarget(this, target));
+				container.getBehaviors().forEach(b -> b.onAttack(this, target));
 			});
 			return true;
 		}
@@ -652,36 +672,37 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 		return this.playerInMenu != null && this.position().closerThan(this.playerInMenu.position(), distance);
 	}
 
+
 	//// NBT ////
 
 	@Override
 	public void readAdditionalSaveData(final CompoundTag tag) {
 		super.readAdditionalSaveData(tag);
-		// load golem ID
-		if(tag.contains(KEY_GOLEM_ID, Tag.TAG_STRING)) {
-			this.setGolemId(new ResourceLocation(tag.getString(KEY_GOLEM_ID)));
-		}
-		// load variant
-		this.setVariant(tag.getByte(KEY_VARIANT));
+		readContainer(tag);
+		readVariant(tag);
 		// load baby flag
 		this.setBaby(tag.getBoolean(KEY_CHILD));
+		// load inventory
+		setupInventory();
+		readInventoryFromTag(tag);
 		// allow behaviors to process readData
-		initArrowInventory();
 		this.getContainer().ifPresent(container -> container.getBehaviors().forEach(b -> b.onReadData(this, tag)));
 	}
 
 	@Override
 	public void addAdditionalSaveData(final CompoundTag tag) {
 		super.addAdditionalSaveData(tag);
-		// save golem ID
-		this.getGolemId().ifPresent(id -> tag.putString(KEY_GOLEM_ID, id.toString()));
-		// save variant
-		tag.putByte(KEY_VARIANT, (byte) this.getVariant());
+		writeContainer(tag);
+		writeVariant(tag);
 		// save baby flag
 		tag.putBoolean(KEY_CHILD, this.isBaby());
+		// save inventory
+		writeInventoryToTag(tag);
 		// allow behaviors to process writeData
 		this.getContainer().ifPresent(container -> container.getBehaviors().forEach(b -> b.onWriteData(this, tag)));
 	}
+
+	//// SPAWN DATA ////
 
 	@Override
 	public Packet<ClientGamePacketListener> getAddEntityPacket() {
@@ -756,70 +777,17 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 		return this.getEntityData().get(VARIANT);
 	}
 
-	//// FUEL CONSUMER ////
+	//// RANGED ATTACK ////
 
 	@Override
-	public void setFuel(int fuel) {
-		getEntityData().set(FUEL, fuel);
+	public void performRangedAttack(LivingEntity target, float distanceFactor) {
+		this.getContainer().ifPresent(container -> container.getBehaviors().forEach(b -> b.onRangedAttack(this, target, distanceFactor)));
 	}
 
-	@Override
-	public int getFuel() {
-		return getEntityData().get(FUEL);
-	}
+	//// INVENTORY ////
 
 	@Override
-	public int getMaxFuel() {
-		final Optional<GolemContainer> oContainer = getContainer();
-		if(oContainer.isEmpty()) {
-			return 0;
-		}
-		final List<UseFuelBehavior> behaviors = oContainer.get().getBehaviors().getActiveBehaviors(UseFuelBehavior.class, this);
-		if(behaviors.isEmpty()) {
-			return 0;
-		}
-		return behaviors.get(0).getMaxFuel();
-	}
-
-	//// RANDOM EXPLODER ////
-
-	@Override
-	public int getMinFuse() {
-		final Optional<GolemContainer> oContainer = getContainer();
-		if(oContainer.isEmpty()) {
-			return 0;
-		}
-		final List<ExplodeBehavior> behaviors = oContainer.get().getBehaviors().getActiveBehaviors(ExplodeBehavior.class, this);
-		if(behaviors.isEmpty()) {
-			return 0;
-		}
-		return behaviors.get(0).getMinFuse();
-	}
-
-	@Override
-	public int getFuse() {
-		return fuse;
-	}
-
-	@Override
-	public void setFuse(int fuseIn) {
-		fuse = fuseIn;
-	}
-
-	@Override
-	public void setFuseLit(boolean litIn) {
-		this.fuseLit = true;
-	}
-
-	@Override
-	public boolean isFuseLit() {
-		return this.fuseLit || this.getFuse() < getMinFuse();
-	}
-
-	//// ARROW SHOOTER ////
-
-	@Override
-	public void initArrowInventory() {
+	public void setupInventory() {
 		SimpleContainer simplecontainer = this.inventory;
 		this.inventory = new SimpleContainer(INVENTORY_SIZE);
 		if (simplecontainer != null) {
@@ -835,28 +803,7 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 		}
 
 		this.inventory.addListener(this);
-		this.isInventoryDirty = true;
-	}
-
-	@Override
-	public double getArrowDamage() {
-		// resolve container
-		final Optional<GolemContainer> oContainer = getContainer();
-		if(oContainer.isEmpty()) {
-			return 0;
-		}
-		// resolve behaviors
-		final List<ShootArrowsBehavior> behaviors = oContainer.get().getBehaviors().getActiveBehaviors(ShootArrowsBehavior.class, this);
-		if(behaviors.isEmpty()) {
-			return 0;
-		}
-		// resolve damage from first behavior in the list
-		double damage = behaviors.get(0).getDamage();
-		// multiply damage by 0.5 when baby
-		if(isBaby()) {
-			damage *= 0.5D;
-		}
-		return damage;
+		this.isInventoryChanged = true;
 	}
 
 	@Override
@@ -880,26 +827,6 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 	@Override
 	public SimpleContainer getInventory() {
 		return inventory;
-	}
-
-	@Override
-	public RangedAttackGoal getRangedGoal() {
-		return aiArrowAttack;
-	}
-
-	@Override
-	public MeleeAttackGoal getMeleeGoal() {
-		return aiMeleeAttack;
-	}
-
-	@Override
-	public int getArrowsInInventory() {
-		return getEntityData().get(ARROWS);
-	}
-
-	@Override
-	public void setArrowsInInventory(int count) {
-		getEntityData().set(ARROWS, count);
 	}
 
 	@Override
@@ -927,18 +854,18 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 	@Override
 	public void containerChanged(Container container) {
 		if(container == this.inventory) {
-			this.isInventoryDirty = true;
+			this.isInventoryChanged = true;
 		}
 	}
 
 	@Override
 	public boolean isInventoryChanged() {
-		return this.isInventoryDirty;
+		return this.isInventoryChanged;
 	}
 
 	@Override
 	public void resetInventoryChanged() {
-		this.isInventoryDirty = false;
+		this.isInventoryChanged = false;
 	}
 
 	//// SWIMMING ////

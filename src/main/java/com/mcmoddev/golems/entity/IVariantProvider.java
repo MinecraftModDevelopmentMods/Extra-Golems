@@ -28,14 +28,14 @@ public interface IVariantProvider {
 	/**
 	 * @param tag the CompoundTag to write to
 	 **/
-	default void saveVariant(final CompoundTag tag) {
+	default void writeVariant(final CompoundTag tag) {
 		tag.putByte(KEY_VARIANT, (byte) getVariant());
 	}
 
 	/**
 	 * @param tag the CompoundTag to read from
 	 **/
-	default void loadVariant(final CompoundTag tag) {
+	default void readVariant(final CompoundTag tag) {
 		if(tag.contains(KEY_VARIANT, Tag.TAG_BYTE)) {
 			setVariant(tag.getByte(KEY_VARIANT));
 		}

@@ -4,6 +4,7 @@ import com.mcmoddev.golems.block.GolemHeadBlock;
 import com.mcmoddev.golems.data.GolemContainer;
 import com.mcmoddev.golems.data.behavior.ShootArrowsBehavior;
 import com.mcmoddev.golems.data.behavior.UseFuelBehavior;
+import com.mcmoddev.golems.data.behavior.data.UseFuelBehaviorData;
 import com.mcmoddev.golems.data.golem.Golem;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.entity.IExtraGolem;
@@ -101,7 +102,8 @@ public final class EGEvents {
 			if (event.getEntity() instanceof Mob mob && event.getNewTarget() instanceof IExtraGolem target) {
 				// resolve the golem container
 				final Optional<GolemContainer> oContainer = target.getContainer(mob.level().registryAccess());
-				if(oContainer.isPresent() && oContainer.get().getBehaviors().hasActiveBehavior(UseFuelBehavior.class, target) && !target.hasFuel()) {
+				if(oContainer.isPresent() && oContainer.get().getBehaviors().hasActiveBehavior(UseFuelBehavior.class, target)
+						&& target.getBehaviorData(UseFuelBehaviorData.class).map(data -> !data.hasFuel()).orElse(false)) {
 					event.setCanceled(true);
 					mob.setLastHurtByMob(null);
 				}

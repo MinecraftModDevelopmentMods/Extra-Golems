@@ -107,7 +107,7 @@ public class SetFireBehavior extends Behavior {
 	}
 
 	@Override
-	public void onHurtTarget(IExtraGolem entity, Entity target) {
+	public void onAttack(IExtraGolem entity, Entity target) {
 		if(this.trigger == TriggerType.ATTACK) {
 			setFire(entity.asMob());
 		}

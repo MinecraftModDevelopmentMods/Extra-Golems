@@ -1,26 +1,36 @@
 package com.mcmoddev.golems.entity.goal;
 
-import com.mcmoddev.golems.entity.IFuelConsumer;
+import com.mcmoddev.golems.data.behavior.data.UseFuelBehaviorData;
+import com.mcmoddev.golems.entity.IExtraGolem;
+import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 
-public class LookAtWhenActiveGoal<T extends Mob & IFuelConsumer> extends LookAtPlayerGoal {
+import java.util.Optional;
 
-	protected T entity;
+public class LookAtWhenActiveGoal extends LookAtPlayerGoal {
 
-	public LookAtWhenActiveGoal(T entityIn, Class<? extends LivingEntity> watchTargetClass, float maxDistance) {
-		super(entityIn, watchTargetClass, maxDistance);
+	protected final IExtraGolem entity;
+	protected final Mob mob;
+	protected final MinMaxBounds.Ints variants;
+
+	public LookAtWhenActiveGoal(IExtraGolem entityIn, Class<? extends LivingEntity> watchTargetClass, float maxDistance, MinMaxBounds.Ints variants) {
+		super(entityIn.asMob(), watchTargetClass, maxDistance);
 		this.entity = entityIn;
+		this.mob = entityIn.asMob();
+		this.variants = variants;
 	}
 
 	@Override
 	public boolean canUse() {
-		return entity.hasFuel() && super.canUse();
+		final Optional<UseFuelBehaviorData> oData = this.entity.getBehaviorData(UseFuelBehaviorData.class);
+		return oData.isPresent() && oData.get().hasFuel() && variants.matches(entity.getVariant()) && super.canUse();
 	}
 
 	@Override
 	public boolean canContinueToUse() {
-		return entity.hasFuel() && super.canContinueToUse();
+		final Optional<UseFuelBehaviorData> oData = this.entity.getBehaviorData(UseFuelBehaviorData.class);
+		return oData.isPresent() && oData.get().hasFuel() && variants.matches(entity.getVariant()) && super.canContinueToUse();
 	}
 }

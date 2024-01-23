@@ -2,7 +2,7 @@ package com.mcmoddev.golems.data.behavior;
 
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
-import com.mcmoddev.golems.entity.GolemBase;
+import com.mcmoddev.golems.data.behavior.data.UseFuelBehaviorData;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mcmoddev.golems.entity.goal.InertGoal;
 import com.mcmoddev.golems.entity.goal.LookAtWhenActiveGoal;
@@ -13,10 +13,14 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.animal.AbstractGolem;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -26,6 +30,7 @@ import net.minecraftforge.common.ForgeHooks;
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * This behavior allows an entity to use fuel, accept fuel items,
@@ -38,6 +43,8 @@ public class UseFuelBehavior extends Behavior {
 			.and(Codec.intRange(1, Integer.MAX_VALUE).fieldOf("max_fuel").forGetter(UseFuelBehavior::getMaxFuel))
 			.and(Codec.intRange(1, Integer.MAX_VALUE).fieldOf("burn_time").forGetter(UseFuelBehavior::getBurnTime))
 			.apply(instance, UseFuelBehavior::new));
+
+	protected static final EntityDataAccessor<Integer> FUEL = SynchedEntityData.defineId(AbstractGolem.class, EntityDataSerializers.INT);
 
 	/** The maximum amount of fuel the entity can hold **/
 	protected final int maxFuel;
@@ -68,20 +75,33 @@ public class UseFuelBehavior extends Behavior {
 	//// METHODS ////
 
 	@Override
+	public void onAttachData(IExtraGolem entity) {
+		entity.attachBehaviorData(new UseFuelBehaviorData(entity, FUEL));
+	}
+
+	@Override
+	public void onRegisterSynchedData(IExtraGolem entity) {
+		defineSynchedData(entity.asMob().getEntityData(), FUEL, 0);
+	}
+
+	@Override
 	public void onRegisterGoals(final IExtraGolem entity) {
 		final Mob mob = entity.asMob();
+		// remove look goals
 		removeGoal(mob, LookAtPlayerGoal.class);
 		removeGoal(mob, RandomLookAroundGoal.class);
-		// TODO adjust goals to account for texture variant
-		mob.goalSelector.addGoal(0, new InertGoal<>(entity));
-		mob.goalSelector.addGoal(7, new LookAtWhenActiveGoal<>(entity, Player.class, 6.0F));
-		mob.goalSelector.addGoal(8, new LookRandomlyWhenActiveGoal<>(entity));
+		// add inert goal
+		mob.goalSelector.addGoal(0, new InertGoal(entity, getVariantBounds()));
+		// add custom look goals
+		mob.goalSelector.addGoal(7, new LookAtWhenActiveGoal(entity, Player.class, 6.0F, getVariantBounds()));
+		mob.goalSelector.addGoal(8, new LookRandomlyWhenActiveGoal(entity, getVariantBounds()));
 	}
 
 	@Override
 	public void onTick(IExtraGolem entity) {
-		if(entity.hasFuel() && entity.asMob().tickCount % burnTime == 0) {
-			entity.addFuel(-1);
+		final Optional<UseFuelBehaviorData> oHelper = entity.getBehaviorData(UseFuelBehaviorData.class);
+		if(oHelper.isPresent() && oHelper.get().hasFuel() && entity.asMob().tickCount % oHelper.get().getBurnTime() == 0) {
+			oHelper.get().addFuel(-1);
 		}
 	}
 
@@ -99,16 +119,16 @@ public class UseFuelBehavior extends Behavior {
 
 	//// NBT ////
 
-	private static final String KEY_FUEL = "Fuel";
+	private static final String KEY_FUEL_HELPER = "FuelData";
 
 	@Override
 	public void onWriteData(final IExtraGolem entity, final CompoundTag tag) {
-		tag.putInt(KEY_FUEL, entity.getFuel());
+		entity.getBehaviorData(UseFuelBehaviorData.class).ifPresent(helper -> tag.put(KEY_FUEL_HELPER, helper.serializeNBT()));
 	}
 
 	@Override
 	public void onReadData(final IExtraGolem entity, final CompoundTag tag) {
-		entity.setFuel(tag.getInt(KEY_FUEL));
+		entity.getBehaviorData(UseFuelBehaviorData.class).ifPresent(helper -> helper.deserializeNBT(tag.getCompound(KEY_FUEL_HELPER)));
 	}
 
 	//// HELPER METHODS ////
@@ -123,16 +143,21 @@ public class UseFuelBehavior extends Behavior {
 	 */
 	protected boolean processInteractFuel(final IExtraGolem entity, final Player player, final InteractionHand hand) {
 		// allow player to add fuel to the entity by clicking on them with a fuel item
+		final Optional<UseFuelBehaviorData> oHelper = entity.getBehaviorData(UseFuelBehaviorData.class);
+		if(oHelper.isEmpty()) {
+			return false;
+		}
+		final UseFuelBehaviorData helper = oHelper.get();
 		ItemStack stack = player.getItemInHand(hand);
 		int burnTime = ForgeHooks.getBurnTime(stack, RecipeType.SMELTING) * (player.isCrouching() ? stack.getCount() : 1);
-		if (burnTime > 0 && (entity.getFuel() + burnTime) <= getMaxFuel()) {
+		if (burnTime > 0 && (helper.getFuel() + burnTime) <= getMaxFuel()) {
 			if (player.isCrouching()) {
 				// take entire ItemStack
-				entity.addFuel(burnTime * stack.getCount());
+				helper.addFuel(burnTime * stack.getCount());
 				stack = stack.getCraftingRemainingItem();
 			} else {
 				// take one item from ItemStack
-				entity.addFuel(burnTime);
+				helper.addFuel(burnTime);
 				if (stack.getCount() > 1) {
 					stack.shrink(1);
 				} else {
@@ -147,7 +172,7 @@ public class UseFuelBehavior extends Behavior {
 
 		// allow player to remove burn time by using a water bucket
 		if (stack.getItem() == Items.WATER_BUCKET) {
-			entity.setFuel(0);
+			helper.setFuel(0);
 			player.setItemInHand(hand, stack.getCraftingRemainingItem());
 			// TODO spawn particles, play extinguish sound
 			return true;
