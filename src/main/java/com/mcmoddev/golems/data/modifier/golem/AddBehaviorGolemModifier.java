@@ -64,7 +64,7 @@ public class AddBehaviorGolemModifier extends GolemModifier {
 			}
 			// resolve holders
 			if(getBehaviorList() != null) {
-				b.addAll(getBehaviorList().get().getBehaviors());
+				b.addAllHolders(getBehaviorList().get().getBehaviors());
 			}
 			// add elements
 			b.addAll(this.getBehaviors());

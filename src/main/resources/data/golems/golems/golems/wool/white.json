@@ -1,0 +1,6 @@
+{
+  "parent": "golems:wool/generic",
+  "hidden": false,
+  "blocks": "minecraft:white_wool",
+  "model": "golems:wool/white"
+}

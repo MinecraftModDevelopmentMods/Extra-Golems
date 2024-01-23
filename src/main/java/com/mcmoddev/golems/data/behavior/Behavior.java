@@ -10,10 +10,12 @@ import com.mojang.datafixers.Products;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.RegistryFileCodec;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
@@ -36,6 +38,7 @@ public abstract class Behavior implements IVariantPredicate {
 
 	public static final Codec<Behavior> DIRECT_CODEC = ExtraCodecs.lazyInitializedCodec(() -> EGRegistry.BEHAVIOR_SERIALIZERS_SUPPLIER.get().getCodec())
 			.dispatch(Behavior::getCodec, Function.identity());
+	public static final Codec<Holder<Behavior>> HOLDER_CODEC = RegistryFileCodec.create(EGRegistry.Keys.BEHAVIORS, DIRECT_CODEC, true);
 
 	private final MinMaxBounds.Ints variant;
 	private final Supplier<List<Component>> descriptions;

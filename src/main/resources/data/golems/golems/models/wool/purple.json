@@ -1,0 +1,19 @@
+{
+  "layers": [
+    {
+	  "texture": "minecraft:white_wool",
+	  "template": "golems:template"
+	},
+	{
+	  "texture": "minecraft:purple_wool",
+	  "template": "golems:wool/outfit_template"
+	},
+	{
+	  "texture": "#golems:wool/outfit_buttons",
+	  "render_type": "translucent"
+	},
+	{
+	  "texture": "#golems:eyes/eyes"
+	}
+  ]
+}

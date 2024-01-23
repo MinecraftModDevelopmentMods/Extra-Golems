@@ -35,6 +35,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
@@ -42,19 +43,23 @@ import java.util.function.Predicate;
  **/
 @Immutable
 public class SummonEntityBehavior extends Behavior {
-
-	public static final Codec<SummonEntityBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
-			.and(ForgeRegistries.ENTITY_TYPES.getCodec().fieldOf("entity").forGetter(SummonEntityBehavior::getEntity))
-			.and(Codec.STRING.optionalFieldOf("nbt", "{}").forGetter(SummonEntityBehavior::getNbt))
-			.and(Codec.intRange(0, 255).optionalFieldOf("amount", 1).forGetter(SummonEntityBehavior::getAmount))
-			.and(TargetType.SELF_OR_ENEMY_CODEC.optionalFieldOf("position", TargetType.SELF).forGetter(SummonEntityBehavior::getPosition))
-			.and(TriggerType.CODEC.fieldOf("trigger").forGetter(SummonEntityBehavior::getTrigger))
-			.and(EGCodecUtils.listOrElementCodec(WorldPredicate.CODEC).optionalFieldOf("predicate", ImmutableList.of(WorldPredicate.ALWAYS)).forGetter(SummonEntityBehavior::getPredicates))
-			.and(Codec.doubleRange(0.0D, 1.0D).optionalFieldOf("chance", 1.0D).forGetter(SummonEntityBehavior::getChance))
-			.apply(instance, SummonEntityBehavior::new));
+	
+	public static final Codec<SummonEntityBehavior> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+			EGCodecUtils.MIN_MAX_INTS_CODEC.optionalFieldOf("variant", MinMaxBounds.Ints.ANY).forGetter(Behavior::getVariantBounds),
+			ForgeRegistries.ENTITY_TYPES.getCodec().fieldOf("entity").forGetter(SummonEntityBehavior::getEntity),
+			Codec.STRING.optionalFieldOf("display_name").forGetter(o -> Optional.ofNullable(o.displayNameKey)),
+			Codec.STRING.optionalFieldOf("nbt", "{}").forGetter(SummonEntityBehavior::getNbt),
+			Codec.intRange(0, 255).optionalFieldOf("amount", 1).forGetter(SummonEntityBehavior::getAmount),
+			TargetType.SELF_OR_ENEMY_CODEC.optionalFieldOf("position", TargetType.SELF).forGetter(SummonEntityBehavior::getPosition),
+			TriggerType.CODEC.fieldOf("trigger").forGetter(SummonEntityBehavior::getTrigger),
+			EGCodecUtils.listOrElementCodec(WorldPredicate.CODEC).optionalFieldOf("predicate", ImmutableList.of(WorldPredicate.ALWAYS)).forGetter(SummonEntityBehavior::getPredicates),
+			Codec.doubleRange(0.0D, 1.0D).optionalFieldOf("chance", 1.0D).forGetter(SummonEntityBehavior::getChance)
+	).apply(instance, SummonEntityBehavior::new));
 
 	/** The entity ID of an entity to spawn **/
 	private final EntityType<?> entity;
+	/** The translation key for the display name of the entity **/
+	private final @Nullable String displayNameKey;
 	/** The entity NBT **/
 	private final String nbt;
 	/** The entity NBT as a compound tag **/
@@ -72,9 +77,10 @@ public class SummonEntityBehavior extends Behavior {
 	/** The percent chance [0,1] to apply **/
 	private final double chance;
 
-	public SummonEntityBehavior(MinMaxBounds.Ints variant, EntityType<?> entity, String nbt, int amount, TargetType position, TriggerType trigger, List<WorldPredicate> predicates, double chance) {
+	public SummonEntityBehavior(MinMaxBounds.Ints variant, EntityType<?> entity, Optional<String> displayNameKey, String nbt, int amount, TargetType position, TriggerType trigger, List<WorldPredicate> predicates, double chance) {
 		super(variant);
 		this.entity = entity;
+		this.displayNameKey = displayNameKey.orElse(null);
 		this.nbt = nbt;
 		this.amount = amount;
 		this.position = position;
@@ -96,6 +102,11 @@ public class SummonEntityBehavior extends Behavior {
 
 	public EntityType<?> getEntity() {
 		return entity;
+	}
+
+	@Nullable
+	public String getDisplayNameKey() {
+		return displayNameKey;
 	}
 
 	public String getNbt() {
@@ -164,6 +175,8 @@ public class SummonEntityBehavior extends Behavior {
 	@Override
 	public List<Component> createDescriptions() {
 		final Component description = Component.empty(); // TODO description
+		final String entityKey = displayNameKey != null ? displayNameKey : entity.getDescriptionId();
+		final Component entityName = Component.translatable(entityKey);
 		return ImmutableList.of(description);
 	}
 

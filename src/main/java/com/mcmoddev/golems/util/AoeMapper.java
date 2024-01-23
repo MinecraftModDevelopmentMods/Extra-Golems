@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 
 /**
  * Used by {@link com.mcmoddev.golems.data.behavior.AoeBehavior}
- * and {@link com.mcmoddev.golems.event.GolemModifyBlocksEvent}
+ * and {@link GolemModifyBlocksEvent}
  * to replace block states in a large area
  */
 @FunctionalInterface

@@ -127,6 +127,7 @@ public final class EGRegistry {
 	private static void onNewDatapackRegistry(final DataPackRegistryEvent.NewRegistry event) {
 		event.dataPackRegistry(Keys.GOLEMS, Golem.CODEC, Golem.CODEC);
 		event.dataPackRegistry(Keys.MODELS, LayerList.CODEC, LayerList.CODEC);
+		event.dataPackRegistry(Keys.BEHAVIORS, Behavior.DIRECT_CODEC, Behavior.DIRECT_CODEC);
 		event.dataPackRegistry(Keys.BEHAVIOR_LISTS, BehaviorList.CODEC, BehaviorList.CODEC);
 		event.dataPackRegistry(Keys.GOLEM_MODIFIER_LISTS, GolemModifierList.CODEC, GolemModifierList.CODEC);
 	}

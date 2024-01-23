@@ -1,0 +1,10 @@
+{
+  "type": "golems:summon",
+  "trigger": "hurt",
+  "target": "self",
+  "summon_pos": "self",
+  "chance": 0.166,
+  "display_name": "item.minecraft.amethyst_shard",
+  "entity": "minecraft:item",
+  "nbt": "{Item:{id:\"minecraft:amethyst_shard\",Count:1}}"
+}

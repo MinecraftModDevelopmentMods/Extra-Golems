@@ -2,7 +2,7 @@ package com.mcmoddev.golems.data.behavior;
 
 import com.mcmoddev.golems.data.behavior.util.AoeShape;
 import com.mcmoddev.golems.entity.IExtraGolem;
-import com.mcmoddev.golems.event.GolemModifyBlocksEvent;
+import com.mcmoddev.golems.util.GolemModifyBlocksEvent;
 import com.mcmoddev.golems.util.AoeMapper;
 import com.mojang.datafixers.Products;
 import com.mojang.serialization.Codec;

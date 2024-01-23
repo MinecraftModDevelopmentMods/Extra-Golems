@@ -1,0 +1,31 @@
+{
+  "attributes": {
+    "health": 30.0,
+    "attack": 7.0,
+    "speed": 0.3,
+	"knockback_resistance": 0.2,
+	"swim_ability": "float",
+	"sound": "minecraft:grass"
+  },
+  "group": "golems:mushroom",
+  "repair_items": {
+	"minecraft:mushroom_stem": 0.5,
+	"minecraft:brown_mushroom_block": 0.5,
+    "minecraft:red_mushroom_block": 0.5,
+	"minecraft:brown_mushroom": 0.15,
+	"minecraft:red_mushroom": 0.15
+  },
+  "model": "golems:mushroom/red",
+  "brain": {
+	"behavior": [
+	  "golems:regen_at_night",
+	  {
+		"type": "golems:place_block",
+		"radius": 1,
+		"chance": 0.009,
+		"display_name": "block.minecraft.red_mushroom",
+		"block": "minecraft:red_mushroom"
+	  }
+	]
+  }
+}

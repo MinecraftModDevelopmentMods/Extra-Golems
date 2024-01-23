@@ -1,0 +1,22 @@
+{
+  "attributes": {
+    "health": 112.0,
+    "attack": 11.0,
+	"armor": 3.0,
+	"knockback_resistance": 1.0,
+	"immune": [
+	  "minecraft:explosion",
+	  "minecraft:player_explosion",
+	  "minecraft:on_fire",
+	  "minecraft:in_fire"
+	],
+	"sound": "minecraft:ancient_debris"
+  },
+  "blocks": "minecraft:ancient_debris",
+  "repair_items": {
+    "minecraft:ancient_debris": 0.5,
+	"minecraft:netherite_scrap": 0.5
+  },
+  "model": "golems:ancient_debris",
+  "brain": "golems:empty"
+}

@@ -1,17 +1,17 @@
 {
   "layers": [
 	{
-	  "texture": "#minecraft:clay",
+	  "texture": "minecraft:clay",
 	  "template": "golems:template",
 	  "use_biome_color": false,
 	  "emissive": false,
 	  "render_type": "cutout"
 	},
 	{
-	  "texture": "#golems:layer/eyes/eyes"
+	  "texture": "#golems:eyes/eyes"
 	},
 	{
-	  "texture": "#golems:layer/vines",
+	  "texture": "#golems:vines/vines",
 	  "color": "83A05A"
 	}
   ]

@@ -57,7 +57,7 @@ public class GolemContainer {
 				.map(Map.Entry::getValue)
 				.forEach(list -> modifiers.computeIfAbsent(list.getPriority(), p -> new ArrayList<>()).add(list));
 		// initialize builders
-		final Golem.Builder builder = Golem.Builder.from(wrapped);
+		final Golem.Builder builder = Golem.Builder.from(registryAccess, wrapped);
 		// add default behaviors
 		builder.behaviors(b -> b.add(WearBannerBehavior.ANY));
 		// apply each modifier in order of priority
@@ -125,7 +125,7 @@ public class GolemContainer {
 	 */
 	public boolean matches(final Block body, final Block legs, final Block arm1, final Block arm2) {
 		final Collection<Block> blocks = golem.getBlocks().get();
-		return blocks.contains(body) && blocks.contains(legs) && blocks.contains(arm1) && blocks.contains(arm2);
+		return !blocks.isEmpty() && blocks.contains(body) && blocks.contains(legs) && blocks.contains(arm1) && blocks.contains(arm2);
 	}
 
 	//// REGISTRY ////

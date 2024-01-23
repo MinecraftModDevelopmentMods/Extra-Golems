@@ -1,0 +1,18 @@
+{
+  "attributes": {
+    "health": 999.0,
+    "attack": 32.0,
+    "knockback_resistance": 1.0,
+    "armor": 30.0,
+	"immune": [
+	  "minecraft:explosion",
+	  "minecraft:player_explosion",
+	  "minecraft:on_fire",
+	  "minecraft:in_fire"
+	],
+    "invulnerable": true
+  },
+  "hidden": true,
+  "model": "golems:bedrock",
+  "brain": "golems:empty"
+}

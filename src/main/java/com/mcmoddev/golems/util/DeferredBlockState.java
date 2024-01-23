@@ -7,10 +7,9 @@
 package com.mcmoddev.golems.util;
 
 import com.google.common.collect.ImmutableMap;
+import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -19,6 +18,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -26,15 +26,23 @@ import java.util.function.Supplier;
  */
 public class DeferredBlockState implements Supplier<BlockState> {
 
-	public static final Codec<DeferredBlockState> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+	public static final Codec<DeferredBlockState> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			ResourceLocation.CODEC.fieldOf("block").forGetter(DeferredBlockState::getBlock),
 			Codec.unboundedMap(Codec.STRING, EGCodecUtils.AS_STRING_CODEC).optionalFieldOf("properties", ImmutableMap.of()).forGetter(DeferredBlockState::getProperties)
 	).apply(instance, DeferredBlockState::new));
+
+	public static final Codec<DeferredBlockState> CODEC = Codec.either(ResourceLocation.CODEC, DIRECT_CODEC)
+			.xmap(either -> either.map(DeferredBlockState::new, Function.identity()),
+					o -> o.getProperties().isEmpty() ? Either.left(o.getBlock()) : Either.right(o));
 
 	private final ResourceLocation block;
 	private final Map<String, String> properties;
 
 	private BlockState blockState;
+
+	public DeferredBlockState(ResourceLocation block) {
+		this(block, ImmutableMap.of());
+	}
 
 	public DeferredBlockState(ResourceLocation block, Map<String, String> properties) {
 		this.block = block;

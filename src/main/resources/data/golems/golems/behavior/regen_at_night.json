@@ -1,0 +1,17 @@
+{
+  "type": "golems:effect",
+  "trigger": "tick",
+  "predicate": [
+	"night"
+  ],
+  "chance": 0.0025,
+  "effect": {
+	"target": "self",
+	"effects": [
+	  {
+		"potion": "minecraft:regeneration",
+		"duration": 300
+	  }
+	]
+  }
+}

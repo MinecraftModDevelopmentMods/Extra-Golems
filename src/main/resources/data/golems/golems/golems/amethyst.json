@@ -1,0 +1,22 @@
+{
+  "attributes": {
+	"health": 38.0,
+	"attack": 12.5,
+	"weak": [
+	  "minecraft:fall"
+	],
+	"sound": "minecraft:amethyst"
+  },
+  "hidden": false,
+  "blocks": "#forge:storage_blocks/amethyst",
+  "repair_items": {
+	"#forge:storage_blocks/amethyst": 0.5,
+	"#forge:gems/amethyst": 0.15
+  },
+  "model": "golems:amethyst",
+  "brain": {
+	"behaviors": [
+	  "golems:summon_amethyst_shard_on_hurt"
+	]
+  }
+}

@@ -8,6 +8,8 @@ import com.mcmoddev.golems.entity.IVariantProvider;
 import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.RegistryFileCodec;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
@@ -22,17 +24,16 @@ import java.util.Spliterator;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-@SuppressWarnings("rawtypes")
 @Immutable
 public class BehaviorList implements Iterable<Behavior> {
 
-	public static final Codec<BehaviorList> CODEC = EGCodecUtils.listOrElementCodec(Behavior.DIRECT_CODEC)
-			.xmap(BehaviorList::new, BehaviorList::getBehaviors);
+	public static final Codec<BehaviorList> CODEC = EGCodecUtils.listOrElementCodec(Behavior.HOLDER_CODEC)
+			.xmap(BehaviorList::new, BehaviorList::getBehaviors).fieldOf("behaviors").codec();
 	public static final Codec<Holder<BehaviorList>> HOLDER_CODEC = RegistryFileCodec.create(EGRegistry.Keys.BEHAVIOR_LISTS, CODEC, true);
 
-	private final List<Behavior> behaviors;
+	private final List<Holder<Behavior>> behaviors;
 
-	public BehaviorList(List<Behavior> behaviors) {
+	public BehaviorList(List<Holder<Behavior>> behaviors) {
 		this.behaviors = behaviors;
 	}
 
@@ -40,23 +41,23 @@ public class BehaviorList implements Iterable<Behavior> {
 
 	@Override
 	public void forEach(Consumer<? super Behavior> action) {
-		behaviors.forEach(action);
+		behaviors.stream().map(Holder::get).forEach(action);
 	}
 
 	@Override
 	public Spliterator<Behavior> spliterator() {
-		return behaviors.spliterator();
+		return behaviors.stream().map(Holder::get).spliterator();
 	}
 
 	@NotNull
 	@Override
 	public Iterator<Behavior> iterator() {
-		return behaviors.iterator();
+		return behaviors.stream().map(Holder::get).iterator();
 	}
 
 	//// GETTERS ////
 
-	public List<Behavior> getBehaviors() {
+	public List<Holder<Behavior>> getBehaviors() {
 		return behaviors;
 	}
 
@@ -68,11 +69,11 @@ public class BehaviorList implements Iterable<Behavior> {
 	 */
 	public <T extends Behavior> List<T> getActiveBehaviors(final Class<T> clazz, final IExtraGolem entity) {
 		final ImmutableList.Builder<T> builder = ImmutableList.builder();
-		for(Behavior b : behaviors) {
+		this.iterator().forEachRemaining(b -> {
 			if(b.getClass().isAssignableFrom(clazz) && b.isVariantInBounds(entity)) {
 				builder.add((T) b);
 			}
-		}
+		});
 		return builder.build();
 	}
 
@@ -84,11 +85,11 @@ public class BehaviorList implements Iterable<Behavior> {
 	 */
 	public <T extends Behavior> List<T> getBehaviors(final Class<T> clazz) {
 		final ImmutableList.Builder<T> builder = ImmutableList.builder();
-		for(Behavior b : behaviors) {
+		this.iterator().forEachRemaining(b -> {
 			if(b.getClass().isAssignableFrom(clazz)) {
 				builder.add((T) b);
 			}
-		}
+		});
 		return builder.build();
 	}
 
@@ -98,8 +99,8 @@ public class BehaviorList implements Iterable<Behavior> {
 	 * @see #hasBehavior(Class)
 	 */
 	public boolean hasActiveBehavior(final Class<? extends Behavior> clazz, final IExtraGolem entity) {
-		for(Behavior b : behaviors) {
-			if(b.getClass().isAssignableFrom(clazz) && b.isVariantInBounds(entity)) {
+		for(Holder<Behavior> b : behaviors) {
+			if(b.get().getClass().isAssignableFrom(clazz) && b.get().isVariantInBounds(entity)) {
 				return true;
 			}
 		}
@@ -112,8 +113,8 @@ public class BehaviorList implements Iterable<Behavior> {
 	 * @see #hasActiveBehavior(Class, IExtraGolem)
 	 */
 	public boolean hasBehavior(final Class<? extends Behavior> clazz) {
-		for(Behavior b : behaviors) {
-			if(b.getClass().isAssignableFrom(clazz)) {
+		for(Holder<Behavior> b : behaviors) {
+			if(b.get().getClass().isAssignableFrom(clazz)) {
 				return true;
 			}
 		}
@@ -135,21 +136,24 @@ public class BehaviorList implements Iterable<Behavior> {
 		return Objects.hash(behaviors);
 	}
 
-	@SuppressWarnings("rawtypes")
+	//// CLASSES ////
+
 	public static class Builder {
 
-		private List<Behavior> behaviors;
+		private final List<Holder<Behavior>> behaviors;
+		private final Registry<Behavior> registry;
 
-		public Builder() {
-			this.behaviors = new ArrayList<>();
+		public Builder(final RegistryAccess registryAccess) {
+			this(registryAccess, ImmutableList.of());
 		}
 
-		public Builder(List<Behavior> behaviors) {
+		public Builder(final RegistryAccess registryAccess, BehaviorList behaviorList) {
+			this(registryAccess, behaviorList.getBehaviors());
+		}
+
+		public Builder(final RegistryAccess registryAccess, List<Holder<Behavior>> behaviors) {
 			this.behaviors = new ArrayList<>(behaviors);
-		}
-
-		public Builder(BehaviorList behaviorList) {
-			this(behaviorList.getBehaviors());
+			this.registry = registryAccess.registryOrThrow(EGRegistry.Keys.BEHAVIORS);
 		}
 
 		/**
@@ -157,7 +161,7 @@ public class BehaviorList implements Iterable<Behavior> {
 		 * @return the builder instance
 		 */
 		public Builder add(final Behavior behavior) {
-			this.behaviors.add(behavior);
+			this.behaviors.add(registry.wrapAsHolder(behavior));
 			return this;
 		}
 
@@ -166,6 +170,17 @@ public class BehaviorList implements Iterable<Behavior> {
 		 * @return the builder instance
 		 */
 		public Builder addAll(final Collection<Behavior> collection) {
+			for(Behavior b : collection) {
+				this.behaviors.add(registry.wrapAsHolder(b));
+			}
+			return this;
+		}
+
+		/**
+		 * @param collection the behavior holders to add
+		 * @return the builder instance
+		 */
+		public Builder addAllHolders(final Collection<Holder<Behavior>> collection) {
 			this.behaviors.addAll(collection);
 			return this;
 		}
@@ -175,7 +190,7 @@ public class BehaviorList implements Iterable<Behavior> {
 		 * @return the builder instance
 		 */
 		public Builder remove(final Predicate<Behavior> predicate) {
-			this.behaviors.removeIf(predicate);
+			this.behaviors.removeIf(b -> predicate.test(b.get()));
 			return this;
 		}
 

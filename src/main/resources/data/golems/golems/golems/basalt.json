@@ -1,0 +1,18 @@
+{
+  "attributes": {
+    "health": 58.0,
+    "attack": 10.8,
+    "knockback_resistance": 0.8,
+	"immune": [
+	  "minecraft:on_fire",
+	  "minecraft:in_fire"
+	]
+  },
+  "blocks": "minecraft:polished_basalt",
+  "repair_items": {
+    "minecraft:polished_basalt": 0.5,
+	"minecraft:basalt": 0.25
+  },
+  "model": "golems:basalt",
+  "brain": "golems:empty"
+}

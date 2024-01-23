@@ -1,0 +1,20 @@
+{
+  "layers": [
+	{
+	  "texture": "minecraft:ancient_debris_side",
+	  "template": "golems:template"
+	},
+	{
+	  "texture": "minecraft:ancient_debris_side",
+	  "template": "golems:layer/hands_template"
+	},
+	{
+	  "texture": "#golems:eyes/eyes"
+	},
+	{
+	  "texture": "#golems:vines/vines",
+	  "color": "B02525",
+	  "emissive": true
+	}
+  ]
+}

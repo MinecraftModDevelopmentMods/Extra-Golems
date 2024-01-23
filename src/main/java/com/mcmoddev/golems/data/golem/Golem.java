@@ -7,6 +7,7 @@ import com.mcmoddev.golems.data.model.LayerList;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.RegistryFileCodec;
@@ -29,7 +30,7 @@ public class Golem {
 			Codec.BOOL.optionalFieldOf("hidden", false).forGetter(Golem::isHidden),
 			ParticleTypes.CODEC.optionalFieldOf("particle").forGetter(o -> Optional.ofNullable(o.particle)),
 			LayerList.HOLDER_CODEC.optionalFieldOf("model", Holder.direct(new LayerList(ImmutableList.of()))).forGetter(Golem::getLayers),
-			BehaviorList.HOLDER_CODEC.optionalFieldOf("behavior", Holder.direct(new BehaviorList(ImmutableList.of()))).forGetter(Golem::getBehaviors),
+			BehaviorList.HOLDER_CODEC.optionalFieldOf("brain", Holder.direct(new BehaviorList(ImmutableList.of()))).forGetter(Golem::getBehaviors),
 			ResourceLocation.CODEC.optionalFieldOf("group").forGetter(o -> Optional.ofNullable(o.group))
 	).apply(instance, Golem::new));
 	public static final Codec<Holder<Golem>> HOLDER_CODEC = RegistryFileCodec.create(EGRegistry.Keys.GOLEMS, CODEC, true);
@@ -51,6 +52,9 @@ public class Golem {
 				 Holder<LayerList> layers, Holder<BehaviorList> behaviors, Optional<ResourceLocation> group) {
 		this.parent = parent.orElse(null);
 		this.attributes = attributes.orElse(null);
+		if(parent.isEmpty() && attributes.isEmpty()) {
+			throw new IllegalArgumentException("Failed to parse Golem because both parent and attributes are not defined!");
+		}
 		this.blocks = blocks;
 		this.repairItems = repairItems;
 		this.variants = variants;
@@ -123,16 +127,16 @@ public class Golem {
 
 		//// CONSTRUCTOR ////
 
-		private Builder() {
+		private Builder(final RegistryAccess registryAccess) {
 			this.blocks = new BuildingBlocks.Builder();
 			this.attributes = new Attributes.Builder();
 			this.repairItems = new RepairItems.Builder();
 			this.layers = new LayerList.Builder();
-			this.behaviors = new BehaviorList.Builder();
+			this.behaviors = new BehaviorList.Builder(registryAccess);
 		}
 
-		public static Builder from(final Golem golem) {
-			final Builder builder = new Golem.Builder();
+		public static Builder from(final RegistryAccess registryAccess, final Golem golem) {
+			final Builder builder = new Golem.Builder(registryAccess);
 			final boolean hasParent = golem.getParent() != null;
 			final Golem parent = hasParent ? golem.getParent().get() : null;
 			// apply settings from parent
@@ -145,7 +149,7 @@ public class Golem {
 						.hidden(parent.isHidden())
 						.particle(parent.getParticle())
 						.layers(b -> b.addAll(parent.getLayers().get().getLayers()))
-						.behaviors(b -> b.addAll(parent.getBehaviors().get().getBehaviors()))
+						.behaviors(b -> b.addAllHolders(parent.getBehaviors().get().getBehaviors()))
 						.group(parent.getGroup());
 			}
 			// attributes (merges parent)
@@ -189,7 +193,7 @@ public class Golem {
 			if(!hasParent || !golem.getBehaviors().get().equals(parent.getBehaviors().get())) {
 				builder.behaviors(b -> {
 					b.clear();
-					b.addAll(golem.getBehaviors().get().getBehaviors());
+					b.addAllHolders(golem.getBehaviors().get().getBehaviors());
 				});
 			}
 			// group (replaces parent)

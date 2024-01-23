@@ -34,7 +34,7 @@ public class Attributes {
 	 **/
 	public static final Attributes EMPTY = new Attributes(Optional.of(1024.0D), Optional.empty(), Optional.empty(),
 			Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
-			Optional.empty(), Optional.empty(), Optional.empty(),
+			Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
 			Optional.empty(), Optional.empty());
 
 	public static final Codec<Attributes> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -48,6 +48,7 @@ public class Attributes {
 			DeferredHolderSet.codec(Registries.DAMAGE_TYPE).optionalFieldOf("immune").forGetter(o -> Optional.ofNullable(o.damageImmune)),
 			DeferredHolderSet.codec(Registries.DAMAGE_TYPE).optionalFieldOf("weak").forGetter(o -> Optional.ofNullable(o.damageWeak)),
 			Codec.BOOL.optionalFieldOf("invulnerable").forGetter(o -> Optional.ofNullable(o.invulnerable)),
+			Codec.BOOL.optionalFieldOf("occludes").forGetter(o -> Optional.ofNullable(o.occludes)),
 			SwimAbility.CODEC.optionalFieldOf("swim_ability").forGetter(o -> Optional.ofNullable(o.swimAbility)),
 			SoundTypeRegistry.CODEC.optionalFieldOf("sound").forGetter(o -> Optional.ofNullable(o.sound))
 	).apply(instance, Attributes::new));
@@ -63,6 +64,7 @@ public class Attributes {
 	private final @Nullable DeferredHolderSet<DamageType> damageImmune;
 	private final @Nullable DeferredHolderSet<DamageType> damageWeak;
 	private final @Nullable Boolean invulnerable;
+	private final @Nullable Boolean occludes;
 
 	private final @Nullable SwimAbility swimAbility;
 	private final @Nullable SoundType sound;
@@ -70,7 +72,7 @@ public class Attributes {
 	private Attributes(Optional<Double> health, Optional<Double> attack, Optional<Double> speed, Optional<Double> knockbackResistance, Optional<Double> armor,
 					   Optional<Double> attackKnockback, Optional<DeferredHolderSet<MobEffect>> potionIgnore,
 					   Optional<DeferredHolderSet<DamageType>> damageImmune, Optional<DeferredHolderSet<DamageType>> damageWeak,
-					   Optional<Boolean> invulnerable, Optional<SwimAbility> swimAbility, Optional<SoundType> sound) {
+					   Optional<Boolean> invulnerable, Optional<Boolean> occludes, Optional<SwimAbility> swimAbility, Optional<SoundType> sound) {
 		this.health = health.orElse(null);
 		this.attack = attack.orElse(null);
 		this.speed = speed.orElse(null);
@@ -81,6 +83,7 @@ public class Attributes {
 		this.damageImmune = damageImmune.orElse(null);
 		this.damageWeak = damageWeak.orElse(null);
 		this.invulnerable = invulnerable.orElse(null);
+		this.occludes = occludes.orElse(null);
 		this.swimAbility = swimAbility.orElse(null);
 		this.sound = sound.orElse(null);
 	}
@@ -209,8 +212,15 @@ public class Attributes {
 		return damageWeak != null ? damageWeak : DeferredHolderSet.empty();
 	}
 
+	/** @return {@code true} if the entity is invulnerable **/
 	public boolean isInvulnerable() {
-		return invulnerable != null ? invulnerable : false;
+		return invulnerable != null && invulnerable;
+	}
+
+	/** @return {@code true} if the entity occludes vibrations **/
+	public boolean occludes() {
+		// TODO use this property in code
+		return occludes != null && occludes;
 	}
 
 	/**
@@ -260,12 +270,13 @@ public class Attributes {
 				&& Objects.equals(knockbackResistance, other.knockbackResistance) && Objects.equals(armor, other.armor)
 				&& Objects.equals(attackKnockback, other.attackKnockback) && Objects.equals(potionIgnore, other.potionIgnore)
 				&& Objects.equals(damageImmune, other.damageImmune) && Objects.equals(damageWeak, other.damageWeak)
-				&& Objects.equals(invulnerable, other.invulnerable) && swimAbility == other.swimAbility && Objects.equals(sound, other.sound);
+				&& Objects.equals(invulnerable, other.invulnerable) && Objects.equals(occludes, other.occludes)
+				&& swimAbility == other.swimAbility && Objects.equals(sound, other.sound);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(health, attack, speed, knockbackResistance, armor, attackKnockback, potionIgnore, damageImmune, damageWeak, invulnerable, swimAbility, sound);
+		return Objects.hash(health, attack, speed, knockbackResistance, armor, attackKnockback, potionIgnore, damageImmune, damageWeak, invulnerable, occludes, swimAbility, sound);
 	}
 
 
@@ -283,6 +294,7 @@ public class Attributes {
 		private Optional<DeferredHolderSet<DamageType>> immune;
 		private Optional<DeferredHolderSet<DamageType>> weak;
 		private Optional<Boolean> invulnerable;
+		private Optional<Boolean> occludes;
 
 		private Optional<SwimAbility> swimAbility;
 		private Optional<SoundType> sound;
@@ -299,6 +311,7 @@ public class Attributes {
 			this.immune = Optional.empty();
 			this.weak = Optional.empty();
 			this.invulnerable = Optional.empty();
+			this.occludes = Optional.empty();
 
 			this.swimAbility = Optional.empty();
 			this.sound = Optional.empty();
@@ -322,6 +335,7 @@ public class Attributes {
 			if(attributes.damageImmune != null) this.immune(attributes.damageImmune);
 			if(attributes.damageWeak != null) this.weak(attributes.damageWeak);
 			if(attributes.invulnerable != null) this.invulnerable(attributes.invulnerable);
+			if(attributes.occludes != null) this.occludes(attributes.occludes);
 			if(attributes.swimAbility != null) this.swimAbility(attributes.swimAbility);
 			if(attributes.sound != null) this.sound(attributes.sound);
 			return this;
@@ -418,6 +432,15 @@ public class Attributes {
 		}
 
 		/**
+		 * @param occludes whether the entity occludes sounds
+		 * @return the builder instance
+		 */
+		public Builder occludes(final boolean occludes) {
+			this.occludes = Optional.of(occludes);
+			return this;
+		}
+
+		/**
 		 * @param swimAbility the swim ability enum
 		 * @return the builder instance
 		 */
@@ -439,7 +462,7 @@ public class Attributes {
 		 * @return a new {@link Attributes} instance
 		 */
 		public Attributes build() {
-			return new Attributes(health, attack, speed, knockbackResist, armor, attackKnockback, ignore, immune, weak, invulnerable, swimAbility, sound);
+			return new Attributes(health, attack, speed, knockbackResist, armor, attackKnockback, ignore, immune, weak, invulnerable, occludes, swimAbility, sound);
 		}
 	}
 }
