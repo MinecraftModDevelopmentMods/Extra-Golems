@@ -5,6 +5,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
+import javax.annotation.Nullable;
+
 public class DrawPageModule extends DrawModule {
 
 	protected final Font font;
@@ -16,6 +18,7 @@ public class DrawPageModule extends DrawModule {
 	// unused
 	protected int maxPages;
 	protected Component title;
+	protected @Nullable Component subtitle;
 	protected Component body;
 
 	public DrawPageModule(Font font, int width, int height, int margin) {
@@ -44,6 +47,11 @@ public class DrawPageModule extends DrawModule {
 		this.title = title;
 		return this;
 	}
+
+	public DrawPageModule withSubtitle(final @Nullable Component subtitle) {
+		this.subtitle = subtitle;
+		return this;
+	}
 	
 	public DrawPageModule withBody(final Component body) {
 		this.body = body;
@@ -68,20 +76,24 @@ public class DrawPageModule extends DrawModule {
 	protected void drawBasicPage(GuiGraphics graphics, Component title, Component body) {
 		final int maxWidth = (width / 2) - (margin * 2);
 
-		int titleX = x + margin + 4;
-		int titleY = y + margin;
+		// TODO clean up to properly display title and subtitle
+		int posX = x + margin + 4;
+		int posY = y + margin;
 		int sWidth = this.font.width(title.getString());
 		if (sWidth > maxWidth) {
 			// draw title wrapped
-			graphics.drawWordWrap(font, title, titleX, titleY, maxWidth, 0);
+			graphics.drawWordWrap(font, title, posX, posY, maxWidth, 0);
 		} else {
 			// draw title centered
-			// TODO: use draw centered method
-			graphics.drawString(font, title.getVisualOrderText(), titleX + ((maxWidth - sWidth) / 2.0F), (float) titleY, 0, false);
+			graphics.drawString(font, title, posX + ((maxWidth - sWidth) / 2), posY, 0, false);
 		}
-
-		int bodyX = titleX;
-		int bodyY = titleY + margin * 2;
-		graphics.drawWordWrap(font, body, bodyX, bodyY, maxWidth, 0);
+		// draw subtitle
+		posY += margin;
+		if(this.subtitle != null) {
+			graphics.drawString(font, subtitle, posX, posY, 0, false);
+		}
+		// draw body
+		posY += margin;
+		graphics.drawWordWrap(font, body, posX, posY, maxWidth, 0);
 	}
 }

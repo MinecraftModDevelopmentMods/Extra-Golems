@@ -11,11 +11,14 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
@@ -143,21 +146,22 @@ public class UseFuelBehavior extends Behavior {
 	 */
 	protected boolean processInteractFuel(final IExtraGolem entity, final Player player, final InteractionHand hand) {
 		// allow player to add fuel to the entity by clicking on them with a fuel item
-		final Optional<UseFuelBehaviorData> oHelper = entity.getBehaviorData(UseFuelBehaviorData.class);
-		if(oHelper.isEmpty()) {
+		final Optional<UseFuelBehaviorData> oData = entity.getBehaviorData(UseFuelBehaviorData.class);
+		if(oData.isEmpty()) {
 			return false;
 		}
-		final UseFuelBehaviorData helper = oHelper.get();
+		final UseFuelBehaviorData data = oData.get();
 		ItemStack stack = player.getItemInHand(hand);
+		final Mob mob = entity.asMob();
 		int burnTime = ForgeHooks.getBurnTime(stack, RecipeType.SMELTING) * (player.isCrouching() ? stack.getCount() : 1);
-		if (burnTime > 0 && (helper.getFuel() + burnTime) <= getMaxFuel()) {
+		if (burnTime > 0 && (data.getFuel() + burnTime) <= getMaxFuel()) {
 			if (player.isCrouching()) {
 				// take entire ItemStack
-				helper.addFuel(burnTime * stack.getCount());
+				data.addFuel(burnTime * stack.getCount());
 				stack = stack.getCraftingRemainingItem();
 			} else {
 				// take one item from ItemStack
-				helper.addFuel(burnTime);
+				data.addFuel(burnTime);
 				if (stack.getCount() > 1) {
 					stack.shrink(1);
 				} else {
@@ -166,15 +170,19 @@ public class UseFuelBehavior extends Behavior {
 			}
 			// update the player's held item
 			player.setItemInHand(hand, stack);
-			// TODO spawn particles
+			// play sound and send particles
+			mob.playSound(SoundEvents.GENERIC_BURN, 1.0F, 0.8F + 0.4F * mob.getRandom().nextFloat());
+			((ServerLevel)mob.level()).sendParticles(ParticleTypes.FLAME, mob.getX(), mob.getY(0.6D), mob.getZ(), 6, 0.5D, 0.25D, 0.5D, 0);
 			return true;
 		}
 
 		// allow player to remove burn time by using a water bucket
 		if (stack.getItem() == Items.WATER_BUCKET) {
-			helper.setFuel(0);
+			data.setFuel(0);
 			player.setItemInHand(hand, stack.getCraftingRemainingItem());
-			// TODO spawn particles, play extinguish sound
+			// play sound and send particles
+			mob.playSound(SoundEvents.FIRE_EXTINGUISH, 1.0F, 0.8F + 0.4F * mob.getRandom().nextFloat());
+			((ServerLevel)mob.level()).sendParticles(ParticleTypes.SMOKE, mob.getX(), mob.getY(0.6D), mob.getZ(), 6, 0.5D, 0.25D, 0.5D, 0);
 			return true;
 		}
 		// no changes

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -126,6 +127,15 @@ public class GolemContainer {
 	public boolean matches(final Block body, final Block legs, final Block arm1, final Block arm2) {
 		final Collection<Block> blocks = golem.getBlocks().get();
 		return !blocks.isEmpty() && blocks.contains(body) && blocks.contains(legs) && blocks.contains(arm1) && blocks.contains(arm2);
+	}
+
+	public List<Component> createDescriptions(final RegistryAccess registryAccess) {
+		final List<Component> list = new ArrayList<>();
+		// create attribute descriptions
+		getAttributes().onAddDescriptions(this, registryAccess, list);
+		// create behavior descriptions
+		getBehaviors().forEach(b -> b.onAddDescriptions(list));
+		return list;
 	}
 
 	//// REGISTRY ////

@@ -40,7 +40,7 @@ public abstract class GolemDescriptionManager {
 		if (showAttack) {
 			double attack = (golem.getAttribute(Attributes.ATTACK_DAMAGE).getValue());
 			list.add(Component.translatable("entitytip.attack").withStyle(ChatFormatting.GRAY).append(": ")
-					.append(Component.literal(Double.toString(attack)).withStyle(ChatFormatting.WHITE)));
+					.append(Component.literal(String.format("%.2f", attack)).withStyle(ChatFormatting.WHITE)));
 		}
 		// add special descriptions
 		if (showSpecial) {

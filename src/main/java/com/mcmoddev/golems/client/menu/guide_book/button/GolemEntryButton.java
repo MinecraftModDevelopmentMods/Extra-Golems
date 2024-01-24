@@ -1,14 +1,17 @@
 package com.mcmoddev.golems.client.menu.guide_book.button;
 
-import com.mcmoddev.golems.client.menu.guide_book.GolemBookEntry;
+import com.mcmoddev.golems.client.menu.guide_book.GuideBookGroup;
 import com.mcmoddev.golems.client.menu.guide_book.module.DrawBlockModule;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.util.StringUtil;
 
 import java.util.function.Supplier;
 
@@ -20,7 +23,7 @@ public class GolemEntryButton extends ImageButton {
 	protected final int margin;
 	protected final Supplier<Long> ticksOpenSupplier;
 	
-	protected GolemBookEntry entry;
+	protected GuideBookGroup group;
 	protected int page;
 	
 	public GolemEntryButton(final Screen parent, final Font font, final DrawBlockModule drawBlockModule,
@@ -36,8 +39,8 @@ public class GolemEntryButton extends ImageButton {
 		this.page = 0;
 	}
 
-	public void setEntry(final GolemBookEntry entry, final int page) {
-		this.entry = entry;
+	public void setGroup(final GuideBookGroup entry, final int page) {
+		this.group = entry;
 		this.page = page;
 	}
 
@@ -50,31 +53,21 @@ public class GolemEntryButton extends ImageButton {
 		super.renderWidget(graphics, mouseX, mouseY, partialTicks);
 		// draw the block and name of the entity
 		int index = (int) (ticksOpenSupplier.get() / 30);
+		final GuideBookGroup.Entry entry = this.group.getEntry(index);
 		drawBlockModule
-				.withBlock(this.entry.getBlock(index))
+				.withBlock(this.group.getEntry(index).getBlock(index))
 				.withScale(1.0F)
 				.withPos(this.getX() - margin - 2, this.getY() - 9)
 				.render(parent, graphics, partialTicks);
 
 		// prepare to draw the entity's name
-		graphics.pose().pushPose();
-
-		final MutableComponent name = entry.getGolemName();
-		final int wrap = this.width - 20;
-		float scale = 1.0F;
-		int nameH = font.wordWrapHeight(name.getString(), wrap);
-		if (nameH > this.height) {
-			scale = 0.78F;
-			nameH = (int) (scale * font.wordWrapHeight(name.getString(), (int) (wrap / scale)));
-		}
-		int nameX = this.getX() + 20;
-		int nameY = this.getY() + ((this.height - nameH) / 2) + 1;
-		// re-scale and draw the entity name
-		graphics.pose().scale(scale, scale, scale);
-		for (final FormattedCharSequence word : font.split(name, (int) (wrap / scale))) {
-			graphics.drawString(font, word, nameX / scale, nameY / scale, 0, false);
-			nameY += font.lineHeight;
-		}
-		graphics.pose().popPose();
+		final int textMargin = 20;
+		final int titleWidth = this.width - textMargin;
+		// create a truncated title component
+		Component title = this.group.getTitle() != null ? this.group.getTitle() : this.group.getEntry(0).getTitle();
+		final String sTitle = StringUtil.truncateStringIfNecessary(ChatFormatting.stripFormatting(title.getString()), (int) (titleWidth / 5.5D), true);
+		title = Component.literal(sTitle).withStyle(title.getStyle());
+		// draw the title
+		graphics.drawString(font, title, textMargin, this.getY() + (this.height - font.lineHeight) / 2, 0, false);
 	}
 }

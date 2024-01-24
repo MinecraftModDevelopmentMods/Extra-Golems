@@ -1,26 +1,24 @@
 package com.mcmoddev.golems.client.menu.guide_book;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.ImmutableBiMap;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.ExtraGolems;
-import com.mcmoddev.golems.container.GolemContainer;
 import com.mcmoddev.golems.client.menu.guide_book.button.BlockButton;
 import com.mcmoddev.golems.client.menu.guide_book.button.GolemEntryButton;
 import com.mcmoddev.golems.client.menu.guide_book.button.ScrollButton;
 import com.mcmoddev.golems.client.menu.guide_book.module.DrawBlockModule;
 import com.mcmoddev.golems.client.menu.guide_book.module.DrawDiagramPageModule;
-import com.mcmoddev.golems.client.menu.guide_book.module.DrawEntryPageModule;
+import com.mcmoddev.golems.client.menu.guide_book.module.DrawGroupPageModule;
 import com.mcmoddev.golems.client.menu.guide_book.module.DrawPageModule;
 import com.mcmoddev.golems.client.menu.guide_book.module.DrawRecipePageModule;
 import com.mcmoddev.golems.client.menu.guide_book.module.DrawTableOfContentsPageModule;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.Tuple;
@@ -30,7 +28,6 @@ import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.level.block.Block;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -86,12 +83,6 @@ public class GolemBookScreen extends Screen implements ScrollButton.IScrollListe
 	// width of the arrow button and its texture
 	protected static final int ARROW_WIDTH = 18;
 	protected static final int ARROW_HEIGHT = 10;
-	/**
-	 * size of the supplemental image for each entry, if one is present.
-	 * Any image with a 2:1 ratio will render with no issues.
-	 **/
-	protected static final int GOLEM_PAGE_IMAGE_WIDTH = 100;
-	protected static final int GOLEM_PAGE_IMAGE_HEIGHT = 50;
 
 	private Button doneBtn;
 	// If a Block is displayed on the LEFT side, this helps with the tooltip
@@ -105,8 +96,10 @@ public class GolemBookScreen extends Screen implements ScrollButton.IScrollListe
 	// Clickable link to each entity, used on page 2
 	private final GolemEntryButton[] tableOfContentsBtns;
 
-	protected final List<GolemBookEntry> golemBookEntryList = new ArrayList<>();
-	protected final List<Tuple<GolemBookEntry, Integer>> golemBookEntryListSorted = new ArrayList<>();
+	private static final Comparator<GuideBookGroup> SORT_BY_ATTACK = Comparator.comparingDouble(GuideBookGroup::getAttack);
+	private static final Comparator<GuideBookGroup> SORT_BY_NAME = Comparator.comparing(group -> (group.getTitle() != null ? group.getTitle() : group.getEntry(0).getTitle()).getString());
+	protected final BiMap<GuideBookGroup, Integer> guideBookTableOfContents;
+	protected final List<Map.Entry<GuideBookGroup, Integer>> guideBookGroupsByName;
 	protected int page;
 	protected int totalPages;
 
@@ -117,7 +110,7 @@ public class GolemBookScreen extends Screen implements ScrollButton.IScrollListe
 
 	//// MODULES ////
 	protected DrawBlockModule drawBlockModule;
-	protected DrawEntryPageModule drawdrawEntryPageModule;
+	protected DrawGroupPageModule drawdrawGroupPageModule;
 	protected DrawPageModule drawPageModule;
 	protected DrawDiagramPageModule drawDiagramPageModule;
 	protected DrawRecipePageModule drawRecipePageModule;
@@ -131,12 +124,15 @@ public class GolemBookScreen extends Screen implements ScrollButton.IScrollListe
 
 	public GolemBookScreen(Player playerIn, ItemStack itemIn) {
 		super(EGRegistry.ItemReg.GUIDE_BOOK.get().getDescription());
-		this.initGolemBookEntries();
+		// create
+		this.guideBookTableOfContents = createGuideBookGroups(SORT_BY_ATTACK);
+		this.guideBookGroupsByName = new ArrayList<>(guideBookTableOfContents.entrySet());
+		this.guideBookGroupsByName.sort(Map.Entry.comparingByKey(SORT_BY_NAME));
 		// init variables
 		this.spellRecipe = DrawRecipePageModule.loadRecipe(playerIn.level().getRecipeManager(), SPELL_RECIPE);
 		this.headRecipe = DrawRecipePageModule.loadRecipe(playerIn.level().getRecipeManager(), HEAD_RECIPE);
 		this.page = 0;
-		this.totalPages = INTRO_PAGE_COUNT + golemBookEntryList.size();
+		this.totalPages = INTRO_PAGE_COUNT + guideBookTableOfContents.size();
 		this.tableOfContentsBtns = new GolemEntryButton[GOLEM_BOOK_ENTRY_COUNT];
 		this.ticksOpen = 0L;
 		this.scrollOffset = 0;
@@ -150,13 +146,13 @@ public class GolemBookScreen extends Screen implements ScrollButton.IScrollListe
 		this.drawDiagramPageModule = new DrawDiagramPageModule(drawBlockModule, this.font, BOOK_WIDTH, BOOK_HEIGHT, MARGIN);
 		this.drawRecipePageModule = new DrawRecipePageModule(this.font, BOOK_WIDTH, BOOK_HEIGHT, MARGIN, CONTENTS, 84, 46, 111, 54);
 		this.drawTableOfContentsPageModule = new DrawTableOfContentsPageModule(this.font, BOOK_WIDTH, BOOK_HEIGHT, MARGIN, CONTENTS, 0, 0, CONTENTS_WIDTH, CONTENTS_HEIGHT);
-		this.drawdrawEntryPageModule = new DrawEntryPageModule(this.font, BOOK_WIDTH, BOOK_HEIGHT, MARGIN, GolemBookEntry.IMAGE_WIDTH, GolemBookEntry.IMAGE_HEIGHT);
+		this.drawdrawGroupPageModule = new DrawGroupPageModule(this.font, BOOK_WIDTH, BOOK_HEIGHT, MARGIN, GuideBookGroup.Entry.IMAGE_WIDTH, GuideBookGroup.Entry.IMAGE_HEIGHT);
 
 		// Scroll button
 		this.scrollButton = this.addRenderableWidget(new ScrollButton(Button.builder(Component.empty(), b -> {})
 				.pos((width / 2) + MARGIN + CONTENTS_WIDTH - 14, MARGIN * 3 + 4).size(12, CONTENTS_HEIGHT - 2),
 				CONTENTS, 0, 115, 12, 15, 15, true,
-				1.0F / (golemBookEntryList.size() - GOLEM_BOOK_ENTRY_COUNT), this));
+				1.0F / (guideBookTableOfContents.size() - GOLEM_BOOK_ENTRY_COUNT), this));
 
 		// Done button
 		int doneBtnWidth = 98;
@@ -179,7 +175,7 @@ public class GolemBookScreen extends Screen implements ScrollButton.IScrollListe
 		blockX = (this.width / 2) + MARGIN;
 		this.rightBlockBtn = this.addRenderableWidget(new BlockButton(this, drawBlockModule, new Block[]{}, blockX, blockY, MARGIN, GOLEM_BLOCK_SCALE));
 		// Golem Entry buttons in table of contents
-		for (int i = 0, l = Math.min(GOLEM_BOOK_ENTRY_COUNT, golemBookEntryListSorted.size()), btnX = (this.width / 2) + SCROLL_X, btnY; i < l; i++) {
+		for (int i = 0, l = Math.min(GOLEM_BOOK_ENTRY_COUNT, guideBookGroupsByName.size()), btnX = (this.width / 2) + SCROLL_X, btnY; i < l; i++) {
 			final Button.OnPress onPress = b -> {
 				int page = ((GolemEntryButton) b).getPage();
 				GolemBookScreen.this.setPage(page);
@@ -301,9 +297,9 @@ public class GolemBookScreen extends Screen implements ScrollButton.IScrollListe
 			default:
 				// draw entity entry
 				if (isPageGolemEntry(pageNum, this.totalPages)) {
-					GolemBookEntry entry = getGolemEntryForPage(pageNum);
-					drawdrawEntryPageModule
-							.withEntry(entry)
+					GuideBookGroup group = getGroupForPage(pageNum);
+					drawdrawGroupPageModule
+							.withEntry(group)
 							.withPage(pageNum)
 							.withPos(cornerX, cornerY)
 							.render(this, graphics, partialTicks);
@@ -338,13 +334,13 @@ public class GolemBookScreen extends Screen implements ScrollButton.IScrollListe
 		// entity-entry block buttons
 		if (isPageGolemEntry(this.page, this.totalPages)) {
 			this.leftBlockBtn.visible = true;
-			this.leftBlockBtn.updateBlocks(getGolemEntryForPage(this.page).getBlocks());
+			this.leftBlockBtn.updateBlocks(getGroupForPage(this.page).getBlocks());
 		} else {
 			this.leftBlockBtn.visible = false;
 		}
 		if (isPageGolemEntry(this.page + 1, this.totalPages)) {
 			this.rightBlockBtn.visible = true;
-			this.rightBlockBtn.updateBlocks(getGolemEntryForPage(this.page + 1).getBlocks());
+			this.rightBlockBtn.updateBlocks(getGroupForPage(this.page + 1).getBlocks());
 		} else {
 			this.rightBlockBtn.visible = false;
 		}
@@ -359,33 +355,26 @@ public class GolemBookScreen extends Screen implements ScrollButton.IScrollListe
 	}
 
 	/**
-	 * Populates the GolemEntry list to use in book gui
+	 * @param sorter the comparator to determine page number
+	 * @return a map of guide book groups and their page numbers
 	 **/
-	public final void initGolemBookEntries() {
-		golemBookEntryList.clear();
-		final Registry<GolemContainer> registry = Minecraft.getInstance().level.registryAccess().registryOrThrow(ExtraGolems.Keys.GOLEM_CONTAINERS);
-		for (Map.Entry<ResourceKey<GolemContainer>, GolemContainer> entry : registry.entrySet()) {
-			if (!entry.getValue().isHidden()) {
-				golemBookEntryList.add(new GolemBookEntry(entry.getKey().location(), entry.getValue()));
-			}
+	public final BiMap<GuideBookGroup, Integer> createGuideBookGroups(final Comparator<GuideBookGroup> sorter) {
+		final List<GuideBookGroup> list = GuideBookGroup.buildGroups(getMinecraft().level.registryAccess());
+		// sort by attack power
+		list.sort(sorter);
+		// create map of guide book group and page number
+		final ImmutableBiMap.Builder<GuideBookGroup, Integer> builder = ImmutableBiMap.builder();
+		for(int i = 0, n = list.size(); i < n; i++) {
+			builder.put(list.get(i), i);
 		}
-		// sort golems by attack power
-		Collections.sort(golemBookEntryList, (g1, g2) -> Float.compare(g1.getAttack(), g2.getAttack()));
-
-		// make and sort alphabetical list
-		golemBookEntryListSorted.clear();
-		final List<GolemBookEntry> naturalOrderList = new ArrayList<>(golemBookEntryList);
-		Collections.sort(naturalOrderList, Comparator.comparing(g -> g.getGolemName().getString()));
-		// add alphabetical list and page entries to sorted list
-		for(GolemBookEntry entry : naturalOrderList) {
-			// determine lowest even number page that corresponds to this entry
-			int page = INTRO_PAGE_COUNT + (golemBookEntryList.indexOf(entry) >> 1) * 2;
-			golemBookEntryListSorted.add(new Tuple<>(entry, page));
-		}
+		return builder.build();
 	}
 
-	public GolemBookEntry getGolemEntryForPage(final int page) {
-		return golemBookEntryList.get(page - INTRO_PAGE_COUNT);
+	public GuideBookGroup getGroupForPage(final int page) {
+		// determine index as the lowest even number (since 2 entries are displayed per page)
+		final int index = (page >> 1) * 2;
+		// retrieve by index
+		return guideBookTableOfContents.inverse().get(index - INTRO_PAGE_COUNT);
 	}
 
 	//// SCROLL BAR /////
@@ -410,16 +399,18 @@ public class GolemBookScreen extends Screen implements ScrollButton.IScrollListe
 
 	@Override
 	public void onScroll(ScrollButton button, float percent) {
-		scrollOffset = Mth.floor(percent * (golemBookEntryListSorted.size() - GOLEM_BOOK_ENTRY_COUNT));
+		scrollOffset = Mth.floor(percent * (guideBookTableOfContents.size() - GOLEM_BOOK_ENTRY_COUNT));
 		updateButtons();
-		if(tableOfContentsBtns != null && tableOfContentsBtns.length > 0 && !golemBookEntryListSorted.isEmpty()) {
+		if(tableOfContentsBtns != null && tableOfContentsBtns.length > 0 && !guideBookGroupsByName.isEmpty()) {
 			for(int i = 0, n = GOLEM_BOOK_ENTRY_COUNT; i < n; i++) {
-				boolean outOfBounds = n >= golemBookEntryListSorted.size();
+				GolemEntryButton btn = tableOfContentsBtns[i];
+				boolean outOfBounds = n >= guideBookGroupsByName.size();
 				if(outOfBounds) {
-					this.tableOfContentsBtns[i].visible = false;
+					btn.visible = btn.active = false;
 				} else {
-					Tuple<GolemBookEntry, Integer> tuple = golemBookEntryListSorted.get(scrollOffset + i);
-					this.tableOfContentsBtns[i].setEntry(tuple.getA(), tuple.getB());
+					final Map.Entry<GuideBookGroup, Integer> entry = guideBookGroupsByName.get(scrollOffset + i);
+					btn.setGroup(entry.getKey(), entry.getValue());
+					btn.visible = btn.active = true;
 				}
 			}
 		}

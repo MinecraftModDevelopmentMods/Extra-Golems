@@ -1,5 +1,6 @@
 package com.mcmoddev.golems.client.menu.guide_book.button;
 
+import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.client.menu.guide_book.module.DrawBlockModule;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -9,14 +10,17 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BlockButton extends Button {
 
 	protected final Screen parent;
 	protected final DrawBlockModule drawBlockModule;
 	protected final int margin;
 	private final float scale;
-	
-	private Block[] blocks;
+
+	private final List<Block> blocks;
 	private Block currentBlock;
 
 	public BlockButton(Screen parent, DrawBlockModule drawBlockModule, Block[] blockValues, int x, int y, 
@@ -27,7 +31,7 @@ public class BlockButton extends Button {
 				.size((int) (scaleIn * 16.0F), (int) (scaleIn * 16.0F)));
 		this.parent = parent;
 		this.drawBlockModule = drawBlockModule;
-		this.blocks = blockValues;
+		this.blocks = new ArrayList<>(ImmutableList.copyOf(blockValues));
 		this.margin = margin;
 		this.scale = scaleIn;
 	}
@@ -45,9 +49,9 @@ public class BlockButton extends Button {
 
 	public void tick(final Screen parent, final int ticksOpen) {
 		// update the block to draw
-		if (blocks != null && blocks.length > 0) {
-			int index = (ticksOpen / 30) % blocks.length;
-			this.currentBlock = this.blocks[index];
+		if (!blocks.isEmpty()) {
+			int index = (ticksOpen / 30) % blocks.size();
+			this.currentBlock = this.blocks.get(index);
 			setTooltip(Tooltip.create(this.currentBlock.getName()));
 		} else {
 			this.currentBlock = Blocks.AIR;
@@ -55,8 +59,9 @@ public class BlockButton extends Button {
 		}
 	}
 
-	public void updateBlocks(final Block[] blocksToDraw) {
-		this.blocks = blocksToDraw;
+	public void updateBlocks(final List<Block> blocksToDraw) {
+		this.blocks.clear();
+		this.blocks.addAll(blocksToDraw);
 		this.tick(parent, 0);
 	}
 }

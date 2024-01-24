@@ -1,15 +1,20 @@
 package com.mcmoddev.golems.data.golem;
 
+import com.mcmoddev.golems.data.GolemContainer;
+import com.mcmoddev.golems.data.behavior.LightBehavior;
+import com.mcmoddev.golems.data.behavior.PowerBehavior;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.util.DeferredHolderSet;
 import com.mcmoddev.golems.util.SoundTypeRegistry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -21,6 +26,7 @@ import net.minecraft.world.level.pathfinder.BlockPathTypes;
 
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -259,6 +265,37 @@ public class Attributes {
 		}
 	}
 
+	public void onAddDescriptions(final GolemContainer container, final RegistryAccess registryAccess, final List<Component> list) {
+		// add health description
+		list.add(Component.translatable("entitytip.health").append(": ").withStyle(ChatFormatting.GRAY)
+				.append(Component.literal(String.format("%.1f", health)).withStyle(ChatFormatting.BLACK))
+				.append(Component.literal(" \u2764").withStyle(ChatFormatting.DARK_RED)));
+		// add attack description
+		list.add(Component.translatable("entitytip.attack").append(": ").withStyle(ChatFormatting.GRAY)
+				.append(Component.literal(String.format("%.1f", attack)).withStyle(ChatFormatting.BLACK))
+				.append(Component.literal(" \u2694")));
+		// add "fireproof" description
+		if (isImmuneTo(registryAccess, DamageTypes.IN_FIRE, DamageTypes.ON_FIRE)) {
+			list.add(Component.translatable("enchantment.minecraft.fire_protection").withStyle(ChatFormatting.GOLD));
+		}
+		// add "explosion-proof" description
+		if (isImmuneTo(registryAccess, DamageTypes.EXPLOSION, DamageTypes.PLAYER_EXPLOSION)) {
+			list.add(Component.translatable("enchantment.minecraft.blast_protection").withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD));
+		}
+		// TODO add "potion ignore" description
+		// TODO add "invulnerable" description
+		// TODO add "occludes" description
+		// add "knockback" description
+		if (getAttackKnockback() > 0.39D) {
+			list.add(Component.translatable("entitytip.has_knockback").withStyle(ChatFormatting.DARK_RED));
+		}
+		// add "advanced swimmer" description
+		if (swimAbility == SwimAbility.SWIM) {
+			list.add(Component.translatable("entitytip.advanced_swim").withStyle(ChatFormatting.DARK_AQUA));
+		}
+	}
+
+
 	//// EQUALITY ////
 
 	@Override
@@ -278,7 +315,6 @@ public class Attributes {
 	public int hashCode() {
 		return Objects.hash(health, attack, speed, knockbackResistance, armor, attackKnockback, potionIgnore, damageImmune, damageWeak, invulnerable, occludes, swimAbility, sound);
 	}
-
 
 	//// CLASSES ////
 
