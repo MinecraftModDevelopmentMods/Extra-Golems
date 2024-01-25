@@ -8,7 +8,9 @@
 	  "minecraft:in_fire"
 	]
   },
-  "blocks": "minecraft:polished_basalt",
+  "blocks": {
+	"all": "minecraft:polished_basalt"
+  },
   "repair_items": {
     "minecraft:polished_basalt": 0.5,
 	"minecraft:basalt": 0.25

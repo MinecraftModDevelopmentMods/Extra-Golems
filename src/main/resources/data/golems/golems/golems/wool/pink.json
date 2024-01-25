@@ -1,6 +1,0 @@
-{
-  "parent": "golems:wool/generic",
-  "hidden": false,
-  "blocks": "minecraft:pink_wool",
-  "model": "golems:wool/pink"
-}

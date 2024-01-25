@@ -2,7 +2,7 @@ package com.mcmoddev.golems.data.modifier.golem;
 
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.golem.Golem;
-import com.mcmoddev.golems.data.modifier.GolemModifier;
+import com.mcmoddev.golems.data.modifier.Modifier;
 import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mcmoddev.golems.util.PredicateUtils;
 import com.mcmoddev.golems.util.ResourcePair;
@@ -22,16 +22,16 @@ import java.util.function.Predicate;
  * that pass any of the given {@link RemovePredicate}s
  */
 @Immutable
-public class RemoveRepairItemsGolemModifier extends GolemModifier {
+public class RemoveRepairItemsModifier extends Modifier {
 
-	public static final Codec<RemoveRepairItemsGolemModifier> CODEC = EGCodecUtils.listOrElementCodec(RemovePredicate.CODEC)
-			.xmap(RemoveRepairItemsGolemModifier::new, RemoveRepairItemsGolemModifier::getPredicates)
+	public static final Codec<RemoveRepairItemsModifier> CODEC = EGCodecUtils.listOrElementCodec(RemovePredicate.CODEC)
+			.xmap(RemoveRepairItemsModifier::new, RemoveRepairItemsModifier::getPredicates)
 			.fieldOf("predicate").codec();
 
 	private final List<RemovePredicate> predicates;
 	private final Predicate<Map.Entry<ResourcePair, Double>> predicate;
 
-	public RemoveRepairItemsGolemModifier(List<RemovePredicate> predicates) {
+	public RemoveRepairItemsModifier(List<RemovePredicate> predicates) {
 		this.predicates = predicates;
 		this.predicate = PredicateUtils.or(predicates);
 	}
@@ -50,7 +50,7 @@ public class RemoveRepairItemsGolemModifier extends GolemModifier {
 	}
 
 	@Override
-	public Codec<? extends GolemModifier> getCodec() {
+	public Codec<? extends Modifier> getCodec() {
 		return EGRegistry.GolemModifierReg.REMOVE_REPAIR_ITEMS.get();
 	}
 

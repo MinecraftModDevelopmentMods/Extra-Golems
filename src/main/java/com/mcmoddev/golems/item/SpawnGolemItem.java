@@ -1,8 +1,9 @@
 package com.mcmoddev.golems.item;
 
 import com.mcmoddev.golems.ExtraGolems;
-import com.mcmoddev.golems.container.GolemContainer;
+import com.mcmoddev.golems.data.GolemContainer;
 import com.mcmoddev.golems.entity.GolemBase;
+import com.mcmoddev.golems.entity.IExtraGolem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
@@ -26,6 +27,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Optional;
 
 public final class SpawnGolemItem extends Item {
 
@@ -37,7 +39,7 @@ public final class SpawnGolemItem extends Item {
 
 	@Override
 	public InteractionResult useOn(UseOnContext context) {
-		final Level worldIn = context.getLevel();
+		final Level level = context.getLevel();
 		final Player player = context.getPlayer();
 		final Direction facing = context.getClickedFace();
 		final BlockPos pos = context.getClickedPos();
@@ -48,44 +50,41 @@ public final class SpawnGolemItem extends Item {
 		}
 
 		// check if the entity is enabled
-		final GolemContainer container = worldIn.registryAccess().registryOrThrow(ExtraGolems.Keys.GOLEM_CONTAINERS).get(BEDROCK_GOLEM);
-		if (container != null) {
-			// make sure the entity can be spawned here (empty block)
-			BlockState state = worldIn.getBlockState(pos);
-			BlockPos spawnPos;
-			if (state.getBlockSupportShape(context.getLevel(), context.getClickedPos()).isEmpty()) {
-				spawnPos = pos;
-			} else {
-				spawnPos = pos.relative(context.getClickedFace());
-			}
-			// attempt to spawn a bedrock entity at this position
-			if (!worldIn.isClientSide()) {
-				final GolemBase entity = GolemBase.create(worldIn, BEDROCK_GOLEM);
-				entity.moveTo(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
-				worldIn.addFreshEntity(entity);
-				entity.finalizeSpawn((ServerLevel) worldIn, worldIn.getCurrentDifficultyAt(spawnPos), MobSpawnType.SPAWN_EGG, null, null);
-				entity.setInvulnerable(true);
-			}
-			// spawn the entity!
-			if (!context.getPlayer().isCreative()) {
-				stack.shrink(1);
-			}
-			spawnParticles(worldIn, spawnPos.getX(), spawnPos.getY() + 0.5D, spawnPos.getZ(), 0.12D);
-			return InteractionResult.SUCCESS;
+		final GolemContainer container = GolemContainer.getOrCreate(level.registryAccess(), BEDROCK_GOLEM);
+		// make sure the entity can be spawned here (empty block)
+		BlockState state = level.getBlockState(pos);
+		BlockPos spawnPos;
+		if (state.getBlockSupportShape(context.getLevel(), context.getClickedPos()).isEmpty()) {
+			spawnPos = pos;
+		} else {
+			spawnPos = pos.relative(context.getClickedFace());
 		}
-		return InteractionResult.PASS;
+		// attempt to spawn a bedrock entity at this position
+		if (!level.isClientSide()) {
+			final GolemBase entity = GolemBase.create(level, BEDROCK_GOLEM);
+			entity.moveTo(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
+			level.addFreshEntity(entity);
+			entity.finalizeSpawn((ServerLevel) level, level.getCurrentDifficultyAt(spawnPos), MobSpawnType.SPAWN_EGG, null, null);
+			entity.setInvulnerable(true);
+		}
+		// spawn the entity!
+		if (!context.getPlayer().isCreative()) {
+			stack.shrink(1);
+		}
+		spawnParticles(level, spawnPos.getX(), spawnPos.getY() + 0.5D, spawnPos.getZ(), 0.12D);
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
 	public InteractionResult interactLivingEntity(ItemStack stack, Player playerIn, LivingEntity entity, InteractionHand hand) {
 		// determine if the entity is a golem
-		if (entity instanceof GolemBase) {
-			GolemBase golem = (GolemBase) entity;
+		if (entity instanceof IExtraGolem golem) {
+			final Optional<ResourceLocation> oId = golem.getGolemId();
 			// determine if the entity is a Bedrock golem
-			if (golem.getMaterial().equals(BEDROCK_GOLEM)) {
+			if (oId.isPresent() && BEDROCK_GOLEM.equals(oId.get())) {
 				// attempt to remove the entity
 				if (!entity.level().isClientSide()) {
-					golem.discard();
+					entity.discard();
 				}
 				// spawn particles
 				spawnParticles(playerIn.level(), entity.getX(), entity.getY() + 0.5D, entity.getZ(), 0.12D);

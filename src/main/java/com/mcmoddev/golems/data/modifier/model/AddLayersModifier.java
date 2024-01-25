@@ -4,7 +4,7 @@ import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.golem.Golem;
 import com.mcmoddev.golems.data.model.Layer;
 import com.mcmoddev.golems.data.model.LayerList;
-import com.mcmoddev.golems.data.modifier.GolemModifier;
+import com.mcmoddev.golems.data.modifier.Modifier;
 import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
@@ -17,15 +17,15 @@ import java.util.List;
  * Adds the given layers or model references to the {@link LayerList.Builder}
  */
 @Immutable
-public class AddLayersGolemModifier extends GolemModifier {
+public class AddLayersModifier extends Modifier {
 
-	public static final Codec<AddLayersGolemModifier> CODEC = EGCodecUtils.listOrElementCodec(LayerList.EITHER_CODEC)
-			.xmap(AddLayersGolemModifier::new, AddLayersGolemModifier::getLayers)
+	public static final Codec<AddLayersModifier> CODEC = EGCodecUtils.listOrElementCodec(LayerList.EITHER_CODEC)
+			.xmap(AddLayersModifier::new, AddLayersModifier::getLayers)
 			.fieldOf("layers").codec();
 
 	private final List<Either<Layer, Holder<LayerList>>> layers;
 
-	public AddLayersGolemModifier(List<Either<Layer, Holder<LayerList>>> layers) {
+	public AddLayersModifier(List<Either<Layer, Holder<LayerList>>> layers) {
 		this.layers = layers;
 	}
 
@@ -43,7 +43,7 @@ public class AddLayersGolemModifier extends GolemModifier {
 	}
 
 	@Override
-	public Codec<? extends GolemModifier> getCodec() {
+	public Codec<? extends Modifier> getCodec() {
 		return EGRegistry.GolemModifierReg.ADD_LAYERS.get();
 	}
 }

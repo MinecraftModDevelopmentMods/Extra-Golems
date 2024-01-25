@@ -64,7 +64,7 @@ public class BurnInSunBehavior extends Behavior {
 	public void onTick(IExtraGolem entity) {
 		final Mob mob = entity.asMob();
 		// set on fire
-		if(entity.isSunBurnTick() && mob.getRandom().nextFloat() < chance && mob.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
+		if(entity.isSunBurnTickAccessor() && mob.getRandom().nextFloat() < chance && mob.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
 			mob.setSecondsOnFire(3);
 		}
 	}

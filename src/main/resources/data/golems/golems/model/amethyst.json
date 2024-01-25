@@ -1,8 +1,7 @@
 {
   "layers": [
 	{
-	  "texture": "#golems:amethyst",
-	  "template": "golems:template"
+	  "texture": "#golems:amethyst"
 	},
 	{
 	  "texture": "#golems:layer/eyes/eyes"

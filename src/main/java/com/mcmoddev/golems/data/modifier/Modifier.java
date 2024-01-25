@@ -9,12 +9,12 @@ import javax.annotation.concurrent.Immutable;
 import java.util.function.Function;
 
 @Immutable
-public abstract class GolemModifier {
+public abstract class Modifier {
 
-	public static final Codec<GolemModifier> DIRECT_CODEC = ExtraCodecs.lazyInitializedCodec(() -> EGRegistry.GOLEM_MODIFIER_SERIALIZERS_SUPPLIER.get().getCodec())
-			.dispatch(GolemModifier::getCodec, Function.identity());
+	public static final Codec<Modifier> DIRECT_CODEC = ExtraCodecs.lazyInitializedCodec(() -> EGRegistry.GOLEM_MODIFIER_SERIALIZER_SUPPLIER.get().getCodec())
+			.dispatch(Modifier::getCodec, Function.identity());
 
 	public abstract void apply(final Golem.Builder builder);
 
-	public abstract Codec<? extends GolemModifier> getCodec();
+	public abstract Codec<? extends Modifier> getCodec();
 }

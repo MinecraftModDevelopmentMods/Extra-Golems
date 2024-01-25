@@ -235,6 +235,11 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 		return biomeColor;
 	}
 
+	@Override
+	public boolean isSunBurnTickAccessor() {
+		return this.isSunBurnTick();
+	}
+
 	//// SYNCHED DATA ////
 
 	@Override
@@ -368,11 +373,6 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 			this.getEntityData().set(CHILD, Boolean.valueOf(isChild));
 			this.refreshDimensions();
 		}
-	}
-
-	@Override
-	public boolean isSunBurnTick() {
-		return super.isSunBurnTick();
 	}
 
 	//// LIGHT PROVIDER ////

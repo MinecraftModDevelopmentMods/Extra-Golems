@@ -17,8 +17,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
-import java.util.Spliterator;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -28,7 +26,7 @@ public class LayerList implements Iterable<Either<Layer, Holder<LayerList>>>, Su
 	public static final Codec<LayerList> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			EGCodecUtils.listOrElementCodec(LayerList.EITHER_CODEC).optionalFieldOf("layers", ImmutableList.of()).forGetter(LayerList::getLayers)
 	).apply(instance, LayerList::new));
-	public static final Codec<Holder<LayerList>> HOLDER_CODEC = RegistryFileCodec.create(EGRegistry.Keys.MODELS, LayerList.CODEC, true);
+	public static final Codec<Holder<LayerList>> HOLDER_CODEC = RegistryFileCodec.create(EGRegistry.Keys.MODEL, LayerList.CODEC, true);
 	public static final Codec<Either<Layer, Holder<LayerList>>> EITHER_CODEC = Codec.either(Layer.CODEC, LayerList.HOLDER_CODEC);
 
 	private final List<Either<Layer, Holder<LayerList>>> layers;

@@ -75,7 +75,7 @@ public interface IExtraGolem extends IVariantProvider, ILightProvider, IPowerPro
 
 	//// GOLEM ////
 
-	boolean isSunBurnTick();
+	boolean isSunBurnTickAccessor();
 
 	/**
 	 * Called after construction when a entity is built by a player

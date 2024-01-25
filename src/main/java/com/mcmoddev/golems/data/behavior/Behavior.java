@@ -36,9 +36,9 @@ import java.util.function.Supplier;
 @Immutable
 public abstract class Behavior implements IVariantPredicate {
 
-	public static final Codec<Behavior> DIRECT_CODEC = ExtraCodecs.lazyInitializedCodec(() -> EGRegistry.BEHAVIOR_SERIALIZERS_SUPPLIER.get().getCodec())
+	public static final Codec<Behavior> DIRECT_CODEC = ExtraCodecs.lazyInitializedCodec(() -> EGRegistry.BEHAVIOR_SERIALIZER_SUPPLIER.get().getCodec())
 			.dispatch(Behavior::getCodec, Function.identity());
-	public static final Codec<Holder<Behavior>> HOLDER_CODEC = RegistryFileCodec.create(EGRegistry.Keys.BEHAVIORS, DIRECT_CODEC, true);
+	public static final Codec<Holder<Behavior>> HOLDER_CODEC = RegistryFileCodec.create(EGRegistry.Keys.BEHAVIOR, DIRECT_CODEC, true);
 
 	private final MinMaxBounds.Ints variant;
 	private final Supplier<List<Component>> descriptions;

@@ -2,10 +2,8 @@ package com.mcmoddev.golems;
 
 import com.mcmoddev.golems.block.GolemHeadBlock;
 import com.mcmoddev.golems.client.EGClientEvents;
-import com.mcmoddev.golems.container.GolemContainer;
-import com.mcmoddev.golems.container.behavior.GolemBehaviors;
-import com.mcmoddev.golems.container.render.GolemRenderSettings;
-import com.mcmoddev.golems.entity.GolemBase;
+import com.mcmoddev.golems.data.GolemContainer;
+import com.mcmoddev.golems.data.golem.Golem;
 import com.mcmoddev.golems.integration.AddonLoader;
 import com.mcmoddev.golems.item.GolemSpellItem;
 import net.minecraft.core.Registry;
@@ -31,7 +29,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
-import java.util.Map.Entry;
 
 @Mod(ExtraGolems.MODID)
 public class ExtraGolems {
@@ -87,62 +84,30 @@ public class ExtraGolems {
 		CONFIG.bake();
 	}
 
-
-
 	/**
 	 * Checks all registered GolemContainers until one is found that is constructed
 	 * out of the passed Blocks. Parameters are the current World and the 4 blocks
-	 * that will be used to calculate this Golem. It is okay to pass {@code null} or
-	 * Air.
+	 * that will be used to build this Golem.
 	 *
 	 * @param level the level
 	 * @param bodyBlock the block directly below the head
 	 * @param bodySupportBlock the block 2 positions below the head
 	 * @param leftArmBlock the block adjacent to {@code bodyBlock}
 	 * @param rightArmBlock the block adjacent to {@code bodyBlock} and opposite {@code leftArmBlock}
-	 * @return the constructed GolemBase instance if there is one for the passed blocks, otherwise null
-	 * @see GolemContainer#matches(Block, Block, Block, Block)
+	 * @return the ID of the Golem that can be spawned with the given blocks
 	 **/
 	@Nullable
-	public static GolemBase getGolem(Level level, Block bodyBlock, Block bodySupportBlock, Block leftArmBlock, Block rightArmBlock) {
-		ResourceLocation id = getGolemId(level, bodyBlock, bodySupportBlock, leftArmBlock, rightArmBlock);
-		if (null == id) {
-			return null;
-		}
-		return GolemBase.create(level, id);
-	}
-
-	/**
-	 * Checks all registered GolemContainers until one is found that is constructed
-	 * out of the passed Blocks. Parameters are the current World and the 4 blocks
-	 * that will be used to calculate this Golem. It is okay to pass {@code null} or
-	 * Air.
-	 *
-	 * @param level the level
-	 * @param bodyBlock the block directly below the head
-	 * @param bodySupportBlock the block 2 positions below the head
-	 * @param leftArmBlock the block adjacent to {@code bodyBlock}
-	 * @param rightArmBlock the block adjacent to {@code bodyBlock} and opposite {@code leftArmBlock}
-	 * @return the constructed GolemBase instance if there is one for the passed blocks, otherwise null
-	 * @see GolemContainer#matches(Block, Block, Block, Block)
-	 **/
-	@Nullable
-	public static ResourceLocation getGolemId(Level level, Block bodyBlock, Block bodySupportBlock, Block leftArmBlock, Block rightArmBlock) {
-		ResourceLocation id = null;
-		final Registry<GolemContainer> registry = level.registryAccess().registryOrThrow(Keys.GOLEM_CONTAINERS);
-		for (Entry<ResourceKey<GolemContainer>, GolemContainer> entry : registry.entrySet()) {
-			if (entry.getValue().matches(bodyBlock, bodySupportBlock, leftArmBlock, rightArmBlock)) {
-				id = entry.getKey().location();
-				break;
+	public static ResourceKey<Golem> getGolemId(Level level, Block bodyBlock, Block bodySupportBlock, Block leftArmBlock, Block rightArmBlock) {
+		// load registry
+		final Registry<Golem> registry = level.registryAccess().registryOrThrow(EGRegistry.Keys.GOLEM);
+		// iterate all registered golems
+		for (ResourceKey<Golem> key : registry.registryKeySet()) {
+			// check if the blocks match each golem container
+			GolemContainer container = GolemContainer.getOrCreate(level.registryAccess(), key.location());
+			if (container.getGolem().getBlocks().matches(bodyBlock, bodySupportBlock, leftArmBlock, rightArmBlock)) {
+				return key;
 			}
 		}
-		return id;
-	}
-
-	public static class Keys {
-
-		public static final ResourceKey<Registry<GolemContainer>> GOLEM_CONTAINERS = ResourceKey.createRegistryKey(new ResourceLocation(MODID, "golem_stats"));
-
-		public static final ResourceKey<Registry<GolemRenderSettings>> GOLEM_MODELS = ResourceKey.createRegistryKey(new ResourceLocation(MODID, "golem_models"));
+		return null;
 	}
 }

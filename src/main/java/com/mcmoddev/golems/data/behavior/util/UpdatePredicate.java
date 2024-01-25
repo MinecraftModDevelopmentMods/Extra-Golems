@@ -1,6 +1,7 @@
 package com.mcmoddev.golems.data.behavior.util;
 
 import com.mcmoddev.golems.data.behavior.data.ExplodeBehaviorData;
+import com.mcmoddev.golems.data.behavior.data.ShootArrowsBehaviorData;
 import com.mcmoddev.golems.data.behavior.data.UseFuelBehaviorData;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mojang.serialization.Codec;
@@ -14,8 +15,8 @@ public enum UpdatePredicate implements Predicate<IExtraGolem>, StringRepresentab
 	DRY("dry", e -> !e.asMob().isInWaterRainOrBubble()),
 	FUELED("fuel", e -> e.getBehaviorData(UseFuelBehaviorData.class).map(o -> o.hasFuel()).orElse(false)),
 	FUEL_EMPTY("fuel_empty", e -> e.getBehaviorData(UseFuelBehaviorData.class).map(o -> !o.hasFuel()).orElse(false)),
-	ARROWS("arrows", e -> e.getArrowsInInventory() > 0),
-	ARROWS_EMPTY("arrows_empty", e -> e.getArrowsInInventory() <= 0),
+	ARROWS("arrows", e -> e.getBehaviorData(ShootArrowsBehaviorData.class).map(o -> o.getArrowsInInventory() > 0).orElse(false)),
+	ARROWS_EMPTY("arrows_empty", e -> e.getBehaviorData(ShootArrowsBehaviorData.class).map(o -> o.getArrowsInInventory() <= 0).orElse(false)),
 	FUSE_LIT("fuse_lit", e -> e.getBehaviorData(ExplodeBehaviorData.class).map(o -> o.isFuseLit()).orElse(false)),
 	FUSE_UNLIT("fuse_unlit", e -> e.getBehaviorData(ExplodeBehaviorData.class).map(o -> !o.isFuseLit()).orElse(false)),
 	BABY("baby", e -> e.asMob().isBaby()),

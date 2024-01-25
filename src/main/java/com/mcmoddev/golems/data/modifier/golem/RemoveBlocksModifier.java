@@ -1,15 +1,20 @@
 package com.mcmoddev.golems.data.modifier.golem;
 
+import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.golem.Golem;
-import com.mcmoddev.golems.data.modifier.GolemModifier;
+import com.mcmoddev.golems.data.golem.GolemPart;
+import com.mcmoddev.golems.data.modifier.Modifier;
 import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mcmoddev.golems.util.PredicateUtils;
 import com.mcmoddev.golems.util.ResourcePair;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
@@ -17,35 +22,46 @@ import java.util.function.Predicate;
  * that pass any of the given {@link RemovePredicate}s
  */
 @Immutable
-public class RemoveBlocksGolemModifier extends GolemModifier {
+public class RemoveBlocksModifier extends Modifier {
 
-	public static final Codec<RemoveBlocksGolemModifier> CODEC = EGCodecUtils.listOrElementCodec(RemovePredicate.CODEC)
-			.xmap(RemoveBlocksGolemModifier::new, RemoveBlocksGolemModifier::getPredicates)
-			.fieldOf("predicate").codec();
+	public static final Codec<RemoveBlocksModifier> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+			EGCodecUtils.listOrElementCodec(RemovePredicate.CODEC).optionalFieldOf("predicate", ImmutableList.of()).forGetter(RemoveBlocksModifier::getPredicates),
+			EGCodecUtils.listOrElementCodec(GolemPart.CODEC).optionalFieldOf("part", ImmutableList.of(GolemPart.ALL)).forGetter(RemoveBlocksModifier::getPart)
+			).apply(instance, RemoveBlocksModifier::new));
 
 	private final List<RemovePredicate> predicates;
+	private final List<GolemPart> part;
 	private final Predicate<ResourcePair> predicate;
 
-	public RemoveBlocksGolemModifier(List<RemovePredicate> predicates) {
+	public RemoveBlocksModifier(List<RemovePredicate> predicates, List<GolemPart> part) {
 		this.predicates = predicates;
-		this.predicate = PredicateUtils.or(predicates);
+		this.predicate = predicates.isEmpty() ? (o -> true) : PredicateUtils.or(predicates);
+		this.part = part;
 	}
 
 	//// GETTERS ////
 
+	/** @return The predicates to test ResourcePair entries. If this list is empty, all entries will be removed. **/
 	public List<RemovePredicate> getPredicates() {
 		return predicates;
+	}
+
+	/** @return The Golem Parts to modify. Defaults to {@link GolemPart#ALL} **/
+	public List<GolemPart> getPart() {
+		return part;
 	}
 
 	//// METHODS ////
 
 	@Override
 	public void apply(Golem.Builder builder) {
-		builder.blocks(b -> b.remove(predicate));
+		for(GolemPart p : part) {
+			builder.blocks(b -> b.apply(p, o -> o.remove(predicate)));
+		}
 	}
 
 	@Override
-	public Codec<? extends GolemModifier> getCodec() {
+	public Codec<? extends Modifier> getCodec() {
 		return EGRegistry.GolemModifierReg.REMOVE_BLOCKS.get();
 	}
 

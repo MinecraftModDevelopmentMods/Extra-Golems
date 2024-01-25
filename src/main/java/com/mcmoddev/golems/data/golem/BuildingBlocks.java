@@ -20,7 +20,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 @Immutable
-public class BuildingBlocks implements Supplier<Collection<Block>> {
+public class BuildingBlocks implements Supplier<Collection<Block>>, Predicate<Block> {
 
 	public static final BuildingBlocks EMPTY = new BuildingBlocks(ImmutableList.of());
 
@@ -31,6 +31,8 @@ public class BuildingBlocks implements Supplier<Collection<Block>> {
 
 	private final List<TagKey<Block>> tagList;
 	private final List<ResourceLocation> blockList;
+
+	private final Set<Block> cachedBlocks;
 
 	public BuildingBlocks(List<ResourcePair> list) {
 		this.list = ImmutableList.copyOf(list);
@@ -46,14 +48,39 @@ public class BuildingBlocks implements Supplier<Collection<Block>> {
 		}
 		this.tagList = tagMapBuilder.build();
 		this.blockList = blockMapBuilder.build();
+		this.cachedBlocks = new HashSet<>();
 	}
 
 	//// SUPPLIER ////
 
-	@Override
 	public Collection<Block> get() {
-		final Set<Block> set = new HashSet<>();
-		for(final )
+		if(this.cachedBlocks.isEmpty() && !(this.tagList.isEmpty() && this.blockList.isEmpty())) {
+			// add blocks by ID
+			for(ResourceLocation id : blockList) {
+				if(ForgeRegistries.BLOCKS.containsKey(id)) {
+					this.cachedBlocks.add(ForgeRegistries.BLOCKS.getValue(id));
+				}
+			}
+			// add blocks by tag
+			for(TagKey<Block> tagKey : tagList) {
+				for(Block block : ForgeRegistries.BLOCKS.tags().getTag(tagKey)) {
+					this.cachedBlocks.add(block);
+				}
+			}
+		}
+		return this.cachedBlocks;
+	}
+
+	//// PREDICATE ////
+
+	/**
+	 * @param block the block to test
+	 * @return true if the golem can be constructed with the given block
+	 */
+	@Override
+	public boolean test(final Block block) {
+		final Collection<Block> blocks = this.get();
+		return !blocks.isEmpty() && blocks.contains(block);
 	}
 
 	//// GETTERS ////
@@ -96,7 +123,12 @@ public class BuildingBlocks implements Supplier<Collection<Block>> {
 		}
 
 		public Builder(List<ResourcePair> list) {
-			this.list = new ArrayList<>(list);
+			this();
+			this.list.addAll(list);
+		}
+
+		public Builder(BuildingBlocks copy) {
+			this(copy.getList());
 		}
 
 		/**

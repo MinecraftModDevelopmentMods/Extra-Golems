@@ -2,7 +2,7 @@ package com.mcmoddev.golems.data.modifier.golem;
 
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.golem.Golem;
-import com.mcmoddev.golems.data.modifier.GolemModifier;
+import com.mcmoddev.golems.data.modifier.Modifier;
 import com.mojang.serialization.Codec;
 
 import javax.annotation.concurrent.Immutable;
@@ -11,15 +11,15 @@ import javax.annotation.concurrent.Immutable;
  * Sets whether the golem is hidden from the UI
  */
 @Immutable
-public class HiddenGolemModifier extends GolemModifier {
+public class HiddenModifier extends Modifier {
 
-	public static final Codec<HiddenGolemModifier> CODEC = Codec.BOOL
-			.xmap(HiddenGolemModifier::new, HiddenGolemModifier::isHidden)
+	public static final Codec<HiddenModifier> CODEC = Codec.BOOL
+			.xmap(HiddenModifier::new, HiddenModifier::isHidden)
 			.fieldOf("hidden").codec();
 
 	private final boolean hidden;
 
-	public HiddenGolemModifier(boolean hidden) {
+	public HiddenModifier(boolean hidden) {
 		this.hidden = hidden;
 	}
 
@@ -37,7 +37,7 @@ public class HiddenGolemModifier extends GolemModifier {
 	}
 
 	@Override
-	public Codec<? extends GolemModifier> getCodec() {
+	public Codec<? extends Modifier> getCodec() {
 		return EGRegistry.GolemModifierReg.HIDDEN.get();
 	}
 }

@@ -5,7 +5,7 @@ import com.mcmoddev.golems.data.golem.Golem;
 import com.mcmoddev.golems.data.model.Layer;
 import com.mcmoddev.golems.data.model.LayerList;
 import com.mcmoddev.golems.data.model.RenderTypes;
-import com.mcmoddev.golems.data.modifier.GolemModifier;
+import com.mcmoddev.golems.data.modifier.Modifier;
 import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mcmoddev.golems.util.ResourcePair;
 import com.mojang.datafixers.util.Either;
@@ -24,15 +24,15 @@ import java.util.function.Predicate;
  * Removes all layers from the {@link LayerList.Builder} that pass any of the given {@link RemovePredicate}s
  */
 @Immutable
-public class RemoveLayersGolemModifier extends GolemModifier {
+public class RemoveLayersModifier extends Modifier {
 
-	public static final Codec<RemoveLayersGolemModifier> CODEC = RemovePredicate.CODEC
-			.xmap(RemoveLayersGolemModifier::new, RemoveLayersGolemModifier::getPredicate)
+	public static final Codec<RemoveLayersModifier> CODEC = RemovePredicate.CODEC
+			.xmap(RemoveLayersModifier::new, RemoveLayersModifier::getPredicate)
 			.fieldOf("predicate").codec();
 
 	private final RemovePredicate predicate;
 
-	public RemoveLayersGolemModifier(RemovePredicate predicate) {
+	public RemoveLayersModifier(RemovePredicate predicate) {
 		this.predicate = predicate;
 	}
 
@@ -50,7 +50,7 @@ public class RemoveLayersGolemModifier extends GolemModifier {
 	}
 
 	@Override
-	public Codec<? extends GolemModifier> getCodec() {
+	public Codec<? extends Modifier> getCodec() {
 		return EGRegistry.GolemModifierReg.REMOVE_LAYERS.get();
 	}
 

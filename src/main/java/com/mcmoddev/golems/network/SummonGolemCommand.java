@@ -1,8 +1,10 @@
 package com.mcmoddev.golems.network;
 
+import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.ExtraGolems;
-import com.mcmoddev.golems.container.GolemContainer;
+import com.mcmoddev.golems.data.golem.Golem;
 import com.mcmoddev.golems.entity.GolemBase;
+import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
@@ -21,12 +23,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.MobSpawnType;
 
-import java.util.HashSet;
-
 public class SummonGolemCommand {
 
 	private static final DynamicCommandExceptionType INVALID_ID = new DynamicCommandExceptionType(arg -> Component.translatable("command.golem.invalid_id", arg));
-	private static final SuggestionProvider<CommandSourceStack> SUGGEST_ID = ((context, builder) -> SharedSuggestionProvider.suggestResource(context.getSource().registryAccess().registryOrThrow(ExtraGolems.Keys.GOLEM_CONTAINERS).keySet(), builder));
+	private static final SuggestionProvider<CommandSourceStack> SUGGEST_ID = ((context, builder) -> SharedSuggestionProvider.suggestResource(context.getSource().registryAccess().registryOrThrow(EGRegistry.Keys.GOLEM).keySet(), builder));
 
 	public static void register(CommandDispatcher<CommandSourceStack> commandSource) {
 
@@ -61,12 +61,12 @@ public class SummonGolemCommand {
 			id = new ResourceLocation(ExtraGolems.MODID, id.getPath());
 		}
 		// validate the id
-		final Registry<GolemContainer> registry = source.registryAccess().registryOrThrow(ExtraGolems.Keys.GOLEM_CONTAINERS);
+		final Registry<Golem> registry = source.registryAccess().registryOrThrow(EGRegistry.Keys.GOLEM);
 		if (!registry.containsKey(id)) {
 			throw INVALID_ID.create(id);
 		}
 		// create the golem
-		tag.putString(GolemBase.KEY_MATERIAL, id.toString());
+		tag.putString(IExtraGolem.KEY_GOLEM_ID, id.toString());
 		final GolemBase entity = GolemBase.create(source.getLevel(), id);
 		entity.load(tag);
 		entity.moveTo(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D);

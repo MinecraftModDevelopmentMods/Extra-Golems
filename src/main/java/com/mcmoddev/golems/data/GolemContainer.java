@@ -7,17 +7,13 @@ import com.mcmoddev.golems.data.behavior.WearBannerBehavior;
 import com.mcmoddev.golems.data.golem.Attributes;
 import com.mcmoddev.golems.data.golem.Golem;
 import com.mcmoddev.golems.data.model.LayerList;
-import com.mcmoddev.golems.data.modifier.GolemModifierList;
+import com.mcmoddev.golems.data.modifier.ModifierList;
 import com.mcmoddev.golems.data.modifier.Priority;
-import com.mcmoddev.golems.entity.GolemBase;
-import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.level.block.Block;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,10 +21,9 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
 /**
- * Contains the ID and values of a {@link Golem} after applying {@link GolemModifierList}s
+ * Contains the ID and values of a {@link Golem} after applying {@link ModifierList}s
  * for the given ID
  */
 public class GolemContainer {
@@ -47,12 +42,12 @@ public class GolemContainer {
 	private GolemContainer(final RegistryAccess registryAccess, final ResourceLocation id) {
 		this.id = id;
 		// load golem
-		final Registry<Golem> golemRegistry = registryAccess.registryOrThrow(EGRegistry.Keys.GOLEMS);
+		final Registry<Golem> golemRegistry = registryAccess.registryOrThrow(EGRegistry.Keys.GOLEM);
 		final Golem wrapped = golemRegistry.getOptional(id).orElseThrow();
 		this.holder = golemRegistry.wrapAsHolder(wrapped);
 		// load modifiers
-		final Map<Priority, Collection<GolemModifierList>> modifiers = new EnumMap<>(Priority.class);
-		registryAccess.registryOrThrow(EGRegistry.Keys.GOLEM_MODIFIER_LISTS).entrySet()
+		final Map<Priority, Collection<ModifierList>> modifiers = new EnumMap<>(Priority.class);
+		registryAccess.registryOrThrow(EGRegistry.Keys.MODIFIER_LIST).entrySet()
 				.stream()
 				.filter(entry -> id.equals(entry.getValue().getTarget()))
 				.map(Map.Entry::getValue)
@@ -63,7 +58,7 @@ public class GolemContainer {
 		builder.behaviors(b -> b.add(WearBannerBehavior.ANY));
 		// apply each modifier in order of priority
 		for(Priority priority : Priority.values()) {
-			for(GolemModifierList modifierList : modifiers.getOrDefault(priority, ImmutableList.of())) {
+			for(ModifierList modifierList : modifiers.getOrDefault(priority, ImmutableList.of())) {
 				modifierList.getModifiers().forEach(m -> m.apply(builder));
 			}
 		}
@@ -115,18 +110,6 @@ public class GolemContainer {
 	/** @return The reconstructed {@link BehaviorList} instance **/
 	public BehaviorList getBehaviors() {
 		return golem.getBehaviors().get();
-	}
-
-	/**
-	 * @param body the body block
-	 * @param legs the legs block
-	 * @param arm1 the first arm block
-	 * @param arm2 the second arm block
-	 * @return true if the golem can be constructed with the given blocks
-	 */
-	public boolean matches(final Block body, final Block legs, final Block arm1, final Block arm2) {
-		final Collection<Block> blocks = golem.getBlocks().get();
-		return !blocks.isEmpty() && blocks.contains(body) && blocks.contains(legs) && blocks.contains(arm1) && blocks.contains(arm2);
 	}
 
 	public List<Component> createDescriptions(final RegistryAccess registryAccess) {

@@ -4,14 +4,12 @@ import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.model.LayerList;
 import com.mcmoddev.golems.entity.IExtraGolem;
-import com.mcmoddev.golems.entity.IVariantProvider;
 import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.RegistryFileCodec;
-import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.concurrent.Immutable;
@@ -29,7 +27,7 @@ public class BehaviorList implements Iterable<Behavior> {
 
 	public static final Codec<BehaviorList> CODEC = EGCodecUtils.listOrElementCodec(Behavior.HOLDER_CODEC)
 			.xmap(BehaviorList::new, BehaviorList::getBehaviors).fieldOf("behaviors").codec();
-	public static final Codec<Holder<BehaviorList>> HOLDER_CODEC = RegistryFileCodec.create(EGRegistry.Keys.BEHAVIOR_LISTS, CODEC, true);
+	public static final Codec<Holder<BehaviorList>> HOLDER_CODEC = RegistryFileCodec.create(EGRegistry.Keys.BEHAVIOR_LIST, CODEC, true);
 
 	private final List<Holder<Behavior>> behaviors;
 
@@ -153,7 +151,7 @@ public class BehaviorList implements Iterable<Behavior> {
 
 		public Builder(final RegistryAccess registryAccess, List<Holder<Behavior>> behaviors) {
 			this.behaviors = new ArrayList<>(behaviors);
-			this.registry = registryAccess.registryOrThrow(EGRegistry.Keys.BEHAVIORS);
+			this.registry = registryAccess.registryOrThrow(EGRegistry.Keys.BEHAVIOR);
 		}
 
 		/**

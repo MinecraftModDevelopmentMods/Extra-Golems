@@ -14,7 +14,14 @@
 	"sound": "minecraft:gravel"
   },
   "hidden": false,
-  "blocks": "minecraft:clay",
+  "blocks": {
+	"all": "minecraft:clay",
+	"body": "minecraft:clay",
+	"legs": "minecraft:clay",
+	"arms": "minecraft:clay",
+	"left_arm": "minecraft:clay",
+	"right_arm": "minecraft:clay"
+  },
   "repair_items": {
     "minecraft:clay": 0.5,
 	"minecraft:clay_ball": 0.1

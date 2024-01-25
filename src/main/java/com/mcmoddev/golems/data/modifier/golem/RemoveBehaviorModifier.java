@@ -4,7 +4,7 @@ import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.behavior.Behavior;
 import com.mcmoddev.golems.data.behavior.BehaviorList;
 import com.mcmoddev.golems.data.golem.Golem;
-import com.mcmoddev.golems.data.modifier.GolemModifier;
+import com.mcmoddev.golems.data.modifier.Modifier;
 import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mcmoddev.golems.util.PredicateUtils;
 import com.mojang.serialization.Codec;
@@ -24,16 +24,16 @@ import java.util.function.Predicate;
  */
 @SuppressWarnings("rawtypes")
 @Immutable
-public class RemoveBehaviorGolemModifier extends GolemModifier {
+public class RemoveBehaviorModifier extends Modifier {
 
-	public static final Codec<RemoveBehaviorGolemModifier> CODEC = EGCodecUtils.listOrElementCodec(RemovePredicate.CODEC)
-			.xmap(RemoveBehaviorGolemModifier::new, RemoveBehaviorGolemModifier::getPredicates)
+	public static final Codec<RemoveBehaviorModifier> CODEC = EGCodecUtils.listOrElementCodec(RemovePredicate.CODEC)
+			.xmap(RemoveBehaviorModifier::new, RemoveBehaviorModifier::getPredicates)
 			.fieldOf("predicate").codec();
 
 	private final List<RemovePredicate> predicates;
 	private final Predicate<Behavior> predicate;
 
-	public RemoveBehaviorGolemModifier(List<RemovePredicate> predicates) {
+	public RemoveBehaviorModifier(List<RemovePredicate> predicates) {
 		this.predicates = predicates;
 		this.predicate = PredicateUtils.or(predicates);
 	}
@@ -52,7 +52,7 @@ public class RemoveBehaviorGolemModifier extends GolemModifier {
 	}
 
 	@Override
-	public Codec<? extends GolemModifier> getCodec() {
+	public Codec<? extends Modifier> getCodec() {
 		return EGRegistry.GolemModifierReg.REMOVE_BEHAVIOR.get();
 	}
 
@@ -75,7 +75,7 @@ public class RemoveBehaviorGolemModifier extends GolemModifier {
 
 		@Override
 		public boolean test(Behavior behavior) {
-			if(type != null && !this.type.equals(EGRegistry.BEHAVIOR_SERIALIZERS_SUPPLIER.get().getKey(behavior.getCodec()))) {
+			if(type != null && !this.type.equals(EGRegistry.BEHAVIOR_SERIALIZER_SUPPLIER.get().getKey(behavior.getCodec()))) {
 				return false;
 			}
 			return variant.equals(behavior.getVariantBounds());

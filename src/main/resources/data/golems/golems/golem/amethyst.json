@@ -8,7 +8,9 @@
 	"sound": "minecraft:amethyst"
   },
   "hidden": false,
-  "blocks": "#forge:storage_blocks/amethyst",
+  "blocks": {
+	"all": "#forge:storage_blocks/amethyst"
+  },
   "repair_items": {
 	"#forge:storage_blocks/amethyst": 0.5,
 	"#forge:gems/amethyst": 0.15

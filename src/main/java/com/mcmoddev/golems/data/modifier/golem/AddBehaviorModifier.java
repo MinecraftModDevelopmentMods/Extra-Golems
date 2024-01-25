@@ -4,9 +4,8 @@ import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.behavior.Behavior;
 import com.mcmoddev.golems.data.behavior.BehaviorList;
 import com.mcmoddev.golems.data.golem.Golem;
-import com.mcmoddev.golems.data.modifier.GolemModifier;
+import com.mcmoddev.golems.data.modifier.Modifier;
 import com.mcmoddev.golems.util.EGCodecUtils;
-import com.mcmoddev.golems.util.ResourcePair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
@@ -21,19 +20,19 @@ import java.util.Optional;
  */
 @SuppressWarnings("rawtypes")
 @Immutable
-public class AddBehaviorGolemModifier extends GolemModifier {
+public class AddBehaviorModifier extends Modifier {
 
-	public static final Codec<AddBehaviorGolemModifier> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			EGCodecUtils.listOrElementCodec(Behavior.DIRECT_CODEC).fieldOf("behavior").forGetter(AddBehaviorGolemModifier::getBehaviors),
+	public static final Codec<AddBehaviorModifier> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+			EGCodecUtils.listOrElementCodec(Behavior.DIRECT_CODEC).fieldOf("behavior").forGetter(AddBehaviorModifier::getBehaviors),
 			BehaviorList.HOLDER_CODEC.optionalFieldOf("reference").forGetter(o -> Optional.ofNullable(o.behaviorList)),
-			Codec.BOOL.optionalFieldOf("replace", false).forGetter(AddBehaviorGolemModifier::replace)
-	).apply(instance, AddBehaviorGolemModifier::new));
+			Codec.BOOL.optionalFieldOf("replace", false).forGetter(AddBehaviorModifier::replace)
+	).apply(instance, AddBehaviorModifier::new));
 
 	private final List<Behavior> behaviors;
 	private final @Nullable Holder<BehaviorList> behaviorList;
 	private final boolean replace;
 
-	public AddBehaviorGolemModifier(List<Behavior> behaviors, Optional<Holder<BehaviorList>> behaviorList, boolean replace) {
+	public AddBehaviorModifier(List<Behavior> behaviors, Optional<Holder<BehaviorList>> behaviorList, boolean replace) {
 		this.behaviors = behaviors;
 		this.behaviorList = behaviorList.orElse(null);
 		this.replace = replace;
@@ -72,7 +71,7 @@ public class AddBehaviorGolemModifier extends GolemModifier {
 	}
 
 	@Override
-	public Codec<? extends GolemModifier> getCodec() {
+	public Codec<? extends Modifier> getCodec() {
 		return EGRegistry.GolemModifierReg.ADD_BEHAVIOR.get();
 	}
 }

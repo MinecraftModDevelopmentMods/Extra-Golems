@@ -3,7 +3,7 @@ package com.mcmoddev.golems.data.modifier.golem;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.golem.Attributes;
 import com.mcmoddev.golems.data.golem.Golem;
-import com.mcmoddev.golems.data.modifier.GolemModifier;
+import com.mcmoddev.golems.data.modifier.Modifier;
 import com.mojang.serialization.Codec;
 
 import javax.annotation.concurrent.Immutable;
@@ -12,14 +12,14 @@ import javax.annotation.concurrent.Immutable;
  * Merges the given {@link Attributes} with the existing ones by replacing values with the ones specified here, if any
  */
 @Immutable
-public class AttributesGolemModifier extends GolemModifier {
+public class AttributesModifier extends Modifier {
 
-	public static final Codec<AttributesGolemModifier> CODEC = Attributes.CODEC.xmap(AttributesGolemModifier::new, AttributesGolemModifier::getAttributes)
+	public static final Codec<AttributesModifier> CODEC = Attributes.CODEC.xmap(AttributesModifier::new, AttributesModifier::getAttributes)
 			.fieldOf("attributes").codec();
 	
 	private final Attributes attributes;
 
-	public AttributesGolemModifier(Attributes attributes) {
+	public AttributesModifier(Attributes attributes) {
 		this.attributes = attributes;
 	}
 
@@ -37,7 +37,7 @@ public class AttributesGolemModifier extends GolemModifier {
 	}
 
 	@Override
-	public Codec<? extends GolemModifier> getCodec() {
+	public Codec<? extends Modifier> getCodec() {
 		return EGRegistry.GolemModifierReg.ATTRIBUTES.get();
 	}
 }

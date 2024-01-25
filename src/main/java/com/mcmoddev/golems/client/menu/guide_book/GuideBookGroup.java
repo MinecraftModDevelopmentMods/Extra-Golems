@@ -67,7 +67,7 @@ public class GuideBookGroup {
 	 */
 	public static List<GuideBookGroup> buildGroups(final RegistryAccess registryAccess) {
 		// load registry
-		final Registry<Golem> registry = registryAccess.registryOrThrow(EGRegistry.Keys.GOLEMS);
+		final Registry<Golem> registry = registryAccess.registryOrThrow(EGRegistry.Keys.GOLEM);
 		// prepare data structures for groups and entries
 		final Map<ResourceLocation, List<GuideBookGroup.Entry>> groups = new HashMap<>();
 		final List<GuideBookGroup> list = new ArrayList<>();

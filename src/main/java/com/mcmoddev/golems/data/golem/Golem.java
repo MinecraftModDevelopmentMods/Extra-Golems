@@ -24,7 +24,7 @@ public class Golem {
 	public static final Codec<Golem> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			Golem.HOLDER_CODEC.optionalFieldOf("parent").forGetter(o -> Optional.ofNullable(o.parent)),
 			Attributes.CODEC.optionalFieldOf("attributes").forGetter(o -> Optional.ofNullable(o.attributes)),
-			BuildingBlocks.CODEC.optionalFieldOf("blocks", BuildingBlocks.EMPTY).forGetter(Golem::getBlocks),
+			GolemBuildingBlocks.CODEC.optionalFieldOf("blocks", GolemBuildingBlocks.EMPTY).forGetter(Golem::getBlocks),
 			RepairItems.CODEC.optionalFieldOf("repair_items", RepairItems.EMPTY).forGetter(Golem::getRepairItems),
 			Codec.intRange(1, 127).optionalFieldOf("variants", 1).forGetter(Golem::getVariants),
 			Codec.BOOL.optionalFieldOf("hidden", false).forGetter(Golem::isHidden),
@@ -33,11 +33,11 @@ public class Golem {
 			BehaviorList.HOLDER_CODEC.optionalFieldOf("brain", Holder.direct(new BehaviorList(ImmutableList.of()))).forGetter(Golem::getBehaviors),
 			ResourceLocation.CODEC.optionalFieldOf("group").forGetter(o -> Optional.ofNullable(o.group))
 	).apply(instance, Golem::new));
-	public static final Codec<Holder<Golem>> HOLDER_CODEC = RegistryFileCodec.create(EGRegistry.Keys.GOLEMS, CODEC, true);
+	public static final Codec<Holder<Golem>> HOLDER_CODEC = RegistryFileCodec.create(EGRegistry.Keys.GOLEM, CODEC, true);
 
 	private final @Nullable Holder<Golem> parent;
 	private final @Nullable Attributes attributes;
-	private final BuildingBlocks blocks;
+	private final GolemBuildingBlocks blocks;
 	private final RepairItems repairItems;
 	private final int variants;
 	private final boolean hidden;
@@ -47,7 +47,7 @@ public class Golem {
 	private final @Nullable ResourceLocation group;
 
 	public Golem(Optional<Holder<Golem>> parent, Optional<Attributes> attributes,
-				 BuildingBlocks blocks, RepairItems repairItems,
+				 GolemBuildingBlocks blocks, RepairItems repairItems,
 				 int variants, boolean hidden, Optional<ParticleOptions> particle,
 				 Holder<LayerList> layers, Holder<BehaviorList> behaviors, Optional<ResourceLocation> group) {
 		this.parent = parent.orElse(null);
@@ -77,7 +77,7 @@ public class Golem {
 		return attributes;
 	}
 
-	public BuildingBlocks getBlocks() {
+	public GolemBuildingBlocks getBlocks() {
 		return blocks;
 	}
 
@@ -116,7 +116,7 @@ public class Golem {
 	public static class Builder {
 		private Holder<Golem> parent;
 		private Attributes.Builder attributes;
-		private BuildingBlocks.Builder blocks;
+		private GolemBuildingBlocks.Builder blocks;
 		private RepairItems.Builder repairItems;
 		private int variants;
 		private boolean hidden;
@@ -128,7 +128,7 @@ public class Golem {
 		//// CONSTRUCTOR ////
 
 		private Builder(final RegistryAccess registryAccess) {
-			this.blocks = new BuildingBlocks.Builder();
+			this.blocks = new GolemBuildingBlocks.Builder();
 			this.attributes = new Attributes.Builder();
 			this.repairItems = new RepairItems.Builder();
 			this.layers = new LayerList.Builder();
@@ -143,7 +143,7 @@ public class Golem {
 			if(hasParent) {
 				builder.parent = golem.getParent();
 				builder.attributes(b -> b.copy(parent.getAttributes()))
-						.blocks(b -> b.addAll(parent.getBlocks().getList()))
+						.blocks(new GolemBuildingBlocks.Builder(parent.getBlocks()))
 						.repairItems(b -> b.addAll(parent.getRepairItems().getMap()))
 						.variants(parent.getVariants())
 						.hidden(parent.isHidden())
@@ -158,17 +158,11 @@ public class Golem {
 			}
 			// blocks (replaces parent)
 			if(!hasParent || !golem.getBlocks().equals(parent.getBlocks())) {
-				builder.blocks(b -> {
-					b.clear();
-					b.addAll(golem.getBlocks().getList());
-				});
+				builder.blocks(new GolemBuildingBlocks.Builder(golem.getBlocks()));
 			}
 			// repair items (replaces parent)
 			if(!hasParent || !golem.getRepairItems().getMap().equals(parent.getRepairItems().getMap())) {
-				builder.repairItems(b -> {
-					b.clear();
-					b.addAll(golem.getRepairItems().getMap());
-				});
+				builder.repairItems(new RepairItems.Builder(golem.getRepairItems()));
 			}
 			// variants (replaces parent)
 			if(!hasParent || golem.getVariants() != parent.getVariants()) {
@@ -229,7 +223,7 @@ public class Golem {
 		 * @param action the action to perform on the blocks
 		 * @return the builder instance
 		 */
-		public Builder blocks(final Consumer<BuildingBlocks.Builder> action) {
+		public Builder blocks(final Consumer<GolemBuildingBlocks.Builder> action) {
 			action.accept(this.blocks);
 			return this;
 		}
@@ -240,7 +234,7 @@ public class Golem {
 		 * @return the builder instance
 		 * @see #blocks(Consumer)
 		 */
-		public Builder blocks(final BuildingBlocks.Builder blocks) {
+		public Builder blocks(final GolemBuildingBlocks.Builder blocks) {
 			this.blocks = blocks;
 			return this;
 		}

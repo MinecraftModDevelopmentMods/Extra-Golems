@@ -14,18 +14,13 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
-import net.minecraft.util.SpawnUtil;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.sensing.GolemSensor;
-import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.level.Level;
@@ -33,9 +28,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.MobSpawnEvent;
 import net.minecraftforge.event.level.BlockEvent;
@@ -59,7 +52,7 @@ public final class EGEvents {
 
 	public static class ForgeHandler {
 
-		private static final TagKey<Golem> VILLAGER_SUMMONABLE = TagKey.create(EGRegistry.Keys.GOLEMS, new ResourceLocation(ExtraGolems.MODID, "villager_summonable"));
+		private static final TagKey<Golem> VILLAGER_SUMMONABLE = TagKey.create(EGRegistry.Keys.GOLEM, new ResourceLocation(ExtraGolems.MODID, "villager_summonable"));
 
 		@SubscribeEvent
 		public static void onAddCommands(final RegisterCommandsEvent event) {
@@ -147,7 +140,7 @@ public final class EGEvents {
 		 */
 		@Nullable
 		private static ResourceLocation getGolemToSpawn(final Level level, final BlockPos pos, final RandomSource random) {
-			final Registry<Golem> registry = level.registryAccess().registryOrThrow(EGRegistry.Keys.GOLEMS);
+			final Registry<Golem> registry = level.registryAccess().registryOrThrow(EGRegistry.Keys.GOLEM);
 			final Optional<Holder<Golem>> oHolder = registry.getOrCreateTag(VILLAGER_SUMMONABLE).getRandomElement(random);
 			if(oHolder.isEmpty()) {
 				return null;

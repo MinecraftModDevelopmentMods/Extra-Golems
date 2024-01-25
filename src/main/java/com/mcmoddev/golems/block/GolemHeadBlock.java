@@ -2,6 +2,7 @@ package com.mcmoddev.golems.block;
 
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.ExtraGolems;
+import com.mcmoddev.golems.data.golem.Golem;
 import com.mcmoddev.golems.entity.GolemBase;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
@@ -9,6 +10,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -137,7 +139,7 @@ public final class GolemHeadBlock extends HorizontalDirectionalBlock {
 		}
 
 		////// Attempt to locate a Golem from this mod //////
-		ResourceLocation golemId = ExtraGolems.getGolemId(level, blockBelow1, blockBelow2, blockArmNorth, blockArmSouth);
+		ResourceKey<Golem> golemId = ExtraGolems.getGolemId(level, blockBelow1, blockBelow2, blockArmNorth, blockArmSouth);
 		// if no entity found for North-South, try to find one for East-West pattern
 		if (golemId == null) {
 			golemId = ExtraGolems.getGolemId(level, blockBelow1, blockBelow2, blockArmEast, blockArmWest);
@@ -216,7 +218,7 @@ public final class GolemHeadBlock extends HorizontalDirectionalBlock {
 		}
 
 		////// Attempt to spawn a Golem from this mod //////
-		ResourceLocation golemId = ExtraGolems.getGolemId(level, blockBelow1, blockBelow2, blockArmNorth, blockArmSouth);
+		ResourceKey<Golem> golemId = ExtraGolems.getGolemId(level, blockBelow1, blockBelow2, blockArmNorth, blockArmSouth);
 		isEastWest = false;
 		// if no entity found for North-South, try to find one for East-West pattern
 		if (golemId == null) {
@@ -226,7 +228,7 @@ public final class GolemHeadBlock extends HorizontalDirectionalBlock {
 
 		if (golemId != null) {
 			if(!level.isClientSide()) {
-				final GolemBase golem = GolemBase.create(level, golemId);
+				final GolemBase golem = GolemBase.create(level, golemId.location());
 				// spawn the entity!
 				removeAllGolemBlocks(level, headPos, isEastWest);
 				golem.setPlayerCreated(true);
