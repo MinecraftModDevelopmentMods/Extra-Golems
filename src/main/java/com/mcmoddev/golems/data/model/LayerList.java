@@ -7,7 +7,11 @@ import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.RegistryFileCodec;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.concurrent.Immutable;
@@ -21,19 +25,20 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 @Immutable
-public class LayerList implements Iterable<Either<Layer, Holder<LayerList>>>, Supplier<List<Layer>> {
+public class LayerList implements Iterable<Either<Layer, ResourceLocation>> {
+
+	public static final Codec<Either<Layer, ResourceLocation>> LAYER_OR_ID_CODEC = Codec.either(Layer.CODEC, ResourceLocation.CODEC);
 
 	public static final Codec<LayerList> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			EGCodecUtils.listOrElementCodec(LayerList.EITHER_CODEC).optionalFieldOf("layers", ImmutableList.of()).forGetter(LayerList::getLayers)
+			EGCodecUtils.listOrElementCodec(LayerList.LAYER_OR_ID_CODEC).optionalFieldOf("layers", ImmutableList.of()).forGetter(LayerList::getLayers)
 	).apply(instance, LayerList::new));
 	public static final Codec<Holder<LayerList>> HOLDER_CODEC = RegistryFileCodec.create(EGRegistry.Keys.MODEL, LayerList.CODEC, true);
-	public static final Codec<Either<Layer, Holder<LayerList>>> EITHER_CODEC = Codec.either(Layer.CODEC, LayerList.HOLDER_CODEC);
 
-	private final List<Either<Layer, Holder<LayerList>>> layers;
+	private final List<Either<Layer, ResourceLocation>> layers;
 	private final List<Layer> flatList;
 	private final List<Layer> flatListView;
 
-	public LayerList(List<Either<Layer, Holder<LayerList>>> layers) {
+	public LayerList(List<Either<Layer, ResourceLocation>> layers) {
 		this.layers = ImmutableList.copyOf(layers);
 		this.flatList = new ArrayList<>();
 		this.flatListView = Collections.unmodifiableList(this.flatList);
@@ -43,24 +48,29 @@ public class LayerList implements Iterable<Either<Layer, Holder<LayerList>>>, Su
 
 	@NotNull
 	@Override
-	public Iterator<Either<Layer, Holder<LayerList>>> iterator() {
+	public Iterator<Either<Layer, ResourceLocation>> iterator() {
 		return layers.iterator();
 	}
 
 	//// GETTERS ////
 
-	public List<Either<Layer, Holder<LayerList>>> getLayers() {
+	public List<Either<Layer, ResourceLocation>> getLayers() {
 		return layers;
 	}
 
-	/**
-	 * DO NOT CALL UNTIL THE SERVER IS RUNNING
-	 * @return the lazy-populated list of layers where all holders have been resolved into layer lists.
-	 */
-	public List<Layer> get() {
+	/** @return the lazy-populated list of layers where all holders have been resolved into layer lists. **/
+	public List<Layer> get(final RegistryAccess registryAccess) {
+		final Registry<LayerList> registry = registryAccess.registryOrThrow(EGRegistry.Keys.MODEL);
 		if(this.flatList.isEmpty()) {
-			for(Either<Layer, Holder<LayerList>> either : this.layers) {
-				either.map(this.flatList::add, holder -> this.flatList.addAll(holder.get().get()));
+			for(Either<Layer, ResourceLocation> either : this.layers) {
+				// add layer directly to list
+				either.ifLeft(layer -> this.flatList.add(layer));
+				// recursively load referenced layer list and add layers
+				either.ifRight(id -> {
+					ResourceKey<LayerList> key = ResourceKey.create(EGRegistry.Keys.MODEL, id);
+					LayerList layerList = registry.getOrThrow(key);
+					this.flatList.addAll(layerList.get(registryAccess));
+				});
 			}
 		}
 		return this.flatListView;
@@ -85,7 +95,7 @@ public class LayerList implements Iterable<Either<Layer, Holder<LayerList>>>, Su
 
 	public static class Builder {
 
-		private List<Either<Layer, Holder<LayerList>>> layers;
+		private List<Either<Layer, ResourceLocation>> layers;
 
 		/**
 		 * Creates a builder with an empty list of layers
@@ -98,7 +108,7 @@ public class LayerList implements Iterable<Either<Layer, Holder<LayerList>>>, Su
 		 * Creates a builder with the given list of layers
 		 * @param layers a list of layers
 		 */
-		public Builder(final List<Either<Layer, Holder<LayerList>>> layers) {
+		public Builder(final List<Either<Layer, ResourceLocation>> layers) {
 			this.layers = new ArrayList<>(layers);
 		}
 
@@ -123,7 +133,7 @@ public class LayerList implements Iterable<Either<Layer, Holder<LayerList>>>, Su
 		 * @param model the model to add
 		 * @return the builder instance
 		 */
-		public Builder add(final Holder<LayerList> model) {
+		public Builder add(final ResourceLocation model) {
 			this.layers.add(Either.right(model));
 			return this;
 		}
@@ -132,7 +142,7 @@ public class LayerList implements Iterable<Either<Layer, Holder<LayerList>>>, Su
 		 * @param collection the layers to add
 		 * @return the builder instance
 		 */
-		public Builder addAll(final Collection<Either<Layer, Holder<LayerList>>> collection) {
+		public Builder addAll(final Collection<Either<Layer, ResourceLocation>> collection) {
 			this.layers.addAll(collection);
 			return this;
 		}
@@ -141,7 +151,7 @@ public class LayerList implements Iterable<Either<Layer, Holder<LayerList>>>, Su
 		 * @param predicate the predicate for layers to remove
 		 * @return the builder instance
 		 */
-		public Builder remove(final Predicate<Either<Layer, Holder<LayerList>>> predicate) {
+		public Builder remove(final Predicate<Either<Layer, ResourceLocation>> predicate) {
 			this.layers.removeIf(predicate);
 			return this;
 		}

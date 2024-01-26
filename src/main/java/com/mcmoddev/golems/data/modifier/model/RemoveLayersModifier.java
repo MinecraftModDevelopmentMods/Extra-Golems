@@ -56,7 +56,7 @@ public class RemoveLayersModifier extends Modifier {
 
 	//// CLASSES ////
 
-	public static class RemovePredicate implements Predicate<Either<Layer, Holder<LayerList>>> {
+	public static class RemovePredicate implements Predicate<Either<Layer, ResourceLocation>> {
 
 		public static final Codec<RemovePredicate> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 				ResourceLocation.CODEC.optionalFieldOf("model").forGetter(o -> Optional.ofNullable(o.model)),
@@ -88,10 +88,10 @@ public class RemoveLayersModifier extends Modifier {
 		}
 
 		@Override
-		public boolean test(Either<Layer, Holder<LayerList>> either) {
+		public boolean test(Either<Layer, ResourceLocation> either) {
 			// check model
 			if(either.right().isPresent()) {
-				return this.model != null && either.right().get().is(this.model);
+				return this.model != null && this.model.equals(either.right().get());
 			}
 			// check layer
 			if(either.left().isEmpty()) {

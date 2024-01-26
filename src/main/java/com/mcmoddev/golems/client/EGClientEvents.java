@@ -5,7 +5,7 @@ import com.mcmoddev.golems.client.entity.GolemModel;
 import com.mcmoddev.golems.client.entity.GolemRenderType;
 import com.mcmoddev.golems.client.entity.GolemRenderer;
 import com.mcmoddev.golems.client.menu.DispenserGolemScreen;
-import com.mcmoddev.golems.client.menu.guide_book.GolemBookScreen;
+import com.mcmoddev.golems.client.menu.guide_book.GuideBookScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.resources.model.ModelBakery;
@@ -78,7 +78,7 @@ public final class EGClientEvents {
 				return;
 			}
 			// open the gui
-			Minecraft.getInstance().setScreen(new GolemBookScreen(playerIn, itemstack));
+			Minecraft.getInstance().setScreen(new GuideBookScreen(playerIn, itemstack));
 		}
 	}
 }

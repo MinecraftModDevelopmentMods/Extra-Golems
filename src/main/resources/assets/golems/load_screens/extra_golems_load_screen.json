@@ -1,7 +1,7 @@
 {
 	"screens" : [
 		{
-			"class" : "com.mcmoddev.golems.client.menu.guide_book.GolemBookScreen",
+			"class" : "com.mcmoddev.golems.client.menu.guide_book.GuideBookScreen",
 			"texture" : "golems:textures/gui/guide_book.png",
 			"size" : [512, 328], 
 			"texSize" : [512, 512]

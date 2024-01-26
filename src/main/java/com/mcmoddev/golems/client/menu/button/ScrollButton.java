@@ -1,4 +1,4 @@
-package com.mcmoddev.golems.client.menu.guide_book.button;
+package com.mcmoddev.golems.client.menu.button;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -114,4 +114,12 @@ public class ScrollButton extends Button {
          */
         void onScroll(final ScrollButton button, final float percent);
     }
+
+	@FunctionalInterface
+	public static interface IScrollProvider {
+		/**
+		 * @return the scroll button used by this scroll provider
+		 */
+		ScrollButton getScrollButton();
+	}
 }

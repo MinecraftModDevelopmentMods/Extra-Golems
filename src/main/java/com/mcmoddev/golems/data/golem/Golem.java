@@ -11,6 +11,7 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.RegistryFileCodec;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
@@ -21,8 +22,9 @@ import java.util.function.Consumer;
 @Immutable
 public class Golem {
 
+
 	public static final Codec<Golem> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			Golem.HOLDER_CODEC.optionalFieldOf("parent").forGetter(o -> Optional.ofNullable(o.parent)),
+			ResourceLocation.CODEC.optionalFieldOf("parent").forGetter(o -> Optional.ofNullable(o.parent)),
 			Attributes.CODEC.optionalFieldOf("attributes").forGetter(o -> Optional.ofNullable(o.attributes)),
 			GolemBuildingBlocks.CODEC.optionalFieldOf("blocks", GolemBuildingBlocks.EMPTY).forGetter(Golem::getBlocks),
 			RepairItems.CODEC.optionalFieldOf("repair_items", RepairItems.EMPTY).forGetter(Golem::getRepairItems),
@@ -33,9 +35,9 @@ public class Golem {
 			BehaviorList.HOLDER_CODEC.optionalFieldOf("brain", Holder.direct(new BehaviorList(ImmutableList.of()))).forGetter(Golem::getBehaviors),
 			ResourceLocation.CODEC.optionalFieldOf("group").forGetter(o -> Optional.ofNullable(o.group))
 	).apply(instance, Golem::new));
-	public static final Codec<Holder<Golem>> HOLDER_CODEC = RegistryFileCodec.create(EGRegistry.Keys.GOLEM, CODEC, true);
+	public static final Codec<Holder<Golem>> HOLDER_CODEC = RegistryFileCodec.create(EGRegistry.Keys.GOLEM, Golem.CODEC, true);
 
-	private final @Nullable Holder<Golem> parent;
+	private final @Nullable ResourceLocation parent;
 	private final @Nullable Attributes attributes;
 	private final GolemBuildingBlocks blocks;
 	private final RepairItems repairItems;
@@ -46,7 +48,7 @@ public class Golem {
 	private final Holder<BehaviorList> behaviors;
 	private final @Nullable ResourceLocation group;
 
-	public Golem(Optional<Holder<Golem>> parent, Optional<Attributes> attributes,
+	public Golem(Optional<ResourceLocation> parent, Optional<Attributes> attributes,
 				 GolemBuildingBlocks blocks, RepairItems repairItems,
 				 int variants, boolean hidden, Optional<ParticleOptions> particle,
 				 Holder<LayerList> layers, Holder<BehaviorList> behaviors, Optional<ResourceLocation> group) {
@@ -68,7 +70,7 @@ public class Golem {
 	//// GETTERS ////
 
 	@Nullable
-	public Holder<Golem> getParent() {
+	public ResourceLocation getParent() {
 		return parent;
 	}
 
@@ -114,7 +116,7 @@ public class Golem {
 	//// BUILDER ////
 
 	public static class Builder {
-		private Holder<Golem> parent;
+		private ResourceLocation parent;
 		private Attributes.Builder attributes;
 		private GolemBuildingBlocks.Builder blocks;
 		private RepairItems.Builder repairItems;
@@ -136,12 +138,25 @@ public class Golem {
 		}
 
 		public static Builder from(final RegistryAccess registryAccess, final Golem golem) {
-			final Builder builder = new Golem.Builder(registryAccess);
+			final Builder builder;
+			final Golem parent;
+			// check if the golem has a parent
 			final boolean hasParent = golem.getParent() != null;
-			final Golem parent = hasParent ? golem.getParent().get() : null;
+			if(hasParent) {
+				// load parent recursively
+				final ResourceKey<Golem> parentId = ResourceKey.create(EGRegistry.Keys.GOLEM, golem.getParent());
+				parent = registryAccess.registryOrThrow(EGRegistry.Keys.GOLEM).getOrThrow(parentId);
+				// create builder from the parent recursively
+				builder = from(registryAccess, parent);
+			} else {
+				// no parent, create builder immediately
+				parent = null;
+				builder = new Golem.Builder(registryAccess);
+			}
 			// apply settings from parent
 			if(hasParent) {
 				builder.parent = golem.getParent();
+
 				builder.attributes(b -> b.copy(parent.getAttributes()))
 						.blocks(new GolemBuildingBlocks.Builder(parent.getBlocks()))
 						.repairItems(b -> b.addAll(parent.getRepairItems().getMap()))

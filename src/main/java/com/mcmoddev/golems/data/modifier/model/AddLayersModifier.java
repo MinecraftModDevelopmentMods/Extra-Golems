@@ -9,6 +9,7 @@ import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
@@ -19,19 +20,19 @@ import java.util.List;
 @Immutable
 public class AddLayersModifier extends Modifier {
 
-	public static final Codec<AddLayersModifier> CODEC = EGCodecUtils.listOrElementCodec(LayerList.EITHER_CODEC)
+	public static final Codec<AddLayersModifier> CODEC = EGCodecUtils.listOrElementCodec(LayerList.LAYER_OR_ID_CODEC)
 			.xmap(AddLayersModifier::new, AddLayersModifier::getLayers)
 			.fieldOf("layers").codec();
 
-	private final List<Either<Layer, Holder<LayerList>>> layers;
+	private final List<Either<Layer, ResourceLocation>> layers;
 
-	public AddLayersModifier(List<Either<Layer, Holder<LayerList>>> layers) {
+	public AddLayersModifier(List<Either<Layer, ResourceLocation>> layers) {
 		this.layers = layers;
 	}
 
 	//// GETTERS ////
 
-	public List<Either<Layer, Holder<LayerList>>> getLayers() {
+	public List<Either<Layer, ResourceLocation>> getLayers() {
 		return layers;
 	}
 

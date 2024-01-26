@@ -76,12 +76,8 @@ public class DeferredBlockState implements Supplier<BlockState> {
 					// load property key
 					Property<?> property = block.getStateDefinition().getProperty(entry.getKey());
 					if(null == property) continue;
-					// load property value
-					Optional<? extends Comparable> oValue = property.getValue(entry.getValue());
-					// assign property
-					if(oValue.isPresent()) {
-						state = state.setValue((Property<? extends Comparable>)property, (Comparable)oValue.get());
-					}
+					// assign property value
+					state = setProperty(state, property, entry.getValue());
 				}
 			}
 			this.blockState = state;
@@ -89,15 +85,10 @@ public class DeferredBlockState implements Supplier<BlockState> {
 		return blockState;
 	}
 
-	/*
-	pPropertyMap.dispatch("Name", (p_61121_) -> {
-         return p_61121_.owner;
-      }, (p_187547_) -> {
-         S s = pHolderFunction.apply(p_187547_);
-         return s.getValues().isEmpty() ? Codec.unit(s) : s.propertiesCodec.codec().optionalFieldOf("Properties").xmap((p_187544_) -> {
-            return p_187544_.orElse(s);
-         }, Optional::of).codec();
-      });
-   }
-	 */
+	private <T extends Comparable<T>> BlockState setProperty(final BlockState blockState, final Property<T> property, final String valueKey) {
+		if(property.getValue(valueKey).isEmpty()) {
+			return blockState;
+		}
+		return blockState.setValue(property, property.getValue(valueKey).get());
+	}
 }

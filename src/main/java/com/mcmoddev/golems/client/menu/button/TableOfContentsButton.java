@@ -1,0 +1,71 @@
+package com.mcmoddev.golems.client.menu.button;
+
+import com.mcmoddev.golems.client.menu.guide_book.IBookScreen;
+import com.mcmoddev.golems.client.menu.guide_book.ITableOfContentsEntry;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.StringUtil;
+import net.minecraft.world.item.ItemStack;
+
+/**
+ * Displays an {@link ItemStack} and message on an {@link ImageButton}
+ */
+public class TableOfContentsButton extends ImageButton {
+
+	protected final IBookScreen parent;
+	protected final Font font;
+	protected final int margin;
+
+	protected ITableOfContentsEntry entry;
+	protected int index;
+
+	protected ItemStack itemStack;
+
+	public TableOfContentsButton(final IBookScreen parent, final Font font,
+								 final int x, final int y, final int width, final int height, int margin,
+								 final ResourceLocation texture, final int u, final int v, final int dv,
+								 final OnPress onPress) {
+		super(x, y, width, height, u, v, dv, texture, onPress);
+		this.parent = parent;
+		this.font = font;
+		this.margin = margin;
+		this.index = 0;
+	}
+
+	public void setEntry(final ITableOfContentsEntry entry, final int index) {
+		this.setMessage(entry.getMessage(0));
+		this.entry = entry;
+		this.index = index;
+	}
+
+	public int getIndex() {
+		return index;
+	}
+
+	@Override
+	public void renderWidget(final GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		super.renderWidget(graphics, mouseX, mouseY, partialTicks);
+		// determine index
+		int index = (int) (this.parent.getTicksOpen() / 30L);
+		// update message
+		this.setMessage(entry.getMessage(index));
+		// draw the block itemstack
+		int posX = this.getX() + margin;
+		int posY = this.getY() + (height - margin * 2) / 2;
+		ItemStack itemStack = this.entry.getItem(index);
+		graphics.renderItem(itemStack, posX, posY);
+		// prepare to draw the message
+		posX += 18;
+		final int messageWidth = (this.width - (posX - this.getX()) - margin);
+		// create a truncated message component
+		final String sMessage = StringUtil.truncateStringIfNecessary(ChatFormatting.stripFormatting(getMessage().getString()), (int) (messageWidth / 5.5F), true);
+		final Component message = Component.literal(sMessage).withStyle(getMessage().getStyle());
+		// draw the message
+		posY = this.getY() + (this.height - font.lineHeight) / 2;
+		graphics.drawString(font, message, posX, posY, 0, false);
+	}
+}
