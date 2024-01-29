@@ -3,6 +3,7 @@ package com.mcmoddev.golems.client.menu.guide_book;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.client.menu.button.ScrollButton;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -44,7 +45,7 @@ public class GuideBookScreen extends Screen implements IBookScreen {
 		super(EGRegistry.ItemReg.GUIDE_BOOK.get().getDescription());
 		this.imageWidth = 256;
 		this.imageHeight = 164;
-		this.groups = GuideBookGroup.buildGroups(getMinecraft().level.registryAccess());
+		this.groups = GuideBookGroup.buildGroups(player.level().registryAccess());
 		this.groups.sort(GuideBookGroup.SORT_BY_ATTACK);
 		this.page = 0;
 	}
@@ -70,16 +71,16 @@ public class GuideBookScreen extends Screen implements IBookScreen {
 		// prepare to add previous and next page buttons
 		final int arrowWidth = 18;
 		final int arrowHeight = 10;
-		final int arrowY = this.y + this.height - arrowHeight - 8;
+		final int arrowY = this.y + this.imageHeight - arrowHeight - 8;
 		// add Previous Page button
 		this.prevPageButton = this.addRenderableWidget(new ImageButton(this.x + 8, arrowY, arrowWidth, arrowHeight,
-				23, 169, arrowHeight, TEXTURE, b -> addPage(-2)));
+				22, 168, arrowHeight, TEXTURE, b -> addPage(-2)));
 		// add Next Page button
 		this.nextPageButton = this.addRenderableWidget(new ImageButton(this.x + this.imageWidth - arrowWidth - 8, arrowY, arrowWidth, arrowHeight,
-				0, 169, arrowHeight, TEXTURE, b -> addPage(2)));
+				0, 168, arrowHeight, TEXTURE, b -> addPage(2)));
 
 		// create guide book
-		guideBook = new GuideBook(this.groups, this, this.x, this.y, 164, 256);
+		guideBook = new GuideBook(this.groups, this, this.x, this.y, 128, 256);
 		// update index
 		setPageIndex(this.page);
 	}

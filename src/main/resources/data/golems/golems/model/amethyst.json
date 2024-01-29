@@ -4,7 +4,7 @@
 	  "texture": "#golems:amethyst"
 	},
 	{
-	  "texture": "#golems:layer/eyes/eyes"
+	  "texture": "#golems:eyes"
 	}
   ]
 }

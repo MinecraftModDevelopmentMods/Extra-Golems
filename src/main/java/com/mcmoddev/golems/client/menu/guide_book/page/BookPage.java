@@ -94,9 +94,9 @@ public class BookPage {
 		public Builder(IBookScreen parent) {
 			this.parent = parent;
 			this.font = parent.getFont();
-			this.width = 164;
+			this.width = 128;
 			this.height = 256;
-			this.padding = 12;
+			this.padding = 10;
 			this.x = parent.getStartX();
 			this.y = parent.getStartY();
 		}

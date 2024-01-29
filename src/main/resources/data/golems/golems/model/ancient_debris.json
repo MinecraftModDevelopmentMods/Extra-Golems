@@ -6,13 +6,13 @@
 	},
 	{
 	  "texture": "minecraft:ancient_debris_side",
-	  "template": "golems:layer/hands_template"
+	  "template": "golems:template/hands"
 	},
 	{
-	  "texture": "#golems:eyes/eyes"
+	  "texture": "#golems:eyes"
 	},
 	{
-	  "texture": "#golems:vines/vines",
+	  "texture": "#golems:vines",
 	  "color": "B02525",
 	  "emissive": true
 	}

@@ -6,14 +6,14 @@
 	},
 	{
 	  "texture": "minecraft:polished_basalt_side",
-	  "template": "golems:template_hands"
+	  "template": "golems:template/hands"
 	},
 	{
-	  "texture": "#golems:layer/vines",
+	  "texture": "#golems:vines",
 	  "color": "005A75"
 	},
 	{
-	  "texture": "#golems:eyes/eyes"
+	  "texture": "#golems:eyes"
 	}
   ]
 }

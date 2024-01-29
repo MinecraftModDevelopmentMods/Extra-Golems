@@ -63,7 +63,7 @@ public class EGCodecUtils {
 
 	/** {@link MobEffectInstance} codec **/
 	public static final Codec<MobEffectInstance> MOB_EFFECT_INSTANCE_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			ForgeRegistries.MOB_EFFECTS.getCodec().fieldOf("potion").forGetter(MobEffectInstance::getEffect),
+			ForgeRegistries.MOB_EFFECTS.getCodec().fieldOf("id").forGetter(MobEffectInstance::getEffect),
 			Codec.INT.optionalFieldOf("duration", 0).forGetter(MobEffectInstance::getDuration),
 			Codec.INT.optionalFieldOf("amplifier", 0).forGetter(MobEffectInstance::getAmplifier),
 			Codec.BOOL.optionalFieldOf("ambient", false).forGetter(MobEffectInstance::isAmbient),

@@ -40,22 +40,22 @@ public class GolemDiagramPage extends BookPage {
 		graphics.pose().scale(scale, scale, scale);
 
 		// head
-		graphics.renderItem(this.head, (int) (x / scale), y);
+		graphics.renderItem(this.head, (int) (x / scale), (int) (y / scale));
 		// middle-bottom
 		y += deltaXY * 4;
-		graphics.renderItem(this.body, (int) (x / scale), y);
+		graphics.renderItem(this.body, (int) (x / scale), (int) (y / scale));
 		// arm-right
 		x += deltaXY * 2;
 		y -= (deltaXY * 5) / 2;
-		graphics.renderItem(this.body, (int) (x / scale), y);
+		graphics.renderItem(this.body, (int) (x / scale), (int) (y / scale));
 		// middle-top
 		x -= deltaXY * 2;
 		y += (deltaXY / 2);
-		graphics.renderItem(this.body, (int) (x / scale), y);
+		graphics.renderItem(this.body, (int) (x / scale), (int) (y / scale));
 		// arm-left
 		x -= deltaXY * 2;
 		y += (deltaXY / 2);
-		graphics.renderItem(this.body, (int) (x / scale), y);
+		graphics.renderItem(this.body, (int) (x / scale), (int) (y / scale));
 
 		// finish rendering
 		graphics.pose().popPose();

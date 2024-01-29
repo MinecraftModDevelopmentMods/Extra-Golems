@@ -154,7 +154,7 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> implement
 		// animate tail
 		if (showKittyLayer) {
 			// ears
-			//TODO this.ears.copyFrom(this.head);
+			this.ears.copyFrom(this.head);
 			// tail
 			this.tail.y = 2.0F;
 			this.tail.z = 4.0F;
@@ -176,11 +176,9 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> implement
 	}
 
 	protected ModelPart getArmForSide(HumanoidArm side) {
-		/*if (side == HumanoidArm.LEFT) {
+		if (side == HumanoidArm.LEFT) {
 			return this.leftArm;
 		}
-		return this.rightArm;*/
-		// TODO
-		return null;
+		return this.rightArm;
 	}
 }

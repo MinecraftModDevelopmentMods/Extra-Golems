@@ -5,11 +5,11 @@
 	"night"
   ],
   "chance": 0.0025,
-  "effect": {
+  "apply": {
 	"target": "self",
-	"effects": [
+	"effect": [
 	  {
-		"potion": "minecraft:regeneration",
+		"id": "minecraft:regeneration",
 		"duration": 300
 	  }
 	]

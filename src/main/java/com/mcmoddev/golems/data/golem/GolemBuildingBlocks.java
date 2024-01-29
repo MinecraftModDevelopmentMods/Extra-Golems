@@ -209,6 +209,10 @@ public class GolemBuildingBlocks implements Supplier<Collection<Block>> {
 		 * @throws IllegalStateException when the map is missing {@link GolemPart#ARMS} and one of {@link GolemPart#LEFT_ARM} or {@link GolemPart#RIGHT_ARM}
 		 */
 		public GolemBuildingBlocks build() {
+			// validate empty
+			if(this.blocks.isEmpty()) {
+				return EMPTY;
+			}
 			// validate all
 			final BuildingBlocks.Builder all = this.blocks.get(GolemPart.ALL);
 			if(all != null) {

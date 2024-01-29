@@ -1,6 +1,5 @@
 package com.mcmoddev.golems.data.behavior.util;
 
-import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mojang.serialization.Codec;

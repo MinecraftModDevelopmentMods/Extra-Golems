@@ -1,6 +1,7 @@
 package com.mcmoddev.golems.data.model;
 
 import com.mcmoddev.golems.ExtraGolems;
+import com.mcmoddev.golems.entity.goal.IVariantPredicate;
 import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mcmoddev.golems.util.ResourcePair;
 import com.mojang.serialization.Codec;
@@ -14,12 +15,12 @@ import javax.annotation.concurrent.Immutable;
 import java.util.Optional;
 
 @Immutable
-public class Layer {
+public class Layer implements IVariantPredicate {
 
-	public static final Layer RAINBOW = new Layer.Builder().texture(new ResourcePair(new ResourceLocation(ExtraGolems.MODID, "layer/vines_rainbow"), true)).build();
+	public static final Layer RAINBOW = new Layer.Builder(new ResourcePair(new ResourceLocation(ExtraGolems.MODID, "rainbow_vines"), true)).build();
 
 	public static final Codec<Layer> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			ResourcePair.CODEC.optionalFieldOf("texture", ResourcePair.EMPTY).forGetter(o -> o.rawTexture),
+			ResourcePair.CODEC.fieldOf("texture").forGetter(o -> o.rawTexture),
 			ResourceLocation.CODEC.optionalFieldOf("template").forGetter(o -> Optional.ofNullable(o.rawTemplate)),
 			Codec.BOOL.optionalFieldOf("emissive", false).forGetter(Layer::isEmissive),
 			EGCodecUtils.HEX_OR_INT_CODEC.optionalFieldOf("color", 0xFFFFFF).forGetter(Layer::getPackedColor),
@@ -42,7 +43,11 @@ public class Layer {
 	public Layer(ResourcePair texture, Optional<ResourceLocation> template, boolean emissive, int color, boolean useBiomeColor,
 				 RenderTypes renderType, MinMaxBounds.Ints variant) {
 		this.rawTexture = texture;
-		this.texture = new ResourcePair(new ResourceLocation(texture.resource().getNamespace(), "textures/entity/golem/" + texture.resource().getPath() + ".png"), texture.flag());
+		if(texture.flag()) {
+			this.texture = new ResourcePair(new ResourceLocation(texture.resource().getNamespace(), "textures/entity/golem/" + texture.resource().getPath() + ".png"), texture.flag());
+		} else {
+			this.texture = new ResourcePair(new ResourceLocation(texture.resource().getNamespace(), "textures/block/" + texture.resource().getPath() + ".png"), texture.flag());
+		}
 		this.rawTemplate = template.orElse(null);
 		this.template = template.map(id -> new ResourceLocation(id.getNamespace(), "textures/entity/golem/" + id.getPath() + ".png")).orElse(null);
 		this.emissive = emissive;
@@ -53,8 +58,11 @@ public class Layer {
 		this.variant = variant;
 	}
 
-	public boolean isInBounds(final int variant) {
-		return this.variant.matches(variant);
+	//// VARIANT PREDICATE ////
+
+	@Override
+	public MinMaxBounds.Ints getVariantBounds() {
+		return variant;
 	}
 
 	//// GETTERS ////
@@ -96,10 +104,6 @@ public class Layer {
 	public RenderTypes getRenderType() {
 		return renderType;
 	}
-
-	public MinMaxBounds.Ints getVariantBounds() {
-		return variant;
-	}
 	
 	//// CLASSES ////
 	
@@ -112,8 +116,8 @@ public class Layer {
 		private RenderTypes renderType;
 		private MinMaxBounds.Ints variant;
 
-		public Builder() {
-			this.texture = ResourcePair.EMPTY;
+		public Builder(ResourcePair texture) {
+			this.texture = texture;
 			this.template = Optional.empty();
 			this.emissive = false;
 			this.color = 0xFFFFFF;

@@ -19,6 +19,8 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiFunction;
+import java.util.function.Supplier;
 
 public class GuideBook {
 
@@ -51,48 +53,64 @@ public class GuideBook {
 	public GuideBook(final List<GuideBookGroup> groups, final IBookScreen screen, final int x, final int y, final int pageWidth, final int pageHeight) {
 		// prepare to create book sections
 		final ImmutableList.Builder<BookPage> pages = ImmutableList.builder();
+		final BiFunction<Integer, Integer, BookPage> blankPage = (posX, posY) -> new BookPage.Builder(screen)
+				.pos(posX, posY)
+				.dimensions(pageWidth, pageHeight)
+				.build();
 		int page = 0;
 		// add introduction section
 		pages.add(new TitleAndBodyPage.Builder(screen)
 				.title(INTRO_TITLE)
 				.body(INTRO_BODY)
+				.pos(x, y)
 				.build());
 		page++;
 		// add table of contents section
-		pages.add(new TableOfContentsPage.Builder(screen, groups, screen::setPageIndex)
+		pages.add(new TableOfContentsPage.Builder(screen, groups, i -> screen.setPageIndex(i + 6))
 				.title(CONTENTS_TITLE)
+				.pos(x + pageWidth, y)
 				.build());
 		page++;
-		// add spell crafting section
+		// add crafting sections
 		final RecipeManager recipeManager = Minecraft.getInstance().level.getRecipeManager();
 		final Optional<CraftingRecipe> oSpellRecipe = loadRecipe(recipeManager, SPELL_RECIPE);
-		if(oSpellRecipe.isPresent()) {
-			pages.add(new CraftingRecipePage.Builder(screen, oSpellRecipe.get()).build());
-			page++;
-		}
-		// add golem head crafting section
 		final Optional<CraftingRecipe> oHeadRecipe = loadRecipe(recipeManager, HEAD_RECIPE);
-		if(oHeadRecipe.isPresent()) {
-			pages.add(new CraftingRecipePage.Builder(screen, oHeadRecipe.get()).build());
-			page++;
+		if(oSpellRecipe.isPresent() && oHeadRecipe.isPresent()) {
+			pages.add(new CraftingRecipePage.Builder(screen, oSpellRecipe.get())
+					.title(BUILD_SPELL_TITLE)
+					.body(BUILD_SPELL_BODY)
+					.pos(x, y)
+					.build());
+			pages.add(new CraftingRecipePage.Builder(screen, oHeadRecipe.get())
+					.title(BUILD_HEAD_TITLE)
+					.body(BUILD_HEAD_BODY)
+					.pos(x + pageWidth, y)
+					.dimensions(pageWidth, pageHeight)
+					.build());
+		} else {
+			pages.add(blankPage.apply(x, y));
+			pages.add(blankPage.apply(x + pageWidth, y));
 		}
+		page += 2;
 		// add build instructions section
 		pages.add(new TitleAndBodyPage.Builder(screen)
 				.title(BUILD_GOLEM_TITLE)
 				.body(BUILD_GOLEM_BODY)
+				.pos(x, y)
+				.dimensions(pageWidth, pageHeight)
 				.build());
 		// add build diagram section
-		pages.add(new GolemDiagramPage.Builder(screen).build());
+		pages.add(new GolemDiagramPage.Builder(screen)
+				.pos(x + pageWidth, y)
+				.dimensions(pageWidth, pageHeight)
+				.build());
 		// add guide book group sections
 		for(GuideBookGroup group : groups) {
 			boolean hasTableOfContents = group.getList().size() > 1;
 			if(hasTableOfContents) {
 				// check if blank page is needed to ensure table of contents is always on an even number page
 				if(page % 2 != 0) {
-					pages.add(new TitleAndBodyPage.Builder(screen)
-							.pos(x + pageWidth, y)
-							.dimensions(pageWidth, pageHeight)
-							.build());
+					pages.add(blankPage.apply(x + pageWidth, y));
 					page++;
 				}
 				// create description page
@@ -121,15 +139,17 @@ public class GuideBook {
 
 		// ensure book has even number of pages
 		if(page % 2 != 0) {
-			pages.add(new TitleAndBodyPage.Builder(screen)
-					.pos(x + pageWidth, y)
-					.dimensions(pageWidth, pageHeight)
-					.build());
+			pages.add(blankPage.apply(x + pageWidth, y));
 			page++;
 		}
 
 		// build list of pages
 		this.pages = pages.build();
+
+		// hide all pages
+		for(BookPage p : this.pages) {
+			p.onHide(screen);
+		}
 	}
 
 	private static Optional<CraftingRecipe> loadRecipe(final RecipeManager recipeManager, final ResourceLocation recipe) {
@@ -138,6 +158,10 @@ public class GuideBook {
 			return Optional.of(craftingRecipe);
 		}
 		return Optional.empty();
+	}
+
+	public List<BookPage> getPages() {
+		return this.pages;
 	}
 
 	@Nullable

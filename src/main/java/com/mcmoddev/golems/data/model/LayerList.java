@@ -61,7 +61,7 @@ public class LayerList implements Iterable<Either<Layer, ResourceLocation>> {
 	/** @return the lazy-populated list of layers where all holders have been resolved into layer lists. **/
 	public List<Layer> get(final RegistryAccess registryAccess) {
 		final Registry<LayerList> registry = registryAccess.registryOrThrow(EGRegistry.Keys.MODEL);
-		if(this.flatList.isEmpty()) {
+		if(this.flatList.isEmpty() && !this.layers.isEmpty()) {
 			for(Either<Layer, ResourceLocation> either : this.layers) {
 				// add layer directly to list
 				either.ifLeft(layer -> this.flatList.add(layer));

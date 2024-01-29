@@ -1,0 +1,20 @@
+{
+  "attributes": {
+    "health": 6.0,
+    "attack": 1.0,
+    "speed": 0.31,
+	"knockback_resistance": 0.0,
+	"swim_ability": "float",
+	"sound": "minecraft:grass"
+  },
+  "group": "golems:leaves",
+  "blocks": {
+	"all": "#minecraft:leaves"
+  },
+  "repair_items": {
+    "#minecraft:leaves": 0.5,
+	"#forge:rods/wooden": 0.1
+  },
+  "model": "golems:leaves",
+  "brain": "golems:leaves"
+}

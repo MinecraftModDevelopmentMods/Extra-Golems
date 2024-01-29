@@ -91,6 +91,7 @@ public class SummonEntityBehavior extends Behavior {
 		CompoundTag tag;
 		try {
 			tag = TagParser.parseTag(this.nbt);
+			tag.putString("id", ForgeRegistries.ENTITY_TYPES.getKey(this.entity).toString());
 		} catch (CommandSyntaxException e) {
 			ExtraGolems.LOGGER.error(this.getClass().getSimpleName() + " failed to parse NBT from '" + this.nbt + "'");
 			tag = new CompoundTag();
@@ -193,9 +194,8 @@ public class SummonEntityBehavior extends Behavior {
 		final ServerLevel level = (ServerLevel) self.level();
 		// spawn entity
 		for(int i = 0; i < amount; i++) {
-			EntityType.create(compoundTag, self.level()).ifPresent(e -> {
-				// read entity from compound tag
-				e.load(getCompoundTag());
+			final CompoundTag tag = compoundTag.copy();
+			EntityType.create(tag, self.level()).ifPresent(e -> {
 				e.setPos(pos);
 				// spawn entity
 				level.addFreshEntityWithPassengers(e);

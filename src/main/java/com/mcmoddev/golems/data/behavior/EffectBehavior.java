@@ -28,7 +28,7 @@ import java.util.function.Predicate;
 public class EffectBehavior extends Behavior {
 
 	public static final Codec<EffectBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
-			.and(TargetedMobEffects.CODEC.fieldOf("effect").forGetter(EffectBehavior::getTargetedMobEffects))
+			.and(TargetedMobEffects.CODEC.fieldOf("apply").forGetter(EffectBehavior::getTargetedMobEffects))
 			.and(TriggerType.CODEC.optionalFieldOf("trigger", TriggerType.TICK).forGetter(EffectBehavior::getTrigger))
 			.and(EGCodecUtils.listOrElementCodec(WorldPredicate.CODEC).optionalFieldOf("predicate", ImmutableList.of(WorldPredicate.ALWAYS)).forGetter(EffectBehavior::getPredicates))
 			.and(Codec.doubleRange(0.0D, 1.0D).optionalFieldOf("chance", 1.0D).forGetter(EffectBehavior::getChance))

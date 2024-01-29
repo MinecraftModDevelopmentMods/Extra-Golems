@@ -27,6 +27,8 @@ public class TableOfContentsPage extends TitleAndBodyPage implements ScrollButto
 	protected final List<TableOfContentsButton> buttons;
 	protected ScrollButton scrollButton;
 	protected int scrollOffset;
+	protected int tableWidth;
+	protected int tableHeight;
 
 	public TableOfContentsPage(Font font, int x, int y, int width, int height, int padding, Component title,
 							   ResourceLocation texture, int tableU, int tableV, final List<ITableOfContentsEntry> entries) {
@@ -36,12 +38,19 @@ public class TableOfContentsPage extends TitleAndBodyPage implements ScrollButto
 		this.tableV = tableV;
 		this.entries = entries;
 		this.buttons = new ArrayList<>();
+		this.tableWidth = width;
+		this.tableHeight = height;
 	}
 
 	protected void setButtons(final ScrollButton scrollButton, List<TableOfContentsButton> buttons) {
 		this.scrollButton = scrollButton;
 		this.buttons.clear();
 		this.buttons.addAll(buttons);
+		if(!buttons.isEmpty()) {
+			TableOfContentsButton b = buttons.get(0);
+			this.tableWidth = b.getWidth() + scrollButton.getWidth() + 6;
+			this.tableHeight = b.getHeight() * buttons.size() + 2;
+		}
 	}
 
 	public ITableOfContentsEntry getEntry(final int index) {
@@ -52,26 +61,29 @@ public class TableOfContentsPage extends TitleAndBodyPage implements ScrollButto
 
 	@Override
 	public void onShow(IBookScreen parent) {
+		// update scroll button
 		this.scrollButton.visible = true;
 		this.scrollButton.active = this.entries.size() > this.buttons.size();
+		updateButtons();
 	}
 
 	@Override
 	public void onHide(IBookScreen parent) {
 		this.scrollButton.visible = this.scrollButton.active = false;
+		for(Button b : this.buttons) {
+			b.visible = b.active = false;
+		}
 	}
 
 	@Override
 	public void render(IBookScreen parent, GuiGraphics graphics, int pageNumber, float ticksOpen) {
-		graphics.blit(texture, x + padding + 1, y + padding * 2 - 1, tableU, tableV, width, height);
+		graphics.blit(texture, x + padding, y + padding * 2, tableU, tableV, tableWidth, tableHeight);
 		super.render(parent, graphics, pageNumber, ticksOpen);
 	}
 
 	//// SCROLL LISTENER ////
 
-	public void onScroll(final ScrollButton scrollButton, final float percent) {
-		// calculate scroll offset
-		this.scrollOffset = Mth.floor(percent * (entries.size() - buttons.size()));
+	protected void updateButtons() {
 		// iterate table of contents buttons
 		for(int i = 0, n = buttons.size(), index = 0; i < n; i++) {
 			TableOfContentsButton button = buttons.get(i);
@@ -87,6 +99,12 @@ public class TableOfContentsPage extends TitleAndBodyPage implements ScrollButto
 		}
 	}
 
+	public void onScroll(final ScrollButton scrollButton, final float percent) {
+		// calculate scroll offset
+		this.scrollOffset = Mth.floor(percent * (entries.size() - buttons.size()));
+		updateButtons();
+	}
+
 	//// BUILDER ////
 
 	public static class Builder extends TitleAndBodyPage.Builder {
@@ -98,6 +116,8 @@ public class TableOfContentsPage extends TitleAndBodyPage implements ScrollButto
 		protected int buttonCount;
 		protected int buttonU;
 		protected int buttonV;
+		private int buttonHeight;
+		private int buttonWidth;
 		protected int scrollU;
 		protected int scrollV;
 		protected Consumer<Integer> onPress;
@@ -111,10 +131,12 @@ public class TableOfContentsPage extends TitleAndBodyPage implements ScrollButto
 			this.texture = GuideBookScreen.CONTENTS;
 			this.tableU = 0;
 			this.tableV = 0;
-			this.buttonU = 111;
+			this.buttonU = 108;
 			this.buttonV = 0;
-			this.scrollU = 0;
-			this.scrollV = 115;
+			this.buttonWidth = 88;
+			this.buttonHeight = 22;
+			this.scrollU = 198;
+			this.scrollV = 0;
 		}
 
 		public Builder texture(final ResourceLocation texture) {
@@ -140,6 +162,12 @@ public class TableOfContentsPage extends TitleAndBodyPage implements ScrollButto
 			return this;
 		}
 
+		public Builder buttonDimensions(final int width, final int height) {
+			this.buttonWidth = width;
+			this.buttonHeight = height;
+			return this;
+		}
+
 		public Builder buttonCount(final int count) {
 			this.buttonCount = count;
 			return this;
@@ -148,18 +176,19 @@ public class TableOfContentsPage extends TitleAndBodyPage implements ScrollButto
 		@Override
 		public TableOfContentsPage build() {
 			// build page
-			final TableOfContentsPage page = new TableOfContentsPage(font, x, y, width, height * buttonCount, padding, title, texture, tableU, tableV, entries);
+			final TableOfContentsPage page = new TableOfContentsPage(font, x, y, width, height, padding, title, texture, tableU, tableV, entries);
 			// add scroll button
 			final ScrollButton scrollButton = new ScrollButton(Button.builder(Component.empty(), b -> {})
-					.pos(x + width + padding, y)
-					.size(12, height * buttonCount),
+					.pos(x + padding + buttonWidth + 5, y + padding * 2 + 1)
+					.size(12, buttonHeight * buttonCount),
 					texture, scrollU, scrollV, 12, 15, 15, true,
-					1.0F / entries.size(), page);
+					1.0F / Math.max(1, entries.size()), page);
 			// add table of contents buttons
 			final List<TableOfContentsButton> buttons = new ArrayList<>();
 			for(int i = 0; i < buttonCount; i++) {
 				Button.OnPress onPress = b -> this.onPress.accept(((TableOfContentsButton)b).getIndex());
-				buttons.add(parent.addButton(new TableOfContentsButton(parent, font, x + padding, y + padding + i * height, width - padding * 2, height - padding * 2, padding, texture, buttonU, buttonV, height, onPress)));
+				TableOfContentsButton button = new TableOfContentsButton(parent, font, x + padding + 1, y + padding * 2 + 1 + i * buttonHeight, buttonWidth, buttonHeight, padding, texture, buttonU, buttonV, buttonHeight, onPress);
+				buttons.add(parent.addButton(button));
 			}
 			// assign buttons
 			page.setButtons(scrollButton, buttons);

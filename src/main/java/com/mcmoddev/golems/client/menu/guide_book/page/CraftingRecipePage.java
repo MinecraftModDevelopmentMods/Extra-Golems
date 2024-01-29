@@ -41,6 +41,21 @@ public class CraftingRecipePage extends TitleAndBodyPage {
 
 	//// RENDER METHODS ////
 
+
+	@Override
+	public void onShow(IBookScreen parent) {
+		for(Button b : this.itemButtons) {
+			b.visible = b.active = true;
+		}
+	}
+
+	@Override
+	public void onHide(IBookScreen parent) {
+		for(Button b : this.itemButtons) {
+			b.visible = b.active = false;
+		}
+	}
+
 	@Override
 	public void render(final IBookScreen parent, final GuiGraphics graphics, int pageNumber, final float ticksOpen) {
 		// render background
@@ -101,7 +116,7 @@ public class CraftingRecipePage extends TitleAndBodyPage {
 			final List<Ingredient> ingredients = recipe.getIngredients();
 			final List<CyclingItemButton> itemButtons = new ArrayList<>();
 			// add first four ingredients from recipe to the list
-			for(int i = 0, n = Math.max(ingredients.size(), 4); i < n; i++) {
+			for(int i = 0, n = Math.min(ingredients.size(), 4); i < n; i++) {
 				itemButtons.add(parent.addButton(new CyclingItemButton(new Button.Builder(Component.empty(), b -> {})
 						.pos(bx + (i % 2) * 18, by + (i / 2) * 18), ingredients.get(i), 1.0F)));
 			}

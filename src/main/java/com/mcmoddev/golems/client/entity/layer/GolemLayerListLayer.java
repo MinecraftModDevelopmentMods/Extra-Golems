@@ -71,7 +71,7 @@ public class GolemLayerListLayer<T extends GolemBase> extends RenderLayer<T, Gol
 		layerModel.setupAnim(entity, limbSwing, limbSwingAmount, partialTicks, netHeadYaw, headPitch);
 		// render all layers
 		int packedOverlay = LivingEntityRenderer.getOverlayCoords(entity, 0.0F);
-		layers.get().forEach(layer -> renderTexture(entity, layerModel, layer, poseStack, bufferSource, packedLight, packedOverlay));
+		layers.get(entity.level().registryAccess()).forEach(layer -> renderTexture(entity, layerModel, layer, poseStack, bufferSource, packedLight, packedOverlay));
 		// render special layers
 		if(ExtraGolems.CONFIG.pride() || ChatFormatting.stripFormatting(entity.getName().getString()).toLowerCase(Locale.ENGLISH).startsWith("lgbt")) {
 			renderTexture(entity, layerModel, Layer.RAINBOW, poseStack, bufferSource, packedLight, packedOverlay);

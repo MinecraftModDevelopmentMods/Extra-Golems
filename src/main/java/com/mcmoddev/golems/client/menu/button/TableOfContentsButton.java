@@ -6,6 +6,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringUtil;
@@ -37,9 +38,14 @@ public class TableOfContentsButton extends ImageButton {
 	}
 
 	public void setEntry(final ITableOfContentsEntry entry, final int index) {
-		this.setMessage(entry.getMessage(0));
 		this.entry = entry;
 		this.index = index;
+		Component message = entry.getMessage(0);
+		final int messageWidth = (this.width - 18 - margin);
+		final String sMessage = StringUtil.truncateStringIfNecessary(ChatFormatting.stripFormatting(message.getString()), (int) (messageWidth / 4.5F), true);
+		message = Component.literal(sMessage).withStyle(getMessage().getStyle());
+		this.setMessage(message);
+		this.setTooltip(Tooltip.create(entry.getMessage(0)));
 	}
 
 	public int getIndex() {
@@ -58,14 +64,9 @@ public class TableOfContentsButton extends ImageButton {
 		int posY = this.getY() + (height - margin * 2) / 2;
 		ItemStack itemStack = this.entry.getItem(index);
 		graphics.renderItem(itemStack, posX, posY);
-		// prepare to draw the message
-		posX += 18;
-		final int messageWidth = (this.width - (posX - this.getX()) - margin);
-		// create a truncated message component
-		final String sMessage = StringUtil.truncateStringIfNecessary(ChatFormatting.stripFormatting(getMessage().getString()), (int) (messageWidth / 5.5F), true);
-		final Component message = Component.literal(sMessage).withStyle(getMessage().getStyle());
 		// draw the message
+		posX += 18;
 		posY = this.getY() + (this.height - font.lineHeight) / 2;
-		graphics.drawString(font, message, posX, posY, 0, false);
+		graphics.drawString(font, getMessage(), posX, posY, 0, false);
 	}
 }
