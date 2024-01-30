@@ -1,0 +1,47 @@
+{
+  "parent": "golems:generic_copper",
+  "hidden": false,
+  "blocks": {
+	"arms": "#forge:storage_blocks/copper",
+	"legs": "#forge:storage_blocks/copper",
+	"body": [
+	  "minecraft:exposed_copper_block",
+	  "minecraft:exposed_cut_copper"
+	]
+  },
+  "model": "golems:exposed_copper",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:update_golem",
+		"trigger": "lightning",
+		"apply": {
+		  "golem": "golems:copper"
+		}
+	  },
+	  {
+		"type": "golems:update_golem",
+		"trigger": "tick",
+		"chance": 0.0004,
+		"apply": {
+		  "golem": "golems:weathered_copper"
+		}
+	  },
+	  {
+		"type": "golems:item_update_golem",
+		"item": "#forge:axe",
+		"apply": {
+		  "golem": "golems:copper"
+		}
+	  },
+	  {
+		"type": "golems:item_update_golem",
+		"item": "minecraft:honeycomb",
+		"consume": true,
+		"apply": {
+		  "golem": "golems:waxed_exposed_copper"
+		}
+	  }
+	]
+  }
+}

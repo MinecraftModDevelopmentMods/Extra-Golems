@@ -1,0 +1,33 @@
+{
+  "attributes": {
+    "health": 24.0,
+    "attack": 6.0,
+	"knockback_resistance": 0.2,
+    "speed": 0.28,
+	"swim_ability": "float"
+  },
+  "group": "golems:coal",
+  "blocks": {
+	"all": "#forge:storage_blocks/coal"
+  },
+  "repair_items": {
+	"#forge:storage_blocks/coal": 0.5,
+    "#minecraft:coals": 0.1
+  },
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:effect",
+		"trigger": "attack",
+		"chance": 0.6,
+		"apply": {
+		  "target": "enemy",
+		  "effect": {
+			"id": "minecraft:blindness",
+			"duration": 90
+		  }
+		}
+	  }
+	]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "parent": "golems:generic_concrete",
+  "hidden": false,
+  "blocks": {
+	"arms": "#forge:concrete",
+	"legs": "#forge:concrete",
+	"body": "minecraft:light_blue_concrete"
+  },
+  "model": "golems:light_blue_concrete"
+}

@@ -1,0 +1,26 @@
+{
+  "attributes": {
+    "health": 40.0,
+    "attack": 12.5,
+    "speed": 0.3,
+	"weak": [
+	  "minecraft:fall"
+	]
+  },
+  "blocks": {
+	"all": "minecraft:bone_block"
+  },
+  "repair_items": {
+    "minecraft:bone_block": 0.5,
+	"#forge:bones": 0.25,
+	"minecraft:bone_meal": 0.08
+  },
+  "model": "golems:bone",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:burn_in_sun"
+	  }
+	]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "attributes": {
+    "health": 24.0,
+    "attack": 5.0,
+    "speed": 0.29,
+	"swim_ability": "float",
+	"sound": "minecraft:wood"
+  },
+  "group": "golems:crafting",
+  "blocks": {
+	"all": "#forge:workbench"
+  },
+  "repair_items": {
+    "#forge:workbench": 0.5,
+	"#minecraft:planks": 0.15
+  },
+  "model": "golems:crafting",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:craft_menu"
+	  }
+	]
+  }
+}
