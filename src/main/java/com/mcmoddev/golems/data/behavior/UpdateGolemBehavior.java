@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-
 /**
  * This behavior allows an entity to change its golem or variant
  * when a certain {@link TriggerType} is triggered

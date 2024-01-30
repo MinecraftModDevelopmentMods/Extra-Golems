@@ -13,7 +13,7 @@ public enum UpdatePredicate implements Predicate<IExtraGolem>, StringRepresentab
 	ALWAYS("always", e -> true),
 	WET("wet", e -> e.asMob().isInWaterRainOrBubble()),
 	DRY("dry", e -> !e.asMob().isInWaterRainOrBubble()),
-	FUELED("fuel", e -> e.getBehaviorData(UseFuelBehaviorData.class).map(o -> o.hasFuel()).orElse(false)),
+	FUEL("fuel", e -> e.getBehaviorData(UseFuelBehaviorData.class).map(o -> o.hasFuel()).orElse(false)),
 	FUEL_EMPTY("fuel_empty", e -> e.getBehaviorData(UseFuelBehaviorData.class).map(o -> !o.hasFuel()).orElse(false)),
 	ARROWS("arrows", e -> e.getBehaviorData(ShootArrowsBehaviorData.class).map(o -> o.getArrowsInInventory() > 0).orElse(false)),
 	ARROWS_EMPTY("arrows_empty", e -> e.getBehaviorData(ShootArrowsBehaviorData.class).map(o -> o.getArrowsInInventory() <= 0).orElse(false)),

@@ -1,0 +1,19 @@
+{
+  "attributes": {
+    "health": 68.0,
+    "attack": 6.0,
+	"speed": 0.27,
+	"swim_ability": "float",
+	"sound": "minecraft:grass"
+  },
+  "blocks": {
+	"all": "minecraft:dried_kelp_block"
+  },
+  "repair_items": {
+    "minecraft:dried_kelp_block": 0.5,
+	"minecraft:dried_kelp": 0.15,
+	"minecraft:kelp": 0.1
+  },
+  "model": "golems:dried_kelp",
+  "brain": "golems:empty"
+}

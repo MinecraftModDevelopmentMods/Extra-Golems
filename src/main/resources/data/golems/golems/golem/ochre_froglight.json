@@ -1,0 +1,22 @@
+{
+  "parent": "golems:generic_froglight",
+  "hidden": false,
+  "blocks": {
+	"arms": [
+	  "minecraft:ochre_froglight",
+	  "minecraft:verdant_froglight",
+	  "minecraft:pearlescent_froglight"
+	],
+	"legs": [
+	  "minecraft:ochre_froglight",
+	  "minecraft:verdant_froglight",
+	  "minecraft:pearlescent_froglight"
+	],
+	"body": "minecraft:ochre_froglight"
+  },
+  "repair_items": {
+	"minecraft:ochre_froglight": 0.5,
+	"#forge:slimeballs": 0.15
+  },
+  "model": "golems:ochre_froglight"
+}
