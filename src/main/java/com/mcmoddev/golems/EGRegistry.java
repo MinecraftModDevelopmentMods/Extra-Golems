@@ -22,8 +22,8 @@ import com.mcmoddev.golems.data.behavior.SplitBehavior;
 import com.mcmoddev.golems.data.behavior.SummonEntityBehavior;
 import com.mcmoddev.golems.data.behavior.TeleportBehavior;
 import com.mcmoddev.golems.data.behavior.TemptBehavior;
-import com.mcmoddev.golems.data.behavior.TickUpdateGolemBehavior;
 import com.mcmoddev.golems.data.behavior.ItemUpdateGolemBehavior;
+import com.mcmoddev.golems.data.behavior.UpdateGolemBehavior;
 import com.mcmoddev.golems.data.behavior.UseFuelBehavior;
 import com.mcmoddev.golems.data.behavior.WearBannerBehavior;
 import com.mcmoddev.golems.data.golem.Attributes;
@@ -246,7 +246,7 @@ public final class EGRegistry {
 		public static final RegistryObject<Codec<SummonEntityBehavior>> SUMMON = BEHAVIOR_SERIALIZER.register("summon", () -> SummonEntityBehavior.CODEC);
 		public static final RegistryObject<Codec<TeleportBehavior>> TELEPORT = BEHAVIOR_SERIALIZER.register("teleport", () -> TeleportBehavior.CODEC);
 		public static final RegistryObject<Codec<TemptBehavior>> TEMPT = BEHAVIOR_SERIALIZER.register("tempt", () -> TemptBehavior.CODEC);
-		public static final RegistryObject<Codec<TickUpdateGolemBehavior>> TICK_UPDATE_GOLEM = BEHAVIOR_SERIALIZER.register("tick_update_golem", () -> TickUpdateGolemBehavior.CODEC);
+		public static final RegistryObject<Codec<UpdateGolemBehavior>> UPDATE_GOLEM = BEHAVIOR_SERIALIZER.register("update_golem", () -> UpdateGolemBehavior.CODEC);
 		public static final RegistryObject<Codec<UseFuelBehavior>> USE_FUEL = BEHAVIOR_SERIALIZER.register("use_fuel", () -> UseFuelBehavior.CODEC);
 
 	}

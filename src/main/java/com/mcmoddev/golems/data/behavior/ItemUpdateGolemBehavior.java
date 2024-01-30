@@ -35,6 +35,7 @@ public class ItemUpdateGolemBehavior extends Behavior {
 			.and(UpdateTarget.CODEC.fieldOf("apply").forGetter(ItemUpdateGolemBehavior::getApply))
 			.and(DeferredHolderSet.codec(BuiltInRegistries.ITEM.key()).optionalFieldOf("item", DeferredHolderSet.empty()).forGetter(ItemUpdateGolemBehavior::getItems))
 			.and(EGCodecUtils.listOrElementCodec(UpdatePredicate.CODEC).fieldOf("predicate").forGetter(ItemUpdateGolemBehavior::getPredicates))
+			.and(Codec.BOOL.optionalFieldOf("consume", false).forGetter(ItemUpdateGolemBehavior::consume))
 			.and(Codec.doubleRange(0.0D, 1.0D).optionalFieldOf("chance", 1.0D).forGetter(ItemUpdateGolemBehavior::getChance))
 			.apply(instance, ItemUpdateGolemBehavior::new));
 
@@ -46,15 +47,18 @@ public class ItemUpdateGolemBehavior extends Behavior {
 	private final List<UpdatePredicate> predicates;
 	/** The conditions to update the golem and variant as a single predicate **/
 	private final Predicate<IExtraGolem> predicate;
+	/** True to consume the item, if any **/
+	private final boolean consume;
 	/** The percent chance **/
 	private final double chance;
 
-	public ItemUpdateGolemBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, UpdateTarget apply, DeferredHolderSet<Item> items, List<UpdatePredicate> predicates, double chance) {
+	public ItemUpdateGolemBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, UpdateTarget apply, DeferredHolderSet<Item> items, List<UpdatePredicate> predicates, boolean consume, double chance) {
 		super(variant, tooltipPredicate);
 		this.apply = apply;
 		this.items = items;
 		this.predicates = predicates;
 		this.predicate = PredicateUtils.and(predicates);
+		this.consume = consume;
 		this.chance = chance;
 	}
 
@@ -70,6 +74,10 @@ public class ItemUpdateGolemBehavior extends Behavior {
 
 	public DeferredHolderSet<Item> getItems() {
 		return items;
+	}
+
+	public boolean consume() {
+		return consume;
 	}
 
 	public double getChance() {
@@ -93,7 +101,12 @@ public class ItemUpdateGolemBehavior extends Behavior {
 				&& this.predicate.test(entity)
 				&& entity.asMob().getRandom().nextDouble() < getChance()
 				&& getApply().apply(entity)) {
+			// swing hand
 			player.swing(hand);
+			// consume item
+			if(consume() && !player.getAbilities().instabuild) {
+				item.shrink(1);
+			}
 		}
 	}
 

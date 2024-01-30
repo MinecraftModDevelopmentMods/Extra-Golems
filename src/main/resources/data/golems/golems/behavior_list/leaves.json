@@ -6,12 +6,10 @@
 	  "chance": 0.25,
 	  "apply": {
 		"target": "self",
-		"effect": [
-		  {
-			"id": "minecraft:regeneration",
-			"duration": 300
-		  }
-		]
+		"effect": {
+		  "id": "minecraft:regeneration",
+		  "duration": 300
+		}
 	  }
 	},
 	{
@@ -20,12 +18,10 @@
 	  "chance": 1.0,
 	  "apply": {
 		"target": "self",
-		"effect": [
-		  {
-			"id": "minecraft:regeneration",
-			"duration": 300
-		  }
-		]
+		"effect": {
+		  "id": "minecraft:regeneration",
+		  "duration": 300
+		}
 	  }
 	}
   ]

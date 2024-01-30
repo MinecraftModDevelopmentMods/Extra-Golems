@@ -4,14 +4,12 @@
   "predicate": [
 	"night"
   ],
-  "chance": 0.0025,
+  "chance": 0.0125,
   "apply": {
 	"target": "self",
-	"effect": [
-	  {
-		"id": "minecraft:regeneration",
-		"duration": 300
-	  }
-	]
+	"effect": {
+	  "id": "minecraft:regeneration",
+	  "duration": 300
+	}
   }
 }

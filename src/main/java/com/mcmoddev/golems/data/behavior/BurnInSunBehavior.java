@@ -57,8 +57,8 @@ public class BurnInSunBehavior extends Behavior {
 	public void onRegisterGoals(final IExtraGolem entity) {
 		final PathfinderMob mob = entity.asMob();
 		// TODO adjust goals to use variant
-		mob.goalSelector.addGoal(1, new RestrictSunGoal(mob));
-		mob.goalSelector.addGoal(2, new FleeSunGoal(mob, 1.1D));
+		mob.goalSelector.addGoal(0, new RestrictSunGoal(mob));
+		mob.goalSelector.addGoal(1, new FleeSunGoal(mob, 1.1D));
 	}
 
 	@Override
