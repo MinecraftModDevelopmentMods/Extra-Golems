@@ -94,6 +94,10 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 	@Nullable
 	private GolemContainer cachedContainer;
 
+	// LIGHT AND POWER
+	private int lightLevel;
+	private int powerLevel;
+
 	// INVENTORY //
 	private static final int INVENTORY_SIZE = 9;
 	private SimpleContainer inventory;
@@ -219,6 +223,9 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 			// allow behaviors to register synched data
 			container.getBehaviors().forEach(b -> b.onRegisterSynchedData(this));
 		}
+		// update light and power
+		this.lightLevel = calculateLightLevel();
+		this.powerLevel = calculatePowerLevel();
 	}
 
 	public void clearCachedGolemContainer() {
@@ -375,10 +382,23 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 		}
 	}
 
+	@Override
+	public boolean dampensVibrations() {
+		final Optional<GolemContainer> oContainer = getContainer();
+		if(oContainer.isPresent() && oContainer.get().getAttributes().occludes()) {
+			return true;
+		}
+		return super.dampensVibrations();
+	}
+
 	//// LIGHT PROVIDER ////
 
 	@Override
 	public int getLightLevel() {
+		return this.lightLevel;
+	}
+
+	public int calculateLightLevel() {
 		final Optional<GolemContainer> oContainer = getContainer();
 		if(oContainer.isEmpty()) {
 			return 0;
@@ -397,6 +417,10 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 
 	@Override
 	public int getPowerLevel() {
+		return this.powerLevel;
+	}
+
+	protected int calculatePowerLevel() {
 		final Optional<GolemContainer> oContainer = getContainer();
 		if(oContainer.isEmpty()) {
 			return 0;
@@ -770,6 +794,8 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 		if (variant >= 0) {
 			this.getEntityData().set(VARIANT, (byte)variant);
 		}
+		this.lightLevel = calculateLightLevel();
+		this.powerLevel = calculatePowerLevel();
 	}
 
 	@Override
