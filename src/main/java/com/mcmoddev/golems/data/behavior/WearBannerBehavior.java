@@ -1,6 +1,7 @@
 package com.mcmoddev.golems.data.behavior;
 
 import com.mcmoddev.golems.EGRegistry;
+import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mojang.serialization.Codec;
@@ -22,13 +23,13 @@ import javax.annotation.concurrent.Immutable;
 @Immutable
 public class WearBannerBehavior extends Behavior {
 
-	public static final WearBannerBehavior ANY = new WearBannerBehavior(MinMaxBounds.Ints.ANY);
+	public static final WearBannerBehavior ANY = new WearBannerBehavior(MinMaxBounds.Ints.ANY, TooltipPredicate.HIDDEN);
 
 	public static final Codec<WearBannerBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
 			.apply(instance, WearBannerBehavior::new));
 
-	public WearBannerBehavior(MinMaxBounds.Ints variant) {
-		super(variant);
+	public WearBannerBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate) {
+		super(variant, tooltipPredicate);
 	}
 
 	//// GETTERS ////

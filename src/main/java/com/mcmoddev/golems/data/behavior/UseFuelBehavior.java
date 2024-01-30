@@ -3,6 +3,7 @@ package com.mcmoddev.golems.data.behavior;
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.behavior.data.UseFuelBehaviorData;
+import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mcmoddev.golems.entity.goal.InertGoal;
 import com.mcmoddev.golems.entity.goal.LookAtWhenActiveGoal;
@@ -54,8 +55,8 @@ public class UseFuelBehavior extends Behavior {
 	/** The number of ticks it takes to deplete one unit of fuel **/
 	protected final int burnTime;
 
-	public UseFuelBehavior(MinMaxBounds.Ints variant, int maxFuel, int burnTime) {
-		super(variant);
+	public UseFuelBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, int maxFuel, int burnTime) {
+		super(variant, tooltipPredicate);
 		this.maxFuel = maxFuel;
 		this.burnTime = burnTime;
 	}

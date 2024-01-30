@@ -3,6 +3,7 @@ package com.mcmoddev.golems.data.behavior;
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.behavior.util.TargetedMobEffects;
+import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.data.behavior.util.TriggerType;
 import com.mcmoddev.golems.data.behavior.util.WorldPredicate;
 import com.mcmoddev.golems.entity.IExtraGolem;
@@ -45,8 +46,8 @@ public class EffectBehavior extends Behavior {
 	/** The chance to apply **/
 	private final double chance;
 
-	public EffectBehavior(MinMaxBounds.Ints variant, TargetedMobEffects targetedMobEffects, TriggerType trigger, List<WorldPredicate> predicates, double chance) {
-		super(variant);
+	public EffectBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, TargetedMobEffects targetedMobEffects, TriggerType trigger, List<WorldPredicate> predicates, double chance) {
+		super(variant, tooltipPredicate);
 		this.targetedMobEffects = targetedMobEffects;
 		this.trigger = trigger;
 		this.predicates = predicates;

@@ -3,6 +3,7 @@ package com.mcmoddev.golems.data.behavior;
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.behavior.util.AoeShape;
+import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.util.AoeMapper;
 import com.mojang.serialization.Codec;
@@ -41,8 +42,8 @@ public class AoeGrowBehavior extends AoeBehavior {
 	/** The AoeMapper instance **/
 	private final AoeMapper mapper;
 
-	public AoeGrowBehavior(MinMaxBounds.Ints variant, int radius, int interval, AoeShape shape, double chance, IntProvider amount) {
-		super(variant, radius, interval, shape);
+	public AoeGrowBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, int radius, int interval, AoeShape shape, double chance, IntProvider amount) {
+		super(variant, tooltipPredicate, radius, interval, shape);
 		this.chance = chance;
 		this.amount = amount;
 		this.mapper = new AoeGrowMapper(chance, amount);

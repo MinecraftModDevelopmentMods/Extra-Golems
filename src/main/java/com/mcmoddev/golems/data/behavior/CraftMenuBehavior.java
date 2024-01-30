@@ -2,6 +2,7 @@ package com.mcmoddev.golems.data.behavior;
 
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
+import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mcmoddev.golems.menu.PortableCraftingMenu;
 import com.mojang.serialization.Codec;
@@ -28,8 +29,8 @@ public class CraftMenuBehavior extends Behavior {
 	public static final Codec<CraftMenuBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
 			.apply(instance, CraftMenuBehavior::new));
 
-	public CraftMenuBehavior(MinMaxBounds.Ints variant) {
-		super(variant);
+	public CraftMenuBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate) {
+		super(variant, tooltipPredicate);
 	}
 
 	//// GETTERS ////

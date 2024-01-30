@@ -9,6 +9,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.TooltipFlag;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -58,7 +59,7 @@ public abstract class GolemDescriptionManager {
 
 		// add all other descriptions information
 		if ((!mob.isBaby() && showBehaviorData) || (mob.isBaby() && showChildBehaviorData)) {
-			list.addAll(container.createDescriptions(mob.level().registryAccess()));
+			list.addAll(container.createDescriptions(mob.level().registryAccess(), extended ? TooltipFlag.ADVANCED : TooltipFlag.NORMAL));
 		}
 		return list;
 	}

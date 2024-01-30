@@ -3,6 +3,7 @@ package com.mcmoddev.golems.data.behavior;
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.behavior.data.ExplodeBehaviorData;
+import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -53,8 +54,8 @@ public class ExplodeBehavior extends Behavior {
 	/** The percent chance [0,1] to apply when the entity attacks **/
 	protected final double chanceOnAttack;
 
-	public ExplodeBehavior(MinMaxBounds.Ints variant, double radius, int fuse, double chanceOnHurt, double chanceOnAttack) {
-		super(variant);
+	public ExplodeBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, double radius, int fuse, double chanceOnHurt, double chanceOnAttack) {
+		super(variant, tooltipPredicate);
 		this.radius = radius;
 		this.fuse = fuse;
 		this.chanceOnHurt = chanceOnHurt;

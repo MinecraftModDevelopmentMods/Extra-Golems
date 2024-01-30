@@ -1,6 +1,7 @@
 package com.mcmoddev.golems.data.behavior;
 
 import com.mcmoddev.golems.data.behavior.util.AoeShape;
+import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mcmoddev.golems.util.GolemModifyBlocksEvent;
 import com.mcmoddev.golems.util.AoeMapper;
@@ -29,8 +30,8 @@ public abstract class AoeBehavior extends Behavior {
 	/** The shape of the affected area **/
 	private final AoeShape shape;
 
-	public AoeBehavior(MinMaxBounds.Ints variant, int radius, int interval, AoeShape shape) {
-		super(variant);
+	public AoeBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, int radius, int interval, AoeShape shape) {
+		super(variant, tooltipPredicate);
 		this.radius = radius;
 		this.interval = interval;
 		this.shape = shape;
@@ -54,7 +55,7 @@ public abstract class AoeBehavior extends Behavior {
 
 	//// METHODS ////
 
-	protected static <T extends AoeBehavior> Products.P4<RecordCodecBuilder.Mu<T>, MinMaxBounds.Ints, Integer, Integer, AoeShape> codecStartAoe(RecordCodecBuilder.Instance<T> instance) {
+	protected static <T extends AoeBehavior> Products.P5<RecordCodecBuilder.Mu<T>, MinMaxBounds.Ints, TooltipPredicate, Integer, Integer, AoeShape> codecStartAoe(RecordCodecBuilder.Instance<T> instance) {
 		return Behavior.codecStart(instance)
 				.and(Codec.intRange(0, 127).optionalFieldOf("radius", 3).forGetter(AoeBehavior::getRadius))
 				.and(Codec.intRange(0, Integer.MAX_VALUE).optionalFieldOf("interval", 4).forGetter(AoeBehavior::getInterval))

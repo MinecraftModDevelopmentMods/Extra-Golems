@@ -13,6 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.Block;
 
 import javax.annotation.Nullable;
@@ -64,7 +65,7 @@ public class GuideBookEntry implements ITableOfContentsEntry {
 		}
 		this.items = builder.build();
 		// collect descriptions
-		this.descriptionList = ImmutableList.copyOf(container.createDescriptions(registryAccess));
+		this.descriptionList = ImmutableList.copyOf(container.createDescriptions(registryAccess, TooltipFlag.ADVANCED));
 		// build single component from description list
 		final MutableComponent descriptionBuilder = Component.empty();
 		for (Component c : this.descriptionList) {

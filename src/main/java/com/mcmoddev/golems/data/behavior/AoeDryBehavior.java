@@ -3,6 +3,7 @@ package com.mcmoddev.golems.data.behavior;
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.behavior.util.AoeShape;
+import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.util.AoeMapper;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -32,8 +33,8 @@ public class AoeDryBehavior extends AoeBehavior {
 	public static final Codec<AoeDryBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStartAoe(instance)
 			.apply(instance, AoeDryBehavior::new));
 
-	public AoeDryBehavior(MinMaxBounds.Ints variant, int radius, int interval, AoeShape shape) {
-		super(variant, radius, interval, shape);
+	public AoeDryBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, int radius, int interval, AoeShape shape) {
+		super(variant, tooltipPredicate, radius, interval, shape);
 	}
 
 	//// AOE BEHAVIOR ////

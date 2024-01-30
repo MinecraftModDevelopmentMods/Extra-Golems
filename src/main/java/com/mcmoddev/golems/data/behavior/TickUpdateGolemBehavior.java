@@ -1,6 +1,7 @@
 package com.mcmoddev.golems.data.behavior;
 
 import com.mcmoddev.golems.EGRegistry;
+import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.data.behavior.util.UpdateTarget;
 import com.mcmoddev.golems.data.behavior.util.UpdatePredicate;
 import com.mcmoddev.golems.entity.GolemBase;
@@ -38,8 +39,8 @@ public class TickUpdateGolemBehavior extends Behavior {
 	/** The percent chance **/
 	private final double chance;
 
-	public TickUpdateGolemBehavior(MinMaxBounds.Ints variant, UpdateTarget apply, List<UpdatePredicate> predicates, double chance) {
-		super(variant);
+	public TickUpdateGolemBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, UpdateTarget apply, List<UpdatePredicate> predicates, double chance) {
+		super(variant, tooltipPredicate);
 		this.apply = apply;
 		this.predicates = predicates;
 		this.predicate = PredicateUtils.and(predicates);

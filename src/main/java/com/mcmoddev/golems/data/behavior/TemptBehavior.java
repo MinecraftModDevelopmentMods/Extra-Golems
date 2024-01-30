@@ -1,6 +1,7 @@
 package com.mcmoddev.golems.data.behavior;
 
 import com.mcmoddev.golems.EGRegistry;
+import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mcmoddev.golems.util.DeferredHolderSet;
@@ -32,8 +33,8 @@ public class TemptBehavior extends Behavior {
 	/** The tempt items **/
 	private final DeferredHolderSet<Item> items;
 
-	public TemptBehavior(MinMaxBounds.Ints variant, DeferredHolderSet<Item> items) {
-		super(variant);
+	public TemptBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, DeferredHolderSet<Item> items) {
+		super(variant, tooltipPredicate);
 		this.items = items;
 		// TODO tempt behavior description
 	}

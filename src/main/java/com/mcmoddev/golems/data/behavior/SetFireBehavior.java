@@ -3,6 +3,7 @@ package com.mcmoddev.golems.data.behavior;
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.behavior.util.TargetType;
+import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.data.behavior.util.TriggerType;
 import com.mcmoddev.golems.data.behavior.util.WorldPredicate;
 import com.mcmoddev.golems.entity.GolemBase;
@@ -55,8 +56,8 @@ public class SetFireBehavior extends Behavior {
 	/** The percent chance [0,1] to apply **/
 	private final double chance;
 
-	public SetFireBehavior(MinMaxBounds.Ints variant, IntProvider seconds, TargetType target, TriggerType trigger, List<WorldPredicate> predicates, double radius, double chance) {
-		super(variant);
+	public SetFireBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, IntProvider seconds, TargetType target, TriggerType trigger, List<WorldPredicate> predicates, double radius, double chance) {
+		super(variant, tooltipPredicate);
 		this.seconds = seconds;
 		this.target = target;
 		this.trigger = trigger;

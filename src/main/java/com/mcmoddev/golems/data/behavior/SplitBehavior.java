@@ -2,6 +2,7 @@ package com.mcmoddev.golems.data.behavior;
 
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
+import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mcmoddev.golems.entity.goal.FollowGoal;
@@ -33,8 +34,8 @@ public class SplitBehavior extends Behavior {
 	/** The number of children to spawn **/
 	private final int children;
 
-	public SplitBehavior(MinMaxBounds.Ints variant, int children) {
-		super(variant);
+	public SplitBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, int children) {
+		super(variant, tooltipPredicate);
 		this.children = children;
 	}
 

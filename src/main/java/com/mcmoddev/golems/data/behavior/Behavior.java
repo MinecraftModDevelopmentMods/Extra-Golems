@@ -3,6 +3,7 @@ package com.mcmoddev.golems.data.behavior;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
+import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mcmoddev.golems.entity.goal.IVariantPredicate;
 import com.mcmoddev.golems.util.EGCodecUtils;
@@ -25,10 +26,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.TooltipFlag;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -42,9 +45,11 @@ public abstract class Behavior implements IVariantPredicate {
 
 	private final MinMaxBounds.Ints variant;
 	private final Supplier<List<Component>> descriptions;
+	private final TooltipPredicate tooltipPredicate;
 
-	public Behavior(MinMaxBounds.Ints variant) {
+	public Behavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate) {
 		this.variant = variant;
+		this.tooltipPredicate = tooltipPredicate;
 		this.descriptions = Suppliers.memoize(this::createDescriptions);
 	}
 
@@ -56,6 +61,10 @@ public abstract class Behavior implements IVariantPredicate {
 	}
 
 	//// GETTERS ////
+
+	public TooltipPredicate getTooltipPredicate() {
+		return tooltipPredicate;
+	}
 
 	/**
 	 * @return the {@link Codec} for this behavior
@@ -177,9 +186,12 @@ public abstract class Behavior implements IVariantPredicate {
 	 * Called when building the Guide Book to add descriptions
 	 *
 	 * @param list the current description list
+	 * @param tooltipFlag the tooltip flag
 	 */
-	public void onAddDescriptions(List<Component> list) {
-		list.addAll(this.descriptions.get());
+	public void onAddDescriptions(List<Component> list, TooltipFlag tooltipFlag) {
+		if(getTooltipPredicate().test(tooltipFlag)) {
+			list.addAll(this.descriptions.get());
+		}
 	}
 
 	//// EQUALITY ////
@@ -217,8 +229,10 @@ public abstract class Behavior implements IVariantPredicate {
 	 * Simplifies codec creation, especially if no other fields are added
 	 * @param instance the record codec builder with additional parameters, if any
 	 */
-	protected static <T extends Behavior> Products.P1<RecordCodecBuilder.Mu<T>, MinMaxBounds.Ints> codecStart(RecordCodecBuilder.Instance<T> instance) {
-		return instance.group(EGCodecUtils.MIN_MAX_INTS_CODEC.optionalFieldOf("variant", MinMaxBounds.Ints.ANY).forGetter(Behavior::getVariantBounds));
+	protected static <T extends Behavior> Products.P2<RecordCodecBuilder.Mu<T>, MinMaxBounds.Ints, TooltipPredicate> codecStart(RecordCodecBuilder.Instance<T> instance) {
+		return instance.group(
+				EGCodecUtils.MIN_MAX_INTS_CODEC.optionalFieldOf("variant", MinMaxBounds.Ints.ANY).forGetter(Behavior::getVariantBounds),
+				TooltipPredicate.CODEC.optionalFieldOf("tooltip", TooltipPredicate.NORMAL).forGetter(Behavior::getTooltipPredicate));
 	}
 
 	protected static boolean removeGoal(final Mob entity, final Class<? extends Goal> goalToRemove) {

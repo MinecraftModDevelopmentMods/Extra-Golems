@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.block.GlowBlock;
+import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.data.behavior.util.TriggerType;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.entity.IExtraGolem;
@@ -49,8 +50,8 @@ public class LightBehavior extends Behavior {
 	/** The light level **/
 	private final int lightLevel;
 
-	public LightBehavior(MinMaxBounds.Ints variant, int interval, int lightLevel) {
-		super(variant);
+	public LightBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, int interval, int lightLevel) {
+		super(variant, tooltipPredicate);
 		this.interval = interval;
 		this.lightLevel = lightLevel;
 	}

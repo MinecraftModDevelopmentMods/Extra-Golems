@@ -3,6 +3,7 @@ package com.mcmoddev.golems.data.behavior;
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.behavior.util.TargetType;
+import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.data.behavior.util.TriggerType;
 import com.mcmoddev.golems.data.behavior.util.WorldPredicate;
 import com.mcmoddev.golems.entity.GolemBase;
@@ -41,6 +42,7 @@ public class PlaceBlockBehavior extends Behavior {
 
 	public static final Codec<PlaceBlockBehavior> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			EGCodecUtils.MIN_MAX_INTS_CODEC.optionalFieldOf("variant", MinMaxBounds.Ints.ANY).forGetter(Behavior::getVariantBounds),
+			TooltipPredicate.CODEC.optionalFieldOf("tooltip", TooltipPredicate.NORMAL).forGetter(Behavior::getTooltipPredicate),
 			TriggerType.CODEC.optionalFieldOf("trigger", TriggerType.TICK).forGetter(PlaceBlockBehavior::getTrigger),
 			TargetType.CODEC.optionalFieldOf("position", TargetType.SELF).forGetter(PlaceBlockBehavior::getPosition),
 			Codec.intRange(0, 8).optionalFieldOf("radius", 0).forGetter(PlaceBlockBehavior::getRadius),
@@ -70,8 +72,8 @@ public class PlaceBlockBehavior extends Behavior {
 	/** True to call the mustSurvive method of the blocks **/
 	private final boolean mustSurvive;
 
-	public PlaceBlockBehavior(MinMaxBounds.Ints variant, TriggerType trigger, TargetType position, int radius, double chance, List<DeferredBlockState> blocks, String displayNameKey, List<WorldPredicate> predicates, boolean mustSurvive) {
-		super(variant);
+	public PlaceBlockBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, TriggerType trigger, TargetType position, int radius, double chance, List<DeferredBlockState> blocks, String displayNameKey, List<WorldPredicate> predicates, boolean mustSurvive) {
+		super(variant, tooltipPredicate);
 		this.trigger = trigger;
 		this.position = position;
 		this.radius = radius;

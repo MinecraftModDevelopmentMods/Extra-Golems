@@ -2,6 +2,7 @@ package com.mcmoddev.golems.data.behavior;
 
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
+import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -45,8 +46,8 @@ public class TeleportBehavior extends Behavior {
 	/** The percent chance [0,1] to apply each tick that the entity has an attack target **/
 	private final double chanceOnTarget;
 
-	public TeleportBehavior(MinMaxBounds.Ints variant, double radius, double chanceOnIdle, double chanceOnHurt, double chanceOnTarget) {
-		super(variant);
+	public TeleportBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, double radius, double chanceOnIdle, double chanceOnHurt, double chanceOnTarget) {
+		super(variant, tooltipPredicate);
 		this.radius = radius;
 		this.chanceOnIdle = chanceOnIdle;
 		this.chanceOnHurt = chanceOnHurt;

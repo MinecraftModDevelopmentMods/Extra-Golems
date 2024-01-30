@@ -5,6 +5,7 @@ import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.block.GlowBlock;
 import com.mcmoddev.golems.block.PowerBlock;
+import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mojang.serialization.Codec;
@@ -44,8 +45,8 @@ public class PowerBehavior extends Behavior {
 	/** The power level **/
 	private final int powerLevel;
 
-	public PowerBehavior(MinMaxBounds.Ints variant, int interval, int powerLevel) {
-		super(variant);
+	public PowerBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, int interval, int powerLevel) {
+		super(variant, tooltipPredicate);
 		this.interval = interval;
 		this.powerLevel = powerLevel;
 	}

@@ -2,6 +2,7 @@ package com.mcmoddev.golems.data.behavior;
 
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
+import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mcmoddev.golems.entity.goal.FollowGoal;
@@ -34,8 +35,8 @@ public class FollowBehavior extends Behavior {
 	/** The goal priority **/
 	private final int priority;
 
-	public FollowBehavior(MinMaxBounds.Ints variant, EntityType<?> entity, int priority) {
-		super(variant);
+	public FollowBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, EntityType<?> entity, int priority) {
+		super(variant, tooltipPredicate);
 		this.entity = entity;
 		this.priority = priority;
 	}

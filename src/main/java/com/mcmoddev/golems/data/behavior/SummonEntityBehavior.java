@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.data.behavior.util.TargetType;
+import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.data.behavior.util.TriggerType;
 import com.mcmoddev.golems.data.behavior.util.WorldPredicate;
 import com.mcmoddev.golems.entity.GolemBase;
@@ -46,6 +47,7 @@ public class SummonEntityBehavior extends Behavior {
 	
 	public static final Codec<SummonEntityBehavior> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			EGCodecUtils.MIN_MAX_INTS_CODEC.optionalFieldOf("variant", MinMaxBounds.Ints.ANY).forGetter(Behavior::getVariantBounds),
+			TooltipPredicate.CODEC.optionalFieldOf("tooltip", TooltipPredicate.NORMAL).forGetter(Behavior::getTooltipPredicate),
 			ForgeRegistries.ENTITY_TYPES.getCodec().fieldOf("entity").forGetter(SummonEntityBehavior::getEntity),
 			Codec.STRING.optionalFieldOf("display_name").forGetter(o -> Optional.ofNullable(o.displayNameKey)),
 			Codec.STRING.optionalFieldOf("nbt", "{}").forGetter(SummonEntityBehavior::getNbt),
@@ -77,8 +79,8 @@ public class SummonEntityBehavior extends Behavior {
 	/** The percent chance [0,1] to apply **/
 	private final double chance;
 
-	public SummonEntityBehavior(MinMaxBounds.Ints variant, EntityType<?> entity, Optional<String> displayNameKey, String nbt, int amount, TargetType position, TriggerType trigger, List<WorldPredicate> predicates, double chance) {
-		super(variant);
+	public SummonEntityBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, EntityType<?> entity, Optional<String> displayNameKey, String nbt, int amount, TargetType position, TriggerType trigger, List<WorldPredicate> predicates, double chance) {
+		super(variant, tooltipPredicate);
 		this.entity = entity;
 		this.displayNameKey = displayNameKey.orElse(null);
 		this.nbt = nbt;

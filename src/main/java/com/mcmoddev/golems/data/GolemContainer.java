@@ -14,6 +14,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.TooltipFlag;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -112,12 +113,12 @@ public class GolemContainer {
 		return golem.getBehaviors().get();
 	}
 
-	public List<Component> createDescriptions(final RegistryAccess registryAccess) {
+	public List<Component> createDescriptions(final RegistryAccess registryAccess, final TooltipFlag tooltipFlag) {
 		final List<Component> list = new ArrayList<>();
 		// create attribute descriptions
-		getAttributes().onAddDescriptions(this, registryAccess, list);
+		getAttributes().onAddDescriptions(this, registryAccess, list, tooltipFlag);
 		// create behavior descriptions
-		getBehaviors().forEach(b -> b.onAddDescriptions(list));
+		getBehaviors().forEach(b -> b.onAddDescriptions(list, tooltipFlag));
 		return list;
 	}
 

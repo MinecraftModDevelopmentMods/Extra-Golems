@@ -2,6 +2,7 @@ package com.mcmoddev.golems.data.behavior;
 
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
+import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mojang.serialization.Codec;
@@ -34,8 +35,8 @@ public class BurnInSunBehavior extends Behavior {
 	/** The percent chance [0,1] to apply each tick **/
 	private final double chance;
 
-	public BurnInSunBehavior(MinMaxBounds.Ints variant, double chance) {
-		super(variant);
+	public BurnInSunBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, double chance) {
+		super(variant, tooltipPredicate);
 		this.chance = chance;
 	}
 

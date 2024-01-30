@@ -1,6 +1,7 @@
 package com.mcmoddev.golems.data.behavior;
 
 import com.mcmoddev.golems.EGRegistry;
+import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.data.behavior.util.UpdateTarget;
 import com.mcmoddev.golems.data.behavior.util.UpdatePredicate;
 import com.mcmoddev.golems.entity.GolemBase;
@@ -48,8 +49,8 @@ public class ItemUpdateGolemBehavior extends Behavior {
 	/** The percent chance **/
 	private final double chance;
 
-	public ItemUpdateGolemBehavior(MinMaxBounds.Ints variant, UpdateTarget apply, DeferredHolderSet<Item> items, List<UpdatePredicate> predicates, double chance) {
-		super(variant);
+	public ItemUpdateGolemBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, UpdateTarget apply, DeferredHolderSet<Item> items, List<UpdatePredicate> predicates, double chance) {
+		super(variant, tooltipPredicate);
 		this.apply = apply;
 		this.items = items;
 		this.predicates = predicates;

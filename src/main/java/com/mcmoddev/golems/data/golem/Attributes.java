@@ -21,6 +21,7 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 
@@ -265,7 +266,7 @@ public class Attributes {
 		}
 	}
 
-	public void onAddDescriptions(final GolemContainer container, final RegistryAccess registryAccess, final List<Component> list) {
+	public void onAddDescriptions(final GolemContainer container, final RegistryAccess registryAccess, final List<Component> list, final TooltipFlag tooltipFlag) {
 		// add health description
 		list.add(Component.translatable("entitytip.health").append(": ").withStyle(ChatFormatting.GRAY)
 				.append(Component.literal(String.format("%.1f", health)).withStyle(ChatFormatting.BLACK))

@@ -3,6 +3,7 @@ package com.mcmoddev.golems.data.behavior;
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.behavior.data.ShootArrowsBehaviorData;
+import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mcmoddev.golems.entity.goal.MoveToItemGoal;
 import com.mcmoddev.golems.menu.PortableDispenserMenu;
@@ -62,8 +63,10 @@ public class ShootArrowsBehavior extends Behavior {
 	/** The follow range modifier to allow the entity to detect enemies from a distance **/
 	protected final AttributeModifier rangeModifier = new AttributeModifier("Ranged follow bonus", 8.0F, AttributeModifier.Operation.ADDITION);
 
-	public ShootArrowsBehavior(MinMaxBounds.Ints variant, double damage) {
-		super(variant);
+	// TODO make other shoot behaviors (fireball, snowball)
+
+	public ShootArrowsBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, double damage) {
+		super(variant, tooltipPredicate);
 		this.damage = damage;
 	}
 
