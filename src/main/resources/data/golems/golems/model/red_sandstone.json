@@ -1,0 +1,9 @@
+{
+  "layers": [
+	{
+	  "texture": "minecraft:red_sandstone",
+	  "template": "golems:template"
+	},
+	"golems:eyes_and_vines"
+  ]
+}

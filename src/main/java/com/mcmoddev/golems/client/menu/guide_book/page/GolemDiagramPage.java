@@ -2,7 +2,7 @@ package com.mcmoddev.golems.client.menu.guide_book.page;
 
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.ExtraGolems;
-import com.mcmoddev.golems.client.menu.guide_book.IBookScreen;
+import com.mcmoddev.golems.client.menu.guide_book.book.IBookScreen;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;

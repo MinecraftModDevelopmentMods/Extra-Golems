@@ -1,0 +1,19 @@
+{
+  "layers": [
+	{
+	  "texture": "minecraft:redstone_block",
+	  "template": "golems:template",
+	  "emissive": true
+	},
+	{
+	  "texture": "minecraft:redstone_block",
+	  "template": "golems:template/hands",
+	  "emissive": true
+	},
+	{
+	  "texture": "#golems:layer/redstone",
+	  "emissive": true
+	},
+	"golems:eyes_and_vines"
+  ]
+}

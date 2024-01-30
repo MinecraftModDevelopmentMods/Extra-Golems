@@ -2,8 +2,8 @@ package com.mcmoddev.golems.client.menu.guide_book.page;
 
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.client.menu.guide_book.GuideBookScreen;
-import com.mcmoddev.golems.client.menu.guide_book.IBookScreen;
-import com.mcmoddev.golems.client.menu.guide_book.ITableOfContentsEntry;
+import com.mcmoddev.golems.client.menu.guide_book.book.IBookScreen;
+import com.mcmoddev.golems.client.menu.guide_book.book.ITableOfContentsEntry;
 import com.mcmoddev.golems.client.menu.button.ScrollButton;
 import com.mcmoddev.golems.client.menu.button.TableOfContentsButton;
 import net.minecraft.client.gui.Font;

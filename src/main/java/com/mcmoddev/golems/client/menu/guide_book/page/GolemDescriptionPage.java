@@ -2,7 +2,7 @@ package com.mcmoddev.golems.client.menu.guide_book.page;
 
 import com.mcmoddev.golems.client.menu.guide_book.GuideBookEntry;
 import com.mcmoddev.golems.client.menu.guide_book.GuideBookGroup;
-import com.mcmoddev.golems.client.menu.guide_book.IBookScreen;
+import com.mcmoddev.golems.client.menu.guide_book.book.IBookScreen;
 import com.mcmoddev.golems.client.menu.button.CyclingItemButton;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;

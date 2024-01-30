@@ -1,0 +1,9 @@
+{
+  "layers": [
+    {
+	  "texture": "minecraft:magenta_concrete",
+	  "template": "golems:template"
+	},
+	"golems:eyes_and_vines"
+  ]
+}

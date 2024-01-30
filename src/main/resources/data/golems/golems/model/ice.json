@@ -1,0 +1,12 @@
+{
+  "layers": [
+	{
+	  "texture": "minecraft:ice",
+	  "template": "golems:template/ice",
+	  "render_type": "translucent"
+	},
+	{
+	  "texture": "#golems:eyes/white"
+	}
+  ]
+}

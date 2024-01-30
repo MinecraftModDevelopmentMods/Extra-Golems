@@ -2,6 +2,7 @@ package com.mcmoddev.golems.client.menu.guide_book;
 
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
+import com.mcmoddev.golems.client.menu.guide_book.book.ITableOfContentsEntry;
 import com.mcmoddev.golems.data.GolemContainer;
 import com.mcmoddev.golems.data.golem.Golem;
 import net.minecraft.core.Registry;

@@ -1,0 +1,9 @@
+{
+  "layers": [
+	{
+	  "texture": "minecraft:mangrove_roots_top",
+	  "template": "golems:template"
+	},
+	"golems:eyes_and_vines"
+  ]
+}

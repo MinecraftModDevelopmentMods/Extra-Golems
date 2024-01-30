@@ -1,0 +1,9 @@
+{
+  "layers": [
+	{
+	  "texture": "minecraft:coal_block",
+	  "template": "golems:template"
+	},
+	"golems:eyes_and_vines"
+  ]
+}

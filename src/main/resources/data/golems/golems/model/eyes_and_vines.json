@@ -1,0 +1,11 @@
+{
+  "layers": [
+	{
+	  "texture": "#golems:eyes"
+	},
+	{
+	  "texture": "#golems:vines",
+	  "color": "83A05A"
+	}
+  ]
+}

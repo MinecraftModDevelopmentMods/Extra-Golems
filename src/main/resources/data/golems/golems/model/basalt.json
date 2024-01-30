@@ -9,11 +9,11 @@
 	  "template": "golems:template/hands"
 	},
 	{
-	  "texture": "#golems:vines",
-	  "color": "005A75"
+	  "texture": "#golems:eyes"
 	},
 	{
-	  "texture": "#golems:eyes"
+	  "texture": "#golems:vines",
+	  "color": "005A75"
 	}
   ]
 }

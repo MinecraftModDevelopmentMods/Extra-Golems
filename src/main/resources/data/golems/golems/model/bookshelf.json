@@ -1,0 +1,11 @@
+{
+  "layers": [
+	{
+	  "texture": "minecraft:bookshelf",
+	  "template": "golems:template"
+	},
+	{
+	  "texture": "#golems:layer/eyes/glasses"
+	}
+  ]
+}

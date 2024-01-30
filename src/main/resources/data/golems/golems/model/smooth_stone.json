@@ -1,0 +1,13 @@
+{
+  "layers": [
+	{
+	  "texture": "minecraft:smooth_stone",
+	  "template": "golems:template"
+	},
+	{
+	  "texture": "minecraft:smooth_stone",
+	  "template": "golems:template/hands"
+	},
+	"golems:eyes_and_vines"
+  ]
+}

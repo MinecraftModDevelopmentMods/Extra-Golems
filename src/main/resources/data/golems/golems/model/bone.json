@@ -1,0 +1,10 @@
+{
+  "layers": [
+	{
+	  "texture": "#golems:bone_skeleton"
+	},
+	{
+	  "texture": "#golems:eyes"
+	}
+  ]
+}

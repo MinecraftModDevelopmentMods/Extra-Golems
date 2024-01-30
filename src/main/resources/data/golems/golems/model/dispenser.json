@@ -1,0 +1,10 @@
+{
+  "layers": [
+	{
+	  "texture": "#golems:dispenser"
+	},
+	{
+	  "texture": "#golems:eyes"
+	}
+  ]
+}

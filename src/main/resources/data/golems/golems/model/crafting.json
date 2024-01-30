@@ -1,0 +1,10 @@
+{
+  "layers": [
+	{
+	  "texture": "#golems:crafting"
+	},
+	{
+	  "texture": "#golems:eyes/glasses"
+	}
+  ]
+}

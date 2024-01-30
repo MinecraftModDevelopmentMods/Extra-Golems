@@ -1,9 +1,0 @@
-{
-  "multitexture": {
-    "base_map": {
-      "0": "minecraft:redstone_lamp_on",
-	  "1": "minecraft:redstone_lamp"
-    }
-  },
-  "vines": {}
-}

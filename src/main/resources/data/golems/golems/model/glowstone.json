@@ -1,0 +1,15 @@
+{
+  "layers": [
+	{
+	  "texture": "minecraft:glowstone",
+	  "template": "golems:template"
+	},
+	{
+	  "texture": "#golems:eyes"
+	},
+	{
+	  "texture": "#golems:vines",
+	  "color": "B02525"
+	}
+  ]
+}

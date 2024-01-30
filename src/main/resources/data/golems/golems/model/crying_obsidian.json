@@ -1,0 +1,15 @@
+{
+  "layers": [
+	{
+	  "texture": "minecraft:crying_obsidian",
+	  "template": "golems:template"
+	},
+    {
+	  "texture": "#golems:layer/crying_obsidian",
+	  "emissive": true
+	},
+	{
+	  "texture": "#golems:eyes"
+	}
+  ]
+}

@@ -8,12 +8,6 @@
 	  "texture": "minecraft:polished_andesite",
 	  "template": "golems:template/hands"
 	},
-	{
-	  "texture": "#golems:eyes"
-	},
-	{
-	  "texture": "#golems:vines",
-	  "color": "83A05A"
-	}
+	"golems:eyes_and_vines"
   ]
 }

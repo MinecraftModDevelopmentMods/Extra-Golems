@@ -1,7 +1,0 @@
-{
-  "base": "minecraft:prismarine_bricks",
-  "vines": {
-	"texture": "#golems:layer/vines",
-	"color": 2070638
-  }
-}

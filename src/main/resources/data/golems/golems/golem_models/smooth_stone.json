@@ -1,9 +1,0 @@
-{
-  "base": "minecraft:smooth_stone",
-  "layers": [
-	{
-	  "texture": "minecraft:smooth_stone",
-	  "template": "golems:layer/hands_template"
-	}
-  ]
-}

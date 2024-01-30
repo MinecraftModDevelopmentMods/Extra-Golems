@@ -1,7 +1,7 @@
 package com.mcmoddev.golems.client.menu.button;
 
-import com.mcmoddev.golems.client.menu.guide_book.IBookScreen;
-import com.mcmoddev.golems.client.menu.guide_book.ITableOfContentsEntry;
+import com.mcmoddev.golems.client.menu.guide_book.book.IBookScreen;
+import com.mcmoddev.golems.client.menu.guide_book.book.ITableOfContentsEntry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;

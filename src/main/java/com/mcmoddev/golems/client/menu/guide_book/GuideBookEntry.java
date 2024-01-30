@@ -1,7 +1,7 @@
 package com.mcmoddev.golems.client.menu.guide_book;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
+import com.mcmoddev.golems.client.menu.guide_book.book.ITableOfContentsEntry;
 import com.mcmoddev.golems.data.GolemContainer;
 import com.mcmoddev.golems.data.golem.GolemBuildingBlocks;
 import com.mcmoddev.golems.data.golem.GolemPart;
@@ -12,7 +12,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.Block;
 
@@ -20,7 +19,6 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 /**

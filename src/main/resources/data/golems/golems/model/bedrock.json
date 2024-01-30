@@ -4,12 +4,6 @@
 	  "texture": "minecraft:bedrock",
 	  "template": "golems:template"
 	},
-	{
-	  "texture": "#golems:eyes"
-	},
-	{
-	  "texture": "#golems:vines",
-	  "color": "83A05A"
-	}
+	"golems:eyes_and_vines"
   ]
 }
