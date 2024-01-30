@@ -11,12 +11,10 @@
   "blocks": {
 	"arms": [
 	  "minecraft:mushroom_stem",
-	  "minecraft:brown_mushroom_block",
 	  "minecraft:red_mushroom_block"
 	],
 	"legs": [
 	  "minecraft:mushroom_stem",
-	  "minecraft:brown_mushroom_block",
 	  "minecraft:red_mushroom_block"
 	],
 	"body": "minecraft:red_mushroom_block"

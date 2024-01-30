@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class TableOfContentsPage extends TitleAndBodyPage implements ScrollButton.IScrollListener {
+public class TableOfContentsPage extends TitleAndBodyPage implements ScrollButton.IScrollListener, ScrollButton.IScrollProvider {
 
 	protected final ResourceLocation texture;
 	protected final int tableU;
@@ -30,9 +30,9 @@ public class TableOfContentsPage extends TitleAndBodyPage implements ScrollButto
 	protected int tableWidth;
 	protected int tableHeight;
 
-	public TableOfContentsPage(Font font, int x, int y, int width, int height, int padding, Component title,
+	public TableOfContentsPage(Font font, int page, int x, int y, int width, int height, int padding, Component title,
 							   ResourceLocation texture, int tableU, int tableV, final List<ITableOfContentsEntry> entries) {
-		super(font, x, y, width, height, padding, title, null);
+		super(font, page, x, y, width, height, padding, title, null);
 		this.texture = texture;
 		this.tableU = tableU;
 		this.tableV = tableV;
@@ -76,9 +76,9 @@ public class TableOfContentsPage extends TitleAndBodyPage implements ScrollButto
 	}
 
 	@Override
-	public void render(IBookScreen parent, GuiGraphics graphics, int pageNumber, float ticksOpen) {
+	public void render(IBookScreen parent, GuiGraphics graphics, float ticksOpen) {
 		graphics.blit(texture, x + padding, y + padding * 2, tableU, tableV, tableWidth, tableHeight);
-		super.render(parent, graphics, pageNumber, ticksOpen);
+		super.render(parent, graphics, ticksOpen);
 	}
 
 	//// SCROLL LISTENER ////
@@ -89,7 +89,7 @@ public class TableOfContentsPage extends TitleAndBodyPage implements ScrollButto
 			TableOfContentsButton button = buttons.get(i);
 			index = i + scrollOffset;
 			// hide button when reaching end of entries
-			if(index >= buttons.size()) {
+			if(index >= entries.size()) {
 				button.active = button.visible = false;
 				continue;
 			}
@@ -99,10 +99,16 @@ public class TableOfContentsPage extends TitleAndBodyPage implements ScrollButto
 		}
 	}
 
+	@Override
 	public void onScroll(final ScrollButton scrollButton, final float percent) {
 		// calculate scroll offset
 		this.scrollOffset = Mth.floor(percent * (entries.size() - buttons.size()));
 		updateButtons();
+	}
+
+	@Override
+	public ScrollButton getScrollButton() {
+		return this.scrollButton;
 	}
 
 	//// BUILDER ////
@@ -122,12 +128,11 @@ public class TableOfContentsPage extends TitleAndBodyPage implements ScrollButto
 		protected int scrollV;
 		protected Consumer<Integer> onPress;
 
-		public Builder(IBookScreen parent, List<? extends ITableOfContentsEntry> entries, Consumer<Integer> onPress) {
-			super(parent);
+		public Builder(IBookScreen parent, int page, List<? extends ITableOfContentsEntry> entries, Consumer<Integer> onPress) {
+			super(parent, page);
 			this.entries = ImmutableList.copyOf(entries);
 			this.buttonCount = 5;
 			this.onPress = onPress;
-			this.padding = 2;
 			this.texture = GuideBookScreen.CONTENTS;
 			this.tableU = 0;
 			this.tableV = 0;
@@ -176,13 +181,13 @@ public class TableOfContentsPage extends TitleAndBodyPage implements ScrollButto
 		@Override
 		public TableOfContentsPage build() {
 			// build page
-			final TableOfContentsPage page = new TableOfContentsPage(font, x, y, width, height, padding, title, texture, tableU, tableV, entries);
+			final TableOfContentsPage tableOfContentsPage = new TableOfContentsPage(font, page, x, y, width, height, padding, title, texture, tableU, tableV, entries);
 			// add scroll button
-			final ScrollButton scrollButton = new ScrollButton(Button.builder(Component.empty(), b -> {})
+			final ScrollButton scrollButton = parent.addButton(new ScrollButton(Button.builder(Component.empty(), b -> {})
 					.pos(x + padding + buttonWidth + 5, y + padding * 2 + 1)
 					.size(12, buttonHeight * buttonCount),
 					texture, scrollU, scrollV, 12, 15, 15, true,
-					1.0F / Math.max(1, entries.size()), page);
+					1.0F / Math.max(1, entries.size()), tableOfContentsPage));
 			// add table of contents buttons
 			final List<TableOfContentsButton> buttons = new ArrayList<>();
 			for(int i = 0; i < buttonCount; i++) {
@@ -191,8 +196,8 @@ public class TableOfContentsPage extends TitleAndBodyPage implements ScrollButto
 				buttons.add(parent.addButton(button));
 			}
 			// assign buttons
-			page.setButtons(scrollButton, buttons);
-			return page;
+			tableOfContentsPage.setButtons(scrollButton, buttons);
+			return tableOfContentsPage;
 		}
 	}
 }

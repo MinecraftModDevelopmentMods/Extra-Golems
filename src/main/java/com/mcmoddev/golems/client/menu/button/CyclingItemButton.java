@@ -78,20 +78,22 @@ public class CyclingItemButton extends Button {
 		return this.items.get(index % this.items.size());
 	}
 
+	public float getScale() {
+		return scale;
+	}
+
 	//// RENDER ////
 
 	@Override
 	protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
 
-		float deltaPos = 1.0F / scale;
-
-		// translate and scale
+		// begin rendering
 		graphics.pose().pushPose();
-		graphics.pose().translate(deltaPos, deltaPos, deltaPos);
+		// scale the pose stack
 		graphics.pose().scale(scale, scale, scale);
 
 		// render the item stack
-		graphics.renderItem(this.itemStack, getX(), getY());
+		graphics.renderItem(this.itemStack, (int)(getX() / scale), (int) (getY() / scale));
 
 		// finish rendering
 		graphics.pose().popPose();

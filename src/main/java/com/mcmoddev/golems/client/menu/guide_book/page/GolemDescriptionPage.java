@@ -12,13 +12,20 @@ import net.minecraft.util.Mth;
 
 public class GolemDescriptionPage extends TitleAndBodyPage {
 
+	/*
+	 * Size of the supplemental image for each entry, if one is present.
+	 * Any image with a 2:1 ratio will render with no issues.
+	 */
+	public static final int IMAGE_WIDTH = 100;
+	public static final int IMAGE_HEIGHT = 50;
+
 	protected final GuideBookGroup group;
 	protected int entryIndex;
 
 	protected final CyclingItemButton item;
 
-	public GolemDescriptionPage(GuideBookGroup group, Font font, int x, int y, int width, int height, int padding, CyclingItemButton itemButton) {
-		super(font, x, y, width, height, padding, group.getEntry(0).getTitle(), group.getEntry(0).getDescription());
+	public GolemDescriptionPage(GuideBookGroup group, Font font, int page, int x, int y, int width, int height, int padding, CyclingItemButton itemButton) {
+		super(font, page, x, y, width, height, padding, group.getEntry(0).getTitle(), group.getEntry(0).getDescription());
 		this.group = group;
 		this.item = itemButton;
 		this.setEntryIndex(0);
@@ -55,23 +62,56 @@ public class GolemDescriptionPage extends TitleAndBodyPage {
 	}
 
 	@Override
-	public void render(IBookScreen parent, GuiGraphics graphics, int pageNumber, float ticksOpen) {
-		super.render(parent, graphics, pageNumber, ticksOpen);
+	public void render(IBookScreen parent, GuiGraphics graphics, float ticksOpen) {
+		// update item button
 		this.item.setIndex((int) (ticksOpen / 30));
-		renderDescription(this.group.getEntry(this.entryIndex), parent, graphics, pageNumber, ticksOpen);
+		// render image
+		renderImage(parent, graphics, ticksOpen);
+		// render title and body
+		super.render(parent, graphics, ticksOpen);
 	}
 
-	protected void renderDescription(GuideBookEntry entry, IBookScreen parent, GuiGraphics graphics, int pageNumber, float ticksOpen) {
+	@Override
+	protected void renderTitle(IBookScreen parent, GuiGraphics graphics, float ticksOpen) {
+		// validate title
+		if(null == title) {
+			return;
+		}
 		// determine maximum width
-		final int maxWidth = width - (padding * 2);
-		// prepare to draw title
-		int posX = x + padding + 4;
+		final int itemWidth = (int) (16 * item.getScale());
+		final int maxWidth = width - itemWidth - (padding * 2);
+		// determine position
+		int posX = x + padding + itemWidth + 2 + Math.max(0, maxWidth - font.width(title)) / 2;
 		int posY = y + padding;
 		// draw title
-		graphics.drawWordWrap(font, entry.getTitle(), posX, posY, maxWidth, 0);
+		graphics.drawWordWrap(font, title, posX, posY, maxWidth, 0);
+	}
+
+	@Override
+	protected void renderBody(IBookScreen parent, GuiGraphics graphics, float ticksOpen) {
+		// validate body
+		if(null == body) {
+			return;
+		}
+		// determine maximum width
+		final int maxWidth = width - (padding * 2);
+		// determine position
+		int posX = x + padding + 4;
+		int posY = y + (int)(padding * 3.5F);
 		// draw body
-		posY += padding * 2;
-		graphics.drawWordWrap(font, entry.getDescription(), posX, posY, maxWidth, 0);
+		graphics.drawWordWrap(font, body, posX, posY, maxWidth, 0);
+	}
+
+	protected void renderImage(IBookScreen parent, GuiGraphics graphics, float ticksOpen) {
+		final GuideBookEntry entry = group.getEntry(entryIndex);
+		// validate image
+		if(null == entry.getImage()) {
+			return;
+		}
+		// draw image
+		final int posX = this.x + (this.width - IMAGE_WIDTH) / 2;
+		final int posY = this.y + this.height - IMAGE_HEIGHT - padding;
+		graphics.blit(entry.getImage(), posX, posY, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT, IMAGE_WIDTH, IMAGE_HEIGHT);
 	}
 
 	//// BUILDER ////
@@ -81,8 +121,8 @@ public class GolemDescriptionPage extends TitleAndBodyPage {
 		private final GuideBookGroup group;
 		private float itemScale;
 
-		public Builder(IBookScreen parent, GuideBookGroup group) {
-			super(parent);
+		public Builder(IBookScreen parent, int page, GuideBookGroup group) {
+			super(parent, page);
 			this.group = group;
 			this.itemScale = 1.6F;
 		}
@@ -94,8 +134,10 @@ public class GolemDescriptionPage extends TitleAndBodyPage {
 
 		@Override
 		public GolemDescriptionPage build() {
-			final CyclingItemButton button = parent.addButton(new CyclingItemButton(Button.builder(Component.empty(), b -> {}), group.getItems(), this.itemScale));
-			return new GolemDescriptionPage(group, font, x, y, width, height, padding, button);
+			final CyclingItemButton button = parent.addButton(new CyclingItemButton(Button
+					.builder(Component.empty(), b -> {})
+					.pos(x + padding, y + padding), group.getItems(), this.itemScale));
+			return new GolemDescriptionPage(group, font, page, x, y, width, height, padding, button);
 		}
 	}
 }

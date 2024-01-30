@@ -3,31 +3,38 @@ package com.mcmoddev.golems.client.menu.guide_book.page;
 import com.mcmoddev.golems.client.menu.guide_book.IBookScreen;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
 
 public class BookPage {
 
 	protected final Font font;
+	protected final int page;
 	protected final int x;
 	protected final int y;
 	protected final int width;
 	protected final int height;
 	protected final int padding;
 
+	protected final Component pageText;
+
 	/**
 	 * @param font the font
+	 * @param page the page number
 	 * @param x the x position
 	 * @param y the y position
 	 * @param width the page width
 	 * @param height the page height
 	 * @param padding the page margin
 	 */
-	public BookPage(Font font, int x, int y, int width, int height, int padding) {
+	public BookPage(Font font, int page, int x, int y, int width, int height, int padding) {
 		this.font = font;
+		this.page = page;
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
 		this.padding = padding;
+		this.pageText = Component.literal("" + page);
 	}
 
 	//// GETTERS ////
@@ -52,6 +59,10 @@ public class BookPage {
 		return padding;
 	}
 
+	public int getPage() {
+		return page;
+	}
+
 	//// RENDER METHODS ////
 
 	public void onShow(final IBookScreen parent) {}
@@ -62,26 +73,30 @@ public class BookPage {
 	 * Renders the content(s) of this page
 	 * @param parent the screen
 	 * @param graphics the gui graphics
-	 * @param pageNumber the page number
 	 * @param ticksOpen the number of ticks since the screen was opened, including the partial tick
 	 */
-	public void render(final IBookScreen parent, final GuiGraphics graphics, int pageNumber, final float ticksOpen) {
-		drawPageNumber(graphics, pageNumber + 1);
+	public void render(final IBookScreen parent, final GuiGraphics graphics, final float ticksOpen) {
+		drawPageNumber(graphics, this.page + 1);
 	}
 
 	protected void drawPageNumber(GuiGraphics graphics, int number) {
-		final boolean isRight = (number % 2) == 1;
-		final int posX = isRight ? this.x + padding * 2 : this.x + width / 2 - padding * 2;
-		final int posY = y + height - 18;
-		final String sPage = String.valueOf(number + 1);
-		final int sWidth = isRight ? this.font.width(sPage) : 0;
-		graphics.drawString(font, sPage, posX - sWidth, posY, 0, false);
+		final int posX;
+		if((number % 2) == 1) {
+			// right-hand page has text near left side
+			posX = this.x + padding * 2;
+		} else {
+			// left-hand page has text near right side
+			posX = this.x + this.width - padding * 2;
+		}
+		final int posY = this.y + this.height + 18;
+		graphics.drawString(font, pageText, posX, posY, 0, false);
 	}
 
 	//// BUILDER ////
 
 	public static class Builder {
 		protected final IBookScreen parent;
+		protected final int page;
 		protected Font font;
 		protected int x;
 		protected int y;
@@ -91,12 +106,13 @@ public class BookPage {
 
 		//// CONSTRUCTOR ////
 
-		public Builder(IBookScreen parent) {
+		public Builder(IBookScreen parent, int page) {
 			this.parent = parent;
+			this.page = page;
 			this.font = parent.getFont();
 			this.width = 128;
 			this.height = 256;
-			this.padding = 10;
+			this.padding = 11;
 			this.x = parent.getStartX();
 			this.y = parent.getStartY();
 		}
@@ -123,7 +139,7 @@ public class BookPage {
 		//// BUILD ////
 
 		public BookPage build() {
-			return new BookPage(font, x, y, width, height, padding);
+			return new BookPage(font, page, x, y, width, height, padding);
 		}
 	}
 }

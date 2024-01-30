@@ -24,8 +24,6 @@ public class TableOfContentsButton extends ImageButton {
 	protected ITableOfContentsEntry entry;
 	protected int index;
 
-	protected ItemStack itemStack;
-
 	public TableOfContentsButton(final IBookScreen parent, final Font font,
 								 final int x, final int y, final int width, final int height, int margin,
 								 final ResourceLocation texture, final int u, final int v, final int dv,
@@ -40,12 +38,13 @@ public class TableOfContentsButton extends ImageButton {
 	public void setEntry(final ITableOfContentsEntry entry, final int index) {
 		this.entry = entry;
 		this.index = index;
-		Component message = entry.getMessage(0);
-		final int messageWidth = (this.width - 18 - margin);
+		// update message
+		final Component message = entry.getMessage(0);
+		final int messageWidth = (this.width - 18 - 2 * 2);
 		final String sMessage = StringUtil.truncateStringIfNecessary(ChatFormatting.stripFormatting(message.getString()), (int) (messageWidth / 4.5F), true);
-		message = Component.literal(sMessage).withStyle(getMessage().getStyle());
-		this.setMessage(message);
-		this.setTooltip(Tooltip.create(entry.getMessage(0)));
+		this.setMessage(Component.literal(sMessage).withStyle(message.getStyle()));
+		// update tooltip
+		this.setTooltip(Tooltip.create(message));
 	}
 
 	public int getIndex() {
@@ -57,11 +56,9 @@ public class TableOfContentsButton extends ImageButton {
 		super.renderWidget(graphics, mouseX, mouseY, partialTicks);
 		// determine index
 		int index = (int) (this.parent.getTicksOpen() / 30L);
-		// update message
-		this.setMessage(entry.getMessage(index));
 		// draw the block itemstack
-		int posX = this.getX() + margin;
-		int posY = this.getY() + (height - margin * 2) / 2;
+		int posX = this.getX() + 2;
+		int posY = this.getY() + (height - 16) / 2;
 		ItemStack itemStack = this.entry.getItem(index);
 		graphics.renderItem(itemStack, posX, posY);
 		// draw the message

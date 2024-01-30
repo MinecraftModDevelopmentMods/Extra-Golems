@@ -12,8 +12,8 @@ public class TitleAndBodyPage extends BookPage {
 	protected @Nullable Component title;
 	protected @Nullable Component body;
 
-	public TitleAndBodyPage(Font font, int x, int y, int width, int height, int padding, @Nullable Component title, @Nullable Component body) {
-		super(font, x, y, width, height, padding);
+	public TitleAndBodyPage(Font font, int page, int x, int y, int width, int height, int padding, @Nullable Component title, @Nullable Component body) {
+		super(font, page, x, y, width, height, padding);
 		this.title = title;
 		this.body = body;
 	}
@@ -31,27 +31,28 @@ public class TitleAndBodyPage extends BookPage {
 	//// RENDER METHODS ////
 
 	@Override
-	public void render(final IBookScreen parent, final GuiGraphics graphics, final int pageNumber, final float ticksOpen) {
-		super.render(parent, graphics, pageNumber, ticksOpen);
-		renderTitle(parent, graphics, pageNumber, ticksOpen);
-		renderBody(parent, graphics, pageNumber, ticksOpen);
+	public void render(final IBookScreen parent, final GuiGraphics graphics, final float ticksOpen) {
+		super.render(parent, graphics, ticksOpen);
+		renderTitle(parent, graphics, ticksOpen);
+		renderBody(parent, graphics, ticksOpen);
 	}
 
-	protected void renderTitle(IBookScreen parent, GuiGraphics graphics, int pageNumber, float ticksOpen) {
+	protected void renderTitle(IBookScreen parent, GuiGraphics graphics, float ticksOpen) {
 		// validate title
 		if(null == title) {
 			return;
 		}
 		// determine maximum width
-		final int maxWidth = width - (padding * 2);
+		//final int maxWidth = width - (padding * 2);
+		final int textWidth = font.width(title);
 		// determine position
-		int posX = x + padding + 4;
+		int posX = x + Math.max(0, width - textWidth) / 2;
 		int posY = y + padding;
 		// draw title
-		graphics.drawWordWrap(font, title, posX, posY, maxWidth, 0);
+		graphics.drawString(font, title, posX, posY, 0, false);
 	}
 
-	protected void renderBody(IBookScreen parent, GuiGraphics graphics, int pageNumber, float ticksOpen) {
+	protected void renderBody(IBookScreen parent, GuiGraphics graphics, float ticksOpen) {
 		// validate body
 		if(null == body) {
 			return;
@@ -73,8 +74,8 @@ public class TitleAndBodyPage extends BookPage {
 
 		//// CONSTRUCTOR ////
 
-		public Builder(IBookScreen parent) {
-			super(parent);
+		public Builder(IBookScreen parent, int page) {
+			super(parent, page);
 		}
 
 		//// CHAIN METHODS ////
@@ -93,7 +94,7 @@ public class TitleAndBodyPage extends BookPage {
 
 		@Override
 		public TitleAndBodyPage build() {
-			return new TitleAndBodyPage(font, x, y, width, height, padding, title, body);
+			return new TitleAndBodyPage(font, page, x, y, width, height, padding, title, body);
 		}
 	}
 }

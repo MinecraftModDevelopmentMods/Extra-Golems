@@ -1,7 +1,10 @@
 package com.mcmoddev.golems.client.menu.guide_book;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.mcmoddev.golems.data.GolemContainer;
+import com.mcmoddev.golems.data.golem.GolemBuildingBlocks;
+import com.mcmoddev.golems.data.golem.GolemPart;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
@@ -10,9 +13,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -20,13 +27,6 @@ import java.util.Optional;
  * to display in the Guide Book
  **/
 public class GuideBookEntry implements ITableOfContentsEntry {
-
-	/*
-	 * Size of the supplemental image for each entry, if one is present.
-	 * Any image with a 2:1 ratio will render with no issues.
-	 */
-	public static final int IMAGE_WIDTH = 100;
-	public static final int IMAGE_HEIGHT = 50;
 
 	private final ResourceLocation id;
 	private final GolemContainer container;
@@ -41,11 +41,28 @@ public class GuideBookEntry implements ITableOfContentsEntry {
 	public GuideBookEntry(final RegistryAccess registryAccess, final GolemContainer container) {
 		this.id = container.getId();
 		this.container = container;
-		this.items = container.getGolem().getBlocks().get().stream().map(ItemStack::new).collect(ImmutableList.toImmutableList());
 		this.image = resolveImage(this.id).orElse(null);
 		this.health = container.getAttributes().getHealth();
 		this.attack = container.getAttributes().getAttack();
 		this.title = container.getTypeName();
+		// collect blocks
+		final GolemBuildingBlocks buildingBlocks = container.getGolem().getBlocks();
+		final Collection<Block> blocks = new HashSet<>();
+		if(container.getGolem().getGroup() != null && !buildingBlocks.getBlocks().containsKey(GolemPart.ALL) && buildingBlocks.getBlocks().containsKey(GolemPart.BODY)) {
+			// only show body blocks if there are any.
+			// this ensures that golems in groups do not appear to have identical blocks
+			// when the only difference is the body block, which is often the case.
+			blocks.addAll(buildingBlocks.getBlocks().get(GolemPart.BODY).get());
+		} else {
+			// otherwise, show all blocks
+			blocks.addAll(buildingBlocks.get());
+		}
+		// create item stacks
+		final ImmutableList.Builder<ItemStack> builder = ImmutableList.builder();
+		for(Block b : blocks) {
+			builder.add(new ItemStack(b));
+		}
+		this.items = builder.build();
 		// collect descriptions
 		this.descriptionList = ImmutableList.copyOf(container.createDescriptions(registryAccess));
 		// build single component from description list
@@ -112,5 +129,20 @@ public class GuideBookEntry implements ITableOfContentsEntry {
 
 	public Component getDescription() {
 		return description;
+	}
+
+	//// EQUALITY ////
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof GuideBookEntry)) return false;
+		GuideBookEntry that = (GuideBookEntry) o;
+		return id.equals(that.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return id.hashCode();
 	}
 }

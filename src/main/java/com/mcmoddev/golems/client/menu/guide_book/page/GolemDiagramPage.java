@@ -14,8 +14,8 @@ public class GolemDiagramPage extends BookPage {
 	protected final ItemStack body;
 	protected final float scale;
 
-	public GolemDiagramPage(Font font, int x, int y, int width, int height, int padding, ItemStack head, ItemStack body, float scale) {
-		super(font, x, y, width, height, padding);
+	public GolemDiagramPage(Font font, int page, int x, int y, int width, int height, int padding, ItemStack head, ItemStack body, float scale) {
+		super(font, page, x, y, width, height, padding);
 		this.head = head;
 		this.body = body;
 		this.scale = scale;
@@ -24,16 +24,16 @@ public class GolemDiagramPage extends BookPage {
 	//// BOOK PAGE ////
 
 	@Override
-	public void render(IBookScreen parent, GuiGraphics graphics, int pageNumber, float ticksOpen) {
-		super.render(parent, graphics, pageNumber, ticksOpen);
-		renderDiagram(parent, graphics, pageNumber, ticksOpen);
+	public void render(IBookScreen parent, GuiGraphics graphics, float ticksOpen) {
+		super.render(parent, graphics, ticksOpen);
+		renderDiagram(parent, graphics, ticksOpen);
 	}
 
-	protected void renderDiagram(IBookScreen parent, GuiGraphics graphics, int pageNumber, float ticksOpen) {
+	protected void renderDiagram(IBookScreen parent, GuiGraphics graphics, float ticksOpen) {
 
 		final int deltaXY = (int) (8.0F * scale);
-		int x = this.x + (width / 8);
-		int y = this.y + deltaXY;
+		int x = this.x + ((width - deltaXY * 2) / 2);
+		int y = this.y + deltaXY * 2;
 
 		// start rendering
 		graphics.pose().pushPose();
@@ -69,8 +69,8 @@ public class GolemDiagramPage extends BookPage {
 		protected ItemStack body;
 		protected float scale;
 
-		public Builder(IBookScreen parent) {
-			super(parent);
+		public Builder(IBookScreen parent, int page) {
+			super(parent, page);
 			this.head = ExtraGolems.CONFIG.pumpkinBuildsGolems() ? new ItemStack(Blocks.CARVED_PUMPKIN) : new ItemStack(EGRegistry.BlockReg.GOLEM_HEAD.get());
 			this.body = new ItemStack(Blocks.IRON_BLOCK);
 			this.scale = 2.0F;
@@ -93,7 +93,7 @@ public class GolemDiagramPage extends BookPage {
 
 		@Override
 		public GolemDiagramPage build() {
-			return new GolemDiagramPage(font, x, y, width, height, padding, head, body, scale);
+			return new GolemDiagramPage(font, page, x, y, width, height, padding, head, body, scale);
 		}
 	}
 }

@@ -28,9 +28,9 @@ public class CraftingRecipePage extends TitleAndBodyPage {
 
 	protected List<CyclingItemButton> itemButtons;
 
-	public CraftingRecipePage(Font font, int x, int y, int width, int height, int padding, @Nullable Component title, @Nullable Component body,
+	public CraftingRecipePage(Font font, int page, int x, int y, int width, int height, int padding, @Nullable Component title, @Nullable Component body,
 							  ResourceLocation texture, int imageWidth, int imageHeight, int u, int v, List<CyclingItemButton> itemButtons) {
-		super(font, x, y, width, height, padding, title, body);
+		super(font, page, x, y, width, height, padding, title, body);
 		this.texture = texture;
 		this.imageWidth = imageWidth;
 		this.imageHeight = imageHeight;
@@ -40,7 +40,6 @@ public class CraftingRecipePage extends TitleAndBodyPage {
 	}
 
 	//// RENDER METHODS ////
-
 
 	@Override
 	public void onShow(IBookScreen parent) {
@@ -57,15 +56,17 @@ public class CraftingRecipePage extends TitleAndBodyPage {
 	}
 
 	@Override
-	public void render(final IBookScreen parent, final GuiGraphics graphics, int pageNumber, final float ticksOpen) {
+	public void render(final IBookScreen parent, final GuiGraphics graphics, final float ticksOpen) {
 		// render background
-		graphics.blit(texture, this.x + padding * 2, this.y + padding * 2, u, v, imageWidth, imageHeight);
+		int bx = this.x + (width - imageWidth) / 2;
+		int by = this.y + padding * 2;
+		graphics.blit(texture, bx, by, u, v, imageWidth, imageHeight);
 		// update item button index
 		int index = (int) (ticksOpen / 30);
 		for(CyclingItemButton b : itemButtons) {
 			b.setIndex(index);
 		}
-		super.render(parent, graphics, pageNumber, ticksOpen);
+		super.render(parent, graphics, ticksOpen);
 	}
 
 	//// BUILDER ////
@@ -80,14 +81,14 @@ public class CraftingRecipePage extends TitleAndBodyPage {
 
 		//// CONSTRUCTOR ////
 
-		public Builder(IBookScreen parent, CraftingRecipe recipe) {
-			super(parent);
+		public Builder(IBookScreen parent, int page, CraftingRecipe recipe) {
+			super(parent, page);
 			this.recipe = recipe;
 			this.texture = GuideBookScreen.CONTENTS;
 			this.textureWidth = 84;
 			this.textureHeight = 46;
-			this.textureU = 111;
-			this.textureV = 54;
+			this.textureU = 0;
+			this.textureV = 114;
 		}
 
 		public Builder texture(final ResourceLocation texture) {
@@ -111,22 +112,24 @@ public class CraftingRecipePage extends TitleAndBodyPage {
 
 		public CraftingRecipePage build() {
 			// create list of item buttons
-			int bx = this.x + padding * 2;
+			int bx = this.x + (width - textureWidth) / 2;
 			int by = this.y + padding * 2;
+			bx += 5;
+			by += 5;
 			final List<Ingredient> ingredients = recipe.getIngredients();
 			final List<CyclingItemButton> itemButtons = new ArrayList<>();
-			// add first four ingredients from recipe to the list
+			// add at most four ingredient buttons to the list
 			for(int i = 0, n = Math.min(ingredients.size(), 4); i < n; i++) {
 				itemButtons.add(parent.addButton(new CyclingItemButton(new Button.Builder(Component.empty(), b -> {})
 						.pos(bx + (i % 2) * 18, by + (i / 2) * 18), ingredients.get(i), 1.0F)));
 			}
 			// add result to the list
-			// TODO figure out x position
+			// TODO figure out xy position
 			final ItemStack result = recipe.getResultItem(Minecraft.getInstance().level.registryAccess());
 			itemButtons.add(parent.addButton(new CyclingItemButton(new Button.Builder(Component.empty(), b -> {})
-					.pos(bx + 40, by + 16), ImmutableList.of(result), 1.0F)));
+					.pos(bx + 56, by + 11), ImmutableList.of(result), 1.0F)));
 			// build the page
-			return new CraftingRecipePage(font, x, y, width, height, padding, title, body, texture, textureWidth, textureHeight, textureU, textureV, itemButtons);
+			return new CraftingRecipePage(font, page, x, y, width, height, padding, title, body, texture, textureWidth, textureHeight, textureU, textureV, itemButtons);
 		}
 	}
 }

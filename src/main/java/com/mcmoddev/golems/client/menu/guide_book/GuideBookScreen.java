@@ -64,23 +64,23 @@ public class GuideBookScreen extends Screen implements IBookScreen {
 		// add Done button
 		final int doneButtonWidth = 98;
 		this.doneButton = this.addRenderableWidget(Button.builder(Component.translatable("gui.done"), b -> this.minecraft.setScreen(null))
-				.pos(this.x + (this.width - doneButtonWidth) / 2, this.y + this.imageHeight + 8)
+				.pos(this.x + (this.imageWidth - doneButtonWidth) / 2, this.y + this.imageHeight + 8)
 				.size(98, 20)
 				.build());
 
 		// prepare to add previous and next page buttons
 		final int arrowWidth = 18;
 		final int arrowHeight = 10;
-		final int arrowY = this.y + this.imageHeight - arrowHeight - 8;
+		final int arrowY = this.y + this.imageHeight - arrowHeight - 12;
 		// add Previous Page button
-		this.prevPageButton = this.addRenderableWidget(new ImageButton(this.x + 8, arrowY, arrowWidth, arrowHeight,
+		this.prevPageButton = this.addRenderableWidget(new ImageButton(this.x + 12, arrowY, arrowWidth, arrowHeight,
 				22, 168, arrowHeight, TEXTURE, b -> addPage(-2)));
 		// add Next Page button
-		this.nextPageButton = this.addRenderableWidget(new ImageButton(this.x + this.imageWidth - arrowWidth - 8, arrowY, arrowWidth, arrowHeight,
+		this.nextPageButton = this.addRenderableWidget(new ImageButton(this.x + this.imageWidth - arrowWidth - 12, arrowY, arrowWidth, arrowHeight,
 				0, 168, arrowHeight, TEXTURE, b -> addPage(2)));
 
 		// create guide book
-		guideBook = new GuideBook(this.groups, this, this.x, this.y, 128, 256);
+		guideBook = new GuideBook(this, this.groups, this.x, this.y, 128, 256);
 		// update index
 		setPageIndex(this.page);
 	}
@@ -106,8 +106,8 @@ public class GuideBookScreen extends Screen implements IBookScreen {
 
 		// render open pages
 		if(this.guideBook != null) {
-			this.guideBook.getPage(this.page).render(this, graphics, this.page, ticksOpen);
-			this.guideBook.getPage(this.page + 1).render(this, graphics, this.page + 1, ticksOpen);
+			this.guideBook.getPage(this.page).render(this, graphics, ticksOpen);
+			this.guideBook.getPage(this.page + 1).render(this, graphics, ticksOpen);
 		}
 
 		// draw buttons, etc.
@@ -156,6 +156,9 @@ public class GuideBookScreen extends Screen implements IBookScreen {
 		// show new pages
 		this.guideBook.getPage(this.page).onShow(this);
 		this.guideBook.getPage(this.page + 1).onShow(this);
+		// update page buttons
+		this.prevPageButton.visible = this.page > 0;
+		this.nextPageButton.visible = this.page < (this.guideBook.getPageCount() - 2);
 	}
 
 	@Override
@@ -167,18 +170,16 @@ public class GuideBookScreen extends Screen implements IBookScreen {
 
 	public void addPage(final int amount) {
 		setPageIndex(Mth.clamp(this.page + amount, 0, this.guideBook.getPageCount() - 1));
-		this.prevPageButton.visible = this.page > 0;
-		this.nextPageButton.visible = this.page < (this.guideBook.getPageCount() - 2);
 	}
 
 	//// SCROLL ////
 
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-		if(guideBook != null && guideBook.getPage(page) instanceof ScrollButton.IScrollProvider provider) {
+		if(guideBook != null && guideBook.getPage(page) instanceof ScrollButton.IScrollProvider provider && provider.getScrollButton() != null) {
 			return provider.getScrollButton().mouseScrolled(mouseX, mouseY, amount);
 		}
-		if(guideBook != null && guideBook.getPage(page + 1) instanceof ScrollButton.IScrollProvider provider) {
+		if(guideBook != null && guideBook.getPage(page + 1) instanceof ScrollButton.IScrollProvider provider && provider.getScrollButton() != null) {
 			return provider.getScrollButton().mouseScrolled(mouseX, mouseY, amount);
 		}
 		return super.mouseScrolled(mouseX, mouseY, amount);

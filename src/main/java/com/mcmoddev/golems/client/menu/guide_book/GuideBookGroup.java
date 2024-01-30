@@ -16,6 +16,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Holds one or more {@link GuideBookEntry} objects with an optional group ID
@@ -97,7 +98,6 @@ public class GuideBookGroup implements ITableOfContentsEntry {
 
 	//// TABLE OF CONTENTS ENTRY ////
 
-
 	@Override
 	public List<ItemStack> getItems() {
 		return this.items;
@@ -149,6 +149,18 @@ public class GuideBookGroup implements ITableOfContentsEntry {
 		return averageAttack;
 	}
 
-	//// CLASSES ////
+	//// EQUALITY ////
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof GuideBookGroup)) return false;
+		GuideBookGroup that = (GuideBookGroup) o;
+		return list.equals(that.list) && group.equals(that.group);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(list, group);
+	}
 }
