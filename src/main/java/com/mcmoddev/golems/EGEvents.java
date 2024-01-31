@@ -12,6 +12,7 @@ import com.mcmoddev.golems.network.SummonGolemCommand;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -32,6 +33,7 @@ import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.MobSpawnEvent;
 import net.minecraftforge.event.level.BlockEvent;
+import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
@@ -57,6 +59,17 @@ public final class EGEvents {
 		@SubscribeEvent
 		public static void onAddCommands(final RegisterCommandsEvent event) {
 			SummonGolemCommand.register(event.getDispatcher());
+		}
+
+		@SubscribeEvent
+		public static void onServerStarted(final ServerStartedEvent event) {
+			// load golem registry
+			final RegistryAccess registryAccess = event.getServer().registryAccess();;
+			final Registry<Golem> registry = registryAccess.registryOrThrow(EGRegistry.Keys.GOLEM);
+			// resolve golem containers when the server starts to avoid lag spikes later
+			for(ResourceLocation id : registry.keySet()) {
+				GolemContainer.getOrCreate(registryAccess, id);
+			}
 		}
 
 		/**

@@ -1,0 +1,16 @@
+{
+  "behaviors": [
+	{
+	  "type": "golems:effect",
+	  "trigger": "tick",
+	  "chance": 0.006,
+	  "apply": {
+		"target": "self",
+		"effect": {
+		  "id": "minecraft:regeneration",
+		  "duration": 300
+		}
+	  }
+	}
+  ]
+}

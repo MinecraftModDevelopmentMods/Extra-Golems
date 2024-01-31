@@ -34,10 +34,10 @@ public final class EGConfig {
 		builder.push("general");
 		BEDROCK_GOLEM_CREATIVE_ONLY = builder.comment("When true, only players in creative mode can use a Bedrock Golem spawn item")
 				.define("bedrock_golem_creative_only", true);
-		PUMPKIN_BUILDS_GOLEMS = builder.comment("When true, pumpkins can be used to build this mod's golems")
+		PUMPKIN_BUILDS_GOLEMS = builder.comment("When true, pumpkins can be used to build Extra Golems entities")
 				.define("pumpkin_builds_golems", false);
-		ENABLE_FRIENDLY_FIRE = builder.comment("When enabled, attacking a player-built entity will make it attack you")
-				.define("friendly_fire", true);
+		ENABLE_FRIENDLY_FIRE = builder.comment("When enabled, attacking a player-built golem will make it attack you")
+				.define("friendly_fire", false);
 		ENABLE_USE_SPELL_ITEM = builder
 				.comment("When enabled, players can use the spell item on a carved pumpkin to convert it to a golem head in-world")
 				.define("use_spell", true);

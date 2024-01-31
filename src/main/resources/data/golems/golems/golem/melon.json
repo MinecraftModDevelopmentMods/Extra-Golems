@@ -1,0 +1,19 @@
+{
+  "attributes": {
+    "health": 18.0,
+    "attack": 4.0,
+    "speed": 0.265,
+	"swim_ability": "float",
+	"sound": "minecraft:wood"
+  },
+  "blocks": {
+	"all": "minecraft:melon"
+  },
+  "repair_items": {
+    "minecraft:melon": 0.5,
+	"minecraft:melon_slice": 0.15,
+	"minecraft:glistering_melon_slice": 0.25
+  },
+  "model": "golems:melon",
+  "brain": "golems:melon"
+}

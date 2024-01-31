@@ -13,9 +13,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -58,5 +60,12 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
 	@Override
 	public ResourceLocation getTextureLocation(T pEntity) {
 		return GOLEM_LOCATION;
+	}
+
+	@Nullable
+	@Override
+	protected RenderType getRenderType(T pLivingEntity, boolean pBodyVisible, boolean pTranslucent, boolean pGlowing) {
+		// This prevents the model from being rendered, but layer renderers still trigger.
+		return null;
 	}
 }

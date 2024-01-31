@@ -24,6 +24,10 @@
 		"type": "golems:item_update_golem",
 		"item": "minecraft:honeycomb",
 		"consume": true,
+		"sound": "minecraft:item.honeycomb.wax_on",
+		"particle": {
+		  "type": "minecraft:wax_on"
+		},
 		"apply": {
 		  "golem": "golems:waxed_copper"
 		}

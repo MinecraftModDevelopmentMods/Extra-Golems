@@ -1,11 +1,15 @@
 package com.mcmoddev.golems.data.golem;
 
+import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.serialization.Codec;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
 import javax.annotation.concurrent.Immutable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumMap;
@@ -37,18 +41,21 @@ public class GolemBuildingBlocks implements Supplier<Collection<Block>> {
 
 	private final Map<GolemPart, BuildingBlocks> blocks;
 	private final Set<Block> cachedBlocks;
+	private final Supplier<ItemStack> pickResult;
 
 	//// CONSTRUCTOR ////
 
 	private GolemBuildingBlocks() {
 		this.blocks = ImmutableMap.of();
 		this.cachedBlocks = ImmutableSet.of();
+		this.pickResult = Suppliers.memoize(() -> ItemStack.EMPTY);
 	}
 
 	public GolemBuildingBlocks(BuildingBlocks all) {
 		this.blocks = new EnumMap<>(GolemPart.class);
 		this.blocks.put(GolemPart.ALL, all);
 		this.cachedBlocks = new HashSet<>();
+		this.pickResult = Suppliers.memoize(this::createPickResult);
 	}
 
 	public GolemBuildingBlocks(BuildingBlocks body, BuildingBlocks legs, BuildingBlocks leftArm, BuildingBlocks rightArm) {
@@ -58,6 +65,7 @@ public class GolemBuildingBlocks implements Supplier<Collection<Block>> {
 		this.blocks.put(GolemPart.LEFT_ARM, leftArm);
 		this.blocks.put(GolemPart.RIGHT_ARM, rightArm);
 		this.cachedBlocks = new HashSet<>();
+		this.pickResult = Suppliers.memoize(this::createPickResult);
 	}
 
 	//// GETTERS ////
@@ -68,6 +76,33 @@ public class GolemBuildingBlocks implements Supplier<Collection<Block>> {
 	 **/
 	public Map<GolemPart, BuildingBlocks> getBlocks() {
 		return ImmutableMap.copyOf(this.blocks);
+	}
+
+	/**
+	 * @return an item stack to use in {@link Entity#getPickResult()}
+	 */
+	public ItemStack getPickResult() {
+		return this.pickResult.get();
+	}
+
+	/**
+	 * @return an item stack to cache for the pick result
+	 * @see #getPickResult()
+	 */
+	protected ItemStack createPickResult() {
+		final BuildingBlocks all = blocks.get(GolemPart.ALL);
+		final List<Block> list = new ArrayList<>();
+		if (all != null) {
+			list.addAll(all.get());
+		} else if(blocks.containsKey(GolemPart.BODY)) {
+			list.addAll(blocks.get(GolemPart.BODY).get());
+		}
+		// load first element of list
+		if(!list.isEmpty()) {
+			return new ItemStack(list.get(0));
+		}
+		// no results
+		return ItemStack.EMPTY;
 	}
 
 	//// SUPPLIER ////
@@ -100,10 +135,16 @@ public class GolemBuildingBlocks implements Supplier<Collection<Block>> {
 	 * @return true if the golem can be constructed with the given blocks
 	 */
 	public boolean matches(final Block body, final Block legs, final Block arm1, final Block arm2) {
+		// validate non empty
+		if(blocks.isEmpty()) {
+			return false;
+		}
+		// use ALL when present
 		final BuildingBlocks all = blocks.get(GolemPart.ALL);
 		if(all != null) {
 			return all.test(body) && all.test(legs) && all.test(arm1) && all.test(arm2);
 		}
+		// use individual parts when ALL is not present
 		if(!blocks.get(GolemPart.BODY).test(body)) {
 			return false;
 		}

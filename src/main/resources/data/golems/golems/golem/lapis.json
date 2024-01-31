@@ -1,0 +1,68 @@
+{
+  "attributes": {
+    "health": 55.0,
+    "attack": 5.0,
+    "speed": 0.28
+  },
+  "blocks": {
+	"all": "#forge:storage_blocks/lapis"
+  },
+  "repair_items": {
+    "#forge:storage_blocks/lapis": 0.5,
+	"#forge:gems/lapis": 0.1
+  },
+  "model": "golems:lapis",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:effect",
+		"trigger": "attack",
+		"chance": 0.9,
+		"apply": {
+		  "target": "enemy",
+		  "rolls": 1,
+		  "effect": [
+			{
+			  "id": "minecraft:blindness",
+			  "duration": 200
+			},
+			{
+			  "id": "minecraft:slowness",
+			  "duration": 290
+			},
+			{
+			  "id": "minecraft:slowness",
+			  "amplifier": 1,
+			  "duration": 220
+			},
+			{
+			  "id": "minecraft:poison",
+			  "duration": 220
+			},
+			{
+			  "id": "minecraft:instant_damage",
+			  "amplifier": 1,
+			  "duration": 1
+			},
+			{
+			  "id": "minecraft:weakness",
+			  "duration": 300
+			},
+			{
+			  "id": "minecraft:wither",
+			  "duration": 120
+			},
+			{
+			  "id": "minecraft:levitation",
+			  "duration": 200
+			},
+			{
+			  "id": "minecraft:glowing",
+			  "duration": 400
+			}
+		  ]
+		}
+	  }
+	]
+  }
+}

@@ -18,7 +18,17 @@
   "model": "golems:amethyst",
   "brain": {
 	"behaviors": [
-	  "golems:summon_amethyst_shard_on_hurt"
+	  {
+		"type": "golems:summon",
+		"trigger": "hurt",
+		"target": "self",
+		"position": "self",
+		"radius": 0.5,
+		"chance": 0.166,
+		"display_name": "item.minecraft.amethyst_shard",
+		"entity": "minecraft:item",
+		"nbt": "{Item:{id:\"minecraft:amethyst_shard\",Count:1}}"
+	  }
 	]
   }
 }

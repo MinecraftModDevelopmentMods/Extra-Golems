@@ -1,0 +1,30 @@
+{
+  "attributes": {
+    "health": 68.0,
+    "attack": 6.0,
+	"speed": 0.27,
+	"swim_ability": "float",
+	"sound": "minecraft:coral_block"
+  },
+  "blocks": {
+	"all": "minecraft:honeycomb_block"
+  },
+  "repair_items": {
+    "minecraft:honeycomb_block": 0.5,
+	"minecraft:honeycomb": 0.15
+  },
+  "model": "golems:honeycomb",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:summon",
+		"trigger": "hurt",
+		"target": "enemy",
+		"position": "self",
+		"radius": 0.5,
+		"chance": 0.31,
+		"entity": "minecraft:bee"
+	  }
+	]
+  }
+}

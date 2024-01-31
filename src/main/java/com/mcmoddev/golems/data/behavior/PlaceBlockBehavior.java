@@ -48,7 +48,7 @@ public class PlaceBlockBehavior extends Behavior {
 			Codec.intRange(0, 8).optionalFieldOf("radius", 0).forGetter(PlaceBlockBehavior::getRadius),
 			Codec.doubleRange(0.0D, 1.0D).optionalFieldOf("chance", 1.0D).forGetter(PlaceBlockBehavior::getChance),
 			EGCodecUtils.listOrElementCodec(DeferredBlockState.CODEC).fieldOf("block").forGetter(PlaceBlockBehavior::getBlocks),
-			Codec.STRING.fieldOf("display_name").forGetter(PlaceBlockBehavior::getDisplayNameKey),
+			Codec.STRING.optionalFieldOf("display_name", "").forGetter(PlaceBlockBehavior::getDisplayNameKey),
 			EGCodecUtils.listOrElementCodec(WorldPredicate.CODEC).optionalFieldOf("predicate", ImmutableList.of(WorldPredicate.ALWAYS)).forGetter(PlaceBlockBehavior::getPredicates),
 			Codec.BOOL.optionalFieldOf("must_survive", true).forGetter(PlaceBlockBehavior::mustSurvive)
 	).apply(instance, PlaceBlockBehavior::new));
@@ -121,7 +121,7 @@ public class PlaceBlockBehavior extends Behavior {
 
 	@Override
 	public Codec<? extends Behavior> getCodec() {
-		return EGRegistry.BehaviorReg.PLACE_BLOCK.get();
+		return EGRegistry.BehaviorReg.PLACE.get();
 	}
 
 	//// METHODS ////
@@ -149,9 +149,19 @@ public class PlaceBlockBehavior extends Behavior {
 
 	@Override
 	public List<Component> createDescriptions() {
+		// resolve display name of the block
+		final Component blockName;
+		if(this.displayNameKey != null && !this.displayNameKey.isEmpty()) {
+			blockName = Component.translatable(this.displayNameKey);
+		} else if(!this.blocks.isEmpty()) {
+			final BlockState randomBlock = this.blocks.get(0).get();
+			blockName = randomBlock.getBlock().getName();
+		} else {
+			blockName = Component.literal("");
+		}
 		// TODO add block to tooltip
 		// TODO add trigger and predicate to tooltip
-		return ImmutableList.of(Component.translatable("entitytip.places_blocks", Component.translatable(displayNameKey)).withStyle(ChatFormatting.GREEN));
+		return ImmutableList.of(Component.translatable("entitytip.places_blocks", blockName).withStyle(ChatFormatting.GREEN));
 	}
 
 	/**

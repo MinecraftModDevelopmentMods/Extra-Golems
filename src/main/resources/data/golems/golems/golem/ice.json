@@ -1,0 +1,31 @@
+{
+  "attributes": {
+    "health": 18.0,
+    "attack": 9.5,
+	"speed": 0.27,
+	"weak": [
+	  "minecraft:in_fire",
+	  "minecraft:on_fire"
+	],
+	"swim_ability": "float",
+	"sound": "minecraft:glass"
+  },
+  "blocks": {
+	"all": "#minecraft:ice"
+  },
+  "repair_items": {
+    "#minecraft:ice": 0.5
+  },
+  "model": "golems:ice",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:aoe_freeze",
+		"radius": 3,
+		"interval": 2,
+		"shape": "disc",
+		"frosted": false
+	  }
+	]
+  }
+}

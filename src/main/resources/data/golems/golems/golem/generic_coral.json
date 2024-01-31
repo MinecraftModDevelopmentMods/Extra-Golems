@@ -3,7 +3,8 @@
     "health": 38.0,
     "attack": 9.0,
     "knockback_resistance": 0.2,
-	"swim_ability": "swim"
+	"swim_ability": "swim",
+	"sound": "minecraft:coral_block"
   },
   "group": "golems:coral",
   "hidden": true,

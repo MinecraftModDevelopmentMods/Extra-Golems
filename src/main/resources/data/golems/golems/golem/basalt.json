@@ -6,7 +6,8 @@
 	"immune": [
 	  "minecraft:on_fire",
 	  "minecraft:in_fire"
-	]
+	],
+	"sound": "minecraft:basalt"
   },
   "blocks": {
 	"all": "minecraft:polished_basalt"

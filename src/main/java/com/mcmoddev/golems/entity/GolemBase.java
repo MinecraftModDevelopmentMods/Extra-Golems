@@ -332,11 +332,7 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 		if(oContainer.isEmpty()) {
 			return ItemStack.EMPTY;
 		}
-		final Collection<Block> blocks = oContainer.get().getGolem().getBlocks().get();
-		if(blocks.isEmpty()) {
-			return ItemStack.EMPTY;
-		}
-		return new ItemStack(blocks.toArray(new Block[blocks.size()])[0]);
+		return oContainer.get().getGolem().getBlocks().getPickResult();
 	}
 
 	@Override
@@ -579,7 +575,9 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 					target.setDeltaMovement(target.getDeltaMovement().add(dX, knockback / 2, dZ));
 				}
 				// allow behaviors to process doHurtTarget
-				container.getBehaviors().forEach(b -> b.onAttack(this, target));
+				if(isEffectiveAi()){
+					container.getBehaviors().forEach(b -> b.onAttack(this, target));
+				}
 			});
 			return true;
 		}
@@ -590,19 +588,25 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 	protected void actuallyHurt(DamageSource source, float amount) {
 		super.actuallyHurt(source, amount);
 		// allow behaviors to process actuallyHurt
-		getContainer().ifPresent(container -> container.getBehaviors().forEach(b -> b.onActuallyHurt(this, source, amount)));
+		if(isEffectiveAi()) {
+			getContainer().ifPresent(container -> container.getBehaviors().forEach(b -> b.onActuallyHurt(this, source, amount)));
+		}
 	}
 
 	@Override
 	public void thunderHit(ServerLevel pLevel, LightningBolt pLightning) {
 		super.thunderHit(pLevel, pLightning);
-		getContainer().ifPresent(container -> container.getBehaviors().forEach(b -> b.onStruckByLightning(this, pLightning)));
+		if(isEffectiveAi()) {
+			getContainer().ifPresent(container -> container.getBehaviors().forEach(b -> b.onStruckByLightning(this, pLightning)));
+		}
 	}
 
 	@Override
 	public void die(final DamageSource source) {
 		// allow behaviors to process die
-		getContainer().ifPresent(container -> container.getBehaviors().forEach(b -> b.onDie(this, source)));
+		if(isEffectiveAi()) {
+			getContainer().ifPresent(container -> container.getBehaviors().forEach(b -> b.onDie(this, source)));
+		}
 		super.die(source);
 	}
 
@@ -615,7 +619,9 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 			return InteractionResult.CONSUME;
 		}
 		// Allow behaviors to process mobInteract
-		getContainer().ifPresent(container -> container.getBehaviors().forEach(b -> b.onMobInteract(this, player, hand)));
+		if(isEffectiveAi()) {
+			getContainer().ifPresent(container -> container.getBehaviors().forEach(b -> b.onMobInteract(this, player, hand)));
+		}
 		return super.mobInteract(player, hand);
 	}
 
@@ -843,7 +849,7 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 			return false;
 		}
 		// resolve behaviors
-		if(!oContainer.get().getBehaviors().hasActiveBehavior(ShootArrowsBehavior.class, this)) {
+		if(isEffectiveAi() && !oContainer.get().getBehaviors().hasActiveBehavior(ShootArrowsBehavior.class, this)) {
 			return false;
 		}
 		// validate inventory

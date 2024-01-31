@@ -1,0 +1,9 @@
+{
+  "layers": [
+	{
+	  "texture": "minecraft:stripped_oak_log",
+	  "template": "golems:template"
+	},
+	"golems:eyes_and_vines"
+  ]
+}

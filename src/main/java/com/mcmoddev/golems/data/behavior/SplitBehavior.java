@@ -47,7 +47,7 @@ public class SplitBehavior extends Behavior {
 
 	@Override
 	public Codec<? extends Behavior> getCodec() {
-		return EGRegistry.BehaviorReg.FOLLOW.get();
+		return EGRegistry.BehaviorReg.SPLIT.get();
 	}
 
 	//// METHODS ////

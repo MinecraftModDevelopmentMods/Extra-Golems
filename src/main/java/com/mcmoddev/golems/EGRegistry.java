@@ -238,7 +238,7 @@ public final class EGRegistry {
 		public static final RegistryObject<Codec<FollowBehavior>> FOLLOW = BEHAVIOR_SERIALIZER.register("follow", () -> FollowBehavior.CODEC);
 		public static final RegistryObject<Codec<ItemUpdateGolemBehavior>> ITEM_UPDATE_GOLEM = BEHAVIOR_SERIALIZER.register("item_update_golem", () -> ItemUpdateGolemBehavior.CODEC);
 		public static final RegistryObject<Codec<LightBehavior>> LIGHT = BEHAVIOR_SERIALIZER.register("light", () -> LightBehavior.CODEC);
-		public static final RegistryObject<Codec<PlaceBlockBehavior>> PLACE_BLOCK = BEHAVIOR_SERIALIZER.register("place_block", () -> PlaceBlockBehavior.CODEC);
+		public static final RegistryObject<Codec<PlaceBlockBehavior>> PLACE = BEHAVIOR_SERIALIZER.register("place", () -> PlaceBlockBehavior.CODEC);
 		public static final RegistryObject<Codec<PowerBehavior>> POWER = BEHAVIOR_SERIALIZER.register("power", () -> PowerBehavior.CODEC);
 		public static final RegistryObject<Codec<ShootArrowsBehavior>> SHOOT_ARROWS = BEHAVIOR_SERIALIZER.register("shoot_arrows", () -> ShootArrowsBehavior.CODEC);
 		public static final RegistryObject<Codec<SplitBehavior>> SPLIT = BEHAVIOR_SERIALIZER.register("split", () -> SplitBehavior.CODEC);

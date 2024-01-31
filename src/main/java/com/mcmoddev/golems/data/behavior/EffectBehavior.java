@@ -115,6 +115,7 @@ public class EffectBehavior extends Behavior {
 			predicateText.getSiblings().add(Component.translatable("entitytip.and_x", Component.translatable(predicates.get(i).getDescriptionId())));
 		}
 		// TODO add this tooltip to lang file
+		// TODO account for rolls
 		final String key = "entitytip.effect." + targetedMobEffects.getTargetType().getSerializedName();
 		for(MobEffectInstance effect : targetedMobEffects.getEffects()) {
 			builder.add(Component.translatable(key, effect.getEffect().getDisplayName(), predicateText));

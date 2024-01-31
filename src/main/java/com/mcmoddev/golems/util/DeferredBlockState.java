@@ -27,7 +27,7 @@ import java.util.function.Supplier;
 public class DeferredBlockState implements Supplier<BlockState> {
 
 	public static final Codec<DeferredBlockState> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			ResourceLocation.CODEC.fieldOf("block").forGetter(DeferredBlockState::getBlock),
+			ResourceLocation.CODEC.fieldOf("Name").forGetter(DeferredBlockState::getBlock),
 			Codec.unboundedMap(Codec.STRING, EGCodecUtils.AS_STRING_CODEC).optionalFieldOf("properties", ImmutableMap.of()).forGetter(DeferredBlockState::getProperties)
 	).apply(instance, DeferredBlockState::new));
 

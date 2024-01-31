@@ -1,0 +1,29 @@
+{
+  "parent": "golems:generic_log",
+  "hidden": false,
+  "blocks": {
+	"arms": "#minecraft:logs_that_burn",
+	"legs": "#minecraft:logs_that_burn",
+	"body": "#minecraft:acacia_logs"
+  },
+  "model": "golems:acacia_log",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:item_update_golem",
+		"item": "#forge:axe",
+		"sound": "minecraft:item.axe.strip",
+		"particle": {
+		  "type": "minecraft:item",
+		  "value": {
+			"id": "minecraft:acacia_log",
+			"Count": 1
+		  }
+		},
+		"apply": {
+		  "golem": "golems:stripped_acacia_log"
+		}
+	  }
+	]
+  }
+}

@@ -53,6 +53,7 @@ public class SummonEntityBehavior extends Behavior {
 			Codec.STRING.optionalFieldOf("nbt", "{}").forGetter(SummonEntityBehavior::getNbt),
 			Codec.intRange(0, 255).optionalFieldOf("amount", 1).forGetter(SummonEntityBehavior::getAmount),
 			TargetType.SELF_OR_ENEMY_CODEC.optionalFieldOf("position", TargetType.SELF).forGetter(SummonEntityBehavior::getPosition),
+			Codec.doubleRange(0.0D, 128.0D).optionalFieldOf("radius", 0.0D).forGetter(SummonEntityBehavior::getRadius),
 			TriggerType.CODEC.fieldOf("trigger").forGetter(SummonEntityBehavior::getTrigger),
 			EGCodecUtils.listOrElementCodec(WorldPredicate.CODEC).optionalFieldOf("predicate", ImmutableList.of(WorldPredicate.ALWAYS)).forGetter(SummonEntityBehavior::getPredicates),
 			Codec.doubleRange(0.0D, 1.0D).optionalFieldOf("chance", 1.0D).forGetter(SummonEntityBehavior::getChance)
@@ -70,6 +71,8 @@ public class SummonEntityBehavior extends Behavior {
 	private final int amount;
 	/** The position to summon the entity **/
 	private final TargetType position;
+	/** The radius to offset the summon position **/
+	private final double radius;
 	/** The trigger to summon the entity **/
 	private final TriggerType trigger;
 	/** The conditions to summon the entity **/
@@ -79,13 +82,14 @@ public class SummonEntityBehavior extends Behavior {
 	/** The percent chance [0,1] to apply **/
 	private final double chance;
 
-	public SummonEntityBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, EntityType<?> entity, Optional<String> displayNameKey, String nbt, int amount, TargetType position, TriggerType trigger, List<WorldPredicate> predicates, double chance) {
+	public SummonEntityBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, EntityType<?> entity, Optional<String> displayNameKey, String nbt, int amount, TargetType position, double radius, TriggerType trigger, List<WorldPredicate> predicates, double chance) {
 		super(variant, tooltipPredicate);
 		this.entity = entity;
 		this.displayNameKey = displayNameKey.orElse(null);
 		this.nbt = nbt;
 		this.amount = amount;
 		this.position = position;
+		this.radius = radius;
 		this.trigger = trigger;
 		this.predicates = predicates;
 		this.predicate = PredicateUtils.and(predicates);
@@ -126,6 +130,10 @@ public class SummonEntityBehavior extends Behavior {
 
 	public TargetType getPosition() {
 		return position;
+	}
+
+	public double getRadius() {
+		return radius;
 	}
 
 	public TriggerType getTrigger() {
@@ -198,7 +206,10 @@ public class SummonEntityBehavior extends Behavior {
 		for(int i = 0; i < amount; i++) {
 			final CompoundTag tag = compoundTag.copy();
 			EntityType.create(tag, self.level()).ifPresent(e -> {
-				e.setPos(pos);
+				// randomize position
+				e.setPos(pos.add((self.getRandom().nextDouble() - 0.5F) * 2.0F * radius,
+						(self.getRandom().nextDouble() - 0.5F) * 2.0F * (radius / 4.0F),
+						(self.getRandom().nextDouble() - 0.5F) * 2.0F * radius));
 				// spawn entity
 				level.addFreshEntityWithPassengers(e);
 				// post process

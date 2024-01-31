@@ -15,6 +15,10 @@
 	  {
 		"type": "golems:item_update_golem",
 		"item": "#forge:axe",
+		"sound": "minecraft:item.axe.wax_off",
+		"particle": {
+		  "type": "minecraft:wax_off"
+		},
 		"apply": {
 		  "golem": "golems:weathered_copper"
 		}

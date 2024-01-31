@@ -7,7 +7,7 @@
   "group": "golems:copper",
   "hidden": true,
   "repair_items": {
-	"#forge:storage_blocks/unwaxed_copper": 0.5,
+	"#forge:storage_blocks/copper": 0.5,
 	"minecraft:copper_ingot": 0.15
   },
   "model": "golems:copper",

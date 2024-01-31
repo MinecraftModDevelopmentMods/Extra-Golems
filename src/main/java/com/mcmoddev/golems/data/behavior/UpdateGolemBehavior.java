@@ -1,5 +1,6 @@
 package com.mcmoddev.golems.data.behavior;
 
+import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.data.behavior.util.TriggerType;
@@ -31,7 +32,7 @@ public class UpdateGolemBehavior extends Behavior {
 	public static final Codec<UpdateGolemBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
 			.and(UpdateTarget.CODEC.fieldOf("apply").forGetter(UpdateGolemBehavior::getApply))
 			.and(TriggerType.CODEC.optionalFieldOf("trigger", TriggerType.TICK).forGetter(UpdateGolemBehavior::getTrigger))
-			.and(EGCodecUtils.listOrElementCodec(UpdatePredicate.CODEC).fieldOf("predicate").forGetter(UpdateGolemBehavior::getPredicates))
+			.and(EGCodecUtils.listOrElementCodec(UpdatePredicate.CODEC).optionalFieldOf("predicate", ImmutableList.of(UpdatePredicate.ALWAYS)).forGetter(UpdateGolemBehavior::getPredicates))
 			.and(Codec.doubleRange(0.0D, 1.0D).optionalFieldOf("chance", 1.0D).forGetter(UpdateGolemBehavior::getChance))
 			.apply(instance, UpdateGolemBehavior::new));
 

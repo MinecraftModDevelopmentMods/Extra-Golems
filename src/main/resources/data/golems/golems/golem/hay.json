@@ -4,7 +4,8 @@
     "attack": 3.5,
     "speed": 0.32,
 	"knockback_resistance": 0.0,
-	"swim_ability": "float"
+	"swim_ability": "float",
+	"sound": "minecraft:crop"
   },
   "blocks": {
 	"all": "minecraft:hay_block"
