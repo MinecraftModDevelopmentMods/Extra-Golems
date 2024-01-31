@@ -16,7 +16,6 @@ import com.mcmoddev.golems.util.GolemAttributeManager;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -63,7 +62,6 @@ import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.HitResult;
@@ -71,7 +69,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nullable;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -482,7 +479,7 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 		if(oContainer.isEmpty()) {
 			return super.canBeAffected(pEffectInstance);
 		}
-		return !oContainer.get().getAttributes().isImmuneTo(level().registryAccess(), pEffectInstance.getEffect());
+		return !oContainer.get().getAttributes().ignores(level().registryAccess(), pEffectInstance.getEffect());
 	}
 
 	@Override

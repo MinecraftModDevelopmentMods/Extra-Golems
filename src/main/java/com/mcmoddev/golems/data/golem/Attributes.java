@@ -1,8 +1,6 @@
 package com.mcmoddev.golems.data.golem;
 
 import com.mcmoddev.golems.data.GolemContainer;
-import com.mcmoddev.golems.data.behavior.LightBehavior;
-import com.mcmoddev.golems.data.behavior.PowerBehavior;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.util.DeferredHolderSet;
 import com.mcmoddev.golems.util.SoundTypeRegistry;
@@ -150,7 +148,7 @@ public class Attributes {
 		return attackKnockback != null ? this.attackKnockback : 0;
 	}
 
-	public boolean isImmuneTo(final RegistryAccess registryAccess, final MobEffect mobEffect) {
+	public boolean ignores(final RegistryAccess registryAccess, final MobEffect mobEffect) {
 		if(null == potionIgnore) {
 			return false;
 		}
@@ -226,7 +224,6 @@ public class Attributes {
 
 	/** @return {@code true} if the entity occludes vibrations **/
 	public boolean occludes() {
-		// TODO use this property in code
 		return occludes != null && occludes;
 	}
 

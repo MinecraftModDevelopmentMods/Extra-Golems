@@ -1,15 +1,20 @@
 {
   "parent": "golems:generic_stem",
   "group": "golems:stem",
-  "hidden": false,
+  "hidden": true,
   "blocks": {
-	"all": "#minecraft:warped_stems"
+	"arms": "#minecraft:warped_stems",
+	"legs": "#minecraft:warped_stems",
+	"body": [
+	  "minecraft:stripped_warped_stem",
+	  "minecraft:stripped_warped_hyphae"
+	]
   },
   "repair_items": {
     "#minecraft:warped_stems": 0.5,
 	"minecraft:warped_fungus": 0.15
   },
-  "model": "golems:warped_stem",
+  "model": "golems:stripped_warped_stem",
   "brain": {
 	"behaviors": [
 	  {
@@ -20,21 +25,6 @@
 		"must_survive": false,
 		"block": {
 		  "Name": "minecraft:warped_fungus"
-		}
-	  },
-	  {
-		"type": "golems:item_update_golem",
-		"item": "#forge:axe",
-		"sound": "minecraft:item.axe.strip",
-		"particle": {
-		  "type": "minecraft:item",
-		  "value": {
-			"id": "minecraft:warped_stem",
-			"Count": 1
-		  }
-		},
-		"apply": {
-		  "golem": "golems:stripped_warped_stem"
 		}
 	  }
 	]

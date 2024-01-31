@@ -1,0 +1,17 @@
+{
+  "attributes": {
+	"health": 24.0,
+	"attack": 7.0,
+	"speed": 0.289,
+	"knockback_resistance": 0.2,
+	"immune": [
+	  "minecraft:in_fire",
+	  "minecraft:on_fire"
+	],
+	"swim_ability": "float",
+	"sound": "minecraft:stem"
+  },
+  "group": "golems:stem",
+  "hidden": true,
+  "brain": "golems:empty"
+}

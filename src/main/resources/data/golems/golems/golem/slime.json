@@ -5,7 +5,7 @@
 	"attack_knockback": 0.92,
 	"knockback_resistance": 0.35,
 	"swim_ability": "float",
-	"sound": "minecraft:slime"
+	"sound": "minecraft:slime_block"
   },
   "group": "golems:slime",
   "blocks": {
