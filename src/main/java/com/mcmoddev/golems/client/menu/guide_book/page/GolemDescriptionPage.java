@@ -16,8 +16,8 @@ public class GolemDescriptionPage extends TitleAndBodyPage {
 	 * Size of the supplemental image for each entry, if one is present.
 	 * Any image with a 2:1 ratio will render with no issues.
 	 */
-	public static final int IMAGE_WIDTH = 100;
-	public static final int IMAGE_HEIGHT = 50;
+	public static final int IMAGE_WIDTH = 128;
+	public static final int IMAGE_HEIGHT = 64;
 
 	protected final GuideBookGroup group;
 	protected int entryIndex;
