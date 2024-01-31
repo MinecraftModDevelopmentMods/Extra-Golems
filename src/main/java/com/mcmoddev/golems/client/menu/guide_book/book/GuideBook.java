@@ -85,6 +85,7 @@ public class GuideBook {
 				.title(INTRO_TITLE)
 				.body(INTRO_BODY)
 				.pos(x, y)
+				.dimensions(pageWidth, pageHeight)
 				.build());
 
 		// add table of contents section
@@ -92,6 +93,7 @@ public class GuideBook {
 		pages.add(new TableOfContentsPage.Builder(screen, page++, sortedByName, i -> screen.setPageIndex(tableOfContents.getOrDefault(sortedByName.get(i), 0)))
 				.title(CONTENTS_TITLE)
 				.pos(x + pageWidth, y)
+				.dimensions(pageWidth, pageHeight)
 				.build());
 
 		// add crafting sections
@@ -103,6 +105,7 @@ public class GuideBook {
 					.title(BUILD_SPELL_TITLE)
 					.body(BUILD_SPELL_BODY)
 					.pos(x, y)
+					.dimensions(pageWidth, pageHeight)
 					.build());
 			pages.add(new CraftingRecipePage.Builder(screen, page++, oHeadRecipe.get())
 					.title(BUILD_HEAD_TITLE)

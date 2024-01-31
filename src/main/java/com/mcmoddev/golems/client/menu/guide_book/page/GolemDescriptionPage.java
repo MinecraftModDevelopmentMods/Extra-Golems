@@ -82,7 +82,7 @@ public class GolemDescriptionPage extends TitleAndBodyPage {
 		final int maxWidth = width - itemWidth - (padding * 2);
 		// determine position
 		int posX = x + padding + itemWidth + 2 + Math.max(0, maxWidth - font.width(title)) / 2;
-		int posY = y + padding;
+		int posY = y + padding + 4;
 		// draw title
 		graphics.drawWordWrap(font, title, posX, posY, maxWidth, 0);
 	}
@@ -110,7 +110,7 @@ public class GolemDescriptionPage extends TitleAndBodyPage {
 		}
 		// draw image
 		final int posX = this.x + (this.width - IMAGE_WIDTH) / 2;
-		final int posY = this.y + this.height - IMAGE_HEIGHT - padding;
+		final int posY = this.y + this.height - IMAGE_HEIGHT - padding * 2;
 		graphics.blit(entry.getImage(), posX, posY, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT, IMAGE_WIDTH, IMAGE_HEIGHT);
 	}
 

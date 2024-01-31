@@ -81,7 +81,7 @@ public class GuideBookScreen extends Screen implements IBookScreen {
 				0, 168, arrowHeight, TEXTURE, b -> addPage(2)));
 
 		// create guide book
-		guideBook = new GuideBook(this, this.groups, this.x, this.y, 128, 256);
+		guideBook = new GuideBook(this, this.groups, this.x, this.y, 128, 164);
 		// update index
 		setPageIndex(this.page);
 	}

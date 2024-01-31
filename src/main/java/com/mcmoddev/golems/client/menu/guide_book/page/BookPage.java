@@ -34,7 +34,7 @@ public class BookPage {
 		this.width = width;
 		this.height = height;
 		this.padding = padding;
-		this.pageText = Component.literal("" + page);
+		this.pageText = Component.literal("" + (page + 1));
 	}
 
 	//// GETTERS ////
@@ -76,20 +76,20 @@ public class BookPage {
 	 * @param ticksOpen the number of ticks since the screen was opened, including the partial tick
 	 */
 	public void render(final IBookScreen parent, final GuiGraphics graphics, final float ticksOpen) {
-		drawPageNumber(graphics, this.page + 1);
+		renderPageNumber(graphics);
 	}
 
-	protected void drawPageNumber(GuiGraphics graphics, int number) {
+	protected void renderPageNumber(GuiGraphics graphics) {
 		final int posX;
-		if((number % 2) == 1) {
+		if((page % 2) == 1) {
 			// right-hand page has text near left side
-			posX = this.x + padding * 2;
+			posX = (int) (this.x + padding * 1.5F);
 		} else {
 			// left-hand page has text near right side
-			posX = this.x + this.width - padding * 2;
+			posX = (int) (this.x + this.width - padding * 1.5F);
 		}
-		final int posY = this.y + this.height + 18;
-		graphics.drawString(font, pageText, posX, posY, 0, false);
+		final int posY = this.y + this.height - 18;
+		graphics.drawString(font, pageText, posX - font.width(pageText) / 2, posY, 0, false);
 	}
 
 	//// BUILDER ////
@@ -111,8 +111,8 @@ public class BookPage {
 			this.page = page;
 			this.font = parent.getFont();
 			this.width = 128;
-			this.height = 256;
-			this.padding = 11;
+			this.height = 128;
+			this.padding = 12;
 			this.x = parent.getStartX();
 			this.y = parent.getStartY();
 		}

@@ -112,8 +112,8 @@ public class CraftingRecipePage extends TitleAndBodyPage {
 
 		public CraftingRecipePage build() {
 			// create list of item buttons
-			int bx = this.x + (width - textureWidth) / 2;
-			int by = this.y + padding * 2;
+			int bx = this.x + (width - textureWidth) / 2 + 1;
+			int by = this.y + padding * 2 + 1;
 			bx += 5;
 			by += 5;
 			final List<Ingredient> ingredients = recipe.getIngredients();

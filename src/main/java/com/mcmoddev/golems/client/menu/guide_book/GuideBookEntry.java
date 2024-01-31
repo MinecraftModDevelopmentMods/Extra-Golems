@@ -75,7 +75,7 @@ public class GuideBookEntry implements ITableOfContentsEntry {
 	}
 
 	private static Optional<ResourceLocation> resolveImage(final ResourceLocation id) {
-		ResourceLocation img = id.withPath("textures/gui/guide_book/").withSuffix(".png");
+		ResourceLocation img = id.withPrefix("textures/gui/guide_book/").withSuffix(".png");
 		Optional<Resource> imageResource = Minecraft.getInstance().getResourceManager().getResource(img);
 		if (imageResource.isPresent()) {
 			return Optional.of(img);
