@@ -63,7 +63,7 @@ public class AddBehaviorModifier extends Modifier {
 			}
 			// resolve holders
 			if(getBehaviorList() != null) {
-				b.addAllHolders(getBehaviorList().get().getBehaviors());
+				b.addAll(getBehaviorList().get().getBehaviors());
 			}
 			// add elements
 			b.addAll(this.getBehaviors());

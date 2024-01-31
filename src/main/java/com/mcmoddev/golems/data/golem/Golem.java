@@ -134,7 +134,7 @@ public class Golem {
 			this.attributes = new Attributes.Builder();
 			this.repairItems = new RepairItems.Builder();
 			this.layers = new LayerList.Builder();
-			this.behaviors = new BehaviorList.Builder(registryAccess);
+			this.behaviors = new BehaviorList.Builder();
 		}
 
 		public static Builder from(final RegistryAccess registryAccess, final Golem golem) {
@@ -164,7 +164,7 @@ public class Golem {
 						.hidden(parent.isHidden())
 						.particle(parent.getParticle())
 						.layers(b -> b.addAll(parent.getLayers().get().getLayers()))
-						.behaviors(b -> b.addAllHolders(parent.getBehaviors().get().getBehaviors()))
+						.behaviors(b -> b.addAll(parent.getBehaviors().get().getBehaviors()))
 						.group(parent.getGroup());
 			}
 			// attributes (merges parent)
@@ -202,7 +202,7 @@ public class Golem {
 			if(!hasParent || !golem.getBehaviors().get().equals(parent.getBehaviors().get())) {
 				builder.behaviors(b -> {
 					b.clear();
-					b.addAllHolders(golem.getBehaviors().get().getBehaviors());
+					b.addAll(golem.getBehaviors().get().getBehaviors());
 				});
 			}
 			// group (replaces parent)
