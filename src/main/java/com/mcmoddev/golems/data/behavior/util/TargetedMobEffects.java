@@ -21,7 +21,7 @@ public class TargetedMobEffects {
 
 	public static final Codec<TargetedMobEffects> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			TargetType.CODEC.fieldOf("target").forGetter(TargetedMobEffects::getTargetType),
-			Codec.doubleRange(0.0D, 128.0D).optionalFieldOf("radius", 2.0D).forGetter(TargetedMobEffects::getRadius),
+			Codec.doubleRange(0.0D, 128.0D).optionalFieldOf("radius", 0.0D).forGetter(TargetedMobEffects::getRadius),
 			IntProvider.NON_NEGATIVE_CODEC.optionalFieldOf("rolls", ConstantInt.of(0)).forGetter(TargetedMobEffects::getRolls),
 			EGCodecUtils.listOrElementCodec(EGCodecUtils.MOB_EFFECT_INSTANCE_CODEC).fieldOf("effect").forGetter(TargetedMobEffects::getEffects)
 	).apply(instance, TargetedMobEffects::new));

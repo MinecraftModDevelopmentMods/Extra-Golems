@@ -28,7 +28,7 @@ import java.util.Objects;
 public class SplitBehavior extends Behavior {
 
 	public static final Codec<SplitBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
-			.and(Codec.intRange(0, 255).fieldOf("children").forGetter(SplitBehavior::getChildren))
+			.and(Codec.intRange(1, 255).optionalFieldOf("children", 2).forGetter(SplitBehavior::getChildren))
 			.apply(instance, SplitBehavior::new));
 
 	/** The number of children to spawn **/
@@ -51,7 +51,6 @@ public class SplitBehavior extends Behavior {
 	}
 
 	//// METHODS ////
-
 
 	@Override
 	public void onDie(final IExtraGolem entity, final DamageSource source) {

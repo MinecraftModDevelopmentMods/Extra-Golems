@@ -1,0 +1,17 @@
+{
+  "attributes": {
+    "health": 60.0,
+    "attack": 9.4,
+    "knockback_resistance": 0.6
+  },
+  "group": "golems:stone",
+  "blocks": {
+	"all": "minecraft:smooth_stone"
+  },
+  "repair_items": {
+    "minecraft:smooth_stone": 0.5,
+	"minecraft:stone": 0.25
+  },
+  "model": "golems:smooth_stone",
+  "brain": "golems:empty"
+}

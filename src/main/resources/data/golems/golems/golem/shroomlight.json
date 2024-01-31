@@ -1,25 +1,22 @@
 {
   "attributes": {
-    "health": 8.0,
-    "attack": 15.0,
+    "health": 30.0,
+    "attack": 7.5,
+	"speed": 0.3,
 	"immune": [
 	  "minecraft:in_fire",
 	  "minecraft:on_fire"
 	],
-	"weak": [
-	  "minecraft:fall"
-	],
 	"swim_ability": "float",
-	"sound": "minecraft:glass"
+	"sound": "minecraft:shroomlight"
   },
   "blocks": {
-	"all": "minecraft:glowstone"
+	"all": "minecraft:shroomlight"
   },
   "repair_items": {
-    "minecraft:glowstone": 0.5,
-	"#forge:dusts/glowstone": 0.15
+    "minecraft:shroomlight": 0.5
   },
-  "model": "golems:glowstone",
+  "model": "golems:shroomlight",
   "brain": {
 	"behaviors": [
 	  {

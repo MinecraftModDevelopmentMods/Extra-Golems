@@ -1,0 +1,28 @@
+{
+  "attributes": {
+	"health": 58.0,
+	"attack": 6.5,
+	"attack_knockback": 0.92,
+	"knockback_resistance": 0.35,
+	"swim_ability": "float",
+	"sound": "minecraft:slime"
+  },
+  "group": "golems:slime",
+  "blocks": {
+	"all": "minecraft:slime_block"
+  },
+  "repair_items": {
+	"minecraft:slime_block": 0.5,
+	"#forge:slimeballs": 0.15
+  },
+  "model": "golems:slime",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:split",
+		"children": 2
+	  }
+	]
+  }
+}
+

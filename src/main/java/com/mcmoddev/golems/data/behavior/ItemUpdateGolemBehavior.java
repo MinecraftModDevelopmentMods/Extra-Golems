@@ -43,7 +43,7 @@ public class ItemUpdateGolemBehavior extends Behavior {
 			EGCodecUtils.MIN_MAX_INTS_CODEC.optionalFieldOf("variant", MinMaxBounds.Ints.ANY).forGetter(Behavior::getVariantBounds),
 			TooltipPredicate.CODEC.optionalFieldOf("tooltip", TooltipPredicate.NORMAL).forGetter(Behavior::getTooltipPredicate),
 			UpdateTarget.CODEC.fieldOf("apply").forGetter(ItemUpdateGolemBehavior::getApply),
-			DeferredHolderSet.codec(BuiltInRegistries.ITEM.key()).optionalFieldOf("item", DeferredHolderSet.empty()).forGetter(ItemUpdateGolemBehavior::getItems),
+			DeferredHolderSet.codec(BuiltInRegistries.ITEM.key()).optionalFieldOf("item", DeferredHolderSet.empty()).forGetter(ItemUpdateGolemBehavior::getItem),
 			EGCodecUtils.listOrElementCodec(UpdatePredicate.CODEC).optionalFieldOf("predicate", ImmutableList.of(UpdatePredicate.ALWAYS)).forGetter(ItemUpdateGolemBehavior::getPredicates),
 			Codec.BOOL.optionalFieldOf("consume", false).forGetter(ItemUpdateGolemBehavior::consume),
 			Codec.doubleRange(0.0D, 1.0D).optionalFieldOf("chance", 1.0D).forGetter(ItemUpdateGolemBehavior::getChance),
@@ -54,7 +54,7 @@ public class ItemUpdateGolemBehavior extends Behavior {
 	/** The golem and variant **/
 	private final UpdateTarget apply;
 	/** The items associated with the update **/
-	private final DeferredHolderSet<Item> items;
+	private final DeferredHolderSet<Item> item;
 	/** The conditions to update the golem and variant **/
 	private final List<UpdatePredicate> predicates;
 	/** The conditions to update the golem and variant as a single predicate **/
@@ -69,11 +69,11 @@ public class ItemUpdateGolemBehavior extends Behavior {
 	private final @Nullable ParticleOptions particle;
 
 	public ItemUpdateGolemBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, UpdateTarget apply,
-								   DeferredHolderSet<Item> items, List<UpdatePredicate> predicates, boolean consume, double chance,
+								   DeferredHolderSet<Item> item, List<UpdatePredicate> predicates, boolean consume, double chance,
 								   Optional<SoundEvent> sound, Optional<ParticleOptions> particle) {
 		super(variant, tooltipPredicate);
 		this.apply = apply;
-		this.items = items;
+		this.item = item;
 		this.predicates = predicates;
 		this.predicate = PredicateUtils.and(predicates);
 		this.consume = consume;
@@ -92,8 +92,8 @@ public class ItemUpdateGolemBehavior extends Behavior {
 		return predicates;
 	}
 
-	public DeferredHolderSet<Item> getItems() {
-		return items;
+	public DeferredHolderSet<Item> getItem() {
+		return item;
 	}
 
 	public boolean consume() {
@@ -128,7 +128,7 @@ public class ItemUpdateGolemBehavior extends Behavior {
 		final ItemStack item = player.getItemInHand(hand);
 		final Mob mob = entity.asMob();
 		// validate and use item
-		if((getItems().isEmpty() || getItems().get(BuiltInRegistries.ITEM).contains(item.getItemHolder()))
+		if((getItem().isEmpty() || getItem().get(BuiltInRegistries.ITEM).contains(item.getItemHolder()))
 				&& this.predicate.test(entity)
 				&& mob.getRandom().nextDouble() < getChance()
 				&& getApply().apply(entity)) {
@@ -157,11 +157,11 @@ public class ItemUpdateGolemBehavior extends Behavior {
 		if (!(o instanceof ItemUpdateGolemBehavior)) return false;
 		if (!super.equals(o)) return false;
 		ItemUpdateGolemBehavior that = (ItemUpdateGolemBehavior) o;
-		return Double.compare(that.chance, chance) == 0 && apply.equals(that.apply) && items.equals(that.items) && predicates.equals(that.predicates);
+		return Double.compare(that.chance, chance) == 0 && apply.equals(that.apply) && item.equals(that.item) && predicates.equals(that.predicates);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(super.hashCode(), apply, items, predicates, chance);
+		return Objects.hash(super.hashCode(), apply, item, predicates, chance);
 	}
 }

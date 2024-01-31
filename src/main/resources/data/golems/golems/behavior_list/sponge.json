@@ -1,0 +1,10 @@
+{
+  "behaviors": [
+	{
+	  "type": "golems:aoe_dry",
+	  "radius": 5,
+	  "interval": 7,
+	  "shape": "sphere"
+	}
+  ]
+}

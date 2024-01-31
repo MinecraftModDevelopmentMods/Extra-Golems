@@ -1,0 +1,12 @@
+{
+  "parent": "golems:generic_glazed_terracotta",
+  "group": "golems:glazed_terracotta",
+  "hidden": false,
+  "blocks": {
+	"all": "minecraft:orange_glazed_terracotta"
+  },
+  "repair_items": {
+    "minecraft:orange_glazed_terracotta": 0.5
+  },
+  "model": "golems:orange_glazed_terracotta"
+}

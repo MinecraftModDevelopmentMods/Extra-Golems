@@ -1,0 +1,33 @@
+{
+  "attributes": {
+    "health": 28.0,
+    "attack": 10.0,
+    "knockback_resistance": 1.0,
+	"sound": "minecraft:glass"
+  },
+  "blocks": {
+	"all": "minecraft:redstone_lamp"
+  },
+  "repair_items": {
+    "minecraft:redstone_lamp": 0.5,
+	"#forge:dusts/redstone": 0.15,
+	"#forge:dusts/glowstone": 0.15
+  },
+  "variants": 2,
+  "model": "golems:redstone_lamp",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:light",
+		"light": 15,
+		"variant": 0
+	  },
+	  {
+		"type": "golems:item_update_golem",
+		"apply": {
+		  "cycle": true
+		}
+	  }
+	]
+  }
+}

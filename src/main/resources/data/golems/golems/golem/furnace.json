@@ -9,6 +9,7 @@
 	]
   },
   "group": "golems:furnace",
+  "variants": 2,
   "blocks": {
 	"all": "minecraft:furnace"
   },

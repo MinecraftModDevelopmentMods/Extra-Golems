@@ -1,0 +1,35 @@
+{
+  "attributes": {
+    "health": 22.0,
+    "attack": 4.5,
+    "speed": 0.26,
+	"immune": [
+	  "minecraft:in_fire",
+	  "minecraft:on_fire"
+	],
+	"swim_ability": "float",
+	"sound": "minecraft:nether_wart"
+  },
+  "group": "golems:nether_wart",
+  "blocks": {
+	"all": "minecraft:nether_wart_block"
+  },
+  "repair_items": {
+    "minecraft:nether_wart_block": 0.5,
+	"minecraft:nether_wart": 0.15
+  },
+  "model": "golems:nether_wart",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:place",
+		"trigger": "tick",
+		"position": "self",
+		"chance": 0.0022,
+		"block": {
+		  "Name": "minecraft:nether_wart"
+		}
+	  }
+	]
+  }
+}

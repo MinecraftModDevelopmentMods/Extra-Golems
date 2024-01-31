@@ -1,0 +1,37 @@
+{
+  "attributes": {
+    "health": 54.0,
+    "attack": 6.5,
+    "speed": 0.32,
+	"immune": [
+	  "minecraft:in_fire",
+	  "minecraft:on_fire"
+	],
+	"sound": "minecraft:sculk",
+	"occludes": true
+  },
+  "blocks": {
+	"all": "minecraft:sculk"
+  },
+  "repair_items": {
+    "minecraft:sculk": 0.5,
+	"minecraft:experience_bottle": 0.5
+  },
+  "model": "golems:sculk",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:place",
+		"trigger": "tick",
+		"position": "self",
+		"chance": 0.004,
+		"block": {
+		  "Name": "minecraft:sculk_vein",
+		  "properties": {
+			"up": "true"
+		  }
+		}
+	  }
+	]
+  }
+}

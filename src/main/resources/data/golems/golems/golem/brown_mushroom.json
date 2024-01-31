@@ -30,7 +30,21 @@
   "model": "golems:brown_mushroom",
   "brain": {
 	"behavior": [
-	  "golems:regen_at_night",
+	  {
+		"type": "golems:effect",
+		"trigger": "tick",
+		"predicate": [
+		  "night"
+		],
+		"chance": 0.0125,
+		"apply": {
+		  "target": "self",
+		  "effect": {
+			"id": "minecraft:regeneration",
+			"duration": 300
+		  }
+		}
+	  },
 	  {
 		"type": "golems:place_block",
 		"radius": 1,

@@ -1,0 +1,17 @@
+{
+  "attributes": {
+    "health": 42.0,
+    "attack": 8.0,
+	"speed": 0.24,
+	"knockback_resistance": 0.6
+  },
+  "group": "golems:terracotta",
+  "blocks": {
+	"all": "#forge:terracotta/colorless"
+  },
+  "repair_items": {
+    "#forge:terracotta": 0.5
+  },
+  "model": "golems:terracotta",
+  "brain": "golems:empty"
+}

@@ -1,0 +1,37 @@
+{
+  "attributes": {
+	"health": 24.0,
+	"attack": 7.0,
+	"speed": 0.289,
+	"knockback_resistance": 0.2,
+	"immune": [
+	  "minecraft:in_fire",
+	  "minecraft:on_fire"
+	],
+	"swim_ability": "float",
+	"sound": "minecraft:stem"
+  },
+  "group": "golems:stem",
+  "blocks": {
+	"all": "#minecraft:warped_stems"
+  },
+  "repair_items": {
+    "#minecraft:warped_stems": 0.5,
+	"minecraft:warped_fungus": 0.15
+  },
+  "model": "golems:warped_stem",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:place",
+		"trigger": "tick",
+		"position": "self",
+		"chance": 0.00062,
+		"must_survive": false,
+		"block": {
+		  "Name": "minecraft:warped_fungus"
+		}
+	  }
+	]
+  }
+}

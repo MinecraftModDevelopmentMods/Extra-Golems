@@ -9,7 +9,10 @@
   "hidden": true,
   "brain": {
 	"behaviors": [
-	  "golems:light_level_15"
+	  {
+		"type": "golems:light",
+		"light": 15
+	  }
 	]
   }
 }

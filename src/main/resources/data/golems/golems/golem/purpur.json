@@ -1,0 +1,32 @@
+{
+  "attributes": {
+    "health": 80.0,
+    "attack": 7.0,
+    "knockback_resistance": 0.3
+  },
+  "particle": {
+    "type": "minecraft:portal"
+  },
+  "blocks": {
+	"all": [
+	  "minecraft:purpur_block",
+	  "minecraft:purpur_pillar"
+	]
+  },
+  "repair_items": {
+    "minecraft:purpur_block": 0.5,
+	"minecraft:purpur_pillar": 0.5
+  },
+  "model": "golems:purpur",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:teleport",
+		"radius": 16,
+		"idle_chance": 0.01,
+		"hurt_chance": 0.6,
+		"target_chance": 0.2
+	  }
+	]
+  }
+}

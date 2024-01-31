@@ -41,8 +41,8 @@ public class ExplodeBehavior extends Behavior {
 	public static final Codec<ExplodeBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
 			.and(Codec.doubleRange(0.0D, 127.0D).optionalFieldOf("radius", 2.0D).forGetter(ExplodeBehavior::getRadius))
 			.and(Codec.intRange(0, Integer.MAX_VALUE).optionalFieldOf("fuse", 60).forGetter(ExplodeBehavior::getMinFuse))
-			.and(Codec.doubleRange(0.0D, 1.0D).optionalFieldOf("chance_on_hurt", 0.0D).forGetter(ExplodeBehavior::getChanceOnHurt))
-			.and(Codec.doubleRange(0.0D, 1.0D).optionalFieldOf("chance_on_attack", 0.0D).forGetter(ExplodeBehavior::getChanceOnAttack))
+			.and(Codec.doubleRange(0.0D, 1.0D).optionalFieldOf("hurt_chance", 0.0D).forGetter(ExplodeBehavior::getChanceOnHurt))
+			.and(Codec.doubleRange(0.0D, 1.0D).optionalFieldOf("attack_chance", 0.0D).forGetter(ExplodeBehavior::getChanceOnAttack))
 			.apply(instance, ExplodeBehavior::new));
 
 	/** The radius of the explosion **/
