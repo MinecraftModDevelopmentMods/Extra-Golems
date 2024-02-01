@@ -1,7 +1,7 @@
 {
   "layers": [
 	{
-	  "texture": "minecraft::oak_leaves",
+	  "texture": "minecraft:oak_leaves",
 	  "template": "golems:template/leaves",
 	  "use_biome_color": true
 	},

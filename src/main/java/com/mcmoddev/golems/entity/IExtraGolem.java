@@ -35,6 +35,9 @@ public interface IExtraGolem extends IVariantProvider, ILightProvider, IPowerPro
 	/** Set up the inventory **/
 	void setupInventory();
 
+	/** @return the color of the biome at the entity position **/
+	int getBiomeColor();
+
 	//// CONTAINER ////
 
 	/**

@@ -45,7 +45,7 @@ public class GuideBookGroup implements ITableOfContentsEntry {
 		if(list.isEmpty()) {
 			throw new IllegalArgumentException("GuideBookGroup requires at least one Entry");
 		}
-		this.list = ImmutableList.copyOf(list);
+		this.list = ImmutableList.sortedCopyOf(GuideBookEntry.SORT_BY_NAME, list);
 		this.group = group;
 		this.title = (group != null) ? Component.translatable(group.toLanguageKey("guide_book.group")) : null;
 		// calculate average health and attack, and collect blocks and items
@@ -111,11 +111,6 @@ public class GuideBookGroup implements ITableOfContentsEntry {
 
 	//// GETTERS ////
 
-	/** @return {@code true} if the list has exactly one element **/
-	public boolean isSingleton() {
-		return this.list.size() == 1;
-	}
-
 	/** @return The entry list **/
 	public List<GuideBookEntry> getList() {
 		return list;
@@ -135,6 +130,7 @@ public class GuideBookGroup implements ITableOfContentsEntry {
 		return group;
 	}
 
+	/** @return the title of the group, if any **/
 	@Nullable
 	public Component getTitle() {
 		return title;

@@ -12,6 +12,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
 
 public class GolemBannerLayer<T extends GolemBase> extends RenderLayer<T, GolemModel<T>> {
 
@@ -22,22 +23,23 @@ public class GolemBannerLayer<T extends GolemBase> extends RenderLayer<T, GolemM
 	@Override
 	public void render(PoseStack poseStack, MultiBufferSource bufferSource, int packedLightIn, T entity,
 					   float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-		if (entity.getItemBySlot(EquipmentSlot.CHEST).is(ItemTags.BANNERS)) {
+		ItemStack itemStack = entity.getItemBySlot(EquipmentSlot.CHEST);
+		if (itemStack.is(ItemTags.BANNERS)) {
 			poseStack.pushPose();
 			// position the banner
-			poseStack.translate(-0.09375D, 0.8725D, 0.3525D); // -0.075
+			poseStack.translate(0, 0.5825D, 0.3D); // 0.8725D
 			poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
 			poseStack.mulPose(Axis.YP.rotationDegrees(90.0F));
 			// animation
 			final float bannerSwing = 0.1F + Mth.cos((ageInTicks + partialTicks) * 0.07F) * (limbSwingAmount + 0.1F) * 0.2F;
-			poseStack.translate(0, 1.5D, 0);
+			poseStack.translate(0, 1.5D, 0.0625D);
 			poseStack.mulPose(Axis.ZP.rotation(bannerSwing));
-			poseStack.translate(0, -1.5D, 0);
+			poseStack.translate(0, -1.5D, -0.0625D);
 			// scale and center on entity body
 			poseStack.scale(2.6F, 2.3F, 2.6F);
 			getParentModel().root().translateAndRotate(poseStack);
 			// Actually render the banner item
-			Minecraft.getInstance().getEntityRenderDispatcher().getItemInHandRenderer().renderItem(entity, entity.getItemBySlot(EquipmentSlot.CHEST), ItemDisplayContext.FIRST_PERSON_RIGHT_HAND, false, poseStack, bufferSource, packedLightIn);
+			Minecraft.getInstance().getEntityRenderDispatcher().getItemInHandRenderer().renderItem(entity, itemStack, ItemDisplayContext.FIRST_PERSON_RIGHT_HAND, false, poseStack, bufferSource, packedLightIn);
 			poseStack.popPose();
 		}
 	}

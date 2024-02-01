@@ -3,6 +3,9 @@
     "health": 68.0,
     "attack": 6.0,
 	"speed": 0.27,
+	"ignore": [
+	  "minecraft:poison"
+	],
 	"swim_ability": "float",
 	"sound": "minecraft:coral_block"
   },
@@ -22,7 +25,7 @@
 		"target": "enemy",
 		"position": "self",
 		"radius": 0.5,
-		"chance": 0.31,
+		"chance": 0.21,
 		"entity": "minecraft:bee"
 	  }
 	]

@@ -43,7 +43,7 @@
 		"block": {
 		  "Name": "minecraft:sculk_vein",
 		  "properties": {
-			"up": "true"
+			"down": "true"
 		  }
 		}
 	  }

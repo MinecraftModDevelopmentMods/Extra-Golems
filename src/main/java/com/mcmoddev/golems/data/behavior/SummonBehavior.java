@@ -43,21 +43,21 @@ import java.util.function.Predicate;
  * This behavior allows an entity to summon an entity under specific conditions
  **/
 @Immutable
-public class SummonEntityBehavior extends Behavior {
+public class SummonBehavior extends Behavior {
 	
-	public static final Codec<SummonEntityBehavior> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+	public static final Codec<SummonBehavior> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			EGCodecUtils.MIN_MAX_INTS_CODEC.optionalFieldOf("variant", MinMaxBounds.Ints.ANY).forGetter(Behavior::getVariantBounds),
 			TooltipPredicate.CODEC.optionalFieldOf("tooltip", TooltipPredicate.NORMAL).forGetter(Behavior::getTooltipPredicate),
-			ForgeRegistries.ENTITY_TYPES.getCodec().fieldOf("entity").forGetter(SummonEntityBehavior::getEntity),
+			ForgeRegistries.ENTITY_TYPES.getCodec().fieldOf("entity").forGetter(SummonBehavior::getEntity),
 			Codec.STRING.optionalFieldOf("display_name").forGetter(o -> Optional.ofNullable(o.displayNameKey)),
-			Codec.STRING.optionalFieldOf("nbt", "{}").forGetter(SummonEntityBehavior::getNbt),
-			Codec.intRange(0, 255).optionalFieldOf("amount", 1).forGetter(SummonEntityBehavior::getAmount),
-			TargetType.SELF_OR_ENEMY_CODEC.optionalFieldOf("position", TargetType.SELF).forGetter(SummonEntityBehavior::getPosition),
-			Codec.doubleRange(0.0D, 128.0D).optionalFieldOf("radius", 0.0D).forGetter(SummonEntityBehavior::getRadius),
-			TriggerType.CODEC.fieldOf("trigger").forGetter(SummonEntityBehavior::getTrigger),
-			EGCodecUtils.listOrElementCodec(WorldPredicate.CODEC).optionalFieldOf("predicate", ImmutableList.of(WorldPredicate.ALWAYS)).forGetter(SummonEntityBehavior::getPredicates),
-			Codec.doubleRange(0.0D, 1.0D).optionalFieldOf("chance", 1.0D).forGetter(SummonEntityBehavior::getChance)
-	).apply(instance, SummonEntityBehavior::new));
+			Codec.STRING.optionalFieldOf("nbt", "{}").forGetter(SummonBehavior::getNbt),
+			Codec.intRange(0, 255).optionalFieldOf("amount", 1).forGetter(SummonBehavior::getAmount),
+			TargetType.SELF_OR_ENEMY_CODEC.optionalFieldOf("position", TargetType.SELF).forGetter(SummonBehavior::getPosition),
+			Codec.doubleRange(0.0D, 128.0D).optionalFieldOf("radius", 0.0D).forGetter(SummonBehavior::getRadius),
+			TriggerType.CODEC.fieldOf("trigger").forGetter(SummonBehavior::getTrigger),
+			EGCodecUtils.listOrElementCodec(WorldPredicate.CODEC).optionalFieldOf("predicate", ImmutableList.of(WorldPredicate.ALWAYS)).forGetter(SummonBehavior::getPredicates),
+			Codec.doubleRange(0.0D, 1.0D).optionalFieldOf("chance", 1.0D).forGetter(SummonBehavior::getChance)
+	).apply(instance, SummonBehavior::new));
 
 	/** The entity ID of an entity to spawn **/
 	private final EntityType<?> entity;
@@ -82,7 +82,7 @@ public class SummonEntityBehavior extends Behavior {
 	/** The percent chance [0,1] to apply **/
 	private final double chance;
 
-	public SummonEntityBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, EntityType<?> entity, Optional<String> displayNameKey, String nbt, int amount, TargetType position, double radius, TriggerType trigger, List<WorldPredicate> predicates, double chance) {
+	public SummonBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, EntityType<?> entity, Optional<String> displayNameKey, String nbt, int amount, TargetType position, double radius, TriggerType trigger, List<WorldPredicate> predicates, double chance) {
 		super(variant, tooltipPredicate);
 		this.entity = entity;
 		this.displayNameKey = displayNameKey.orElse(null);
@@ -208,7 +208,7 @@ public class SummonEntityBehavior extends Behavior {
 			EntityType.create(tag, self.level()).ifPresent(e -> {
 				// randomize position
 				e.setPos(pos.add((self.getRandom().nextDouble() - 0.5F) * 2.0F * radius,
-						(self.getRandom().nextDouble() - 0.5F) * 2.0F * (radius / 4.0F),
+						self.getRandom().nextDouble() * (radius / 4.0F),
 						(self.getRandom().nextDouble() - 0.5F) * 2.0F * radius));
 				// spawn entity
 				level.addFreshEntityWithPassengers(e);
@@ -231,9 +231,9 @@ public class SummonEntityBehavior extends Behavior {
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
-		if (!(o instanceof SummonEntityBehavior)) return false;
+		if (!(o instanceof SummonBehavior)) return false;
 		if (!super.equals(o)) return false;
-		SummonEntityBehavior that = (SummonEntityBehavior) o;
+		SummonBehavior that = (SummonBehavior) o;
 		return amount == that.amount && Double.compare(that.chance, chance) == 0 && entity.equals(that.entity) && nbt.equals(that.nbt) && position == that.position && trigger == that.trigger && predicates.equals(that.predicates);
 	}
 

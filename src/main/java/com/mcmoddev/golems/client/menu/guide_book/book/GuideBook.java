@@ -2,6 +2,7 @@ package com.mcmoddev.golems.client.menu.guide_book.book;
 
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.ExtraGolems;
+import com.mcmoddev.golems.client.menu.guide_book.GuideBookEntry;
 import com.mcmoddev.golems.client.menu.guide_book.GuideBookGroup;
 import com.mcmoddev.golems.client.menu.guide_book.page.BookPage;
 import com.mcmoddev.golems.client.menu.guide_book.page.CraftingRecipePage;
@@ -13,15 +14,18 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Queue;
 
 public class GuideBook {
 
@@ -129,35 +133,20 @@ public class GuideBook {
 				.dimensions(pageWidth, pageHeight)
 				.build());
 
+		// create queue for groups that have a table of contents.
+		// groups with tables of contents must start on an even page.
+		// we could add a blank page before the groups that start on odd pages,
+		// or use this queue to fill in the gaps with single-page entries.
+		final Queue<GuideBookGroup> tabulatedGroups = new LinkedList<>();
 		// add guide book group sections
 		for(GuideBookGroup group : groups) {
+			// check if this group has a table of contents
 			boolean hasTableOfContents = group.getList().size() > 1;
 			if(hasTableOfContents) {
-				// check if blank page is needed to ensure table of contents is always on an even number page
-				if(page % 2 != 0) {
-					pages.add(blankPage(screen, page, x + pageWidth, y));
-					page++;
-				}
-				// create description page
-				GolemDescriptionPage descriptionPage = (GolemDescriptionPage) new GolemDescriptionPage.Builder(screen, page + 1, group)
-						.pos(x + pageWidth, y)
-						.dimensions(pageWidth, pageHeight)
-						.build();
-				// create table of contents page and link it to description page
-				BookPage tableOfContentsPage = new TableOfContentsPage.Builder(screen, page, group.getList(), descriptionPage::setEntryIndex)
-						.title(group.getTitle())
-						.pos(x, y)
-						.dimensions(pageWidth, pageHeight)
-						.build();
-				// add table of contents page first, then add description page
-				pages.add(tableOfContentsPage);
-				pages.add(descriptionPage);
-				// add entry to table of contents
-				tableOfContents.put(group, page);
-				// update page
-				page += 2;
+				// add to the queue
+				tabulatedGroups.add(group);
 			} else {
-				// no table of contents, add simple description page instead
+				// add directly to pages
 				pages.add(new GolemDescriptionPage.Builder(screen, page, group)
 						.pos(x + (page % 2) * pageWidth, y)
 						.dimensions(pageWidth, pageHeight)
@@ -167,6 +156,18 @@ public class GuideBook {
 				// update page
 				page++;
 			}
+			// check if any enqueued groups can be added to an even number page
+			while(!tabulatedGroups.isEmpty() && page % 2 == 0) {
+				GuideBookGroup qGroup = tabulatedGroups.remove();
+				Tuple<BookPage, BookPage> addedPages = groupedGolemDescriptionPage(qGroup, screen, page);
+				// add table of contents page first, then add description page
+				pages.add(addedPages.getA());
+				pages.add(addedPages.getB());
+				// add entry to table of contents
+				tableOfContents.put(qGroup, page);
+				// update page
+				page += 2;
+			}
 		}
 
 		// ensure book has even number of pages
@@ -175,10 +176,52 @@ public class GuideBook {
 			page++;
 		}
 
+		// add remaining elements from queue, if any
+		while(!tabulatedGroups.isEmpty()) {
+			GuideBookGroup qGroup = tabulatedGroups.remove();
+			Tuple<BookPage, BookPage> addedPages = groupedGolemDescriptionPage(qGroup, screen, page);
+			// add table of contents page first, then add description page
+			pages.add(addedPages.getA());
+			pages.add(addedPages.getB());
+			// add entry to table of contents
+			tableOfContents.put(qGroup, page);
+			// update page
+			page += 2;
+		}
+
 		// build list of pages
 		return pages.build();
 	}
 
+	/**
+	 * Adds a table of contents page and golem description page (total 2 pages)
+	 * @param group the guide book group
+	 * @param screen the parent screen
+	 * @param page the page number
+	 * @return the table of contents page and golem description page, in that order
+	 */
+	private Tuple<BookPage, BookPage> groupedGolemDescriptionPage(final GuideBookGroup group, final IBookScreen screen, final int page) {
+		// create description page
+		GolemDescriptionPage descriptionPage = (GolemDescriptionPage) new GolemDescriptionPage.Builder(screen, page + 1, group)
+				.pos(x + pageWidth, y)
+				.dimensions(pageWidth, pageHeight)
+				.build();
+		// create table of contents page and link it to description page
+		BookPage tableOfContentsPage = new TableOfContentsPage.Builder(screen, page, group.getList(), descriptionPage::setEntryIndex)
+				.title(group.getTitle())
+				.pos(x, y)
+				.dimensions(pageWidth, pageHeight)
+				.build();
+		return new Tuple<>(tableOfContentsPage, descriptionPage);
+	}
+
+	/**
+	 * @param screen the parent screen
+	 * @param page the page number
+	 * @param x the x position
+	 * @param y the y position
+	 * @return a newly constructed blank page
+	 */
 	private BookPage blankPage(final IBookScreen screen, final int page, final int x, final int y) {
 		return new BookPage.Builder(screen, page).pos(x, y).dimensions(pageWidth, pageHeight).build();
 	}

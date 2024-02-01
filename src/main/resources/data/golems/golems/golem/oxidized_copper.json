@@ -4,10 +4,7 @@
   "blocks": {
 	"arms": "#forge:storage_blocks/copper",
 	"legs": "#forge:storage_blocks/copper",
-	"body": [
-	  "minecraft:oxidized_copper_block",
-	  "minecraft:oxidized_cut_copper"
-	]
+	"body": "minecraft:oxidized_copper"
   },
   "model": "golems:oxidized_copper",
   "brain": {
@@ -21,6 +18,15 @@
 		"apply": {
 		  "golem": "golems:copper"
 		}
+	  },
+	  {
+		"type": "golems:summon",
+		"trigger": "tick",
+		"predicate": "thunder",
+		"position": "self",
+		"radius": 1.0,
+		"chance": 0.0014,
+		"entity": "minecraft:lightning_bolt"
 	  },
 	  {
 		"type": "golems:item_update_golem",

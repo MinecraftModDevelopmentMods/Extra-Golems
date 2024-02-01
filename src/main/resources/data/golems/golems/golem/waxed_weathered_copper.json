@@ -4,10 +4,7 @@
   "blocks": {
 	"arms": "#forge:storage_blocks/copper",
 	"legs": "#forge:storage_blocks/copper",
-	"body": [
-	  "minecraft:waxed_weathered_copper_block",
-	  "minecraft:waxed_weathered_cut_copper"
-	]
+	"body": "minecraft:waxed_weathered_copper"
   },
   "model": "golems:weathered_copper",
   "brain": {

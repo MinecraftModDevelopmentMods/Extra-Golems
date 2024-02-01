@@ -235,6 +235,7 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 	}
 
 	/** @return the current biome color (only updated client-side) **/
+	@Override
 	public int getBiomeColor() {
 		return biomeColor;
 	}

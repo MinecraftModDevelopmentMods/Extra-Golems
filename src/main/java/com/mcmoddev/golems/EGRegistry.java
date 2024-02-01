@@ -19,7 +19,7 @@ import com.mcmoddev.golems.data.behavior.PowerBehavior;
 import com.mcmoddev.golems.data.behavior.SetFireBehavior;
 import com.mcmoddev.golems.data.behavior.ShootArrowsBehavior;
 import com.mcmoddev.golems.data.behavior.SplitBehavior;
-import com.mcmoddev.golems.data.behavior.SummonEntityBehavior;
+import com.mcmoddev.golems.data.behavior.SummonBehavior;
 import com.mcmoddev.golems.data.behavior.TeleportBehavior;
 import com.mcmoddev.golems.data.behavior.TemptBehavior;
 import com.mcmoddev.golems.data.behavior.ItemUpdateGolemBehavior;
@@ -242,7 +242,7 @@ public final class EGRegistry {
 		public static final RegistryObject<Codec<ShootArrowsBehavior>> SHOOT_ARROWS = BEHAVIOR_SERIALIZER.register("shoot_arrows", () -> ShootArrowsBehavior.CODEC);
 		public static final RegistryObject<Codec<SplitBehavior>> SPLIT = BEHAVIOR_SERIALIZER.register("split", () -> SplitBehavior.CODEC);
 		public static final RegistryObject<Codec<SetFireBehavior>> SET_FIRE = BEHAVIOR_SERIALIZER.register("set_fire", () -> SetFireBehavior.CODEC);
-		public static final RegistryObject<Codec<SummonEntityBehavior>> SUMMON = BEHAVIOR_SERIALIZER.register("summon", () -> SummonEntityBehavior.CODEC);
+		public static final RegistryObject<Codec<SummonBehavior>> SUMMON = BEHAVIOR_SERIALIZER.register("summon", () -> SummonBehavior.CODEC);
 		public static final RegistryObject<Codec<TeleportBehavior>> TELEPORT = BEHAVIOR_SERIALIZER.register("teleport", () -> TeleportBehavior.CODEC);
 		public static final RegistryObject<Codec<TemptBehavior>> TEMPT = BEHAVIOR_SERIALIZER.register("tempt", () -> TemptBehavior.CODEC);
 		public static final RegistryObject<Codec<UpdateGolemBehavior>> UPDATE_GOLEM = BEHAVIOR_SERIALIZER.register("update_golem", () -> UpdateGolemBehavior.CODEC);

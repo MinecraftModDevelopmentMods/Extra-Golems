@@ -23,6 +23,7 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
 import java.util.Locale;
@@ -101,8 +102,16 @@ public class GolemLayerListLayer<T extends GolemBase> extends RenderLayer<T, Gol
 			RenderSystem.enableBlend();
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.5F);
 		}
+		// determine model color
+		final Vector3f colors;
+		if(layer.useBiomeColor()) {
+			// unpack biome color
+			colors = Vec3.fromRGB24(entity.getBiomeColor()).toVector3f();
+		} else {
+			// use layer color
+			colors = layer.getColors().toVector3f();
+		}
 		// set model color
-		final Vector3f colors = layer.getColors().toVector3f();
 		model.setColor(colors.x(), colors.y(), colors.z());
 		// render model
 		model.renderToBuffer(poseStack, vertexBuilder, packedLight, packedOverlayIn, 1.0F, 1.0F, 1.0F, 1.0F);

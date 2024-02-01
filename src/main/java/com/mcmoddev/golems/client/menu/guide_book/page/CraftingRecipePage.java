@@ -127,7 +127,7 @@ public class CraftingRecipePage extends TitleAndBodyPage {
 			// TODO figure out xy position
 			final ItemStack result = recipe.getResultItem(Minecraft.getInstance().level.registryAccess());
 			itemButtons.add(parent.addButton(new CyclingItemButton(new Button.Builder(Component.empty(), b -> {})
-					.pos(bx + 56, by + 11), ImmutableList.of(result), 1.0F)));
+					.pos(bx + 56, by + 10), ImmutableList.of(result), 1.0F)));
 			// build the page
 			return new CraftingRecipePage(font, page, x, y, width, height, padding, title, body, texture, textureWidth, textureHeight, textureU, textureV, itemButtons);
 		}

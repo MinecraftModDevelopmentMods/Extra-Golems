@@ -8,6 +8,6 @@
     "minecraft:warped_wart_block": 0.5,
 	"minecraft:nether_wart": 0.15
   },
-  "model": "golems:nether_wart",
+  "model": "golems:warped_wart",
   "brain": "golems:empty"
 }

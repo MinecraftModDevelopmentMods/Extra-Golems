@@ -16,7 +16,6 @@
 	  "type": "golems:place",
 	  "trigger": "tick",
 	  "position": "self",
-	  "radius": 1,
 	  "chance": 0.0009,
 	  "predicate": "day",
 	  "block": [

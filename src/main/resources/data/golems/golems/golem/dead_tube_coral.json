@@ -1,6 +1,6 @@
 {
   "parent": "golems:generic_dead_coral",
-  "hidden": false,
+  "hidden": true,
   "blocks": {
 	"arms": [
 	  "#minecraft:coral_blocks",

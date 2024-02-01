@@ -45,14 +45,15 @@ public class WearBannerBehavior extends Behavior {
 	public void onMobInteract(final IExtraGolem entity, final Player player, final InteractionHand hand) {
 		final Mob mob = entity.asMob();
 		final ItemStack stack = player.getItemInHand(hand);
+		final boolean isBanner = stack.is(ItemTags.BANNERS);
 		// Attempt to remove banner from the entity
 		final ItemStack banner = mob.getItemBySlot(EquipmentSlot.CHEST);
-		if (!banner.isEmpty() && stack.getItem() instanceof ShearsItem) {
+		if (!banner.isEmpty() && (isBanner || stack.getItem() instanceof ShearsItem)) {
 			mob.spawnAtLocation(banner, mob.getBbHeight() * 0.9F);
 			mob.setItemSlot(EquipmentSlot.CHEST, ItemStack.EMPTY);
 		}
 		// Attempt to place a banner on the entity
-		if (stack.is(ItemTags.BANNERS)) {
+		if (isBanner) {
 			mob.setItemSlot(EquipmentSlot.CHEST, stack.split(1));
 			mob.setDropChance(EquipmentSlot.CHEST, 1.0F);
 		}

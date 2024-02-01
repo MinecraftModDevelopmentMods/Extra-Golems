@@ -110,7 +110,7 @@ public class GolemDescriptionPage extends TitleAndBodyPage {
 		}
 		// draw image
 		final int posX = this.x + (this.width - IMAGE_WIDTH) / 2;
-		final int posY = this.y + this.height - IMAGE_HEIGHT - padding * 2;
+		final int posY = this.y + this.height - IMAGE_HEIGHT - (int) (padding * 1.5F);
 		graphics.blit(entry.getImage(), posX, posY, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT, IMAGE_WIDTH, IMAGE_HEIGHT);
 	}
 

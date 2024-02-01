@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.Block;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +27,8 @@ import java.util.Optional;
  * to display in the Guide Book
  **/
 public class GuideBookEntry implements ITableOfContentsEntry {
+
+	public static final Comparator<GuideBookEntry> SORT_BY_NAME = Comparator.comparing(o -> o.getTitle().getString());
 
 	private final ResourceLocation id;
 	private final GolemContainer container;
