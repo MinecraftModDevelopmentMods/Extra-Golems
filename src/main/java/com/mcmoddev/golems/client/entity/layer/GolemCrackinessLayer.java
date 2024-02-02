@@ -18,7 +18,10 @@ import java.util.Map;
 
 public class GolemCrackinessLayer<T extends GolemBase> extends RenderLayer<T, GolemModel<T>> {
 
-	private static final Map<IronGolem.Crackiness, ResourceLocation> resourceLocations = ImmutableMap.of(IronGolem.Crackiness.LOW, new ResourceLocation("textures/entity/iron_golem/iron_golem_crackiness_low.png"), IronGolem.Crackiness.MEDIUM, new ResourceLocation("textures/entity/iron_golem/iron_golem_crackiness_medium.png"), IronGolem.Crackiness.HIGH, new ResourceLocation("textures/entity/iron_golem/iron_golem_crackiness_high.png"));
+	private static final Map<IronGolem.Crackiness, ResourceLocation> resourceLocations = ImmutableMap.of(
+			IronGolem.Crackiness.LOW, new ResourceLocation("textures/entity/iron_golem/iron_golem_crackiness_low.png"),
+			IronGolem.Crackiness.MEDIUM, new ResourceLocation("textures/entity/iron_golem/iron_golem_crackiness_medium.png"),
+			IronGolem.Crackiness.HIGH, new ResourceLocation("textures/entity/iron_golem/iron_golem_crackiness_high.png"));
 
 	public GolemCrackinessLayer(RenderLayerParent<T, GolemModel<T>> ientityrenderer) {
 		super(ientityrenderer);
@@ -37,6 +40,7 @@ public class GolemCrackinessLayer<T extends GolemBase> extends RenderLayer<T, Go
 				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.5F);
 				getParentModel().renderToBuffer(stack, vertexconsumer, packedLight, LivingEntityRenderer.getOverlayCoords(entity, 0.0F), 1.0F, 1.0F, 1.0F, 0.5F);
 				RenderSystem.disableBlend();
+				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 				stack.popPose();
 			}
 		}
