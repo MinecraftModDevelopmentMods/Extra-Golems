@@ -1,22 +1,23 @@
 {
   "replace": false,
   "values": [
+	"#golems:log",
+	"#golems:glass",
+	"#golems:terracotta",
+	"#golems:wool",
 	"golems:bookshelf",
+	"golems:brown_mushroom",
 	"golems:clay",
 	"golems:coal",
 	"golems:crafting",
-	"golems:glass",
 	"golems:glowstone",
 	"golems:hay",
 	"golems:leaves",
-	"golems:log",
 	"golems:melon",
 	"golems:moss",
-	"golems:mushroom",
 	"golems:obsidian",
 	"golems:quartz",
-	"golems:sandstone",
-	"golems:terracotta",
-	"golems:wool"
+	"golems:red_mushroom",
+	"golems:red_sandstone"
   ]
 }

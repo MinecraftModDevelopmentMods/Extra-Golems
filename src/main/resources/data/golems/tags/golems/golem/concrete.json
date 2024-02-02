@@ -1,0 +1,20 @@
+{
+  "values": [
+	"golems:white_concrete",
+	"golems:orange_concrete",
+	"golems:magenta_concrete",
+	"golems:light_blue_concrete",
+	"golems:yellow_concrete",
+	"golems:lime_concrete",
+	"golems:pink_concrete",
+	"golems:gray_concrete",
+	"golems:light_gray_concrete",
+	"golems:cyan_concrete",
+	"golems:purple_concrete",
+	"golems:blue_concrete",
+	"golems:brown_concrete",
+	"golems:green_concrete",
+	"golems:red_concrete",
+	"golems:black_concrete"
+  ]
+}
