@@ -27,7 +27,7 @@ public class RemoveBlocksModifier extends Modifier {
 	public static final Codec<RemoveBlocksModifier> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			EGCodecUtils.listOrElementCodec(RemovePredicate.CODEC).optionalFieldOf("predicate", ImmutableList.of()).forGetter(RemoveBlocksModifier::getPredicates),
 			EGCodecUtils.listOrElementCodec(GolemPart.CODEC).optionalFieldOf("part", ImmutableList.of(GolemPart.ALL)).forGetter(RemoveBlocksModifier::getPart)
-			).apply(instance, RemoveBlocksModifier::new));
+	).apply(instance, RemoveBlocksModifier::new));
 
 	private final List<RemovePredicate> predicates;
 	private final List<GolemPart> part;

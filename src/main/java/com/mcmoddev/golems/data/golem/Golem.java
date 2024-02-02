@@ -4,18 +4,23 @@ import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.behavior.BehaviorList;
 import com.mcmoddev.golems.data.model.LayerList;
+import com.mcmoddev.golems.util.EGCodecUtils;
+import com.mcmoddev.golems.util.EGComponentUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.RegistryFileCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -33,25 +38,41 @@ public class Golem {
 			ParticleTypes.CODEC.optionalFieldOf("particle").forGetter(o -> Optional.ofNullable(o.particle)),
 			LayerList.HOLDER_CODEC.optionalFieldOf("model", Holder.direct(new LayerList(ImmutableList.of()))).forGetter(Golem::getLayers),
 			BehaviorList.HOLDER_CODEC.optionalFieldOf("brain", Holder.direct(new BehaviorList(ImmutableList.of()))).forGetter(Golem::getBehaviors),
-			ResourceLocation.CODEC.optionalFieldOf("group").forGetter(o -> Optional.ofNullable(o.group))
+			ResourceLocation.CODEC.optionalFieldOf("group").forGetter(o -> Optional.ofNullable(o.group)),
+			EGCodecUtils.listOrElementCodec(Codec.STRING).optionalFieldOf("description", ImmutableList.of()).forGetter(o -> o.rawDescriptions)
 	).apply(instance, Golem::new));
 	public static final Codec<Holder<Golem>> HOLDER_CODEC = RegistryFileCodec.create(EGRegistry.Keys.GOLEM, Golem.CODEC, true);
 
+	/** The ID of the parent Golem to copy settings **/
 	private final @Nullable ResourceLocation parent;
+	/** The Attributes of the Golem, required if no parent is specified **/
 	private final @Nullable Attributes attributes;
+	/** The building blocks of the Golem **/
 	private final GolemBuildingBlocks blocks;
+	/** The repair items of the Golem **/
 	private final RepairItems repairItems;
+	/** The maximum number of variants, defaults to 1 **/
 	private final int variants;
+	/** True to hide the Golem from the guide book UI **/
 	private final boolean hidden;
+	/** The particle to randomly spawn, if any **/
 	private final @Nullable ParticleOptions particle;
+	/** The layers for the Golem model **/
 	private final Holder<LayerList> layers;
+	/** The Golem behaviors **/
 	private final Holder<BehaviorList> behaviors;
+	/** The ID of the guide book group of the Golem **/
 	private final @Nullable ResourceLocation group;
+	/** The additional descriptions to display as raw strings **/
+	private final List<String> rawDescriptions;
+	/** The additional descriptions to display as components **/
+	private final List<Component> descriptions;
 
 	public Golem(Optional<ResourceLocation> parent, Optional<Attributes> attributes,
 				 GolemBuildingBlocks blocks, RepairItems repairItems,
 				 int variants, boolean hidden, Optional<ParticleOptions> particle,
-				 Holder<LayerList> layers, Holder<BehaviorList> behaviors, Optional<ResourceLocation> group) {
+				 Holder<LayerList> layers, Holder<BehaviorList> behaviors, Optional<ResourceLocation> group,
+				 List<String> rawDescriptions) {
 		this.parent = parent.orElse(null);
 		this.attributes = attributes.orElse(null);
 		if(parent.isEmpty() && attributes.isEmpty()) {
@@ -65,6 +86,8 @@ public class Golem {
 		this.layers = layers;
 		this.behaviors = behaviors;
 		this.group = group.orElse(null);
+		this.rawDescriptions = rawDescriptions;
+		this.descriptions = ImmutableList.copyOf(EGComponentUtils.parseComponents(rawDescriptions));
 	}
 
 	//// GETTERS ////
@@ -113,6 +136,10 @@ public class Golem {
 		return group;
 	}
 
+	public List<Component> getDescriptions() {
+		return descriptions;
+	}
+
 	//// BUILDER ////
 
 	public static class Builder {
@@ -126,6 +153,7 @@ public class Golem {
 		private LayerList.Builder layers;
 		private BehaviorList.Builder behaviors;
 		private ResourceLocation group;
+		private List<String> descriptions;
 
 		//// CONSTRUCTOR ////
 
@@ -135,6 +163,7 @@ public class Golem {
 			this.repairItems = new RepairItems.Builder();
 			this.layers = new LayerList.Builder();
 			this.behaviors = new BehaviorList.Builder();
+			this.descriptions = new ArrayList<>();
 		}
 
 		public static Builder from(final RegistryAccess registryAccess, final Golem golem) {
@@ -165,7 +194,8 @@ public class Golem {
 						.particle(parent.getParticle())
 						.layers(b -> b.addAll(parent.getLayers().get().getLayers()))
 						.behaviors(b -> b.addAll(parent.getBehaviors().get().getBehaviors()))
-						.group(parent.getGroup());
+						.group(parent.getGroup())
+						.descriptions(parent.rawDescriptions);
 			}
 			// attributes (merges parent)
 			if(golem.getAttributes() != null) {
@@ -208,6 +238,10 @@ public class Golem {
 			// group (replaces parent)
 			if(golem.getGroup() != null) {
 				builder.group(golem.getGroup());
+			}
+			// descriptions (replaces parent)
+			if(!golem.rawDescriptions.isEmpty()) {
+				builder.descriptions(golem.rawDescriptions);
 			}
 			return builder;
 		}
@@ -321,7 +355,7 @@ public class Golem {
 
 		/**
 		 * @param layers the new builder to use.
-		 * Warning: this causes previous calls to {@link #layers(Consumer)} to be rendered useless.
+		 * Warning: this causes previous calls to {@link #layers(Consumer)} to be ignored.
 		 * @return the builder instance
 		 * @see #layers(Consumer)
 		 */
@@ -341,7 +375,7 @@ public class Golem {
 
 		/**
 		 * @param behaviors the new builder to use.
-		 * Warning: this causes previous calls to {@link #behaviors(Consumer)} to be rendered useless.
+		 * Warning: this causes previous calls to {@link #behaviors(Consumer)} to be ignored.
 		 * @return the builder instance
 		 * @see #behaviors(Consumer)
 		 */
@@ -360,12 +394,32 @@ public class Golem {
 		}
 
 		/**
+		 * @param descriptions a new list of descriptions to use.
+		 * Warning: this causes previous calls to {@link #descriptions(Consumer)} to be ignored.
+		 * @return the builder instance
+		 */
+		public Builder descriptions(final List<String> descriptions) {
+			this.descriptions.clear();
+			this.descriptions.addAll(descriptions);
+			return this;
+		}
+
+		/**
+		 * @param action the action to perform on the description list
+		 * @return the builder instance
+		 */
+		public Builder descriptions(final Consumer<List<String>> action) {
+			action.accept(this.descriptions);
+			return this;
+		}
+
+		/**
 		 * @return a new {@link Golem} instance
 		 */
 		public Golem build() {
 			return new Golem(Optional.ofNullable(parent), Optional.of(attributes.build()), blocks.build(),
 					repairItems.build(), variants, hidden, Optional.ofNullable(particle),
-					Holder.direct(layers.build()), Holder.direct(behaviors.build()), Optional.ofNullable(group));
+					Holder.direct(layers.build()), Holder.direct(behaviors.build()), Optional.ofNullable(group), descriptions);
 		}
 	}
 }

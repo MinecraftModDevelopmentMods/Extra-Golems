@@ -119,6 +119,8 @@ public class GolemContainer {
 		getAttributes().onAddDescriptions(this, registryAccess, list, tooltipFlag);
 		// create behavior descriptions
 		getBehaviors().forEach(b -> b.onAddDescriptions(list, tooltipFlag));
+		// add additional descriptions
+		list.addAll(getGolem().getDescriptions());
 		return list;
 	}
 
