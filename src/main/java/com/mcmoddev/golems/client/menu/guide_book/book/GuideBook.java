@@ -2,6 +2,7 @@ package com.mcmoddev.golems.client.menu.guide_book.book;
 
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.ExtraGolems;
+import com.mcmoddev.golems.client.menu.guide_book.GuideBookEntry;
 import com.mcmoddev.golems.client.menu.guide_book.GuideBookGroup;
 import com.mcmoddev.golems.client.menu.guide_book.page.BookPage;
 import com.mcmoddev.golems.client.menu.guide_book.page.CraftingRecipePage;
@@ -9,8 +10,11 @@ import com.mcmoddev.golems.client.menu.guide_book.page.GolemDescriptionPage;
 import com.mcmoddev.golems.client.menu.guide_book.page.GolemDiagramPage;
 import com.mcmoddev.golems.client.menu.guide_book.page.TableOfContentsPage;
 import com.mcmoddev.golems.client.menu.guide_book.page.TitleAndBodyPage;
+import com.mcmoddev.golems.network.EGNetwork;
+import com.mcmoddev.golems.network.ServerBoundSpawnGolemPacket;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
@@ -25,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Queue;
+import java.util.function.Consumer;
 
 public class GuideBook {
 
@@ -59,6 +64,8 @@ public class GuideBook {
 
 	private final List<BookPage> pages;
 
+	//// CONSTRUCTOR ////
+
 	public GuideBook(final IBookScreen screen, final List<GuideBookGroup> groups, final int x, final int y, final int pageWidth, final int pageHeight) {
 		this.x = x;
 		this.y = y;
@@ -91,7 +98,14 @@ public class GuideBook {
 
 		// add table of contents section
 		final List<GuideBookGroup> sortedByName = ImmutableList.sortedCopyOf(GuideBookGroup.SORT_BY_NAME, groups);
-		pages.add(new TableOfContentsPage.Builder(screen, page++, sortedByName, i -> screen.setPageIndex(tableOfContents.getOrDefault(sortedByName.get(i), 0)))
+		final Consumer<Integer> onPress = i -> {
+			if(isDebug()) {
+				debugSpawnGolem(sortedByName.get(i));
+			} else {
+				screen.setPageIndex(tableOfContents.getOrDefault(sortedByName.get(i), 0));
+			}
+		};
+		pages.add(new TableOfContentsPage.Builder(screen, page++, sortedByName, onPress)
 				.title(CONTENTS_TITLE)
 				.pos(x + pageWidth, y)
 				.dimensions(pageWidth, pageHeight)
@@ -190,6 +204,8 @@ public class GuideBook {
 		return pages.build();
 	}
 
+	//// HELPER METHODS ////
+
 	/**
 	 * Adds a table of contents page and golem description page (total 2 pages)
 	 * @param group the guide book group
@@ -199,12 +215,19 @@ public class GuideBook {
 	 */
 	private Tuple<BookPage, BookPage> groupedGolemDescriptionPage(final GuideBookGroup group, final IBookScreen screen, final int page) {
 		// create description page
-		GolemDescriptionPage descriptionPage = (GolemDescriptionPage) new GolemDescriptionPage.Builder(screen, page + 1, group)
+		final GolemDescriptionPage descriptionPage = (GolemDescriptionPage) new GolemDescriptionPage.Builder(screen, page + 1, group)
 				.pos(x + pageWidth, y)
 				.dimensions(pageWidth, pageHeight)
 				.build();
 		// create table of contents page and link it to description page
-		BookPage tableOfContentsPage = new TableOfContentsPage.Builder(screen, page, group.getList(), descriptionPage::setEntryIndex)
+		final Consumer<Integer> onPress = i -> {
+			if(isDebug()) {
+				debugSpawnGolem(group);
+			} else {
+				descriptionPage.setEntryIndex(i);
+			}
+		};
+		final BookPage tableOfContentsPage = new TableOfContentsPage.Builder(screen, page, group.getList(), onPress)
 				.title(group.getTitle())
 				.pos(x, y)
 				.dimensions(pageWidth, pageHeight)
@@ -223,6 +246,21 @@ public class GuideBook {
 		return new BookPage.Builder(screen, page).pos(x, y).dimensions(pageWidth, pageHeight).build();
 	}
 
+	private static boolean isDebug() {
+		return Screen.hasControlDown();
+	}
+
+	private static void debugSpawnGolem(final GuideBookGroup group) {
+		// validate group
+		if(!isDebug() || group.getList().isEmpty()) {
+			return;
+		}
+		// determine golem(s) to spawn
+		final List<ResourceLocation> list = group.getList().stream().map(GuideBookEntry::getId).toList();
+		// send packet to server
+		EGNetwork.CHANNEL.sendToServer(new ServerBoundSpawnGolemPacket(list));
+	}
+
 	private static Optional<CraftingRecipe> loadRecipe(final RecipeManager recipeManager, final ResourceLocation recipe) {
 		final Optional<? extends Recipe<?>> oRecipe = recipeManager.byKey(recipe);
 		if(oRecipe.isPresent() && oRecipe.get() instanceof CraftingRecipe craftingRecipe && craftingRecipe.canCraftInDimensions(2, 2)) {
@@ -230,6 +268,8 @@ public class GuideBook {
 		}
 		return Optional.empty();
 	}
+
+	//// GETTERS ////
 
 	public List<BookPage> getPages() {
 		return this.pages;

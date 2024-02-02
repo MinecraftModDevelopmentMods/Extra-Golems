@@ -94,6 +94,11 @@ public class GuideBookScreen extends Screen implements IBookScreen {
 		ticksOpen++;
 	}
 
+	@Override
+	public boolean isPauseScreen() {
+		return false;
+	}
+
 	//// RENDER ////
 
 	@Override

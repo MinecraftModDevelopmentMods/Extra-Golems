@@ -6,6 +6,7 @@ import com.mcmoddev.golems.data.GolemContainer;
 import com.mcmoddev.golems.data.golem.Golem;
 import com.mcmoddev.golems.integration.AddonLoader;
 import com.mcmoddev.golems.item.GolemSpellItem;
+import com.mcmoddev.golems.network.EGNetwork;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -41,14 +42,13 @@ public class ExtraGolems {
 	public static final EGConfig CONFIG = new EGConfig(BUILDER);
 	public static final ForgeConfigSpec SPEC = BUILDER.build();
 
-	private static final String PROTOCOL_VERSION = "3";
-	public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(new ResourceLocation(MODID, "channel"), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
-
 	public ExtraGolems() {
 		// register and load config
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, SPEC);
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(ExtraGolems::loadConfig);
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(ExtraGolems::reloadConfig);
+		// init network
+		EGNetwork.register();
 		// init registry
 		EGRegistry.register();
 		// register event handlers

@@ -16,6 +16,7 @@ public final class EGConfig {
 	private final ForgeConfigSpec.BooleanValue ENABLE_HEAL_GOLEMS;
 	private final ForgeConfigSpec.BooleanValue ENABLE_HOLIDAYS;
 	private final ForgeConfigSpec.IntValue VILLAGER_GOLEM_SPAWN_CHANCE;
+	private final ForgeConfigSpec.IntValue DEBUG_GOLEMS_PERMISSION_LEVEL;
 
 	private boolean aprilFirst;
 	private boolean halloween;
@@ -28,6 +29,7 @@ public final class EGConfig {
 	private boolean enableHealGolems;
 	private boolean enableHolidays;
 	private int villagerGolemSpawnChance;
+	private int debugGolemsPermissionLevel;
 
 	public EGConfig(final ForgeConfigSpec.Builder builder) {
 		// Global values
@@ -47,6 +49,9 @@ public final class EGConfig {
 				.defineInRange("villager_summon_chance", 60, 0, 100);
 		ENABLE_HEAL_GOLEMS = builder.comment("When enabled, giving blocks and items to golems can restore health")
 				.define("heal_golems", true);
+		DEBUG_GOLEMS_PERMISSION_LEVEL = builder
+				.comment("The minimum permission level required to spawn golems from the guide book")
+				.defineInRange("debug_golems_permission_level", 2, 0, 4);
 		builder.pop();
 	}
 
@@ -86,6 +91,10 @@ public final class EGConfig {
 		return enableHolidays && pride;
 	}
 
+	public int debugPermissionLevel() {
+		return debugGolemsPermissionLevel;
+	}
+
 	public void bake() {
 		// update the holiday configs
 		final LocalDateTime now = LocalDateTime.now();
@@ -100,5 +109,6 @@ public final class EGConfig {
 		enableHolidays = ENABLE_HOLIDAYS.get();
 		enableHealGolems = ENABLE_HEAL_GOLEMS.get();
 		villagerGolemSpawnChance = VILLAGER_GOLEM_SPAWN_CHANCE.get();
+		this.debugGolemsPermissionLevel = DEBUG_GOLEMS_PERMISSION_LEVEL.get();
 	}
 }
