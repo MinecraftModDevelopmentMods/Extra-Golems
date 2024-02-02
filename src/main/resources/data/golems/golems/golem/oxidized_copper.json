@@ -17,7 +17,8 @@
 		},
 		"apply": {
 		  "golem": "golems:copper"
-		}
+		},
+		"tooltip": "hidden"
 	  },
 	  {
 		"type": "golems:summon",
@@ -26,7 +27,8 @@
 		"position": "self",
 		"radius": 1.0,
 		"chance": 0.0014,
-		"entity": "minecraft:lightning_bolt"
+		"entity": "minecraft:lightning_bolt",
+		"tooltip": "hidden"
 	  },
 	  {
 		"type": "golems:item_update_golem",

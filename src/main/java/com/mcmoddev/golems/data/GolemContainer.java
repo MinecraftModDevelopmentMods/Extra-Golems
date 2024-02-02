@@ -2,6 +2,7 @@ package com.mcmoddev.golems.data;
 
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
+import com.mcmoddev.golems.data.behavior.Behavior;
 import com.mcmoddev.golems.data.behavior.BehaviorList;
 import com.mcmoddev.golems.data.behavior.WearBannerBehavior;
 import com.mcmoddev.golems.data.golem.Attributes;

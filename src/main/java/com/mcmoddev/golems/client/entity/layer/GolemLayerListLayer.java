@@ -72,7 +72,12 @@ public class GolemLayerListLayer<T extends GolemBase> extends RenderLayer<T, Gol
 		layerModel.setupAnim(entity, limbSwing, limbSwingAmount, partialTicks, netHeadYaw, headPitch);
 		// render all layers
 		int packedOverlay = LivingEntityRenderer.getOverlayCoords(entity, 0.0F);
-		layers.get(entity.level().registryAccess()).forEach(layer -> renderTexture(entity, layerModel, layer, poseStack, bufferSource, packedLight, packedOverlay));
+		layers.get(entity.level().registryAccess()).forEach(layer -> {
+			// validate variant
+			if(layer.isVariantInBounds(entity)) {
+				renderTexture(entity, layerModel, layer, poseStack, bufferSource, packedLight, packedOverlay);
+			}
+		});
 		// render special layers
 		if(ExtraGolems.CONFIG.pride() || ChatFormatting.stripFormatting(entity.getName().getString()).toLowerCase(Locale.ENGLISH).startsWith("lgbt")) {
 			renderTexture(entity, layerModel, Layer.RAINBOW, poseStack, bufferSource, packedLight, packedOverlay);
@@ -100,6 +105,7 @@ public class GolemLayerListLayer<T extends GolemBase> extends RenderLayer<T, Gol
 		// enable translucency if needed
 		if (layer.getRenderType() == RenderTypes.TRANSLUCENT) {
 			RenderSystem.enableBlend();
+			RenderSystem.enableDepthTest();
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.5F);
 		}
 		// determine model color
@@ -118,6 +124,7 @@ public class GolemLayerListLayer<T extends GolemBase> extends RenderLayer<T, Gol
 		// disable translucency if needed
 		if (layer.getRenderType() == RenderTypes.TRANSLUCENT) {
 			RenderSystem.disableBlend();
+			RenderSystem.disableDepthTest();
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		}
 		poseStack.popPose();

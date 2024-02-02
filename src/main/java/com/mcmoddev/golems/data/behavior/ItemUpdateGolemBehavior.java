@@ -14,6 +14,7 @@ import com.mcmoddev.golems.util.EGComponentUtils;
 import com.mcmoddev.golems.util.PredicateUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.ParticleOptions;
@@ -138,7 +139,10 @@ public class ItemUpdateGolemBehavior extends Behavior {
 
 	@Override
 	public void onMobInteract(IExtraGolem entity, Player player, InteractionHand hand) {
-		// TODO verify this does not fire for both hands
+		// only handle mainhand
+		if(hand != InteractionHand.MAIN_HAND) {
+			return;
+		}
 		// determine held item
 		final ItemStack item = player.getItemInHand(hand);
 		final Mob mob = entity.asMob();
@@ -174,7 +178,7 @@ public class ItemUpdateGolemBehavior extends Behavior {
 		final Optional<Component> predicateText = EGComponentUtils.combineWithAnd(filteredPredicates, GolemPredicate::getDescriptionId);
 
 		// resolve display name of the item
-		final Component itemName;
+		Component itemName;
 		if(this.displayNameKey != null && !this.displayNameKey.isEmpty()) {
 			itemName = Component.translatable(this.displayNameKey);
 		} else if(!this.item.isEmpty()) {
@@ -183,15 +187,17 @@ public class ItemUpdateGolemBehavior extends Behavior {
 		} else {
 			itemName = Component.translatable(PREFIX + "item_update_golem.empty_hand");
 		}
+		itemName = itemName.copy().withStyle(ChatFormatting.LIGHT_PURPLE);
 
 		// create description when golem can change
 		if(apply.getGolem() != null) {
 			// load golem from ID
 			GolemContainer container = GolemContainer.getOrCreate(registryAccess, apply.getGolem());
+			Component name = container.getTypeName().copy().withStyle(ChatFormatting.BLUE);
 			if(predicateText.isPresent()) {
-				return ImmutableList.of(Component.translatable(PREFIX + "item_update_golem.golem.predicate", itemName, container.getTypeName(), predicateText.get()));
+				return ImmutableList.of(Component.translatable(PREFIX + "item_update_golem.golem.predicate", itemName, name, predicateText.get()));
 			}
-			return ImmutableList.of(Component.translatable(PREFIX + "item_update_golem.golem", itemName, container.getTypeName()));
+			return ImmutableList.of(Component.translatable(PREFIX + "item_update_golem.golem", itemName, name));
 		}
 
 		// create description when variant can change

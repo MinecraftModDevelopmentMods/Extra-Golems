@@ -81,8 +81,8 @@ public class GolemDescriptionPage extends TitleAndBodyPage {
 		final int itemWidth = (int) (16 * item.getScale());
 		final int maxWidth = width - itemWidth - (padding * 2);
 		// determine position
-		int posX = x + padding + itemWidth + 2 + Math.max(0, maxWidth - font.width(title)) / 2;
-		int posY = y + padding + 4;
+		int posX = x + padding + itemWidth + 2;
+		int posY = y + padding + (padding * 2 - font.wordWrapHeight(title, maxWidth)) / 2;
 		// draw title
 		graphics.drawWordWrap(font, title, posX, posY, maxWidth, 0);
 	}

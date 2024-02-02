@@ -21,31 +21,19 @@ import java.util.Optional;
 public class ExplodeBehaviorData implements IBehaviorData {
 
 	private final IExtraGolem entity;
-	private int minFuse;
-	private double explosionRadius;
+	private final int minFuse;
+	private final double explosionRadius;
+
 	private int fuse;
 	private boolean fuseLit;
 
-	public ExplodeBehaviorData(final IExtraGolem entity) {
+	public ExplodeBehaviorData(final IExtraGolem entity, final ExplodeBehavior behavior) {
 		this.entity = entity;
-		processBehaviors();
+		this.minFuse = behavior.getMinFuse();
+		this.explosionRadius = behavior.getRadius();
 	}
 
 	//// METHODS ////
-
-	/** Loads the relevant behaviors from the IExtraGolem to initialize fields **/
-	private void processBehaviors() {
-		final Optional<GolemContainer> oContainer = entity.getContainer(entity.asMob().level().registryAccess());
-		if(oContainer.isEmpty()) {
-			return;
-		}
-		final List<ExplodeBehavior> behaviors = oContainer.get().getBehaviors().getActiveBehaviors(ExplodeBehavior.class, entity);
-		if(behaviors.isEmpty()) {
-			return;
-		}
-		this.minFuse = behaviors.get(0).getMinFuse();
-		this.explosionRadius = behaviors.get(0).getRadius();
-	}
 
 	/** Decrements the fuse if it is lit, then explodes when it reaches zero **/
 	public void updateFuse() {

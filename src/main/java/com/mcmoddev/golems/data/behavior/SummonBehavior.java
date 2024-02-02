@@ -14,6 +14,7 @@ import com.mcmoddev.golems.util.PredicateUtils;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
@@ -190,12 +191,13 @@ public class SummonBehavior extends Behavior {
 		final Optional<Component> predicateText = createTriggerAndPredicateDescription(trigger, predicates);
 
 		// resolve entity name
-		final Component name;
+		Component name;
 		if(displayNameKey != null && !displayNameKey.isEmpty()) {
 			name = Component.translatable(displayNameKey);
 		} else {
 			name = entity.getDescription();
 		}
+		name = name.copy().withStyle(ChatFormatting.RED);
 
 		// create description
 		if(predicateText.isPresent()) {

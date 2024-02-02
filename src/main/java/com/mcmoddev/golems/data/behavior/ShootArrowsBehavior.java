@@ -92,7 +92,6 @@ public class ShootArrowsBehavior extends Behavior {
 
 	//// METHODS ////
 
-
 	@Override
 	public void onAttachData(IExtraGolem entity) {
 		final RangedAttackGoal rangedGoal = new RangedAttackGoal(entity.asMob(), 1.0D, 28, 32.0F);

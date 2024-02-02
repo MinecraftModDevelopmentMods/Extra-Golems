@@ -89,6 +89,11 @@ public class ExplodeBehavior extends Behavior {
 	//// METHODS ////
 
 	@Override
+	public void onAttachData(IExtraGolem entity) {
+		entity.attachBehaviorData(new ExplodeBehaviorData(entity, this));
+	}
+
+	@Override
 	public void onAttack(final IExtraGolem entity, final Entity target) {
 		if (target.isOnFire() || entity.asMob().getRandom().nextFloat() < chanceOnAttack) {
 			entity.getBehaviorData(ExplodeBehaviorData.class).ifPresent(data -> data.lightFuse());

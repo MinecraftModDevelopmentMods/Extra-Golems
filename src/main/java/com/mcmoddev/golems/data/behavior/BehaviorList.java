@@ -2,6 +2,7 @@ package com.mcmoddev.golems.data.behavior;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Iterables;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.model.LayerList;
 import com.mcmoddev.golems.entity.IExtraGolem;
@@ -89,6 +90,14 @@ public class BehaviorList implements Iterable<Behavior> {
 	}
 
 	/**
+	 * @param entity the entity
+	 * @return an iterable of the behaviors that are currently active
+	 */
+	public Iterable<Behavior> getActiveBehaviors(final IExtraGolem entity) {
+		return Iterables.filter(this.behaviors, b -> b.isVariantInBounds(entity));
+	}
+
+	/**
 	 * @param clazz the {@link Behavior} class
 	 * @param <T> the behavior class
 	 * @return a list of behaviors with the given class
@@ -100,6 +109,7 @@ public class BehaviorList implements Iterable<Behavior> {
 
 	/**
 	 * @param clazz the {@link Behavior} class
+	 * @param entity the entity
 	 * @return true if there is at least one active behavior with the given class
 	 * @see #hasBehavior(Class)
 	 */

@@ -8,7 +8,7 @@
 	  "texture": "#golems:eyes"
 	},
 	{
-	  "texture": "#golems:layer/vines",
+	  "texture": "#golems:vines",
 	  "color": "B02525",
 	  "emissive": true
 	}

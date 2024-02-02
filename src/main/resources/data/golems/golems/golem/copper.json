@@ -36,7 +36,8 @@
 		"position": "self",
 		"radius": 1.0,
 		"chance": 0.0014,
-		"entity": "minecraft:lightning_bolt"
+		"entity": "minecraft:lightning_bolt",
+		"tooltip": "hidden"
 	  }
 	]
   }

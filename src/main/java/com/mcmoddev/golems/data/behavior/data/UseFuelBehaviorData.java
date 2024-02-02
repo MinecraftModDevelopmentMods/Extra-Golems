@@ -18,34 +18,20 @@ import java.util.Optional;
  */
 public class UseFuelBehaviorData implements IBehaviorData {
 
-
 	// DATA //
 	private final IExtraGolem entity;
 	private final EntityDataAccessor<Integer> fuel;
-	private int maxFuel;
-	private int burnTime;
+	private final int maxFuel;
+	private final int burnTime;
 
-	public UseFuelBehaviorData(final IExtraGolem entity, final EntityDataAccessor<Integer> fuel) {
+	public UseFuelBehaviorData(final IExtraGolem entity, final UseFuelBehavior behavior, final EntityDataAccessor<Integer> fuel) {
 		this.entity = entity;
 		this.fuel = fuel;
-		processBehaviors();
+		this.maxFuel = behavior.getMaxFuel();
+		this.burnTime = behavior.getBurnTime();
 	}
 
 	//// METHODS ////
-
-	/** Loads the relevant behaviors from the IExtraGolem to initialize fields **/
-	private void processBehaviors() {
-		final Optional<GolemContainer> oContainer = entity.getContainer(entity.asMob().level().registryAccess());
-		if(oContainer.isEmpty()) {
-			return;
-		}
-		final List<UseFuelBehavior> behaviors = oContainer.get().getBehaviors().getBehaviors(UseFuelBehavior.class);
-		if(behaviors.isEmpty()) {
-			return;
-		}
-		this.maxFuel = behaviors.get(0).getMaxFuel();
-		this.burnTime = behaviors.get(0).getBurnTime();
-	}
 
 	/** @param fuel the new amount of fuel **/
 	public void setFuel(final int fuel) {

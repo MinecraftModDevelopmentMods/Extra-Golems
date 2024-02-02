@@ -13,6 +13,7 @@ import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mcmoddev.golems.util.PredicateUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
@@ -138,10 +139,11 @@ public class UpdateGolemBehavior extends Behavior {
 		if(apply.getGolem() != null) {
 			// load golem from ID
 			GolemContainer container = GolemContainer.getOrCreate(registryAccess, apply.getGolem());
+			Component name = container.getTypeName().copy().withStyle(ChatFormatting.BLUE);
 			if(predicateText.isPresent()) {
-				return ImmutableList.of(Component.translatable(PREFIX + "update_golem.golem.predicate", container.getTypeName(), predicateText.get()));
+				return ImmutableList.of(Component.translatable(PREFIX + "update_golem.golem.predicate", name, predicateText.get()));
 			}
-			return ImmutableList.of(Component.translatable(PREFIX + "update_golem.golem", container.getTypeName()));
+			return ImmutableList.of(Component.translatable(PREFIX + "update_golem.golem", name));
 		}
 
 		// create description when variant can change

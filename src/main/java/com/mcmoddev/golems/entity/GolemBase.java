@@ -166,8 +166,10 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 	@Override
 	public void setGolemId(final @Nullable ResourceLocation id) {
 		// update golem and container
-		this.getEntityData().set(GOLEM, Optional.ofNullable(id));
 		clearCachedGolemContainer();
+		if(!level().isClientSide()) {
+			this.getEntityData().set(GOLEM, Optional.ofNullable(id));
+		}
 		if(null == id) {
 			return;
 		}
@@ -184,6 +186,22 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 		this.setInvulnerable(container.getAttributes().isInvulnerable());
 		// update server data
 		if (!this.level().isClientSide()) {
+			// update attribute values
+			if (this.isBaby()) {
+				// truncate these values to one decimal place after reducing them from base values
+				double childHealth = (Math.floor(container.getAttributes().getHealth() * 0.3D * 10D)) / 10D;
+				double childAttack = (Math.floor(container.getAttributes().getAttack() * 0.6D * 10D)) / 10D;
+				this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(childHealth);
+				this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(childAttack);
+				this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(0.0D);
+				this.setMaxUpStep(0.6F);
+			} else {
+				// use full values for non-child entity
+				this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(container.getAttributes().getHealth());
+				this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(container.getAttributes().getAttack());
+				this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(container.getAttributes().getKnockbackResistance());
+				this.setMaxUpStep(1.0F);
+			}
 			// remove and re-instantiate goals
 			this.goalSelector.getAvailableGoals().clear();
 			this.registerGoals();
@@ -258,37 +276,21 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 	@Override
 	public void onSyncedDataUpdated(final EntityDataAccessor<?> key) {
 		super.onSyncedDataUpdated(key);
+		final GolemContainer oldContainer = this.cachedContainer;
 		if (GOLEM.equals(key)) {
-			setGolemId(this.getEntityData().get(GOLEM).orElse(null));
+			clearCachedGolemContainer();
 		}
 		Optional<GolemContainer> oContainer = getContainer();
 		if (CHILD.equals(key)) {
 			// recalculate size
 			this.refreshDimensions();
-			// process golem container
-			if(oContainer.isPresent()) {
-				final GolemContainer container = oContainer.get();
-				if (this.isBaby()) {
-					// truncate these values to one decimal place after reducing them from base values
-					double childHealth = (Math.floor(container.getAttributes().getHealth() * 0.3D * 10D)) / 10D;
-					double childAttack = (Math.floor(container.getAttributes().getAttack() * 0.6D * 10D)) / 10D;
-					this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(childHealth);
-					this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(childAttack);
-					this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(0.0D);
-					this.setMaxUpStep(0.6F);
-				} else {
-					// use full values for non-child entity
-					this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(container.getAttributes().getHealth());
-					this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(container.getAttributes().getAttack());
-					this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(container.getAttributes().getKnockbackResistance());
-					this.setMaxUpStep(1.0F);
-				}
-			}
-		} else if (VARIANT.equals(key)) {
-			this.setVariant((byte) this.getVariant());
+			// recalculate attributes by reassigning the container
+			this.setGolemId(getGolemId().orElse(null));
 		}
 		// update behaviors
-		oContainer.ifPresent(container -> container.getBehaviors().forEach(b -> b.onSyncedDataUpdated(this, key)));
+		if(isEffectiveAi()) {
+			oContainer.ifPresent(container -> container.getBehaviors().forEach(b -> b.onSyncedDataUpdated(this, key)));
+		}
 	}
 
 	//// BEHAVIOR DATA ////
@@ -449,7 +451,7 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 			this.hurt(this.damageSources().onFire(), 1.0F);
 		}
 		// update behaviors
-		container.getBehaviors().forEach(b -> b.onTick(this));
+		container.getBehaviors().getActiveBehaviors(this).forEach(b -> b.onTick(this));
 	}
 
 	@Override
@@ -574,7 +576,7 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 				}
 				// allow behaviors to process doHurtTarget
 				if(isEffectiveAi()){
-					container.getBehaviors().forEach(b -> b.onAttack(this, target));
+					container.getBehaviors().getActiveBehaviors(this).forEach(b -> b.onAttack(this, target));
 				}
 			});
 			return true;
@@ -587,7 +589,7 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 		super.actuallyHurt(source, amount);
 		// allow behaviors to process actuallyHurt
 		if(isEffectiveAi()) {
-			getContainer().ifPresent(container -> container.getBehaviors().forEach(b -> b.onActuallyHurt(this, source, amount)));
+			getContainer().ifPresent(container -> container.getBehaviors().getActiveBehaviors(this).forEach(b -> b.onActuallyHurt(this, source, amount)));
 		}
 	}
 
@@ -595,7 +597,7 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 	public void thunderHit(ServerLevel pLevel, LightningBolt pLightning) {
 		super.thunderHit(pLevel, pLightning);
 		if(isEffectiveAi()) {
-			getContainer().ifPresent(container -> container.getBehaviors().forEach(b -> b.onStruckByLightning(this, pLightning)));
+			getContainer().ifPresent(container -> container.getBehaviors().getActiveBehaviors(this).forEach(b -> b.onStruckByLightning(this, pLightning)));
 		}
 	}
 
@@ -603,7 +605,7 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 	public void die(final DamageSource source) {
 		// allow behaviors to process die
 		if(isEffectiveAi()) {
-			getContainer().ifPresent(container -> container.getBehaviors().forEach(b -> b.onDie(this, source)));
+			getContainer().ifPresent(container -> container.getBehaviors().getActiveBehaviors(this).forEach(b -> b.onDie(this, source)));
 		}
 		super.die(source);
 	}
@@ -618,7 +620,7 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 		}
 		// Allow behaviors to process mobInteract
 		if(isEffectiveAi()) {
-			getContainer().ifPresent(container -> container.getBehaviors().forEach(b -> b.onMobInteract(this, player, hand)));
+			getContainer().ifPresent(container -> container.getBehaviors().getActiveBehaviors(this).forEach(b -> b.onMobInteract(this, player, hand)));
 		}
 		return super.mobInteract(player, hand);
 	}
@@ -795,7 +797,7 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 
 	@Override
 	public void setVariant(int variant) {
-		if (variant >= 0) {
+		if (variant >= 0 && !level().isClientSide()) {
 			this.getEntityData().set(VARIANT, (byte)variant);
 		}
 		this.lightLevel = calculateLightLevel();
@@ -811,7 +813,7 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 
 	@Override
 	public void performRangedAttack(LivingEntity target, float distanceFactor) {
-		this.getContainer().ifPresent(container -> container.getBehaviors().forEach(b -> b.onRangedAttack(this, target, distanceFactor)));
+		this.getContainer().ifPresent(container -> container.getBehaviors().getActiveBehaviors(this).forEach(b -> b.onRangedAttack(this, target, distanceFactor)));
 	}
 
 	//// INVENTORY ////

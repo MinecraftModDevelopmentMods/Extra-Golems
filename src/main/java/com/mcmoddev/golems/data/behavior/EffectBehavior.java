@@ -114,7 +114,7 @@ public class EffectBehavior extends Behavior {
 		// convert potion effect(s) to a single component
 		Component effectText = Component.empty();
 		if(!multipleEffects) {
-			effectText = Component.translatable(targetedMobEffects.getEffects().get(0).getDescriptionId()).withStyle(ChatFormatting.RED);
+			effectText = Component.translatable(targetedMobEffects.getEffects().get(0).getDescriptionId()).withStyle(ChatFormatting.DARK_PURPLE);
 		}
 
 		// convert target type to a single component

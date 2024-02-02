@@ -99,11 +99,11 @@ public class LightBehavior extends Behavior {
 			}
 			// attempt to replace air
 			if(replace.isAir()) {
-				return level.setBlock(pos, blockState, Block.UPDATE_ALL);
+				return level.setBlock(blockPos, blockState, Block.UPDATE_ALL);
 			}
 			// attempt to replace water
 			if(replace.is(Blocks.WATER) && replace.getFluidState().isSource()) {
-				return level.setBlock(pos, blockState.setValue(GlowBlock.WATERLOGGED, true), Block.UPDATE_ALL);
+				return level.setBlock(blockPos, blockState.setValue(GlowBlock.WATERLOGGED, true), Block.UPDATE_ALL);
 			}
 			// update block pos
 			blockPos.move(0, 1, 0);

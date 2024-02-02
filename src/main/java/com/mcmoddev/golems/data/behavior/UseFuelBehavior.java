@@ -81,7 +81,7 @@ public class UseFuelBehavior extends Behavior {
 
 	@Override
 	public void onAttachData(IExtraGolem entity) {
-		entity.attachBehaviorData(new UseFuelBehaviorData(entity, FUEL));
+		entity.attachBehaviorData(new UseFuelBehaviorData(entity, this, FUEL));
 	}
 
 	@Override

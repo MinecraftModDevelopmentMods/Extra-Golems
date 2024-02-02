@@ -100,12 +100,12 @@ public class PowerBehavior extends Behavior {
 			}
 			// attempt to replace air
 			if(replace.isAir()) {
-				level.setBlock(pos, blockState, Block.UPDATE_ALL);
+				level.setBlock(blockPos, blockState, Block.UPDATE_ALL);
 				count++;
 			}
 			// attempt to replace water
 			if(replace.is(Blocks.WATER) && replace.getFluidState().isSource()) {
-				level.setBlock(pos, blockState.setValue(PowerBlock.WATERLOGGED, true), Block.UPDATE_ALL);
+				level.setBlock(blockPos, blockState.setValue(PowerBlock.WATERLOGGED, true), Block.UPDATE_ALL);
 				count++;
 			}
 			// update block pos

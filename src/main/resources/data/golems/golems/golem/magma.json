@@ -19,6 +19,7 @@
     "minecraft:magma_block": 0.5,
 	"minecraft:magma_cream": 0.15
   },
+  "model": "golems:magma",
   "brain": {
 	"behaviors": [
 	  {

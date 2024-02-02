@@ -167,9 +167,9 @@ public class PlaceBlockBehavior extends Behavior {
 
 		// create description
 		if(predicateText.isPresent()) {
-			return ImmutableList.of(Component.translatable(PREFIX + "place.predicate", blockName, predicateText.get()).withStyle(ChatFormatting.GREEN));
+			return ImmutableList.of(Component.translatable(PREFIX + "place.predicate", blockName, predicateText.get()).withStyle(ChatFormatting.DARK_GREEN));
 		}
-		return ImmutableList.of(Component.translatable(PREFIX + "place", blockName).withStyle(ChatFormatting.GREEN));
+		return ImmutableList.of(Component.translatable(PREFIX + "place", blockName).withStyle(ChatFormatting.DARK_GREEN));
 	}
 
 	/**

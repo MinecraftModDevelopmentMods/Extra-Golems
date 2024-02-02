@@ -19,5 +19,6 @@
     "minecraft:sponge": 0.5,
 	"minecraft:wet_sponge": 0.5
   },
+  "model": "golems:sponge",
   "brain": "golems:sponge"
 }
