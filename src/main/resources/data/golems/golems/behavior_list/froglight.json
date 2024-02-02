@@ -1,0 +1,8 @@
+{
+  "behaviors": [
+	{
+	  "type": "golems:light",
+	  "light": 15
+	}
+  ]
+}

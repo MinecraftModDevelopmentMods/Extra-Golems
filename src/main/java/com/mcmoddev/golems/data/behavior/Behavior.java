@@ -1,22 +1,23 @@
 package com.mcmoddev.golems.data.behavior;
 
-import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
+import com.mcmoddev.golems.data.behavior.util.TriggerType;
+import com.mcmoddev.golems.data.behavior.util.GolemPredicate;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mcmoddev.golems.entity.goal.IVariantPredicate;
 import com.mcmoddev.golems.util.EGCodecUtils;
+import com.mcmoddev.golems.util.EGComponentUtils;
 import com.mojang.datafixers.Products;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.MinMaxBounds;
-import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.RegistryFileCodec;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
@@ -31,10 +32,9 @@ import net.minecraft.world.item.TooltipFlag;
 import javax.annotation.concurrent.Immutable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 @Immutable
 public abstract class Behavior implements IVariantPredicate {
@@ -42,14 +42,16 @@ public abstract class Behavior implements IVariantPredicate {
 	public static final Codec<Behavior> DIRECT_CODEC = ExtraCodecs.lazyInitializedCodec(() -> EGRegistry.BEHAVIOR_SERIALIZER_SUPPLIER.get().getCodec())
 			.dispatch(Behavior::getCodec, Function.identity());
 
+	public static final String PREFIX = "golem.description.behavior.";
+
 	private final MinMaxBounds.Ints variant;
-	private final Supplier<List<Component>> descriptions;
+	private final List<Component> descriptions;
 	private final TooltipPredicate tooltipPredicate;
 
 	public Behavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate) {
 		this.variant = variant;
 		this.tooltipPredicate = tooltipPredicate;
-		this.descriptions = Suppliers.memoize(this::createDescriptions);
+		this.descriptions = new ArrayList<>();
 	}
 
 	//// VARIANT PREDICATE ////
@@ -175,21 +177,28 @@ public abstract class Behavior implements IVariantPredicate {
 	public void onReadData(final IExtraGolem entity, final CompoundTag tag) { }
 
 	/**
+	 * @param registryAccess the registry access
 	 * @return a list of description text components to cache for later use
 	 */
-	public List<Component> createDescriptions() {
+	public List<Component> createDescriptions(RegistryAccess registryAccess) {
 		return ImmutableList.of();
 	}
 
 	/**
 	 * Called when building the Guide Book to add descriptions
 	 *
+	 * @param registryAccess the registry access
 	 * @param list the current description list
 	 * @param tooltipFlag the tooltip flag
 	 */
-	public void onAddDescriptions(List<Component> list, TooltipFlag tooltipFlag) {
+	public void onAddDescriptions(RegistryAccess registryAccess, List<Component> list, TooltipFlag tooltipFlag) {
+		// load descriptions
+		if(this.descriptions.isEmpty()) {
+			this.descriptions.addAll(createDescriptions(registryAccess));
+		}
+		// test tooltip predicate and add descriptions
 		if(getTooltipPredicate().test(tooltipFlag)) {
-			list.addAll(this.descriptions.get());
+			list.addAll(this.descriptions);
 		}
 	}
 
@@ -232,6 +241,33 @@ public abstract class Behavior implements IVariantPredicate {
 		return instance.group(
 				EGCodecUtils.MIN_MAX_INTS_CODEC.optionalFieldOf("variant", MinMaxBounds.Ints.ANY).forGetter(Behavior::getVariantBounds),
 				TooltipPredicate.CODEC.optionalFieldOf("tooltip", TooltipPredicate.NORMAL).forGetter(Behavior::getTooltipPredicate));
+	}
+
+	/**
+	 * @param trigger a trigger type, where {@link TriggerType#TICK} will be ignored
+	 * @param predicates a list of world predicates, where {@link GolemPredicate#ALWAYS} and {@link GolemPredicate#NEVER} will be ignored
+	 * @return a single component combining the trigger type and world predicates, if any apply
+	 */
+	protected static Optional<Component> createTriggerAndPredicateDescription(final TriggerType trigger, final List<GolemPredicate> predicates) {
+		// create filtered list of predicates, ignoring ALWAYS and NEVER
+		final List<GolemPredicate> filteredPredicates = predicates.stream()
+				.filter(p -> p != GolemPredicate.ALWAYS && p != GolemPredicate.NEVER)
+				.collect(ImmutableList.toImmutableList());
+
+		// create component from predicates list
+		final Optional<Component> oPredicates = EGComponentUtils.combineWithAnd(filteredPredicates, GolemPredicate::getDescriptionId);
+		// create component from trigger
+		final Optional<Component> oTrigger = trigger == TriggerType.TICK ? Optional.empty() : Optional.of(Component.translatable(trigger.getDescriptionId()));
+
+		// use either component, or combine both
+		if(oPredicates.isPresent() && oTrigger.isPresent()) {
+			return Optional.of(Component.translatable("golem.description.predicate.multiple", oTrigger.get(), oPredicates.get()));
+		} else if(oPredicates.isPresent()) {
+			return oPredicates;
+		} else if(oTrigger.isPresent()) {
+			return oTrigger;
+		}
+		return Optional.empty();
 	}
 
 	protected static boolean removeGoal(final Mob entity, final Class<? extends Goal> goalToRemove) {

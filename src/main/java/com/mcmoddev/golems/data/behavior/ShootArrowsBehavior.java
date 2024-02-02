@@ -11,6 +11,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -210,9 +211,9 @@ public class ShootArrowsBehavior extends Behavior {
 	}
 
 	@Override
-	public List<Component> createDescriptions() {
-		return ImmutableList.of(Component.translatable("entitytip.shoot_arrows").withStyle(ChatFormatting.LIGHT_PURPLE),
-				Component.translatable("entitytip.click_refill").withStyle(ChatFormatting.GRAY));
+	public List<Component> createDescriptions(RegistryAccess registryAccess) {
+		return ImmutableList.of(Component.translatable(PREFIX + "shoot_arrows").withStyle(ChatFormatting.LIGHT_PURPLE),
+				Component.translatable(PREFIX + "shoot_arrows.refill").withStyle(ChatFormatting.GRAY));
 	}
 
 	//// HELPER METHODS ////

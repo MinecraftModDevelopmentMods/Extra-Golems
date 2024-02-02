@@ -264,12 +264,13 @@ public class Attributes {
 	}
 
 	public void onAddDescriptions(final GolemContainer container, final RegistryAccess registryAccess, final List<Component> list, final TooltipFlag tooltipFlag) {
+		final String PREFIX = "golem.description.";
 		// add health description
-		list.add(Component.translatable("entitytip.health").append(": ").withStyle(ChatFormatting.GRAY)
+		list.add(Component.translatable(PREFIX + "health").append(": ").withStyle(ChatFormatting.GRAY)
 				.append(Component.literal(String.format("%.1f", health)).withStyle(ChatFormatting.BLACK))
 				.append(Component.literal(" \u2764").withStyle(ChatFormatting.DARK_RED)));
 		// add attack description
-		list.add(Component.translatable("entitytip.attack").append(": ").withStyle(ChatFormatting.GRAY)
+		list.add(Component.translatable(PREFIX + "attack").append(": ").withStyle(ChatFormatting.GRAY)
 				.append(Component.literal(String.format("%.1f", attack)).withStyle(ChatFormatting.BLACK))
 				.append(Component.literal(" \u2694")));
 		// add "fireproof" description
@@ -281,15 +282,18 @@ public class Attributes {
 			list.add(Component.translatable("enchantment.minecraft.blast_protection").withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD));
 		}
 		// TODO add "potion ignore" description
-		// TODO add "invulnerable" description
+		// add "invulnerable" description
+		if(isInvulnerable()) {
+			list.add(Component.translatable(PREFIX + "invulnerable").withStyle(ChatFormatting.BOLD));
+		}
 		// TODO add "occludes" description
 		// add "knockback" description
 		if (getAttackKnockback() > 0.39D) {
-			list.add(Component.translatable("entitytip.has_knockback").withStyle(ChatFormatting.DARK_RED));
+			list.add(Component.translatable(PREFIX + "knockback").withStyle(ChatFormatting.DARK_RED));
 		}
 		// add "advanced swimmer" description
 		if (swimAbility == SwimAbility.SWIM) {
-			list.add(Component.translatable("entitytip.advanced_swim").withStyle(ChatFormatting.DARK_AQUA));
+			list.add(Component.translatable(PREFIX + "swim").withStyle(ChatFormatting.DARK_AQUA));
 		}
 	}
 

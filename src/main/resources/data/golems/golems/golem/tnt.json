@@ -13,5 +13,6 @@
 	"#forge:gunpowder": 0.15,
 	"#forge:sand": 0.15
   },
+  "model": "golems:tnt",
   "brain": "golems:tnt"
 }

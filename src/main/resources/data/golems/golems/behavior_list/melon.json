@@ -18,6 +18,7 @@
 	  "position": "self",
 	  "chance": 0.0009,
 	  "predicate": "day",
+	  "display_name": "golem.description.flowers",
 	  "block": [
 		{
 		  "Name": "minecraft:dandelion"

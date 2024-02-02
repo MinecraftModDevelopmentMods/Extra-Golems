@@ -10,6 +10,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.LivingEntity;
@@ -54,8 +55,8 @@ public class AoeDryBehavior extends AoeBehavior {
 	//// METHODS ////
 
 	@Override
-	public List<Component> createDescriptions() {
-		return ImmutableList.of(Component.translatable("entitytip.aoe_dry").withStyle(ChatFormatting.GOLD));
+	public List<Component> createDescriptions(RegistryAccess registryAccess) {
+		return ImmutableList.of(Component.translatable(PREFIX + "aoe_dry").withStyle(ChatFormatting.GOLD));
 	}
 
 	//// CLASSES ////

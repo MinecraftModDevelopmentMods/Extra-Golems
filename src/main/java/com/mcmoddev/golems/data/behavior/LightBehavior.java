@@ -5,22 +5,16 @@ import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.block.GlowBlock;
 import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
-import com.mcmoddev.golems.data.behavior.util.TriggerType;
-import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -83,8 +77,8 @@ public class LightBehavior extends Behavior {
 
 
 	@Override
-	public List<Component> createDescriptions() {
-		return ImmutableList.of(Component.translatable("entitytip.provides_light").withStyle(ChatFormatting.RED));
+	public List<Component> createDescriptions(RegistryAccess registryAccess) {
+		return ImmutableList.of(Component.translatable(PREFIX + "light").withStyle(ChatFormatting.RED));
 	}
 
 	/**

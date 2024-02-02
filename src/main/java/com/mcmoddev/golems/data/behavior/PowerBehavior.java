@@ -3,16 +3,15 @@ package com.mcmoddev.golems.data.behavior;
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.ExtraGolems;
-import com.mcmoddev.golems.block.GlowBlock;
 import com.mcmoddev.golems.block.PowerBlock;
 import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
-import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -78,8 +77,8 @@ public class PowerBehavior extends Behavior {
 
 
 	@Override
-	public List<Component> createDescriptions() {
-		return ImmutableList.of(Component.translatable("entitytip.provides_power").withStyle(ChatFormatting.RED));
+	public List<Component> createDescriptions(RegistryAccess registryAccess) {
+		return ImmutableList.of(Component.translatable(PREFIX + "power").withStyle(ChatFormatting.RED));
 	}
 
 	/**

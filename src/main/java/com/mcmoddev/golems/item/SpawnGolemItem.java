@@ -110,21 +110,11 @@ public final class SpawnGolemItem extends Item {
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-		final Component loreCreativeOnly = Component.translatable("tooltip.creative_only_item").withStyle(ChatFormatting.RED);
-		final Component lorePressShift = Component.translatable("tooltip.press").withStyle(ChatFormatting.GRAY).append(" ")
-				.append(Component.translatable("tooltip.shift").withStyle(ChatFormatting.YELLOW)).append(" ")
-				.append(Component.translatable("tooltip.for_more_details").withStyle(ChatFormatting.GRAY));
-		// "Creative-Mode Only"
-		tooltip.add(loreCreativeOnly);
-		// "Use to spawn Bedrock Golem. Use on existing Bedrock Golem to remove it"
-		if (Screen.hasShiftDown()) {
-			tooltip.add(Component.translatable("tooltip.use_to_spawn", Component.translatable("entity.golems.golem.bedrock")));
-			tooltip.add(Component.translatable("tooltip.use_on_existing", Component.translatable("entity.golems.golem.bedrock")));
-			tooltip.add(Component.translatable("tooltip.to_remove_it"));
-		} else {
-			// "Press SHIFT for more details"
-			tooltip.add(lorePressShift);
+	public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
+		if(level != null) {
+			final GolemContainer container = GolemContainer.getOrCreate(level.registryAccess(), BEDROCK_GOLEM);
+			final Component name = container.getTypeName();
+			tooltip.add(Component.translatable(getDescriptionId() + ".tooltip", name));
 		}
 	}
 }

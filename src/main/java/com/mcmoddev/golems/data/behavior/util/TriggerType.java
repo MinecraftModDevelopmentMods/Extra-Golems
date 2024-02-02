@@ -12,9 +12,15 @@ public enum TriggerType implements StringRepresentable {
 	public static final Codec<TriggerType> CODEC = StringRepresentable.fromEnum(TriggerType::values);
 
 	private final String name;
+	private final String descriptionId;
 
 	TriggerType(final String nameIn) {
 		name = nameIn;
+		this.descriptionId = "golem.description.trigger." + name;
+	}
+
+	public String getDescriptionId() {
+		return descriptionId;
 	}
 
 	@Override

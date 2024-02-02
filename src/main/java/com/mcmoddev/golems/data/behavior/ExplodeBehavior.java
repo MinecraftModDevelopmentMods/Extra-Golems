@@ -9,6 +9,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -144,8 +145,8 @@ public class ExplodeBehavior extends Behavior {
 	}
 
 	@Override
-	public List<Component> createDescriptions() {
-		return ImmutableList.of(Component.translatable("entitytip.explode").withStyle(ChatFormatting.RED));
+	public List<Component> createDescriptions(RegistryAccess registryAccess) {
+		return ImmutableList.of(Component.translatable(PREFIX + "explode").withStyle(ChatFormatting.RED));
 	}
 
 	///// NBT ////

@@ -1,6 +1,6 @@
 package com.mcmoddev.golems.util;
 
-import com.mcmoddev.golems.data.behavior.util.WorldPredicate;
+import com.mcmoddev.golems.data.behavior.util.GolemPredicate;
 import com.mcmoddev.golems.entity.GolemBase;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public final class PredicateUtils {
 	}
 
 	/**
-	 * @param predicates a list of {@link WorldPredicate}s
+	 * @param predicates a list of {@link GolemPredicate}s
 	 * @return a single {@link Predicate} that requires any of the given predicates to pass, or {@code false} for an empty list
 	 */
 	public static <U, T extends Predicate<U>> Predicate<U> or(final List<T> predicates) {

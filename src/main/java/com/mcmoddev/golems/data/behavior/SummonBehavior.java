@@ -6,7 +6,7 @@ import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.data.behavior.util.TargetType;
 import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.data.behavior.util.TriggerType;
-import com.mcmoddev.golems.data.behavior.util.WorldPredicate;
+import com.mcmoddev.golems.data.behavior.util.GolemPredicate;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mcmoddev.golems.util.EGCodecUtils;
@@ -16,6 +16,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.network.chat.Component;
@@ -55,7 +56,7 @@ public class SummonBehavior extends Behavior {
 			TargetType.SELF_OR_ENEMY_CODEC.optionalFieldOf("position", TargetType.SELF).forGetter(SummonBehavior::getPosition),
 			Codec.doubleRange(0.0D, 128.0D).optionalFieldOf("radius", 0.0D).forGetter(SummonBehavior::getRadius),
 			TriggerType.CODEC.fieldOf("trigger").forGetter(SummonBehavior::getTrigger),
-			EGCodecUtils.listOrElementCodec(WorldPredicate.CODEC).optionalFieldOf("predicate", ImmutableList.of(WorldPredicate.ALWAYS)).forGetter(SummonBehavior::getPredicates),
+			EGCodecUtils.listOrElementCodec(GolemPredicate.CODEC).optionalFieldOf("predicate", ImmutableList.of(GolemPredicate.ALWAYS)).forGetter(SummonBehavior::getPredicates),
 			Codec.doubleRange(0.0D, 1.0D).optionalFieldOf("chance", 1.0D).forGetter(SummonBehavior::getChance)
 	).apply(instance, SummonBehavior::new));
 
@@ -76,13 +77,13 @@ public class SummonBehavior extends Behavior {
 	/** The trigger to summon the entity **/
 	private final TriggerType trigger;
 	/** The conditions to summon the entity **/
-	private final List<WorldPredicate> predicates;
+	private final List<GolemPredicate> predicates;
 	/** The conditions to summon the entity as a single predicate **/
 	private final Predicate<IExtraGolem> predicate;
 	/** The percent chance [0,1] to apply **/
 	private final double chance;
 
-	public SummonBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, EntityType<?> entity, Optional<String> displayNameKey, String nbt, int amount, TargetType position, double radius, TriggerType trigger, List<WorldPredicate> predicates, double chance) {
+	public SummonBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, EntityType<?> entity, Optional<String> displayNameKey, String nbt, int amount, TargetType position, double radius, TriggerType trigger, List<GolemPredicate> predicates, double chance) {
 		super(variant, tooltipPredicate);
 		this.entity = entity;
 		this.displayNameKey = displayNameKey.orElse(null);
@@ -140,7 +141,7 @@ public class SummonBehavior extends Behavior {
 		return trigger;
 	}
 
-	public List<WorldPredicate> getPredicates() {
+	public List<GolemPredicate> getPredicates() {
 		return predicates;
 	}
 
@@ -184,11 +185,23 @@ public class SummonBehavior extends Behavior {
 	}
 
 	@Override
-	public List<Component> createDescriptions() {
-		final Component description = Component.empty(); // TODO description
-		final String entityKey = displayNameKey != null ? displayNameKey : entity.getDescriptionId();
-		final Component entityName = Component.translatable(entityKey);
-		return ImmutableList.of(description);
+	public List<Component> createDescriptions(RegistryAccess registryAccess) {
+		// create predicate text, if any
+		final Optional<Component> predicateText = createTriggerAndPredicateDescription(trigger, predicates);
+
+		// resolve entity name
+		final Component name;
+		if(displayNameKey != null && !displayNameKey.isEmpty()) {
+			name = Component.translatable(displayNameKey);
+		} else {
+			name = entity.getDescription();
+		}
+
+		// create description
+		if(predicateText.isPresent()) {
+			return ImmutableList.of(Component.translatable(PREFIX + "summon.predicate", name, predicateText.get()));
+		}
+		return ImmutableList.of(Component.translatable(PREFIX + "summon", name));
 	}
 
 	protected boolean summonEntity(final GolemBase self) {

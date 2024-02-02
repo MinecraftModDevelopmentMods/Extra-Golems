@@ -26,8 +26,12 @@
 		"type": "golems:item_update_golem",
 		"apply": {
 		  "cycle": true
-		}
+		},
+		"tooltip": "hidden"
 	  }
 	]
-  }
+  },
+  "description": [
+	"golem.description.toggle_light"
+  ]
 }

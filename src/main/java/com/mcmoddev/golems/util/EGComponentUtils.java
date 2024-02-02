@@ -6,6 +6,8 @@ import net.minecraft.network.chat.MutableComponent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 
 public class EGComponentUtils {
 
@@ -47,5 +49,25 @@ public class EGComponentUtils {
 
 	public static String stripFormatting(final String string) {
 		return string.replaceAll(DELIMITER, "");
+	}
+
+	/**
+	 * @param list a list of objects to combine
+	 * @param getDescriptionId the function to get a translation key from the object
+	 * @param <T> the object
+	 * @return a component in the form "X and Y and Z" for all items in the list
+	 */
+	public static <T> Optional<Component> combineWithAnd(final List<T> list, final Function<T, String> getDescriptionId) {
+		if(list.isEmpty()) {
+			return Optional.empty();
+		}
+		// initialize text as first predicate in list
+		Component text = Component.translatable(getDescriptionId.apply(list.get(0)));
+		// add remaining items from list
+		for(int i = 1, n = list.size(); i < n; i++) {
+			T t = list.get(i);
+			text = Component.translatable("golem.description.predicates.and", text, Component.translatable(getDescriptionId.apply(t)));
+		}
+		return Optional.of(text);
 	}
 }

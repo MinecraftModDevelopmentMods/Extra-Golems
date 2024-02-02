@@ -4,13 +4,13 @@ import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.behavior.util.AoeShape;
 import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
-import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.util.AoeMapper;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.LivingEntity;
@@ -67,8 +67,8 @@ public class AoeFreezeBehavior extends AoeBehavior {
 	//// METHODS ////
 
 	@Override
-	public List<Component> createDescriptions() {
-		return ImmutableList.of(Component.translatable("entitytip.aoe_freeze").withStyle(ChatFormatting.AQUA));
+	public List<Component> createDescriptions(RegistryAccess registryAccess) {
+		return ImmutableList.of(Component.translatable(PREFIX + "aoe_freeze").withStyle(ChatFormatting.AQUA));
 	}
 
 	//// EQUALITY ////

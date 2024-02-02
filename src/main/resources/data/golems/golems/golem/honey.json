@@ -33,7 +33,8 @@
 			  "duration": 70
 			}
 		  ]
-		}
+		},
+		"tooltip": "hidden"
 	  },
 	  {
 		"type": "golems:effect",
@@ -52,12 +53,16 @@
 			  "duration": 70
 			}
 		  ]
-		}
+		},
+		"tooltip": "hidden"
 	  },
 	  {
 		"type": "golems:split",
 		"children": 2
 	  }
 	]
-  }
+  },
+  "description": [
+	"golem.description.sticky"
+  ]
 }

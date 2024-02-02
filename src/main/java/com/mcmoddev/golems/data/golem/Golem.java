@@ -185,15 +185,14 @@ public class Golem {
 			// apply settings from parent
 			if(hasParent) {
 				builder.parent = golem.getParent();
-
 				builder.attributes(b -> b.copy(parent.getAttributes()))
 						.blocks(new GolemBuildingBlocks.Builder(parent.getBlocks()))
-						.repairItems(b -> b.addAll(parent.getRepairItems().getMap()))
+						.repairItems(new RepairItems.Builder(parent.getRepairItems()))
 						.variants(parent.getVariants())
 						.hidden(parent.isHidden())
 						.particle(parent.getParticle())
-						.layers(b -> b.addAll(parent.getLayers().get().getLayers()))
-						.behaviors(b -> b.addAll(parent.getBehaviors().get().getBehaviors()))
+						.layers(new LayerList.Builder(parent.getLayers().get().getLayers()))
+						.behaviors(new BehaviorList.Builder(parent.getBehaviors().get().getBehaviors()))
 						.group(parent.getGroup())
 						.descriptions(parent.rawDescriptions);
 			}
@@ -202,11 +201,11 @@ public class Golem {
 				builder.attributes(b -> b.copy(golem.getAttributes()));
 			}
 			// blocks (replaces parent)
-			if(!hasParent || !golem.getBlocks().equals(parent.getBlocks())) {
+			if(!hasParent || !golem.getBlocks().getBlocks().isEmpty()) {
 				builder.blocks(new GolemBuildingBlocks.Builder(golem.getBlocks()));
 			}
 			// repair items (replaces parent)
-			if(!hasParent || !golem.getRepairItems().getMap().equals(parent.getRepairItems().getMap())) {
+			if(!hasParent || !golem.getRepairItems().getMap().isEmpty()) {
 				builder.repairItems(new RepairItems.Builder(golem.getRepairItems()));
 			}
 			// variants (replaces parent)
@@ -222,14 +221,14 @@ public class Golem {
 				builder.particle(golem.getParticle());
 			}
 			// model (replaces parent)
-			if(!hasParent || !golem.getLayers().get().equals(parent.getLayers().get())) {
+			if(!hasParent || !golem.getLayers().get().getLayers().isEmpty()) {
 				builder.layers(b -> {
 					b.clear();
 					b.addAll(golem.getLayers().get().getLayers());
 				});
 			}
 			// behaviors (replaces parent)
-			if(!hasParent || !golem.getBehaviors().get().equals(parent.getBehaviors().get())) {
+			if(!hasParent || !golem.getBehaviors().get().getBehaviors().isEmpty()) {
 				builder.behaviors(b -> {
 					b.clear();
 					b.addAll(golem.getBehaviors().get().getBehaviors());

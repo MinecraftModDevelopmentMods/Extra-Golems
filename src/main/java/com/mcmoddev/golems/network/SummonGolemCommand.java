@@ -26,7 +26,8 @@ import net.minecraft.world.entity.MobSpawnType;
 public class SummonGolemCommand {
 
 	private static final DynamicCommandExceptionType INVALID_ID = new DynamicCommandExceptionType(arg -> Component.translatable("command.golem.invalid_id", arg));
-	private static final SuggestionProvider<CommandSourceStack> SUGGEST_ID = ((context, builder) -> SharedSuggestionProvider.suggestResource(context.getSource().registryAccess().registryOrThrow(EGRegistry.Keys.GOLEM).keySet(), builder));
+	private static final SuggestionProvider<CommandSourceStack> SUGGEST_ID = ((context, builder) -> SharedSuggestionProvider.suggestResource(
+			context.getSource().registryAccess().registryOrThrow(EGRegistry.Keys.GOLEM).keySet().stream().filter(id -> !id.getPath().startsWith("generic_")), builder));
 
 	public static void register(CommandDispatcher<CommandSourceStack> commandSource) {
 

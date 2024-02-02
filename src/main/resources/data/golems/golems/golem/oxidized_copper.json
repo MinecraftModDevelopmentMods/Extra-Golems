@@ -31,6 +31,7 @@
 	  {
 		"type": "golems:item_update_golem",
 		"item": "#forge:axe",
+		"display_name": "golem.description.axe",
 		"sound": "minecraft:item.axe.scrape",
 		"particle": {
 		  "type": "minecraft:scrape"

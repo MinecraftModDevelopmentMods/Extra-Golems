@@ -5,7 +5,7 @@ import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.behavior.util.TargetType;
 import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.data.behavior.util.TriggerType;
-import com.mcmoddev.golems.data.behavior.util.WorldPredicate;
+import com.mcmoddev.golems.data.behavior.util.GolemPredicate;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mcmoddev.golems.util.EGCodecUtils;
@@ -13,6 +13,7 @@ import com.mcmoddev.golems.util.PredicateUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.util.valueproviders.IntProvider;
@@ -24,6 +25,7 @@ import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
@@ -36,7 +38,7 @@ public class SetFireBehavior extends Behavior {
 			.and(IntProvider.NON_NEGATIVE_CODEC.optionalFieldOf("seconds", ConstantInt.of(3)).forGetter(SetFireBehavior::getSeconds))
 			.and(TargetType.CODEC.fieldOf("target").forGetter(SetFireBehavior::getTarget))
 			.and(TriggerType.CODEC.fieldOf("trigger").forGetter(SetFireBehavior::getTrigger))
-			.and(EGCodecUtils.listOrElementCodec(WorldPredicate.CODEC).optionalFieldOf("predicate", ImmutableList.of(WorldPredicate.ALWAYS)).forGetter(SetFireBehavior::getPredicates))
+			.and(EGCodecUtils.listOrElementCodec(GolemPredicate.CODEC).optionalFieldOf("predicate", ImmutableList.of(GolemPredicate.ALWAYS)).forGetter(SetFireBehavior::getPredicates))
 			.and(Codec.doubleRange(0.0D, 255.0D).optionalFieldOf("radius", 2.0D).forGetter(SetFireBehavior::getRadius))
 			.and(Codec.doubleRange(0.0D, 1.0D).optionalFieldOf("chance", 1.0D).forGetter(SetFireBehavior::getChance))
 			.apply(instance, SetFireBehavior::new));
@@ -48,7 +50,7 @@ public class SetFireBehavior extends Behavior {
 	/** The trigger to set fire **/
 	private final TriggerType trigger;
 	/** The conditions to set fire **/
-	private final List<WorldPredicate> predicates;
+	private final List<GolemPredicate> predicates;
 	/** The conditions to set fire as a single predicate **/
 	private final Predicate<IExtraGolem> predicate;
 	/** The radius to set fire, only used when {@link #target} is {@link TargetType#AREA} **/
@@ -56,7 +58,7 @@ public class SetFireBehavior extends Behavior {
 	/** The percent chance [0,1] to apply **/
 	private final double chance;
 
-	public SetFireBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, IntProvider seconds, TargetType target, TriggerType trigger, List<WorldPredicate> predicates, double radius, double chance) {
+	public SetFireBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, IntProvider seconds, TargetType target, TriggerType trigger, List<GolemPredicate> predicates, double radius, double chance) {
 		super(variant, tooltipPredicate);
 		this.seconds = seconds;
 		this.target = target;
@@ -81,7 +83,7 @@ public class SetFireBehavior extends Behavior {
 		return trigger;
 	}
 
-	public List<WorldPredicate> getPredicates() {
+	public List<GolemPredicate> getPredicates() {
 		return predicates;
 	}
 
@@ -122,9 +124,18 @@ public class SetFireBehavior extends Behavior {
 	}
 
 	@Override
-	public List<Component> createDescriptions() {
-		final Component description = Component.empty(); // TODO description
-		return ImmutableList.of(description);
+	public List<Component> createDescriptions(RegistryAccess registryAccess) {
+		// create predicate text, if any
+		final Optional<Component> predicateText = createTriggerAndPredicateDescription(trigger, predicates);
+
+		// create component from target
+		final Component targetText = Component.translatable(target.getDescriptionId());
+
+		// create description
+		if(predicateText.isPresent()) {
+			return ImmutableList.of(Component.translatable(PREFIX + "set_fire.predicate", targetText, predicateText.get()));
+		}
+		return ImmutableList.of(Component.translatable(PREFIX + "set_fire", targetText));
 	}
 
 	protected boolean setFire(final GolemBase self) {

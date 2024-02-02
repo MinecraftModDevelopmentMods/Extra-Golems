@@ -7,12 +7,5 @@
   },
   "group": "golems:froglight",
   "hidden": true,
-  "brain": {
-	"behaviors": [
-	  {
-		"type": "golems:light",
-		"light": 15
-	  }
-	]
-  }
+  "brain": "golems:froglight"
 }

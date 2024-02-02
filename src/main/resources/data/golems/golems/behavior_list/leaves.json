@@ -3,7 +3,7 @@
 	{
 	  "type": "golems:effect",
 	  "trigger": "tick",
-	  "chance": 0.25,
+	  "chance": 0.025,
 	  "apply": {
 		"target": "self",
 		"effect": {
@@ -22,7 +22,8 @@
 		  "id": "minecraft:regeneration",
 		  "duration": 300
 		}
-	  }
+	  },
+	  "tooltip": "hidden"
 	}
   ]
 }

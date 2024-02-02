@@ -47,7 +47,11 @@ public class GuideBookGroup implements ITableOfContentsEntry {
 		}
 		this.list = ImmutableList.sortedCopyOf(GuideBookEntry.SORT_BY_NAME, list);
 		this.group = group;
-		this.title = (group != null) ? Component.translatable(group.toLanguageKey("guide_book.group")) : null;
+		if(group != null) {
+			this.title = Component.translatable("entity." + group.getNamespace() + ".golem.group." + group.getPath());
+		} else {
+			this.title = null;
+		}
 		// calculate average health and attack, and collect blocks and items
 		double health = 0;
 		double attack = 0;

@@ -12,6 +12,7 @@
 	  {
 		"type": "golems:item_update_golem",
 		"item": "#forge:axe",
+		"display_name": "golem.description.axe",
 		"sound": "minecraft:item.axe.wax_off",
 		"particle": {
 		  "type": "minecraft:wax_off"

@@ -5,21 +5,23 @@ import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.behavior.util.TargetedMobEffects;
 import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.data.behavior.util.TriggerType;
-import com.mcmoddev.golems.data.behavior.util.WorldPredicate;
+import com.mcmoddev.golems.data.behavior.util.GolemPredicate;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mcmoddev.golems.util.PredicateUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
@@ -31,7 +33,7 @@ public class EffectBehavior extends Behavior {
 	public static final Codec<EffectBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
 			.and(TargetedMobEffects.CODEC.fieldOf("apply").forGetter(EffectBehavior::getTargetedMobEffects))
 			.and(TriggerType.CODEC.optionalFieldOf("trigger", TriggerType.TICK).forGetter(EffectBehavior::getTrigger))
-			.and(EGCodecUtils.listOrElementCodec(WorldPredicate.CODEC).optionalFieldOf("predicate", ImmutableList.of(WorldPredicate.ALWAYS)).forGetter(EffectBehavior::getPredicates))
+			.and(EGCodecUtils.listOrElementCodec(GolemPredicate.CODEC).optionalFieldOf("predicate", ImmutableList.of(GolemPredicate.ALWAYS)).forGetter(EffectBehavior::getPredicates))
 			.and(Codec.doubleRange(0.0D, 1.0D).optionalFieldOf("chance", 1.0D).forGetter(EffectBehavior::getChance))
 			.apply(instance, EffectBehavior::new));
 
@@ -40,13 +42,13 @@ public class EffectBehavior extends Behavior {
 	/** The trigger to apply the effects **/
 	private final TriggerType trigger;
 	/** The predicate to check before applying **/
-	private final List<WorldPredicate> predicates;
+	private final List<GolemPredicate> predicates;
 	/** The conditions to summon the entity as a single predicate **/
 	private final Predicate<IExtraGolem> predicate;
 	/** The chance to apply **/
 	private final double chance;
 
-	public EffectBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, TargetedMobEffects targetedMobEffects, TriggerType trigger, List<WorldPredicate> predicates, double chance) {
+	public EffectBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, TargetedMobEffects targetedMobEffects, TriggerType trigger, List<GolemPredicate> predicates, double chance) {
 		super(variant, tooltipPredicate);
 		this.targetedMobEffects = targetedMobEffects;
 		this.trigger = trigger;
@@ -65,7 +67,7 @@ public class EffectBehavior extends Behavior {
 		return trigger;
 	}
 
-	public List<WorldPredicate> getPredicates() {
+	public List<GolemPredicate> getPredicates() {
 		return predicates;
 	}
 
@@ -102,25 +104,33 @@ public class EffectBehavior extends Behavior {
 	}
 
 	@Override
-	public List<Component> createDescriptions() {
-		final ImmutableList.Builder<Component> builder = ImmutableList.builder();
-		// verify predicates
-		if(getPredicates().isEmpty()) {
-			return builder.build();
+	public List<Component> createDescriptions(RegistryAccess registryAccess) {
+		// create predicate text, if any
+		final Optional<Component> predicateText = createTriggerAndPredicateDescription(trigger, predicates);
+
+		// determine whether to display one effect or multiple
+		final boolean multipleEffects = targetedMobEffects.getEffects().size() != 1;
+
+		// convert potion effect(s) to a single component
+		Component effectText = Component.empty();
+		if(!multipleEffects) {
+			effectText = Component.translatable(targetedMobEffects.getEffects().get(0).getDescriptionId()).withStyle(ChatFormatting.RED);
 		}
-		// create predicate description
-		// TODO add predicates to lang file
-		final Component predicateText = Component.translatable("entitytip.when_x", Component.translatable(predicates.get(0).getDescriptionId()));
-		for(int i = 1, n = predicates.size(); i < n; i++) {
-			predicateText.getSiblings().add(Component.translatable("entitytip.and_x", Component.translatable(predicates.get(i).getDescriptionId())));
+
+		// convert target type to a single component
+		Component targetText = Component.translatable(targetedMobEffects.getTargetType().getDescriptionId());
+
+		// create tooltip
+		if(multipleEffects && predicateText.isPresent()) {
+			return ImmutableList.of(Component.translatable(PREFIX + "effect.multiple.predicate", targetText, predicateText.get()));
 		}
-		// TODO add this tooltip to lang file
-		// TODO account for rolls
-		final String key = "entitytip.effect." + targetedMobEffects.getTargetType().getSerializedName();
-		for(MobEffectInstance effect : targetedMobEffects.getEffects()) {
-			builder.add(Component.translatable(key, effect.getEffect().getDisplayName(), predicateText));
+		if(!multipleEffects && predicateText.isPresent()) {
+			return ImmutableList.of(Component.translatable(PREFIX + "effect.single.predicate", effectText, targetText, predicateText.get()));
 		}
-		return builder.build();
+		if(multipleEffects) {
+			return ImmutableList.of(Component.translatable(PREFIX + "effect.multiple", targetText));
+		}
+		return ImmutableList.of(Component.translatable(PREFIX + "effect.single", effectText, targetText));
 	}
 
 	//// EQUALITY ////

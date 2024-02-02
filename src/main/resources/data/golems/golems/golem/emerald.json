@@ -13,10 +13,12 @@
 	"#forge:gems/emerald": 0.1
   },
   "model": "golems:emerald",
-  "behavior": [
-    {
-      "type": "golems:follow",
-      "entity": "minecraft:villager"
-    }
-  ]
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:follow",
+		"entity": "minecraft:villager"
+	  }
+	]
+  }
 }

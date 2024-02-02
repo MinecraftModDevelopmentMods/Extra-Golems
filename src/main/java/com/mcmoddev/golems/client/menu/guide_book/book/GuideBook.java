@@ -2,7 +2,6 @@ package com.mcmoddev.golems.client.menu.guide_book.book;
 
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.ExtraGolems;
-import com.mcmoddev.golems.client.menu.guide_book.GuideBookEntry;
 import com.mcmoddev.golems.client.menu.guide_book.GuideBookGroup;
 import com.mcmoddev.golems.client.menu.guide_book.page.BookPage;
 import com.mcmoddev.golems.client.menu.guide_book.page.CraftingRecipePage;
@@ -29,28 +28,26 @@ import java.util.Queue;
 
 public class GuideBook {
 
+	protected static final String PREFIX = "item.golems.guide_book.page.";
+
 	protected static final Component INTRO_TITLE = Component.translatable("item.golems.guide_book").withStyle(ChatFormatting.ITALIC);
-	protected static final Component INTRO_BODY = Component.translatable("golembook.intro1").append("\n").append(Component.translatable("golembook.intro2"));
+	protected static final Component INTRO_BODY = Component.translatable(PREFIX + "intro1").append("\n").append(Component.translatable(PREFIX + "intro2"));
 
-	protected static final Component CONTENTS_TITLE = Component.translatable("golembook.contents.title").withStyle(ChatFormatting.ITALIC);
+	protected static final Component CONTENTS_TITLE = Component.translatable(PREFIX + "contents.title").withStyle(ChatFormatting.ITALIC);
 
-	protected static final Component BUILD_GOLEM_TITLE = Component.translatable("golembook.build_golem.title").withStyle(ChatFormatting.ITALIC);
-	protected static final Component BUILD_GOLEM_BODY = Component.translatable("golembook.build_golem.howto1").append(" ")
-			.append(Component.translatable("golembook.build_golem.howto2")).append("\n\n")
-			.append(Component.translatable("golembook.build_golem.howto3", Component.translatable("block.golems.golem_head")));
+	protected static final Component BUILD_GOLEM_TITLE = Component.translatable(PREFIX + "build_golem.title").withStyle(ChatFormatting.ITALIC);
+	protected static final Component BUILD_GOLEM_BODY = Component.translatable(PREFIX + "build_golem.howto1").append(" ")
+			.append(Component.translatable(PREFIX + "build_golem.howto2")).append("\n\n")
+			.append(Component.translatable(PREFIX + "build_golem.howto3", Component.translatable("block.golems.golem_head")));
 
-	// TODO change to something like "first make a golem spell" without referencing ingredients
-	protected static final Component BUILD_HEAD_TITLE = Component.translatable("block.golems.golem_head").withStyle(ChatFormatting.ITALIC);
-	protected static final Component BUILD_HEAD_BODY = Component.literal("\n\n\n\n")
-			.append(Component.translatable("golembook.recipe_head.recipe", BUILD_HEAD_TITLE,
-					Component.translatable("item.golems.golem_spell"), Component.translatable("block.minecraft.pumpkin")));
-
-	// TODO change to something like "next make a golem head" without referencing ingredients
 	protected static final Component BUILD_SPELL_TITLE = Component.translatable("item.golems.golem_spell").withStyle(ChatFormatting.ITALIC);
 	protected static final Component BUILD_SPELL_BODY = Component.literal("\n\n\n\n")
-			.append(Component.translatable("golembook.recipe_spell.recipe", BUILD_SPELL_TITLE,
-					Component.translatable("item.minecraft.paper"), Component.translatable("item.minecraft.feather"),
-					Component.translatable("item.minecraft.ink_sac"), Component.translatable("item.minecraft.redstone")));
+			.append(Component.translatable(PREFIX + "recipe_spell.recipe", BUILD_SPELL_TITLE,
+					Component.translatable("block.minecraft.carved_pumpkin").withStyle(ChatFormatting.ITALIC)));
+
+	protected static final Component BUILD_HEAD_TITLE = Component.translatable("block.golems.golem_head").withStyle(ChatFormatting.ITALIC);
+	protected static final Component BUILD_HEAD_BODY = Component.literal("\n\n\n\n")
+			.append(Component.translatable(PREFIX + "recipe_head.recipe", BUILD_HEAD_TITLE));
 
 	protected static final ResourceLocation SPELL_RECIPE = new ResourceLocation(ExtraGolems.MODID, "golem_spell");
 	protected static final ResourceLocation HEAD_RECIPE = new ResourceLocation(ExtraGolems.MODID, "golem_head");

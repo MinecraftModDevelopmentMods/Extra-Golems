@@ -12,9 +12,15 @@ public enum TargetType implements StringRepresentable {
 	public static final Codec<TargetType> SELF_OR_ENEMY_CODEC = StringRepresentable.fromEnum(() -> new TargetType[] {SELF, ENEMY});
 
 	private final String name;
+	private final String descriptionId;
 
 	TargetType(final String nameIn) {
-		name = nameIn;
+		this.name = nameIn;
+		this.descriptionId = "golem.description.target_type." + name;
+	}
+
+	public String getDescriptionId() {
+		return descriptionId;
 	}
 
 	@Override

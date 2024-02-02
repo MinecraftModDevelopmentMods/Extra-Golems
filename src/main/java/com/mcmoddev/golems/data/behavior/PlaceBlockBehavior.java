@@ -5,7 +5,7 @@ import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.behavior.util.TargetType;
 import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.data.behavior.util.TriggerType;
-import com.mcmoddev.golems.data.behavior.util.WorldPredicate;
+import com.mcmoddev.golems.data.behavior.util.GolemPredicate;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mcmoddev.golems.util.DeferredBlockState;
@@ -18,6 +18,7 @@ import net.minecraft.Util;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -32,6 +33,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
@@ -49,7 +51,7 @@ public class PlaceBlockBehavior extends Behavior {
 			Codec.doubleRange(0.0D, 1.0D).optionalFieldOf("chance", 1.0D).forGetter(PlaceBlockBehavior::getChance),
 			EGCodecUtils.listOrElementCodec(DeferredBlockState.CODEC).fieldOf("block").forGetter(PlaceBlockBehavior::getBlocks),
 			Codec.STRING.optionalFieldOf("display_name", "").forGetter(PlaceBlockBehavior::getDisplayNameKey),
-			EGCodecUtils.listOrElementCodec(WorldPredicate.CODEC).optionalFieldOf("predicate", ImmutableList.of(WorldPredicate.ALWAYS)).forGetter(PlaceBlockBehavior::getPredicates),
+			EGCodecUtils.listOrElementCodec(GolemPredicate.CODEC).optionalFieldOf("predicate", ImmutableList.of(GolemPredicate.ALWAYS)).forGetter(PlaceBlockBehavior::getPredicates),
 			Codec.BOOL.optionalFieldOf("must_survive", true).forGetter(PlaceBlockBehavior::mustSurvive)
 	).apply(instance, PlaceBlockBehavior::new));
 
@@ -66,13 +68,13 @@ public class PlaceBlockBehavior extends Behavior {
 	/** The translation key for the display name of the blocks **/
 	private final String displayNameKey;
 	/** The conditions to place a block **/
-	private final List<WorldPredicate> predicates;
+	private final List<GolemPredicate> predicates;
 	/** The conditions to place a block as a single predicate **/
 	private final Predicate<IExtraGolem> predicate;
 	/** True to call the mustSurvive method of the blocks **/
 	private final boolean mustSurvive;
 
-	public PlaceBlockBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, TriggerType trigger, TargetType position, int radius, double chance, List<DeferredBlockState> blocks, String displayNameKey, List<WorldPredicate> predicates, boolean mustSurvive) {
+	public PlaceBlockBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, TriggerType trigger, TargetType position, int radius, double chance, List<DeferredBlockState> blocks, String displayNameKey, List<GolemPredicate> predicates, boolean mustSurvive) {
 		super(variant, tooltipPredicate);
 		this.trigger = trigger;
 		this.position = position;
@@ -111,7 +113,7 @@ public class PlaceBlockBehavior extends Behavior {
 		return displayNameKey;
 	}
 
-	public List<WorldPredicate> getPredicates() {
+	public List<GolemPredicate> getPredicates() {
 		return predicates;
 	}
 
@@ -148,7 +150,10 @@ public class PlaceBlockBehavior extends Behavior {
 	}
 
 	@Override
-	public List<Component> createDescriptions() {
+	public List<Component> createDescriptions(RegistryAccess registryAccess) {
+		// create predicate text, if any
+		final Optional<Component> predicateText = createTriggerAndPredicateDescription(trigger, predicates);
+
 		// resolve display name of the block
 		final Component blockName;
 		if(this.displayNameKey != null && !this.displayNameKey.isEmpty()) {
@@ -159,9 +164,12 @@ public class PlaceBlockBehavior extends Behavior {
 		} else {
 			blockName = Component.literal("");
 		}
-		// TODO add block to tooltip
-		// TODO add trigger and predicate to tooltip
-		return ImmutableList.of(Component.translatable("entitytip.places_blocks", blockName).withStyle(ChatFormatting.GREEN));
+
+		// create description
+		if(predicateText.isPresent()) {
+			return ImmutableList.of(Component.translatable(PREFIX + "place.predicate", blockName, predicateText.get()).withStyle(ChatFormatting.GREEN));
+		}
+		return ImmutableList.of(Component.translatable(PREFIX + "place", blockName).withStyle(ChatFormatting.GREEN));
 	}
 
 	/**
