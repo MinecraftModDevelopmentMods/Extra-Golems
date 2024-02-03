@@ -52,6 +52,9 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
 		if (ExtraGolems.CONFIG.aprilFirst()) {
 			poseStack.mulPose(Axis.ZP.rotationDegrees(180.0F));
 		}
+		// scale according to entity
+		final float scale = entity.getScale();
+		poseStack.scale(scale, scale, scale);
 		// render the entity
 		super.render(entity, entityYaw, partialTicks, poseStack, bufferSource, pPackedLight);
 		poseStack.popPose();

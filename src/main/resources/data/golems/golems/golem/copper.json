@@ -35,7 +35,7 @@
 		"predicate": "thunder",
 		"position": "self",
 		"radius": 1.0,
-		"chance": 0.0014,
+		"chance": 0.0007,
 		"entity": "minecraft:lightning_bolt",
 		"tooltip": "hidden"
 	  }
