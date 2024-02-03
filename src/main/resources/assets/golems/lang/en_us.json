@@ -224,7 +224,7 @@
   "golem.description.axe": "an axe",
   "golem.description.flowers": "flowers",
   "golem.description.group": "Group: %1$s",
-  "golem.description.health": "Health: %1$s \u2764",
+  "golem.description.health": "Health: %1$s",
   "golem.description.health.icon": "\u2764",
   "golem.description.invulnerable": "Indestructible!",
   "golem.description.knockback": "Massive knockback attack!",

@@ -64,7 +64,7 @@ public class TableOfContentsButton extends ImageButton {
 		// determine index
 		int index = (int) (this.parent.getTicksOpen() / 30L);
 		// draw the block itemstack
-		int posX = this.getX() + 2;
+		int posX = this.getX() + 3;
 		int posY = this.getY() + (height - 16) / 2;
 		ItemStack itemStack = this.entry.getItem(index);
 		graphics.renderItem(itemStack, posX, posY);

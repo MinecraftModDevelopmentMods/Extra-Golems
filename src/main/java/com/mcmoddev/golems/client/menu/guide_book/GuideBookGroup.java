@@ -127,10 +127,6 @@ public class GuideBookGroup implements ITableOfContentsEntry {
 		if(null == this.title || this.list.size() == 1) {
 			return this.getEntry(0).getMessage(index);
 		}
-		// create advanced name
-		if(Minecraft.getInstance().options.advancedItemTooltips && group != null) {
-			return Component.empty().append(this.title).append("\n").append(Component.literal(group.toString()).withStyle(ChatFormatting.GRAY));
-		}
 		// return title component
 		return this.title;
 	}
