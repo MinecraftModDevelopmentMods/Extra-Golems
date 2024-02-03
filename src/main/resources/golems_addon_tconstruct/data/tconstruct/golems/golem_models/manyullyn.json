@@ -1,9 +1,0 @@
-{
-  "base": "tconstruct:storage/manyullyn",
-  "layers": [
-	{
-	  "texture": "tconstruct:storage/manyullyn",
-	  "template": "golems:layer/hands_template"
-	}
-  ]
-}
