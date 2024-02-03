@@ -58,6 +58,7 @@ public class Attributes {
 			SoundTypeRegistry.CODEC.optionalFieldOf("sound").forGetter(o -> Optional.ofNullable(o.sound))
 	).apply(instance, Attributes::new));
 
+	// attributes
 	private final @Nullable Double health;
 	private final @Nullable Double attack;
 	private final @Nullable Double speed;
@@ -73,6 +74,19 @@ public class Attributes {
 
 	private final @Nullable SwimAbility swimAbility;
 	private final @Nullable SoundType sound;
+
+	// descriptions
+	private static final String PREFIX = "golem.description.";
+	private static final Component invulnerableText = Component.translatable(PREFIX + "invulnerable").withStyle(ChatFormatting.BOLD);
+	private static final Component fireImmuneText = Component.translatable("enchantment.minecraft.fire_protection").withStyle(ChatFormatting.GOLD);
+	private static final Component explosionImmuneText = Component.translatable("enchantment.minecraft.blast_protection").withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD);
+	private static final Component occludesText = Component.translatable(PREFIX + "occludes").withStyle(ChatFormatting.DARK_AQUA);
+	private static final Component knockbackText = Component.translatable(PREFIX + "knockback").withStyle(ChatFormatting.DARK_GRAY);
+	private static final Component swimAbilityText = Component.translatable(PREFIX + "swim").withStyle(ChatFormatting.DARK_AQUA);
+	private static final Component healthIcon = Component.translatable(PREFIX + "health.icon").withStyle(ChatFormatting.DARK_RED);
+	private static final Component attackIcon = Component.translatable(PREFIX + "attack.icon").withStyle(ChatFormatting.BLACK);
+	private final Component healthText;
+	private final Component attackText;
 
 	private Attributes(Optional<Double> health, Optional<Double> attack, Optional<Double> speed, Optional<Double> knockbackResistance, Optional<Double> armor,
 					   Optional<Double> attackKnockback, Optional<DeferredHolderSet<MobEffect>> potionIgnore,
@@ -91,6 +105,13 @@ public class Attributes {
 		this.occludes = occludes.orElse(null);
 		this.swimAbility = swimAbility.orElse(null);
 		this.sound = sound.orElse(null);
+		// descriptions
+		this.healthText = Component.translatable(PREFIX + "health", Component.literal(String.format("%.1f", getHealth())).withStyle(ChatFormatting.BLACK)).withStyle(ChatFormatting.GRAY)
+				.append(" ").append(healthIcon);
+		// add attack description
+		this.attackText = Component.translatable(PREFIX + "attack", Component.literal(String.format("%.1f", getAttack())).withStyle(ChatFormatting.BLACK)).withStyle(ChatFormatting.GRAY)
+				.append(" ").append(attackIcon);
+
 	}
 
 	/** @return a new attribute supplier builder **/
@@ -148,8 +169,13 @@ public class Attributes {
 		return attackKnockback != null ? this.attackKnockback : 0;
 	}
 
+	/**
+	 * @param registryAccess the registry access
+	 * @param mobEffect the mob effect to test
+	 * @return true if the entity is immune to the given mob effect
+	 */
 	public boolean ignores(final RegistryAccess registryAccess, final MobEffect mobEffect) {
-		if(null == potionIgnore) {
+		if(null == potionIgnore || potionIgnore.isEmpty()) {
 			return false;
 		}
 		// resolve registry and holder set
@@ -165,7 +191,7 @@ public class Attributes {
 	 * @return true if the Golem is immune to any of the given damage types
 	 */
 	public boolean isImmuneTo(final RegistryAccess registryAccess, final ResourceKey<DamageType>... damageTypes) {
-		if(null == damageImmune) {
+		if(null == damageImmune || damageImmune.isEmpty()) {
 			return false;
 		}
 		// resolve registry and holder set
@@ -188,7 +214,7 @@ public class Attributes {
 	 * @return true if the Golem is weak to any of the given damage types
 	 */
 	public boolean isWeakTo(final RegistryAccess registryAccess, final ResourceKey<DamageType>... damageTypes) {
-		if(null == damageWeak) {
+		if(null == damageWeak || damageWeak.isEmpty()) {
 			return false;
 		}
 		// resolve registry and holder set
@@ -243,6 +269,11 @@ public class Attributes {
 
 	//// HELPER METHODS ////
 
+	/**
+	 * Updates {@link PathfinderMob#setPathfindingMalus(BlockPathTypes, float)}
+	 * values based on the attributes
+	 * @param mob the entity
+	 */
 	public void updatePathfinding(final PathfinderMob mob) {
 		final RegistryAccess registryAccess = mob.level().registryAccess();
 		// water damage
@@ -252,7 +283,7 @@ public class Attributes {
 			mob.setPathfindingMalus(BlockPathTypes.WATER, 8.0F);
 		}
 		// fire damage
-		if(isImmuneTo(registryAccess, DamageTypes.IN_FIRE, DamageTypes.ON_FIRE)) {
+		if(isInvulnerable() || isImmuneTo(registryAccess, DamageTypes.IN_FIRE, DamageTypes.ON_FIRE)) {
 			mob.setPathfindingMalus(BlockPathTypes.LAVA, 8.0F);
 			mob.setPathfindingMalus(BlockPathTypes.DAMAGE_FIRE, 0.0F);
 			mob.setPathfindingMalus(BlockPathTypes.DANGER_FIRE, 0.0F);
@@ -263,40 +294,51 @@ public class Attributes {
 		}
 	}
 
-	public void onAddDescriptions(final GolemContainer container, final RegistryAccess registryAccess, final List<Component> list, final TooltipFlag tooltipFlag) {
-		final String PREFIX = "golem.description.";
+	/**
+	 * Adds cached description components to the given list
+	 * @param container the golem container
+	 * @param registryAccess the registry access
+	 * @param list the list to append
+	 * @param tooltipFlag the tooltip flag
+	 * @param showHealth true to show the maximum health value
+	 * @param showAttack true to show the base attack value
+	 */
+	public void onAddDescriptions(final GolemContainer container, final RegistryAccess registryAccess, final List<Component> list,
+								  final TooltipFlag tooltipFlag, final boolean showHealth, final boolean showAttack) {
 		// add health description
-		list.add(Component.translatable(PREFIX + "health").append(": ").withStyle(ChatFormatting.GRAY)
-				.append(Component.literal(String.format("%.1f", health)).withStyle(ChatFormatting.BLACK))
-				.append(Component.literal(" \u2764").withStyle(ChatFormatting.DARK_RED)));
+		if(showHealth) {
+			list.add(healthText);
+		}
 		// add attack description
-		list.add(Component.translatable(PREFIX + "attack").append(": ").withStyle(ChatFormatting.GRAY)
-				.append(Component.literal(String.format("%.1f", attack)).withStyle(ChatFormatting.BLACK))
-				.append(Component.literal(" \u2694")));
-		// add "fireproof" description
-		if (isImmuneTo(registryAccess, DamageTypes.IN_FIRE, DamageTypes.ON_FIRE)) {
-			list.add(Component.translatable("enchantment.minecraft.fire_protection").withStyle(ChatFormatting.GOLD));
+		if(showAttack) {
+			list.add(attackText);
 		}
-		// add "explosion-proof" description
-		if (isImmuneTo(registryAccess, DamageTypes.EXPLOSION, DamageTypes.PLAYER_EXPLOSION)) {
-			list.add(Component.translatable("enchantment.minecraft.blast_protection").withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD));
-		}
-		// TODO add "potion ignore" description
 		// add "invulnerable" description
 		if(isInvulnerable()) {
-			list.add(Component.translatable(PREFIX + "invulnerable").withStyle(ChatFormatting.BOLD));
+			list.add(invulnerableText);
+		} else {
+			// add "fireproof" description
+			if (isImmuneTo(registryAccess, DamageTypes.IN_FIRE, DamageTypes.ON_FIRE)) {
+				list.add(fireImmuneText);
+			}
+			// add "explosion-proof" description
+			if (isImmuneTo(registryAccess, DamageTypes.EXPLOSION, DamageTypes.PLAYER_EXPLOSION)) {
+				list.add(explosionImmuneText);
+			}
 		}
-		// TODO add "occludes" description
+		// add "occludes" description
+		if(occludes()) {
+			list.add(occludesText);
+		}
 		// add "knockback" description
 		if (getAttackKnockback() > 0.39D) {
-			list.add(Component.translatable(PREFIX + "knockback").withStyle(ChatFormatting.DARK_RED));
+			list.add(knockbackText);
 		}
 		// add "advanced swimmer" description
-		if (swimAbility == SwimAbility.SWIM) {
-			list.add(Component.translatable(PREFIX + "swim").withStyle(ChatFormatting.DARK_AQUA));
+		if (getSwimAbility() == SwimAbility.SWIM) {
+			list.add(swimAbilityText);
 		}
 	}
-
 
 	//// EQUALITY ////
 

@@ -83,11 +83,11 @@ public class TemptBehavior extends Behavior {
 			Either<TagKey<Item>, List<Holder<Item>>> value = holderSet.unwrap();
 			if(value.left().isPresent()) {
 				// create name from tag key
-				name = Component.literal("#" + value.left().get().location().toString()).withStyle(ChatFormatting.GRAY);
+				name = Component.literal("#" + value.left().get().location().toString()).withStyle(ChatFormatting.DARK_GRAY);
 			} else if(value.right().isPresent()) {
 				// create name from first item
 				Item randomItem = value.right().get().get(0).get();
-				name = randomItem.getDescription();
+				name = randomItem.getDescription().copy().withStyle(ChatFormatting.LIGHT_PURPLE);
 			} else {
 				// create empty name
 				name = ItemStack.EMPTY.getHoverName();

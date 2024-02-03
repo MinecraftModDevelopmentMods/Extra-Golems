@@ -3,6 +3,7 @@ package com.mcmoddev.golems.client.menu.button;
 import com.mcmoddev.golems.client.menu.guide_book.book.IBookScreen;
 import com.mcmoddev.golems.client.menu.guide_book.book.ITableOfContentsEntry;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
@@ -22,6 +23,7 @@ public class TableOfContentsButton extends ImageButton {
 	protected final int margin;
 
 	protected ITableOfContentsEntry entry;
+	protected Component tooltip;
 	protected int index;
 
 	public TableOfContentsButton(final IBookScreen parent, final Font font,
@@ -44,7 +46,12 @@ public class TableOfContentsButton extends ImageButton {
 		final String sMessage = StringUtil.truncateStringIfNecessary(ChatFormatting.stripFormatting(message.getString()), (int) (messageWidth / 4.5F), true);
 		this.setMessage(Component.literal(sMessage).withStyle(message.getStyle()));
 		// update tooltip
-		this.setTooltip(Tooltip.create(message));
+		final Component tooltip = message.copy();
+		if(Minecraft.getInstance().options.advancedItemTooltips) {
+			tooltip.getSiblings().add(Component.literal("\n"));
+			tooltip.getSiblings().add(entry.getAdvancedMessage(0));
+		}
+		this.setTooltip(Tooltip.create(tooltip));
 	}
 
 	public int getIndex() {

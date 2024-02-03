@@ -13,14 +13,13 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.AbstractGolem;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 
 import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Optional;
 
 public interface IExtraGolem extends IVariantProvider, ILightProvider, IPowerProvider,
-		IInventoryProvider, ContainerListener, RangedAttackMob, IEntityAdditionalSpawnData {
+		IInventoryProvider, ContainerListener, RangedAttackMob {
 
 	public static final EntityDataSerializer<Optional<ResourceLocation>> OPTIONAL_RESOURCE_LOCATION = EntityDataSerializer.optional(FriendlyByteBuf::writeResourceLocation, FriendlyByteBuf::readResourceLocation);
 

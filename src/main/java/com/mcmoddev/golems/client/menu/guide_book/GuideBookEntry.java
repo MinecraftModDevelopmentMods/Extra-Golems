@@ -5,6 +5,7 @@ import com.mcmoddev.golems.client.menu.guide_book.book.ITableOfContentsEntry;
 import com.mcmoddev.golems.data.GolemContainer;
 import com.mcmoddev.golems.data.golem.GolemBuildingBlocks;
 import com.mcmoddev.golems.data.golem.GolemPart;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
@@ -29,6 +30,7 @@ import java.util.Optional;
 public class GuideBookEntry implements ITableOfContentsEntry {
 
 	public static final Comparator<GuideBookEntry> SORT_BY_NAME = Comparator.comparing(o -> o.getTitle().getString());
+	public static final Comparator<GuideBookEntry> SORT_BY_NAMESPACE = Comparator.comparing(o -> o.getId().getNamespace());
 
 	private final ResourceLocation id;
 	private final GolemContainer container;
@@ -91,6 +93,11 @@ public class GuideBookEntry implements ITableOfContentsEntry {
 	@Override
 	public Component getMessage(int index) {
 		return getTitle();
+	}
+
+	@Override
+	public Component getAdvancedMessage(int index) {
+		return Component.literal(getId().toString()).withStyle(ChatFormatting.GRAY);
 	}
 
 	@Override

@@ -165,11 +165,13 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 
 	@Override
 	public void setGolemId(final @Nullable ResourceLocation id) {
-		// update golem and container
+		// clear cached container
 		clearCachedGolemContainer();
-		if(!level().isClientSide()) {
-			this.getEntityData().set(GOLEM, Optional.ofNullable(id));
+		if(level().isClientSide()) {
+			return;
 		}
+		// update ID
+		this.getEntityData().set(GOLEM, Optional.ofNullable(id));
 		if(null == id) {
 			return;
 		}
@@ -737,23 +739,6 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 	@Override
 	public Packet<ClientGamePacketListener> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
-	}
-
-	@Override
-	public void writeSpawnData(FriendlyByteBuf buffer) {
-		final Optional<ResourceLocation> oId = getGolemId();
-		buffer.writeBoolean(oId.isPresent());
-		oId.ifPresent(buffer::writeResourceLocation);
-	}
-
-	@Override
-	public void readSpawnData(FriendlyByteBuf buffer) {
-		boolean hasId = buffer.readBoolean();
-		if(hasId) {
-			ResourceLocation id = buffer.readResourceLocation();
-			setGolemId(id);
-			setHealth(getMaxHealth());
-		}
 	}
 
 	//// SOUNDS ////

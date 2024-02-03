@@ -117,7 +117,7 @@ public class GolemContainer {
 	public List<Component> createDescriptions(final RegistryAccess registryAccess, final TooltipFlag tooltipFlag) {
 		final List<Component> list = new ArrayList<>();
 		// create attribute descriptions
-		getAttributes().onAddDescriptions(this, registryAccess, list, tooltipFlag);
+		getAttributes().onAddDescriptions(this, registryAccess, list, tooltipFlag, true, true);
 		// create behavior descriptions
 		getBehaviors().forEach(b -> b.onAddDescriptions(registryAccess, list, tooltipFlag));
 		// add additional descriptions

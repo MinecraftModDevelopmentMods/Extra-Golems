@@ -4,6 +4,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public interface ITableOfContentsEntry {
@@ -27,4 +28,10 @@ public interface ITableOfContentsEntry {
 	 * @return the message to display on the button
 	 */
 	Component getMessage(final int index);
+
+	/**
+	 * @param index the index
+	 * @return the message to display on the button
+	 */
+	Component getAdvancedMessage(final int index);
 }

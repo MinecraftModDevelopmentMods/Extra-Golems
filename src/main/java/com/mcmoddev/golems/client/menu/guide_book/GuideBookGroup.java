@@ -5,6 +5,8 @@ import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.client.menu.guide_book.book.ITableOfContentsEntry;
 import com.mcmoddev.golems.data.GolemContainer;
 import com.mcmoddev.golems.data.golem.Golem;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
@@ -20,12 +22,17 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Holds one or more {@link GuideBookEntry} objects with an optional group ID
+ * When there is exactly one {@link GuideBookEntry} in the list, {@link #getGroup()} and
+ * {@link #getTitle()} may or may not be null.
+ * When there is more than one {@link GuideBookEntry} in the list, {@link #getGroup()} and
+ * {@link #getTitle()} are guaranteed to be nonnull.
+ * The list will never be empty.
  **/
 public class GuideBookGroup implements ITableOfContentsEntry {
 	public static final Comparator<GuideBookGroup> SORT_BY_ATTACK = Comparator.comparingDouble(GuideBookGroup::getAttack);
 	public static final Comparator<GuideBookGroup> SORT_BY_HEALTH = Comparator.comparingDouble(GuideBookGroup::getHealth);
 	public static final Comparator<GuideBookGroup> SORT_BY_NAME = Comparator.comparing(group -> (group.getTitle() != null ? group.getTitle() : group.getEntry(0).getTitle()).getString());
+	public static final Comparator<GuideBookGroup> SORT_BY_NAMESPACE = Comparator.comparing(group -> (group.getGroup() != null ? group.getGroup().getNamespace() : group.getEntry(0).getId().getNamespace()));
 
 	private final List<GuideBookEntry> list;
 	private final List<ItemStack> items;
@@ -45,8 +52,14 @@ public class GuideBookGroup implements ITableOfContentsEntry {
 		if(list.isEmpty()) {
 			throw new IllegalArgumentException("GuideBookGroup requires at least one Entry");
 		}
-		this.list = ImmutableList.sortedCopyOf(GuideBookEntry.SORT_BY_NAME, list);
+		// validate group
+		if(list.size() > 1 && null == group) {
+			throw new IllegalArgumentException("GuideBookGroup with multiple entries requires a group ID");
+		}
+		// create sorted list
+		this.list = ImmutableList.sortedCopyOf(GuideBookEntry.SORT_BY_NAMESPACE.thenComparing(GuideBookEntry.SORT_BY_NAME), list);
 		this.group = group;
+		// create title
 		if(group != null) {
 			this.title = Component.translatable("entity." + group.getNamespace() + ".golem.group." + group.getPath());
 		} else {
@@ -110,7 +123,36 @@ public class GuideBookGroup implements ITableOfContentsEntry {
 
 	@Override
 	public Component getMessage(int index) {
-		return this.title != null ? this.title : this.getEntry(index / this.list.size()).getTitle();
+		// delegate to element message when there is one element or title is not defined
+		if(null == this.title || this.list.size() == 1) {
+			return this.getEntry(0).getMessage(index);
+		}
+		// create advanced name
+		if(Minecraft.getInstance().options.advancedItemTooltips && group != null) {
+			return Component.empty().append(this.title).append("\n").append(Component.literal(group.toString()).withStyle(ChatFormatting.GRAY));
+		}
+		// return title component
+		return this.title;
+	}
+
+	@Override
+	public Component getAdvancedMessage(int index) {
+		// add single golem advanced message if applicable
+		final Component message = Component.empty();
+		if(null == this.title || this.list.size() == 1) {
+			message.getSiblings().add(this.getEntry(0).getAdvancedMessage(index));
+			message.getSiblings().add(Component.literal("\n"));
+		}
+		// add group advanced message if applicable
+		if(group != null) {
+			message.getSiblings().add(Component.translatable("golem.description.group", group.toString()).withStyle(ChatFormatting.GRAY));
+			message.getSiblings().add(Component.literal("\n"));
+		}
+		// remove trailing newline
+		if(!message.getSiblings().isEmpty()) {
+			message.getSiblings().remove(message.getSiblings().size() - 1);
+		}
+		return message;
 	}
 
 	//// GETTERS ////
