@@ -1,0 +1,25 @@
+{
+  "attributes": {
+    "health": 45.0,
+    "attack": 8.1,
+    "knockback_resistance": 0.8
+  },
+  "group": "golems:stone",
+  "blocks": {
+	"all": [
+	  "quark:polished_calcite",
+	  "quark:calcite_bricks",
+	  "quark:chiseled_calcite_bricks",
+	  "quark:calcite_pillar"
+	]
+  },
+  "repair_items": {
+    "quark:polished_calcite": 0.5,
+    "quark:calcite_bricks": 0.5,
+    "quark:chiseled_calcite_bricks": 0.5,
+    "quark:calcite_pillar": 0.5,
+	"minecraft:calcite": 0.15
+  },
+  "model": "quark:calcite",
+  "brain": "golems:empty"
+}

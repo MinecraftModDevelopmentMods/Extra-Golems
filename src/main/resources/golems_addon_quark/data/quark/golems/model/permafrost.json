@@ -1,0 +1,11 @@
+{
+  "layers": [
+	{
+	  "texture": "quark:permafrost",
+	  "template": "golems:template/ice"
+	},
+	{
+	  "texture": "#golems:eyes/white"
+	}
+  ]
+}

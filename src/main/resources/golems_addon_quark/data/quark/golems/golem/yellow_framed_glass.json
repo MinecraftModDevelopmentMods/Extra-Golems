@@ -1,0 +1,10 @@
+{
+  "parent": "quark:framed_glass",
+  "group": "quark:framed_glass",
+  "blocks": {
+    "arms": "#quark:framed_glass",
+    "legs": "#quark:framed_glass",
+    "body": "quark:yellow_framed_glass"
+  },
+  "model": "quark:yellow_framed_glass"
+}

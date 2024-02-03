@@ -1,0 +1,25 @@
+{
+  "attributes": {
+    "health": 48.0,
+    "attack": 8.0,
+    "knockback_resistance": 0.8
+  },
+  "group": "golems:stone",
+  "blocks": {
+	"all": [
+	  "quark:polished_shale",
+	  "quark:shale_bricks",
+	  "quark:chiseled_shale_bricks",
+	  "quark:shale_pillar"
+	]
+  },
+  "repair_items": {
+    "quark:polished_shale": 0.5,
+    "quark:shale_bricks": 0.5,
+    "quark:chiseled_shale_bricks": 0.5,
+    "quark:shale_pillar": 0.5,
+	"quark:shale": 0.15
+  },
+  "model": "quark:shale",
+  "brain": "golems:empty"
+}

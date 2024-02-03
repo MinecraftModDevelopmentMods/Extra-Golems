@@ -1,0 +1,16 @@
+{
+  "layers": [
+	{
+	  "texture": "quark:duskbound_block",
+	  "template": "golems:template"
+	},
+	{
+	  "texture": "#golems:eyes"
+	},
+	{
+	  "texture": "#golems:vines",
+	  "color": "4E276E",
+	  "emissive": true
+	}
+  ]
+}

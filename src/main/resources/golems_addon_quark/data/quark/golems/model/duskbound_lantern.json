@@ -1,0 +1,18 @@
+{
+  "layers": [
+	{
+	  "texture": "quark:duskbound_lantern",
+	  "template": "golems:template",
+	  "emissive": true
+	},
+	{
+	  "texture": "#golems:eyes",
+	  "emissive": true
+	},
+	{
+	  "texture": "#golems:vines",
+	  "color": "4E276E",
+	  "emissive": true
+	}
+  ]
+}

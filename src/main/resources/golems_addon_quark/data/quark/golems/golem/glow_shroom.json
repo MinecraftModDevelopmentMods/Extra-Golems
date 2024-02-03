@@ -1,0 +1,48 @@
+{
+  "attributes": {
+    "health": 30.0,
+    "attack": 7.0,
+    "speed": 0.3,
+	"knockback_resistance": 0.2,
+	"swim_ability": "float",
+	"sound": "minecraft:grass"
+  },
+  "group": "golems:mushroom",
+  "blocks": {
+	"all": [
+	  "quark:glow_shroom_stem",
+	  "quark:glow_shroom_block"
+	]
+  },
+  "repair_items": {
+	"quark:glow_shroom_stem": 0.5,
+    "quark:glow_shroom_block": 0.5,
+	"quark:glow_shroom": 0.15
+  },
+  "model": "quark:glow_shroom",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:effect",
+		"trigger": "tick",
+		"predicate": [
+		  "night"
+		],
+		"chance": 0.0125,
+		"apply": {
+		  "target": "self",
+		  "effect": {
+			"id": "minecraft:regeneration",
+			"duration": 300
+		  }
+		}
+	  },
+	  {
+		"type": "golems:place",
+		"chance": 0.009,
+		"display_name": "block.quark.glow_shroom",
+		"block": "quark:glow_shroom"
+	  }
+	]
+  }
+}

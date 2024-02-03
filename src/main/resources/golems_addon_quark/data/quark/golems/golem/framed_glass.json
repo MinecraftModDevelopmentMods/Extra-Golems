@@ -1,0 +1,21 @@
+{
+  "parent": "golems:glass",
+  "attributes": {
+    "health": 16.0,
+    "attack": 12.5
+  },
+  "group": "quark:framed_glass",
+  "blocks": {
+	"arms": "#quark:framed_glass",
+	"legs": "#quark:framed_glass",
+	"body": "quark:framed_glass"
+  },
+  "repair_items": {
+    "#quark:framed_glass": 0.5,
+	"#quark:framed_glass_panes": 0.15,
+    "#forge:glass": 0.35,
+	"#forge:glass_panes": 0.1,
+	"#forge:ingots/iron": 0.05
+  },
+  "model": "quark:framed_glass"
+}

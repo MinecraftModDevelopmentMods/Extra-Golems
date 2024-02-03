@@ -1,0 +1,58 @@
+{
+  "attributes": {
+	"health": 42.0,
+	"attack": 5.0
+  },
+  "group": "golems:ice",
+  "blocks": {
+	"all": [
+	  "quark:permafrost",
+	  "quark:permafrost_bricks"
+	]
+  },
+  "repair_items": {
+	"quark:permafrost": 0.5,
+	"quark:permafrost_bricks": 0.5
+  },
+  "model": "quark:permafrost",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:aoe_freeze",
+		"radius": 2,
+		"interval": 4,
+		"shape": "disc"
+	  },
+	  {
+		"type": "golems:effect",
+		"trigger": "attack",
+		"chance": 0.8,
+		"apply": {
+		  "target": "enemy",
+		  "effect": [
+			{
+			  "id": "minecraft:slowness",
+			  "amplifier": 2,
+			  "duration": 160
+			}
+		  ]
+		}
+	  },
+	  {
+		"type": "golems:effect",
+		"trigger": "hurt",
+		"chance": 0.5,
+		"apply": {
+		  "target": "enemy",
+		  "effect": [
+			{
+			  "id": "minecraft:slowness",
+			  "amplifier": 2,
+			  "duration": 110
+			}
+		  ]
+		}
+	  }
+	]
+  }
+}

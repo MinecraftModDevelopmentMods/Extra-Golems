@@ -9,6 +9,7 @@
 	],
 	"sound": "minecraft:basalt"
   },
+  "group": "golems:stone",
   "blocks": {
 	"all": "minecraft:polished_basalt"
   },

@@ -1,0 +1,13 @@
+{
+  "target": "golems:diorite",
+  "modifiers": [
+	{
+	  "type": "golems:add_blocks",
+	  "blocks": [
+		"quark:diorite_bricks",
+		"quark:chiseled_diorite_bricks",
+		"quark:diorite_pillar"
+	  ]
+	}
+  ]
+}

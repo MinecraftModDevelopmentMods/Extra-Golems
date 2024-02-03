@@ -10,6 +10,7 @@
 	"swim_ability": "float",
 	"sound": "minecraft:glass"
   },
+  "group": "golems:ice",
   "blocks": {
 	"all": "#minecraft:ice"
   },

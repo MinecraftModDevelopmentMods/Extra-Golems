@@ -165,15 +165,15 @@ public final class EGRegistry {
 		}
 
 		private static void onBuildTabContents(final BuildCreativeModeTabContentsEvent event) {
-			if(event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
+			if(event.getTabKey().equals(CreativeModeTabs.TOOLS_AND_UTILITIES)) {
 				event.accept(ItemReg.GOLEM_SPELL);
 				event.accept(ItemReg.GUIDE_BOOK);
 				event.accept(ItemReg.GOLEM_HEAD);
 			}
-			if(event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
+			if(event.getTabKey().equals(CreativeModeTabs.FUNCTIONAL_BLOCKS)) {
 				event.accept(ItemReg.GOLEM_HEAD);
 			}
-			if(event.getTabKey() == CreativeModeTabs.NATURAL_BLOCKS) {
+			if(event.getTabKey().equals(CreativeModeTabs.NATURAL_BLOCKS)) {
 				// insert golem head item after jack o lantern
 				event.getEntries().putAfter(Items.JACK_O_LANTERN.getDefaultInstance(), ItemReg.GOLEM_HEAD.get().getDefaultInstance(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
 			}

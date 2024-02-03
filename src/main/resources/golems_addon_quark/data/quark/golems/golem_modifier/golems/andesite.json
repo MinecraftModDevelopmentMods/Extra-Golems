@@ -1,0 +1,13 @@
+{
+  "target": "golems:andesite",
+  "modifiers": [
+	{
+	  "type": "golems:add_blocks",
+	  "blocks": [
+		"quark:andesite_bricks",
+		"quark:chiseled_andesite_bricks",
+		"quark:andesite_pillar"
+	  ]
+	}
+  ]
+}

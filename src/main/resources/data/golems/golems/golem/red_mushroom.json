@@ -43,8 +43,7 @@
 		}
 	  },
 	  {
-		"type": "golems:place_block",
-		"radius": 1,
+		"type": "golems:place",
 		"chance": 0.009,
 		"display_name": "block.minecraft.red_mushroom",
 		"block": "minecraft:red_mushroom"

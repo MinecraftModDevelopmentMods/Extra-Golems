@@ -1,0 +1,15 @@
+{
+  "layers": [
+	{
+	  "texture": "quark:glow_shroom_stem",
+	  "template": "golems:template/mushroom_lower"
+	},
+	{
+	  "texture": "quark:glow_shroom_block",
+	  "template": "golems:template/mushroom_upper"
+	},
+	{
+	  "texture": "#golems:eyes"
+	}
+  ]
+}

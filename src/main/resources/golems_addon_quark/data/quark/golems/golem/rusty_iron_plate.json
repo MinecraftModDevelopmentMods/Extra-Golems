@@ -1,0 +1,32 @@
+{
+  "parent": "quark:iron_plate",
+  "group": "quark:iron_plate",
+  "blocks": {
+	"arms": [
+	  "quark:iron_plate",
+	  "quark:rusty_iron_plate"
+	],
+	"legs": [
+	  "quark:iron_plate",
+	  "quark:rusty_iron_plate"
+	],
+	"body": "quark:rusty_iron_plate"
+  },
+  "model": "quark:rusty_iron_plate",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:item_update_golem",
+		"item": "#minecraft:axes",
+		"display_name": "golem.description.axe",
+		"sound": "minecraft:item.axe.scrape",
+		"particle": {
+		  "type": "minecraft:scrape"
+		},
+		"apply": {
+		  "golem": "quark:iron_plate"
+		}
+	  }
+	]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "layers": [
+	{
+	  "texture": "quark:polished_myalite",
+	  "template": "golems:template",
+	  "color": "632896"
+	},
+	{
+	  "texture": "quark:polished_myalite",
+	  "template": "golems:template/hands",
+	  "color": "632896"
+	},
+	{
+	  "texture": "#golems:eyes"
+	}
+  ]
+}

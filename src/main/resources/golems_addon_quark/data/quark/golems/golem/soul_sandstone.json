@@ -1,0 +1,14 @@
+{
+  "parent": "golems:sandstone",
+  "group": "golems:sandstone",
+  "blocks": {
+	"all": [
+	  "quark:soul_sandstone",
+	  "quark:soul_sandstone_bricks",
+	  "quark:cut_soul_sandstone",
+	  "quark:chiseled_soul_sandstone",
+	  "quark:smooth_soul_sandstone"
+	]
+  },
+  "model": "quark:soul_sandstone"
+}

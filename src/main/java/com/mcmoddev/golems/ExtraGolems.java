@@ -9,7 +9,6 @@ import com.mcmoddev.golems.item.GolemSpellItem;
 import com.mcmoddev.golems.network.EGNetwork;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
@@ -24,8 +23,6 @@ import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.simple.SimpleChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -55,14 +52,13 @@ public class ExtraGolems {
 		EGEvents.register();
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(ExtraGolems::setup);
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(ExtraGolems::enqueueIMC);
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(AddonLoader::onAddPackFinders);
+		// init addons
+		AddonLoader.register();
 		// register client event handlers
 		DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> EGClientEvents::register);
 	}
 
 	private static void setup(final FMLCommonSetupEvent event) {
-		// init addons
-		AddonLoader.init();
 		// register dispenser behavior
 		GolemSpellItem.registerDispenserBehavior();
 		GolemHeadBlock.registerDispenserBehavior();

@@ -1,0 +1,8 @@
+{
+  "layers": [
+	"golems:orange_stained_glass",
+	{
+	  "texture": "#quark:layer/framed_glass"
+	}
+  ]
+}

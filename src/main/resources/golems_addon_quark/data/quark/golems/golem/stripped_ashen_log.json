@@ -1,0 +1,13 @@
+{
+  "parent": "golems:generic_log",
+  "hidden": true,
+  "blocks": {
+	"arms": "#minecraft:logs_that_burn",
+	"legs": "#minecraft:logs_that_burn",
+	"body": [
+	  "quark:stripped_ancient_log",
+	  "quark:stripped_ancient_wood"
+	]
+  },
+  "model": "quark:stripped_ashen_log"
+}

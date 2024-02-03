@@ -1,0 +1,26 @@
+{
+  "attributes": {
+    "health": 18.0,
+    "attack": 12.2,
+	"speed": 0.29,
+	"weak": [
+	  "minecraft:fall"
+	],
+	"sound": "minecraft:glass"
+  },
+  "group": "quark:corundum",
+  "hidden": true,
+  "repair_items": {
+    "#quark:corundum": 0.5,
+	"#quark:corundum_pane": 0.15,
+	"#quark:corundum_cluster": 0.15
+  },
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:light",
+		"light": 11
+	  }
+	]
+  }
+}

@@ -26,7 +26,7 @@ public interface IExtraGolem extends IVariantProvider, ILightProvider, IPowerPro
 	//// ENTITY ////
 
 	/**
-	 * @param <T> AbstractGolem Mob & IExtraGolem
+	 * @param <T> AbstractGolem Mob and IExtraGolem
 	 * @return the IExtraGolem as a mob
 	 */
 	<T extends AbstractGolem & IExtraGolem> T asMob();

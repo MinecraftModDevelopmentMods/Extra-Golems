@@ -1,0 +1,25 @@
+{
+  "attributes": {
+	"health": 62.0,
+	"attack": 8.5,
+    "knockback_resistance": 0.8
+  },
+  "group": "golems:stone",
+  "blocks": {
+	"all": [
+	  "quark:polished_myalite",
+	  "quark:myalite_bricks",
+	  "quark:chiseled_myalite_bricks",
+	  "quark:myalite_pillar"
+	]
+  },
+  "repair_items": {
+    "quark:polished_myalite": 0.5,
+    "quark:myalite_bricks": 0.5,
+    "quark:chiseled_myalite_bricks": 0.5,
+    "quark:myalite_pillar": 0.5,
+	"quark:myalite": 0.15
+  },
+  "model": "quark:myalite",
+  "brain": "golems:empty"
+}

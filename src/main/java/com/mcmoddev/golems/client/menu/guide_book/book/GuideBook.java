@@ -222,7 +222,7 @@ public class GuideBook {
 		// create table of contents page and link it to description page
 		final Consumer<Integer> onPress = i -> {
 			if(isDebug()) {
-				debugSpawnGolem(group);
+				debugSpawnGolem(group.getEntry(i));
 			} else {
 				descriptionPage.setEntryIndex(i);
 			}
@@ -251,7 +251,7 @@ public class GuideBook {
 	}
 
 	private static void debugSpawnGolem(final GuideBookGroup group) {
-		// validate group
+		// validate debug and validate group
 		if(!isDebug() || group.getList().isEmpty()) {
 			return;
 		}
@@ -259,6 +259,15 @@ public class GuideBook {
 		final List<ResourceLocation> list = group.getList().stream().map(GuideBookEntry::getId).toList();
 		// send packet to server
 		EGNetwork.CHANNEL.sendToServer(new ServerBoundSpawnGolemPacket(list));
+	}
+
+	private static void debugSpawnGolem(final GuideBookEntry entry) {
+		// validate debug
+		if(!isDebug()) {
+			return;
+		}
+		// send packet to server
+		EGNetwork.CHANNEL.sendToServer(new ServerBoundSpawnGolemPacket(ImmutableList.of(entry.getId())));
 	}
 
 	private static Optional<CraftingRecipe> loadRecipe(final RecipeManager recipeManager, final ResourceLocation recipe) {

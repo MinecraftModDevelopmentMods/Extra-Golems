@@ -40,7 +40,7 @@
 	  },
 	  {
 		"type": "golems:item_update_golem",
-		"item": "#forge:axe",
+		"item": "#minecraft:axes",
 		"display_name": "golem.description.axe",
 		"sound": "minecraft:item.axe.scrape",
 		"particle": {

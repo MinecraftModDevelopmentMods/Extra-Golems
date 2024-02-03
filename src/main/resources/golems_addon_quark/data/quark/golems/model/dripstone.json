@@ -1,0 +1,13 @@
+{
+  "layers": [
+	{
+	  "texture": "quark:polished_dripstone",
+	  "template": "golems:template"
+	},
+	{
+	  "texture": "quark:polished_dripstone",
+	  "template": "golems:template/hands"
+	},
+	"golems:eyes_and_vines"
+  ]
+}

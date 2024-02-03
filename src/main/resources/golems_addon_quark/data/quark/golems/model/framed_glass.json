@@ -1,0 +1,8 @@
+{
+  "layers": [
+	"golems:glass",
+	{
+	  "texture": "#quark:layer/framed_glass"
+	}
+  ]
+}

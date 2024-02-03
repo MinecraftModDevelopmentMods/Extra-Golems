@@ -1,0 +1,9 @@
+{
+  "layers": [
+	{
+	  "texture": "quark:thatch",
+	  "template": "golems:template"
+	},
+	"golems:eyes_and_vines"
+  ]
+}

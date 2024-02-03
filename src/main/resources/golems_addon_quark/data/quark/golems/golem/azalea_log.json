@@ -1,0 +1,30 @@
+{
+  "parent": "golems:generic_log",
+  "hidden": false,
+  "blocks": {
+	"arms": "#minecraft:logs_that_burn",
+	"legs": "#minecraft:logs_that_burn",
+	"body": "#quark:azalea_logs"
+  },
+  "model": "quark:azalea_log",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:item_update_golem",
+		"item": "#forge:axe",
+		"display_name": "golem.description.axe",
+		"sound": "minecraft:item.axe.strip",
+		"particle": {
+		  "type": "minecraft:item",
+		  "value": {
+			"id": "quark:azalea_log",
+			"Count": 1
+		  }
+		},
+		"apply": {
+		  "golem": "quark:stripped_azalea_log"
+		}
+	  }
+	]
+  }
+}

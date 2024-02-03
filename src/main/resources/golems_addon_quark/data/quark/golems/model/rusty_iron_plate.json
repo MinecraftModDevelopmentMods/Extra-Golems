@@ -1,0 +1,9 @@
+{
+  "layers": [
+	{
+	  "texture": "quark:rusty_iron_plate",
+	  "template": "golems:template"
+	},
+	"golems:eyes_and_vines"
+  ]
+}

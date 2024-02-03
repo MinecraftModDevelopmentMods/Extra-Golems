@@ -1,0 +1,40 @@
+{
+  "attributes": {
+    "health": 34.0,
+    "attack": 11.6,
+    "speed": 0.26,
+	"immune": [
+	  "minecraft:in_fire",
+	  "minecraft:on_fire"
+	],
+	"weak": [
+	  "minecraft:drown"
+	],
+	"swim_ability": "float",
+	"sound": "minecraft:glass"
+  },
+  "blocks": {
+	"all": "quark:blaze_lantern"
+  },
+  "repair_items": {
+    "quark:blaze_lantern": 0.5,
+	"#forge:dusts/blaze_powder": 0.1,
+	"#forge:rods/blaze": 0.25
+  },
+  "model": "quark:blaze_lantern",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:set_fire",
+		"trigger": "hurt",
+		"target": "enemy",
+		"chance": 0.2,
+		"seconds": 3
+	  },
+	  {
+		"type": "golems:light",
+		"light": 15
+	  }
+	]
+  }
+}
