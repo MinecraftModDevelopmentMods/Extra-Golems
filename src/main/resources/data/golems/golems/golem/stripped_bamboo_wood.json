@@ -1,0 +1,12 @@
+{
+  "parent": "golems:bamboo_wood",
+  "group": "golems:bamboo",
+  "hidden": true,
+  "blocks": {
+	"arms": "#minecraft:bamboo_blocks",
+	"legs": "#minecraft:bamboo_blocks",
+	"body": "minecraft:stripped_bamboo_block"
+  },
+  "model": "golems:stripped_bamboo_wood",
+  "brain": "golems:empty"
+}
