@@ -42,24 +42,6 @@ public interface IVariantProvider {
 	}
 
 	/**
-	 * Selects a random variant to apply. Parameters are given in case the entity
-	 * randomizes texture based on location.
-	 *
-	 * @param level the Level
-	 * @param pos an approximate position for the entity
-	 * @param random the random source
-	 **/
-	default void randomizeVariant(final Level level, final BlockPos pos, final RandomSource random) {
-		// verify more than one variant exists
-		if(!(getVariantCount() > 1)) {
-			return;
-		}
-		// update variant
-		final byte texture = (byte) level.getRandom().nextInt(getVariantCount());
-		setVariant(texture);
-	}
-
-	/**
 	 * Updates the variant to the next one, looping once the max variant is reached
 	 *
 	 * @return true if the variant changed

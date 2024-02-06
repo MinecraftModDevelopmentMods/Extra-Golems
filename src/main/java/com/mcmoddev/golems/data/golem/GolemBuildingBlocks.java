@@ -200,6 +200,14 @@ public class GolemBuildingBlocks implements Supplier<Collection<Block>> {
 
 		//// METHODS ////
 
+		public Builder copy(final GolemBuildingBlocks copy) {
+			this.blocks.clear();
+			for(Map.Entry<GolemPart, BuildingBlocks> entry : copy.getBlocks().entrySet()) {
+				this.blocks.put(entry.getKey(), new BuildingBlocks.Builder(entry.getValue()));
+			}
+			return this;
+		}
+
 		public Builder withAll(final BuildingBlocks.Builder builder) {
 			this.blocks.put(GolemPart.ALL, builder);
 			return this;

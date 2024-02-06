@@ -202,11 +202,14 @@ public class Golem {
 			}
 			// blocks (replaces parent)
 			if(!hasParent || !golem.getBlocks().getBlocks().isEmpty()) {
-				builder.blocks(new GolemBuildingBlocks.Builder(golem.getBlocks()));
+				builder.blocks(b -> b.copy(golem.getBlocks()));
 			}
 			// repair items (replaces parent)
 			if(!hasParent || !golem.getRepairItems().getMap().isEmpty()) {
-				builder.repairItems(new RepairItems.Builder(golem.getRepairItems()));
+				builder.repairItems(b -> {
+					b.clear();
+					b.addAll(golem.getRepairItems().getMap());
+				});
 			}
 			// variants (replaces parent)
 			if(!hasParent || golem.getVariants() != parent.getVariants()) {
@@ -222,11 +225,17 @@ public class Golem {
 			}
 			// model (replaces parent)
 			if(!hasParent || !golem.getLayers().get().getLayers().isEmpty()) {
-				builder.layers(new LayerList.Builder(golem.getLayers().get().getLayers()));
+				builder.layers(b -> {
+					b.clear();
+					b.addAll(golem.getLayers().get().getLayers());
+				});
 			}
 			// behaviors (replaces parent)
 			if(!hasParent || !golem.getBehaviors().get().getBehaviors().isEmpty() || golem.getBehaviors().unwrap().left().isPresent()) {
-				builder.behaviors(new BehaviorList.Builder(golem.getBehaviors().get().getBehaviors()));
+				builder.behaviors(b -> {
+					b.clear();
+					b.addAll(golem.getBehaviors().get().getBehaviors());
+				});
 			}
 			// group (replaces parent)
 			if(golem.getGroup() != null) {

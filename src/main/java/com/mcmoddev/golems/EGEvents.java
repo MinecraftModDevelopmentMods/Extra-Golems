@@ -18,6 +18,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
@@ -28,15 +29,18 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.MobSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
@@ -140,30 +144,34 @@ public final class EGEvents {
 		}
 
 		@SubscribeEvent
-		public static void onMobSummoned(final MobSpawnEvent.SpawnPlacementCheck event) {
-			if(event.getEntityType() == EntityType.IRON_GOLEM && event.getSpawnType() == MobSpawnType.MOB_SUMMONED
+		public static void onMobSummoned(final MobSpawnEvent.PositionCheck event) {
+			final Mob entity = event.getEntity();
+			final BlockPos pos = entity.blockPosition();
+			final RandomSource random = entity.getRandom();
+			if(event.getResult() != Event.Result.DENY && entity.getType() == EntityType.IRON_GOLEM
+					&& event.getSpawnType() == MobSpawnType.MOB_SUMMONED
 					&& ExtraGolems.CONFIG.villagerSummonChance() > 0
-					&& event.getRandom().nextInt(100) < ExtraGolems.CONFIG.villagerSummonChance()) {
+					&& event.getEntity().getRandom().nextInt(100) < ExtraGolems.CONFIG.villagerSummonChance()) {
 				// determine material
-				final ResourceLocation golemId = getGolemToSpawn(event.getLevel().getLevel(), event.getPos(), event.getRandom());
+				final ResourceLocation golemId = getGolemToSpawn(entity.level(), pos, random);
 				if(golemId != null) {
-					// cancel the event
-					event.setCanceled(true);
 					// attempt to summon a golem
 					GolemBase golem = GolemBase.create(event.getLevel().getLevel(), golemId);
-					// randomize texture if applicable
-					if (golem.getVariantCount() > 0) {
-						golem.randomizeVariant(event.getLevel().getLevel(), event.getPos(), event.getRandom());
+					golem.copyPosition(entity);
+					// fire spawn position check for the new entity
+					if(ForgeEventFactory.checkSpawnPosition(golem, event.getLevel(), MobSpawnType.MOB_SUMMONED)) {
+						// cancel the original event
+						event.setResult(Event.Result.DENY);
+						// add the golem entity
+						event.getLevel().addFreshEntityWithPassengers(golem);
+						// finalize spawn (required to adjust current health to max health)
+						golem.finalizeSpawn(event.getLevel(), event.getLevel().getCurrentDifficultyAt(pos), MobSpawnType.MOB_SUMMONED, null, null);
+						// locate nearby villagers
+						AABB aabb = golem.getBoundingBox().inflate(16.0D, 16.0D, 16.0D);
+						List<Villager> nearbyVillagers = event.getLevel().getEntitiesOfClass(Villager.class, aabb);
+						// reset golem detected flags
+						nearbyVillagers.forEach(GolemSensor::golemDetected);
 					}
-					// add the golem entity
-					event.getLevel().addFreshEntityWithPassengers(golem);
-					// finalize spawn (required to adjust current health to max health)
-					golem.finalizeSpawn(event.getLevel(), event.getLevel().getCurrentDifficultyAt(event.getPos()), MobSpawnType.MOB_SUMMONED, null, null);
-					// locate nearby villagers
-					AABB aabb = golem.getBoundingBox().inflate(10.0D, 10.0D, 10.0D);
-					List<Villager> nearbyVillagers = event.getLevel().getEntitiesOfClass(Villager.class, aabb);
-					// reset golem detected flags
-					nearbyVillagers.forEach(GolemSensor::golemDetected);
 				}
 			}
 		}

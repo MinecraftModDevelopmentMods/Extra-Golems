@@ -1,7 +1,7 @@
 {
   "attributes": {
     "health": 58.0,
-    "attack": 5.2,
+    "attack": 10.2,
     "knockback_resistance": 0.8
   },
   "group": "golems:stone",
