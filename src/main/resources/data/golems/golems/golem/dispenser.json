@@ -17,7 +17,9 @@
 	"behaviors": [
 	  {
 		"type": "golems:shoot_arrows",
-		"damage": 4.25
+		"damage": 4.25,
+		"consume": true,
+		"attack_interval": 28
 	  }
 	]
   }

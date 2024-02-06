@@ -12,6 +12,7 @@
 	  "minecraft:player_explosion"
 	]
   },
+  "group": "golems:obsidian",
   "blocks": {
 	"all": "minecraft:crying_obsidian"
   },

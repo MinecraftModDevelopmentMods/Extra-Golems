@@ -1,4 +1,4 @@
-package com.mcmoddev.golems.client.menu.guide_book.book;
+package com.mcmoddev.golems.client.menu.guide_book;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;

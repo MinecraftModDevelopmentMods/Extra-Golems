@@ -2,8 +2,8 @@ package com.mcmoddev.golems.client.menu.guide_book.page;
 
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.client.menu.button.CyclingItemButton;
-import com.mcmoddev.golems.client.menu.guide_book.GuideBookScreen;
-import com.mcmoddev.golems.client.menu.guide_book.book.IBookScreen;
+import com.mcmoddev.golems.client.menu.GuideBookScreen;
+import com.mcmoddev.golems.client.menu.guide_book.IBookScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;

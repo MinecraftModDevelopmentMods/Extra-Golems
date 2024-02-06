@@ -1,17 +1,17 @@
 package com.mcmoddev.golems.client.menu;
 
-import com.mcmoddev.golems.menu.PortableDispenserMenu;
+import com.mcmoddev.golems.menu.GolemInventoryMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class DispenserGolemScreen extends AbstractContainerScreen<PortableDispenserMenu> {
+public class GolemInventoryScreen extends AbstractContainerScreen<GolemInventoryMenu> {
 
 	public static final ResourceLocation BG_TEXTURE = new ResourceLocation("minecraft:textures/gui/container/dispenser.png");
 
-	public DispenserGolemScreen(PortableDispenserMenu cont, Inventory pInv, Component title) {
+	public GolemInventoryScreen(GolemInventoryMenu cont, Inventory pInv, Component title) {
 		super(cont, pInv, title);
 	}
 

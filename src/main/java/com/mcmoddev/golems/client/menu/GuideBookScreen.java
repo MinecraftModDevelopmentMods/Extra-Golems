@@ -1,10 +1,11 @@
-package com.mcmoddev.golems.client.menu.guide_book;
+package com.mcmoddev.golems.client.menu;
 
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.client.menu.button.ScrollButton;
-import com.mcmoddev.golems.client.menu.guide_book.book.GuideBook;
-import com.mcmoddev.golems.client.menu.guide_book.book.IBookScreen;
+import com.mcmoddev.golems.client.menu.guide_book.GuideBookGroup;
+import com.mcmoddev.golems.client.menu.guide_book.GuideBook;
+import com.mcmoddev.golems.client.menu.guide_book.IBookScreen;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;

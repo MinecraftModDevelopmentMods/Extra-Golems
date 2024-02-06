@@ -2,11 +2,9 @@ package com.mcmoddev.golems.client.menu.guide_book;
 
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.EGRegistry;
-import com.mcmoddev.golems.client.menu.guide_book.book.ITableOfContentsEntry;
 import com.mcmoddev.golems.data.GolemContainer;
 import com.mcmoddev.golems.data.golem.Golem;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
@@ -141,7 +139,8 @@ public class GuideBookGroup implements ITableOfContentsEntry {
 		}
 		// add group advanced message if applicable
 		if(group != null) {
-			message.getSiblings().add(Component.translatable("golem.description.group", group.toString()).withStyle(ChatFormatting.GRAY));
+			message.getSiblings().add(Component.literal("\n"));
+			message.getSiblings().add(Component.translatable("golem.description.group", Component.literal(group.toString()).withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.BLUE));
 			message.getSiblings().add(Component.literal("\n"));
 		}
 		// remove trailing newline

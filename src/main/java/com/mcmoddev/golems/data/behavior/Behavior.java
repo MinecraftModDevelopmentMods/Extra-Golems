@@ -29,6 +29,7 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.TooltipFlag;
 
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,9 +45,9 @@ public abstract class Behavior implements IVariantPredicate {
 
 	public static final String PREFIX = "golem.description.behavior.";
 
-	private final MinMaxBounds.Ints variant;
+	protected final MinMaxBounds.Ints variant;
+	protected final TooltipPredicate tooltipPredicate;
 	private final List<Component> descriptions;
-	private final TooltipPredicate tooltipPredicate;
 
 	public Behavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate) {
 		this.variant = variant;
@@ -89,14 +90,6 @@ public abstract class Behavior implements IVariantPredicate {
 	public void onRegisterGoals(final IExtraGolem entity) { }
 
 	/**
-	 * Called when the Golem registers goals, not when it normally registers synched data.
-	 * Use {@link #defineSynchedData(SynchedEntityData, EntityDataAccessor, Object)} to safely add data accessors.
-	 *
-	 * @param entity the Golem
-	 */
-	public void onRegisterSynchedData(final IExtraGolem entity) { }
-
-	/**
 	 * Called when any synched data is updated
 	 *
 	 * @param entity the Golem
@@ -109,6 +102,14 @@ public abstract class Behavior implements IVariantPredicate {
 	 * @param entity the Golem
 	 */
 	public void onTick(final IExtraGolem entity) { }
+
+	/**
+	 * Called after the entity attack target changes
+	 *
+	 * @param entity the Golem
+	 * @param target the updated attack target
+	 */
+	public void onTarget(final IExtraGolem entity, final @Nullable LivingEntity target) { }
 
 	/**
 	 * Called when the Golem attacks an entity
@@ -218,20 +219,6 @@ public abstract class Behavior implements IVariantPredicate {
 	}
 
 	//// HELPER METHODS ////
-
-	/**
-	 * Defines synched data after verifying that it is not already defined.
-	 * @param data the synched entity data
-	 * @param key the entity data accessor key
-	 * @param value the default value
-	 * @param <T> the entity data accessor type
-	 */
-	protected static <T> void defineSynchedData(final SynchedEntityData data, final EntityDataAccessor<T> key, T value) {
-		if(data.hasItem(key)) {
-			return;
-		}
-		data.define(key, value);
-	}
 
 	/**
 	 * Simplifies codec creation, especially if no other fields are added

@@ -4,8 +4,8 @@ import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.client.entity.GolemModel;
 import com.mcmoddev.golems.client.entity.GolemRenderType;
 import com.mcmoddev.golems.client.entity.GolemRenderer;
-import com.mcmoddev.golems.client.menu.DispenserGolemScreen;
-import com.mcmoddev.golems.client.menu.guide_book.GuideBookScreen;
+import com.mcmoddev.golems.client.menu.GolemInventoryScreen;
+import com.mcmoddev.golems.client.menu.GuideBookScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.resources.model.ModelBakery;
@@ -33,7 +33,7 @@ public final class EGClientEvents {
 
 		@SubscribeEvent
 		public static void setupClient(final FMLClientSetupEvent event) {
-			event.enqueueWork(() -> MenuScreens.register(EGRegistry.MenuReg.DISPENSER_GOLEM_MENU.get(), DispenserGolemScreen::new));
+			event.enqueueWork(() -> MenuScreens.register(EGRegistry.MenuReg.DISPENSER_GOLEM_MENU.get(), GolemInventoryScreen::new));
 		}
 
 		@SubscribeEvent

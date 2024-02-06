@@ -1,7 +1,11 @@
 package com.mcmoddev.golems.integration;
 
 import com.mcmoddev.golems.data.GolemContainer;
-import com.mcmoddev.golems.data.behavior.data.ShootArrowsBehaviorData;
+import com.mcmoddev.golems.data.behavior.AbstractShootBehavior;
+import com.mcmoddev.golems.data.behavior.ShootArrowsBehavior;
+import com.mcmoddev.golems.data.behavior.ShootFireballsBehavior;
+import com.mcmoddev.golems.data.behavior.ShootSnowballsBehavior;
+import com.mcmoddev.golems.data.behavior.data.ShootBehaviorData;
 import com.mcmoddev.golems.data.behavior.data.UseFuelBehaviorData;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import net.minecraft.ChatFormatting;
@@ -45,9 +49,18 @@ public abstract class GolemDescriptionManager {
 		List<Component> list = new ArrayList<>();
 		// add attributes
 		container.getAttributes().onAddDescriptions(container, registryAccess, list, tooltipFlag, showHealth, showAttack);
+		// add ammo count
+		if(container.getBehaviors().hasBehavior(ShootArrowsBehavior.class)) {
+			addAmmoInfo(entity, "arrows", list);
+		}
+		if(container.getBehaviors().hasBehavior(ShootFireballsBehavior.class)) {
+			addAmmoInfo(entity, "fireballs", list);
+		}
+		if(container.getBehaviors().hasBehavior(ShootSnowballsBehavior.class)) {
+			addAmmoInfo(entity, "snowballs", list);
+		}
 		// add behavior data
 		entity.getBehaviorData(UseFuelBehaviorData.class).ifPresent(data -> addFuelInfo(data, list));
-		entity.getBehaviorData(ShootArrowsBehaviorData.class).ifPresent(data -> addArrowsInfo(data, list));
 		// add behavior descriptions only in extended mode
 		if (extended) {
 			container.getBehaviors().forEach(b -> b.onAddDescriptions(registryAccess, list, tooltipFlag));
@@ -89,19 +102,20 @@ public abstract class GolemDescriptionManager {
 	}
 
 	/**
-	 * Adds information about the number of arrows in the golem's inventory
+	 * Adds information about the ammo count in the golem inventory
 	 *
-	 * @param data the shoot arrows behavior data
+	 * @param entity the entity
+	 * @param key the translation key suffix
 	 * @param list the description list
 	 */
-	protected void addArrowsInfo(final ShootArrowsBehaviorData data, final List<Component> list) {
+	protected void addAmmoInfo(final IExtraGolem entity, final String key, final List<Component> list) {
 		// determine number of arrows available
-		final int arrows = data.getArrowsInInventory();
-		if (arrows > 0 && extended) {
+		final int count = entity.getAmmo();
+		if (count > 0 && extended) {
 			// create arrow count text
-			final Component arrowCount = Component.literal(String.format("%d", arrows)).withStyle(ChatFormatting.WHITE);
+			final Component countText = Component.literal(String.format("%d", count)).withStyle(ChatFormatting.WHITE);
 			// add the description
-			list.add(Component.translatable("golem.description.behavior.arrows", arrowCount).withStyle(ChatFormatting.GRAY));
+			list.add(Component.translatable("golem.description." + key, countText).withStyle(ChatFormatting.GRAY));
 		}
 	}
 }

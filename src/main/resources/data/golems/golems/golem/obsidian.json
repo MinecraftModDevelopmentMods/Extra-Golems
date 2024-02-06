@@ -12,6 +12,7 @@
 	  "minecraft:in_fire"
 	]
   },
+  "group": "golems:obsidian",
   "blocks": {
 	"all": "minecraft:obsidian"
   },

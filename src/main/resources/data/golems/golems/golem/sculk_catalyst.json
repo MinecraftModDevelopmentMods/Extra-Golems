@@ -37,9 +37,9 @@
 	  },
 	  {
 		"type": "golems:place",
-		"trigger": "tick",
+		"trigger": "attack",
 		"position": "self",
-		"chance": 0.004,
+		"chance": 0.4,
 		"block": {
 		  "Name": "minecraft:sculk_vein",
 		  "properties": {

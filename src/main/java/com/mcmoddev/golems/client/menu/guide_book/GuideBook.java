@@ -1,9 +1,7 @@
-package com.mcmoddev.golems.client.menu.guide_book.book;
+package com.mcmoddev.golems.client.menu.guide_book;
 
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.ExtraGolems;
-import com.mcmoddev.golems.client.menu.guide_book.GuideBookEntry;
-import com.mcmoddev.golems.client.menu.guide_book.GuideBookGroup;
 import com.mcmoddev.golems.client.menu.guide_book.page.BookPage;
 import com.mcmoddev.golems.client.menu.guide_book.page.CraftingRecipePage;
 import com.mcmoddev.golems.client.menu.guide_book.page.GolemDescriptionPage;

@@ -18,6 +18,8 @@ import com.mcmoddev.golems.data.behavior.PlaceBlockBehavior;
 import com.mcmoddev.golems.data.behavior.PowerBehavior;
 import com.mcmoddev.golems.data.behavior.SetFireBehavior;
 import com.mcmoddev.golems.data.behavior.ShootArrowsBehavior;
+import com.mcmoddev.golems.data.behavior.ShootFireballsBehavior;
+import com.mcmoddev.golems.data.behavior.ShootSnowballsBehavior;
 import com.mcmoddev.golems.data.behavior.SplitBehavior;
 import com.mcmoddev.golems.data.behavior.SummonBehavior;
 import com.mcmoddev.golems.data.behavior.TeleportBehavior;
@@ -52,7 +54,7 @@ import com.mcmoddev.golems.item.GolemHeadItem;
 import com.mcmoddev.golems.item.GolemSpellItem;
 import com.mcmoddev.golems.item.GuideBookItem;
 import com.mcmoddev.golems.item.SpawnGolemItem;
-import com.mcmoddev.golems.menu.PortableDispenserMenu;
+import com.mcmoddev.golems.menu.GolemInventoryMenu;
 import com.mcmoddev.golems.util.SoundTypeRegistry;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.Registry;
@@ -177,6 +179,9 @@ public final class EGRegistry {
 				// insert golem head item after jack o lantern
 				event.getEntries().putAfter(Items.JACK_O_LANTERN.getDefaultInstance(), ItemReg.GOLEM_HEAD.get().getDefaultInstance(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
 			}
+			if(event.getTabKey().equals(CreativeModeTabs.SPAWN_EGGS)) {
+				event.accept(ItemReg.SPAWN_BEDROCK_GOLEM);
+			}
 		}
 	}
 
@@ -204,8 +209,8 @@ public final class EGRegistry {
 			MENU_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
 		}
 
-		public static final RegistryObject<MenuType<PortableDispenserMenu>> DISPENSER_GOLEM_MENU = MENU_TYPES.register("dispenser_portable",
-				() -> new MenuType<>(PortableDispenserMenu::new, FeatureFlagSet.of()));
+		public static final RegistryObject<MenuType<GolemInventoryMenu>> DISPENSER_GOLEM_MENU = MENU_TYPES.register("dispenser_portable",
+				() -> new MenuType<>(GolemInventoryMenu::new, FeatureFlagSet.of()));
 	}
 
 	public static final class GolemReg {
@@ -242,6 +247,8 @@ public final class EGRegistry {
 		public static final RegistryObject<Codec<PlaceBlockBehavior>> PLACE = BEHAVIOR_SERIALIZER.register("place", () -> PlaceBlockBehavior.CODEC);
 		public static final RegistryObject<Codec<PowerBehavior>> POWER = BEHAVIOR_SERIALIZER.register("power", () -> PowerBehavior.CODEC);
 		public static final RegistryObject<Codec<ShootArrowsBehavior>> SHOOT_ARROWS = BEHAVIOR_SERIALIZER.register("shoot_arrows", () -> ShootArrowsBehavior.CODEC);
+		public static final RegistryObject<Codec<ShootFireballsBehavior>> SHOOT_FIREBALLS = BEHAVIOR_SERIALIZER.register("shoot_fireballs", () -> ShootFireballsBehavior.CODEC);
+		public static final RegistryObject<Codec<ShootSnowballsBehavior>> SHOOT_SNOWBALLS = BEHAVIOR_SERIALIZER.register("shoot_snowballs", () -> ShootSnowballsBehavior.CODEC);
 		public static final RegistryObject<Codec<SplitBehavior>> SPLIT = BEHAVIOR_SERIALIZER.register("split", () -> SplitBehavior.CODEC);
 		public static final RegistryObject<Codec<SetFireBehavior>> SET_FIRE = BEHAVIOR_SERIALIZER.register("set_fire", () -> SetFireBehavior.CODEC);
 		public static final RegistryObject<Codec<SummonBehavior>> SUMMON = BEHAVIOR_SERIALIZER.register("summon", () -> SummonBehavior.CODEC);

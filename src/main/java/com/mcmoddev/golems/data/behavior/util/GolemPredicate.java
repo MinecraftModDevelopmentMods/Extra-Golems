@@ -1,7 +1,7 @@
 package com.mcmoddev.golems.data.behavior.util;
 
 import com.mcmoddev.golems.data.behavior.data.ExplodeBehaviorData;
-import com.mcmoddev.golems.data.behavior.data.ShootArrowsBehaviorData;
+import com.mcmoddev.golems.data.behavior.data.ShootBehaviorData;
 import com.mcmoddev.golems.data.behavior.data.UseFuelBehaviorData;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mojang.serialization.Codec;
@@ -21,8 +21,8 @@ public enum GolemPredicate implements StringRepresentable, Predicate<IExtraGolem
 	DRY("dry", e -> !e.asMob().isInWaterRainOrBubble()),
 	FUEL("fuel", e -> e.getBehaviorData(UseFuelBehaviorData.class).map(o -> o.hasFuel()).orElse(false)),
 	FUEL_EMPTY("fuel_empty", e -> e.getBehaviorData(UseFuelBehaviorData.class).map(o -> !o.hasFuel()).orElse(false)),
-	ARROWS("arrows", e -> e.getBehaviorData(ShootArrowsBehaviorData.class).map(o -> o.getArrowsInInventory() > 0).orElse(false)),
-	ARROWS_EMPTY("arrows_empty", e -> e.getBehaviorData(ShootArrowsBehaviorData.class).map(o -> o.getArrowsInInventory() <= 0).orElse(false)),
+	ARROWS("ammo", e -> e.getBehaviorData(ShootBehaviorData.class).map(o -> o.getAmmo() > 0).orElse(false)),
+	ARROWS_EMPTY("ammo_empty", e -> e.getBehaviorData(ShootBehaviorData.class).map(o -> o.getAmmo() <= 0).orElse(false)),
 	FUSE_LIT("fuse_lit", e -> e.getBehaviorData(ExplodeBehaviorData.class).map(o -> o.isFuseLit()).orElse(false)),
 	FUSE_UNLIT("fuse_unlit", e -> e.getBehaviorData(ExplodeBehaviorData.class).map(o -> !o.isFuseLit()).orElse(false)),
 	BABY("baby", e -> e.asMob().isBaby()),

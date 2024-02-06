@@ -20,28 +20,16 @@ public class UseFuelBehaviorData implements IBehaviorData {
 
 	// DATA //
 	private final IExtraGolem entity;
-	private final EntityDataAccessor<Integer> fuel;
 	private final int maxFuel;
 	private final int burnTime;
 
-	public UseFuelBehaviorData(final IExtraGolem entity, final UseFuelBehavior behavior, final EntityDataAccessor<Integer> fuel) {
+	public UseFuelBehaviorData(final IExtraGolem entity, final UseFuelBehavior behavior) {
 		this.entity = entity;
-		this.fuel = fuel;
 		this.maxFuel = behavior.getMaxFuel();
 		this.burnTime = behavior.getBurnTime();
 	}
 
 	//// METHODS ////
-
-	/** @param fuel the new amount of fuel **/
-	public void setFuel(final int fuel) {
-		entity.asMob().getEntityData().set(this.fuel, fuel);
-	}
-
-	/** @return the amount of fuel remaining **/
-	public int getFuel() {
-		return entity.asMob().getEntityData().get(fuel);
-	}
 
 	/** @return the maximum amount of fuel **/
 	public int getMaxFuel() {
@@ -50,7 +38,7 @@ public class UseFuelBehaviorData implements IBehaviorData {
 
 	/** @return true if the fuel level is above zero */
 	public boolean hasFuel() {
-		return getFuel() > 0;
+		return entity.getFuel() > 0;
 	}
 
 	public int getBurnTime() {
@@ -59,14 +47,24 @@ public class UseFuelBehaviorData implements IBehaviorData {
 
 	/** @return a number between 0.0 and 1.0 to indicate fuel level **/
 	public float getFuelPercentage() {
-		return (float) getFuel() / (float) maxFuel;
+		return (float) entity.getFuel() / (float) maxFuel;
 	}
 
 	/** @param amount the amount of fuel to add or subtract **/
 	public void addFuel(final int amount) {
 		if (amount != 0) {
-			setFuel(getFuel() + amount);
+			entity.setFuel(entity.getFuel() + amount);
 		}
+	}
+
+	/** @param fuel the fuel amount **/
+	public void setFuel(final int fuel) {
+		entity.setFuel(fuel);
+	}
+
+	/** @return the fuel amount **/
+	public int getFuel() {
+		return entity.getFuel();
 	}
 
 	//// NBT ////
@@ -76,12 +74,12 @@ public class UseFuelBehaviorData implements IBehaviorData {
 	@Override
 	public CompoundTag serializeNBT() {
 		final CompoundTag tag = new CompoundTag();
-		tag.putInt(KEY_FUEL, getFuel());
+		tag.putInt(KEY_FUEL, entity.getFuel());
 		return tag;
 	}
 
 	@Override
 	public void deserializeNBT(CompoundTag tag) {
-		setFuel(tag.getInt(KEY_FUEL));
+		entity.setFuel(tag.getInt(KEY_FUEL));
 	}
 }

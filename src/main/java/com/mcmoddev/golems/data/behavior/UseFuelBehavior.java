@@ -49,8 +49,6 @@ public class UseFuelBehavior extends Behavior {
 			.and(Codec.intRange(1, Integer.MAX_VALUE).fieldOf("burn_time").forGetter(UseFuelBehavior::getBurnTime))
 			.apply(instance, UseFuelBehavior::new));
 
-	protected static final EntityDataAccessor<Integer> FUEL = SynchedEntityData.defineId(AbstractGolem.class, EntityDataSerializers.INT);
-
 	/** The maximum amount of fuel the entity can hold **/
 	protected final int maxFuel;
 	/** The number of ticks it takes to deplete one unit of fuel **/
@@ -81,12 +79,7 @@ public class UseFuelBehavior extends Behavior {
 
 	@Override
 	public void onAttachData(IExtraGolem entity) {
-		entity.attachBehaviorData(new UseFuelBehaviorData(entity, this, FUEL));
-	}
-
-	@Override
-	public void onRegisterSynchedData(IExtraGolem entity) {
-		defineSynchedData(entity.asMob().getEntityData(), FUEL, 0);
+		entity.attachBehaviorData(new UseFuelBehaviorData(entity, this));
 	}
 
 	@Override

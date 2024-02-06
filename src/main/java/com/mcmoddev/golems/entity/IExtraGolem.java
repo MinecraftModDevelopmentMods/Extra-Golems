@@ -10,6 +10,7 @@ import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.ContainerListener;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.AbstractGolem;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.level.block.state.BlockState;
@@ -31,11 +32,13 @@ public interface IExtraGolem extends IVariantProvider, ILightProvider, IPowerPro
 	 */
 	<T extends AbstractGolem & IExtraGolem> T asMob();
 
-	/** Set up the inventory **/
-	void setupInventory();
-
 	/** @return the color of the biome at the entity position **/
 	int getBiomeColor();
+
+	//// INVENTORY ////
+
+	/** Set up the inventory **/
+	void setupInventory();
 
 	//// CONTAINER ////
 
@@ -63,20 +66,47 @@ public interface IExtraGolem extends IVariantProvider, ILightProvider, IPowerPro
 		return Optional.of(GolemContainer.getOrCreate(registryAccess, oId.get()));
 	}
 
+	//// GETTERS AND SETTERS ////
+
+	/** @param ammo the ammo count **/
+	void setAmmo(final int ammo);
+
+	/** @return the ammo count **/
+	int getAmmo();
+
+	/** @param fuel the fuel amount **/
+	void setFuel(final int fuel);
+
+	/** @return the fuel amount **/
+	int getFuel();
+
 	//// GOLEM HELPER ////
 
+	/** @return the behavior data map **/
 	Map<Class<? extends IBehaviorData>, IBehaviorData> getBehaviorData();
 
+	/**
+	 * @param data the behavior data
+	 * @param <T> the behavior data class
+	 */
 	default <T extends IBehaviorData> void attachBehaviorData(final T data) {
 		getBehaviorData().put(data.getClass(), data);
 	}
 
+	/**
+	 * @param clazz the behavior data class
+	 * @param <T> the behavior data class
+	 * @return the behavior data for the given class, if any
+	 */
 	default <T extends IBehaviorData> Optional<T> getBehaviorData(final Class<T> clazz) {
 		return Optional.ofNullable((T)getBehaviorData().get(clazz));
 	}
 
 	//// GOLEM ////
 
+	/**
+	 * @return {@code Mob#isSunBurnTick()}
+	 */
 	boolean isSunBurnTickAccessor();
 
 	/**

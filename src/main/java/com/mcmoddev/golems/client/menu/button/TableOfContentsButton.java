@@ -1,7 +1,7 @@
 package com.mcmoddev.golems.client.menu.button;
 
-import com.mcmoddev.golems.client.menu.guide_book.book.IBookScreen;
-import com.mcmoddev.golems.client.menu.guide_book.book.ITableOfContentsEntry;
+import com.mcmoddev.golems.client.menu.guide_book.IBookScreen;
+import com.mcmoddev.golems.client.menu.guide_book.ITableOfContentsEntry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -43,7 +43,7 @@ public class TableOfContentsButton extends ImageButton {
 		// update message
 		final Component message = entry.getMessage(0);
 		final int messageWidth = (this.width - 18 - 2 * 2);
-		final String sMessage = StringUtil.truncateStringIfNecessary(ChatFormatting.stripFormatting(message.getString()), (int) (messageWidth / 4.5F), true);
+		final String sMessage = StringUtil.truncateStringIfNecessary(ChatFormatting.stripFormatting(message.getString()), (int) (messageWidth / 4.8F), true);
 		this.setMessage(Component.literal(sMessage).withStyle(message.getStyle()));
 		// update tooltip
 		final Component tooltip = message.copy();

@@ -1,12 +1,14 @@
 package com.mcmoddev.golems.entity;
 
+import com.google.common.collect.Streams;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.data.GolemContainer;
+import com.mcmoddev.golems.data.behavior.AbstractShootBehavior;
+import com.mcmoddev.golems.data.behavior.Behavior;
 import com.mcmoddev.golems.data.behavior.BurnInSunBehavior;
 import com.mcmoddev.golems.data.behavior.LightBehavior;
 import com.mcmoddev.golems.data.behavior.PowerBehavior;
-import com.mcmoddev.golems.data.behavior.ShootArrowsBehavior;
 import com.mcmoddev.golems.data.behavior.data.IBehaviorData;
 import com.mcmoddev.golems.data.golem.SwimAbility;
 import com.mcmoddev.golems.entity.goal.GoToWaterGoal;
@@ -17,7 +19,6 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -54,11 +55,11 @@ import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.RandomSwimmingGoal;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.WaterBoundPathNavigation;
+import net.minecraft.world.entity.animal.AbstractGolem;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.npc.InventoryCarrier;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -72,7 +73,9 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 /**
  * Base class for all golems in this mod.
@@ -83,6 +86,8 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 	private static final EntityDataAccessor<Optional<ResourceLocation>> GOLEM = SynchedEntityData.defineId(GolemBase.class, IExtraGolem.OPTIONAL_RESOURCE_LOCATION);
 	private static final EntityDataAccessor<Boolean> CHILD = SynchedEntityData.defineId(GolemBase.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Byte> VARIANT = SynchedEntityData.defineId(GolemBase.class, EntityDataSerializers.BYTE);
+	private static final EntityDataAccessor<Integer> FUEL = SynchedEntityData.defineId(GolemBase.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(GolemBase.class, EntityDataSerializers.INT);
 
 	// KEYS //
 	private static final String KEY_CHILD = "IsChild";
@@ -99,6 +104,7 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 	private static final int INVENTORY_SIZE = 9;
 	private SimpleContainer inventory;
 	private @Nullable Player playerInMenu;
+	private Predicate<ItemStack> wantsToPickup;
 
 	// NAVIGATION //
 	private final WaterBoundPathNavigation waterNavigator;
@@ -124,6 +130,7 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 		setupInventory();
 		// create helpers
 		this.behaviorData = new HashMap<>();
+		this.wantsToPickup = (itemStack) -> false;
 	}
 
 	public static GolemBase create(final Level world, final ResourceLocation material) {
@@ -237,8 +244,8 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 			container.getBehaviors().forEach(b -> b.onAttachData(this));
 			// allow behaviors to register goals
 			container.getBehaviors().forEach(b -> b.onRegisterGoals(this));
-			// allow behaviors to register synched data
-			container.getBehaviors().forEach(b -> b.onRegisterSynchedData(this));
+			// update wants to pickup
+			this.wantsToPickup = calculateWantsToPickup();
 		}
 		// update light and power
 		this.lightLevel = calculateLightLevel();
@@ -250,11 +257,11 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 	}
 
 	/** @return the {@link GolemContainer} that was created by ID **/
+	@Nullable
 	public GolemContainer getGolemContainer() {
 		return this.cachedContainer;
 	}
 
-	/** @return the current biome color (only updated client-side) **/
 	@Override
 	public int getBiomeColor() {
 		return biomeColor;
@@ -265,6 +272,26 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 		return this.isSunBurnTick();
 	}
 
+	@Override
+	public int getAmmo() {
+		return getEntityData().get(AMMO);
+	}
+
+	@Override
+	public void setAmmo(final int ammo) {
+		this.getEntityData().set(AMMO, ammo);
+	}
+
+	@Override
+	public void setFuel(int fuel) {
+		this.getEntityData().set(FUEL, fuel);
+	}
+
+	@Override
+	public int getFuel() {
+		return this.getEntityData().get(FUEL);
+	}
+
 	//// SYNCHED DATA ////
 
 	@Override
@@ -273,6 +300,8 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 		this.getEntityData().define(GOLEM, Optional.empty());
 		this.getEntityData().define(CHILD, Boolean.FALSE);
 		this.getEntityData().define(VARIANT, (byte) 0);
+		this.getEntityData().define(FUEL, 0);
+		this.getEntityData().define(AMMO, 0);
 	}
 
 	@Override
@@ -563,6 +592,16 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 	//// BEHAVIOR HOOKS ////
 
 	@Override
+	public void setTarget(@Nullable LivingEntity pTarget) {
+		final LivingEntity oldTarget = this.getTarget();
+		super.setTarget(pTarget);
+		// notify behaviors of target change
+		if(isEffectiveAi() && !Objects.equals(oldTarget, this.getTarget())) {
+			getContainer().ifPresent(container -> container.getBehaviors().getActiveBehaviors(this).forEach(b -> b.onTarget(this, pTarget)));
+		}
+	}
+
+	@Override
 	public boolean doHurtTarget(Entity target) {
 		if (super.doHurtTarget(target)) {
 			// process golem container
@@ -704,7 +743,6 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 		return this.playerInMenu != null && this.position().closerThan(this.playerInMenu.position(), distance);
 	}
 
-
 	//// NBT ////
 
 	@Override
@@ -784,6 +822,7 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 	public void setVariant(int variant) {
 		if (variant >= 0 && !level().isClientSide()) {
 			this.getEntityData().set(VARIANT, (byte)variant);
+			this.wantsToPickup = calculateWantsToPickup();
 		}
 		this.lightLevel = calculateLightLevel();
 		this.powerLevel = calculatePowerLevel();
@@ -802,6 +841,31 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 	}
 
 	//// INVENTORY ////
+
+	protected Predicate<ItemStack> calculateWantsToPickup() {
+		final Optional<GolemContainer> oContainer = getContainer();
+		if(oContainer.isEmpty()) {
+			return (itemStack) -> false;
+		}
+		Predicate<ItemStack> predicate = null;
+		// iterate behaviors
+		for(Behavior b : oContainer.get().getBehaviors().getActiveBehaviors(this)) {
+			if(b instanceof AbstractShootBehavior behavior) {
+				// update predicate
+				if(predicate == null) {
+					predicate = (itemStack) -> behavior.consume() && behavior.isAmmo(itemStack);
+				} else {
+					predicate = predicate.and((itemStack) -> behavior.consume() && behavior.isAmmo(itemStack));
+				}
+			}
+		}
+		// check nonnull
+		if(predicate != null) {
+			return predicate;
+		}
+		// never pickup
+		return (itemStack) -> false;
+	}
 
 	@Override
 	public void setupInventory() {
@@ -825,7 +889,7 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 
 	@Override
 	public boolean wantsToPickUp(ItemStack stack) {
-		if(stack.isEmpty() || !(stack.getItem() instanceof ArrowItem)) {
+		if(stack.isEmpty()) {
 			return false;
 		}
 		// resolve container
@@ -834,7 +898,7 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 			return false;
 		}
 		// resolve behaviors
-		if(isEffectiveAi() && !oContainer.get().getBehaviors().hasActiveBehavior(ShootArrowsBehavior.class, this)) {
+		if(isEffectiveAi() && !wantsToPickup.test(stack)) {
 			return false;
 		}
 		// validate inventory

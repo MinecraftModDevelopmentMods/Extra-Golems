@@ -1,6 +1,6 @@
 package com.mcmoddev.golems.client.menu.guide_book.page;
 
-import com.mcmoddev.golems.client.menu.guide_book.book.IBookScreen;
+import com.mcmoddev.golems.client.menu.guide_book.IBookScreen;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;

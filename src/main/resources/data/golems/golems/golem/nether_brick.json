@@ -46,6 +46,11 @@
 		"target": "enemy",
 		"chance": 0.9,
 		"seconds": 2
+	  },
+	  {
+		"type": "golems:shoot_fireballs",
+		"consume": true,
+		"attack_interval": 40
 	  }
 	]
   }
