@@ -19,6 +19,7 @@ import com.mcmoddev.golems.data.behavior.PowerBehavior;
 import com.mcmoddev.golems.data.behavior.SetFireBehavior;
 import com.mcmoddev.golems.data.behavior.ShootArrowsBehavior;
 import com.mcmoddev.golems.data.behavior.ShootFireballsBehavior;
+import com.mcmoddev.golems.data.behavior.ShootShulkerBulletsBehavior;
 import com.mcmoddev.golems.data.behavior.ShootSnowballsBehavior;
 import com.mcmoddev.golems.data.behavior.SplitBehavior;
 import com.mcmoddev.golems.data.behavior.SummonBehavior;
@@ -249,6 +250,7 @@ public final class EGRegistry {
 		public static final RegistryObject<Codec<ShootArrowsBehavior>> SHOOT_ARROWS = BEHAVIOR_SERIALIZER.register("shoot_arrows", () -> ShootArrowsBehavior.CODEC);
 		public static final RegistryObject<Codec<ShootFireballsBehavior>> SHOOT_FIREBALLS = BEHAVIOR_SERIALIZER.register("shoot_fireballs", () -> ShootFireballsBehavior.CODEC);
 		public static final RegistryObject<Codec<ShootSnowballsBehavior>> SHOOT_SNOWBALLS = BEHAVIOR_SERIALIZER.register("shoot_snowballs", () -> ShootSnowballsBehavior.CODEC);
+		public static final RegistryObject<Codec<ShootShulkerBulletsBehavior>> SHOOT_SHULKER_BULLETS = BEHAVIOR_SERIALIZER.register("shoot_shulker_bullets", () -> ShootShulkerBulletsBehavior.CODEC);
 		public static final RegistryObject<Codec<SplitBehavior>> SPLIT = BEHAVIOR_SERIALIZER.register("split", () -> SplitBehavior.CODEC);
 		public static final RegistryObject<Codec<SetFireBehavior>> SET_FIRE = BEHAVIOR_SERIALIZER.register("set_fire", () -> SetFireBehavior.CODEC);
 		public static final RegistryObject<Codec<SummonBehavior>> SUMMON = BEHAVIOR_SERIALIZER.register("summon", () -> SummonBehavior.CODEC);
