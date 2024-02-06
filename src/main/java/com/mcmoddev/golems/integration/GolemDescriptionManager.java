@@ -5,6 +5,7 @@ import com.mcmoddev.golems.data.behavior.AbstractShootBehavior;
 import com.mcmoddev.golems.data.behavior.ShootArrowsBehavior;
 import com.mcmoddev.golems.data.behavior.ShootFireballsBehavior;
 import com.mcmoddev.golems.data.behavior.ShootSnowballsBehavior;
+import com.mcmoddev.golems.data.behavior.UseFuelBehavior;
 import com.mcmoddev.golems.data.behavior.data.ShootBehaviorData;
 import com.mcmoddev.golems.data.behavior.data.UseFuelBehaviorData;
 import com.mcmoddev.golems.entity.IExtraGolem;
@@ -59,8 +60,13 @@ public abstract class GolemDescriptionManager {
 		if(container.getBehaviors().hasBehavior(ShootSnowballsBehavior.class)) {
 			addAmmoInfo(entity, "snowballs", list);
 		}
-		// add behavior data
-		entity.getBehaviorData(UseFuelBehaviorData.class).ifPresent(data -> addFuelInfo(data, list));
+		// add fuel amount
+		if(container.getBehaviors().hasBehavior(UseFuelBehavior.class)) {
+			final List<UseFuelBehavior> useFuelBehavior = container.getBehaviors().getActiveBehaviors(UseFuelBehavior.class, entity);
+			if(!useFuelBehavior.isEmpty()) {
+				addFuelInfo(entity, useFuelBehavior.get(0), list);
+			}
+		}
 		// add behavior descriptions only in extended mode
 		if (extended) {
 			container.getBehaviors().forEach(b -> b.onAddDescriptions(registryAccess, list, tooltipFlag));
@@ -71,14 +77,15 @@ public abstract class GolemDescriptionManager {
 	}
 
 	/**
-	 * Adds information about the amount of fuel in the golem's inventory
+	 * Adds information about the amount of fuel stored in the golem
 	 *
-	 * @param data the fuel behavior data
+	 * @param entity the entity
+	 * @param behavior the fuel behavior
 	 * @param list the description list
 	 */
-	protected void addFuelInfo(final UseFuelBehaviorData data, final List<Component> list) {
+	protected void addFuelInfo(final IExtraGolem entity, final UseFuelBehavior behavior, final List<Component> list) {
 		// determine fuel percentage
-		final float percentFuel = data.getFuelPercentage() * 100.0F;
+		final float percentFuel = 100.0F * (float) entity.getFuel() / (float) behavior.getMaxFuel();
 		// determine text color
 		final ChatFormatting color;
 		if (percentFuel < 6) {
@@ -91,14 +98,14 @@ public abstract class GolemDescriptionManager {
 		// if sneaking, show exact value, otherwise show percentage value
 		final String fuelString;
 		if (extended) {
-			fuelString = String.format("%d / %d", data.getFuel(), data.getMaxFuel());
+			fuelString = String.format("%d / %d", entity.getFuel(), behavior.getMaxFuel());
 		} else {
 			fuelString = String.format("%.1f", percentFuel) + "%";
 		}
 		// create fuel amount text
 		final Component fuelAmount = Component.literal(fuelString).withStyle(color);
 		// add the description
-		list.add(Component.translatable("golem.description.behavior.fuel", fuelAmount).withStyle(ChatFormatting.GRAY));
+		list.add(Component.translatable("golem.description.fuel", fuelAmount).withStyle(ChatFormatting.GRAY));
 	}
 
 	/**
