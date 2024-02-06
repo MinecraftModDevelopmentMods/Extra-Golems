@@ -7,7 +7,9 @@ public enum TriggerType implements StringRepresentable {
 	HURT("hurt"),
 	ATTACK("attack"),
 	TICK("tick"),
-	LIGHTNING("lightning");
+	TARGET("target"),
+	LIGHTNING("lightning"),
+	DEATH("death");
 
 	public static final Codec<TriggerType> CODEC = StringRepresentable.fromEnum(TriggerType::values);
 

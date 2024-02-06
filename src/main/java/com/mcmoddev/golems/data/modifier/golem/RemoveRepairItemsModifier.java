@@ -46,7 +46,7 @@ public class RemoveRepairItemsModifier extends Modifier {
 
 	@Override
 	public void apply(Golem.Builder builder) {
-		builder.repairItems(b -> getPredicates().forEach(b::remove));
+		builder.repairItems(b -> b.remove(this.predicate));
 	}
 
 	@Override

@@ -20,8 +20,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LightningBolt;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
 import java.util.Objects;
@@ -112,6 +114,20 @@ public class UpdateGolemBehavior extends Behavior {
 	@Override
 	public void onStruckByLightning(IExtraGolem entity, LightningBolt lightningBolt) {
 		if(trigger == TriggerType.LIGHTNING) {
+			apply(entity);
+		}
+	}
+
+	@Override
+	public void onTarget(IExtraGolem entity, @Nullable LivingEntity target) {
+		if(this.trigger == TriggerType.TARGET && target != null) {
+			apply(entity);
+		}
+	}
+
+	@Override
+	public void onDie(IExtraGolem entity, DamageSource source) {
+		if(this.trigger == TriggerType.DEATH) {
 			apply(entity);
 		}
 	}

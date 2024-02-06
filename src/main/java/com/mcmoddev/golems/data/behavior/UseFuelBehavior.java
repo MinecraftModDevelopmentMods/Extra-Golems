@@ -166,8 +166,8 @@ public class UseFuelBehavior extends Behavior {
 			// update the player's held item
 			player.setItemInHand(hand, stack);
 			// play sound and send particles
-			mob.playSound(SoundEvents.GENERIC_BURN, 1.0F, 0.8F + 0.4F * mob.getRandom().nextFloat());
-			((ServerLevel)mob.level()).sendParticles(ParticleTypes.FLAME, mob.getX(), mob.getY(0.6D), mob.getZ(), 6, 0.5D, 0.25D, 0.5D, 0);
+			mob.playSound(SoundEvents.FIRE_AMBIENT, 1.0F, 0.8F + 0.4F * mob.getRandom().nextFloat());
+			((ServerLevel)mob.level()).sendParticles(ParticleTypes.FLAME, mob.getX(), mob.getY(0.6D), mob.getZ(), 6, 0.4D, 0.25D, 0.4D, 0);
 			return true;
 		}
 

@@ -64,7 +64,7 @@ public class CyclingItemButton extends Button {
 	public void setItems(final List<ItemStack> list) {
 		this.items.clear();
 		this.items.addAll(list);
-		this.itemStack = getItem(index);
+		this.setIndex(index);
 	}
 
 	public List<ItemStack> getItems() {

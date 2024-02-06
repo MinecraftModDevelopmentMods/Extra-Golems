@@ -3,6 +3,7 @@ package com.mcmoddev.golems.data.modifier.golem;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.behavior.Behavior;
 import com.mcmoddev.golems.data.behavior.BehaviorList;
+import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.data.golem.Golem;
 import com.mcmoddev.golems.data.modifier.Modifier;
 import com.mcmoddev.golems.util.EGCodecUtils;
@@ -15,6 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -62,23 +64,37 @@ public class RemoveBehaviorModifier extends Modifier {
 
 		public static final Codec<RemovePredicate> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 				ResourceLocation.CODEC.optionalFieldOf("type").forGetter(o -> Optional.ofNullable(o.type)),
-				EGCodecUtils.MIN_MAX_INTS_CODEC.optionalFieldOf("variant", MinMaxBounds.Ints.ANY).forGetter(o -> o.variant)
+				EGCodecUtils.MIN_MAX_INTS_CODEC.optionalFieldOf("variant", MinMaxBounds.Ints.ANY).forGetter(o -> o.variant),
+				TooltipPredicate.CODEC.optionalFieldOf("tooltip").forGetter(o -> Optional.ofNullable(o.tooltip))
 		).apply(instance, RemovePredicate::new));
 
 		private final @Nullable ResourceLocation type;
 		private final MinMaxBounds.Ints variant;
+		private final @Nullable TooltipPredicate tooltip;
 
-		public RemovePredicate(Optional<ResourceLocation> type, MinMaxBounds.Ints variant) {
+		public RemovePredicate(Optional<ResourceLocation> type, MinMaxBounds.Ints variant, Optional<TooltipPredicate> tooltip) {
 			this.type = type.orElse(null);
 			this.variant = variant;
+			this.tooltip = tooltip.orElse(null);
 		}
 
 		@Override
 		public boolean test(Behavior behavior) {
+			// test type
 			if(type != null && !this.type.equals(EGRegistry.BEHAVIOR_SERIALIZER_SUPPLIER.get().getKey(behavior.getCodec()))) {
 				return false;
 			}
-			return variant.equals(behavior.getVariantBounds());
+			// test tooltip
+			if(tooltip != null && tooltip != behavior.getTooltipPredicate()) {
+				return false;
+			}
+			// test variant
+			final MinMaxBounds.Ints bounds = behavior.getVariantBounds();
+			if(!Objects.equals(bounds.getMin(), variant.getMin()) || !Objects.equals(bounds.getMax(), variant.getMax())) {
+				return false;
+			}
+			// all checks passed
+			return true;
 		}
 	}
 }

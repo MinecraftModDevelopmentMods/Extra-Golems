@@ -186,6 +186,20 @@ public class SummonBehavior extends Behavior {
 	}
 
 	@Override
+	public void onTarget(IExtraGolem entity, @Nullable LivingEntity target) {
+		if(this.trigger == TriggerType.TARGET && target != null) {
+			summonEntity(entity.asMob());
+		}
+	}
+
+	@Override
+	public void onDie(IExtraGolem entity, DamageSource source) {
+		if(this.trigger == TriggerType.DEATH) {
+			summonEntity(entity.asMob());
+		}
+	}
+
+	@Override
 	public List<Component> createDescriptions(RegistryAccess registryAccess) {
 		// create predicate text, if any
 		final Optional<Component> predicateText = createTriggerAndPredicateDescription(trigger, predicates);

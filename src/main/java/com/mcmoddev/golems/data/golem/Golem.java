@@ -43,7 +43,7 @@ public class Golem {
 	).apply(instance, Golem::new));
 	public static final Codec<Holder<Golem>> HOLDER_CODEC = RegistryFileCodec.create(EGRegistry.Keys.GOLEM, Golem.CODEC, true);
 
-	/** The ID of the parent Golem to copy settings **/
+	/** The ID of the parent Golem to copy settings, optional **/
 	private final @Nullable ResourceLocation parent;
 	/** The Attributes of the Golem, required if no parent is specified **/
 	private final @Nullable Attributes attributes;
@@ -76,7 +76,7 @@ public class Golem {
 		this.parent = parent.orElse(null);
 		this.attributes = attributes.orElse(null);
 		if(parent.isEmpty() && attributes.isEmpty()) {
-			throw new IllegalArgumentException("Failed to parse Golem because both parent and attributes are not defined!");
+			throw new IllegalArgumentException("Failed to parse Golem because both parent and attributes are undefined!");
 		}
 		this.blocks = blocks;
 		this.repairItems = repairItems;
@@ -222,17 +222,11 @@ public class Golem {
 			}
 			// model (replaces parent)
 			if(!hasParent || !golem.getLayers().get().getLayers().isEmpty()) {
-				builder.layers(b -> {
-					b.clear();
-					b.addAll(golem.getLayers().get().getLayers());
-				});
+				builder.layers(new LayerList.Builder(golem.getLayers().get().getLayers()));
 			}
 			// behaviors (replaces parent)
-			if(!hasParent || !golem.getBehaviors().get().getBehaviors().isEmpty()) {
-				builder.behaviors(b -> {
-					b.clear();
-					b.addAll(golem.getBehaviors().get().getBehaviors());
-				});
+			if(!hasParent || !golem.getBehaviors().get().getBehaviors().isEmpty() || golem.getBehaviors().unwrap().left().isPresent()) {
+				builder.behaviors(new BehaviorList.Builder(golem.getBehaviors().get().getBehaviors()));
 			}
 			// group (replaces parent)
 			if(golem.getGroup() != null) {

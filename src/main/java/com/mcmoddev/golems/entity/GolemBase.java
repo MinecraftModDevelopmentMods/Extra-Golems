@@ -1,5 +1,6 @@
 package com.mcmoddev.golems.entity;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Streams;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.ExtraGolems;
@@ -474,11 +475,11 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 		}
 		final GolemContainer container = oContainer.get();
 		// take damage from water
-		if(this.isInWaterRainOrBubble() && container.getAttributes().isWeakTo(level().registryAccess(), DamageTypes.DROWN)) {
+		if(this.isInWaterRainOrBubble() && container.getAttributes().isWeakTo(level().registryAccess(), ImmutableSet.of(DamageTypes.DROWN))) {
 			this.hurt(this.damageSources().drown(), 1.0F);
 		}
 		// take damage from heat
-		if(this.level().getBiome(this.blockPosition()).is(BiomeTags.SNOW_GOLEM_MELTS) && container.getAttributes().isWeakTo(level().registryAccess(), DamageTypes.ON_FIRE, DamageTypes.IN_FIRE)) {
+		if(this.level().getBiome(this.blockPosition()).is(BiomeTags.SNOW_GOLEM_MELTS) && container.getAttributes().isWeakTo(level().registryAccess(), ImmutableSet.of(DamageTypes.IN_FIRE, DamageTypes.ON_FIRE))) {
 			this.hurt(this.damageSources().onFire(), 1.0F);
 		}
 		// update behaviors
@@ -527,7 +528,7 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 		}
 		final RegistryAccess registryAccess = level().registryAccess();
 		final Optional<ResourceKey<DamageType>> oTypeKey = pSource.typeHolder().unwrapKey();
-		if(oTypeKey.isPresent() && oContainer.get().getAttributes().isImmuneTo(registryAccess, oTypeKey.get())) {
+		if(oTypeKey.isPresent() && oContainer.get().getAttributes().isImmuneTo(registryAccess, ImmutableSet.of(oTypeKey.get()))) {
 			return true;
 		}
 		return false;
@@ -540,7 +541,7 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 			return super.causeFallDamage(distance, damageMultiplier, source);
 		}
 		// process weak to fall damage
-		if(oContainer.get().getAttributes().isWeakTo(level().registryAccess(), DamageTypes.FALL)) {
+		if(oContainer.get().getAttributes().isWeakTo(level().registryAccess(), ImmutableSet.of(DamageTypes.FALL))) {
 			// this code is copied from the super.super.causeFallDamage method since IronGolem overrides it to do nothing
 			float[] ret = net.minecraftforge.common.ForgeHooks.onLivingFall(this, distance, damageMultiplier);
 			if (ret == null) return false;
@@ -563,12 +564,21 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 	}
 
 	@Override
+	public boolean canFreeze() {
+		final Optional<GolemContainer> oContainer = getContainer();
+		if(oContainer.isEmpty()) {
+			return super.canFreeze();
+		}
+		return !oContainer.get().getAttributes().isImmuneTo(level().registryAccess(), ImmutableSet.of(DamageTypes.FREEZE));
+	}
+
+	@Override
 	public boolean fireImmune() {
 		final Optional<GolemContainer> oContainer = getContainer();
 		if(oContainer.isEmpty()) {
 			return super.fireImmune();
 		}
-		return oContainer.get().getAttributes().isImmuneTo(level().registryAccess(), DamageTypes.IN_FIRE, DamageTypes.ON_FIRE);
+		return oContainer.get().getAttributes().isImmuneTo(level().registryAccess(), ImmutableSet.of(DamageTypes.IN_FIRE, DamageTypes.ON_FIRE));
 	}
 
 	@Override
@@ -577,7 +587,7 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 		if(oContainer.isEmpty()) {
 			return super.ignoreExplosion();
 		}
-		return oContainer.get().getAttributes().isImmuneTo(level().registryAccess(), DamageTypes.EXPLOSION, DamageTypes.PLAYER_EXPLOSION);
+		return oContainer.get().getAttributes().isImmuneTo(level().registryAccess(), ImmutableSet.of(DamageTypes.EXPLOSION, DamageTypes.PLAYER_EXPLOSION));
 	}
 
 	@Override
@@ -586,7 +596,7 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 		if(oContainer.isEmpty()) {
 			return super.isSensitiveToWater();
 		}
-		return oContainer.get().getAttributes().isWeakTo(level().registryAccess(), DamageTypes.DROWN);
+		return oContainer.get().getAttributes().isWeakTo(level().registryAccess(), ImmutableSet.of(DamageTypes.DROWN));
 	}
 
 	//// BEHAVIOR HOOKS ////

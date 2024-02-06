@@ -42,9 +42,13 @@ public class TableOfContentsButton extends ImageButton {
 		this.index = index;
 		// update message
 		final Component message = entry.getMessage(0);
-		final int messageWidth = (this.width - 18 - 2 * 2);
-		final String sMessage = StringUtil.truncateStringIfNecessary(ChatFormatting.stripFormatting(message.getString()), (int) (messageWidth / 4.8F), true);
-		this.setMessage(Component.literal(sMessage).withStyle(message.getStyle()));
+		final int maxWidth = (this.width - 18 - 2 * 2);
+		if(font.wordWrapHeight(message, maxWidth) > font.lineHeight * 2) {
+			final String sMessage = StringUtil.truncateStringIfNecessary(ChatFormatting.stripFormatting(message.getString()), (int) (maxWidth / 4.8F), true);
+			this.setMessage(Component.literal(sMessage).withStyle(message.getStyle()));
+		} else {
+			this.setMessage(message);
+		}
 		// update tooltip
 		final Component tooltip = message.copy();
 		if(Minecraft.getInstance().options.advancedItemTooltips) {
@@ -69,8 +73,10 @@ public class TableOfContentsButton extends ImageButton {
 		ItemStack itemStack = this.entry.getItem(index);
 		graphics.renderItem(itemStack, posX, posY);
 		// draw the message
+		int maxWidth = (this.width - 18 - 2 * 2);
 		posX += 18;
-		posY = this.getY() + (this.height - font.lineHeight) / 2;
-		graphics.drawString(font, getMessage(), posX, posY, 0, false);
+		posY = this.getY() + 1 + (this.height - font.wordWrapHeight(getMessage(), maxWidth)) / 2;
+		graphics.drawWordWrap(font, getMessage(), posX, posY, maxWidth, 0);
+		//graphics.drawString(font, getMessage(), posX, posY, 0, false);
 	}
 }

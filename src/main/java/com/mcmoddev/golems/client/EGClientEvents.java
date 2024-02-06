@@ -33,7 +33,7 @@ public final class EGClientEvents {
 
 		@SubscribeEvent
 		public static void setupClient(final FMLClientSetupEvent event) {
-			event.enqueueWork(() -> MenuScreens.register(EGRegistry.MenuReg.DISPENSER_GOLEM_MENU.get(), GolemInventoryScreen::new));
+			event.enqueueWork(() -> MenuScreens.register(EGRegistry.MenuReg.GOLEM_INVENTORY.get(), GolemInventoryScreen::new));
 		}
 
 		@SubscribeEvent

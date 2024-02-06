@@ -210,7 +210,7 @@ public final class EGRegistry {
 			MENU_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
 		}
 
-		public static final RegistryObject<MenuType<GolemInventoryMenu>> DISPENSER_GOLEM_MENU = MENU_TYPES.register("dispenser_portable",
+		public static final RegistryObject<MenuType<GolemInventoryMenu>> GOLEM_INVENTORY = MENU_TYPES.register("golem_inventory",
 				() -> new MenuType<>(GolemInventoryMenu::new, FeatureFlagSet.of()));
 	}
 

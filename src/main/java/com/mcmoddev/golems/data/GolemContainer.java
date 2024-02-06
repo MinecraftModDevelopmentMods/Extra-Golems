@@ -16,6 +16,9 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.util.thread.EffectiveSide;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -128,16 +131,56 @@ public class GolemContainer {
 	//// REGISTRY ////
 
 	private static final Map<ResourceLocation, GolemContainer> REGISTRY = new HashMap<>();
+	private static final Map<ResourceLocation, GolemContainer> CLIENT_REGISTRY = new HashMap<>();
 
+	/**
+	 * @param isClientSide true to use the client side registry, necessary for caching when using LAN servers
+	 * @return the {@link GolemContainer} registry
+	 */
+	private static Map<ResourceLocation, GolemContainer> getRegistry(final boolean isClientSide) {
+		if(isClientSide) {
+			return CLIENT_REGISTRY;
+		}
+		return REGISTRY;
+	}
+
+	/**
+	 * @param registryAccess the registry access
+	 * @param id the {@link Golem} ID
+	 * @return the cached {@link GolemContainer}
+	 */
 	public static GolemContainer getOrCreate(final RegistryAccess registryAccess, final ResourceLocation id) {
 		// get existing entry
-		final GolemContainer entry = REGISTRY.get(id);
+		final Map<ResourceLocation, GolemContainer> registry = getRegistry(EffectiveSide.get().isClient());
+		final GolemContainer entry = registry.get(id);
 		if(entry != null) {
 			return entry;
 		}
 		// create new entry
 		final GolemContainer container = new GolemContainer(registryAccess, id);
-		REGISTRY.put(id, container);
+		registry.put(id, container);
 		return container;
+	}
+
+	/**
+	 * Loads all values in the {@link Golem} registry and creates {@link GolemContainer}s for each one.
+	 * @param registryAccess the registry access
+	 */
+	@ApiStatus.Internal
+	public static void populate(final RegistryAccess registryAccess) {
+		// load golem registry
+		final Registry<Golem> registry = registryAccess.registryOrThrow(EGRegistry.Keys.GOLEM);
+		// resolve golem containers when the server starts to avoid lag spikes later
+		for(ResourceLocation id : registry.keySet()) {
+			GolemContainer.getOrCreate(registryAccess, id);
+		}
+	}
+
+	/**
+	 * Clears the {@link GolemContainer} registry
+	 */
+	@ApiStatus.Internal
+	public static void reset() {
+		getRegistry(EffectiveSide.get().isClient()).clear();
 	}
 }

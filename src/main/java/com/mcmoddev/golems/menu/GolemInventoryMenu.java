@@ -25,7 +25,7 @@ public class GolemInventoryMenu extends AbstractContainerMenu {
 	}
 
 	public GolemInventoryMenu(final int id, final Inventory playerInv, final Container inv, @Nullable final IExtraGolem entity, ContainerLevelAccess access) {
-		super(EGRegistry.MenuReg.DISPENSER_GOLEM_MENU.get(), id);
+		super(EGRegistry.MenuReg.GOLEM_INVENTORY.get(), id);
 		checkContainerSize(inv, 9);
 		this.container = inv;
 		this.entity = entity;

@@ -28,12 +28,15 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.MobSpawnEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
+import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
@@ -63,13 +66,33 @@ public final class EGEvents {
 
 		@SubscribeEvent
 		public static void onServerStarted(final ServerStartedEvent event) {
-			// load golem registry
-			final RegistryAccess registryAccess = event.getServer().registryAccess();;
-			final Registry<Golem> registry = registryAccess.registryOrThrow(EGRegistry.Keys.GOLEM);
-			// resolve golem containers when the server starts to avoid lag spikes later
-			for(ResourceLocation id : registry.keySet()) {
-				GolemContainer.getOrCreate(registryAccess, id);
+			GolemContainer.populate(event.getServer().registryAccess());
+		}
+
+		@SubscribeEvent
+		public static void onServerStopping(final ServerStoppingEvent event) {
+			GolemContainer.reset();
+		}
+
+		@SubscribeEvent
+		public static void onPlayerLoggedIn(final PlayerEvent.PlayerLoggedInEvent event) {
+			if(event.getEntity().level().isClientSide()) {
+				GolemContainer.reset();
+				GolemContainer.populate(event.getEntity().level().registryAccess());
 			}
+		}
+
+		@SubscribeEvent
+		public static void onPlayerLoggedOut(final PlayerEvent.PlayerLoggedOutEvent event) {
+			if(event.getEntity().level().isClientSide()) {
+				GolemContainer.reset();
+			}
+		}
+
+		@SubscribeEvent
+		public static void onSyncDatapacks(final OnDatapackSyncEvent event) {
+			GolemContainer.reset();
+			GolemContainer.populate(event.getPlayerList().getServer().registryAccess());
 		}
 
 		/**
@@ -79,10 +102,10 @@ public final class EGEvents {
 		@SubscribeEvent
 		public static void onPlacePumpkin(final BlockEvent.EntityPlaceEvent event) {
 			// if the config allows it, and the block is a CARVED pumpkin...
-			if (!event.isCanceled() && ExtraGolems.CONFIG.pumpkinBuildsGolems() && event.getPlacedBlock().getBlock() == Blocks.CARVED_PUMPKIN
-					&& event.getLevel() instanceof Level) {
+			if (!event.isCanceled() && ExtraGolems.CONFIG.pumpkinBuildsGolems() && event.getPlacedBlock().is(Blocks.CARVED_PUMPKIN)
+					&& event.getLevel() instanceof Level level) {
 				// try to spawn an entity!
-				GolemHeadBlock.trySpawnGolem(event.getEntity(), (Level) event.getLevel(), event.getPos());
+				GolemHeadBlock.trySpawnGolem(event.getEntity(), level, event.getPos());
 			}
 		}
 

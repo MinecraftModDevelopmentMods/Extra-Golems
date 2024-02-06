@@ -1,5 +1,6 @@
 package com.mcmoddev.golems.data.golem;
 
+import com.google.common.collect.ImmutableSet;
 import com.mcmoddev.golems.data.GolemContainer;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.util.DeferredHolderSet;
@@ -28,6 +29,7 @@ import javax.annotation.concurrent.Immutable;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Supplier;
 
 @Immutable
@@ -190,8 +192,8 @@ public class Attributes {
 	 * @param damageTypes one or more damage types
 	 * @return true if the Golem is immune to any of the given damage types
 	 */
-	public boolean isImmuneTo(final RegistryAccess registryAccess, final ResourceKey<DamageType>... damageTypes) {
-		if(null == damageImmune || damageImmune.isEmpty()) {
+	public boolean isImmuneTo(final RegistryAccess registryAccess, final Set<ResourceKey<DamageType>> damageTypes) {
+		if(null == damageImmune || damageImmune.isEmpty() || damageTypes.isEmpty()) {
 			return false;
 		}
 		// resolve registry and holder set
@@ -213,8 +215,8 @@ public class Attributes {
 	 * @param damageTypes one or more damage types
 	 * @return true if the Golem is weak to any of the given damage types
 	 */
-	public boolean isWeakTo(final RegistryAccess registryAccess, final ResourceKey<DamageType>... damageTypes) {
-		if(null == damageWeak || damageWeak.isEmpty()) {
+	public boolean isWeakTo(final RegistryAccess registryAccess, final Set<ResourceKey<DamageType>> damageTypes) {
+		if(null == damageWeak || damageWeak.isEmpty() || damageTypes.isEmpty()) {
 			return false;
 		}
 		// resolve registry and holder set
@@ -277,13 +279,13 @@ public class Attributes {
 	public void updatePathfinding(final PathfinderMob mob) {
 		final RegistryAccess registryAccess = mob.level().registryAccess();
 		// water damage
-		if(isWeakTo(registryAccess, DamageTypes.DROWN)) {
+		if(isWeakTo(registryAccess, ImmutableSet.of(DamageTypes.DROWN))) {
 			mob.setPathfindingMalus(BlockPathTypes.WATER, -1.0F);
 		} else {
 			mob.setPathfindingMalus(BlockPathTypes.WATER, 8.0F);
 		}
 		// fire damage
-		if(isInvulnerable() || isImmuneTo(registryAccess, DamageTypes.IN_FIRE, DamageTypes.ON_FIRE)) {
+		if(isInvulnerable() || isImmuneTo(registryAccess, ImmutableSet.of(DamageTypes.IN_FIRE, DamageTypes.ON_FIRE))) {
 			mob.setPathfindingMalus(BlockPathTypes.LAVA, 8.0F);
 			mob.setPathfindingMalus(BlockPathTypes.DAMAGE_FIRE, 0.0F);
 			mob.setPathfindingMalus(BlockPathTypes.DANGER_FIRE, 0.0F);
@@ -318,11 +320,11 @@ public class Attributes {
 			list.add(invulnerableText);
 		} else {
 			// add "fireproof" description
-			if (isImmuneTo(registryAccess, DamageTypes.IN_FIRE, DamageTypes.ON_FIRE)) {
+			if (isImmuneTo(registryAccess, ImmutableSet.of(DamageTypes.IN_FIRE, DamageTypes.ON_FIRE))) {
 				list.add(fireImmuneText);
 			}
 			// add "explosion-proof" description
-			if (isImmuneTo(registryAccess, DamageTypes.EXPLOSION, DamageTypes.PLAYER_EXPLOSION)) {
+			if (isImmuneTo(registryAccess, ImmutableSet.of(DamageTypes.EXPLOSION, DamageTypes.PLAYER_EXPLOSION))) {
 				list.add(explosionImmuneText);
 			}
 		}
