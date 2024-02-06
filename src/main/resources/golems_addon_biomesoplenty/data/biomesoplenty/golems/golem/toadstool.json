@@ -5,23 +5,20 @@
   "blocks": {
 	"arms": [
 	  "minecraft:mushroom_stem",
-	  "minecraft:brown_mushroom_block"
+	  "biomesoplenty:toadstool_block"
 	],
 	"legs": [
 	  "minecraft:mushroom_stem",
-	  "minecraft:brown_mushroom_block"
+	  "biomesoplenty:toadstool_block"
 	],
-	"body": [
-	  "minecraft:mushroom_stem",
-	  "minecraft:brown_mushroom_block"
-	]
+	"body": "biomesoplenty:toadstool_block"
   },
   "repair_items": {
 	"minecraft:mushroom_stem": 0.5,
-	"minecraft:brown_mushroom_block": 0.5,
-	"minecraft:brown_mushroom": 0.15
+    "biomesoplenty:toadstool_block": 0.5,
+	"biomesoplenty:toadstool": 0.15
   },
-  "model": "golems:brown_mushroom",
+  "model": "biomesoplenty:toadstool",
   "brain": {
 	"behavior": [
 	  {
@@ -42,8 +39,8 @@
 	  {
 		"type": "golems:place",
 		"chance": 0.009,
-		"display_name": "block.minecraft.brown_mushroom",
-		"block": "minecraft:brown_mushroom"
+		"display_name": "block.biomesoplenty.toadstool",
+		"block": "biomesoplenty:toadstool"
 	  }
 	]
   }

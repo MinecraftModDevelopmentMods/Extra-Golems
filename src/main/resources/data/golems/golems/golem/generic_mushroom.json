@@ -1,0 +1,31 @@
+{
+  "attributes": {
+    "health": 30.0,
+    "attack": 7.0,
+    "speed": 0.3,
+	"knockback_resistance": 0.2,
+	"swim_ability": "float",
+	"sound": "minecraft:grass"
+  },
+  "group": "golems:mushroom",
+  "hidden": true,
+  "brain": {
+	"behavior": [
+	  {
+		"type": "golems:effect",
+		"trigger": "tick",
+		"predicate": [
+		  "night"
+		],
+		"chance": 0.0125,
+		"apply": {
+		  "target": "self",
+		  "effect": {
+			"id": "minecraft:regeneration",
+			"duration": 300
+		  }
+		}
+	  }
+	]
+  }
+}

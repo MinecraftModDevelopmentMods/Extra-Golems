@@ -1,24 +1,17 @@
 {
-  "attributes": {
-    "health": 40.0,
-    "attack": 2.5,
-    "speed": 0.19,
-	"knockback_resistance": 0.0,
-	"swim_ability": "float",
-	"sound": "minecraft:moss"
-  },
+  "parent": "golems:moss",
   "group": "golems:moss",
   "blocks": {
-	"all": "minecraft:moss_block"
+	"all": "biomesoplenty:glowing_moss_block"
   },
   "repair_items": {
-    "minecraft:moss_block": 0.5,
-	"minecraft:moss_carpet": 0.15
+    "biomesoplenty:glowing_moss_block": 0.5,
+	"biomesoplenty:glowing_moss_carpet": 0.15
   },
   "particle": {
-	"type": "minecraft:spore_blossom_air"
+	"type": "minecraft:warped_spore"
   },
-  "model": "golems:moss",
+  "model": "biomesoplenty:glowing_moss",
   "brain": {
 	"behaviors": [
 	  {
@@ -34,12 +27,16 @@
 		}
 	  },
 	  {
+		"type": "golems:light",
+		"light": 5
+	  },
+	  {
 		"type": "golems:place",
 		"trigger": "tick",
 		"position": "self",
 		"chance": 1.0,
 		"block": {
-		  "Name": "minecraft:moss_carpet"
+		  "Name": "biomesoplenty:glowing_moss_carpet"
 		}
 	  }
 	]

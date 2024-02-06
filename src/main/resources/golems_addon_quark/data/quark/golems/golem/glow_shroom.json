@@ -1,13 +1,7 @@
 {
-  "attributes": {
-    "health": 30.0,
-    "attack": 7.0,
-    "speed": 0.3,
-	"knockback_resistance": 0.2,
-	"swim_ability": "float",
-	"sound": "minecraft:grass"
-  },
+  "parent": "golems:generic_mushroom",
   "group": "golems:mushroom",
+  "hidden": false,
   "blocks": {
 	"all": [
 	  "quark:glow_shroom_stem",
@@ -39,7 +33,8 @@
 	  },
 	  {
 		"type": "golems:place",
-		"chance": 0.009,
+		"predicate": "night",
+		"chance": 0.004,
 		"display_name": "block.quark.glow_shroom",
 		"block": "quark:glow_shroom"
 	  }

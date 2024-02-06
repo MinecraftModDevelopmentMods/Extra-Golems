@@ -1,0 +1,13 @@
+{
+  "parent": "golems:sandstone",
+  "group": "golems:sandstone",
+  "blocks": {
+	"all": [
+	  "biomesoplenty:orange_sandstone",
+	  "biomesoplenty:cut_orange_sandstone",
+	  "biomesoplenty:chiseled_orange_sandstone",
+	  "biomesoplenty:smooth_orange_sandstone"
+	]
+  },
+  "model": "biomesoplenty:orange_sandstone"
+}

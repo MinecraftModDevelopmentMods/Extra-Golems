@@ -1,0 +1,20 @@
+{
+  "parent": "golems:generic_log",
+  "attributes": {
+	"immune": [
+	  "minecraft:in_fire",
+	  "minecraft:on_fire"
+	]
+  },
+  "hidden": true,
+  "blocks": {
+	"arms": "#biomesoplenty:hellbark_logs",
+	"legs": "#biomesoplenty:hellbark_logs",
+	"body": [
+	  "biomesoplenty:stripped_hellbark_log",
+	  "biomesoplenty:stripped_hellbark_wood"
+	]
+  },
+  "model": "biomesoplenty:stripped_hellbark_log",
+  "brain": "golems:empty"
+}

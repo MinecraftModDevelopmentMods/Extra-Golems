@@ -29,3 +29,15 @@ issueTrackerURL="https://github.com/MinecraftModDevelopmentMods/Extra-Golems/iss
     versionRange="[11.7.1,)"
     ordering="NONE"
     side="CLIENT"
+[[dependencies.golems]]
+    modId="quark"
+    mandatory=false
+    versionRange="[4.0-433,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.golems]]
+    modId="biomesoplenty"
+    mandatory=false
+    versionRange="[1.20.1-18.0.0.598,)"
+    ordering="NONE"
+    side="BOTH"

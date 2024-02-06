@@ -1,0 +1,15 @@
+{
+  "layers": [
+	{
+	  "texture": "minecraft:mushroom_stem",
+	  "template": "golems:template/mushroom_lower"
+	},
+	{
+	  "texture": "biomesoplenty:glowshroom_block",
+	  "template": "golems:template/mushroom_upper"
+	},
+	{
+	  "texture": "#golems:eyes"
+	}
+  ]
+}

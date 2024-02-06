@@ -1,0 +1,9 @@
+{
+  "layers": [
+	{
+	  "texture": "biomesoplenty:orange_sandstone",
+	  "template": "golems:template"
+	},
+	"golems:eyes_and_vines"
+  ]
+}

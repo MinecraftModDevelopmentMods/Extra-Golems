@@ -1,0 +1,11 @@
+{
+  "layers": [
+	{
+	  "texture": "biomesoplenty:rose_quartz_block",
+	  "template": "golems:template/ice"
+	},
+	{
+	  "texture": "#golems:eyes"
+	}
+  ]
+}

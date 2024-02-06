@@ -1,0 +1,20 @@
+{
+  "layers": [
+	{
+	  "texture": "biomesoplenty:brimstone_bricks",
+	  "template": "golems:template"
+	},
+	{
+	  "texture": "biomesoplenty:brimstone_bricks",
+	  "template": "golems:template/hands"
+	},
+	{
+	  "texture": "#golems:vines",
+	  "color": "B02525",
+	  "emissive": true
+	},
+	{
+	  "texture": "#golems:eyes"
+	}
+  ]
+}

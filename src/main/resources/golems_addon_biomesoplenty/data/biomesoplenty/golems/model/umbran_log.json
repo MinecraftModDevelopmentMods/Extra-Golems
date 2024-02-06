@@ -1,0 +1,9 @@
+{
+  "layers": [
+	{
+	  "texture": "biomesoplenty:umbran_log",
+	  "template": "golems:template"
+	},
+	"golems:eyes_and_vines"
+  ]
+}

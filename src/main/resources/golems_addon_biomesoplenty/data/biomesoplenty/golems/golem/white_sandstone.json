@@ -1,0 +1,13 @@
+{
+  "parent": "golems:sandstone",
+  "group": "golems:sandstone",
+  "blocks": {
+	"all": [
+	  "biomesoplenty:white_sandstone",
+	  "biomesoplenty:cut_white_sandstone",
+	  "biomesoplenty:chiseled_white_sandstone",
+	  "biomesoplenty:smooth_white_sandstone"
+	]
+  },
+  "model": "biomesoplenty:white_sandstone"
+}

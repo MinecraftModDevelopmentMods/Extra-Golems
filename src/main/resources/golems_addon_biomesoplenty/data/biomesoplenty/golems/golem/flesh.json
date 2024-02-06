@@ -1,0 +1,21 @@
+{
+  "attributes": {
+    "health": 94,
+    "attack": 8.5,
+    "armor": 1.5,
+	"swim_ability": "float",
+	"sound": "minecraft:slime_block"
+  },
+  "group": "biomesoplenty:flesh",
+  "blocks": {
+	"arms": "#biomesoplenty:flesh",
+	"legs": "#biomesoplenty:flesh",
+	"body": "biomesoplenty:flesh"
+  },
+  "repair_items": {
+    "#biomesoplenty:flesh": 0.5,
+	"minecraft:rotten_flesh": 0.1
+  },
+  "model": "biomesoplenty:flesh",
+  "brain": "golems:empty"
+}
