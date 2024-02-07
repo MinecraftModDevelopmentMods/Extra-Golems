@@ -1,0 +1,13 @@
+{
+  "layers": [
+	{
+	  "texture": "mekanism:block_uranium",
+	  "template": "golems:template"
+	},
+	{
+	  "texture": "mekanism:block_uranium",
+	  "template": "golems:template/hands"
+	},
+	"golems:eyes_and_vines"
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "attributes": {
+    "health": 70.0,
+    "attack": 7.5,
+    "knockback_resistance": 0.6,
+	"ignore": [
+	  "minecraft:poison"
+	],
+	"sound": "minecraft:metal"
+  },
+  "group": "golems:ore",
+  "blocks": {
+	"all": "#forge:storage_blocks/uranium"
+  },
+  "repair_items": {
+    "#forge:storage_blocks/uranium": 0.5,
+    "#forge:ingots/uranium": 0.25
+  },
+  "model": "mekanism:uranium",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:effect",
+		"trigger": "tick",
+		"chance": 0.25,
+		"apply": {
+		  "target": "area",
+		  "radius": 2.5,
+		  "effect": {
+			"id": "minecraft:poison",
+			"amplifier": 1,
+			"duration": 60
+		  }
+		}
+	  }
+	]
+  }
+}

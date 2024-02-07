@@ -1,9 +1,0 @@
-{
-  "base": "mekanism:block_fluorite",
-  "layers": [
-	{
-	  "texture": "mekanism:block_fluorite",
-	  "template": "golems:layer/ice_template"
-	}
-  ]
-}

@@ -1,0 +1,17 @@
+{
+  "attributes": {
+	"health": 144.0,
+	"attack": 10.0,
+	"knockback_resistance": 0.8,
+	"sound": "minecraft:metal"
+  },
+  "blocks": {
+	"all": "#forge:storage_blocks/steel"
+  },
+  "repair_items": {
+    "#forge:storage_blocks/steel": 0.5,
+    "#forge:ingots/steel": 0.15
+  },
+  "model": "mekanism:steel",
+  "brain": "golems:empty"
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "golems:coal",
+  "group": "golems:coal",
+  "blocks": {
+	"all": "#forge:storage_blocks/charcoal"
+  },
+  "model": "golems:charcoal"
+}

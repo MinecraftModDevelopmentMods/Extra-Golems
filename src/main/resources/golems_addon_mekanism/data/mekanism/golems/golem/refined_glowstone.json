@@ -1,0 +1,27 @@
+{
+  "attributes": {
+    "health": 58.0,
+    "attack": 9.5,
+	"immune": [
+	  "minecraft:in_fire",
+	  "minecraft:on_fire"
+	],
+	"sound": "minecraft:metal"
+  },
+  "blocks": {
+	"all": "#forge:storage_blocks/refined_glowstone"
+  },
+  "repair_items": {
+    "#forge:storage_blocks/refined_glowstone": 0.5,
+    "#forge:ingots/refined_glowstone": 0.15
+  },
+  "model": "mekanism:refined_glowstone",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:light",
+		"light": 15
+	  }
+	]
+  }
+}

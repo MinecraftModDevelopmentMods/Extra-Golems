@@ -1,0 +1,20 @@
+{
+  "attributes": {
+	"health": 74.0,
+	"attack": 8.5,
+	"speed": 0.23,
+	"knockback_resistance": 0.6,
+	"sound": "minecraft:metal"
+  },
+  "group": "golems:raw_ore",
+  "blocks": {
+	"all": "#forge:storage_blocks/raw_osmium"
+  },
+  "repair_items": {
+    "#forge:storage_blocks/raw_osmium": 0.5,
+    "#forge:ingots/osmium": 0.25,
+	"#forge:raw_materials/osmium": 0.15
+  },
+  "model": "mekanism:raw_osmium",
+  "brain": "golems:empty"
+}
