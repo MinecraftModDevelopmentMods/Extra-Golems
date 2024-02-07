@@ -41,3 +41,9 @@ issueTrackerURL="https://github.com/MinecraftModDevelopmentMods/Extra-Golems/iss
     versionRange="[1.20.1-18.0.0.598,)"
     ordering="NONE"
     side="BOTH"
+[[dependencies.golems]]
+    modId="thermal"
+    mandatory=false
+    versionRange="[11.0.0,)"
+    ordering="NONE"
+    side="BOTH"

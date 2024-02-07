@@ -1,0 +1,27 @@
+{
+  "attributes": {
+	"health": 134.0,
+	"attack": 11.5,
+	"knockback_resistance": 0.8,
+	"sound": "minecraft:metal"
+  },
+  "blocks": {
+	"all": "#forge:storage_blocks/enderium"
+  },
+  "repair_items": {
+    "#forge:storage_blocks/enderium": 0.5,
+    "#forge:ingots/enderium": 0.15
+  },
+  "model": "thermal:enderium",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:teleport",
+		"radius": 4,
+		"idle_chance": 0.015,
+		"hurt_chance": 0.8,
+		"target_chance": 0.24
+	  }
+	]
+  }
+}

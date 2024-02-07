@@ -1,0 +1,13 @@
+{
+  "layers": [
+	{
+	  "texture": "thermal:sapphire_block",
+	  "template": "golems:template"
+	},
+	{
+	  "texture": "thermal:sapphire_block",
+	  "template": "golems:template/hands"
+	},
+	"golems:eyes_and_vines"
+  ]
+}

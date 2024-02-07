@@ -17,12 +17,13 @@ import java.util.Optional;
  **/
 public class DynamicTextureState {
 
-	public static final int TILES = 8;
-	public ResourceLocation location;
-	public ResourceLocation sourceImage;
-	public ResourceLocation templateImage;
-	public RenderStateShard.TextureStateShard state;
-	public DynamicTexture texture;
+	protected static final int TILES = 8;
+
+	private final ResourceLocation location;
+	private final ResourceLocation sourceImage;
+	private final ResourceLocation templateImage;
+	private final RenderStateShard.TextureStateShard state;
+	private final DynamicTexture dynamicTexture;
 
 	/**
 	 * @param id           a unique ResourceLocation for the location of the DynamicTextureState
@@ -33,6 +34,7 @@ public class DynamicTextureState {
 		location = id;
 		sourceImage = blockName;
 		templateImage = templateName;
+		DynamicTexture texture;
 
 		Optional<Resource> optionalBlockResource = Minecraft.getInstance().getResourceManager().getResource(blockName);
 		Optional<Resource> optionalTemplateResource = Minecraft.getInstance().getResourceManager().getResource(templateName);
@@ -61,20 +63,49 @@ public class DynamicTextureState {
 				}
 			} catch (IOException e) {
 				ExtraGolems.LOGGER.error("Error opening image resource for " + blockName + " with template " + templateName);
-				texture = new DynamicTexture(16 * TILES, 16 * TILES, true);
-				texture.getPixels().fillRect(0, 0, 16 * TILES, 16 * TILES, 0xffffffff);
+				texture = fallback();
 				e.printStackTrace();
 			}
 		} else {
 			ExtraGolems.LOGGER.error("Error locating image resource for " + blockName + " with template " + templateName);
-			texture = new DynamicTexture(16 * TILES, 16 * TILES, true);
-			texture.getPixels().fillRect(0, 0, 16 * TILES, 16 * TILES, 0xffffffff);
+			texture = fallback();
 		}
-
 		// update texture
-		texture.upload();
+		this.dynamicTexture = texture;
+		this.dynamicTexture.upload();
 		TextureManager textureManager = Minecraft.getInstance().getTextureManager();
-		textureManager.register(location, texture);
-		state = new RenderStateShard.TextureStateShard(location, false, false);
+		textureManager.register(location, this.dynamicTexture);
+		this.state = new RenderStateShard.TextureStateShard(this.location, false, false);
+	}
+
+	/**
+	 * @return a texture filled with white ({@code 0xFFFFFFFF}) pixels and no template applied
+	 */
+	private DynamicTexture fallback() {
+		final DynamicTexture texture = new DynamicTexture(16 * TILES, 16 * TILES, true);
+		texture.getPixels().fillRect(0, 0, 16 * TILES, 16 * TILES, 0xffffffff);
+		return texture;
+	}
+
+	//// GETTERS ////
+
+	public ResourceLocation getLocation() {
+		return location;
+	}
+
+	public ResourceLocation getSourceImage() {
+		return sourceImage;
+	}
+
+	public ResourceLocation getTemplateImage() {
+		return templateImage;
+	}
+
+	public RenderStateShard.TextureStateShard getState() {
+		return state;
+	}
+
+	public DynamicTexture getTexture() {
+		return dynamicTexture;
 	}
 }

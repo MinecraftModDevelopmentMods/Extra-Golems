@@ -95,7 +95,7 @@ public class GuideBook {
 				.build());
 
 		// add table of contents section
-		final List<GuideBookGroup> sortedByName = ImmutableList.sortedCopyOf(GuideBookGroup.SORT_BY_NAMESPACE.thenComparing(GuideBookGroup.SORT_BY_NAME), groups);
+		final List<GuideBookGroup> sortedByName = ImmutableList.sortedCopyOf(GuideBookGroup.SORT_BY_NAME, groups);
 		final Consumer<Integer> onPress = i -> {
 			if(isDebug()) {
 				debugSpawnGolem(sortedByName.get(i));

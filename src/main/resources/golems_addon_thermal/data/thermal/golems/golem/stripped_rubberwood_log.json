@@ -1,0 +1,14 @@
+{
+  "parent": "golems:generic_log",
+  "hidden": true,
+  "blocks": {
+	"arms": "#minecraft:logs_that_burn",
+	"legs": "#minecraft:logs_that_burn",
+	"body": [
+	  "thermal:stripped_rubberwood_log",
+	  "thermal:stripped_rubberwood_wood"
+	]
+  },
+  "model": "thermal:stripped_rubberwood_log",
+  "brain": "golems:empty"
+}

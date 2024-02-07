@@ -55,7 +55,7 @@ public class GuideBookGroup implements ITableOfContentsEntry {
 			throw new IllegalArgumentException("GuideBookGroup with multiple entries requires a group ID");
 		}
 		// create sorted list
-		this.list = ImmutableList.sortedCopyOf(GuideBookEntry.SORT_BY_NAMESPACE.thenComparing(GuideBookEntry.SORT_BY_NAME), list);
+		this.list = ImmutableList.sortedCopyOf(GuideBookEntry.SORT_BY_NAME, list);
 		this.group = group;
 		// create title
 		if(group != null) {

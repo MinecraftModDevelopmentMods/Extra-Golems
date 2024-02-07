@@ -1,0 +1,32 @@
+{
+  "parent": "golems:tnt",
+  "group": "golems:explosive",
+  "blocks": {
+	"all": "thermal:redstone_tnt"
+  },
+  "repair_items": {
+    "thermal:redstone_tnt": 0.5,
+	"#forge:gunpowder": 0.15
+  },
+  "model": "thermal:redstone_explosive",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:explode",
+		"radius": 0.05,
+		"fuse": 50,
+		"hurt_chance": 0.10,
+		"attack_chance": 0.14
+	  },
+	  {
+		"type": "golems:summon",
+		"trigger": "death",
+		"target": "position",
+		"entity": "thermal:redstone_tnt",
+		"nbt": "{Fuse:1}",
+		"amount": 4,
+		"tooltip": "hidden"
+	  }
+	]
+  }
+}

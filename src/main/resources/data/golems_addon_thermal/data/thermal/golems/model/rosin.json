@@ -1,9 +1,0 @@
-{
-  "layers": [
-	{
-	  "texture": "thermal:rosin_block",
-	  "template": "golems:template"
-	},
-	"golems:eyes_and_vines"
-  ]
-}

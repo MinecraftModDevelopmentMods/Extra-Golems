@@ -1,0 +1,13 @@
+{
+  "layers": [
+	{
+	  "texture": "thermal:ruby_block",
+	  "template": "golems:template"
+	},
+	{
+	  "texture": "thermal:ruby_block",
+	  "template": "golems:template/hands"
+	},
+	"golems:eyes_and_vines"
+  ]
+}

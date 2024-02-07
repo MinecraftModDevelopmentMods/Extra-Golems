@@ -1,0 +1,19 @@
+{
+  "attributes": {
+	"health": 40.0,
+	"attack": 12.5,
+	"weak": [
+	  "minecraft:fall"
+	],
+	"sound": "minecraft:glass"
+  },
+  "blocks": {
+	"all": "#forge:storage_blocks/ruby"
+  },
+  "repair_items": {
+    "#forge:storage_blocks/ruby": 0.5,
+    "#forge:gems/ruby": 0.15
+  },
+  "model": "thermal:ruby",
+  "brain": "golems:empty"
+}

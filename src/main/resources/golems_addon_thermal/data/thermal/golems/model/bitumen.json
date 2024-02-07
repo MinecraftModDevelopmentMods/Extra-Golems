@@ -1,0 +1,11 @@
+{
+  "layers": [
+	{
+	  "texture": "thermal:bitumen_block",
+	  "template": "golems:template"
+	},
+	{
+	  "texture": "#golems:eyes"
+	}
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "attributes": {
+	"health": 11.0,
+	"attack": 6.0,
+	"swim_ability": "float",
+	"sound": "minecraft:sand"
+  },
+  "blocks": {
+	"all": "thermal:sawdust_block"
+  },
+  "repair_items": {
+    "thermal:sawdust_block": 0.5,
+    "thermal:sawdust": 0.15
+  },
+  "model": "thermal:sawdust",
+  "brain": "golems:empty"
+}

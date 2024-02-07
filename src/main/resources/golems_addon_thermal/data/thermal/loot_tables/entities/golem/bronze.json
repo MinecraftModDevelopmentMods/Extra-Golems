@@ -1,0 +1,39 @@
+{
+  "pools": [
+	{
+	  "rolls": 1,
+	  "entries": [
+		{
+		  "type": "item",
+		  "name": "thermal:bronze_ingot",
+		  "weight": 1,
+		  "functions": [
+			{
+			  "function": "set_count",
+			  "count": {
+				"min": 8,
+				"max": 16
+			  }
+			},
+			{
+			  "function": "looting_enchant",
+			  "count": {
+				"min": 2,
+				"max": 6
+			  }
+			}
+		  ]
+		}
+	  ]
+	},
+	{
+	  "rolls": 1,
+	  "entries": [
+		{
+		  "type": "loot_table",
+		  "name": "golems:entities/_golem_base"
+		}
+	  ]
+	}
+  ]
+}

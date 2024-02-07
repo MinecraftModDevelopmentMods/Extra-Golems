@@ -5,6 +5,7 @@
 	"swim_ability": "float",
 	"sound": "minecraft:gravel"
   },
+  "group": "golems:explosive",
   "blocks": {
 	"all": "minecraft:tnt"
   },

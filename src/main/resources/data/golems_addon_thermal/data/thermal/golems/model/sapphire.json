@@ -1,9 +1,0 @@
-{
-  "layers": [
-	{
-	  "texture": "thermal:sapphire_block",
-	  "template": "golems:template/ice"
-	},
-	"golems:eyes_and_vines"
-  ]
-}

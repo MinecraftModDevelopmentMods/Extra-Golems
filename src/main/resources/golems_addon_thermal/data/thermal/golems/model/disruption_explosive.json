@@ -1,0 +1,12 @@
+{
+  "layers": [
+	{
+	  "texture": "thermal:ender_tnt_side",
+	  "template": "golems:template"
+	},
+	{
+	  "texture": "#golems:layer/tnt"
+	},
+	"golems:eyes_and_vines"
+  ]
+}

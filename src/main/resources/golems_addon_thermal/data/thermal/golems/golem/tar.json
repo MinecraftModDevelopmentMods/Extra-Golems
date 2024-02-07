@@ -1,0 +1,16 @@
+{
+  "attributes": {
+	"health": 36.0,
+	"attack": 5.6,
+	"speed": 0.19
+  },
+  "blocks": {
+	"all": "#forge:storage_blocks/tar"
+  },
+  "repair_items": {
+    "#forge:storage_blocks/tar": 0.5,
+    "#forge:tar": 0.15
+  },
+  "model": "thermal:tar",
+  "brain": "golems:empty"
+}

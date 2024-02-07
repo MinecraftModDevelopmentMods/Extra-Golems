@@ -87,10 +87,13 @@ public class ExplodeBehaviorData implements IBehaviorData {
 	/** Creates an explosion at the entity location **/
 	public void explode() {
 		final Mob mob = entity.asMob();
-		if (!mob.level().isClientSide() && this.explosionRadius > 0) {
+		if (this.explosionRadius > 0) {
+			// discard mob
+			mob.hurt(mob.damageSources().fellOutOfWorld(), Short.MAX_VALUE);
+			// create explosion
 			final Vec3 pos = mob.position();
 			mob.level().explode(mob, pos.x, pos.y, pos.z, (float) this.explosionRadius, Level.ExplosionInteraction.MOB);
-			mob.discard();
+			// create lingering cloud
 			spawnLingeringCloud();
 		}
 	}

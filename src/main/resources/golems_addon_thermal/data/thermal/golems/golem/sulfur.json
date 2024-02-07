@@ -1,0 +1,16 @@
+{
+  "attributes": {
+	"health": 75.0,
+	"attack": 8.2,
+	"knockback_resistance": 0.8
+  },
+  "blocks": {
+	"all": "#forge:storage_blocks/sulfur"
+  },
+  "repair_items": {
+    "#forge:storage_blocks/sulfur": 0.5,
+    "#forge:gems/sulfur": 0.15
+  },
+  "model": "thermal:sulfur",
+  "brain": "golems:empty"
+}

@@ -129,6 +129,11 @@ public class ExplodeBehavior extends Behavior {
 
 	@Override
 	public void onDie(final IExtraGolem entity, final DamageSource source) {
+		// do not execute when entity fell out of world
+		if(source.is(DamageTypes.FELL_OUT_OF_WORLD)) {
+			return;
+		}
+		// create explosion upon death
 		entity.getBehaviorData(ExplodeBehaviorData.class).ifPresent(data -> data.explode());
 	}
 

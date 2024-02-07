@@ -1,0 +1,19 @@
+{
+  "attributes": {
+	"health": 32.0,
+	"attack": 5.0,
+	"knockback_resistance": 0.6,
+	"sound": "minecraft:metal"
+  },
+  "group": "golems:raw_ore",
+  "blocks": {
+	"all": "#forge:storage_blocks/raw_tin"
+  },
+  "repair_items": {
+    "#forge:storage_blocks/raw_tin": 0.5,
+    "#forge:ingots/tin": 0.25,
+	"#forge:raw_materials/tin": 0.15
+  },
+  "model": "thermal:raw_tin",
+  "brain": "golems:empty"
+}

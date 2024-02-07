@@ -22,7 +22,7 @@ public class GolemRenderType extends RenderType {
 	 */
 	public static void reloadDynamicTextureMap() {
 		final Map<ResourceLocation, DynamicTextureState> copy = new HashMap<>(dynamicTextureMap);
-		copy.entrySet().forEach(e -> dynamicTextureMap.put(e.getKey(), new DynamicTextureState(e.getKey(), e.getValue().sourceImage, e.getValue().templateImage)));
+		copy.entrySet().forEach(e -> dynamicTextureMap.put(e.getKey(), new DynamicTextureState(e.getKey(), e.getValue().getSourceImage(), e.getValue().getTemplateImage())));
 	}
 
 	private static TextureStateShard getTextureState(final ResourceLocation texture, final ResourceLocation template) {
@@ -31,7 +31,7 @@ public class GolemRenderType extends RenderType {
 		if (!dynamicTextureMap.containsKey(id)) {
 			dynamicTextureMap.put(id, new DynamicTextureState(id, texture, template));
 		}
-		return dynamicTextureMap.get(id).state;
+		return dynamicTextureMap.get(id).getState();
 	}
 
 	public static RenderType getGolemCutout(final ResourceLocation texture, final ResourceLocation template, final boolean dynamic) {
