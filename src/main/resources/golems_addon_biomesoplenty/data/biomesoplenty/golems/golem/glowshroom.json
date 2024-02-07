@@ -20,7 +20,7 @@
   },
   "model": "biomesoplenty:glowshroom",
   "brain": {
-	"behavior": [
+	"behaviors": [
 	  {
 		"type": "golems:effect",
 		"trigger": "tick",
@@ -38,8 +38,7 @@
 	  },
 	  {
 		"type": "golems:place",
-		"chance": 0.009,
-		"display_name": "block.biomesoplenty.glowshroom",
+		"chance": 0.004,
 		"block": "biomesoplenty:glowshroom"
 	  }
 	]

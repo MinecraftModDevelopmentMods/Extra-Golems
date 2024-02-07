@@ -20,9 +20,12 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.sensing.GolemSensor;
+import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.level.Level;
@@ -139,6 +142,27 @@ public final class EGEvents {
 						&& target.getBehaviorData(UseFuelBehaviorData.class).map(data -> !data.hasFuel()).orElse(false)) {
 					event.setCanceled(true);
 					mob.setLastHurtByMob(null);
+				}
+			}
+		}
+
+		@SubscribeEvent
+		public static void onVillagerTick(final LivingEvent.LivingTickEvent event) {
+			// verify server side villager and tick count
+			if(event.getEntity().isEffectiveAi()
+					&& event.getEntity() instanceof Villager villager
+					&& (villager.tickCount + villager.getId()) % 200 == 0 /* GolemSensor#GOLEM_SCAN_RATE */
+					&& villager.getBrain().hasMemoryValue(MemoryModuleType.NEAREST_LIVING_ENTITIES)) {
+				// load nearest entities list
+				Optional<List<LivingEntity>> oList = villager.getBrain().getMemory(MemoryModuleType.NEAREST_LIVING_ENTITIES);
+				if (oList.isPresent()) {
+					// check if extra golems are in the list
+					// GolemSensor is hardcoded to only check Iron Golem entity type
+					boolean golemDetected = oList.get().stream().anyMatch(e -> e instanceof IExtraGolem);
+					// update golem detected flag
+					if (golemDetected) {
+						GolemSensor.golemDetected(villager);
+					}
 				}
 			}
 		}

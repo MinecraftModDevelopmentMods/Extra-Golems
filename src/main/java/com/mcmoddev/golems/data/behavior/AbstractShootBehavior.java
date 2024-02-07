@@ -3,6 +3,7 @@ package com.mcmoddev.golems.data.behavior;
 import com.mcmoddev.golems.data.behavior.data.ShootBehaviorData;
 import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.entity.IExtraGolem;
+import com.mcmoddev.golems.entity.goal.MoveToItemGoal;
 import com.mcmoddev.golems.menu.GolemInventoryMenu;
 import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mojang.datafixers.Products;
@@ -135,6 +136,11 @@ public abstract class AbstractShootBehavior extends Behavior {
 		AttributeInstance followRange = entity.asMob().getAttribute(Attributes.FOLLOW_RANGE);
 		if(!followRange.hasModifier(RANGED_FOLLOW_BONUS)) {
 			followRange.addPermanentModifier(RANGED_FOLLOW_BONUS);
+		}
+		// register move to item goal
+		if(consume()) {
+			entity.asMob().goalSelector.addGoal(3, new MoveToItemGoal<>(entity.asMob(), 10.0D, 50, 1.0D, this.getVariantBounds()));
+			entity.asMob().setCanPickUpLoot(true);
 		}
 	}
 

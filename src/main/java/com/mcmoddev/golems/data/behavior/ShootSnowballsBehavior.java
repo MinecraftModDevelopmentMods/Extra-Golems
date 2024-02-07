@@ -105,15 +105,6 @@ public class ShootSnowballsBehavior extends AbstractShootBehavior {
 	}
 
 	@Override
-	public void onRegisterGoals(final IExtraGolem entity) {
-		super.onRegisterGoals(entity);
-		if(consume()) {
-			entity.asMob().goalSelector.addGoal(4, new MoveToItemGoal<>(entity.asMob(), 10.0D, 30, 1.0D, this.getVariantBounds()));
-			entity.asMob().setCanPickUpLoot(true);
-		}
-	}
-
-	@Override
 	public List<Component> createDescriptions(RegistryAccess registryAccess) {
 		final ImmutableList.Builder<Component> builder = ImmutableList.builder();
 		builder.add(Component.translatable(PREFIX + "shoot_snowballs").withStyle(ChatFormatting.AQUA));

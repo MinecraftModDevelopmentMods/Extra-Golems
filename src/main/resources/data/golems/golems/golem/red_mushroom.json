@@ -20,7 +20,7 @@
   },
   "model": "golems:red_mushroom",
   "brain": {
-	"behavior": [
+	"behaviors": [
 	  {
 		"type": "golems:effect",
 		"trigger": "tick",
@@ -38,9 +38,9 @@
 	  },
 	  {
 		"type": "golems:place",
-		"chance": 0.009,
-		"display_name": "block.minecraft.red_mushroom",
-		"block": "minecraft:red_mushroom"
+		"chance": 0.004,
+		"block": "minecraft:red_mushroom",
+		"must_survive": false
 	  }
 	]
   }

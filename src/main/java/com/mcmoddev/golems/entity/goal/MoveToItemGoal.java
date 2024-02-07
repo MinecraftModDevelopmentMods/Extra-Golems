@@ -19,12 +19,17 @@ public class MoveToItemGoal<T extends Mob & IVariantProvider> extends Goal imple
 	private final MinMaxBounds.Ints variant;
 
 	public MoveToItemGoal(final T entityIn, final double rangeIn, final int intervalIn, final double speedIn, final MinMaxBounds.Ints variant) {
-		this.variant = variant;
 		this.setFlags(EnumSet.of(Goal.Flag.MOVE));
-		entity = entityIn;
-		range = rangeIn;
-		interval = Math.max(intervalIn, 1);
-		speed = speedIn;
+		this.entity = entityIn;
+		this.range = rangeIn;
+		this.interval = Math.max(intervalIn, 1);
+		this.speed = speedIn;
+		this.variant = variant;
+	}
+
+	@Override
+	public boolean requiresUpdateEveryTick() {
+		return true;
 	}
 
 	@Override

@@ -10,7 +10,7 @@
   "group": "golems:mushroom",
   "hidden": true,
   "brain": {
-	"behavior": [
+	"behaviors": [
 	  {
 		"type": "golems:effect",
 		"trigger": "tick",

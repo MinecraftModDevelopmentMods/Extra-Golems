@@ -17,6 +17,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.animal.IronGolem;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -37,6 +38,17 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
 		this.addLayer(new GolemFlowerLayer<>(this));
 		this.addLayer(new GolemKittyLayer<>(this));
 		this.addLayer(new GolemBannerLayer<>(this));
+	}
+
+	@Override
+	protected void setupRotations(T pEntityLiving, PoseStack pPoseStack, float pAgeInTicks, float pRotationYaw, float pPartialTicks) {
+		super.setupRotations(pEntityLiving, pPoseStack, pAgeInTicks, pRotationYaw, pPartialTicks);
+		if (!(pEntityLiving.walkAnimation.speed() < 0.01D)) {
+			float maxAngle = 13.0F;
+			float walkAnimation = pEntityLiving.walkAnimation.position(pPartialTicks) + 6.0F;
+			float walkAngle = (Math.abs(walkAnimation % maxAngle - (maxAngle / 2.0F)) - 3.25F) / 3.25F;
+			pPoseStack.mulPose(Axis.ZP.rotationDegrees((maxAngle / 2.0F) * walkAngle));
+		}
 	}
 
 	@Override
