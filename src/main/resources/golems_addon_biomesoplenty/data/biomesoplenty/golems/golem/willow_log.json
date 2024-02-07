@@ -1,0 +1,30 @@
+{
+  "parent": "golems:generic_log",
+  "hidden": false,
+  "blocks": {
+	"arms": "#minecraft:logs_that_burn",
+	"legs": "#minecraft:logs_that_burn",
+	"body": "#biomesoplenty:willow_logs"
+  },
+  "model": "biomesoplenty:willow_log",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:item_update_golem",
+		"item": "#minecraft:axes",
+		"display_name": "golem.description.axe",
+		"sound": "minecraft:item.axe.strip",
+		"particle": {
+		  "type": "minecraft:item",
+		  "value": {
+			"id": "biomesoplenty:willow_log",
+			"Count": 1
+		  }
+		},
+		"apply": {
+		  "golem": "biomesoplenty:stripped_willow_log"
+		}
+	  }
+	]
+  }
+}

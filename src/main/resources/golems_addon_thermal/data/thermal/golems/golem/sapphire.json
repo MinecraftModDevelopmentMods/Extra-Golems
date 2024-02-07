@@ -1,0 +1,19 @@
+{
+  "attributes": {
+	"health": 43.0,
+	"attack": 12.1,
+	"weak": [
+	  "minecraft:fall"
+	],
+	"sound": "minecraft:glass"
+  },
+  "blocks": {
+	"all": "#forge:storage_blocks/sapphire"
+  },
+  "repair_items": {
+    "#forge:storage_blocks/sapphire": 0.5,
+    "#forge:gems/sapphire": 0.15
+  },
+  "model": "thermal:sapphire",
+  "brain": "golems:empty"
+}

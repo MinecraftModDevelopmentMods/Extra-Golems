@@ -1,0 +1,12 @@
+{
+  "layers": [
+	{
+	  "texture": "minecraft:mud",
+	  "template": "golems:template"
+	},
+	{
+	  "texture": "#golems:layer/mud"
+	},
+	"golems:eyes_and_vines"
+  ]
+}

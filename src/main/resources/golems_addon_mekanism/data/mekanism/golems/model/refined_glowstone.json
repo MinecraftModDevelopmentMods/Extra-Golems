@@ -1,0 +1,9 @@
+{
+  "layers": [
+	{
+	  "texture": "mekanism:block_refined_glowstone",
+	  "template": "golems:template"
+	},
+	"golems:eyes_and_vines"
+  ]
+}

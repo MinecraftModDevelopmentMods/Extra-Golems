@@ -1,0 +1,12 @@
+{
+  "layers": [
+	{
+	  "texture": "minecraft:lapis_block",
+	  "template": "golems:template"
+	},
+	"golems:eyes_and_vines",
+	{
+	  "texture": "#golems:layer/gold_edging"
+	}
+  ]
+}

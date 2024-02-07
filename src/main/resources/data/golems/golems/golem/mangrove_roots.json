@@ -1,0 +1,28 @@
+{
+  "attributes": {
+    "health": 16.0,
+    "attack": 4.2,
+    "speed": 0.28,
+	"knockback_resistance": 0.0,
+	"swim_ability": "float",
+	"sound": "minecraft:mangrove_roots"
+  },
+  "group": "golems:roots",
+  "blocks": {
+	"arms": [
+	  "minecraft:mangrove_roots",
+	  "minecraft:muddy_mangrove_roots"
+	],
+	"legs": [
+	  "minecraft:mangrove_roots",
+	  "minecraft:muddy_mangrove_roots"
+	],
+	"body": "minecraft:mangrove_roots"
+  },
+  "repair_items": {
+	"minecraft:mangrove_roots": 0.5,
+	"#forge:rods/wooden": 0.1
+  },
+  "model": "golems:mangrove_roots",
+  "brain": "golems:roots"
+}

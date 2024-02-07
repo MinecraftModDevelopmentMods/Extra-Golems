@@ -1,0 +1,40 @@
+{
+  "attributes": {
+	"health": 84.0,
+	"attack": 9.6,
+	"speed": 0.23,
+	"armor": 3.0,
+	"knockback_resistance": 0.8,
+	"immune": [
+	  "minecraft:explosion",
+	  "minecraft:player_explosion",
+	  "minecraft:on_fire",
+	  "minecraft:in_fire"
+	]
+  },
+  "particle": {
+	"type": "minecraft:portal"
+  },
+  "blocks": {
+	"all": "quark:duskbound_block"
+  },
+  "repair_items": {
+	"quark:duskbound_block": 0.5,
+	"minecraft:purpur_block": 0.1,
+	"minecraft:purpur_pillar": 0.1,
+	"minecraft:obsidian": 0.1,
+	"minecraft:crying_obsidian": 0.05
+  },
+  "model": "quark:duskbound",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:teleport",
+		"radius": 16,
+		"idle_chance": 0.01,
+		"hurt_chance": 0.6,
+		"target_chance": 0.2
+	  }
+	]
+  }
+}

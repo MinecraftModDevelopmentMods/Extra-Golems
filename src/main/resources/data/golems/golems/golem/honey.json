@@ -1,0 +1,68 @@
+{
+  "attributes": {
+    "health": 42.0,
+    "attack": 4.0,
+	"swim_ability": "float",
+	"sound": "minecraft:honey_block"
+  },
+  "blocks": {
+	"all": "minecraft:honey_block"
+  },
+  "repair_items": {
+    "minecraft:honey_block": 0.5,
+	"minecraft:honey_bottle": 0.25,
+	"minecraft:honeycomb": 0.15
+  },
+  "model": "golems:honey",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:effect",
+		"trigger": "attack",
+		"apply": {
+		  "target": "enemy",
+		  "effect": [
+			{
+			  "id": "minecraft:slowness",
+			  "amplifier": 4,
+			  "duration": 30
+			},
+			{
+			  "id": "minecraft:jump_boost",
+			  "amplifier": -4,
+			  "duration": 70
+			}
+		  ]
+		},
+		"tooltip": "hidden"
+	  },
+	  {
+		"type": "golems:effect",
+		"trigger": "hurt",
+		"apply": {
+		  "target": "enemy",
+		  "effect": [
+			{
+			  "id": "minecraft:slowness",
+			  "amplifier": 4,
+			  "duration": 30
+			},
+			{
+			  "id": "minecraft:jump_boost",
+			  "amplifier": -4,
+			  "duration": 70
+			}
+		  ]
+		},
+		"tooltip": "hidden"
+	  },
+	  {
+		"type": "golems:split",
+		"children": 2
+	  }
+	]
+  },
+  "description": [
+	"golem.description.sticky"
+  ]
+}

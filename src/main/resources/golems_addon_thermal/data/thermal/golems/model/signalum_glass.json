@@ -1,0 +1,11 @@
+{
+  "layers": [
+	{
+	  "texture": "thermal:signalum_glass",
+	  "template": "golems:template"
+	},
+	{
+	  "texture": "#golems:eyes"
+	}
+  ]
+}

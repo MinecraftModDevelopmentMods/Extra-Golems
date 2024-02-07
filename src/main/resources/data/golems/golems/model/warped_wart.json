@@ -1,0 +1,15 @@
+{
+  "layers": [
+	{
+	  "texture": "minecraft:warped_wart_block",
+	  "template": "golems:template"
+	},
+	{
+	  "texture": "#golems:eyes"
+	},
+	{
+	  "texture": "#golems:vines",
+	  "color": "B02525"
+	}
+  ]
+}

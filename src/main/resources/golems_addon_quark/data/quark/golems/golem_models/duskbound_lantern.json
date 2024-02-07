@@ -1,7 +1,0 @@
-{
-  "base": "quark:duskbound_lantern",
-  "vines": {
-	"texture": "#golems:layer/vines",
-	"color": 5121902
-  }
-}

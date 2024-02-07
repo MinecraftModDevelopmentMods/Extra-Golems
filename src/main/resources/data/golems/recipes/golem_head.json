@@ -1,12 +1,8 @@
 {
   "type": "crafting_shapeless",
   "ingredients": [
-	{
-	  "item": "minecraft:carved_pumpkin"
-	},
-	{
-	  "item": "golems:golem_spell"
-	}
+	{ "item": "minecraft:carved_pumpkin" },
+	{ "item": "golems:golem_spell" }
   ],
   "result": {
 	"item": "golems:golem_head"

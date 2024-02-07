@@ -1,0 +1,34 @@
+{
+  "attributes": {
+	"health": 38.0,
+	"attack": 12.5,
+	"weak": [
+	  "minecraft:fall"
+	],
+	"sound": "minecraft:amethyst"
+  },
+  "hidden": false,
+  "blocks": {
+	"all": "#forge:storage_blocks/amethyst"
+  },
+  "repair_items": {
+	"#forge:storage_blocks/amethyst": 0.5,
+	"#forge:gems/amethyst": 0.15
+  },
+  "model": "golems:amethyst",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:summon",
+		"trigger": "hurt",
+		"target": "self",
+		"position": "self",
+		"radius": 0.5,
+		"chance": 0.166,
+		"display_name": "item.minecraft.amethyst_shard",
+		"entity": "minecraft:item",
+		"nbt": "{Item:{id:\"minecraft:amethyst_shard\",Count:1}}"
+	  }
+	]
+  }
+}

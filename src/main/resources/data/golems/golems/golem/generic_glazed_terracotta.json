@@ -1,0 +1,14 @@
+{
+  "attributes": {
+    "health": 51.0,
+    "attack": 8.1,
+	"speed": 0.26,
+	"knockback_resistance": 1.0
+  },
+  "group": "golems:glazed_terracotta",
+  "hidden": true,
+  "repair_items": {
+    "#forge:terracotta": 0.5
+  },
+  "brain": "golems:empty"
+}

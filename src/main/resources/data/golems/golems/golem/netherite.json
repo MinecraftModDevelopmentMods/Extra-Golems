@@ -1,0 +1,24 @@
+{
+  "attributes": {
+	"health": 290.0,
+	"attack": 28.0,
+	"armor": 5.0,
+	"knockback_resistance": 1.0,
+	"immune": [
+	  "minecraft:explosion",
+	  "minecraft:player_explosion",
+	  "minecraft:on_fire",
+	  "minecraft:in_fire"
+	],
+	"sound": "minecraft:metal"
+  },
+  "blocks": {
+	"all": "#forge:storage_blocks/netherite"
+  },
+  "repair_items": {
+	"#forge:storage_blocks/netherite": 1.0,
+	"#forge:ingots/netherite": 0.5
+  },
+  "model": "golems:netherite",
+  "brain": "golems:empty"
+}

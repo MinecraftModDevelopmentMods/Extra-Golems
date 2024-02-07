@@ -1,0 +1,22 @@
+{
+  "layers": [
+	{
+	  "texture": "minecraft:polished_blackstone",
+	  "template": "golems:template"
+	},
+	{
+	  "texture": "minecraft:polished_blackstone",
+	  "template": "golems:template/hands"
+	},
+    {
+	  "texture": "#golems:layer/gold_nuggets"
+	},
+	{
+	  "texture": "#golems:eyes"
+	},
+	{
+	  "texture": "#golems:vines",
+	  "color": "005A75"
+	}
+  ]
+}

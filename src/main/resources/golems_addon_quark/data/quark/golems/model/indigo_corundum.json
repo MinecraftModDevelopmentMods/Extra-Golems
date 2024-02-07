@@ -1,0 +1,12 @@
+{
+  "layers": [
+	{
+	  "texture": "quark:indigo_corundum",
+	  "template": "quark:template/corundum",
+	  "render_type": "translucent"
+	},
+	{
+	  "texture": "#golems:eyes"
+	}
+  ]
+}

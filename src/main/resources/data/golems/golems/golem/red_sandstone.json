@@ -1,0 +1,13 @@
+{
+  "parent": "golems:sandstone",
+  "group": "golems:sandstone",
+  "blocks": {
+	"all": [
+	  "minecraft:red_sandstone",
+	  "minecraft:cut_red_sandstone",
+	  "minecraft:chiseled_red_sandstone",
+	  "minecraft:smooth_red_sandstone"
+	]
+  },
+  "model": "golems:red_sandstone"
+}

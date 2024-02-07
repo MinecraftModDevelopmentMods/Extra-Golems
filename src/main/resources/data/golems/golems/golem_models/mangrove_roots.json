@@ -1,8 +1,0 @@
-{
-  "multitexture": {
-    "base_map": {
-      "0": "minecraft:mangrove_roots_top",
-	  "1": "minecraft:muddy_mangrove_roots_top"
-    }
-  }
-}

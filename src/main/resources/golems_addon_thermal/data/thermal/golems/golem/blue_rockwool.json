@@ -1,0 +1,12 @@
+{
+  "parent": "thermal:generic_rockwool",
+  "group": "thermal:rockwool",
+  "hidden": false,
+  "blocks": {
+    "arms": "#thermal:rockwool",
+    "legs": "#thermal:rockwool",
+    "body": "thermal:blue_rockwool"
+  },
+  "model": "golems:blue_wool",
+  "brain": "golems:empty"
+}

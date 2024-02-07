@@ -1,0 +1,13 @@
+{
+  "target": "golems:granite",
+  "modifiers": [
+	{
+	  "type": "golems:add_blocks",
+	  "blocks": [
+		"quark:granite_bricks",
+		"quark:chiseled_granite_bricks",
+		"quark:granite_pillar"
+	  ]
+	}
+  ]
+}

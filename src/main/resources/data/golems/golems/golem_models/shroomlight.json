@@ -1,7 +1,0 @@
-{
-  "base": "minecraft:shroomlight",
-  "vines": {
-	"texture": "#golems:layer/vines",
-	"color": 11543845
-  }
-}

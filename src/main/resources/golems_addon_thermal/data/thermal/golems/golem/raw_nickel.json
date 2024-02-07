@@ -1,0 +1,19 @@
+{
+  "attributes": {
+	"health": 51.0,
+	"attack": 5.4,
+	"knockback_resistance": 0.6,
+	"sound": "minecraft:metal"
+  },
+  "group": "golems:raw_ore",
+  "blocks": {
+	"all": "#forge:storage_blocks/raw_nickel"
+  },
+  "repair_items": {
+    "#forge:storage_blocks/raw_nickel": 0.5,
+    "#forge:ingots/nickel": 0.25,
+	"#forge:raw_materials/nickel": 0.15
+  },
+  "model": "thermal:raw_nickel",
+  "brain": "golems:empty"
+}

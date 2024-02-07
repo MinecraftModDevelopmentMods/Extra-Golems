@@ -1,0 +1,23 @@
+{
+  "attributes": {
+	"health": 70.0,
+	"attack": 8.0,
+	"armor": 0.5,
+	"knockback_resistance": 1.0,
+	"immune": [
+	  "minecraft:explosion",
+	  "minecraft:player_explosion"
+	]
+  },
+  "group": "golems:stone",
+  "blocks": {
+	"all": "quark:sturdy_stone"
+  },
+  "repair_items": {
+	"quark:sturdy_stone": 0.5,
+	"minecraft:cobblestone": 0.15,
+	"minecraft:stone": 0.15
+  },
+  "model": "quark:sturdy_stone",
+  "brain": "golems:empty"
+}

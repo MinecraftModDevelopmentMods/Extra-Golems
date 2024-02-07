@@ -1,0 +1,15 @@
+{
+  "attributes": {
+	"health": 28.0,
+	"attack": 5.6
+  },
+  "blocks": {
+	"all": "#forge:storage_blocks/bitumen"
+  },
+  "repair_items": {
+    "#forge:storage_blocks/bitumen": 0.5,
+    "#forge:bitumen": 0.15
+  },
+  "model": "thermal:bitumen",
+  "brain": "golems:empty"
+}

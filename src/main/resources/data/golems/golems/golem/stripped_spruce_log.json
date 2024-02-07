@@ -1,0 +1,13 @@
+{
+  "parent": "golems:generic_log",
+  "hidden": true,
+  "blocks": {
+	"arms": "#minecraft:logs_that_burn",
+	"legs": "#minecraft:logs_that_burn",
+	"body": [
+	  "minecraft:stripped_spruce_log",
+	  "minecraft:stripped_spruce_wood"
+	]
+  },
+  "model": "golems:stripped_spruce_log"
+}

@@ -1,0 +1,48 @@
+{
+  "attributes": {
+    "health": 22.0,
+    "attack": 5.0,
+    "speed": 0.26,
+	"immune": [
+	  "minecraft:in_fire",
+	  "minecraft:on_fire"
+	]
+  },
+  "group": "golems:sandstone",
+  "blocks": {
+	"all": [
+	  "minecraft:sandstone",
+	  "minecraft:cut_sandstone",
+	  "minecraft:chiseled_sandstone",
+	  "minecraft:smooth_sandstone"
+	]
+  },
+  "repair_items": {
+    "#forge:sandstone": 0.5,
+	"#forge:sand": 0.15
+  },
+  "model": "golems:sandstone",
+  "brain": "golems:empty",
+  "multitexture": {
+	"textures": {
+	  "0": {
+		"blocks": [
+		  "minecraft:sandstone",
+		  "minecraft:cut_sandstone",
+          "minecraft:chiseled_sandstone",
+          "minecraft:smooth_sandstone"
+		],
+		"loot_table": "golems:sandstone/colorless"
+	  },
+	  "1": {
+		"blocks": [
+		  "minecraft:red_sandstone",
+		  "minecraft:cut_red_sandstone",
+		  "minecraft:chiseled_red_sandstone",
+		  "minecraft:smooth_red_sandstone"
+		],
+		"loot_table": "golems:sandstone/red"
+	  }
+	}
+  }
+}

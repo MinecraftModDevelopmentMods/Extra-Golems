@@ -1,0 +1,18 @@
+{
+  "layers": [
+	{
+	  "texture": "biomesoplenty:flesh",
+	  "template": "golems:template"
+	},
+	{
+	  "texture": "biomesoplenty:flesh",
+	  "template": "golems:template/hands"
+	},
+	{
+	  "texture": "#biomesoplenty:layer/flesh"
+	},
+	{
+	  "texture": "#golems:eyes"
+	}
+  ]
+}

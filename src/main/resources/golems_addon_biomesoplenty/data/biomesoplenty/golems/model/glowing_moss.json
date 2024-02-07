@@ -1,0 +1,11 @@
+{
+  "layers": [
+	{
+	  "texture": "biomesoplenty:glowing_moss_block",
+	  "template": "golems:template/moss"
+	},
+	{
+	  "texture": "#golems:eyes"
+	}
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "attributes": {
+    "health": 28.0,
+    "attack": 5.5,
+    "speed": 0.29,
+	"swim_ability": "float",
+	"sound": "minecraft:wood"
+  },
+  "group": "golems:bookshelf",
+  "blocks": {
+	"all": "minecraft:bookshelf"
+  },
+  "repair_items": {
+    "#forge:bookshelves": 0.5,
+	"minecraft:book": 0.15,
+	"#minecraft:planks": 0.15
+  },
+  "model": "golems:bookshelf",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:effect",
+		"trigger": "tick",
+		"chance": 0.03,
+		"apply": {
+		  "target": "self",
+		  "rolls": 1,
+		  "effect": [
+			{
+			  "id": "minecraft:regeneration",
+			  "duration": 300
+			},
+			{
+			  "id": "minecraft:fire_resistance",
+			  "duration": 500
+			},
+			{
+			  "id": "minecraft:strength",
+			  "duration": 250
+			},
+			{
+			  "id": "minecraft:instant_health",
+			  "duration": 1
+			},
+			{
+			  "id": "minecraft:resistance",
+			  "duration": 500
+			},
+			{
+			  "id": "minecraft:invisibility",
+			  "duration": 450
+			},
+			{
+			  "id": "minecraft:speed",
+			  "duration": 300
+			}
+		  ]
+		}
+	  }
+	]
+  }
+}

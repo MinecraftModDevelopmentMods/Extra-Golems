@@ -1,0 +1,57 @@
+{
+  "attributes": {
+    "health": 25.0,
+    "attack": 9.5,
+    "speed": 0.28,
+	"knockback_resistance": 0.2,
+	"immune": [
+	  "minecraft:in_fire",
+	  "minecraft:on_fire"
+	],
+	"sound": "minecraft:nether_bricks"
+  },
+  "group": "golems:nether_brick",
+  "blocks": {
+	"arms": [
+	  "minecraft:nether_bricks",
+	  "minecraft:red_nether_bricks",
+	  "minecraft:cracked_nether_bricks",
+	  "minecraft:chiseled_nether_bricks"
+	],
+	"legs": [
+	  "minecraft:nether_bricks",
+	  "minecraft:red_nether_bricks",
+	  "minecraft:cracked_nether_bricks",
+	  "minecraft:chiseled_nether_bricks"
+	],
+	"body": [
+	  "minecraft:nether_bricks",
+	  "minecraft:cracked_nether_bricks",
+	  "minecraft:chiseled_nether_bricks"
+	]
+  },
+  "repair_items": {
+    "minecraft:nether_bricks": 0.5,
+    "minecraft:red_nether_bricks": 0.5,
+    "minecraft:cracked_nether_bricks": 0.5,
+    "minecraft:chiseled_nether_bricks": 0.5,
+	"#forge:ingots/nether_brick": 0.15
+  },
+  "model": "golems:nether_brick",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:set_fire",
+		"trigger": "attack",
+		"target": "enemy",
+		"chance": 0.9,
+		"seconds": 2
+	  },
+	  {
+		"type": "golems:shoot_fireballs",
+		"consume": true,
+		"attack_interval": 40
+	  }
+	]
+  }
+}

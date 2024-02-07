@@ -1,0 +1,9 @@
+{
+  "layers": [
+	{
+	  "texture": "minecraft:jungle_log",
+	  "template": "golems:template"
+	},
+	"golems:eyes_and_vines"
+  ]
+}

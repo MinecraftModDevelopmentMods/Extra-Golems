@@ -1,0 +1,13 @@
+{
+  "layers": [
+	{
+	  "texture": "minecraft:polished_granite",
+	  "template": "golems:template"
+	},
+	{
+	  "texture": "minecraft:polished_granite",
+	  "template": "golems:template/hands"
+	},
+	"golems:eyes_and_vines"
+  ]
+}

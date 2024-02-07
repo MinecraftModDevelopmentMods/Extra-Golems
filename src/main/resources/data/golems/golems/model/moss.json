@@ -1,0 +1,14 @@
+{
+  "layers": [
+	{
+	  "texture": "minecraft:moss_block",
+	  "template": "golems:template/moss"
+	},
+	{
+	  "texture": "#golems:layer/spore_blossom"
+	},
+	{
+	  "texture": "#golems:eyes"
+	}
+  ]
+}

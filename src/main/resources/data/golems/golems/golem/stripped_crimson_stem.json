@@ -1,0 +1,32 @@
+{
+  "parent": "golems:generic_stem",
+  "group": "golems:stem",
+  "hidden": true,
+  "blocks": {
+	"arms": "#minecraft:crimson_stems",
+	"legs": "#minecraft:crimson_stems",
+	"body": [
+	  "minecraft:stripped_crimson_stem",
+	  "minecraft:stripped_crimson_hyphae"
+	]
+  },
+  "repair_items": {
+    "#minecraft:crimson_stems": 0.5,
+	"minecraft:crimson_fungus": 0.15
+  },
+  "model": "golems:stripped_crimson_stem",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:place",
+		"trigger": "tick",
+		"position": "self",
+		"chance": 0.00071,
+		"must_survive": false,
+		"block": {
+		  "Name": "minecraft:crimson_fungus"
+		}
+	  }
+	]
+  }
+}

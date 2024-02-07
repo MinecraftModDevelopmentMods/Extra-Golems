@@ -1,0 +1,17 @@
+{
+  "layers": [
+	{
+	  "texture": "minecraft:sculk_catalyst_side",
+	  "template": "golems:template/sculk_catalyst_lower"
+	},
+	{
+	  "texture": "minecraft:sculk_catalyst_top",
+	  "template": "golems:template/sculk_catalyst_upper"
+	},
+	{
+	  "texture": "#golems:layer/bioluminescence",
+	  "render_type": "translucent",
+	  "emissive": true
+	}
+  ]
+}

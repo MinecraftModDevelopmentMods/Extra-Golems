@@ -1,0 +1,30 @@
+{
+  "parent": "golems:generic_log",
+  "hidden": false,
+  "blocks": {
+	"arms": "#minecraft:logs_that_burn",
+	"legs": "#minecraft:logs_that_burn",
+	"body": "#minecraft:jungle_logs"
+  },
+  "model": "golems:jungle_log",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:item_update_golem",
+		"item": "#minecraft:axes",
+		"display_name": "golem.description.axe",
+		"sound": "minecraft:item.axe.strip",
+		"particle": {
+		  "type": "minecraft:item",
+		  "value": {
+			"id": "minecraft:jungle_log",
+			"Count": 1
+		  }
+		},
+		"apply": {
+		  "golem": "golems:stripped_jungle_log"
+		}
+	  }
+	]
+  }
+}

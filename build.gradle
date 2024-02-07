@@ -3,6 +3,7 @@ plugins {
     id 'maven-publish'
     id 'net.minecraftforge.gradle' version '(6.0,6.2)'
 	id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+	id 'org.spongepowered.mixin' version '0.7.+'
 }
 
 version = project.mod_version
@@ -35,6 +36,10 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
+			// Enable mixins
+			property 'mixin.env.remapRefMap', 'true'
+			property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+
             mods {
                 golems {
                     source sourceSets.main
@@ -51,6 +56,10 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
+			// Enable mixins
+			property 'mixin.env.remapRefMap', 'true'
+			property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+
             mods {
                 golems {
                     source sourceSets.main
@@ -62,22 +71,29 @@ minecraft {
 
 repositories {
     maven {
-        name 'MMD'
-        url 'https://maven.mcmoddev.com/'
+        name "MMD"
+        url "https://maven.mcmoddev.com/"
     }
 	maven { // CURSE
-		name 'CurseMaven'
-		url 'https://www.cursemaven.com/'
+		name "CurseMaven"
+		url "https://www.cursemaven.com/"
+		content {
+			includeGroup "curse.maven"
+		}
 	}
-	//jcenter()
-    //mavenCentral()
 }
 
 dependencies {
 	// Forge
     minecraft "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
-	
+
+	// Mixin AP
+	annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+
+	// The One Probe
 	implementation fg.deobf("curse.maven:the-one-probe-${project.top_proj}:${project.top_file}")
+	// Jade
+	implementation fg.deobf("curse.maven:jade-${project.jade_proj}:${project.jade_file}")
 }
 
 // This block of code expands all the gradle properties in the specified resource targets.

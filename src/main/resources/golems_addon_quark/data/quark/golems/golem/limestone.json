@@ -1,0 +1,25 @@
+{
+  "attributes": {
+	"health": 45.0,
+	"attack": 8.0,
+    "knockback_resistance": 0.8
+  },
+  "group": "golems:stone",
+  "blocks": {
+	"all": [
+	  "quark:polished_limestone",
+	  "quark:limestone_bricks",
+	  "quark:chiseled_limestone_bricks",
+	  "quark:limestone_pillar"
+	]
+  },
+  "repair_items": {
+    "quark:polished_limestone": 0.5,
+    "quark:limestone_bricks": 0.5,
+    "quark:chiseled_limestone_bricks": 0.5,
+    "quark:limestone_pillar": 0.5,
+	"quark:limestone": 0.15
+  },
+  "model": "quark:limestone",
+  "brain": "golems:empty"
+}

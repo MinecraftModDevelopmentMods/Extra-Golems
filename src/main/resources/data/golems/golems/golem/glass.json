@@ -1,0 +1,23 @@
+{
+  "attributes": {
+    "health": 8.0,
+    "attack": 16.5,
+	"speed": 0.29,
+	"weak": [
+	  "minecraft:fall"
+	],
+	"sound": "minecraft:glass"
+  },
+  "group": "golems:glass",
+  "blocks": {
+	"arms": "#forge:glass",
+	"legs": "#forge:glass",
+	"body": "#forge:glass/colorless"
+  },
+  "repair_items": {
+    "#forge:glass": 0.5,
+	"#forge:glass_panes": 0.15
+  },
+  "model": "golems:glass",
+  "brain": "golems:empty"
+}

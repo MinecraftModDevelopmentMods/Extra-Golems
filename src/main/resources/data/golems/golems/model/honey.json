@@ -1,0 +1,12 @@
+{
+  "layers": [
+    {
+	  "texture": "minecraft:honey_block_top",
+	  "template": "golems:template/translucent",
+	  "render_type": "translucent"
+	},
+	{
+	  "texture": "#golems:eyes"
+	}
+  ]
+}

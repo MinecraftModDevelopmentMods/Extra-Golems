@@ -1,0 +1,8 @@
+{
+  "parent": "golems:terracotta",
+  "group": "golems:terracotta",
+  "blocks": {
+	"all": "#forge:terracotta/blue"
+  },
+  "model": "golems:blue_terracotta"
+}

@@ -1,0 +1,10 @@
+{
+  "parent": "biomesoplenty:flesh",
+  "group": "biomesoplenty:flesh",
+  "blocks": {
+	"arms": "#biomesoplenty:flesh",
+	"legs": "#biomesoplenty:flesh",
+	"body": "biomesoplenty:porous_flesh"
+  },
+  "model": "biomesoplenty:porous_flesh"
+}

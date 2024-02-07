@@ -1,0 +1,17 @@
+{
+  "attributes": {
+	"health": 44.0,
+	"attack": 5.9,
+	"knockback_resistance": 0.8,
+	"sound": "minecraft:glass"
+  },
+  "blocks": {
+	"all": "#forge:storage_blocks/apatite"
+  },
+  "repair_items": {
+    "#forge:storage_blocks/apatite": 0.5,
+    "#forge:gems/apatite": 0.15
+  },
+  "model": "thermal:apatite",
+  "brain": "golems:empty"
+}

@@ -1,0 +1,20 @@
+{
+  "parent": "golems:nether_brick",
+  "group": "golems:nether_brick",
+  "blocks": {
+	"arms": [
+	  "minecraft:nether_bricks",
+	  "minecraft:red_nether_bricks",
+	  "minecraft:cracked_nether_bricks",
+	  "minecraft:chiseled_nether_bricks"
+	],
+	"legs": [
+	  "minecraft:nether_bricks",
+	  "minecraft:red_nether_bricks",
+	  "minecraft:cracked_nether_bricks",
+	  "minecraft:chiseled_nether_bricks"
+	],
+	"body": "minecraft:red_nether_bricks"
+  },
+  "model": "golems:red_nether_brick"
+}

@@ -1,0 +1,11 @@
+{
+  "layers": [
+	{
+	  "texture": "biomesoplenty:dried_salt",
+	  "template": "golems:template"
+	},
+	{
+	  "texture": "#golems:eyes"
+	}
+  ]
+}

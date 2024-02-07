@@ -1,0 +1,16 @@
+{
+  "layers": [
+	{
+	  "texture": "minecraft:red_nether_bricks",
+	  "template": "golems:template"
+	},
+	{
+	  "texture": "#golems:eyes"
+	},
+	{
+	  "texture": "#golems:vines",
+	  "color": "B02525",
+	  "emissive": true
+	}
+  ]
+}

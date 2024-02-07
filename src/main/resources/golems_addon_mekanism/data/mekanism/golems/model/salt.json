@@ -1,0 +1,11 @@
+{
+  "layers": [
+	{
+	  "texture": "mekanism:block_salt",
+	  "template": "golems:template"
+	},
+	{
+	  "texture": "#golems:eyes"
+	}
+  ]
+}

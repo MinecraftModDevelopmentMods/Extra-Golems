@@ -1,0 +1,25 @@
+{
+  "attributes": {
+	"health": 120.0,
+	"attack": 19.0,
+	"speed": 0.23,
+	"armor": 3.0,
+	"knockback_resistance": 0.8,
+	"immune": [
+	  "minecraft:explosion",
+	  "minecraft:player_explosion",
+	  "minecraft:on_fire",
+	  "minecraft:in_fire"
+	]
+  },
+  "group": "golems:obsidian",
+  "blocks": {
+	"all": "minecraft:obsidian"
+  },
+  "repair_items": {
+	"minecraft:obsidian": 0.5,
+	"minecraft:crying_obsidian": 0.25
+  },
+  "model": "golems:obsidian",
+  "brain": "golems:empty"
+}

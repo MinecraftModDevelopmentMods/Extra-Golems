@@ -1,0 +1,18 @@
+{
+  "attributes": {
+	"health": 64.0,
+	"attack": 6.3,
+	"knockback_resistance": 0.8,
+	"sound": "minecraft:metal"
+  },
+  "group": "thermal:slag",
+  "blocks": {
+	"all": "thermal:rich_slag_block"
+  },
+  "repair_items": {
+    "thermal:rich_slag_block": 0.5,
+    "thermal:rich_slag": 0.15
+  },
+  "model": "thermal:rich_slag",
+  "brain": "golems:empty"
+}

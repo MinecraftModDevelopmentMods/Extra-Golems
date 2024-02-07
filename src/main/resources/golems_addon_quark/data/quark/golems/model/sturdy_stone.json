@@ -1,0 +1,13 @@
+{
+  "layers": [
+	{
+	  "texture": "minecraft:furnace_top",
+	  "template": "golems:template"
+	},
+	{
+	  "texture": "minecraft:furnace_top",
+	  "template": "golems:template/hands"
+	},
+	"golems:eyes_and_vines"
+  ]
+}

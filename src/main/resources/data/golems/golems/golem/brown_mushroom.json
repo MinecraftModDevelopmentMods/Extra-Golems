@@ -1,0 +1,50 @@
+{
+  "parent": "golems:generic_mushroom",
+  "group": "golems:mushroom",
+  "hidden": false,
+  "blocks": {
+	"arms": [
+	  "minecraft:mushroom_stem",
+	  "minecraft:brown_mushroom_block"
+	],
+	"legs": [
+	  "minecraft:mushroom_stem",
+	  "minecraft:brown_mushroom_block"
+	],
+	"body": [
+	  "minecraft:mushroom_stem",
+	  "minecraft:brown_mushroom_block"
+	]
+  },
+  "repair_items": {
+	"minecraft:mushroom_stem": 0.5,
+	"minecraft:brown_mushroom_block": 0.5,
+	"minecraft:brown_mushroom": 0.15
+  },
+  "model": "golems:brown_mushroom",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:effect",
+		"trigger": "tick",
+		"predicate": [
+		  "night"
+		],
+		"chance": 0.0125,
+		"apply": {
+		  "target": "self",
+		  "effect": {
+			"id": "minecraft:regeneration",
+			"duration": 300
+		  }
+		}
+	  },
+	  {
+		"type": "golems:place",
+		"chance": 0.004,
+		"block": "minecraft:brown_mushroom",
+		"must_survive": false
+	  }
+	]
+  }
+}

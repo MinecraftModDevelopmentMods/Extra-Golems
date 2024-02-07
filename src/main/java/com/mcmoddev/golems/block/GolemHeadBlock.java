@@ -2,6 +2,7 @@ package com.mcmoddev.golems.block;
 
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.ExtraGolems;
+import com.mcmoddev.golems.data.golem.Golem;
 import com.mcmoddev.golems.entity.GolemBase;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
@@ -9,6 +10,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -79,7 +81,7 @@ public final class GolemHeadBlock extends HorizontalDirectionalBlock {
 				if(level.isEmptyBlock(blockpos) && GolemHeadBlock.canSpawnGolem(level, blockpos)) {
 					if (!level.isClientSide) {
 						// place the block
-						level.setBlock(blockpos, EGRegistry.GOLEM_HEAD.get().defaultBlockState().setValue(FACING, facing), Block.UPDATE_ALL);
+						level.setBlock(blockpos, EGRegistry.BlockReg.GOLEM_HEAD.get().defaultBlockState().setValue(FACING, facing), Block.UPDATE_ALL);
 						level.gameEvent(null, GameEvent.BLOCK_PLACE, blockpos);
 					}
 					// shrink item stack
@@ -94,7 +96,7 @@ public final class GolemHeadBlock extends HorizontalDirectionalBlock {
 		};
 
 		// register dispenser behaviors
-		DispenserBlock.registerBehavior(EGRegistry.GOLEM_HEAD_ITEM.get(), wrappedBehavior);
+		DispenserBlock.registerBehavior(EGRegistry.ItemReg.GOLEM_HEAD.get(), wrappedBehavior);
 		DispenserBlock.registerBehavior(Items.CARVED_PUMPKIN, wrappedBehavior);
 	}
 
@@ -137,7 +139,7 @@ public final class GolemHeadBlock extends HorizontalDirectionalBlock {
 		}
 
 		////// Attempt to locate a Golem from this mod //////
-		ResourceLocation golemId = ExtraGolems.getGolemId(level, blockBelow1, blockBelow2, blockArmNorth, blockArmSouth);
+		ResourceKey<Golem> golemId = ExtraGolems.getGolemId(level, blockBelow1, blockBelow2, blockArmNorth, blockArmSouth);
 		// if no entity found for North-South, try to find one for East-West pattern
 		if (golemId == null) {
 			golemId = ExtraGolems.getGolemId(level, blockBelow1, blockBelow2, blockArmEast, blockArmWest);
@@ -216,7 +218,7 @@ public final class GolemHeadBlock extends HorizontalDirectionalBlock {
 		}
 
 		////// Attempt to spawn a Golem from this mod //////
-		ResourceLocation golemId = ExtraGolems.getGolemId(level, blockBelow1, blockBelow2, blockArmNorth, blockArmSouth);
+		ResourceKey<Golem> golemId = ExtraGolems.getGolemId(level, blockBelow1, blockBelow2, blockArmNorth, blockArmSouth);
 		isEastWest = false;
 		// if no entity found for North-South, try to find one for East-West pattern
 		if (golemId == null) {
@@ -226,7 +228,7 @@ public final class GolemHeadBlock extends HorizontalDirectionalBlock {
 
 		if (golemId != null) {
 			if(!level.isClientSide()) {
-				final GolemBase golem = GolemBase.create(level, golemId);
+				final GolemBase golem = GolemBase.create(level, golemId.location());
 				// spawn the entity!
 				removeAllGolemBlocks(level, headPos, isEastWest);
 				golem.setPlayerCreated(true);
@@ -236,9 +238,9 @@ public final class GolemHeadBlock extends HorizontalDirectionalBlock {
 					golem.finalizeSpawn((ServerLevel) level, level.getCurrentDifficultyAt(headPos), MobSpawnType.MOB_SUMMONED, null, null);
 				}
 				if(isEastWest) {
-					golem.onBuilt(stateBelow1, stateBelow2, stateArmEast, stateArmWest);
+					golem.onBuilt(stateBelow1, stateBelow2, stateArmEast, stateArmWest, placer);
 				} else {
-					golem.onBuilt(stateBelow1, stateBelow2, stateArmNorth, stateArmSouth);
+					golem.onBuilt(stateBelow1, stateBelow2, stateArmNorth, stateArmSouth, placer);
 				}
 			}
 			return true;

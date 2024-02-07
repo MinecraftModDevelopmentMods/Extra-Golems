@@ -1,0 +1,16 @@
+{
+  "layers": [
+	{
+	  "texture": "minecraft:end_stone",
+	  "template": "golems:template"
+	},
+	{
+	  "texture": "#golems:eyes/ender",
+	  "emissive": true
+	},
+	{
+	  "texture": "#golems:vines",
+	  "color": "D722E8"
+	}
+  ]
+}

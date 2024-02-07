@@ -1,0 +1,13 @@
+{
+  "layers": [
+	{
+	  "texture": "minecraft:purpur_pillar",
+	  "template": "golems:template"
+	},
+	{
+	  "texture": "minecraft:purpur_pillar",
+	  "template": "golems:template/hands"
+	},
+	"golems:eyes_and_vines"
+  ]
+}

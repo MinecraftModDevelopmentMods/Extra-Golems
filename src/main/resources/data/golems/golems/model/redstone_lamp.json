@@ -1,0 +1,17 @@
+{
+  "layers": [
+	{
+	  "texture": "minecraft:redstone_lamp_on",
+	  "template": "golems:template",
+	  "variant": 0
+	},
+	{
+	  "texture": "minecraft:redstone_lamp",
+	  "template": "golems:template",
+	  "variant": 1
+	},
+	{
+	  "texture": "#golems:eyes"
+	}
+  ]
+}

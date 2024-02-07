@@ -1,5 +1,7 @@
 package com.mcmoddev.golems.entity.goal;
 
+import com.mcmoddev.golems.entity.IVariantProvider;
+import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -14,8 +16,8 @@ import java.util.function.Predicate;
  * This is copied from net.minecraft.entity.ai.goal.FollowMobGoal
  * but allows for custom follow predicate.
  **/
-public class FollowGoal extends Goal {
-	protected final Mob entity;
+public class  FollowGoal<T extends Mob & IVariantProvider> extends Goal implements IVariantPredicate {
+	protected final T entity;
 	protected final Predicate<LivingEntity> followPredicate;
 	protected LivingEntity followingEntity;
 	protected final double speedModifier;
@@ -24,9 +26,11 @@ public class FollowGoal extends Goal {
 	protected final float stopDistance;
 	protected float oldWaterCost;
 	protected final float areaSize;
+	private final MinMaxBounds.Ints variant;
 
-	public FollowGoal(final Mob entityIn, final double speed, final float stopDistanceIn, final float areaSizeIn,
-					  final Predicate<LivingEntity> followPredicateIn) {
+	public FollowGoal(final T entityIn, final double speed, final float stopDistanceIn, final float areaSizeIn,
+					  final Predicate<LivingEntity> followPredicateIn, final MinMaxBounds.Ints variant) {
+		this.variant = variant;
 		setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
 		this.entity = entityIn;
 		this.followPredicate = followPredicateIn;
@@ -41,8 +45,22 @@ public class FollowGoal extends Goal {
 		}
 	}
 
+	//// VARIANT PREDICATE ////
+
+	@Override
+	public MinMaxBounds.Ints getVariantBounds() {
+		return this.variant;
+	}
+
+	//// GOAL ////
+
 	@Override
 	public boolean canUse() {
+		// validate variant
+		if(!isVariantInBounds(entity)) {
+			return false;
+		}
+		// validate target mob exists
 		List<LivingEntity> mobEntityList = this.entity.level().getEntitiesOfClass(LivingEntity.class,
 				this.entity.getBoundingBox().inflate(this.areaSize), this.followPredicate);
 		if (!mobEntityList.isEmpty()) {
@@ -60,7 +78,8 @@ public class FollowGoal extends Goal {
 
 	@Override
 	public boolean canContinueToUse() {
-		return (this.followingEntity != null && !this.navigation.isDone()
+		return (isVariantInBounds(this.entity)
+				&& this.followingEntity != null && !this.navigation.isDone()
 				&& this.entity.distanceToSqr(this.followingEntity) > (this.stopDistance * this.stopDistance));
 	}
 
@@ -91,22 +110,11 @@ public class FollowGoal extends Goal {
 		}
 		this.timeToRecalcPath = 10;
 
-		double dX = this.entity.getX() - this.followingEntity.getX();
-		double dY = this.entity.getY() - this.followingEntity.getY();
-		double dZ = this.entity.getZ() - this.followingEntity.getZ();
-
-		double distanceSq = dX * dX + dY * dY + dZ * dZ;
-		if (distanceSq <= (this.stopDistance * this.stopDistance)) {
+		if(this.entity.position().closerThan(this.followingEntity.position(), this.stopDistance)) {
 			this.navigation.stop();
-
-//      if (distanceSq <= this.stopDistance) {
-//        double dX2 = this.followingEntity.getPosX() - this.entity.getPosX();
-//        double dZ2 = this.followingEntity.getPosZ() - this.entity.getPosZ();
-//        this.navigation.tryMoveToXYZ(this.entity.getPosX() - dX2, this.entity.getPosY(), this.entity.getPosZ() - dZ2, this.speedModifier);
-//      }
-
 			return;
 		}
+
 		this.navigation.moveTo(this.followingEntity, this.speedModifier);
 	}
 }

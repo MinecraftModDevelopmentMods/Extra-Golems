@@ -1,0 +1,35 @@
+{
+  "attributes": {
+    "health": 50.0,
+    "attack": 12.0,
+    "knockback_resistance": 0.3,
+	"weak": [
+	  "minecraft:drown"
+	]
+  },
+  "particle": {
+    "type": "minecraft:portal"
+  },
+  "blocks": {
+	"all": [
+	  "#forge:end_stones",
+	  "minecraft:end_stone_bricks"
+	]
+  },
+  "repair_items": {
+    "#forge:end_stones": 0.5,
+	"minecraft:end_stone_bricks": 0.5
+  },
+  "model": "golems:end_stone",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:teleport",
+		"radius": 32,
+		"idle_chance": 0.007,
+		"hurt_chance": 0.6,
+		"target_chance": 0.2
+	  }
+	]
+  }
+}

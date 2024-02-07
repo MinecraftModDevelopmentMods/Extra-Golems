@@ -1,0 +1,9 @@
+{
+  "layers": [
+	{
+	  "texture": "minecraft:stripped_bamboo_block",
+	  "template": "golems:template"
+	},
+	"golems:eyes_and_vines"
+  ]
+}

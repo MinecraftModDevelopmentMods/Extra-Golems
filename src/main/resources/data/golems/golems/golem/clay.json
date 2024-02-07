@@ -1,0 +1,31 @@
+{
+  "attributes": {
+    "health": 20.0,
+    "attack": 5.0,
+    "speed": 0.25,
+    "knockback_resistance": 0.4,
+    "armor": 0,
+    "knockback": 0.0,
+	"ignore": [],
+	"immune": [],
+	"weak": [],
+	"invulnerable": false,
+	"swim_ability": "float",
+	"sound": "minecraft:gravel"
+  },
+  "hidden": false,
+  "blocks": {
+	"all": "minecraft:clay",
+	"body": "minecraft:clay",
+	"legs": "minecraft:clay",
+	"arms": "minecraft:clay",
+	"left_arm": "minecraft:clay",
+	"right_arm": "minecraft:clay"
+  },
+  "repair_items": {
+    "minecraft:clay": 0.5,
+	"minecraft:clay_ball": 0.1
+  },
+  "model": "golems:clay",
+  "brain": "golems:empty"
+}

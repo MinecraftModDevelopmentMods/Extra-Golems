@@ -1,0 +1,30 @@
+{
+  "parent": "golems:generic_log",
+  "hidden": false,
+  "blocks": {
+	"arms": "#minecraft:logs_that_burn",
+	"legs": "#minecraft:logs_that_burn",
+	"body": "#minecraft:cherry_logs"
+  },
+  "model": "golems:cherry_log",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:item_update_golem",
+		"item": "#minecraft:axes",
+		"display_name": "golem.description.axe",
+		"sound": "minecraft:item.axe.strip",
+		"particle": {
+		  "type": "minecraft:item",
+		  "value": {
+			"id": "minecraft:cherry_log",
+			"Count": 1
+		  }
+		},
+		"apply": {
+		  "golem": "golems:stripped_cherry_log"
+		}
+	  }
+	]
+  }
+}

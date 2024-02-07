@@ -1,0 +1,18 @@
+{
+  "attributes": {
+    "health": 31.0,
+    "attack": 4.1,
+	"weak": [
+	  "minecraft:drown"
+	]
+  },
+  "blocks": {
+	"all": "mekanism:block_salt"
+  },
+  "repair_items": {
+    "mekanism:block_salt": 0.5,
+    "#forge:dusts/salt": 0.15
+  },
+  "model": "mekanism:salt",
+  "brain": "golems:empty"
+}

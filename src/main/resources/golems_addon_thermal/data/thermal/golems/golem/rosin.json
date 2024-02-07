@@ -1,0 +1,16 @@
+{
+  "attributes": {
+	"health": 24.0,
+	"attack": 5.0,
+	"sound": "minecraft:honey_block"
+  },
+  "blocks": {
+	"all": "thermal:rosin_block"
+  },
+  "repair_items": {
+    "thermal:rosin_block": 0.5,
+    "thermal:rosin": 0.15
+  },
+  "model": "thermal:rosin",
+  "brain": "golems:empty"
+}

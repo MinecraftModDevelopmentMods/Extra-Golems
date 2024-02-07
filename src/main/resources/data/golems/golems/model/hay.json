@@ -1,0 +1,9 @@
+{
+  "layers": [
+	{
+	  "texture": "minecraft:hay_block_side",
+	  "template": "golems:template"
+	},
+	"golems:eyes_and_vines"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "parent": "golems:generic_wool",
+  "hidden": false,
+  "blocks": {
+	"arms": "#minecraft:wool",
+	"legs": "#minecraft:wool",
+	"body": "minecraft:red_wool"
+  },
+  "model": "golems:red_wool"
+}

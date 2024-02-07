@@ -1,0 +1,25 @@
+{
+  "attributes": {
+    "health": 60.0,
+    "attack": 8.2,
+    "knockback_resistance": 0.8
+  },
+  "group": "golems:stone",
+  "blocks": {
+	"all": [
+	  "quark:polished_tuff",
+	  "quark:tuff_bricks",
+	  "quark:chiseled_tuff_bricks",
+	  "quark:tuff_pillar"
+	]
+  },
+  "repair_items": {
+    "quark:polished_tuff": 0.5,
+    "quark:tuff_bricks": 0.5,
+    "quark:chiseled_tuff_bricks": 0.5,
+    "quark:tuff_pillar": 0.5,
+	"minecraft:tuff": 0.15
+  },
+  "model": "quark:tuff",
+  "brain": "golems:empty"
+}

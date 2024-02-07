@@ -1,0 +1,15 @@
+{
+  "layers": [
+	{
+	  "texture": "minecraft:tnt_side",
+	  "template": "golems:template"
+	},
+    {
+	  "texture": "#golems:layer/tnt"
+	},
+	{
+	  "texture": "#golems:eyes/creeper",
+	  "emissive": true
+	}
+  ]
+}

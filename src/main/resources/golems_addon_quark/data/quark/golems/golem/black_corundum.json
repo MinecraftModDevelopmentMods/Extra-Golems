@@ -1,0 +1,11 @@
+{
+  "parent": "quark:generic_corundum",
+  "group": "quark:corundum",
+  "hidden": false,
+  "blocks": {
+	"arms": "#quark:corundum",
+	"legs": "#quark:corundum",
+	"body": "quark:black_corundum"
+  },
+  "model": "quark:black_corundum"
+}

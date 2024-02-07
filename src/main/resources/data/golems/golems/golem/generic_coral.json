@@ -1,0 +1,16 @@
+{
+  "attributes": {
+    "health": 38.0,
+    "attack": 9.0,
+    "knockback_resistance": 0.2,
+	"swim_ability": "swim",
+	"sound": "minecraft:coral_block"
+  },
+  "group": "golems:coral",
+  "hidden": true,
+  "repair_items": {
+    "#minecraft:coral_blocks": 0.5,
+    "#forge:dead_coral_blocks": 0.25
+  },
+  "brain": "golems:empty"
+}

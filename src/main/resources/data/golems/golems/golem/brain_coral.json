@@ -1,0 +1,29 @@
+{
+  "parent": "golems:generic_coral",
+  "hidden": false,
+  "blocks": {
+	"arms": [
+	  "#minecraft:coral_blocks",
+	  "#forge:dead_coral_blocks"
+	],
+	"legs": [
+	  "#minecraft:coral_blocks",
+	  "#forge:dead_coral_blocks"
+	],
+	"body": "minecraft:brain_coral_block"
+  },
+  "model": "golems:brain_coral",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:update_golem",
+		"trigger": "tick",
+		"predicate": "dry",
+		"chance": 0.008,
+		"apply": {
+		  "golem": "golems:dead_brain_coral"
+		}
+	  }
+	]
+  }
+}

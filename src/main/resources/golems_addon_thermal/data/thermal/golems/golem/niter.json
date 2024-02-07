@@ -1,0 +1,16 @@
+{
+  "attributes": {
+	"health": 82.0,
+	"attack": 6.8,
+	"knockback_resistance": 0.8
+  },
+  "blocks": {
+	"all": "#forge:storage_blocks/niter"
+  },
+  "repair_items": {
+    "#forge:storage_blocks/niter": 0.5,
+    "#forge:gems/niter": 0.15
+  },
+  "model": "thermal:niter",
+  "brain": "golems:empty"
+}

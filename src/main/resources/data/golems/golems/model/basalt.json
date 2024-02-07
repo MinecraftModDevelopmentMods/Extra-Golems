@@ -1,0 +1,19 @@
+{
+  "layers": [
+	{
+	  "texture": "minecraft:polished_basalt_side",
+	  "template": "golems:template"
+	},
+	{
+	  "texture": "minecraft:polished_basalt_side",
+	  "template": "golems:template/hands"
+	},
+	{
+	  "texture": "#golems:eyes"
+	},
+	{
+	  "texture": "#golems:vines",
+	  "color": "005A75"
+	}
+  ]
+}

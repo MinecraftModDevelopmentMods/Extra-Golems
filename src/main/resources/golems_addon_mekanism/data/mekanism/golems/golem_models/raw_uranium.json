@@ -1,9 +1,0 @@
-{
-  "base": "mekanism:block_raw_uranium",
-  "layers": [
-	{
-	  "texture": "mekanism:block_raw_uranium",
-	  "template": "golems:layer/hands_template"
-	}
-  ]
-}

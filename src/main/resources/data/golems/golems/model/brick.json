@@ -1,0 +1,13 @@
+{
+  "layers": [
+	{
+	  "texture": "minecraft:bricks",
+	  "template": "golems:template"
+	},
+	{
+	  "texture": "minecraft:bricks",
+	  "template": "golems:template/hands"
+	},
+	"golems:eyes_and_vines"
+  ]
+}

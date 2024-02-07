@@ -1,0 +1,52 @@
+{
+  "attributes": {
+    "health": 104.0,
+    "attack": 8.5,
+    "speed": 0.32,
+	"armor": 2.0,
+	"immune": [
+	  "minecraft:in_fire",
+	  "minecraft:on_fire"
+	],
+	"sound": "minecraft:sculk",
+	"occludes": true
+  },
+  "blocks": {
+	"all": "minecraft:sculk_catalyst"
+  },
+  "glow": 6,
+  "heal_items": {
+	"minecraft:sculk_catalyst": 0.5,
+    "minecraft:sculk": 0.15,
+	"minecraft:experience_bottle": 0.5
+  },
+  "model": "golems:sculk_catalyst",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:effect",
+		"trigger": "attack",
+		"apply": {
+		  "target": "area",
+		  "radius": 6.0,
+		  "effect": {
+			"id": "minecraft:blindness",
+			"duration": 260
+		  }
+		}
+	  },
+	  {
+		"type": "golems:place",
+		"trigger": "attack",
+		"position": "self",
+		"chance": 0.4,
+		"block": {
+		  "Name": "minecraft:sculk_vein",
+		  "properties": {
+			"down": "true"
+		  }
+		}
+	  }
+	]
+  }
+}

@@ -1,8 +1,0 @@
-{
-  "multitexture": {
-    "base_map": {
-      "0": "minecraft:sandstone",
-	  "1": "minecraft:red_sandstone"
-    }
-  }
-}

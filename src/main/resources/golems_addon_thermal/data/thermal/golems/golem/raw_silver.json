@@ -1,0 +1,22 @@
+{
+  "attributes": {
+	"health": 40.0,
+	"attack": 5.1,
+	"knockback_resistance": 0.6,
+	"ignore": [
+	  "minecraft:poison"
+	],
+	"sound": "minecraft:metal"
+  },
+  "group": "golems:raw_ore",
+  "blocks": {
+	"all": "#forge:storage_blocks/raw_silver"
+  },
+  "repair_items": {
+    "#forge:storage_blocks/raw_silver": 0.5,
+    "#forge:ingots/silver": 0.25,
+	"#forge:raw_materials/silver": 0.15
+  },
+  "model": "thermal:raw_silver",
+  "brain": "golems:empty"
+}

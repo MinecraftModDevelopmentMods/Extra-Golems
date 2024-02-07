@@ -1,0 +1,13 @@
+{
+  "layers": [
+	{
+	  "texture": "minecraft:sculk",
+	  "template": "golems:template/sculk"
+	},
+	{
+	  "texture": "#golems:layer/bioluminescence",
+	  "render_type": "translucent",
+	  "emissive": true
+	}
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "layers": [
+	{
+	  "texture": "minecraft:bubble_coral_block",
+	  "template": "golems:template/coral"
+	},
+	{
+	  "texture": "#golems:eyes"
+	}
+  ]
+}

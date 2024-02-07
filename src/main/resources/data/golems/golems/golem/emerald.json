@@ -1,0 +1,24 @@
+{
+  "attributes": {
+    "health": 190.0,
+    "attack": 20.0,
+    "knockback_resistance": 0.8,
+	"armor": 3.5
+  },
+  "blocks": {
+	"all": "#forge:storage_blocks/emerald"
+  },
+  "repair_items": {
+    "#forge:storage_blocks/emerald": 0.5,
+	"#forge:gems/emerald": 0.1
+  },
+  "model": "golems:emerald",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:follow",
+		"entity": "minecraft:villager"
+	  }
+	]
+  }
+}

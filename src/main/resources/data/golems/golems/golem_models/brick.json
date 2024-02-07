@@ -1,9 +1,0 @@
-{
-  "base": "minecraft:bricks",
-  "layers": [
-	{
-	  "texture": "minecraft:bricks",
-	  "template": "golems:layer/hands_template"
-	}
-  ]
-}

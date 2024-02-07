@@ -1,0 +1,13 @@
+{
+  "parent": "golems:nether_wart",
+  "group": "golems:nether_wart",
+  "blocks": {
+	"all": "minecraft:warped_wart_block"
+  },
+  "repair_items": {
+    "minecraft:warped_wart_block": 0.5,
+	"minecraft:nether_wart": 0.15
+  },
+  "model": "golems:warped_wart",
+  "brain": "golems:empty"
+}

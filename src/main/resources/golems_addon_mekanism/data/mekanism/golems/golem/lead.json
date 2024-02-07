@@ -1,0 +1,20 @@
+{
+  "attributes": {
+	"health": 100.0,
+	"attack": 10.0,
+	"speed": 0.21,
+	"knockback_resistance": 1.0,
+	"armor": 1.0,
+	"sound": "minecraft:metal"
+  },
+  "group": "golems:lead",
+  "blocks": {
+	"all": "#forge:storage_blocks/lead"
+  },
+  "repair_items": {
+    "#forge:storage_blocks/lead": 0.5,
+    "#forge:ingots/lead": 0.15
+  },
+  "model": "mekanism:lead",
+  "brain": "golems:empty"
+}

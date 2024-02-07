@@ -1,0 +1,34 @@
+{
+  "attributes": {
+    "health": 160.0,
+    "attack": 19.0,
+	"speed": 0.23,
+	"armor": 3.0,
+	"knockback_resistance": 0.8,
+	"immune": [
+	  "minecraft:explosion",
+	  "minecraft:player_explosion",
+	  "minecraft:on_fire",
+	  "minecraft:in_fire"
+	],
+	"sound": "minecraft:metal"
+  },
+  "blocks": {
+	"all": "#forge:storage_blocks/refined_obsidian"
+  },
+  "repair_items": {
+	"minecraft:obsidian": 0.15,
+	"minecraft:crying_obsidian": 0.1,
+    "#forge:storage_blocks/refined_obsidian": 0.5,
+    "#forge:ingots/refined_obsidian": 0.15
+  },
+  "model": "mekanism:refined_obsidian",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:light",
+		"light": 5
+	  }
+	]
+  }
+}

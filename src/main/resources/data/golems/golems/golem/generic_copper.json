@@ -1,0 +1,18 @@
+{
+  "attributes": {
+    "health": 90.0,
+    "attack": 13.0,
+    "knockback_resistance": 0.98,
+	"immune": [
+	  "minecraft:lightning_bolt"
+	]
+  },
+  "group": "golems:copper",
+  "hidden": true,
+  "repair_items": {
+	"#forge:storage_blocks/copper": 0.5,
+	"minecraft:copper_ingot": 0.15
+  },
+  "model": "golems:copper",
+  "brain": "golems:empty"
+}

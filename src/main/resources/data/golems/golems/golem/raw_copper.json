@@ -1,0 +1,20 @@
+{
+  "attributes": {
+    "health": 45.0,
+    "attack": 6.0,
+	"speed": 0.23,
+    "knockback_resistance": 0.9,
+	"sound": "minecraft:metal"
+  },
+  "group": "golems:raw_ore",
+  "blocks": {
+	"all": "#forge:storage_blocks/raw_copper"
+  },
+  "repair_items": {
+    "#forge:storage_blocks/raw_copper": 0.5,
+	"#forge:raw_materials/copper": 0.1,
+	"#forge:ingots/copper": 0.25
+  },
+  "model": "golems:raw_copper",
+  "brain": "golems:empty"
+}

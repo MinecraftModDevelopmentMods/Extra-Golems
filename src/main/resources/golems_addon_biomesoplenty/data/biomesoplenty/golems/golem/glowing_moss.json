@@ -1,0 +1,44 @@
+{
+  "parent": "golems:moss",
+  "group": "golems:moss",
+  "blocks": {
+	"all": "biomesoplenty:glowing_moss_block"
+  },
+  "repair_items": {
+    "biomesoplenty:glowing_moss_block": 0.5,
+	"biomesoplenty:glowing_moss_carpet": 0.15
+  },
+  "particle": {
+	"type": "minecraft:warped_spore"
+  },
+  "model": "biomesoplenty:glowing_moss",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:effect",
+		"trigger": "tick",
+		"chance": 0.0004,
+		"apply": {
+		  "target": "self",
+		  "effect": {
+			"id": "minecraft:regeneration",
+			"duration": 300
+		  }
+		}
+	  },
+	  {
+		"type": "golems:light",
+		"light": 5
+	  },
+	  {
+		"type": "golems:place",
+		"trigger": "tick",
+		"position": "self",
+		"chance": 1.0,
+		"block": {
+		  "Name": "biomesoplenty:glowing_moss_carpet"
+		}
+	  }
+	]
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "layers": [
+	{
+	  "texture": "#golems:furnace/lit",
+	  "variant": 0
+	},
+	{
+	  "texture": "#golems:furnace/unlit",
+	  "variant": 1
+	}
+  ]
+}

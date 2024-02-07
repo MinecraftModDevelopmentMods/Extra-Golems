@@ -1,0 +1,18 @@
+{
+  "layers": [
+	{
+	  "texture": "minecraft:magma",
+	  "template": "golems:template",
+	  "emissive": true
+	},
+	{
+	  "texture": "#golems:eyes",
+	  "emissive": true
+	},
+	{
+	  "texture": "#golems:vines",
+	  "color": "B02525",
+	  "emissive": true
+	}
+  ]
+}

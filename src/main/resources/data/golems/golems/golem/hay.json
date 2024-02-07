@@ -1,0 +1,29 @@
+{
+  "attributes": {
+    "health": 10.0,
+    "attack": 3.5,
+    "speed": 0.32,
+	"knockback_resistance": 0.0,
+	"swim_ability": "float",
+	"sound": "minecraft:crop"
+  },
+  "blocks": {
+	"all": "minecraft:hay_block"
+  },
+  "repair_items": {
+    "minecraft:hay_block": 0.5,
+	"#forge:crops/wheat": 0.1
+  },
+  "model": "golems:hay",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:aoe_grow",
+		"radius": 4,
+		"interval": 400,
+		"shape": "disc",
+		"chance": 0.2
+	  }
+	]
+  }
+}

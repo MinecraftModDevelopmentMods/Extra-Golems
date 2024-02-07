@@ -1,7 +1,0 @@
-{
-  "base": "#golems:crafting",
-  "eyes": {
-	"texture": "#golems:layer/eyes/glasses"
-  },
-  "vines": {}
-}

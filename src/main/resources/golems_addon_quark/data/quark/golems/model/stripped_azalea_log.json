@@ -1,0 +1,9 @@
+{
+  "layers": [
+	{
+	  "texture": "quark:stripped_azalea_log",
+	  "template": "golems:template"
+	},
+	"golems:eyes_and_vines"
+  ]
+}

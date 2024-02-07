@@ -1,6 +1,6 @@
 package com.mcmoddev.golems.item;
 
-import com.mcmoddev.golems.EGClientEvents;
+import com.mcmoddev.golems.client.EGClientEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;

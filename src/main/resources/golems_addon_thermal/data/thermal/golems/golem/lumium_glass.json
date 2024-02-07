@@ -1,0 +1,27 @@
+{
+  "attributes": {
+	"health": 102.0,
+	"attack": 8.9,
+	"weak": [
+	  "minecraft:fall"
+	],
+	"sound": "minecraft:glass"
+  },
+  "group": "golems:glass",
+  "blocks": {
+	"all": "thermal:lumium_glass"
+  },
+  "repair_items": {
+	"thermal:lumium_glass": 0.5,
+	"#forge:glass": 0.15
+  },
+  "model": "thermal:lumium_glass",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:light",
+		"light": 15
+	  }
+	]
+  }
+}

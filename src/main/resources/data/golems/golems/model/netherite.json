@@ -1,0 +1,10 @@
+{
+  "layers": [
+	{
+	  "texture": "#golems:netherite"
+	},
+	{
+	  "texture": "#golems:eyes"
+	}
+  ]
+}

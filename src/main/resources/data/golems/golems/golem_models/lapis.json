@@ -1,8 +1,0 @@
-{
-  "base": "minecraft:lapis_block",
-  "layers": [
-    {
-	  "texture": "#golems:layer/gold_edging"
-	}
-  ]
-}

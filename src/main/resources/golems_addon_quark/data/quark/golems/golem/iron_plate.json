@@ -1,0 +1,47 @@
+{
+  "attributes": {
+    "health": 40.0,
+    "attack": 7.0,
+    "knockback_resistance": 1.0
+  },
+  "group": "quark:iron_plate",
+  "blocks": {
+	"arms": [
+	  "quark:iron_plate",
+	  "quark:rusty_iron_plate"
+	],
+	"legs": [
+	  "quark:iron_plate",
+	  "quark:rusty_iron_plate"
+	],
+	"body": "quark:iron_plate"
+  },
+  "repair_items": {
+    "quark:iron_plate": 0.25,
+    "quark:rusty_iron_plate": 0.2,
+	"minecraft:iron_ingot": 0.25
+  },
+  "model": "quark:iron_plate",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:update_golem",
+		"predicate": "wet",
+		"trigger": "tick",
+		"chance": 0.0002,
+		"apply": {
+		  "golem": "quark:rusty_iron_plate"
+		}
+	  },
+	  {
+		"type": "golems:item_update_golem",
+		"item": "minecraft:water_bucket",
+		"sound": "minecraft:item.bucket.empty",
+		"consume": true,
+		"apply": {
+		  "golem": "quark:rusty_iron_plate"
+		}
+	  }
+	]
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "attributes": {
+    "health": 34.0,
+    "attack": 10.5,
+	"knockback_resistance": 0.9,
+	"weak": [
+	  "minecraft:fall"
+	],
+	"swim_ability": "swim",
+	"sound": "minecraft:glass"
+  },
+  "blocks": {
+	"all": "minecraft:sea_lantern"
+  },
+  "repair_items": {
+    "minecraft:sea_lantern": 0.5,
+	"#forge:gems/prismarine": 0.15,
+	"#forge:dusts/prismarine": 0.15
+  },
+  "model": "golems:sea_lantern",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:light",
+		"light": 15
+	  }
+	]
+  }
+}

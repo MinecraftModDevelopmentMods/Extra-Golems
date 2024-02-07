@@ -1,9 +1,0 @@
-{
-  "base": "minecraft:polished_granite",
-  "layers": [
-	{
-	  "texture": "minecraft:polished_granite",
-	  "template": "golems:layer/hands_template"
-	}
-  ]
-}

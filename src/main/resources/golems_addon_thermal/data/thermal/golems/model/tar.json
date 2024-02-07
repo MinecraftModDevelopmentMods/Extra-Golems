@@ -1,0 +1,11 @@
+{
+  "layers": [
+	{
+	  "texture": "thermal:tar_block_side",
+	  "template": "golems:template"
+	},
+	{
+	  "texture": "#golems:eyes"
+	}
+  ]
+}

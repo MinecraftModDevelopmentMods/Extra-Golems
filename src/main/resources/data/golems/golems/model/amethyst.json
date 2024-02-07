@@ -1,0 +1,10 @@
+{
+  "layers": [
+	{
+	  "texture": "#golems:amethyst"
+	},
+	{
+	  "texture": "#golems:eyes"
+	}
+  ]
+}

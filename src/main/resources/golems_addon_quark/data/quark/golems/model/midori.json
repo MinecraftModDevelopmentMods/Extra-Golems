@@ -1,0 +1,9 @@
+{
+  "layers": [
+	{
+	  "texture": "quark:midori_pillar",
+	  "template": "golems:template"
+	},
+	"golems:eyes_and_vines"
+  ]
+}

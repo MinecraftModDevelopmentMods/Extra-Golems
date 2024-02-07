@@ -1,0 +1,9 @@
+{
+  "layers": [
+	{
+	  "texture": "thermal:raw_lead_block",
+	  "template": "golems:template"
+	},
+	"golems:eyes_and_vines"
+  ]
+}

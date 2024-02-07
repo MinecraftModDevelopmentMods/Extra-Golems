@@ -1,0 +1,11 @@
+{
+  "behaviors": [
+	{
+	  "type": "golems:explode",
+	  "radius": 8.0,
+	  "fuse": 50,
+	  "hurt_chance": 0.10,
+	  "attack_chance": 0.14
+	}
+  ]
+}

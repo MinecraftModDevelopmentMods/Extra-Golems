@@ -1,0 +1,42 @@
+{
+  "attributes": {
+    "health": 46.0,
+    "attack": 8.5,
+    "speed": 0.28,
+	"immune": [
+	  "minecraft:in_fire",
+	  "minecraft:on_fire"
+	],
+	"weak": [
+	  "minecraft:drown"
+	],
+	"swim_ability": "float"
+  },
+  "blocks": {
+	"all": "minecraft:magma_block"
+  },
+  "repair_items": {
+    "minecraft:magma_block": 0.5,
+	"minecraft:magma_cream": 0.15
+  },
+  "model": "golems:magma",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:light",
+		"light": 11
+	  },
+	  {
+		"type": "golems:set_fire",
+		"trigger": "hurt",
+		"target": "enemy",
+		"chance": 0.9,
+		"seconds": 4
+	  },
+	  {
+		"type": "golems:split",
+		"children": 2
+	  }
+	]
+  }
+}

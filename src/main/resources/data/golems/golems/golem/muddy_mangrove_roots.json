@@ -1,0 +1,24 @@
+{
+  "parent": "golems:mangrove_roots",
+  "attributes": {
+	"sound": "minecraft:muddy_mangrove_roots"
+  },
+  "blocks": {
+	"arms": [
+	  "minecraft:mangrove_roots",
+	  "minecraft:muddy_mangrove_roots"
+	],
+	"legs": [
+	  "minecraft:mangrove_roots",
+	  "minecraft:muddy_mangrove_roots"
+	],
+	"body": "minecraft:muddy_mangrove_roots"
+  },
+  "repair_items": {
+	"minecraft:mangrove_roots": 0.5,
+	"minecraft:muddy_mangrove_roots": 0.5,
+    "minecraft:mud": 0.25,
+	"#forge:rods/wooden": 0.1
+  },
+  "model": "golems:muddy_mangrove_roots"
+}

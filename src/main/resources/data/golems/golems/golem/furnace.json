@@ -1,0 +1,61 @@
+{
+  "attributes": {
+    "health": 88.0,
+    "attack": 9.5,
+    "knockback_resistance": 1.0,
+	"immune": [
+	  "minecraft:in_fire",
+	  "minecraft:on_fire"
+	]
+  },
+  "group": "golems:furnace",
+  "variants": 2,
+  "blocks": {
+	"all": "minecraft:furnace"
+  },
+  "repair_items": {
+    "minecraft:furnace": 0.5,
+	"minecraft:cobblestone": 0.1
+  },
+  "model": "golems:furnace",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:use_fuel",
+		"max_fuel": 102400,
+		"burn_time": 10
+	  },
+	  {
+		"type": "golems:tempt",
+		"item": "#minecraft:coals",
+		"variant": 0
+	  },
+	  {
+		"type": "golems:update_golem",
+		"trigger": "tick",
+		"predicate": "fuel",
+		"variant": 1,
+		"apply": {
+		  "variant": 0
+		},
+		"tooltip": "hidden"
+	  },
+	  {
+		"type": "golems:update_golem",
+		"trigger": "tick",
+		"predicate": "fuel_empty",
+		"variant": 0,
+		"apply": {
+		  "variant": 1
+		},
+		"tooltip": "hidden"
+	  },
+	  {
+		"type": "golems:light",
+		"light": 8,
+		"variant": 0,
+		"tooltip": "hidden"
+	  }
+	]
+  }
+}

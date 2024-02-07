@@ -6,14 +6,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
-import net.minecraft.server.packs.repository.RepositorySource;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraftforge.event.AddPackFindersEvent;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.resource.PathPackResources;
 
 import java.nio.file.Path;
-import java.util.function.Consumer;
 
 /**
  * Tracks which mods are loaded and registered the associated data pack, if any
@@ -30,29 +29,30 @@ public final class AddonLoader {
 	/** Datapack name for Mekanism addon **/
 	private static final String MEKANISM_PACK_NAME = "golems_addon_mekanism";
 
-	/** Mod Id for Tinkers Construct (by mDiyo) **/
-	public static final String TCONSTRUCT = "tconstruct";
-	/** Datapack name for Tinkers addon **/
-	private static final String TCONSTRUCT_PACK_NAME = "golems_addon_tconstruct";
-
 	/** Mod Id for Biomes O Plenty (by Glitchfiend) **/
 	public static final String BIOMESOPLENTY = "biomesoplenty";
 	/** Datapack name for Biomes O Plenty addon **/
 	private static final String BIOMESOPLENTY_PACK_NAME = "golems_addon_biomesoplenty";
 
+	/** Mod Id for Thermal Series (by TeamCoFH) **/
+	public static final String THERMAL = "thermal";
+	/** Datapack name for Thermal Series addon **/
+	private static final String THERMAL_PACK_NAME = "golems_addon_thermal";
+
 	private static boolean isQuarkLoaded;
 	private static boolean isMekanismLoaded;
-	private static boolean isTinkersLoaded;
 	private static boolean isBiomesOPlentyLoaded;
+	private static boolean isThermalLoaded;
 
 	/**
 	 * Called from FMLCommonSetupEvent to determine which mods are loaded
 	 */
-	public static void init() {
+	public static void register() {
 		isQuarkLoaded = ModList.get().isLoaded(QUARK);
 		isMekanismLoaded = ModList.get().isLoaded(MEKANISM);
-		isTinkersLoaded = ModList.get().isLoaded(TCONSTRUCT);
 		isBiomesOPlentyLoaded = ModList.get().isLoaded(BIOMESOPLENTY);
+		isThermalLoaded = ModList.get().isLoaded(THERMAL);
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(AddonLoader::onAddPackFinders);
 	}
 
 	/** @return true if Quark is present **/
@@ -65,14 +65,14 @@ public final class AddonLoader {
 		return isMekanismLoaded;
 	}
 
-	/** @return true if Mekanism is present **/
+	/** @return true if Biomes O Plenty is present **/
 	public static boolean isBiomesOPlentyLoaded() {
 		return isBiomesOPlentyLoaded;
 	}
 
-	/** @return true if Tinkers is present **/
-	public static boolean isTinkersLoaded() {
-		return isTinkersLoaded;
+	/** @return true if Thermal Series is loaded **/
+	public static boolean isThermalLoaded() {
+		return isThermalLoaded;
 	}
 
 	public static void onAddPackFinders(final AddPackFindersEvent event) {
@@ -87,18 +87,18 @@ public final class AddonLoader {
 				ExtraGolems.LOGGER.info("Extra Golems detected Mekanism, registering data pack now");
 				registerAddon(event, MEKANISM_PACK_NAME);
 			}
-			// register Tinkers data pack
-			if(isTinkersLoaded()) {
-				ExtraGolems.LOGGER.info("Extra Golems detected Tinkers Construct, registering data pack now");
-				registerAddon(event, TCONSTRUCT_PACK_NAME);
-			}
 			// register Biomes O Plenty data pack
 			if(isBiomesOPlentyLoaded()) {
 				ExtraGolems.LOGGER.info("Extra Golems detected Biomes O Plenty, registering data pack now");
 				registerAddon(event, BIOMESOPLENTY_PACK_NAME);
 			}
-			// TODO register Thermal data pack
+			// register Thermal data pack
+			if(isThermalLoaded()) {
+				ExtraGolems.LOGGER.info("Extra Golems detected Thermal Series, registering data pack now");
+				registerAddon(event, THERMAL_PACK_NAME);
+			}
 			// TODO register Botania data pack
+			// TODO register Biomes Youll Go data pack
 		}
 	}
 

@@ -1,0 +1,9 @@
+{
+  "layers": [
+	{
+	  "texture": "mekanism:block_raw_lead",
+	  "template": "golems:template"
+	},
+	"golems:eyes_and_vines"
+  ]
+}

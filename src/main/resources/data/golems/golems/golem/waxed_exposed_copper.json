@@ -1,0 +1,26 @@
+{
+  "parent": "golems:generic_copper",
+  "hidden": false,
+  "blocks": {
+	"arms": "#forge:storage_blocks/copper",
+	"legs": "#forge:storage_blocks/copper",
+	"body": "minecraft:waxed_exposed_copper"
+  },
+  "model": "golems:exposed_copper",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:item_update_golem",
+		"item": "#minecraft:axes",
+		"display_name": "golem.description.axe",
+		"sound": "minecraft:item.axe.wax_off",
+		"particle": {
+		  "type": "minecraft:wax_off"
+		},
+		"apply": {
+		  "golem": "golems:exposed_copper"
+		}
+	  }
+	]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "parent": "golems:generic_log",
+  "hidden": true,
+  "blocks": {
+	"arms": "#minecraft:logs_that_burn",
+	"legs": "#minecraft:logs_that_burn",
+	"body": [
+	  "biomesoplenty:stripped_magic_log",
+	  "biomesoplenty:stripped_magic_wood"
+	]
+  },
+  "model": "biomesoplenty:stripped_magic_log",
+  "brain": "golems:empty"
+}

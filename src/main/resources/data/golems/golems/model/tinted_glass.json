@@ -1,0 +1,12 @@
+{
+  "layers": [
+    {
+	  "texture": "minecraft:tinted_glass",
+	  "template": "golems:template/translucent",
+	  "render_type": "translucent"
+	},
+	{
+	  "texture": "#golems:eyes"
+	}
+  ]
+}

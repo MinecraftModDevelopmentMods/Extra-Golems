@@ -1,0 +1,14 @@
+{
+  "attributes": {
+    "health": 47.0,
+    "attack": 9.0,
+    "knockback_resistance": 0.8,
+	"armor": 3.0
+  },
+  "group": "golems:concrete",
+  "hidden": true,
+  "repair_items": {
+    "#forge:concrete": 0.5
+  },
+  "brain": "golems:empty"
+}

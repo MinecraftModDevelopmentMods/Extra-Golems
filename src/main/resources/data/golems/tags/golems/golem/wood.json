@@ -1,0 +1,13 @@
+{
+  "values": [
+	"#golems:log",
+	"golems:stripped_acacia_log",
+	"golems:stripped_birch_log",
+	"golems:stripped_cherry_log",
+	"golems:stripped_dark_oak_log",
+	"golems:stripped_jungle_log",
+	"golems:stripped_mangrove_log",
+	"golems:stripped_oak_log",
+	"golems:stripped_spruce_log"
+  ]
+}

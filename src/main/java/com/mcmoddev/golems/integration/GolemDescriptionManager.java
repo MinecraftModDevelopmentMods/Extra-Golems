@@ -1,13 +1,21 @@
 package com.mcmoddev.golems.integration;
 
-import com.mcmoddev.golems.container.behavior.GolemBehaviors;
-import com.mcmoddev.golems.entity.GolemBase;
+import com.mcmoddev.golems.data.GolemContainer;
+import com.mcmoddev.golems.data.behavior.AbstractShootBehavior;
+import com.mcmoddev.golems.data.behavior.ShootArrowsBehavior;
+import com.mcmoddev.golems.data.behavior.ShootFireballsBehavior;
+import com.mcmoddev.golems.data.behavior.ShootSnowballsBehavior;
+import com.mcmoddev.golems.data.behavior.UseFuelBehavior;
+import com.mcmoddev.golems.data.behavior.data.ShootBehaviorData;
+import com.mcmoddev.golems.data.behavior.data.UseFuelBehaviorData;
+import com.mcmoddev.golems.entity.IExtraGolem;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.item.TooltipFlag;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,58 +26,67 @@ import java.util.List;
  **/
 public abstract class GolemDescriptionManager {
 
-	protected boolean showSpecial = true;
-	protected boolean showSpecialChild = false;
-	protected boolean showAttack = true;
-	protected boolean extended = false;
+	protected boolean extended;
+	private boolean showHealth;
+	private boolean showAttack;
 
 	public GolemDescriptionManager() {
-		// empty constructor
+		this.extended = false;
+		this.showHealth = false;
+		this.showAttack = true;
 	}
 
 	/**
 	 * Collects descriptions that apply to the given golem
 	 *
-	 * @param golem the golem entity
+	 * @param entity the entity
 	 * @return a List containing all descriptions that apply to the passed entity
 	 **/
-	@SuppressWarnings("WeakerAccess")
-	public List<Component> getEntityDescription(final GolemBase golem) {
-		List<Component> list = new LinkedList<>();
-		// add attack damage to tip enabled (usually checks if sneaking)
-		if (showAttack) {
-			double attack = (golem.getAttribute(Attributes.ATTACK_DAMAGE).getValue());
-			list.add(Component.translatable("entitytip.attack").withStyle(ChatFormatting.GRAY).append(": ")
-					.append(Component.literal(Double.toString(attack)).withStyle(ChatFormatting.WHITE)));
+	public List<Component> getEntityDescription(final IExtraGolem entity, GolemContainer container) {
+		final Mob mob = entity.asMob();
+		final RegistryAccess registryAccess = mob.level().registryAccess();
+		final TooltipFlag tooltipFlag = this.extended ? TooltipFlag.ADVANCED : TooltipFlag.NORMAL;
+		// create empty list
+		List<Component> list = new ArrayList<>();
+		// add attributes
+		container.getAttributes().onAddDescriptions(container, registryAccess, list, tooltipFlag, showHealth, showAttack);
+		// add ammo count
+		if(container.getBehaviors().hasBehavior(ShootArrowsBehavior.class)) {
+			addAmmoInfo(entity, "arrows", list);
 		}
-		// add special descriptions
-		if (showSpecial) {
-			// add fuel amount if this golem consumes fuel
-			if (golem.getContainer().hasBehavior(GolemBehaviors.USE_FUEL)) {
-				addFuelInfo(golem, list);
+		if(container.getBehaviors().hasBehavior(ShootFireballsBehavior.class)) {
+			addAmmoInfo(entity, "fireballs", list);
+		}
+		if(container.getBehaviors().hasBehavior(ShootSnowballsBehavior.class)) {
+			addAmmoInfo(entity, "snowballs", list);
+		}
+		// add fuel amount
+		if(container.getBehaviors().hasBehavior(UseFuelBehavior.class)) {
+			final List<UseFuelBehavior> useFuelBehavior = container.getBehaviors().getActiveBehaviors(UseFuelBehavior.class, entity);
+			if(!useFuelBehavior.isEmpty()) {
+				addFuelInfo(entity, useFuelBehavior.get(0), list);
 			}
-			// add arrow amount if this golem shoots arrows
-			if (golem.getContainer().hasBehavior(GolemBehaviors.SHOOT_ARROWS)) {
-				addArrowsInfo(golem, list);
-			}
 		}
-
-		// add all other descriptions information
-		if ((!golem.isBaby() && showSpecial) || (golem.isBaby() && showSpecialChild)) {
-			list.addAll(golem.getContainer().getDescriptions());
+		// add behavior descriptions only in extended mode
+		if (extended) {
+			container.getBehaviors().forEach(b -> b.onAddDescriptions(registryAccess, list, tooltipFlag));
 		}
+		// add additional descriptions
+		list.addAll(container.getGolem().getDescriptions());
 		return list;
 	}
 
 	/**
-	 * Adds information about the amount of fuel in the golem's inventory
+	 * Adds information about the amount of fuel stored in the golem
 	 *
-	 * @param g    the golem
+	 * @param entity the entity
+	 * @param behavior the fuel behavior
 	 * @param list the description list
 	 */
-	protected void addFuelInfo(final GolemBase g, final List<Component> list) {
+	protected void addFuelInfo(final IExtraGolem entity, final UseFuelBehavior behavior, final List<Component> list) {
 		// determine fuel percentage
-		final float percentFuel = g.getFuelPercentage() * 100.0F;
+		final float percentFuel = 100.0F * (float) entity.getFuel() / (float) behavior.getMaxFuel();
+		// determine text color
 		final ChatFormatting color;
 		if (percentFuel < 6) {
 			color = ChatFormatting.RED;
@@ -81,40 +98,31 @@ public abstract class GolemDescriptionManager {
 		// if sneaking, show exact value, otherwise show percentage value
 		final String fuelString;
 		if (extended) {
-			fuelString = String.format("%d / %d", g.getFuel(), g.getMaxFuel());
+			fuelString = String.format("%d / %d", entity.getFuel(), behavior.getMaxFuel());
 		} else {
 			fuelString = String.format("%.1f", percentFuel) + "%";
 		}
-		// actually add the description
-		list.add(Component.translatable("entitytip.fuel").withStyle(ChatFormatting.GRAY).append(": ")
-				.append(Component.literal(fuelString).withStyle(color)));
+		// create fuel amount text
+		final Component fuelAmount = Component.literal(fuelString).withStyle(color);
+		// add the description
+		list.add(Component.translatable("golem.description.fuel", fuelAmount).withStyle(ChatFormatting.GRAY));
 	}
 
 	/**
-	 * Adds information about the number of arrows in the golem's inventory
+	 * Adds information about the ammo count in the golem inventory
 	 *
-	 * @param g    the golem
+	 * @param entity the entity
+	 * @param key the translation key suffix
 	 * @param list the description list
 	 */
-	protected void addArrowsInfo(final GolemBase g, final List<Component> list) {
+	protected void addAmmoInfo(final IExtraGolem entity, final String key, final List<Component> list) {
 		// determine number of arrows available
-		final int arrows = g.getArrowsInInventory();
-		if (arrows > 0 && extended) {
-			final ChatFormatting color = ChatFormatting.WHITE;
-			// if sneaking, show exact value, otherwise show percentage value
-			final String arrowString = String.valueOf(arrows);
-			// actually add the description
-			list.add(Component.translatable("entitytip.arrows").withStyle(ChatFormatting.GRAY).append(": ")
-					.append(Component.literal(arrowString).withStyle(color)));
+		final int count = entity.getAmmo();
+		if (count > 0 && extended) {
+			// create arrow count text
+			final Component countText = Component.literal(String.format("%d", count)).withStyle(ChatFormatting.WHITE);
+			// add the description
+			list.add(Component.translatable("golem.description." + key, countText).withStyle(ChatFormatting.GRAY));
 		}
-
 	}
-
-	/**
-	 * @return whether TRUE if the user is currently holding the SHIFT key
-	 **/
-	protected static boolean isShiftDown() {
-		return Screen.hasShiftDown();
-	}
-
 }

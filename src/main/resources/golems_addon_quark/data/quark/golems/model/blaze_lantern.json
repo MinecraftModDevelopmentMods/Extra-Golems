@@ -1,0 +1,13 @@
+{
+  "layers": [
+	{
+	  "texture": "quark:blaze_lantern",
+	  "template": "golems:template",
+	  "emissive": true
+	},
+	{
+	  "texture": "#golems:eyes",
+	  "emissive": true
+	}
+  ]
+}

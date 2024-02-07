@@ -1,0 +1,67 @@
+{
+  "parent": "golems:generic_copper",
+  "hidden": false,
+  "blocks": {
+	"arms": "#forge:storage_blocks/copper",
+	"legs": "#forge:storage_blocks/copper",
+	"body": "minecraft:exposed_copper"
+  },
+  "model": "golems:exposed_copper",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:update_golem",
+		"trigger": "lightning",
+		"particle": {
+		  "type": "minecraft:scrape"
+		},
+		"apply": {
+		  "golem": "golems:copper"
+		},
+		"tooltip": "hidden"
+	  },
+	  {
+		"type": "golems:update_golem",
+		"trigger": "tick",
+		"chance": 0.0002,
+		"apply": {
+		  "golem": "golems:weathered_copper"
+		}
+	  },
+	  {
+		"type": "golems:summon",
+		"trigger": "tick",
+		"predicate": "thunder",
+		"position": "self",
+		"radius": 1.0,
+		"chance": 0.0007,
+		"entity": "minecraft:lightning_bolt",
+		"tooltip": "hidden"
+	  },
+	  {
+		"type": "golems:item_update_golem",
+		"item": "#minecraft:axes",
+		"display_name": "golem.description.axe",
+		"sound": "minecraft:item.axe.scrape",
+		"particle": {
+		  "type": "minecraft:scrape"
+		},
+		"apply": {
+		  "golem": "golems:copper"
+		}
+	  },
+	  {
+		"type": "golems:item_update_golem",
+		"item": "minecraft:honeycomb",
+		"consume": true,
+		"sound": "minecraft:item.honeycomb.wax_on",
+		"particle": {
+		  "type": "minecraft:wax_on"
+		},
+		"apply": {
+		  "golem": "golems:waxed_exposed_copper"
+		}
+	  }
+	]
+  }
+}

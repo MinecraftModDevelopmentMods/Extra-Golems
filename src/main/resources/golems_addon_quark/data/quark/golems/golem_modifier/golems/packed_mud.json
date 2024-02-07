@@ -1,0 +1,13 @@
+{
+  "target": "golems:packed_mud",
+  "modifiers": [
+	{
+	  "type": "golems:add_blocks",
+	  "blocks": [
+		"quark:carved_mud_bricks",
+		"quark:mud_brick_lattice",
+		"quark:mud_pillar"
+	  ]
+	}
+  ]
+}

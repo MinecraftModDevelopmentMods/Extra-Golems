@@ -1,0 +1,42 @@
+{
+  "attributes": {
+    "health": 18.0,
+    "attack": 5.0,
+    "speed": 0.28,
+	"knockback_resistance": 0.2,
+	"swim_ability": "float",
+	"sound": "minecraft:bamboo_wood"
+  },
+  "group": "golems:bamboo",
+  "hidden": false,
+  "blocks": {
+	"arms": "#minecraft:bamboo_blocks",
+	"legs": "#minecraft:bamboo_blocks",
+	"body": "minecraft:bamboo_block"
+  },
+  "repair_items": {
+    "#minecraft:bamboo_blocks": 0.5,
+	"minecraft:bamboo": 0.1
+  },
+  "model": "golems:bamboo_wood",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:item_update_golem",
+		"item": "#minecraft:axes",
+		"display_name": "golem.description.axe",
+		"sound": "minecraft:item.axe.strip",
+		"particle": {
+		  "type": "minecraft:item",
+		  "value": {
+			"id": "minecraft:bamboo_block",
+			"Count": 1
+		  }
+		},
+		"apply": {
+		  "golem": "golems:stripped_bamboo_wood"
+		}
+	  }
+	]
+  }
+}

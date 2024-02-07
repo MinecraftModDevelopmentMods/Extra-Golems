@@ -1,0 +1,25 @@
+{
+  "attributes": {
+    "health": 54.0,
+    "attack": 9.0,
+    "knockback_resistance": 0.8
+  },
+  "group": "golems:stone",
+  "blocks": {
+	"all": [
+	  "quark:polished_dripstone",
+	  "quark:dripstone_bricks",
+	  "quark:chiseled_dripstone_bricks",
+	  "quark:dripstone_pillar"
+	]
+  },
+  "repair_items": {
+    "quark:polished_dripstone": 0.5,
+    "quark:dripstone_bricks": 0.5,
+    "quark:chiseled_dripstone_bricks": 0.5,
+    "quark:dripstone_pillar": 0.5,
+	"minecraft:dripstone": 0.15
+  },
+  "model": "quark:dripstone",
+  "brain": "golems:empty"
+}

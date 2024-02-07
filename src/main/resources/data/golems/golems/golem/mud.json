@@ -1,0 +1,18 @@
+{
+  "attributes": {
+    "health": 20.0,
+    "attack": 5.0,
+    "speed": 0.24,
+	"knockback_resistance": 0.2,
+	"sound": "minecraft:mud"
+  },
+  "blocks": {
+	"all": "minecraft:mud"
+  },
+  "repair_items": {
+    "minecraft:mud": 0.5,
+	"#minecraft:dirt": 0.25
+  },
+  "model": "golems:mud",
+  "brain": "golems:empty"
+}

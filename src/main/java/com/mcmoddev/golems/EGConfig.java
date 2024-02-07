@@ -1,19 +1,13 @@
 package com.mcmoddev.golems;
 
-import com.mcmoddev.golems.container.GolemContainer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.registries.ForgeRegistry;
-import net.minecraftforge.registries.RegistryManager;
 
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.List;
 
 public final class EGConfig {
-
-	private static final TagKey<GolemContainer> VILLAGER_SUMMONABLE = TagKey.create(ExtraGolems.Keys.GOLEM_CONTAINERS, new ResourceLocation(ExtraGolems.MODID, "villager_summonable"));
 
 	private final ForgeConfigSpec.BooleanValue BEDROCK_GOLEM_CREATIVE_ONLY;
 	private final ForgeConfigSpec.BooleanValue PUMPKIN_BUILDS_GOLEMS;
@@ -22,6 +16,7 @@ public final class EGConfig {
 	private final ForgeConfigSpec.BooleanValue ENABLE_HEAL_GOLEMS;
 	private final ForgeConfigSpec.BooleanValue ENABLE_HOLIDAYS;
 	private final ForgeConfigSpec.IntValue VILLAGER_GOLEM_SPAWN_CHANCE;
+	private final ForgeConfigSpec.IntValue DEBUG_GOLEMS_PERMISSION_LEVEL;
 
 	private boolean aprilFirst;
 	private boolean halloween;
@@ -34,17 +29,17 @@ public final class EGConfig {
 	private boolean enableHealGolems;
 	private boolean enableHolidays;
 	private int villagerGolemSpawnChance;
-	private List<ResourceLocation> villagerGolemSpawnList;
+	private int debugGolemsPermissionLevel;
 
 	public EGConfig(final ForgeConfigSpec.Builder builder) {
 		// Global values
 		builder.push("general");
 		BEDROCK_GOLEM_CREATIVE_ONLY = builder.comment("When true, only players in creative mode can use a Bedrock Golem spawn item")
 				.define("bedrock_golem_creative_only", true);
-		PUMPKIN_BUILDS_GOLEMS = builder.comment("When true, pumpkins can be used to build this mod's golems")
+		PUMPKIN_BUILDS_GOLEMS = builder.comment("When true, pumpkins can be used to build Extra Golems entities")
 				.define("pumpkin_builds_golems", false);
-		ENABLE_FRIENDLY_FIRE = builder.comment("When enabled, attacking a player-built entity will make it attack you")
-				.define("friendly_fire", true);
+		ENABLE_FRIENDLY_FIRE = builder.comment("When enabled, attacking a player-built golem will make it attack you")
+				.define("friendly_fire", false);
 		ENABLE_USE_SPELL_ITEM = builder
 				.comment("When enabled, players can use the spell item on a carved pumpkin to convert it to a golem head in-world")
 				.define("use_spell", true);
@@ -54,6 +49,9 @@ public final class EGConfig {
 				.defineInRange("villager_summon_chance", 60, 0, 100);
 		ENABLE_HEAL_GOLEMS = builder.comment("When enabled, giving blocks and items to golems can restore health")
 				.define("heal_golems", true);
+		DEBUG_GOLEMS_PERMISSION_LEVEL = builder
+				.comment("The minimum permission level required to spawn golems from the guide book")
+				.defineInRange("debug_golems_permission_level", 2, 0, 4);
 		builder.pop();
 	}
 
@@ -93,6 +91,10 @@ public final class EGConfig {
 		return enableHolidays && pride;
 	}
 
+	public int debugPermissionLevel() {
+		return debugGolemsPermissionLevel;
+	}
+
 	public void bake() {
 		// update the holiday configs
 		final LocalDateTime now = LocalDateTime.now();
@@ -107,5 +109,6 @@ public final class EGConfig {
 		enableHolidays = ENABLE_HOLIDAYS.get();
 		enableHealGolems = ENABLE_HEAL_GOLEMS.get();
 		villagerGolemSpawnChance = VILLAGER_GOLEM_SPAWN_CHANCE.get();
+		this.debugGolemsPermissionLevel = DEBUG_GOLEMS_PERMISSION_LEVEL.get();
 	}
 }

@@ -1,0 +1,16 @@
+{
+  "attributes": {
+    "health": 40.0,
+    "attack": 4.9
+  },
+  "group": "golems:fluorite",
+  "blocks": {
+	"all": "#forge:storage_blocks/fluorite"
+  },
+  "repair_items": {
+    "#forge:storage_blocks/fluorite": 0.5,
+    "#forge:gems/fluorite": 0.15
+  },
+  "model": "mekanism:fluorite",
+  "brain": "golems:empty"
+}

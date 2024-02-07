@@ -1,0 +1,21 @@
+{
+  "attributes": {
+	"health": 10.0,
+	"attack": 4.0,
+	"speed": 0.295,
+	"knockback_resistance": 0.4,
+	"immune": [
+	  "minecraft:sonic_boom"
+	],
+	"occludes": true,
+	"swim_ability": "float",
+	"sound": "minecraft:wool"
+  },
+  "group": "golems:wool",
+  "hidden": true,
+  "repair_items": {
+	"#minecraft:wool": 0.5,
+	"#forge:string": 0.1
+  },
+  "brain": "golems:empty"
+}

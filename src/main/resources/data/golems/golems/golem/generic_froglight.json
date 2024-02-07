@@ -1,0 +1,11 @@
+{
+  "attributes": {
+    "health": 44.0,
+    "attack": 10.5,
+    "knockback_resistance": 0.9,
+	"sound": "minecraft:froglight"
+  },
+  "group": "golems:froglight",
+  "hidden": true,
+  "brain": "golems:froglight"
+}

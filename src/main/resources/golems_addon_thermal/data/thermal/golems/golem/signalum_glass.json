@@ -1,0 +1,29 @@
+{
+  "attributes": {
+	"health": 15.0,
+	"attack": 14.0,
+	"speed": 0.29,
+	"knockback_resistance": 0.2,
+	"weak": [
+	  "minecraft:fall"
+	],
+	"sound": "minecraft:glass"
+  },
+  "group": "golems:glass",
+  "blocks": {
+	"all": "thermal:signalum_glass"
+  },
+  "repair_items": {
+	"thermal:signalum_glass": 0.5,
+	"#forge:glass": 0.15
+  },
+  "model": "thermal:signalum_glass",
+  "brain": {
+	"behaviors": [
+	  {
+		"type": "golems:light",
+		"light": 5
+	  }
+	]
+  }
+}

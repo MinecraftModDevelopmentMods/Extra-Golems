@@ -1,0 +1,24 @@
+{
+  "attributes": {
+	"health": 35,
+	"attack": 6.5,
+	"immune": [
+	  "minecraft:in_fire",
+	  "minecraft:on_fire"
+	]
+  },
+  "blocks": {
+	"all": [
+	  "biomesoplenty:brimstone_bricks",
+	  "biomesoplenty:chiseled_brimstone_bricks"
+	]
+  },
+  "repair_items": {
+	"biomesoplenty:brimstone": 0.5,
+	"biomesoplenty:brimstone_bricks": 0.5,
+	"biomesoplenty:chiseled_brimstone_bricks": 0.5,
+	"minecraft:netherrack": 0.15
+  },
+  "model": "biomesoplenty:brimstone_brick",
+  "brain": "golems:empty"
+}
