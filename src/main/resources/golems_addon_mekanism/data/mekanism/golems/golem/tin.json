@@ -5,6 +5,7 @@
 	"knockback_resistance": 0.8,
 	"sound": "minecraft:metal"
   },
+  "group": "golems:tin",
   "blocks": {
 	"all": "#forge:storage_blocks/tin"
   },

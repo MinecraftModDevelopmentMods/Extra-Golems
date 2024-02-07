@@ -1,0 +1,19 @@
+{
+  "attributes": {
+	"health": 68.0,
+	"attack": 5.5,
+	"speed": 0.28,
+	"attack_knockback": 0.79,
+	"swim_ability": "float"
+  },
+  "group": "thermal:rubber",
+  "blocks": {
+	"all": "thermal:cured_rubber_block"
+  },
+  "repair_items": {
+    "thermal:cured_rubber_block": 0.5,
+    "thermal:cured_rubber": 0.15
+  },
+  "model": "thermal:cured_rubber",
+  "brain": "golems:empty"
+}

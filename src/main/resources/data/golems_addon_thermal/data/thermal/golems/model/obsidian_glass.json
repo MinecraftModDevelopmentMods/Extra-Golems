@@ -1,0 +1,11 @@
+{
+  "layers": [
+	{
+	  "texture": "thermal:obsidian_glass",
+	  "template": "golems:template"
+	},
+	{
+	  "texture": "#golems:eyes"
+	}
+  ]
+}

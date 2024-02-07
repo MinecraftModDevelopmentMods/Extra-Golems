@@ -1,0 +1,17 @@
+{
+  "attributes": {
+	"health": 80.0,
+	"attack": 6.2,
+	"sound": "minecraft:sand",
+	"swim_ability": "float"
+  },
+  "blocks": {
+	"all": "#forge:storage_blocks/tin"
+  },
+  "repair_items": {
+    "#forge:storage_blocks/gunpowder": 0.5,
+    "#forge:gunpowder": 0.15
+  },
+  "model": "thermal:gunpowder",
+  "brain": "golems:tnt"
+}

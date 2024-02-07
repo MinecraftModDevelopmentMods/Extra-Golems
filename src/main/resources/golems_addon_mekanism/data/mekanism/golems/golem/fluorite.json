@@ -3,6 +3,7 @@
     "health": 40.0,
     "attack": 4.9
   },
+  "group": "golems:fluorite",
   "blocks": {
 	"all": "#forge:storage_blocks/fluorite"
   },

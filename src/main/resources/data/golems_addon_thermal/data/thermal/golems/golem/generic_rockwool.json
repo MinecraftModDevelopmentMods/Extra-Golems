@@ -1,0 +1,20 @@
+{
+  "attributes": {
+	"health": 32.0,
+	"attack": 5.1,
+	"knockback_resistance": 0.6,
+	"occludes": true,
+	"immune": [
+	  "minecraft:explosion",
+	  "minecraft:player_explosion"
+	],
+	"sound": "minecraft:wool"
+  },
+  "group": "thermal:rockwool",
+  "hidden": true,
+  "repair_items": {
+    "#thermal:rockwool": 0.5,
+    "#forge:slag": 0.15
+  },
+  "brain": "golems:empty"
+}

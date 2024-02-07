@@ -1,0 +1,18 @@
+{
+  "attributes": {
+	"health": 88.0,
+	"attack": 9.6,
+	"speed": 0.30,
+	"knockback_resistance": 0.8,
+	"sound": "minecraft:metal"
+  },
+  "blocks": {
+	"all": "#forge:storage_blocks/electrum"
+  },
+  "repair_items": {
+    "#forge:storage_blocks/electrum": 0.5,
+    "#forge:ingots/electrum": 0.15
+  },
+  "model": "thermal:electrum",
+  "brain": "golems:empty"
+}

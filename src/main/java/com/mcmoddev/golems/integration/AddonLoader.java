@@ -34,9 +34,15 @@ public final class AddonLoader {
 	/** Datapack name for Biomes O Plenty addon **/
 	private static final String BIOMESOPLENTY_PACK_NAME = "golems_addon_biomesoplenty";
 
+	/** Mod Id for Thermal Series (by TeamCoFH) **/
+	public static final String THERMAL = "thermal";
+	/** Datapack name for Thermal Series addon **/
+	private static final String THERMAL_PACK_NAME = "golems_addon_thermal";
+
 	private static boolean isQuarkLoaded;
 	private static boolean isMekanismLoaded;
 	private static boolean isBiomesOPlentyLoaded;
+	private static boolean isThermalLoaded;
 
 	/**
 	 * Called from FMLCommonSetupEvent to determine which mods are loaded
@@ -45,6 +51,7 @@ public final class AddonLoader {
 		isQuarkLoaded = ModList.get().isLoaded(QUARK);
 		isMekanismLoaded = ModList.get().isLoaded(MEKANISM);
 		isBiomesOPlentyLoaded = ModList.get().isLoaded(BIOMESOPLENTY);
+		isThermalLoaded = ModList.get().isLoaded(THERMAL);
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(AddonLoader::onAddPackFinders);
 	}
 
@@ -58,9 +65,14 @@ public final class AddonLoader {
 		return isMekanismLoaded;
 	}
 
-	/** @return true if Mekanism is present **/
+	/** @return true if Biomes O Plenty is present **/
 	public static boolean isBiomesOPlentyLoaded() {
 		return isBiomesOPlentyLoaded;
+	}
+
+	/** @return true if Thermal Series is loaded **/
+	public static boolean isThermalLoaded() {
+		return isThermalLoaded;
 	}
 
 	public static void onAddPackFinders(final AddPackFindersEvent event) {
@@ -80,8 +92,13 @@ public final class AddonLoader {
 				ExtraGolems.LOGGER.info("Extra Golems detected Biomes O Plenty, registering data pack now");
 				registerAddon(event, BIOMESOPLENTY_PACK_NAME);
 			}
-			// TODO register Thermal data pack
+			// register Thermal data pack
+			if(isThermalLoaded()) {
+				ExtraGolems.LOGGER.info("Extra Golems detected Thermal Series, registering data pack now");
+				registerAddon(event, THERMAL_PACK_NAME);
+			}
 			// TODO register Botania data pack
+			// TODO register Biomes Youll Go data pack
 		}
 	}
 
