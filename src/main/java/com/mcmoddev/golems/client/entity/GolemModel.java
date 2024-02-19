@@ -13,26 +13,30 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
 
 public class GolemModel<T extends GolemBase> extends IronGolemModel<T> implements ArmedModel {
 
-	private final ModelPart kitty = createKittyLayer().bakeRoot();
-	private final ModelPart tail;
-	private final ModelPart tail1;
-	private final ModelPart ears;
+	protected final ModelPart kitty = createKittyLayer().bakeRoot();
+	protected final ModelPart tail;
+	protected final ModelPart tail1;
+	protected final ModelPart ears;
 
-	private float red = 1.0f;
-	private float green = 1.0f;
-	private float blue = 1.0f;
+	private float red = 1.0F;
+	private float green = 1.0F;
+	private float blue = 1.0F;
 
 	public GolemModel(ModelPart rootIn) {
 		super(rootIn);
-		tail = kitty.getChild("tail");
-		tail1 = tail.getChild("tail1");
-		ears = kitty.getChild("ears");
+		this.tail = kitty.getChild("tail");
+		this.tail1 = tail.getChild("tail1");
+		this.ears = kitty.getChild("ears");
 	}
+
+	//// MESH DEFINITION ////
 
 	public static LayerDefinition createBodyLayer() {
 		MeshDefinition meshdefinition = new MeshDefinition();
@@ -110,65 +114,54 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> implement
 		return this.kitty;
 	}
 
-	@Override
-	public void renderToBuffer(final PoseStack poseStack, final VertexConsumer vertexConsumer, final int packedLightIn, final int packedOverlayIn, final float redIn,
-							   final float greenIn, final float blueIn, final float alphaIn) {
-		poseStack.pushPose();
+	//// RENDER ////
 
+	@Override
+	public void renderToBuffer(final PoseStack poseStack, final VertexConsumer vertexConsumer, final int packedLight, final int packedOverlay, final float red,
+							   final float green, final float blue, final float alpha) {
 		// render with custom colors
-		super.renderToBuffer(poseStack, vertexConsumer, packedLightIn, packedOverlayIn, red, green, blue, alphaIn);
-		poseStack.popPose();
+		super.renderToBuffer(poseStack, vertexConsumer, packedLight, packedOverlay, this.red, this.green, this.blue, alpha);
 	}
 
-	// SETTINGS AND COLORS
+	public void renderKittyLayer(final PoseStack poseStack, final VertexConsumer vertexConsumer, final int packedLight, final int packedOverlay) {
+		getKitty().render(poseStack, vertexConsumer, packedLight, packedOverlay);
+	}
 
-	public void setColor(final float r, final float g, final float b) {
-		red = r;
-		green = g;
-		blue = b;
+	//// ANIMATIONS ////
+
+	@Override
+	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float partialTicks, float netHeadYaw, float headPitch) {
+		super.setupAnim(entity, limbSwing, limbSwingAmount, partialTicks, netHeadYaw, headPitch);
+	}
+
+	public void setupKittyAnim(T entity, float limbSwing, float limbSwingAmount, float partialTicks, float netHeadYaw, float headPitch) {
+		// ears
+		this.ears.copyFrom(this.head);
+		// tail
+		this.tail.y = 2.0F;
+		this.tail.z = 4.0F;
+		// tail animation
+		float idleSwing = Mth.cos((entity.tickCount + entity.getId() + partialTicks) * 0.058F);
+		float tailSwing = Mth.cos(limbSwing) * limbSwingAmount;
+		tail.xRot = -2.4435F + 0.38F * tailSwing;
+		tail1.xRot = 0.2618F + 0.48F * tailSwing;
+		tail.zRot = 0.06F * idleSwing;
+		tail1.zRot = -0.05F * idleSwing;
+	}
+
+	//// COLOR ////
+
+	public void setColor(final float red, final float green, final float blue) {
+		this.red = red;
+		this.green = green;
+		this.blue = blue;
 	}
 
 	public void resetColor() {
 		red = green = blue = 1.0F;
 	}
 
-	public float red() {
-		return red;
-	}
-
-	public float green() {
-		return green;
-	}
-
-	public float blue() {
-		return blue;
-	}
-
-	// KITTY LAYER HELPERS
-
-	@Override
-	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float partialTicks, float netHeadYaw, float headPitch) {
-		super.setupAnim(entity, limbSwing, limbSwingAmount, partialTicks, netHeadYaw, headPitch);
-		final String name = ChatFormatting.stripFormatting(entity.getName().getString());
-		final boolean showKittyLayer = entity.hasCustomName() && "kitty".equalsIgnoreCase(name);
-		// animate tail
-		if (showKittyLayer) {
-			// ears
-			this.ears.copyFrom(this.head);
-			// tail
-			this.tail.y = 2.0F;
-			this.tail.z = 4.0F;
-			// tail animation
-			float idleSwing = Mth.cos((entity.tickCount + partialTicks) * 0.058F);
-			float tailSwing = Mth.cos(limbSwing) * limbSwingAmount;
-			tail.xRot = -2.4435F + 0.38F * tailSwing;
-			tail1.xRot = 0.2618F + 0.48F * tailSwing;
-			tail.zRot = 0.06F * idleSwing;
-			tail1.zRot = -0.05F * idleSwing;
-		}
-		// show or hide ears/tail
-		this.kitty.visible = showKittyLayer;
-	}
+	//// ARMED MODEL ////
 
 	@Override
 	public void translateToHand(HumanoidArm hand, PoseStack matrixStack) {

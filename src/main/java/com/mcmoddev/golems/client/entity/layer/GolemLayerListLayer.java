@@ -8,7 +8,6 @@ import com.mcmoddev.golems.data.model.RenderTypes;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.client.entity.GolemModel;
 import com.mcmoddev.golems.client.entity.GolemRenderType;
-import com.mcmoddev.golems.client.entity.GolemRenderer;
 import com.mcmoddev.golems.util.ResourcePair;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -31,8 +30,6 @@ import java.util.Optional;
 
 public class GolemLayerListLayer<T extends GolemBase> extends RenderLayer<T, GolemModel<T>> {
 
-	private final GolemModel<T> layerModel;
-
 	/**
 	 * Renders all layers in the golem {@link LayerList}
 	 *
@@ -41,7 +38,6 @@ public class GolemLayerListLayer<T extends GolemBase> extends RenderLayer<T, Gol
 	 **/
 	public GolemLayerListLayer(RenderLayerParent<T, GolemModel<T>> renderParent, EntityModelSet modelSet) {
 		super(renderParent);
-		this.layerModel = new GolemModel<>(modelSet.bakeLayer(GolemRenderer.GOLEM_MODEL_RESOURCE));
 	}
 
 	@Override
@@ -66,21 +62,17 @@ public class GolemLayerListLayer<T extends GolemBase> extends RenderLayer<T, Gol
 		if(layers.getLayers().isEmpty()) {
 			return;
 		}
-		// prepare to render
-		getParentModel().copyPropertiesTo(layerModel);
-		layerModel.prepareMobModel(entity, limbSwing, limbSwingAmount, partialTicks);
-		layerModel.setupAnim(entity, limbSwing, limbSwingAmount, partialTicks, netHeadYaw, headPitch);
 		// render all layers
 		int packedOverlay = LivingEntityRenderer.getOverlayCoords(entity, 0.0F);
-		layers.get(entity.level().registryAccess()).forEach(layer -> {
+		for(Layer layer : layers.get(entity.level().registryAccess())) {
 			// validate variant
 			if(layer.isVariantInBounds(entity)) {
-				renderTexture(entity, layerModel, layer, poseStack, bufferSource, packedLight, packedOverlay);
+				renderTexture(entity, getParentModel(), layer, poseStack, bufferSource, packedLight, packedOverlay);
 			}
-		});
+		}
 		// render special layers
 		if(ExtraGolems.CONFIG.pride() || ChatFormatting.stripFormatting(entity.getName().getString()).toLowerCase(Locale.ENGLISH).startsWith("lgbt")) {
-			renderTexture(entity, layerModel, Layer.RAINBOW, poseStack, bufferSource, packedLight, packedOverlay);
+			renderTexture(entity, getParentModel(), Layer.RAINBOW, poseStack, bufferSource, packedLight, packedOverlay);
 		}
 	}
 

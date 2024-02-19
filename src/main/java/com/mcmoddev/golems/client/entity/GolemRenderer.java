@@ -41,35 +41,42 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
 	}
 
 	@Override
-	protected void setupRotations(T pEntityLiving, PoseStack pPoseStack, float pAgeInTicks, float pRotationYaw, float pPartialTicks) {
-		super.setupRotations(pEntityLiving, pPoseStack, pAgeInTicks, pRotationYaw, pPartialTicks);
-		if (!(pEntityLiving.walkAnimation.speed() < 0.01D)) {
-			float maxAngle = 13.0F;
-			float walkAnimation = pEntityLiving.walkAnimation.position(pPartialTicks) + 6.0F;
+	protected void setupRotations(T entity, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick) {
+		// set up parent rotations
+		super.setupRotations(entity, poseStack, ageInTicks, rotationYaw, partialTick);
+		// flip upside down
+		if (ExtraGolems.CONFIG.aprilFirst()) {
+			poseStack.translate(0.0F, entity.getBbHeight() + 0.1F, 0.0F);
+			poseStack.mulPose(Axis.ZP.rotationDegrees(180.0F));
+		}
+		// update walk animation
+		if (!(entity.walkAnimation.speed() < 0.01D)) {
+			float maxAngle = 13.0F * entity.getScale();
+			float walkAnimation = entity.walkAnimation.position(partialTick) + 6.0F;
 			float walkAngle = (Math.abs(walkAnimation % maxAngle - (maxAngle / 2.0F)) - 3.25F) / 3.25F;
-			pPoseStack.mulPose(Axis.ZP.rotationDegrees((maxAngle / 2.0F) * walkAngle));
+			poseStack.mulPose(Axis.ZP.rotationDegrees((maxAngle / 2.0F) * walkAngle));
 		}
 	}
 
 	@Override
-	public void render(final T entity, final float entityYaw, final float partialTicks, final PoseStack poseStack,
+	protected void scale(T entity, PoseStack poseStack, float partialTick) {
+		// scale baby
+		if(entity.isBaby()) {
+			final float scale = entity.getScale();
+			poseStack.scale(scale, scale, scale);
+		}
+	}
+
+	@Override
+	public void render(final T entity, final float entityYaw, final float partialTick, final PoseStack poseStack,
 					   final MultiBufferSource bufferSource, final int pPackedLight) {
 		// validate container
 		final Optional<GolemContainer> oContainer = entity.getContainer();
 		if(oContainer.isEmpty()) {
 			return;
 		}
-		poseStack.pushPose();
-		// check for april first
-		if (ExtraGolems.CONFIG.aprilFirst()) {
-			poseStack.mulPose(Axis.ZP.rotationDegrees(180.0F));
-		}
-		// scale according to entity
-		final float scale = entity.getScale();
-		poseStack.scale(scale, scale, scale);
 		// render the entity
-		super.render(entity, entityYaw, partialTicks, poseStack, bufferSource, pPackedLight);
-		poseStack.popPose();
+		super.render(entity, entityYaw, partialTick, poseStack, bufferSource, pPackedLight);
 	}
 
 	@Override
