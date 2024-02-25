@@ -8,24 +8,23 @@ import com.mcmoddev.golems.data.behavior.data.UseFuelBehaviorData;
 import com.mcmoddev.golems.data.golem.Golem;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.entity.IExtraGolem;
+import com.mcmoddev.golems.network.ClientBoundGolemContainerPacket;
+import com.mcmoddev.golems.network.EGNetwork;
 import com.mcmoddev.golems.network.SummonGolemCommand;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageTypes;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.sensing.GolemSensor;
-import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.level.Level;
@@ -46,6 +45,7 @@ import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -83,23 +83,17 @@ public final class EGEvents {
 
 		@SubscribeEvent
 		public static void onPlayerLoggedIn(final PlayerEvent.PlayerLoggedInEvent event) {
-			if(event.getEntity().level().isClientSide()) {
-				GolemContainer.reset();
-				GolemContainer.populate(event.getEntity().level().registryAccess());
-			}
-		}
-
-		@SubscribeEvent
-		public static void onPlayerLoggedOut(final PlayerEvent.PlayerLoggedOutEvent event) {
-			if(event.getEntity().level().isClientSide()) {
-				GolemContainer.reset();
-			}
+			// send packet to recalculate golem containers on the client
+			EGNetwork.CHANNEL.send(PacketDistributor.ALL.noArg(), new ClientBoundGolemContainerPacket(ClientBoundGolemContainerPacket.RESET_AND_POPULATE));
 		}
 
 		@SubscribeEvent
 		public static void onSyncDatapacks(final OnDatapackSyncEvent event) {
+			// recalculate golem containers
 			GolemContainer.reset();
 			GolemContainer.populate(event.getPlayerList().getServer().registryAccess());
+			// send packet to recalculate golem containers on the client
+			EGNetwork.CHANNEL.send(PacketDistributor.ALL.noArg(), new ClientBoundGolemContainerPacket(ClientBoundGolemContainerPacket.RESET_AND_POPULATE));
 		}
 
 		/**

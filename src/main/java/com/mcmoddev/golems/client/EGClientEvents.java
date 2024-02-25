@@ -6,6 +6,7 @@ import com.mcmoddev.golems.client.entity.GolemRenderType;
 import com.mcmoddev.golems.client.entity.GolemRenderer;
 import com.mcmoddev.golems.client.menu.GolemInventoryScreen;
 import com.mcmoddev.golems.client.menu.GuideBookScreen;
+import com.mcmoddev.golems.data.GolemContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.resources.model.ModelBakery;
@@ -15,8 +16,10 @@ import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -71,6 +74,11 @@ public final class EGClientEvents {
 	}
 
 	public static final class ForgeHandler {
+
+		@SubscribeEvent
+		public static void onPlayerLoggedOut(final ClientPlayerNetworkEvent.LoggingOut event) {
+			GolemContainer.reset();
+		}
 
 		public static void loadBookGui(final Player playerIn, final ItemStack itemstack) {
 			// only load client-side, of course
