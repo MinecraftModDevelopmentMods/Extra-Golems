@@ -6,6 +6,7 @@ import com.mcmoddev.golems.data.behavior.BehaviorList;
 import com.mcmoddev.golems.data.model.LayerList;
 import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mcmoddev.golems.util.EGComponentUtils;
+import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
@@ -23,10 +24,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 @Immutable
 public class Golem {
 
+	public static Golem EMPTY = new Golem(Optional.empty(), Optional.of(Attributes.EMPTY), GolemBuildingBlocks.EMPTY, RepairItems.EMPTY, 1, true,
+			Optional.empty(), Either.right(LayerList.EMPTY), Either.right(BehaviorList.EMPTY), Optional.empty(), ImmutableList.of());
 
 	public static final Codec<Golem> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			ResourceLocation.CODEC.optionalFieldOf("parent").forGetter(o -> Optional.ofNullable(o.parent)),
@@ -36,12 +40,11 @@ public class Golem {
 			Codec.intRange(1, 127).optionalFieldOf("variants", 1).forGetter(Golem::getVariants),
 			Codec.BOOL.optionalFieldOf("hidden", false).forGetter(Golem::isHidden),
 			ParticleTypes.CODEC.optionalFieldOf("particle").forGetter(o -> Optional.ofNullable(o.particle)),
-			LayerList.HOLDER_CODEC.optionalFieldOf("model", Holder.direct(new LayerList(ImmutableList.of()))).forGetter(Golem::getLayers),
-			BehaviorList.HOLDER_CODEC.optionalFieldOf("brain", Holder.direct(new BehaviorList(ImmutableList.of()))).forGetter(Golem::getBehaviors),
+			Codec.either(ResourceLocation.CODEC, LayerList.CODEC).optionalFieldOf("model", Either.right(LayerList.EMPTY)).forGetter(Golem::getLayers),
+			Codec.either(ResourceLocation.CODEC, BehaviorList.CODEC).optionalFieldOf("brain", Either.right(BehaviorList.EMPTY)).forGetter(Golem::getBehaviors),
 			ResourceLocation.CODEC.optionalFieldOf("group").forGetter(o -> Optional.ofNullable(o.group)),
 			EGCodecUtils.listOrElementCodec(Codec.STRING).optionalFieldOf("description", ImmutableList.of()).forGetter(o -> o.rawDescriptions)
 	).apply(instance, Golem::new));
-	public static final Codec<Holder<Golem>> HOLDER_CODEC = RegistryFileCodec.create(EGRegistry.Keys.GOLEM, Golem.CODEC, true);
 
 	/** The ID of the parent Golem to copy settings, optional **/
 	private final @Nullable ResourceLocation parent;
@@ -58,9 +61,9 @@ public class Golem {
 	/** The particle to randomly spawn, if any **/
 	private final @Nullable ParticleOptions particle;
 	/** The layers for the Golem model **/
-	private final Holder<LayerList> layers;
+	private final Either<ResourceLocation, LayerList> layers;
 	/** The Golem behaviors **/
-	private final Holder<BehaviorList> behaviors;
+	private final Either<ResourceLocation, BehaviorList> behaviors;
 	/** The ID of the guide book group of the Golem **/
 	private final @Nullable ResourceLocation group;
 	/** The additional descriptions to display as raw strings **/
@@ -71,12 +74,12 @@ public class Golem {
 	public Golem(Optional<ResourceLocation> parent, Optional<Attributes> attributes,
 				 GolemBuildingBlocks blocks, RepairItems repairItems,
 				 int variants, boolean hidden, Optional<ParticleOptions> particle,
-				 Holder<LayerList> layers, Holder<BehaviorList> behaviors, Optional<ResourceLocation> group,
-				 List<String> rawDescriptions) {
+				 Either<ResourceLocation, LayerList> layers, Either<ResourceLocation, BehaviorList> behaviors,
+				 Optional<ResourceLocation> group, List<String> rawDescriptions) {
 		this.parent = parent.orElse(null);
 		this.attributes = attributes.orElse(null);
 		if(parent.isEmpty() && attributes.isEmpty()) {
-			throw new IllegalArgumentException("Failed to parse Golem because both parent and attributes are undefined!");
+			throw new IllegalArgumentException("Failed to parse Golem because both 'parent' and 'attributes' are undefined!");
 		}
 		this.blocks = blocks;
 		this.repairItems = repairItems;
@@ -92,50 +95,80 @@ public class Golem {
 
 	//// GETTERS ////
 
+	/** @return the ID of the parent for the {@link Golem}, may be null only when {@link #getAttributes()} is defined **/
 	@Nullable
 	public ResourceLocation getParent() {
 		return parent;
 	}
 
+	/** @return the {@link Attributes} for the {@link Golem}, may be null only when {@link #getParent()} is defined **/
 	@Nullable
 	public Attributes getAttributes() {
 		return attributes;
 	}
 
+	/** @return the {@link GolemBuildingBlocks} for this {@link Golem} **/
 	public GolemBuildingBlocks getBlocks() {
 		return blocks;
 	}
 
+	/** @return the {@link RepairItems} for this {@link Golem} **/
 	public RepairItems getRepairItems() {
 		return repairItems;
 	}
 
+	/**
+	 * @return the total number of variants used by this {@link Golem}
+	 * @see com.mcmoddev.golems.entity.IVariantProvider
+	 **/
 	public int getVariants() {
 		return variants;
 	}
 
+	/** @return true if the {@link Golem} is omitted from the Guide Book UI **/
 	public boolean isHidden() {
 		return hidden;
 	}
 
+	/** @return the particle to spawn each tick **/
 	@Nullable
 	public ParticleOptions getParticle() {
 		return particle;
 	}
 
-	public Holder<LayerList> getLayers() {
+	/** @return Either the ID or direct definition of the {@link LayerList} **/
+	public Either<ResourceLocation, LayerList> getLayers() {
 		return layers;
 	}
 
-	public Holder<BehaviorList> getBehaviors() {
+	/**
+	 * @param registryAccess the registry access
+	 * @return the resolved {@link LayerList} from the registry or direct definition
+	 */
+	public LayerList getLayers(final RegistryAccess registryAccess) {
+		return layers.map(id -> registryAccess.registryOrThrow(EGRegistry.Keys.MODEL).get(id), Function.identity());
+	}
+
+	/** @return Either the ID or direct definition of the {@link BehaviorList} **/
+	public Either<ResourceLocation, BehaviorList> getBehaviors() {
 		return behaviors;
 	}
 
+	/**
+	 * @param registryAccess the registry access
+	 * @return the resolved {@link BehaviorList} from the registry or direct definition
+	 */
+	public BehaviorList getBehaviors(final RegistryAccess registryAccess) {
+		return behaviors.map(id -> registryAccess.registryOrThrow(EGRegistry.Keys.BEHAVIOR_LIST).get(id), Function.identity());
+	}
+
+	/** @return the group ID of the {@link Golem}, used by the Guide Book UI. May be null. **/
 	@Nullable
 	public ResourceLocation getGroup() {
 		return group;
 	}
 
+	/** @return A list of text components to append to the description list, may be empty **/
 	public List<Component> getDescriptions() {
 		return descriptions;
 	}
@@ -143,6 +176,7 @@ public class Golem {
 	//// BUILDER ////
 
 	public static class Builder {
+		private final RegistryAccess registryAccess;
 		private ResourceLocation parent;
 		private Attributes.Builder attributes;
 		private GolemBuildingBlocks.Builder blocks;
@@ -158,6 +192,7 @@ public class Golem {
 		//// CONSTRUCTOR ////
 
 		private Builder(final RegistryAccess registryAccess) {
+			this.registryAccess = registryAccess;
 			this.blocks = new GolemBuildingBlocks.Builder();
 			this.attributes = new Attributes.Builder();
 			this.repairItems = new RepairItems.Builder();
@@ -191,8 +226,8 @@ public class Golem {
 						.variants(parent.getVariants())
 						.hidden(parent.isHidden())
 						.particle(parent.getParticle())
-						.layers(new LayerList.Builder(parent.getLayers().get().getLayers()))
-						.behaviors(new BehaviorList.Builder(parent.getBehaviors().get().getBehaviors()))
+						.layers(new LayerList.Builder(parent.getLayers(registryAccess).getLayers()))
+						.behaviors(new BehaviorList.Builder(parent.getBehaviors(registryAccess).getBehaviors()))
 						.group(parent.getGroup())
 						.descriptions(parent.rawDescriptions);
 			}
@@ -224,17 +259,17 @@ public class Golem {
 				builder.particle(golem.getParticle());
 			}
 			// model (replaces parent)
-			if(!hasParent || !golem.getLayers().get().getLayers().isEmpty()) {
+			if(!hasParent || !golem.getLayers(registryAccess).getLayers().isEmpty()) {
 				builder.layers(b -> {
 					b.clear();
-					b.addAll(golem.getLayers().get().getLayers());
+					b.addAll(golem.getLayers(registryAccess).getLayers());
 				});
 			}
-			// behaviors (replaces parent)
-			if(!hasParent || !golem.getBehaviors().get().getBehaviors().isEmpty() || golem.getBehaviors().unwrap().left().isPresent()) {
+			// behaviors (replaces parent), only when a BehaviorList ID is specified or the BehaviorList direct definition is not empty
+			if(!hasParent || golem.getBehaviors().left().isPresent() || (golem.getBehaviors().right().isPresent() && !golem.getBehaviors().right().get().getBehaviors().isEmpty())) {
 				builder.behaviors(b -> {
 					b.clear();
-					b.addAll(golem.getBehaviors().get().getBehaviors());
+					b.addAll(golem.getBehaviors(registryAccess).getBehaviors());
 				});
 			}
 			// group (replaces parent)
@@ -246,6 +281,13 @@ public class Golem {
 				builder.descriptions(golem.rawDescriptions);
 			}
 			return builder;
+		}
+
+		//// GETTERS ////
+
+		/** @return the registry access **/
+		public RegistryAccess getRegistryAccess() {
+			return this.registryAccess;
 		}
 
 		//// METHODS ////
@@ -421,7 +463,7 @@ public class Golem {
 		public Golem build() {
 			return new Golem(Optional.ofNullable(parent), Optional.of(attributes.build()), blocks.build(),
 					repairItems.build(), variants, hidden, Optional.ofNullable(particle),
-					Holder.direct(layers.build()), Holder.direct(behaviors.build()), Optional.ofNullable(group), descriptions);
+					Either.right(layers.build()), Either.right(behaviors.build()), Optional.ofNullable(group), descriptions);
 		}
 	}
 }

@@ -27,6 +27,8 @@ import java.util.function.Supplier;
 @Immutable
 public class LayerList implements Iterable<Either<Layer, ResourceLocation>> {
 
+	public static final LayerList EMPTY = new LayerList(ImmutableList.of());
+
 	public static final Codec<Either<Layer, ResourceLocation>> LAYER_OR_ID_CODEC = Codec.either(Layer.CODEC, ResourceLocation.CODEC);
 
 	public static final Codec<LayerList> CODEC = RecordCodecBuilder.create(instance -> instance.group(

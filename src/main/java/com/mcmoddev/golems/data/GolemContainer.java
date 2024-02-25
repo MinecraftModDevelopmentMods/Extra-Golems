@@ -109,12 +109,12 @@ public class GolemContainer {
 
 	/** @return The reconstructed {@link LayerList} instance **/
 	public LayerList getModel() {
-		return golem.getLayers().get();
+		return golem.getLayers().right().orElse(LayerList.EMPTY);
 	}
 
 	/** @return The reconstructed {@link BehaviorList} instance **/
 	public BehaviorList getBehaviors() {
-		return golem.getBehaviors().get();
+		return golem.getBehaviors().right().orElse(BehaviorList.EMPTY);
 	}
 
 	public List<Component> createDescriptions(final RegistryAccess registryAccess, final TooltipFlag tooltipFlag) {

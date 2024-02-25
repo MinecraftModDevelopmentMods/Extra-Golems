@@ -7,11 +7,13 @@ import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.model.LayerList;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mcmoddev.golems.util.EGCodecUtils;
+import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.RegistryFileCodec;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.concurrent.Immutable;
@@ -29,9 +31,10 @@ import java.util.function.Predicate;
 @Immutable
 public class BehaviorList implements Iterable<Behavior> {
 
+	public static final BehaviorList EMPTY = new BehaviorList(ImmutableList.of());
+
 	public static final Codec<BehaviorList> CODEC = Behavior.DIRECT_CODEC.listOf()
 			.xmap(BehaviorList::new, BehaviorList::getBehaviors).fieldOf("behaviors").codec();
-	public static final Codec<Holder<BehaviorList>> HOLDER_CODEC = RegistryFileCodec.create(EGRegistry.Keys.BEHAVIOR_LIST, CODEC, true);
 
 	private final List<Behavior> behaviors;
 	private final Map<Class<? extends Behavior>, List<Behavior>> behaviorsByClass;
