@@ -193,14 +193,14 @@ public final class EGRegistry {
 		}
 
 		public static void registerEntityAttributes(final EntityAttributeCreationEvent event) {
-			event.put(GOLEM.get(), Attributes.EMPTY.getAttributeSupplier().get().build());
+			event.put(GOLEM.get(), GolemBase.golemAttributes().build());
 		}
 
 		public static final RegistryObject<? extends EntityType<GolemBase>> GOLEM = ENTITY_TYPES.register("golem", () ->
 				EntityType.Builder.of(GolemBase::new, MobCategory.MISC)
 						.setTrackingRange(48).setUpdateInterval(3)
 						.setShouldReceiveVelocityUpdates(true)
-						.sized(1.4F, 2.7F).noSummon()
+						.sized(1.4F, 2.7F)
 						.build("golem")
 		);
 	}

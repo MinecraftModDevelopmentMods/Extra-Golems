@@ -6,14 +6,12 @@ import com.mcmoddev.golems.data.golem.Golem;
 import com.mcmoddev.golems.data.golem.GolemPart;
 import com.mcmoddev.golems.data.modifier.Modifier;
 import com.mcmoddev.golems.util.EGCodecUtils;
-import com.mcmoddev.golems.util.ResourcePair;
+import com.mcmoddev.golems.data.ResourcePair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Adds all of the given blocks to the {@link com.mcmoddev.golems.data.golem.BuildingBlocks.Builder}

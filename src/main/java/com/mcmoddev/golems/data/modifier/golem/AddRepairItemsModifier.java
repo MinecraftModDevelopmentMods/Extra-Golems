@@ -4,7 +4,7 @@ import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.golem.Golem;
 import com.mcmoddev.golems.data.golem.RepairItems;
 import com.mcmoddev.golems.data.modifier.Modifier;
-import com.mcmoddev.golems.util.ResourcePair;
+import com.mcmoddev.golems.data.ResourcePair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 

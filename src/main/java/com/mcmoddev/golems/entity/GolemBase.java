@@ -1,7 +1,6 @@
 package com.mcmoddev.golems.entity;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Streams;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.data.GolemContainer;
@@ -15,7 +14,7 @@ import com.mcmoddev.golems.data.golem.SwimAbility;
 import com.mcmoddev.golems.entity.goal.GoToWaterGoal;
 import com.mcmoddev.golems.entity.goal.SwimUpGoal;
 import com.mcmoddev.golems.item.SpawnGolemItem;
-import com.mcmoddev.golems.util.GolemAttributeManager;
+import com.mcmoddev.golems.util.EGAttributeUtils;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -47,16 +46,18 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.RandomSwimmingGoal;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.WaterBoundPathNavigation;
-import net.minecraft.world.entity.animal.AbstractGolem;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.npc.InventoryCarrier;
@@ -89,6 +90,11 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 	private static final EntityDataAccessor<Byte> VARIANT = SynchedEntityData.defineId(GolemBase.class, EntityDataSerializers.BYTE);
 	private static final EntityDataAccessor<Integer> FUEL = SynchedEntityData.defineId(GolemBase.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(GolemBase.class, EntityDataSerializers.INT);
+
+	// ATTRIBUTE MODIFIERS //
+	private static final AttributeModifier BABY_GOLEM_HEALTH_DEBUFF = new AttributeModifier("Baby golem health debuff", -0.375D, AttributeModifier.Operation.MULTIPLY_BASE);
+	private static final AttributeModifier BABY_GOLEM_ATTACK_DEBUFF = new AttributeModifier("Baby golem attack debuff", -0.625D, AttributeModifier.Operation.MULTIPLY_BASE);
+	private static final AttributeModifier BABY_GOLEM_KNOCKBACK_DEBUFF = new AttributeModifier("Baby golem knockback debuff", -1.0D, AttributeModifier.Operation.MULTIPLY_BASE);
 
 	// KEYS //
 	private static final String KEY_CHILD = "IsChild";
@@ -138,6 +144,18 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 		GolemBase golem = new GolemBase(EGRegistry.EntityReg.GOLEM.get(), world);
 		golem.setGolemId(material);
 		return golem;
+	}
+
+	//// ATTRIBUTES ////
+
+	public static AttributeSupplier.Builder golemAttributes() {
+		return Mob.createMobAttributes()
+				.add(Attributes.MAX_HEALTH, com.mcmoddev.golems.data.golem.Attributes.EMPTY.getHealth())
+				.add(Attributes.MOVEMENT_SPEED, com.mcmoddev.golems.data.golem.Attributes.EMPTY.getSpeed())
+				.add(Attributes.KNOCKBACK_RESISTANCE, com.mcmoddev.golems.data.golem.Attributes.EMPTY.getKnockbackResistance())
+				.add(Attributes.ATTACK_KNOCKBACK, com.mcmoddev.golems.data.golem.Attributes.EMPTY.getAttackKnockback())
+				.add(Attributes.ARMOR, com.mcmoddev.golems.data.golem.Attributes.EMPTY.getArmor())
+				.add(Attributes.ATTACK_DAMAGE, com.mcmoddev.golems.data.golem.Attributes.EMPTY.getAttack());
 	}
 
 	//// EXTRA GOLEM ////
@@ -192,26 +210,28 @@ public class GolemBase extends IronGolem implements IExtraGolem {
 		}
 		// container was loaded successfully
 		final GolemContainer container = oContainer.get();
-		this.attributes = GolemAttributeManager.getAttributes(this.level().registryAccess(), id);
 		this.setInvulnerable(container.getAttributes().isInvulnerable());
 		// update server data
 		if (!this.level().isClientSide()) {
-			// update attribute values
+			// update attribute base values
+			EGAttributeUtils.setBaseValues(this.getAttributes(), container.getAttributes().getAttributeMap());
+			// update attribute modifiers
 			if (this.isBaby()) {
-				// truncate these values to one decimal place after reducing them from base values
-				double childHealth = (Math.floor(container.getAttributes().getHealth() * 0.3D * 10D)) / 10D;
-				double childAttack = (Math.floor(container.getAttributes().getAttack() * 0.6D * 10D)) / 10D;
-				this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(childHealth);
-				this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(childAttack);
-				this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(0.0D);
+				// add debuffs
+				EGAttributeUtils.safeAddModifier(this.getAttribute(Attributes.MAX_HEALTH), BABY_GOLEM_HEALTH_DEBUFF);
+				EGAttributeUtils.safeAddModifier(this.getAttribute(Attributes.ATTACK_DAMAGE), BABY_GOLEM_ATTACK_DEBUFF);
+				EGAttributeUtils.safeAddModifier(this.getAttribute(Attributes.KNOCKBACK_RESISTANCE), BABY_GOLEM_KNOCKBACK_DEBUFF);
 				this.setMaxUpStep(0.6F);
 			} else {
-				// use full values for non-child entity
-				this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(container.getAttributes().getHealth());
-				this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(container.getAttributes().getAttack());
-				this.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(container.getAttributes().getKnockbackResistance());
+				// remove debuffs
+				EGAttributeUtils.safeRemoveModifier(this.getAttribute(Attributes.MAX_HEALTH), BABY_GOLEM_HEALTH_DEBUFF);
+				EGAttributeUtils.safeRemoveModifier(this.getAttribute(Attributes.ATTACK_DAMAGE), BABY_GOLEM_ATTACK_DEBUFF);
+				EGAttributeUtils.safeRemoveModifier(this.getAttribute(Attributes.KNOCKBACK_RESISTANCE), BABY_GOLEM_KNOCKBACK_DEBUFF);
 				this.setMaxUpStep(1.0F);
 			}
+		}
+		// initialize goals and behaviors
+		if (this.isEffectiveAi()) {
 			// remove and re-instantiate goals
 			this.goalSelector.getAvailableGoals().clear();
 			this.registerGoals();

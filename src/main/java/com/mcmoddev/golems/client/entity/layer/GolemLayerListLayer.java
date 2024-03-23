@@ -8,7 +8,7 @@ import com.mcmoddev.golems.data.model.RenderTypes;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.client.entity.GolemModel;
 import com.mcmoddev.golems.client.entity.GolemRenderType;
-import com.mcmoddev.golems.util.ResourcePair;
+import com.mcmoddev.golems.data.ResourcePair;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;

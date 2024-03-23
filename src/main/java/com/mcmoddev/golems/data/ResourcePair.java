@@ -1,4 +1,4 @@
-package com.mcmoddev.golems.util;
+package com.mcmoddev.golems.data;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;

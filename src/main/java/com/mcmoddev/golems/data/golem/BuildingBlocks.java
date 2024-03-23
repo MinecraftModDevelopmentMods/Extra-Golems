@@ -2,7 +2,7 @@ package com.mcmoddev.golems.data.golem;
 
 import com.google.common.collect.ImmutableList;
 import com.mcmoddev.golems.util.EGCodecUtils;
-import com.mcmoddev.golems.util.ResourcePair;
+import com.mcmoddev.golems.data.ResourcePair;
 import com.mojang.serialization.Codec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;

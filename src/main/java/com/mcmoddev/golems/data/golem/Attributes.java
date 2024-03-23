@@ -1,8 +1,9 @@
 package com.mcmoddev.golems.data.golem;
 
+import com.google.common.base.Suppliers;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.mcmoddev.golems.data.GolemContainer;
-import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.util.DeferredHolderSet;
 import com.mcmoddev.golems.util.SoundTypeRegistry;
 import com.mojang.serialization.Codec;
@@ -18,7 +19,9 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.SoundType;
@@ -27,6 +30,7 @@ import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -43,6 +47,17 @@ public class Attributes {
 			Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
 			Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(),
 			Optional.empty(), Optional.empty());
+
+	public static final Supplier<AttributeSupplier> DEFAULT_ATTRIBUTE_SUPPLIER = Suppliers.memoize(() ->
+			Mob.createMobAttributes()
+					.add(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH, EMPTY.getHealth())
+					.add(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED, EMPTY.getSpeed())
+					.add(net.minecraft.world.entity.ai.attributes.Attributes.KNOCKBACK_RESISTANCE, EMPTY.getKnockbackResistance())
+					.add(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_KNOCKBACK, EMPTY.getAttackKnockback())
+					.add(net.minecraft.world.entity.ai.attributes.Attributes.ARMOR, EMPTY.getArmor())
+					.add(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE, EMPTY.getAttack())
+					.build()
+	);
 
 	public static final Codec<Attributes> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			Codec.doubleRange(0, 1024.0D).optionalFieldOf("health").forGetter(o -> Optional.ofNullable(o.health)),
@@ -67,6 +82,7 @@ public class Attributes {
 	private final @Nullable Double knockbackResistance;
 	private final @Nullable Double armor;
 	private final @Nullable Double attackKnockback;
+	private final Supplier<Map<Attribute, Double>> attributeBaseValues = Suppliers.memoize(this::createAttributeMap);
 
 	private final @Nullable DeferredHolderSet<MobEffect> potionIgnore;
 	private final @Nullable DeferredHolderSet<DamageType> damageImmune;
@@ -116,15 +132,19 @@ public class Attributes {
 
 	}
 
-	/** @return a new attribute supplier builder **/
-	public Supplier<AttributeSupplier.Builder> getAttributeSupplier() {
-		return () -> GolemBase.createMobAttributes()
-				.add(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH, this.getHealth())
-				.add(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED, this.getSpeed())
-				.add(net.minecraft.world.entity.ai.attributes.Attributes.KNOCKBACK_RESISTANCE, this.getKnockbackResistance())
-				.add(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_KNOCKBACK, this.getAttackKnockback())
-				.add(net.minecraft.world.entity.ai.attributes.Attributes.ARMOR, this.getArmor())
-				.add(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE, this.getAttack());
+	private Map<Attribute, Double> createAttributeMap() {
+		return ImmutableMap.<Attribute, Double>builder()
+				.put(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH, this.getHealth())
+				.put(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED, this.getSpeed())
+				.put(net.minecraft.world.entity.ai.attributes.Attributes.KNOCKBACK_RESISTANCE, this.getKnockbackResistance())
+				.put(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_KNOCKBACK, this.getAttackKnockback())
+				.put(net.minecraft.world.entity.ai.attributes.Attributes.ARMOR, this.getArmor())
+				.put(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE, this.getAttack())
+				.build();
+	}
+
+	public Map<Attribute, Double> getAttributeMap() {
+		return this.attributeBaseValues.get();
 	}
 
 	//// GETTERS ////
