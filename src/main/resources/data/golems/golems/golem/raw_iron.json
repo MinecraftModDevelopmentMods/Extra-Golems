@@ -8,12 +8,12 @@
   },
   "group": "golems:raw_ore",
   "blocks": {
-	"all": "#forge:storage_blocks/raw_iron"
+	"all": "#c:storage_blocks/raw_iron"
   },
   "repair_items": {
-    "#forge:storage_blocks/raw_iron": 0.5,
-	"#forge:raw_materials/iron": 0.1,
-	"#forge:ingots/iron": 0.25
+    "#c:storage_blocks/raw_iron": 0.5,
+	"#c:raw_materials/iron": 0.1,
+	"#c:ingots/iron": 0.25
   },
   "model": "golems:raw_iron",
   "brain": "golems:empty"

@@ -12,12 +12,12 @@
   },
   "blocks": {
 	"all": [
-	  "#forge:end_stones",
+	  "#c:end_stones",
 	  "minecraft:end_stone_bricks"
 	]
   },
   "repair_items": {
-    "#forge:end_stones": 0.5,
+    "#c:end_stones": 0.5,
 	"minecraft:end_stone_bricks": 0.5
   },
   "model": "golems:end_stone",

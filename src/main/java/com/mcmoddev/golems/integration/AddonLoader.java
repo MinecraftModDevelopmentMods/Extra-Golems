@@ -7,10 +7,13 @@ import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.world.flag.FeatureFlagSet;
-import net.minecraftforge.event.AddPackFindersEvent;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.resource.PathPackResources;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.event.AddPackFindersEvent;
+import java.util.Optional;
+import net.minecraft.server.packs.PackLocationInfo;
+import net.minecraft.server.packs.PackSelectionConfig;
+import net.neoforged.fml.ModList;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 import java.nio.file.Path;
 
@@ -47,12 +50,12 @@ public final class AddonLoader {
 	/**
 	 * Called from FMLCommonSetupEvent to determine which mods are loaded
 	 */
-	public static void register() {
+	public static void register(IEventBus modEventBus) {
 		isQuarkLoaded = ModList.get().isLoaded(QUARK);
 		isMekanismLoaded = ModList.get().isLoaded(MEKANISM);
 		isBiomesOPlentyLoaded = ModList.get().isLoaded(BIOMESOPLENTY);
 		isThermalLoaded = ModList.get().isLoaded(THERMAL);
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(AddonLoader::onAddPackFinders);
+		modEventBus.addListener(AddonLoader::onAddPackFinders);
 	}
 
 	/** @return true if Quark is present **/
@@ -107,13 +110,24 @@ public final class AddonLoader {
 			// create pack data
 			final String packId = ExtraGolems.MODID + ":" + packName;
 			final Component packTitle = Component.literal(packName);
+
 			final Path path = ModList.get().getModFileById(ExtraGolems.MODID).getFile().findResource("/" + packName);
-			final Pack.Info info = new Pack.Info(packTitle, SharedConstants.DATA_PACK_FORMAT, FeatureFlagSet.of());
 			// create the pack
-			Pack pack = Pack.create(packId, packTitle, true, s -> new PathPackResources(packName, false, path), info,
-					PackType.SERVER_DATA, Pack.Position.TOP, true, PackSource.DEFAULT);
+			PackLocationInfo info = new PackLocationInfo(packId, packTitle, PackSource.DEFAULT, Optional.empty());
+			Pack pack = Pack.readMetaAndCreate(info, new Pack.ResourcesSupplier() {
+				@Override
+				public net.minecraft.server.packs.PackResources openPrimary(PackLocationInfo info) {
+					return new net.minecraft.server.packs.PathPackResources(info, path);
+				}
+				@Override
+				public net.minecraft.server.packs.PackResources openFull(PackLocationInfo info, Pack.Metadata metadata) {
+					return new net.minecraft.server.packs.PathPackResources(info, path);
+				}
+			}, PackType.SERVER_DATA, new PackSelectionConfig(false, Pack.Position.TOP, false));
 			// consume the pack
-			packConsumer.accept(pack);
+			if (pack != null) {
+				packConsumer.accept(pack);
+			}
 		});
 	}
 

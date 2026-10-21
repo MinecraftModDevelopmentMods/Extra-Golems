@@ -11,6 +11,7 @@ import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mcmoddev.golems.util.PredicateUtils;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.core.RegistryAccess;
@@ -34,7 +35,7 @@ import java.util.function.Predicate;
 @Immutable
 public class SetFireBehavior extends Behavior {
 
-	public static final Codec<SetFireBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
+	public static final MapCodec<SetFireBehavior> CODEC = RecordCodecBuilder.mapCodec(instance -> codecStart(instance)
 			.and(IntProvider.NON_NEGATIVE_CODEC.optionalFieldOf("seconds", ConstantInt.of(3)).forGetter(SetFireBehavior::getSeconds))
 			.and(TargetType.CODEC.fieldOf("target").forGetter(SetFireBehavior::getTarget))
 			.and(TriggerType.CODEC.fieldOf("trigger").forGetter(SetFireBehavior::getTrigger))
@@ -96,7 +97,7 @@ public class SetFireBehavior extends Behavior {
 	}
 
 	@Override
-	public Codec<? extends Behavior> getCodec() {
+	public MapCodec<? extends Behavior> getCodec() {
 		return EGRegistry.BehaviorReg.SET_FIRE.get();
 	}
 
@@ -153,16 +154,16 @@ public class SetFireBehavior extends Behavior {
 						condition, self, self.getBoundingBox().inflate(radius));
 				// apply to each entity in list
 				for (LivingEntity entity : targets) {
-					entity.setSecondsOnFire(seconds.sample(self.getRandom()));
+					entity.igniteForSeconds(seconds.sample(self.getRandom()));
 				}
 				return !targets.isEmpty();
 			case SELF:
-				self.setSecondsOnFire(seconds.sample(self.getRandom()));
+				self.igniteForSeconds(seconds.sample(self.getRandom()));
 				return true;
 			case ENEMY:
 				LivingEntity target = self.getTarget();
 				if(target != null) {
-					target.setSecondsOnFire(seconds.sample(self.getRandom()));
+					target.igniteForSeconds(seconds.sample(self.getRandom()));
 				}
 				return target != null;
 

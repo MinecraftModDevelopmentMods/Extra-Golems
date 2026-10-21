@@ -8,7 +8,7 @@
   "group": "golems:concrete",
   "hidden": true,
   "repair_items": {
-    "#forge:concrete": 0.5
+    "#c:concrete": 0.5
   },
   "brain": "golems:empty"
 }

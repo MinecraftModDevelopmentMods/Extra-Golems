@@ -25,7 +25,7 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
@@ -82,7 +82,7 @@ public class Attributes {
 	private final @Nullable Double knockbackResistance;
 	private final @Nullable Double armor;
 	private final @Nullable Double attackKnockback;
-	private final Supplier<Map<Attribute, Double>> attributeBaseValues = Suppliers.memoize(this::createAttributeMap);
+	private final Supplier<Map<Holder<Attribute>, Double>> attributeBaseValues = Suppliers.memoize(this::createAttributeMap);
 
 	private final @Nullable DeferredHolderSet<MobEffect> potionIgnore;
 	private final @Nullable DeferredHolderSet<DamageType> damageImmune;
@@ -132,8 +132,8 @@ public class Attributes {
 
 	}
 
-	private Map<Attribute, Double> createAttributeMap() {
-		return ImmutableMap.<Attribute, Double>builder()
+	private Map<Holder<Attribute>, Double> createAttributeMap() {
+		return ImmutableMap.<Holder<Attribute>, Double>builder()
 				.put(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH, this.getHealth())
 				.put(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED, this.getSpeed())
 				.put(net.minecraft.world.entity.ai.attributes.Attributes.KNOCKBACK_RESISTANCE, this.getKnockbackResistance())
@@ -143,7 +143,7 @@ public class Attributes {
 				.build();
 	}
 
-	public Map<Attribute, Double> getAttributeMap() {
+	public Map<Holder<Attribute>, Double> getAttributeMap() {
 		return this.attributeBaseValues.get();
 	}
 
@@ -292,7 +292,7 @@ public class Attributes {
 	//// HELPER METHODS ////
 
 	/**
-	 * Updates {@link PathfinderMob#setPathfindingMalus(BlockPathTypes, float)}
+	 * Updates {@link PathfinderMob#setPathfindingMalus(PathType, float)}
 	 * values based on the attributes
 	 * @param mob the entity
 	 */
@@ -300,19 +300,19 @@ public class Attributes {
 		final RegistryAccess registryAccess = mob.level().registryAccess();
 		// water damage
 		if(isWeakTo(registryAccess, ImmutableSet.of(DamageTypes.DROWN))) {
-			mob.setPathfindingMalus(BlockPathTypes.WATER, -1.0F);
+			mob.setPathfindingMalus(PathType.WATER, -1.0F);
 		} else {
-			mob.setPathfindingMalus(BlockPathTypes.WATER, 8.0F);
+			mob.setPathfindingMalus(PathType.WATER, 8.0F);
 		}
 		// fire damage
 		if(isInvulnerable() || isImmuneTo(registryAccess, ImmutableSet.of(DamageTypes.IN_FIRE, DamageTypes.ON_FIRE))) {
-			mob.setPathfindingMalus(BlockPathTypes.LAVA, 8.0F);
-			mob.setPathfindingMalus(BlockPathTypes.DAMAGE_FIRE, 0.0F);
-			mob.setPathfindingMalus(BlockPathTypes.DANGER_FIRE, 0.0F);
+			mob.setPathfindingMalus(PathType.LAVA, 8.0F);
+			mob.setPathfindingMalus(PathType.DAMAGE_FIRE, 0.0F);
+			mob.setPathfindingMalus(PathType.DANGER_FIRE, 0.0F);
 		} else {
-			mob.setPathfindingMalus(BlockPathTypes.LAVA, -1.0F);
-			mob.setPathfindingMalus(BlockPathTypes.DAMAGE_FIRE, -1.0F);
-			mob.setPathfindingMalus(BlockPathTypes.DANGER_FIRE, -1.0F);
+			mob.setPathfindingMalus(PathType.LAVA, -1.0F);
+			mob.setPathfindingMalus(PathType.DAMAGE_FIRE, -1.0F);
+			mob.setPathfindingMalus(PathType.DANGER_FIRE, -1.0F);
 		}
 	}
 

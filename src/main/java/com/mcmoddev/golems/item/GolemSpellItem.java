@@ -5,8 +5,8 @@ import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.block.GolemHeadBlock;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.network.chat.Component;
@@ -32,8 +32,8 @@ public class GolemSpellItem extends Item {
 		final DispenseItemBehavior behavior = new DefaultDispenseItemBehavior() {
 			@Override
 			protected ItemStack execute(BlockSource blockSource, ItemStack itemStack) {
-				final Level level = blockSource.getLevel();
-				final BlockPos blockPos = blockSource.getPos().relative(blockSource.getBlockState().getValue(DispenserBlock.FACING));
+				final Level level = blockSource.level();
+				final BlockPos blockPos = blockSource.pos().relative(blockSource.state().getValue(DispenserBlock.FACING));
 				final BlockState blockState = level.getBlockState(blockPos);
 				if (ExtraGolems.CONFIG.enableUseSpellItem() && blockState.is(Blocks.CARVED_PUMPKIN)) {
 					final Direction facing = blockState.getValue(CarvedPumpkinBlock.FACING);

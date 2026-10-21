@@ -5,6 +5,7 @@ import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.MinMaxBounds;
@@ -27,7 +28,7 @@ import java.util.Objects;
 @Immutable
 public class BurnInSunBehavior extends Behavior {
 
-	public static final Codec<BurnInSunBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
+	public static final MapCodec<BurnInSunBehavior> CODEC = RecordCodecBuilder.mapCodec(instance -> codecStart(instance)
 			.and(Codec.doubleRange(0.0D, 1.0D).optionalFieldOf("chance", 0.25D).forGetter(BurnInSunBehavior::getChance))
 			.apply(instance, BurnInSunBehavior::new));
 
@@ -46,7 +47,7 @@ public class BurnInSunBehavior extends Behavior {
 	}
 
 	@Override
-	public Codec<? extends Behavior> getCodec() {
+	public MapCodec<? extends Behavior> getCodec() {
 		return EGRegistry.BehaviorReg.BURN_IN_SUN.get();
 	}
 
@@ -65,7 +66,7 @@ public class BurnInSunBehavior extends Behavior {
 		final Mob mob = entity.asMob();
 		// set on fire
 		if(entity.isSunBurnTickAccessor() && mob.getRandom().nextFloat() < chance && mob.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
-			mob.setSecondsOnFire(3);
+			mob.igniteForSeconds(3);
 		}
 	}
 

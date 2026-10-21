@@ -7,11 +7,11 @@
   },
   "group": "thermal:slag",
   "blocks": {
-	"all": "#forge:storage_blocks/slag"
+	"all": "#c:storage_blocks/slag"
   },
   "repair_items": {
-    "#forge:storage_blocks/slag": 0.5,
-    "#forge:slag": 0.15
+    "#c:storage_blocks/slag": 0.5,
+    "#c:slag": 0.15
   },
   "model": "thermal:slag",
   "brain": "golems:empty"

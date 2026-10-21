@@ -14,13 +14,13 @@
 	"sound": "minecraft:metal"
   },
   "blocks": {
-	"all": "#forge:storage_blocks/refined_obsidian"
+	"all": "#c:storage_blocks/refined_obsidian"
   },
   "repair_items": {
 	"minecraft:obsidian": 0.15,
 	"minecraft:crying_obsidian": 0.1,
-    "#forge:storage_blocks/refined_obsidian": 0.5,
-    "#forge:ingots/refined_obsidian": 0.15
+    "#c:storage_blocks/refined_obsidian": 0.5,
+    "#c:ingots/refined_obsidian": 0.15
   },
   "model": "mekanism:refined_obsidian",
   "brain": {

@@ -12,7 +12,7 @@ import java.util.Objects;
  */
 public final class ResourcePair {
 
-	public static final ResourcePair EMPTY = new ResourcePair(new ResourceLocation("empty"), false);
+	public static final ResourcePair EMPTY = new ResourcePair(ResourceLocation.parse("empty"), false);
 
 	public static final Codec<ResourcePair> CODEC = Codec.STRING.comapFlatMap(ResourcePair::read, ResourcePair::toString).stable();
 
@@ -62,10 +62,10 @@ public final class ResourcePair {
 			ResourceLocation res;
 			boolean dyn;
 			if (string.length() > 0 && string.charAt(0) == '#') {
-				res = new ResourceLocation(string.substring(1));
+				res = ResourceLocation.parse(string.substring(1));
 				dyn = true;
 			} else {
-				res = new ResourceLocation(string);
+				res = ResourceLocation.parse(string);
 				dyn = false;
 			}
 			return DataResult.success(new ResourcePair(res, dyn));

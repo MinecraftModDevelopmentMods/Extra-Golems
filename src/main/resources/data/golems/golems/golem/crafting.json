@@ -8,10 +8,10 @@
   },
   "group": "golems:crafting",
   "blocks": {
-	"all": "#forge:workbench"
+	"all": "#c:workbench"
   },
   "repair_items": {
-    "#forge:workbench": 0.5,
+    "#c:workbench": 0.5,
 	"#minecraft:planks": 0.15
   },
   "model": "golems:crafting",

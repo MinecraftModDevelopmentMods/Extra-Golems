@@ -6,11 +6,11 @@
 	"sound": "minecraft:glass"
   },
   "blocks": {
-	"all": "#forge:storage_blocks/cinnabar"
+	"all": "#c:storage_blocks/cinnabar"
   },
   "repair_items": {
-    "#forge:storage_blocks/cinnabar": 0.5,
-    "#forge:gems/cinnabar": 0.15
+    "#c:storage_blocks/cinnabar": 0.5,
+    "#c:gems/cinnabar": 0.15
   },
   "model": "thermal:cinnabar",
   "brain": "golems:empty"

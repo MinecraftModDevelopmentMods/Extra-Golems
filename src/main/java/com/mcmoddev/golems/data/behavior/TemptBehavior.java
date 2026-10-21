@@ -7,6 +7,7 @@ import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mcmoddev.golems.util.DeferredHolderSet;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.MinMaxBounds;
@@ -20,7 +21,7 @@ import net.minecraft.world.entity.ai.goal.TemptGoal;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
@@ -33,8 +34,8 @@ import java.util.Objects;
 @Immutable
 public class TemptBehavior extends Behavior {
 
-	public static final Codec<TemptBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
-			.and(DeferredHolderSet.codec(ForgeRegistries.ITEMS.getRegistryKey()).fieldOf("item").forGetter(TemptBehavior::getItems))
+	public static final MapCodec<TemptBehavior> CODEC = RecordCodecBuilder.mapCodec(instance -> codecStart(instance)
+			.and(DeferredHolderSet.codec(BuiltInRegistries.ITEM.key()).fieldOf("item").forGetter(TemptBehavior::getItems))
 			.and(Codec.STRING.optionalFieldOf("display_name", "").forGetter(TemptBehavior::getDisplayNameKey))
 			.apply(instance, TemptBehavior::new));
 
@@ -59,7 +60,7 @@ public class TemptBehavior extends Behavior {
 	}
 
 	@Override
-	public Codec<? extends Behavior> getCodec() {
+	public MapCodec<? extends Behavior> getCodec() {
 		return EGRegistry.BehaviorReg.TEMPT.get();
 	}
 
@@ -70,7 +71,7 @@ public class TemptBehavior extends Behavior {
 		// TODO adjust tempt goal to account for entity variant
 		// resolve holder set and convert to ingredient
 		final HolderSet<Item> holderSet = items.get(BuiltInRegistries.ITEM);
-		Ingredient ingredient = holderSet.unwrap().map(Ingredient::of, list -> Ingredient.of(list.stream().map(Holder::get).toArray(Item[]::new)));
+		Ingredient ingredient = holderSet.unwrap().map(Ingredient::of, list -> Ingredient.of(list.stream().map(Holder::value).toArray(Item[]::new)));
 		entity.asMob().goalSelector.addGoal(1, new TemptGoal(entity.asMob(), 0.75D, ingredient, false));
 	}
 
@@ -86,7 +87,7 @@ public class TemptBehavior extends Behavior {
 				name = Component.literal("#" + value.left().get().location().toString()).withStyle(ChatFormatting.DARK_GRAY);
 			} else if(value.right().isPresent()) {
 				// create name from first item
-				Item randomItem = value.right().get().get(0).get();
+				Item randomItem = value.right().get().get(0).value();
 				name = randomItem.getDescription().copy().withStyle(ChatFormatting.LIGHT_PURPLE);
 			} else {
 				// create empty name

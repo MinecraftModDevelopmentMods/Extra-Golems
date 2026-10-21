@@ -1,0 +1,14 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"category": "misc",
+	"ingredients": [
+		{ "item": "minecraft:feather" },
+		{ "item": "minecraft:redstone" },
+		{ "item": "minecraft:paper" },
+		{ "item": "minecraft:ink_sac" }
+	],
+	"result": {
+		"id": "golems:golem_spell",
+		"count": 3
+	}
+}

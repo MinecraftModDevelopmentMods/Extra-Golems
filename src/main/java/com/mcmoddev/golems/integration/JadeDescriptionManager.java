@@ -27,8 +27,8 @@ import java.util.stream.Stream;
 @WailaPlugin
 public class JadeDescriptionManager implements IWailaPlugin {
 
-	private static final ResourceLocation CONFIG_FG_COLOR = new ResourceLocation(ExtraGolems.MODID, "fg_color");
-	private static final ResourceLocation CONFIG_SHOW_ICON = new ResourceLocation(ExtraGolems.MODID, "show_icon");
+	private static final ResourceLocation CONFIG_FG_COLOR = ResourceLocation.fromNamespaceAndPath(ExtraGolems.MODID, "fg_color");
+	private static final ResourceLocation CONFIG_SHOW_ICON = ResourceLocation.fromNamespaceAndPath(ExtraGolems.MODID, "show_icon");
 
 	@Override
 	public void register(IWailaCommonRegistration registration) {
@@ -44,7 +44,7 @@ public class JadeDescriptionManager implements IWailaPlugin {
 
 	private static class EntityProvider extends GolemDescriptionManager implements IEntityComponentProvider {
 
-		private static final ResourceLocation UID = new ResourceLocation(ExtraGolems.MODID, "jade_entity_provider");
+		private static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(ExtraGolems.MODID, "jade_entity_provider");
 
 		@Override
 		public void appendTooltip(ITooltip iTooltip, EntityAccessor entityAccessor, IPluginConfig iPluginConfig) {
@@ -61,7 +61,7 @@ public class JadeDescriptionManager implements IWailaPlugin {
 				// create elements
 				final List<Component> lines = getEntityDescription(entity, oContainer.get());
 				for(Component line : lines) {
-					iTooltip.add(iTooltip.getElementHelper().text(Component.literal(line.getString()).withStyle(fgColor)));
+					iTooltip.add(Component.literal(line.getString()).withStyle(fgColor));
 				}
 			}
 		}

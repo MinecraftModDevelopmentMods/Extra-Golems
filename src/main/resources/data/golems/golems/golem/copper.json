@@ -2,8 +2,8 @@
   "parent": "golems:generic_copper",
   "hidden": false,
   "blocks": {
-	"arms": "#forge:storage_blocks/copper",
-	"legs": "#forge:storage_blocks/copper",
+	"arms": "#c:storage_blocks/copper",
+	"legs": "#c:storage_blocks/copper",
 	"body": "minecraft:copper_block"
   },
   "model": "golems:copper",

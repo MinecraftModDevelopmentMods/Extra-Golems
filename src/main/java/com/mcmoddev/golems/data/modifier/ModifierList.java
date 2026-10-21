@@ -3,6 +3,7 @@ package com.mcmoddev.golems.data.modifier;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.RegistryFileCodec;

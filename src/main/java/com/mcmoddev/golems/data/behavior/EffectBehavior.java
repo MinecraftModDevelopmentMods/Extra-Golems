@@ -10,6 +10,7 @@ import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mcmoddev.golems.util.PredicateUtils;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.MinMaxBounds;
@@ -30,7 +31,7 @@ import java.util.function.Predicate;
 @Immutable
 public class EffectBehavior extends Behavior {
 
-	public static final Codec<EffectBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
+	public static final MapCodec<EffectBehavior> CODEC = RecordCodecBuilder.mapCodec(instance -> codecStart(instance)
 			.and(TargetedMobEffects.CODEC.fieldOf("apply").forGetter(EffectBehavior::getTargetedMobEffects))
 			.and(TriggerType.CODEC.optionalFieldOf("trigger", TriggerType.TICK).forGetter(EffectBehavior::getTrigger))
 			.and(EGCodecUtils.listOrElementCodec(GolemPredicate.CODEC).optionalFieldOf("predicate", ImmutableList.of(GolemPredicate.ALWAYS)).forGetter(EffectBehavior::getPredicates))
@@ -76,7 +77,7 @@ public class EffectBehavior extends Behavior {
 	}
 
 	@Override
-	public Codec<? extends Behavior> getCodec() {
+	public MapCodec<? extends Behavior> getCodec() {
 		return EGRegistry.BehaviorReg.EFFECT.get();
 	}
 

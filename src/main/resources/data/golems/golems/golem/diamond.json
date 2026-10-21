@@ -6,11 +6,11 @@
 	"armor": 4.0
   },
   "blocks": {
-	"all": "#forge:storage_blocks/diamond"
+	"all": "#c:storage_blocks/diamond"
   },
   "repair_items": {
-    "#forge:storage_blocks/diamond": 0.5,
-	"#forge:gems/diamond": 0.1
+    "#c:storage_blocks/diamond": 0.5,
+	"#c:gems/diamond": 0.1
   },
   "model": "golems:diamond",
   "brain": "golems:empty"

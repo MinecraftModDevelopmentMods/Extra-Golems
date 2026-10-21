@@ -21,7 +21,7 @@
   },
   "repair_items": {
 	"minecraft:mangrove_roots": 0.5,
-	"#forge:rods/wooden": 0.1
+	"#c:rods/wooden": 0.1
   },
   "model": "golems:mangrove_roots",
   "brain": "golems:roots"

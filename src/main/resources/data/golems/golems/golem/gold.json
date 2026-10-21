@@ -8,12 +8,12 @@
 	"sound": "minecraft:metal"
   },
   "blocks": {
-	"all": "#forge:storage_blocks/gold"
+	"all": "#c:storage_blocks/gold"
   },
   "repair_items": {
-    "#forge:storage_blocks/gold": 0.5,
-	"#forge:ingots/gold": 0.1,
-	"#forge:nuggets/gold": 0.05
+    "#c:storage_blocks/gold": 0.5,
+	"#c:ingots/gold": 0.1,
+	"#c:nuggets/gold": 0.05
   },
   "model": "golems:gold",
   "brain": "golems:empty"

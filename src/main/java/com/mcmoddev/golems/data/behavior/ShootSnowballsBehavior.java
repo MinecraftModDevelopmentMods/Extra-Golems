@@ -7,6 +7,7 @@ import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mcmoddev.golems.entity.goal.MoveToItemGoal;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.MinMaxBounds;
@@ -32,7 +33,7 @@ import java.util.List;
 @Immutable
 public class ShootSnowballsBehavior extends AbstractShootBehavior {
 
-	public static final Codec<ShootSnowballsBehavior> CODEC = RecordCodecBuilder.create(instance -> shootCodecStart(instance)
+	public static final MapCodec<ShootSnowballsBehavior> CODEC = RecordCodecBuilder.mapCodec(instance -> shootCodecStart(instance)
 			.apply(instance, ShootSnowballsBehavior::new));
 
 	public ShootSnowballsBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, boolean consume, int attackInterval) {
@@ -42,7 +43,7 @@ public class ShootSnowballsBehavior extends AbstractShootBehavior {
 	//// GETTERS ////
 
 	@Override
-	public Codec<? extends Behavior> getCodec() {
+	public MapCodec<? extends Behavior> getCodec() {
 		return EGRegistry.BehaviorReg.SHOOT_SNOWBALLS.get();
 	}
 

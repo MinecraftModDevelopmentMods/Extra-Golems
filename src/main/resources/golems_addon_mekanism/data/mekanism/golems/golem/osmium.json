@@ -8,11 +8,11 @@
 	"sound": "minecraft:metal"
   },
   "blocks": {
-	"all": "#forge:storage_blocks/osmium"
+	"all": "#c:storage_blocks/osmium"
   },
   "repair_items": {
-    "#forge:storage_blocks/osmium": 0.5,
-    "#forge:ingots/osmium": 0.15
+    "#c:storage_blocks/osmium": 0.5,
+    "#c:ingots/osmium": 0.15
   },
   "model": "mekanism:osmium",
   "brain": "golems:empty"

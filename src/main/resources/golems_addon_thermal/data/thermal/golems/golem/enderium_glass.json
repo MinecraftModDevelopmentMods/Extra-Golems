@@ -15,7 +15,7 @@
   },
   "repair_items": {
     "thermal:enderium_glass": 0.5,
-    "#forge:glass": 0.15
+    "#c:glass_blocks": 0.15
   },
   "model": "thermal:enderium_glass",
   "brain": "golems:empty"

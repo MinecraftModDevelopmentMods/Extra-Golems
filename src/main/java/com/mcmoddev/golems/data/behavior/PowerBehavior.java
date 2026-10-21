@@ -7,6 +7,7 @@ import com.mcmoddev.golems.block.PowerBlock;
 import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.MinMaxBounds;
@@ -20,7 +21,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
@@ -32,9 +33,9 @@ import java.util.Objects;
 @Immutable
 public class PowerBehavior extends Behavior {
 
-	private static final TagKey<Block> CANNOT_SUPPORT = ForgeRegistries.BLOCKS.tags().createTagKey(new ResourceLocation(ExtraGolems.MODID, "cannot_support_utility_blocks"));
+	private static final TagKey<Block> CANNOT_SUPPORT = TagKey.create(BuiltInRegistries.BLOCK.key(), ResourceLocation.fromNamespaceAndPath(ExtraGolems.MODID, "cannot_support_utility_blocks"));
 
-	public static final Codec<PowerBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
+	public static final MapCodec<PowerBehavior> CODEC = RecordCodecBuilder.mapCodec(instance -> codecStart(instance)
 			.and(Codec.intRange(1, Integer.MAX_VALUE).optionalFieldOf("interval", 4).forGetter(PowerBehavior::getInterval))
 			.and(Codec.intRange(0, 15).optionalFieldOf("power", 15).forGetter(PowerBehavior::getPowerLevel))
 			.apply(instance, PowerBehavior::new));
@@ -61,7 +62,7 @@ public class PowerBehavior extends Behavior {
 	}
 
 	@Override
-	public Codec<? extends Behavior> getCodec() {
+	public MapCodec<? extends Behavior> getCodec() {
 		return EGRegistry.BehaviorReg.POWER.get();
 	}
 

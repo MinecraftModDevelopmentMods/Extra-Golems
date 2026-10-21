@@ -10,7 +10,7 @@
   "hidden": true,
   "repair_items": {
     "#minecraft:coral_blocks": 0.5,
-    "#forge:dead_coral_blocks": 0.25
+    "#c:dead_coral_blocks": 0.25
   },
   "brain": "golems:empty"
 }

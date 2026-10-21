@@ -8,7 +8,6 @@ import com.mcmoddev.golems.client.menu.GolemInventoryScreen;
 import com.mcmoddev.golems.client.menu.GuideBookScreen;
 import com.mcmoddev.golems.data.GolemContainer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -16,19 +15,20 @@ import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 
 public final class EGClientEvents {
 
-	public static void register() {
-		MinecraftForge.EVENT_BUS.register(EGClientEvents.ForgeHandler.class);
-		FMLJavaModLoadingContext.get().getModEventBus().register(EGClientEvents.ModHandler.class);
+	public static void register(IEventBus modEventBus) {
+		NeoForge.EVENT_BUS.register(EGClientEvents.ForgeHandler.class);
+		modEventBus.register(EGClientEvents.ModHandler.class);
 		ModHandler.addResources();
 	}
 
@@ -36,7 +36,12 @@ public final class EGClientEvents {
 
 		@SubscribeEvent
 		public static void setupClient(final FMLClientSetupEvent event) {
-			event.enqueueWork(() -> MenuScreens.register(EGRegistry.MenuReg.GOLEM_INVENTORY.get(), GolemInventoryScreen::new));
+			// Screen registration moved to RegisterMenuScreensEvent
+		}
+
+		@SubscribeEvent
+		public static void registerScreens(final RegisterMenuScreensEvent event) {
+			event.register(EGRegistry.MenuReg.GOLEM_INVENTORY.get(), GolemInventoryScreen::new);
 		}
 
 		@SubscribeEvent

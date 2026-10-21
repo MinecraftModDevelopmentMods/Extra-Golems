@@ -1,6 +1,10 @@
 {
   "pack": {
-    "pack_format": 15,
-    "description": "Extra Golems"
+    "pack_format": 34,
+    "description": "Extra Golems",
+    "supported_formats": {
+      "min_inclusive": 34,
+      "max_inclusive": 48
+    }
   }
 }

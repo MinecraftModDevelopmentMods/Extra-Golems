@@ -7,11 +7,11 @@
   },
   "group": "golems:steel",
   "blocks": {
-	"all": "#forge:storage_blocks/steel"
+	"all": "#c:storage_blocks/steel"
   },
   "repair_items": {
-    "#forge:storage_blocks/steel": 0.5,
-    "#forge:ingots/steel": 0.15
+    "#c:storage_blocks/steel": 0.5,
+    "#c:ingots/steel": 0.15
   },
   "model": "mekanism:steel",
   "brain": "golems:empty"

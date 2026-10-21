@@ -6,11 +6,11 @@
 	"sound": "minecraft:metal"
   },
   "blocks": {
-	"all": "#forge:storage_blocks/nickel"
+	"all": "#c:storage_blocks/nickel"
   },
   "repair_items": {
-    "#forge:storage_blocks/nickel": 0.5,
-    "#forge:ingots/nickel": 0.15
+    "#c:storage_blocks/nickel": 0.5,
+    "#c:ingots/nickel": 0.15
   },
   "model": "thermal:nickel",
   "brain": "golems:empty"

@@ -5,6 +5,7 @@ import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.tags.ItemTags;
@@ -25,7 +26,7 @@ public class WearBannerBehavior extends Behavior {
 
 	public static final WearBannerBehavior ANY = new WearBannerBehavior(MinMaxBounds.Ints.ANY, TooltipPredicate.HIDDEN);
 
-	public static final Codec<WearBannerBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
+	public static final MapCodec<WearBannerBehavior> CODEC = RecordCodecBuilder.mapCodec(instance -> codecStart(instance)
 			.apply(instance, WearBannerBehavior::new));
 
 	public WearBannerBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate) {
@@ -35,7 +36,7 @@ public class WearBannerBehavior extends Behavior {
 	//// GETTERS ////
 
 	@Override
-	public Codec<? extends Behavior> getCodec() {
+	public MapCodec<? extends Behavior> getCodec() {
 		return EGRegistry.BehaviorReg.WEAR_BANNER.get();
 	}
 

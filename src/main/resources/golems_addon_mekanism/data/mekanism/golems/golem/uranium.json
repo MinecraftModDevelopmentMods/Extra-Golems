@@ -10,11 +10,11 @@
   },
   "group": "golems:ore",
   "blocks": {
-	"all": "#forge:storage_blocks/uranium"
+	"all": "#c:storage_blocks/uranium"
   },
   "repair_items": {
-    "#forge:storage_blocks/uranium": 0.5,
-    "#forge:ingots/uranium": 0.25
+    "#c:storage_blocks/uranium": 0.5,
+    "#c:ingots/uranium": 0.25
   },
   "model": "mekanism:uranium",
   "brain": {

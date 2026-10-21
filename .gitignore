@@ -38,3 +38,6 @@ libs/*
 ._*
 /.apt_generated/
 /Users/
+
+src/references
+.vscode/

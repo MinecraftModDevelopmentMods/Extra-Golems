@@ -8,6 +8,7 @@ import com.mcmoddev.golems.data.modifier.Modifier;
 import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mcmoddev.golems.data.ResourcePair;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import javax.annotation.concurrent.Immutable;
@@ -19,7 +20,7 @@ import java.util.List;
 @Immutable
 public class AddBlocksModifier extends Modifier {
 
-	public static final Codec<AddBlocksModifier> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+	public static final MapCodec<AddBlocksModifier> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
 			EGCodecUtils.listOrElementCodec(ResourcePair.CODEC).fieldOf("blocks").forGetter(AddBlocksModifier::getBlocks),
 			GolemPart.CODEC.optionalFieldOf("part", GolemPart.ALL).forGetter(AddBlocksModifier::getPart),
 			Codec.BOOL.optionalFieldOf("replace", false).forGetter(AddBlocksModifier::replace)
@@ -62,7 +63,7 @@ public class AddBlocksModifier extends Modifier {
 	}
 
 	@Override
-	public Codec<? extends Modifier> getCodec() {
+	public MapCodec<? extends Modifier> getCodec() {
 		return EGRegistry.GolemModifierReg.ADD_BLOCKS.get();
 	}
 }

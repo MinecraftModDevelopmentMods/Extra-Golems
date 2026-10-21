@@ -1,7 +1,7 @@
 package com.mcmoddev.golems;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -9,14 +9,14 @@ import java.util.List;
 
 public final class EGConfig {
 
-	private final ForgeConfigSpec.BooleanValue BEDROCK_GOLEM_CREATIVE_ONLY;
-	private final ForgeConfigSpec.BooleanValue PUMPKIN_BUILDS_GOLEMS;
-	private final ForgeConfigSpec.BooleanValue ENABLE_FRIENDLY_FIRE;
-	private final ForgeConfigSpec.BooleanValue ENABLE_USE_SPELL_ITEM;
-	private final ForgeConfigSpec.BooleanValue ENABLE_HEAL_GOLEMS;
-	private final ForgeConfigSpec.BooleanValue ENABLE_HOLIDAYS;
-	private final ForgeConfigSpec.IntValue VILLAGER_GOLEM_SPAWN_CHANCE;
-	private final ForgeConfigSpec.IntValue DEBUG_GOLEMS_PERMISSION_LEVEL;
+	private final ModConfigSpec.BooleanValue BEDROCK_GOLEM_CREATIVE_ONLY;
+	private final ModConfigSpec.BooleanValue PUMPKIN_BUILDS_GOLEMS;
+	private final ModConfigSpec.BooleanValue ENABLE_FRIENDLY_FIRE;
+	private final ModConfigSpec.BooleanValue ENABLE_USE_SPELL_ITEM;
+	private final ModConfigSpec.BooleanValue ENABLE_HEAL_GOLEMS;
+	private final ModConfigSpec.BooleanValue ENABLE_HOLIDAYS;
+	private final ModConfigSpec.IntValue VILLAGER_GOLEM_SPAWN_CHANCE;
+	private final ModConfigSpec.IntValue DEBUG_GOLEMS_PERMISSION_LEVEL;
 
 	private boolean aprilFirst;
 	private boolean halloween;
@@ -31,7 +31,7 @@ public final class EGConfig {
 	private int villagerGolemSpawnChance;
 	private int debugGolemsPermissionLevel;
 
-	public EGConfig(final ForgeConfigSpec.Builder builder) {
+	public EGConfig(final ModConfigSpec.Builder builder) {
 		// Global values
 		builder.push("general");
 		BEDROCK_GOLEM_CREATIVE_ONLY = builder.comment("When true, only players in creative mode can use a Bedrock Golem spawn item")

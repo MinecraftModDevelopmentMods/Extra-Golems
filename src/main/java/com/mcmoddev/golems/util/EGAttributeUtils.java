@@ -1,5 +1,6 @@
 package com.mcmoddev.golems.util;
 
+import net.minecraft.core.Holder;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
@@ -17,9 +18,9 @@ public final class EGAttributeUtils {
 	 * @param attributeMap the attribute map instance to modify
 	 * @param baseValues a map of attributes and base values to assign
 	 **/
-	public static void setBaseValues(final AttributeMap attributeMap, final Map<Attribute, Double> baseValues) {
+	public static void setBaseValues(final AttributeMap attributeMap, final Map<Holder<Attribute>, Double> baseValues) {
 		// iterate map entries
-		for(Map.Entry<Attribute, Double> entry : baseValues.entrySet()) {
+		for(Map.Entry<Holder<Attribute>, Double> entry : baseValues.entrySet()) {
 			// verify attribute exists
 			if(!attributeMap.hasAttribute(entry.getKey())) {
 				continue;
@@ -35,7 +36,7 @@ public final class EGAttributeUtils {
 	 * @param modifier the attribute modifier to apply
 	 */
 	public static void safeAddModifier(final AttributeInstance instance, final AttributeModifier modifier) {
-		if(instance.hasModifier(modifier)) {
+		if(instance.hasModifier(modifier.id())) {
 			return;
 		}
 		instance.addPermanentModifier(modifier);
@@ -47,10 +48,10 @@ public final class EGAttributeUtils {
 	 * @param modifier the attribute modifier to apply
 	 */
 	public static void safeRemoveModifier(final AttributeInstance instance, final AttributeModifier modifier) {
-		if(!instance.hasModifier(modifier)) {
+		if(!instance.hasModifier(modifier.id())) {
 			return;
 		}
-		instance.removeModifier(modifier);
+		instance.removeModifier(modifier.id());
 	}
 
 }

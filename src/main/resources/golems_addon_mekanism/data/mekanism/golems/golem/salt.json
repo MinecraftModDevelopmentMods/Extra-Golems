@@ -11,7 +11,7 @@
   },
   "repair_items": {
     "mekanism:block_salt": 0.5,
-    "#forge:dusts/salt": 0.15
+    "#c:dusts/salt": 0.15
   },
   "model": "mekanism:salt",
   "brain": "golems:empty"

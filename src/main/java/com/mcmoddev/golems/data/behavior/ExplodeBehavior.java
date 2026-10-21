@@ -6,6 +6,7 @@ import com.mcmoddev.golems.data.behavior.data.ExplodeBehaviorData;
 import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.MinMaxBounds;
@@ -18,6 +19,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
@@ -39,7 +41,7 @@ import java.util.Objects;
 @Immutable
 public class ExplodeBehavior extends Behavior {
 
-	public static final Codec<ExplodeBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
+	public static final MapCodec<ExplodeBehavior> CODEC = RecordCodecBuilder.mapCodec(instance -> codecStart(instance)
 			.and(Codec.doubleRange(0.0D, 127.0D).optionalFieldOf("radius", 2.0D).forGetter(ExplodeBehavior::getRadius))
 			.and(Codec.intRange(0, Integer.MAX_VALUE).optionalFieldOf("fuse", 60).forGetter(ExplodeBehavior::getMinFuse))
 			.and(Codec.doubleRange(0.0D, 1.0D).optionalFieldOf("hurt_chance", 0.0D).forGetter(ExplodeBehavior::getChanceOnHurt))
@@ -82,7 +84,7 @@ public class ExplodeBehavior extends Behavior {
 	}
 
 	@Override
-	public Codec<? extends Behavior> getCodec() {
+	public MapCodec<? extends Behavior> getCodec() {
 		return EGRegistry.BehaviorReg.EXPLODE.get();
 	}
 
@@ -148,9 +150,9 @@ public class ExplodeBehavior extends Behavior {
 			mob.level().playSound(player, pos.x, pos.y, pos.z, sound, mob.getSoundSource(), 1.0F, mob.getRandom().nextFloat() * 0.4F + 0.8F);
 			player.swing(hand);
 
-			mob.setSecondsOnFire(Math.floorDiv(getMinFuse(), 20));
+			mob.igniteForSeconds(Math.floorDiv(getMinFuse(), 20));
 			entity.getBehaviorData(ExplodeBehaviorData.class).ifPresent(data -> data.lightFuse());
-			itemstack.hurtAndBreak(1, player, c -> c.broadcastBreakEvent(hand));
+			itemstack.hurtAndBreak(1, player, hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
 		}
 	}
 
@@ -165,13 +167,13 @@ public class ExplodeBehavior extends Behavior {
 
 	@Override
 	public void onWriteData(final IExtraGolem entity, final CompoundTag tag) {
-		entity.getBehaviorData(ExplodeBehaviorData.class).ifPresent(data -> tag.put(KEY_EXPLOSION_HELPER, data.serializeNBT()));
+		entity.getBehaviorData(ExplodeBehaviorData.class).ifPresent(data -> tag.put(KEY_EXPLOSION_HELPER, data.serializeNBT(((net.minecraft.world.entity.Entity)entity).level().registryAccess())));
 
 	}
 
 	@Override
 	public void onReadData(final IExtraGolem entity, final CompoundTag tag) {
-		entity.getBehaviorData(ExplodeBehaviorData.class).ifPresent(data -> data.deserializeNBT(tag.getCompound(KEY_EXPLOSION_HELPER)));
+		entity.getBehaviorData(ExplodeBehaviorData.class).ifPresent(data -> data.deserializeNBT(((net.minecraft.world.entity.Entity)entity).level().registryAccess(), tag.getCompound(KEY_EXPLOSION_HELPER)));
 	}
 
 	//// EQUALITY ////

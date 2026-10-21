@@ -5,6 +5,7 @@ import com.mcmoddev.golems.data.golem.Golem;
 import com.mcmoddev.golems.data.modifier.Modifier;
 import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import javax.annotation.concurrent.Immutable;
@@ -16,7 +17,7 @@ import java.util.List;
 @Immutable
 public class AddDescriptionModifier extends Modifier {
 
-	public static final Codec<AddDescriptionModifier> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+	public static final MapCodec<AddDescriptionModifier> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
 			EGCodecUtils.listOrElementCodec(Codec.STRING).fieldOf("descriptions").forGetter(AddDescriptionModifier::getDescriptions),
 			Codec.BOOL.optionalFieldOf("replace", false).forGetter(AddDescriptionModifier::replace)
 	).apply(instance, AddDescriptionModifier::new));
@@ -52,7 +53,7 @@ public class AddDescriptionModifier extends Modifier {
 	}
 
 	@Override
-	public Codec<? extends Modifier> getCodec() {
+	public MapCodec<? extends Modifier> getCodec() {
 		return EGRegistry.GolemModifierReg.ADD_DESCRIPTION.get();
 	}
 }

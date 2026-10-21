@@ -2,12 +2,12 @@ package com.mcmoddev.golems.util;
 
 import com.mcmoddev.golems.data.behavior.util.AoeShape;
 import com.mcmoddev.golems.entity.IExtraGolem;
-import com.mcmoddev.golems.util.AoeMapper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.eventbus.api.Cancelable;
+import net.neoforged.neoforge.event.entity.living.LivingEvent;
+import net.neoforged.bus.api.ICancellableEvent;
+import net.minecraft.world.entity.LivingEntity;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -17,8 +17,13 @@ import java.util.Set;
  * This event exists for other mods or addons to handle and modify
  * when the entity modifies a large number of blocks
  */
-@Cancelable
-public final class GolemModifyBlocksEvent extends LivingEvent {
+public final class GolemModifyBlocksEvent extends LivingEvent implements ICancellableEvent {
+	
+	public enum Result {
+		DENY,
+		DEFAULT,
+		ALLOW
+	}
 
 	private Set<BlockPos> blacklist;
 	private AoeMapper aoeMapper;
@@ -32,7 +37,7 @@ public final class GolemModifyBlocksEvent extends LivingEvent {
 	private int updateFlag;
 
 	public GolemModifyBlocksEvent(final IExtraGolem golem, final BlockPos center, final int radius, final AoeShape shape, final AoeMapper aoeMapper) {
-		super(golem.asMob());
+		super((LivingEntity)golem);
 		this.setResult(Result.ALLOW);
 		this.blacklist = new HashSet<>();
 		this.entity = golem;
@@ -49,6 +54,16 @@ public final class GolemModifyBlocksEvent extends LivingEvent {
 
 	public IExtraGolem getGolem() {
 		return entity;
+	}
+
+	private Result result = Result.DEFAULT;
+
+	public Result getResult() {
+		return result;
+	}
+
+	public void setResult(Result result) {
+		this.result = result;
 	}
 
 	public AoeMapper getMapper() {

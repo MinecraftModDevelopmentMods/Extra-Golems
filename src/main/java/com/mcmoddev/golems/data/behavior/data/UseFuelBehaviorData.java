@@ -72,14 +72,14 @@ public class UseFuelBehaviorData implements IBehaviorData {
 	private static final String KEY_FUEL = "Fuel";
 
 	@Override
-	public CompoundTag serializeNBT() {
+	public CompoundTag serializeNBT(net.minecraft.core.HolderLookup.Provider provider) {
 		final CompoundTag tag = new CompoundTag();
 		tag.putInt(KEY_FUEL, entity.getFuel());
 		return tag;
 	}
 
 	@Override
-	public void deserializeNBT(CompoundTag tag) {
+	public void deserializeNBT(net.minecraft.core.HolderLookup.Provider provider, CompoundTag tag) {
 		entity.setFuel(tag.getInt(KEY_FUEL));
 	}
 }

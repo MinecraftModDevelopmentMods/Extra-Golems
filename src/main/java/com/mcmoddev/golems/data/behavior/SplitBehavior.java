@@ -6,6 +6,7 @@ import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.entity.GolemBase;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.MinMaxBounds;
@@ -24,7 +25,7 @@ import java.util.Objects;
 
 public class SplitBehavior extends Behavior {
 
-	public static final Codec<SplitBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
+	public static final MapCodec<SplitBehavior> CODEC = RecordCodecBuilder.mapCodec(instance -> codecStart(instance)
 			.and(Codec.intRange(1, 255).optionalFieldOf("children", 2).forGetter(SplitBehavior::getChildren))
 			.apply(instance, SplitBehavior::new));
 
@@ -43,7 +44,7 @@ public class SplitBehavior extends Behavior {
 	}
 
 	@Override
-	public Codec<? extends Behavior> getCodec() {
+	public MapCodec<? extends Behavior> getCodec() {
 		return EGRegistry.BehaviorReg.SPLIT.get();
 	}
 
@@ -80,7 +81,7 @@ public class SplitBehavior extends Behavior {
 				mob.setInvulnerable(mob.isInvulnerable());
 				// spawn the mob
 				serverLevel.addFreshEntityWithPassengers(child);
-				child.finalizeSpawn(serverLevel, diff, MobSpawnType.MOB_SUMMONED, null, null);
+				child.finalizeSpawn(serverLevel, diff, MobSpawnType.MOB_SUMMONED, null);
 				// add to the list
 				children.add(child);
 			}

@@ -8,11 +8,11 @@
 	"sound": "minecraft:glass"
   },
   "blocks": {
-	"all": "#forge:storage_blocks/sapphire"
+	"all": "#c:storage_blocks/sapphire"
   },
   "repair_items": {
-    "#forge:storage_blocks/sapphire": 0.5,
-    "#forge:gems/sapphire": 0.15
+    "#c:storage_blocks/sapphire": 0.5,
+    "#c:gems/sapphire": 0.15
   },
   "model": "thermal:sapphire",
   "brain": "golems:empty"

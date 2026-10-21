@@ -18,8 +18,8 @@
 	]
   },
   "repair_items": {
-    "#forge:sandstone": 0.5,
-	"#forge:sand": 0.15
+    "#c:sandstone": 0.5,
+	"#c:sand": 0.15
   },
   "model": "golems:sandstone",
   "brain": "golems:empty",

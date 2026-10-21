@@ -6,6 +6,7 @@ import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mcmoddev.golems.menu.GolemCraftingMenu;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.MinMaxBounds;
@@ -18,7 +19,6 @@ import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
@@ -30,7 +30,7 @@ import java.util.List;
 @Immutable
 public class CraftMenuBehavior extends Behavior {
 
-	public static final Codec<CraftMenuBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
+	public static final MapCodec<CraftMenuBehavior> CODEC = RecordCodecBuilder.mapCodec(instance -> codecStart(instance)
 			.apply(instance, CraftMenuBehavior::new));
 
 	public CraftMenuBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate) {
@@ -40,7 +40,7 @@ public class CraftMenuBehavior extends Behavior {
 	//// GETTERS ////
 
 	@Override
-	public Codec<? extends Behavior> getCodec() {
+	public MapCodec<? extends Behavior> getCodec() {
 		return EGRegistry.BehaviorReg.CRAFT_MENU.get();
 	}
 
@@ -56,7 +56,7 @@ public class CraftMenuBehavior extends Behavior {
 			entity.setPlayerInMenu(player);
 			// display crafting grid by sending request to server
 			final Mob mob = entity.asMob();
-			NetworkHooks.openScreen((ServerPlayer) player, new SimpleMenuProvider(
+			((ServerPlayer) player).openMenu(new SimpleMenuProvider(
 					(windowId, inv, menuPlayer) -> new GolemCraftingMenu(windowId, inv, entity, ContainerLevelAccess.create(mob.level(), mob.blockPosition())),
 					mob.getName()));
 			player.awardStat(Stats.INTERACT_WITH_CRAFTING_TABLE);

@@ -11,18 +11,19 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.InterModComms;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.fml.InterModComms;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.config.ModConfigEvent;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,27 +36,29 @@ public class ExtraGolems {
 
 	public static final Logger LOGGER = LogManager.getFormatterLogger(ExtraGolems.MODID);
 
-	private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
+	private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 	public static final EGConfig CONFIG = new EGConfig(BUILDER);
-	public static final ForgeConfigSpec SPEC = BUILDER.build();
+	public static final ModConfigSpec SPEC = BUILDER.build();
 
-	public ExtraGolems() {
+	public ExtraGolems(IEventBus modEventBus, ModContainer modContainer) {
 		// register and load config
-		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, SPEC);
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(ExtraGolems::loadConfig);
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(ExtraGolems::reloadConfig);
+		modContainer.registerConfig(ModConfig.Type.COMMON, SPEC);
+		modEventBus.addListener(ExtraGolems::loadConfig);
+		modEventBus.addListener(ExtraGolems::reloadConfig);
 		// init network
-		EGNetwork.register();
+		modEventBus.addListener(EGNetwork::register);
 		// init registry
-		EGRegistry.register();
+		EGRegistry.register(modEventBus);
 		// register event handlers
-		EGEvents.register();
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(ExtraGolems::setup);
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(ExtraGolems::enqueueIMC);
+		EGEvents.register(modEventBus);
+		modEventBus.addListener(ExtraGolems::setup);
+		modEventBus.addListener(ExtraGolems::enqueueIMC);
 		// init addons
-		AddonLoader.register();
+		AddonLoader.register(modEventBus);
 		// register client event handlers
-		DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> EGClientEvents::register);
+		if (FMLEnvironment.dist == Dist.CLIENT) {
+			EGClientEvents.register(modEventBus);
+		}
 	}
 
 	private static void setup(final FMLCommonSetupEvent event) {

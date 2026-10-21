@@ -8,10 +8,10 @@
   },
   "group": "golems:coal",
   "blocks": {
-	"all": "#forge:storage_blocks/coal"
+	"all": "#c:storage_blocks/coal"
   },
   "repair_items": {
-	"#forge:storage_blocks/coal": 0.5,
+	"#c:storage_blocks/coal": 0.5,
     "#minecraft:coals": 0.1
   },
   "brain": {

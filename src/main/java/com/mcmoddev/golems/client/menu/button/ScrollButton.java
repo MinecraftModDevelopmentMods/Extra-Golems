@@ -72,9 +72,9 @@ public class ScrollButton extends Button {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         if(isActive()) {
-            float scrollPercent = Mth.clamp(this.scrollPercent - (float) amount * scrollAmountMultiplier, 0.0F, 1.0F);
+            float scrollPercent = Mth.clamp(this.scrollPercent - (float) scrollY * scrollAmountMultiplier, 0.0F, 1.0F);
             setScrollPercent(scrollPercent);
             return true;
         }

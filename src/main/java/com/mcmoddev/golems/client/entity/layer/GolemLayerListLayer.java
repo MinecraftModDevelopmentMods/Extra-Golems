@@ -112,7 +112,7 @@ public class GolemLayerListLayer<T extends GolemBase> extends RenderLayer<T, Gol
 		// set model color
 		model.setColor(colors.x(), colors.y(), colors.z());
 		// render model
-		model.renderToBuffer(poseStack, vertexBuilder, packedLight, packedOverlayIn, 1.0F, 1.0F, 1.0F, 1.0F);
+		model.renderToBuffer(poseStack, vertexBuilder, packedLight, packedOverlayIn, 0xFFFFFFFF);
 		// disable translucency if needed
 		if (layer.getRenderType() == RenderTypes.TRANSLUCENT) {
 			RenderSystem.disableBlend();

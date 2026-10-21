@@ -5,6 +5,7 @@ import com.mcmoddev.golems.data.behavior.data.ShootBehaviorData;
 import com.mcmoddev.golems.data.behavior.data.UseFuelBehaviorData;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.util.StringRepresentable;
 
 import java.util.function.Predicate;

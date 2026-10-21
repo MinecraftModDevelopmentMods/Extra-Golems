@@ -2,7 +2,7 @@
   "parent": "golems:terracotta",
   "group": "golems:terracotta",
   "blocks": {
-	"all": "#forge:terracotta/cyan"
+	"all": "#c:terracotta/cyan"
   },
   "model": "golems:cyan_terracotta"
 }

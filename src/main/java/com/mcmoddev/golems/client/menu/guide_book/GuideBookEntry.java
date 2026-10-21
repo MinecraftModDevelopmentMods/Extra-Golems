@@ -29,7 +29,8 @@ import java.util.Optional;
 public class GuideBookEntry implements ITableOfContentsEntry {
 
 	public static final Comparator<GuideBookEntry> SORT_BY_NAME = Comparator.comparing(o -> o.getTitle().getString());
-	public static final Comparator<GuideBookEntry> SORT_BY_NAMESPACE = Comparator.comparing(o -> o.getId().getNamespace());
+	public static final Comparator<GuideBookEntry> SORT_BY_NAMESPACE = Comparator
+			.comparing(o -> o.getId().getNamespace());
 
 	private final ResourceLocation id;
 	private final GolemContainer container;
@@ -51,7 +52,8 @@ public class GuideBookEntry implements ITableOfContentsEntry {
 		// collect blocks
 		final GolemBuildingBlocks buildingBlocks = container.getGolem().getBlocks();
 		final Collection<Block> blocks = new HashSet<>();
-		if(container.getGolem().getGroup() != null && !buildingBlocks.getBlocks().containsKey(GolemPart.ALL) && buildingBlocks.getBlocks().containsKey(GolemPart.BODY)) {
+		if (container.getGolem().getGroup() != null && !buildingBlocks.getBlocks().containsKey(GolemPart.ALL)
+				&& buildingBlocks.getBlocks().containsKey(GolemPart.BODY)) {
 			// only show body blocks if there are any.
 			// this ensures that golems in groups do not appear to have identical blocks
 			// when the only difference is the body block, which is often the case.
@@ -60,10 +62,13 @@ public class GuideBookEntry implements ITableOfContentsEntry {
 			// otherwise, show all blocks
 			blocks.addAll(buildingBlocks.get());
 		}
-		// create item stacks
+		// create item stacks (skip blocks that don't have an item form)
 		final ImmutableList.Builder<ItemStack> builder = ImmutableList.builder();
-		for(Block b : blocks) {
-			builder.add(new ItemStack(b));
+		for (Block b : blocks) {
+			ItemStack stack = new ItemStack(b);
+			if (!stack.isEmpty()) {
+				builder.add(stack);
+			}
 		}
 		this.items = builder.build();
 		// collect descriptions
@@ -143,8 +148,10 @@ public class GuideBookEntry implements ITableOfContentsEntry {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof GuideBookEntry)) return false;
+		if (this == o)
+			return true;
+		if (!(o instanceof GuideBookEntry))
+			return false;
 		GuideBookEntry that = (GuideBookEntry) o;
 		return id.equals(that.id);
 	}

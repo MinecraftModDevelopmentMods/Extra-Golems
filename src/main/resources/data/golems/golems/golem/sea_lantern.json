@@ -14,8 +14,8 @@
   },
   "repair_items": {
     "minecraft:sea_lantern": 0.5,
-	"#forge:gems/prismarine": 0.15,
-	"#forge:dusts/prismarine": 0.15
+	"#c:gems/prismarine": 0.15,
+	"#c:dusts/prismarine": 0.15
   },
   "model": "golems:sea_lantern",
   "brain": {

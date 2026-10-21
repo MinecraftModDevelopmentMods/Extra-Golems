@@ -1,6 +1,7 @@
 package com.mcmoddev.golems.data.behavior.util;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.TooltipFlag;
 

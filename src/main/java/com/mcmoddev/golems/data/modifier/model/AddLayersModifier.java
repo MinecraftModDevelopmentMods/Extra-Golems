@@ -7,8 +7,7 @@ import com.mcmoddev.golems.data.model.LayerList;
 import com.mcmoddev.golems.data.modifier.Modifier;
 import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mojang.datafixers.util.Either;
-import com.mojang.serialization.Codec;
-import net.minecraft.core.Holder;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.concurrent.Immutable;
@@ -20,9 +19,9 @@ import java.util.List;
 @Immutable
 public class AddLayersModifier extends Modifier {
 
-	public static final Codec<AddLayersModifier> CODEC = EGCodecUtils.listOrElementCodec(LayerList.LAYER_OR_ID_CODEC)
+	public static final MapCodec<AddLayersModifier> CODEC = EGCodecUtils.listOrElementCodec(LayerList.LAYER_OR_ID_CODEC)
 			.xmap(AddLayersModifier::new, AddLayersModifier::getLayers)
-			.fieldOf("layers").codec();
+			.fieldOf("layers");
 
 	private final List<Either<Layer, ResourceLocation>> layers;
 
@@ -44,7 +43,7 @@ public class AddLayersModifier extends Modifier {
 	}
 
 	@Override
-	public Codec<? extends Modifier> getCodec() {
+	public MapCodec<? extends Modifier> getCodec() {
 		return EGRegistry.GolemModifierReg.ADD_LAYERS.get();
 	}
 }

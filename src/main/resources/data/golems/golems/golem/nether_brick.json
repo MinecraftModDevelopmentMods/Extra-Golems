@@ -35,7 +35,7 @@
     "minecraft:red_nether_bricks": 0.5,
     "minecraft:cracked_nether_bricks": 0.5,
     "minecraft:chiseled_nether_bricks": 0.5,
-	"#forge:ingots/nether_brick": 0.15
+	"#c:ingots/nether_brick": 0.15
   },
   "model": "golems:nether_brick",
   "brain": {

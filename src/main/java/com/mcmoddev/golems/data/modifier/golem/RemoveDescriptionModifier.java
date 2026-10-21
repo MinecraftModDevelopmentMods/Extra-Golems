@@ -9,6 +9,7 @@ import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mcmoddev.golems.util.EGComponentUtils;
 import com.mcmoddev.golems.util.PredicateUtils;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import javax.annotation.concurrent.Immutable;
@@ -24,9 +25,12 @@ import java.util.regex.PatternSyntaxException;
 @Immutable
 public class RemoveDescriptionModifier extends Modifier {
 
-	public static final Codec<RemoveDescriptionModifier> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			EGCodecUtils.listOrElementCodec(RemovePredicate.CODEC).optionalFieldOf("predicate", ImmutableList.of()).forGetter(RemoveDescriptionModifier::getPredicates)
-	).apply(instance, RemoveDescriptionModifier::new));
+	public static final MapCodec<RemoveDescriptionModifier> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
+			.group(
+					EGCodecUtils.listOrElementCodec(RemovePredicate.CODEC)
+							.optionalFieldOf("predicate", ImmutableList.of())
+							.forGetter(RemoveDescriptionModifier::getPredicates))
+			.apply(instance, RemoveDescriptionModifier::new));
 
 	private final List<RemovePredicate> predicates;
 	private final Predicate<String> predicate;
@@ -38,7 +42,10 @@ public class RemoveDescriptionModifier extends Modifier {
 
 	//// GETTERS ////
 
-	/** @return The predicates to test String entries after removing formatting codes. If this list is empty, all entries will be removed. **/
+	/**
+	 * @return The predicates to test String entries after removing formatting
+	 *         codes. If this list is empty, all entries will be removed.
+	 **/
 	public List<RemovePredicate> getPredicates() {
 		return predicates;
 	}
@@ -51,7 +58,7 @@ public class RemoveDescriptionModifier extends Modifier {
 	}
 
 	@Override
-	public Codec<? extends Modifier> getCodec() {
+	public MapCodec<? extends Modifier> getCodec() {
 		return EGRegistry.GolemModifierReg.REMOVE_DESCRIPTION.get();
 	}
 
@@ -59,9 +66,13 @@ public class RemoveDescriptionModifier extends Modifier {
 
 	public static class RemovePredicate implements Predicate<String> {
 
+		// Note: This needs to be Codec, not MapCodec, for use in listOrElementCodec
 		public static final Codec<RemovePredicate> CODEC = Codec.STRING.xmap(RemovePredicate::new, o -> o.regex);
 
-		/** The regex to test a string to remove. Formatting codes are removed before testing. **/
+		/**
+		 * The regex to test a string to remove. Formatting codes are removed before
+		 * testing.
+		 **/
 		private final String regex;
 		private final Pattern pattern;
 

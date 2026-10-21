@@ -8,11 +8,11 @@
 	"sound": "minecraft:glass"
   },
   "blocks": {
-	"all": "#forge:storage_blocks/ruby"
+	"all": "#c:storage_blocks/ruby"
   },
   "repair_items": {
-    "#forge:storage_blocks/ruby": 0.5,
-    "#forge:gems/ruby": 0.15
+    "#c:storage_blocks/ruby": 0.5,
+    "#c:gems/ruby": 0.15
   },
   "model": "thermal:ruby",
   "brain": "golems:empty"

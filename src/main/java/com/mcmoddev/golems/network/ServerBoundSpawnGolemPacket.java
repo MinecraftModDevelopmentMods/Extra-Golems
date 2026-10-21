@@ -12,104 +12,75 @@ import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.data.golem.Golem;
 import com.mcmoddev.golems.entity.GolemBase;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.Registry;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 
-public class ServerBoundSpawnGolemPacket {
+public record ServerBoundSpawnGolemPacket(List<ResourceLocation> ids) implements CustomPacketPayload {
 
-    private List<ResourceLocation> ids;
+    public static final CustomPacketPayload.Type<ServerBoundSpawnGolemPacket> TYPE = new CustomPacketPayload.Type<>(
+            ResourceLocation.fromNamespaceAndPath(ExtraGolems.MODID, "spawn_golem"));
+
+    public static final StreamCodec<ByteBuf, ServerBoundSpawnGolemPacket> STREAM_CODEC = StreamCodec.composite(
+            ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.list()),
+            ServerBoundSpawnGolemPacket::ids,
+            ServerBoundSpawnGolemPacket::new);
 
     public ServerBoundSpawnGolemPacket(ResourceLocation id) {
         this(ImmutableList.of(id));
     }
 
-	public ServerBoundSpawnGolemPacket(List<ResourceLocation> ids) {
-		this.ids = ImmutableList.copyOf(ids);
-	}
-
-    /**
-     * Reads the raw packet data from the data stream.
-     *
-     * @param buf the PacketBuffer
-     * @return a new instance of the packet based on the PacketBuffer
-     */
-    public static ServerBoundSpawnGolemPacket fromBytes(final FriendlyByteBuf buf) {
-		// read number of entries
-		final int count = buf.readInt();
-		// create list
-		final List<ResourceLocation> list = new ArrayList<>(count);
-		// read each entry
-		for(int i = 0; i < count; i++) {
-			list.add(buf.readResourceLocation());
-		}
-        return new ServerBoundSpawnGolemPacket(list);
-    }
-
-    /**
-     * Writes the raw packet data to the data stream.
-     *
-     * @param msg the packet
-     * @param buf the PacketBuffer
-     */
-    public static void toBytes(final ServerBoundSpawnGolemPacket msg, final FriendlyByteBuf buf) {
-		// write number of entries
-		buf.writeInt(msg.ids.size());
-		// write each entry
-		for(ResourceLocation id : msg.ids) {
-			buf.writeResourceLocation(id);
-		}
+    @Override
+    public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 
     /**
      * Handles the packet when it is received.
-     *
-     * @param message the packet
-     * @param contextSupplier the NetworkEvent.Context supplier
      */
-    public static void handlePacket(final ServerBoundSpawnGolemPacket message, final Supplier<NetworkEvent.Context> contextSupplier) {
-        NetworkEvent.Context context = contextSupplier.get();
-        if (context.getDirection().getReceptionSide() == LogicalSide.SERVER && context.getSender() != null) {
-            context.enqueueWork(() -> {
-                // validate player
-                final ServerPlayer player = context.getSender();
-				// validate permissions
-				if(!player.hasPermissions(ExtraGolems.CONFIG.debugPermissionLevel())) {
-					return;
-				}
-				// validate item
-				if(!(player.getMainHandItem().is(EGRegistry.ItemReg.GUIDE_BOOK.get()) || player.getOffhandItem().is(EGRegistry.ItemReg.GUIDE_BOOK.get()))) {
-					return;
-				}
-				// iterate list
-				for(ResourceLocation id : message.ids) {
-					// validate golem ID
-					final Registry<Golem> registry = player.level().registryAccess().registryOrThrow(EGRegistry.Keys.GOLEM);
-					if(!registry.keySet().contains(id)) {
-						return;
-					}
-					// create a golem at this position
-					final GolemBase golem = GolemBase.create(player.level(), id);
-					golem.setPlayerCreated(true);
-					golem.copyPosition(player);
-					// spawn the golem
-					player.level().addFreshEntity(golem);
-					golem.finalizeSpawn((ServerLevelAccessor) player.level(), player.level().getCurrentDifficultyAt(player.blockPosition()), MobSpawnType.MOB_SUMMONED, null, null);
-					// send feedback
-					player.displayClientMessage(Component.translatable("command.golem.success", id, (int) player.getX(), (int) player.getY(), (int) player.getZ()), false);
-				}
-			});
-        }
-        context.setPacketHandled(true);
+    public static void handlePacket(final ServerBoundSpawnGolemPacket message, final IPayloadContext context) {
+        context.enqueueWork(() -> {
+            // validate player
+            final ServerPlayer player = (ServerPlayer) context.player();
+            // validate permissions
+            if (!player.hasPermissions(ExtraGolems.CONFIG.debugPermissionLevel())) {
+                return;
+            }
+            // validate item
+            if (!(player.getMainHandItem().is(EGRegistry.ItemReg.GUIDE_BOOK.get())
+                    || player.getOffhandItem().is(EGRegistry.ItemReg.GUIDE_BOOK.get()))) {
+                return;
+            }
+            // iterate list
+            for (ResourceLocation id : message.ids) {
+                // validate golem ID
+                final Registry<Golem> registry = player.level().registryAccess().registryOrThrow(EGRegistry.Keys.GOLEM);
+                if (!registry.keySet().contains(id)) {
+                    return;
+                }
+                // create a golem at this position
+                final GolemBase golem = GolemBase.create(player.level(), id);
+                golem.setPlayerCreated(true);
+                golem.copyPosition(player);
+                // spawn the golem
+                player.level().addFreshEntity(golem);
+                golem.finalizeSpawn((ServerLevelAccessor) player.level(),
+                        player.level().getCurrentDifficultyAt(player.blockPosition()), MobSpawnType.MOB_SUMMONED, null);
+                // send feedback
+                player.displayClientMessage(Component.translatable("command.golem.success", id, (int) player.getX(),
+                        (int) player.getY(), (int) player.getZ()), false);
+            }
+        });
     }
 }

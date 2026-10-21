@@ -10,6 +10,7 @@ import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mcmoddev.golems.data.ResourcePair;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.resources.ResourceLocation;
@@ -20,14 +21,15 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
- * Removes all layers from the {@link LayerList.Builder} that pass any of the given {@link RemovePredicate}s
+ * Removes all layers from the {@link LayerList.Builder} that pass any of the
+ * given {@link RemovePredicate}s
  */
 @Immutable
 public class RemoveLayersModifier extends Modifier {
 
-	public static final Codec<RemoveLayersModifier> CODEC = RemovePredicate.CODEC
+	public static final MapCodec<RemoveLayersModifier> CODEC = RemovePredicate.CODEC
 			.xmap(RemoveLayersModifier::new, RemoveLayersModifier::getPredicate)
-			.fieldOf("predicate").codec();
+			.fieldOf("predicate");
 
 	private final RemovePredicate predicate;
 
@@ -49,7 +51,7 @@ public class RemoveLayersModifier extends Modifier {
 	}
 
 	@Override
-	public Codec<? extends Modifier> getCodec() {
+	public MapCodec<? extends Modifier> getCodec() {
 		return EGRegistry.GolemModifierReg.REMOVE_LAYERS.get();
 	}
 
@@ -57,6 +59,7 @@ public class RemoveLayersModifier extends Modifier {
 
 	public static class RemovePredicate implements Predicate<Either<Layer, ResourceLocation>> {
 
+		// Note: This needs to be Codec, not MapCodec
 		public static final Codec<RemovePredicate> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 				ResourceLocation.CODEC.optionalFieldOf("model").forGetter(o -> Optional.ofNullable(o.model)),
 				ResourcePair.CODEC.optionalFieldOf("texture").forGetter(o -> Optional.ofNullable(o.texture)),
@@ -64,8 +67,9 @@ public class RemoveLayersModifier extends Modifier {
 				Codec.BOOL.optionalFieldOf("emissive").forGetter(o -> Optional.ofNullable(o.emissive)),
 				Codec.BOOL.optionalFieldOf("use_biome_color").forGetter(o -> Optional.ofNullable(o.useBiomeColor)),
 				RenderTypes.CODEC.optionalFieldOf("render_type").forGetter(o -> Optional.ofNullable(o.renderType)),
-				EGCodecUtils.MIN_MAX_INTS_CODEC.optionalFieldOf("variant").forGetter(o -> Optional.ofNullable(o.variant))
-		).apply(instance, RemovePredicate::new));
+				EGCodecUtils.MIN_MAX_INTS_CODEC.optionalFieldOf("variant")
+						.forGetter(o -> Optional.ofNullable(o.variant)))
+				.apply(instance, RemovePredicate::new));
 
 		private final @Nullable ResourceLocation model;
 		private final @Nullable ResourcePair texture;
@@ -75,8 +79,10 @@ public class RemoveLayersModifier extends Modifier {
 		private final @Nullable RenderTypes renderType;
 		private final @Nullable MinMaxBounds.Ints variant;
 
-		public RemovePredicate(Optional<ResourceLocation> model, Optional<ResourcePair> texture, Optional<ResourceLocation> template, Optional<Boolean> emissive,
-							   Optional<Boolean> useBiomeColor, Optional<RenderTypes> renderType, Optional<MinMaxBounds.Ints> variant) {
+		public RemovePredicate(Optional<ResourceLocation> model, Optional<ResourcePair> texture,
+				Optional<ResourceLocation> template, Optional<Boolean> emissive,
+				Optional<Boolean> useBiomeColor, Optional<RenderTypes> renderType,
+				Optional<MinMaxBounds.Ints> variant) {
 			this.model = model.orElse(null);
 			this.texture = texture.orElse(null);
 			this.template = template.orElse(null);
@@ -89,30 +95,30 @@ public class RemoveLayersModifier extends Modifier {
 		@Override
 		public boolean test(Either<Layer, ResourceLocation> either) {
 			// check model
-			if(either.right().isPresent()) {
+			if (either.right().isPresent()) {
 				return this.model != null && this.model.equals(either.right().get());
 			}
 			// check layer
-			if(either.left().isEmpty()) {
+			if (either.left().isEmpty()) {
 				return false;
 			}
 			final Layer layer = either.left().get();
-			if(texture != null && !texture.equals(layer.getRawTexture())) {
+			if (texture != null && !texture.equals(layer.getRawTexture())) {
 				return false;
 			}
-			if(template != null && !template.equals(layer.getRawTemplate())) {
+			if (template != null && !template.equals(layer.getRawTemplate())) {
 				return false;
 			}
-			if(emissive != null && emissive != layer.isEmissive()) {
+			if (emissive != null && emissive != layer.isEmissive()) {
 				return false;
 			}
-			if(useBiomeColor != null && useBiomeColor != layer.useBiomeColor()) {
+			if (useBiomeColor != null && useBiomeColor != layer.useBiomeColor()) {
 				return false;
 			}
-			if(renderType != null && renderType != layer.getRenderType()) {
+			if (renderType != null && renderType != layer.getRenderType()) {
 				return false;
 			}
-			if(variant != null && !testMinMaxBounds(variant, layer.getVariantBounds())) {
+			if (variant != null && !testMinMaxBounds(variant, layer.getVariantBounds())) {
 				return false;
 			}
 			// all checks passed
@@ -121,22 +127,22 @@ public class RemoveLayersModifier extends Modifier {
 
 		/**
 		 * @param predicate the bounds to check if they are in the range
-		 * @param bounds the range
+		 * @param bounds    the range
 		 * @return true if the predicate is ANY,
 		 */
 		private boolean testMinMaxBounds(final MinMaxBounds.Ints predicate, final MinMaxBounds.Ints bounds) {
-			if(predicate.isAny() || bounds.isAny()) {
+			if (predicate.isAny() || bounds.isAny()) {
 				return true;
 			}
 			// TODO test to make sure this works
-			if(bounds.getMin() != null && bounds.getMax() != null
-					&& (predicate.matches(bounds.getMin()) || predicate.matches(bounds.getMax()))) {
+			if (bounds.min().orElse(null) != null && bounds.max().orElse(null) != null
+					&& (predicate.matches(bounds.min().orElse(null)) || predicate.matches(bounds.max().orElse(null)))) {
 				return true;
 			}
-			if(bounds.getMin() != null && predicate.matches(bounds.getMin())) {
+			if (bounds.min().orElse(null) != null && predicate.matches(bounds.min().orElse(null))) {
 				return true;
 			}
-			if(bounds.getMax() != null && predicate.matches(bounds.getMax())) {
+			if (bounds.max().orElse(null) != null && predicate.matches(bounds.max().orElse(null))) {
 				return true;
 			}
 			return false;

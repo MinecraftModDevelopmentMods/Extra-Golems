@@ -44,12 +44,12 @@ public class ShootBehaviorData implements IBehaviorData {
 	//// NBT ////
 
 	@Override
-	public CompoundTag serializeNBT() {
+	public CompoundTag serializeNBT(net.minecraft.core.HolderLookup.Provider provider) {
 		return new CompoundTag();
 	}
 
 	@Override
-	public void deserializeNBT(CompoundTag tag) {
+	public void deserializeNBT(net.minecraft.core.HolderLookup.Provider provider, CompoundTag tag) {
 		// do nothing
 	}
 }

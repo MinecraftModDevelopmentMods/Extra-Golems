@@ -15,7 +15,7 @@
   "hidden": true,
   "repair_items": {
 	"#minecraft:wool": 0.5,
-	"#forge:string": 0.1
+	"#c:string": 0.1
   },
   "brain": "golems:empty"
 }

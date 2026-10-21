@@ -8,12 +8,12 @@
   },
   "group": "golems:raw_ore",
   "blocks": {
-	"all": "#forge:storage_blocks/raw_lead"
+	"all": "#c:storage_blocks/raw_lead"
   },
   "repair_items": {
-    "#forge:storage_blocks/raw_lead": 0.5,
-    "#forge:ingots/lead": 0.25,
-	"#forge:raw_materials/lead": 0.15
+    "#c:storage_blocks/raw_lead": 0.5,
+    "#c:ingots/lead": 0.25,
+	"#c:raw_materials/lead": 0.15
   },
   "model": "thermal:raw_lead",
   "brain": "golems:empty"

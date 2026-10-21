@@ -1,0 +1,11 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"category": "misc",
+	"ingredients": [
+		{ "item": "minecraft:carved_pumpkin" },
+		{ "item": "golems:golem_spell" }
+	],
+	"result": {
+		"id": "golems:golem_head"
+	}
+}

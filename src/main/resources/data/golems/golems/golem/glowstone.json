@@ -17,7 +17,7 @@
   },
   "repair_items": {
     "minecraft:glowstone": 0.5,
-	"#forge:dusts/glowstone": 0.15
+	"#c:dusts/glowstone": 0.15
   },
   "model": "golems:glowstone",
   "brain": {

@@ -13,7 +13,7 @@
   },
   "repair_items": {
     "#minecraft:leaves": 0.5,
-	"#forge:rods/wooden": 0.1
+	"#c:rods/wooden": 0.1
   },
   "model": "golems:leaves",
   "brain": "golems:leaves"

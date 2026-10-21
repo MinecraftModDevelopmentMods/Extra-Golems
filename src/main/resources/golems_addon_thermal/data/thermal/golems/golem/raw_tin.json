@@ -7,12 +7,12 @@
   },
   "group": "golems:raw_ore",
   "blocks": {
-	"all": "#forge:storage_blocks/raw_tin"
+	"all": "#c:storage_blocks/raw_tin"
   },
   "repair_items": {
-    "#forge:storage_blocks/raw_tin": 0.5,
-    "#forge:ingots/tin": 0.25,
-	"#forge:raw_materials/tin": 0.15
+    "#c:storage_blocks/raw_tin": 0.5,
+    "#c:ingots/tin": 0.25,
+	"#c:raw_materials/tin": 0.15
   },
   "model": "thermal:raw_tin",
   "brain": "golems:empty"

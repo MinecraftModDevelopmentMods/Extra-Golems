@@ -10,12 +10,12 @@
   },
   "group": "golems:raw_ore",
   "blocks": {
-	"all": "#forge:storage_blocks/raw_uranium"
+	"all": "#c:storage_blocks/raw_uranium"
   },
   "repair_items": {
-    "#forge:storage_blocks/raw_uranium": 0.5,
-    "#forge:ingots/uranium": 0.25,
-	"#forge:raw_materials/uranium": 0.15
+    "#c:storage_blocks/raw_uranium": 0.5,
+    "#c:ingots/uranium": 0.25,
+	"#c:raw_materials/uranium": 0.15
   },
   "model": "mekanism:raw_uranium",
   "brain": {

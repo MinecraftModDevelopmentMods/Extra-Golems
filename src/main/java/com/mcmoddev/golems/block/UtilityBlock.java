@@ -93,7 +93,7 @@ public abstract class UtilityBlock extends Block implements SimpleWaterloggedBlo
 	}
 
 	@Override
-	public ItemStack getCloneItemStack(final BlockGetter level, final BlockPos pos, final BlockState state) {
+	public ItemStack getCloneItemStack(final net.minecraft.world.level.LevelReader level, final BlockPos pos, final BlockState state) {
 		return ItemStack.EMPTY;
 	}
 

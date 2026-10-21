@@ -7,6 +7,7 @@ import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mcmoddev.golems.entity.goal.MoveToItemGoal;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.MinMaxBounds;
@@ -33,7 +34,7 @@ import java.util.List;
 @Immutable
 public class ShootFireballsBehavior extends AbstractShootBehavior {
 
-	public static final Codec<ShootFireballsBehavior> CODEC = RecordCodecBuilder.create(instance -> shootCodecStart(instance)
+	public static final MapCodec<ShootFireballsBehavior> CODEC = RecordCodecBuilder.mapCodec(instance -> shootCodecStart(instance)
 			.apply(instance, ShootFireballsBehavior::new));
 
 	public ShootFireballsBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, boolean consume, int attackInterval) {
@@ -43,7 +44,7 @@ public class ShootFireballsBehavior extends AbstractShootBehavior {
 	//// GETTERS ////
 
 	@Override
-	public Codec<? extends Behavior> getCodec() {
+	public MapCodec<? extends Behavior> getCodec() {
 		return EGRegistry.BehaviorReg.SHOOT_FIREBALLS.get();
 	}
 
@@ -72,7 +73,7 @@ public class ShootFireballsBehavior extends AbstractShootBehavior {
 			return false;
 		}
 		// create fireball
-		SmallFireball fireball = new SmallFireball(mob.level(), mob, 0, 0, 0);
+		SmallFireball fireball = new SmallFireball(mob.level(), mob, new Vec3(0, 0, 0));
 		fireball.setPos(mob.getX(), mob.getY(0.6F), mob.getZ());
 		// determine position and distance
 		final double targetY = target.getEyeY() - 1.1D;

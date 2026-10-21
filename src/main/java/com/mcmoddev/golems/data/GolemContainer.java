@@ -14,10 +14,11 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.util.thread.EffectiveSide;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.fml.util.thread.EffectiveSide;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.ArrayList;
@@ -26,6 +27,8 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import net.minecraft.core.HolderLookup;
 
 /**
  * Contains the ID and values of a {@link Golem} after applying {@link ModifierList}s
@@ -44,21 +47,20 @@ public class GolemContainer {
 	/** The loot table ID **/
 	private final ResourceLocation lootTable;
 
-	private GolemContainer(final RegistryAccess registryAccess, final ResourceLocation id) {
+	private GolemContainer(final HolderLookup.Provider registryAccess, final ResourceLocation id) {
 		this.id = id;
 		// load golem
-		final Registry<Golem> golemRegistry = registryAccess.registryOrThrow(EGRegistry.Keys.GOLEM);
-		final Golem wrapped = golemRegistry.getOptional(id).orElseThrow();
-		this.holder = golemRegistry.wrapAsHolder(wrapped);
+		final HolderLookup.RegistryLookup<Golem> golemRegistry = registryAccess.lookupOrThrow(EGRegistry.Keys.GOLEM);
+		final Holder<Golem> wrapped = golemRegistry.get(ResourceKey.create(EGRegistry.Keys.GOLEM, id)).orElseThrow();
+		this.holder = wrapped;
 		// load modifiers
 		final Map<Priority, Collection<ModifierList>> modifiers = new EnumMap<>(Priority.class);
-		registryAccess.registryOrThrow(EGRegistry.Keys.MODIFIER_LIST).entrySet()
-				.stream()
-				.filter(entry -> id.equals(entry.getValue().getTarget()))
-				.map(Map.Entry::getValue)
+		registryAccess.lookupOrThrow(EGRegistry.Keys.MODIFIER_LIST).listElements()
+				.filter(entry -> id.equals(entry.value().getTarget()))
+				.map(Holder::value)
 				.forEach(list -> modifiers.computeIfAbsent(list.getPriority(), p -> new ArrayList<>()).add(list));
 		// initialize builders
-		final Golem.Builder builder = Golem.Builder.from(registryAccess, wrapped);
+		final Golem.Builder builder = Golem.Builder.from(registryAccess, wrapped.value());
 		// add default behaviors
 		builder.behaviors(b -> b.add(WearBannerBehavior.ANY));
 		// apply each modifier in order of priority
@@ -149,7 +151,7 @@ public class GolemContainer {
 	 * @param id the {@link Golem} ID
 	 * @return the cached {@link GolemContainer}
 	 */
-	public static GolemContainer getOrCreate(final RegistryAccess registryAccess, final ResourceLocation id) {
+	public static GolemContainer getOrCreate(final HolderLookup.Provider registryAccess, final ResourceLocation id) {
 		// get existing entry
 		final Map<ResourceLocation, GolemContainer> registry = getRegistry(EffectiveSide.get().isClient());
 		final GolemContainer entry = registry.get(id);

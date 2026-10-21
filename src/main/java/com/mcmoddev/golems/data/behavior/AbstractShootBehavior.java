@@ -8,6 +8,7 @@ import com.mcmoddev.golems.menu.GolemInventoryMenu;
 import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mojang.datafixers.Products;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.nbt.CompoundTag;
@@ -28,7 +29,6 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.concurrent.Immutable;
@@ -40,7 +40,7 @@ import java.util.function.Predicate;
 public abstract class AbstractShootBehavior extends Behavior {
 
 	/** The follow range modifier to allow the entity to detect enemies from a distance **/
-	public static final AttributeModifier RANGED_FOLLOW_BONUS = new AttributeModifier("Ranged follow bonus", 8.0F, AttributeModifier.Operation.ADDITION);
+	public static final AttributeModifier RANGED_FOLLOW_BONUS = new AttributeModifier(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(com.mcmoddev.golems.ExtraGolems.MODID, "ranged_follow_bonus"), 8.0F, AttributeModifier.Operation.ADD_VALUE);
 
 	/** True to consume ammo when shooting **/
 	private final boolean consume;
@@ -122,7 +122,7 @@ public abstract class AbstractShootBehavior extends Behavior {
 	 */
 	protected boolean openMenu(final IExtraGolem entity, final ServerPlayer player) {
 		final Mob mob = entity.asMob();
-		NetworkHooks.openScreen(player, new SimpleMenuProvider(
+		player.openMenu(new SimpleMenuProvider(
 				(windowId, inventory, menuPlayer) -> new GolemInventoryMenu(windowId, inventory, entity.getInventory(), entity, ContainerLevelAccess.create(mob.level(), mob.blockPosition())),
 				mob.getName()));
 		return true;
@@ -134,7 +134,7 @@ public abstract class AbstractShootBehavior extends Behavior {
 	public void onRegisterGoals(final IExtraGolem entity) {
 		// modify follow range
 		AttributeInstance followRange = entity.asMob().getAttribute(Attributes.FOLLOW_RANGE);
-		if(!followRange.hasModifier(RANGED_FOLLOW_BONUS)) {
+		if(!followRange.hasModifier(RANGED_FOLLOW_BONUS.id())) {
 			followRange.addPermanentModifier(RANGED_FOLLOW_BONUS);
 		}
 		// register move to item goal
@@ -148,7 +148,7 @@ public abstract class AbstractShootBehavior extends Behavior {
 	public void onActuallyHurt(final IExtraGolem entity, final DamageSource source, final float amount) {
 		final Mob mob = entity.asMob();
 		// if it's an arrow or other projectile, set the attacker as revenge target
-		if (source.isIndirect() && source.getEntity() instanceof LivingEntity) {
+		if (source.getEntity() != source.getDirectEntity() && source.getEntity() instanceof LivingEntity) {
 			mob.setTarget((LivingEntity) source.getEntity());
 		}
 		updateCombatTask(entity, isInRangeToAttack(entity, mob.getTarget()));

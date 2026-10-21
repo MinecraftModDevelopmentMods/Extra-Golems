@@ -4,9 +4,10 @@ import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.ExtraGolems;
 import com.mcmoddev.golems.data.golem.Golem;
 import com.mcmoddev.golems.entity.GolemBase;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
@@ -37,9 +38,16 @@ import javax.annotation.Nullable;
 
 public final class GolemHeadBlock extends HorizontalDirectionalBlock {
 
+	public static final MapCodec<GolemHeadBlock> CODEC = simpleCodec(GolemHeadBlock::new);
+
 	public GolemHeadBlock(BlockBehaviour.Properties properties) {
 		super(properties);
 		this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
+	}
+
+	@Override
+	protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
+		return CODEC;
 	}
 
 	@Override
@@ -74,9 +82,9 @@ public final class GolemHeadBlock extends HorizontalDirectionalBlock {
 		final DispenseItemBehavior carvedPumpkinBehavior = DispenserBlock.DISPENSER_REGISTRY.getOrDefault(Items.CARVED_PUMPKIN, new DefaultDispenseItemBehavior());
 		final DispenseItemBehavior wrappedBehavior = new OptionalDispenseItemBehavior() {
 			protected ItemStack execute(BlockSource blockSource, ItemStack itemStack) {
-				final Level level = blockSource.getLevel();
-				final Direction facing = blockSource.getBlockState().getValue(DispenserBlock.FACING);
-				final BlockPos blockpos = blockSource.getPos().relative(facing);
+				final Level level = blockSource.level();
+				final Direction facing = blockSource.state().getValue(DispenserBlock.FACING);
+				final BlockPos blockpos = blockSource.pos().relative(facing);
 				// check if the block can be placed
 				if(level.isEmptyBlock(blockpos) && GolemHeadBlock.canSpawnGolem(level, blockpos)) {
 					if (!level.isClientSide) {
@@ -235,7 +243,7 @@ public final class GolemHeadBlock extends HorizontalDirectionalBlock {
 				golem.moveTo(spawnX, spawnY, spawnZ, 0.0F, 0.0F);
 				level.addFreshEntity(golem);
 				if (level instanceof ServerLevel) {
-					golem.finalizeSpawn((ServerLevel) level, level.getCurrentDifficultyAt(headPos), MobSpawnType.MOB_SUMMONED, null, null);
+					golem.finalizeSpawn((ServerLevel) level, level.getCurrentDifficultyAt(headPos), MobSpawnType.MOB_SUMMONED, null);
 				}
 				if(isEastWest) {
 					golem.onBuilt(stateBelow1, stateBelow2, stateArmEast, stateArmWest, placer);

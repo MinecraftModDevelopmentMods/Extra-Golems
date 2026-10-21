@@ -59,7 +59,7 @@ public class SummonGolemCommand {
 	private static int summonGolem(CommandSourceStack source, ResourceLocation id, BlockPos pos, CompoundTag tag) throws CommandSyntaxException {
 		// hard-coded namespace support
 		if ("minecraft".equals(id.getNamespace())) {
-			id = new ResourceLocation(ExtraGolems.MODID, id.getPath());
+			id = ResourceLocation.fromNamespaceAndPath(ExtraGolems.MODID, id.getPath());
 		}
 		// validate the id
 		final Registry<Golem> registry = source.registryAccess().registryOrThrow(EGRegistry.Keys.GOLEM);
@@ -72,7 +72,7 @@ public class SummonGolemCommand {
 		entity.load(tag);
 		entity.moveTo(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D);
 		source.getLevel().addFreshEntity(entity);
-		entity.finalizeSpawn(source.getLevel(), source.getLevel().getCurrentDifficultyAt(pos), MobSpawnType.COMMAND, null, tag);
+		entity.finalizeSpawn(source.getLevel(), source.getLevel().getCurrentDifficultyAt(pos), MobSpawnType.COMMAND, null);
 		ResourceLocation finalId = id;
 		source.sendSuccess(() -> Component.translatable("command.golem.success", finalId, pos.getX(), pos.getY(), pos.getZ()), true);
 		return 1;

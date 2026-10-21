@@ -1,0 +1,23 @@
+{
+    "replace": false,
+    "values": [
+        "#c:glass_blocks/colorless",
+        "#c:glass_blocks/tinted",
+        "#c:glass_blocks/white",
+        "#c:glass_blocks/orange",
+        "#c:glass_blocks/magenta",
+        "#c:glass_blocks/light_blue",
+        "#c:glass_blocks/yellow",
+        "#c:glass_blocks/lime",
+        "#c:glass_blocks/pink",
+        "#c:glass_blocks/gray",
+        "#c:glass_blocks/light_gray",
+        "#c:glass_blocks/cyan",
+        "#c:glass_blocks/purple",
+        "#c:glass_blocks/blue",
+        "#c:glass_blocks/brown",
+        "#c:glass_blocks/green",
+        "#c:glass_blocks/red",
+        "#c:glass_blocks/black"
+    ]
+}

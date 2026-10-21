@@ -4,6 +4,7 @@ import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.golem.Golem;
 import com.mcmoddev.golems.data.modifier.Modifier;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 
 import javax.annotation.concurrent.Immutable;
 
@@ -13,9 +14,9 @@ import javax.annotation.concurrent.Immutable;
 @Immutable
 public class HiddenModifier extends Modifier {
 
-	public static final Codec<HiddenModifier> CODEC = Codec.BOOL
+	public static final MapCodec<HiddenModifier> CODEC = Codec.BOOL
 			.xmap(HiddenModifier::new, HiddenModifier::isHidden)
-			.fieldOf("hidden").codec();
+			.fieldOf("hidden");
 
 	private final boolean hidden;
 
@@ -37,7 +38,7 @@ public class HiddenModifier extends Modifier {
 	}
 
 	@Override
-	public Codec<? extends Modifier> getCodec() {
+	public MapCodec<? extends Modifier> getCodec() {
 		return EGRegistry.GolemModifierReg.HIDDEN.get();
 	}
 }

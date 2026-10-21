@@ -6,11 +6,11 @@
 	"knockback_resistance": 0.6
   },
   "blocks": {
-	"all": "#forge:quartz"
+	"all": "#c:quartz"
   },
   "repair_items": {
-    "#forge:quartz": 0.5,
-	"#forge:gems/quartz": 0.15
+    "#c:quartz": 0.5,
+	"#c:gems/quartz": 0.15
   },
   "model": "golems:quartz",
   "brain": "golems:empty"

@@ -7,6 +7,7 @@ import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mcmoddev.golems.entity.goal.MoveToItemGoal;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.MinMaxBounds;
@@ -36,7 +37,7 @@ import java.util.Objects;
 @Immutable
 public class ShootArrowsBehavior extends AbstractShootBehavior {
 
-	public static final Codec<ShootArrowsBehavior> CODEC = RecordCodecBuilder.create(instance -> shootCodecStart(instance)
+	public static final MapCodec<ShootArrowsBehavior> CODEC = RecordCodecBuilder.mapCodec(instance -> shootCodecStart(instance)
 			.and(Codec.doubleRange(0.0D, 100.0D).optionalFieldOf("damage", 2.0D).forGetter(ShootArrowsBehavior::getDamage))
 			.apply(instance, ShootArrowsBehavior::new));
 
@@ -63,7 +64,7 @@ public class ShootArrowsBehavior extends AbstractShootBehavior {
 	}
 
 	@Override
-	public Codec<? extends Behavior> getCodec() {
+	public MapCodec<? extends Behavior> getCodec() {
 		return EGRegistry.BehaviorReg.SHOOT_ARROWS.get();
 	}
 
@@ -92,7 +93,7 @@ public class ShootArrowsBehavior extends AbstractShootBehavior {
 			return false;
 		}
 		// make an arrow out of the inventory
-		AbstractArrow arrow = ProjectileUtil.getMobArrow(mob, itemstack, distanceFactor);
+		AbstractArrow arrow = ProjectileUtil.getMobArrow(mob, itemstack, distanceFactor, null);
 		arrow.setPos(mob.getX(), mob.getY() + mob.getBbHeight() * 0.55F, mob.getZ());
 		double d0 = target.getX() - mob.getX();
 		double d1 = target.getY(1.0D / 3.0D) - arrow.getY();

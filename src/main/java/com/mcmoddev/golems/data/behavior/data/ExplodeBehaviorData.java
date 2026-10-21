@@ -156,7 +156,7 @@ public class ExplodeBehaviorData implements IBehaviorData {
 	private static final String KEY_FUSE_LIT = "FuseLit";
 
 	@Override
-	public CompoundTag serializeNBT() {
+	public CompoundTag serializeNBT(net.minecraft.core.HolderLookup.Provider provider) {
 		final CompoundTag tag = new CompoundTag();
 		tag.putInt(KEY_FUSE, fuse);
 		tag.putBoolean(KEY_FUSE_LIT, fuseLit);
@@ -164,7 +164,7 @@ public class ExplodeBehaviorData implements IBehaviorData {
 	}
 
 	@Override
-	public void deserializeNBT(CompoundTag tag) {
+	public void deserializeNBT(net.minecraft.core.HolderLookup.Provider provider, CompoundTag tag) {
 		this.fuse = tag.getInt(KEY_FUSE);
 		this.fuseLit = tag.getBoolean(KEY_FUSE_LIT);
 	}

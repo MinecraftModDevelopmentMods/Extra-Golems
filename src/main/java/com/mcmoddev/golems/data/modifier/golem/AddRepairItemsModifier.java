@@ -6,6 +6,7 @@ import com.mcmoddev.golems.data.golem.RepairItems;
 import com.mcmoddev.golems.data.modifier.Modifier;
 import com.mcmoddev.golems.data.ResourcePair;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import javax.annotation.concurrent.Immutable;
@@ -17,7 +18,7 @@ import java.util.Map;
 @Immutable
 public class AddRepairItemsModifier extends Modifier {
 
-	public static final Codec<AddRepairItemsModifier> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+	public static final MapCodec<AddRepairItemsModifier> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
 			Codec.unboundedMap(ResourcePair.CODEC, Codec.DOUBLE).fieldOf("repair_items").forGetter(AddRepairItemsModifier::getRepairItems),
 			Codec.BOOL.optionalFieldOf("replace", false).forGetter(AddRepairItemsModifier::replace)
 	).apply(instance, AddRepairItemsModifier::new));
@@ -53,7 +54,7 @@ public class AddRepairItemsModifier extends Modifier {
 	}
 
 	@Override
-	public Codec<? extends Modifier> getCodec() {
+	public MapCodec<? extends Modifier> getCodec() {
 		return EGRegistry.GolemModifierReg.ADD_REPAIR_ITEMS.get();
 	}
 }

@@ -20,7 +20,7 @@ public class GlowBlock extends UtilityBlock {
 	public static final int UPDATE_TICKS = 6;
 
 	public GlowBlock(final BlockBehaviour copy, final float defaultLight) {
-		super(Properties.copy(copy).randomTicks().lightLevel(state -> state.getValue(LIGHT_LEVEL)), UPDATE_TICKS);
+		super(Properties.ofFullCopy(copy).randomTicks().lightLevel(state -> state.getValue(LIGHT_LEVEL)), UPDATE_TICKS);
 		int light = (int) (defaultLight * 15.0F);
 		this.registerDefaultState(this.defaultBlockState().setValue(LIGHT_LEVEL, light));
 	}

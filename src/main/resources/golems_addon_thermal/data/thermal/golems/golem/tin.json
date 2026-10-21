@@ -7,11 +7,11 @@
   },
   "group": "golems:tin",
   "blocks": {
-	"all": "#forge:storage_blocks/tin"
+	"all": "#c:storage_blocks/tin"
   },
   "repair_items": {
-    "#forge:storage_blocks/tin": 0.5,
-    "#forge:ingots/tin": 0.15
+    "#c:storage_blocks/tin": 0.5,
+    "#c:ingots/tin": 0.15
   },
   "model": "thermal:tin",
   "brain": "golems:empty"

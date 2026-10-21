@@ -14,7 +14,7 @@
   "hidden": true,
   "repair_items": {
     "#thermal:rockwool": 0.5,
-    "#forge:slag": 0.15
+    "#c:slag": 0.15
   },
   "brain": "golems:empty"
 }

@@ -6,11 +6,11 @@
 	"swim_ability": "float"
   },
   "blocks": {
-	"all": "#forge:storage_blocks/gunpowder"
+	"all": "#c:storage_blocks/gunpowder"
   },
   "repair_items": {
-    "#forge:storage_blocks/gunpowder": 0.5,
-    "#forge:gunpowder": 0.15
+    "#c:storage_blocks/gunpowder": 0.5,
+    "#c:gunpowder": 0.15
   },
   "model": "thermal:gunpowder",
   "brain": "golems:tnt"

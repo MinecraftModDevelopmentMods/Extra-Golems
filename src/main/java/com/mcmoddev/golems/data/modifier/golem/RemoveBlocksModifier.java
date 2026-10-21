@@ -9,6 +9,7 @@ import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mcmoddev.golems.util.PredicateUtils;
 import com.mcmoddev.golems.data.ResourcePair;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import javax.annotation.concurrent.Immutable;
@@ -16,16 +17,19 @@ import java.util.List;
 import java.util.function.Predicate;
 
 /**
- * Removes entries in the {@link com.mcmoddev.golems.data.golem.BuildingBlocks.Builder}
+ * Removes entries in the
+ * {@link com.mcmoddev.golems.data.golem.BuildingBlocks.Builder}
  * that pass any of the given {@link RemovePredicate}s
  */
 @Immutable
 public class RemoveBlocksModifier extends Modifier {
 
-	public static final Codec<RemoveBlocksModifier> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			EGCodecUtils.listOrElementCodec(RemovePredicate.CODEC).optionalFieldOf("predicate", ImmutableList.of()).forGetter(RemoveBlocksModifier::getPredicates),
-			EGCodecUtils.listOrElementCodec(GolemPart.CODEC).optionalFieldOf("part", ImmutableList.of(GolemPart.ALL)).forGetter(RemoveBlocksModifier::getPart)
-	).apply(instance, RemoveBlocksModifier::new));
+	public static final MapCodec<RemoveBlocksModifier> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+			EGCodecUtils.listOrElementCodec(RemovePredicate.CODEC).optionalFieldOf("predicate", ImmutableList.of())
+					.forGetter(RemoveBlocksModifier::getPredicates),
+			EGCodecUtils.listOrElementCodec(GolemPart.CODEC).optionalFieldOf("part", ImmutableList.of(GolemPart.ALL))
+					.forGetter(RemoveBlocksModifier::getPart))
+			.apply(instance, RemoveBlocksModifier::new));
 
 	private final List<RemovePredicate> predicates;
 	private final List<GolemPart> part;
@@ -39,7 +43,10 @@ public class RemoveBlocksModifier extends Modifier {
 
 	//// GETTERS ////
 
-	/** @return The predicates to test ResourcePair entries. If this list is empty, all entries will be removed. **/
+	/**
+	 * @return The predicates to test ResourcePair entries. If this list is empty,
+	 *         all entries will be removed.
+	 **/
 	public List<RemovePredicate> getPredicates() {
 		return predicates;
 	}
@@ -53,13 +60,13 @@ public class RemoveBlocksModifier extends Modifier {
 
 	@Override
 	public void apply(Golem.Builder builder) {
-		for(GolemPart p : part) {
+		for (GolemPart p : part) {
 			builder.blocks(b -> b.apply(p, o -> o.remove(predicate)));
 		}
 	}
 
 	@Override
-	public Codec<? extends Modifier> getCodec() {
+	public MapCodec<? extends Modifier> getCodec() {
 		return EGRegistry.GolemModifierReg.REMOVE_BLOCKS.get();
 	}
 
@@ -67,7 +74,9 @@ public class RemoveBlocksModifier extends Modifier {
 
 	public static class RemovePredicate implements Predicate<ResourcePair> {
 
-		public static final Codec<RemovePredicate> CODEC = ResourcePair.CODEC.xmap(RemovePredicate::new, o -> o.resource);
+		// Note: This should be Codec, not MapCodec, as it's used in listOrElementCodec
+		public static final Codec<RemovePredicate> CODEC = ResourcePair.CODEC.xmap(RemovePredicate::new,
+				o -> o.resource);
 
 		private final ResourcePair resource;
 

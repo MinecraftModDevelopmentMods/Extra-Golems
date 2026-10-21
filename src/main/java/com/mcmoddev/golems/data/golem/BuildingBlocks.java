@@ -7,7 +7,8 @@ import com.mojang.serialization.Codec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.HolderSet;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.ArrayList;
@@ -39,9 +40,9 @@ public class BuildingBlocks implements Supplier<Collection<Block>>, Predicate<Bl
 		// parse list
 		final ImmutableList.Builder<TagKey<Block>> tagMapBuilder = ImmutableList.builder();
 		final ImmutableList.Builder<ResourceLocation> blockMapBuilder = ImmutableList.builder();
-		for(ResourcePair entry : list) {
-			if(entry.flag()) {
-				tagMapBuilder.add(ForgeRegistries.BLOCKS.tags().createTagKey(entry.resource()));
+		for (ResourcePair entry : list) {
+			if (entry.flag()) {
+				tagMapBuilder.add(TagKey.create(BuiltInRegistries.BLOCK.key(), entry.resource()));
 			} else {
 				blockMapBuilder.add(entry.resource());
 			}
@@ -54,17 +55,19 @@ public class BuildingBlocks implements Supplier<Collection<Block>>, Predicate<Bl
 	//// SUPPLIER ////
 
 	public Collection<Block> get() {
-		if(this.cachedBlocks.isEmpty() && !(this.tagList.isEmpty() && this.blockList.isEmpty())) {
+		if (this.cachedBlocks.isEmpty() && !(this.tagList.isEmpty() && this.blockList.isEmpty())) {
 			// add blocks by ID
-			for(ResourceLocation id : blockList) {
-				if(ForgeRegistries.BLOCKS.containsKey(id)) {
-					this.cachedBlocks.add(ForgeRegistries.BLOCKS.getValue(id));
+			for (ResourceLocation id : blockList) {
+				if (BuiltInRegistries.BLOCK.containsKey(id)) {
+					this.cachedBlocks.add(BuiltInRegistries.BLOCK.get(id));
 				}
 			}
-			// add blocks by tag
-			for(TagKey<Block> tagKey : tagList) {
-				for(Block block : ForgeRegistries.BLOCKS.tags().getTag(tagKey)) {
-					this.cachedBlocks.add(block);
+			// add blocks by tag - iterate registered blocks and check tag membership
+			for (TagKey<Block> tagKey : tagList) {
+				for (Block block : BuiltInRegistries.BLOCK) {
+					if (block.builtInRegistryHolder().is(tagKey)) {
+						this.cachedBlocks.add(block);
+					}
 				}
 			}
 		}
@@ -79,8 +82,18 @@ public class BuildingBlocks implements Supplier<Collection<Block>>, Predicate<Bl
 	 */
 	@Override
 	public boolean test(final Block block) {
-		final Collection<Block> blocks = this.get();
-		return !blocks.isEmpty() && blocks.contains(block);
+		// check if block is in block list
+		ResourceLocation blockId = BuiltInRegistries.BLOCK.getKey(block);
+		if (blockList.contains(blockId)) {
+			return true;
+		}
+		// check if block belongs to any tag
+		for (TagKey<Block> tagKey : tagList) {
+			if (block.builtInRegistryHolder().is(tagKey)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	//// GETTERS ////
@@ -101,8 +114,10 @@ public class BuildingBlocks implements Supplier<Collection<Block>>, Predicate<Bl
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof BuildingBlocks)) return false;
+		if (this == o)
+			return true;
+		if (!(o instanceof BuildingBlocks))
+			return false;
 		BuildingBlocks that = (BuildingBlocks) o;
 		return list.equals(that.list);
 	}
@@ -111,7 +126,6 @@ public class BuildingBlocks implements Supplier<Collection<Block>>, Predicate<Bl
 	public int hashCode() {
 		return Objects.hash(list);
 	}
-
 
 	//// CLASSES ////
 

@@ -10,12 +10,12 @@
   },
   "group": "golems:raw_ore",
   "blocks": {
-	"all": "#forge:storage_blocks/raw_silver"
+	"all": "#c:storage_blocks/raw_silver"
   },
   "repair_items": {
-    "#forge:storage_blocks/raw_silver": 0.5,
-    "#forge:ingots/silver": 0.25,
-	"#forge:raw_materials/silver": 0.15
+    "#c:storage_blocks/raw_silver": 0.5,
+    "#c:ingots/silver": 0.25,
+	"#c:raw_materials/silver": 0.15
   },
   "model": "thermal:raw_silver",
   "brain": "golems:empty"

@@ -10,11 +10,11 @@
   },
   "group": "golems:silver",
   "blocks": {
-	"all": "#forge:storage_blocks/silver"
+	"all": "#c:storage_blocks/silver"
   },
   "repair_items": {
-    "#forge:storage_blocks/silver": 0.5,
-    "#forge:ingots/silver": 0.15
+    "#c:storage_blocks/silver": 0.5,
+    "#c:ingots/silver": 0.15
   },
   "model": "thermal:silver",
   "brain": "golems:empty"

@@ -2,7 +2,7 @@
   "parent": "golems:terracotta",
   "group": "golems:terracotta",
   "blocks": {
-	"all": "#forge:terracotta/purple"
+	"all": "#c:terracotta/purple"
   },
   "model": "golems:purple_terracotta"
 }

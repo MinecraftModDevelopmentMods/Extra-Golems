@@ -6,6 +6,7 @@ import com.mcmoddev.golems.data.behavior.util.AoeShape;
 import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.util.AoeMapper;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.MinMaxBounds;
@@ -31,7 +32,7 @@ import java.util.List;
 @Immutable
 public class AoeDryBehavior extends AoeBehavior {
 
-	public static final Codec<AoeDryBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStartAoe(instance)
+	public static final MapCodec<AoeDryBehavior> CODEC = RecordCodecBuilder.mapCodec(instance -> codecStartAoe(instance)
 			.apply(instance, AoeDryBehavior::new));
 
 	public AoeDryBehavior(MinMaxBounds.Ints variant, TooltipPredicate tooltipPredicate, int radius, int interval, AoeShape shape) {
@@ -48,7 +49,7 @@ public class AoeDryBehavior extends AoeBehavior {
 	//// GETTERS ////
 
 	@Override
-	public Codec<? extends Behavior> getCodec() {
+	public MapCodec<? extends Behavior> getCodec() {
 		return EGRegistry.BehaviorReg.AOE_DRY.get();
 	}
 

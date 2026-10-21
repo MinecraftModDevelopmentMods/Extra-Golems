@@ -9,11 +9,11 @@
   },
   "group": "golems:lead",
   "blocks": {
-	"all": "#forge:storage_blocks/lead"
+	"all": "#c:storage_blocks/lead"
   },
   "repair_items": {
-    "#forge:storage_blocks/lead": 0.5,
-    "#forge:ingots/lead": 0.15
+    "#c:storage_blocks/lead": 0.5,
+    "#c:ingots/lead": 0.15
   },
   "model": "thermal:lead",
   "brain": "golems:empty"

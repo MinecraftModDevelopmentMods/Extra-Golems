@@ -11,8 +11,8 @@
   },
   "repair_items": {
     "minecraft:tnt": 0.5,
-	"#forge:gunpowder": 0.15,
-	"#forge:sand": 0.15
+	"#c:gunpowder": 0.15,
+	"#c:sand": 0.15
   },
   "model": "golems:tnt",
   "brain": "golems:tnt"

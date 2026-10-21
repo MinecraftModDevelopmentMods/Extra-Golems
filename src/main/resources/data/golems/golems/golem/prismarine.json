@@ -6,12 +6,12 @@
 	"swim_ability": "swim"
   },
   "blocks": {
-	"all": "#forge:prismarine"
+	"all": "#c:prismarine"
   },
   "repair_items": {
-    "#forge:prismarine": 0.5,
-	"#forge:gems/prismarine": 0.1,
-	"#forge:dusts/prismarine": 0.1
+    "#c:prismarine": 0.5,
+	"#c:gems/prismarine": 0.1,
+	"#c:dusts/prismarine": 0.1
   },
   "model": "golems:prismarine",
   "brain": "golems:empty"

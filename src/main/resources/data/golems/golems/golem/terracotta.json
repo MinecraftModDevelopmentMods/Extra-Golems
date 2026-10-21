@@ -7,10 +7,10 @@
   },
   "group": "golems:terracotta",
   "blocks": {
-	"all": "#forge:terracotta/colorless"
+	"all": "#c:terracotta/colorless"
   },
   "repair_items": {
-    "#forge:terracotta": 0.5
+    "#c:terracotta": 0.5
   },
   "model": "golems:terracotta",
   "brain": "golems:empty"

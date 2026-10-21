@@ -13,6 +13,7 @@ import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mcmoddev.golems.util.PredicateUtils;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.MinMaxBounds;
@@ -31,8 +32,8 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.NeutralMob;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.EventHooks;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
@@ -47,10 +48,10 @@ import java.util.function.Predicate;
 @Immutable
 public class SummonBehavior extends Behavior {
 	
-	public static final Codec<SummonBehavior> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+	public static final MapCodec<SummonBehavior> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
 			EGCodecUtils.MIN_MAX_INTS_CODEC.optionalFieldOf("variant", MinMaxBounds.Ints.ANY).forGetter(Behavior::getVariantBounds),
 			TooltipPredicate.CODEC.optionalFieldOf("tooltip", TooltipPredicate.NORMAL).forGetter(Behavior::getTooltipPredicate),
-			ForgeRegistries.ENTITY_TYPES.getCodec().fieldOf("entity").forGetter(SummonBehavior::getEntity),
+			BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("entity").forGetter(SummonBehavior::getEntity),
 			Codec.STRING.optionalFieldOf("display_name").forGetter(o -> Optional.ofNullable(o.displayNameKey)),
 			Codec.STRING.optionalFieldOf("nbt", "{}").forGetter(SummonBehavior::getNbt),
 			Codec.intRange(0, 255).optionalFieldOf("amount", 1).forGetter(SummonBehavior::getAmount),
@@ -99,7 +100,7 @@ public class SummonBehavior extends Behavior {
 		CompoundTag tag;
 		try {
 			tag = TagParser.parseTag(this.nbt);
-			tag.putString("id", ForgeRegistries.ENTITY_TYPES.getKey(this.entity).toString());
+			tag.putString("id", BuiltInRegistries.ENTITY_TYPE.getKey(this.entity).toString());
 		} catch (CommandSyntaxException e) {
 			ExtraGolems.LOGGER.error(this.getClass().getSimpleName() + " failed to parse NBT from '" + this.nbt + "'");
 			tag = new CompoundTag();
@@ -151,7 +152,7 @@ public class SummonBehavior extends Behavior {
 	}
 
 	@Override
-	public Codec<? extends Behavior> getCodec() {
+	public MapCodec<? extends Behavior> getCodec() {
 		return EGRegistry.BehaviorReg.SUMMON.get();
 	}
 
@@ -243,7 +244,7 @@ public class SummonBehavior extends Behavior {
 				level.addFreshEntityWithPassengers(e);
 				// post process
 				if(e instanceof Mob mob) {
-					ForgeEventFactory.onFinalizeSpawn(mob, level, level.getCurrentDifficultyAt(BlockPos.containing(pos)), MobSpawnType.MOB_SUMMONED, null, null);
+					EventHooks.finalizeMobSpawn(mob, level, level.getCurrentDifficultyAt(BlockPos.containing(pos)), MobSpawnType.MOB_SUMMONED, null);
 					mob.setTarget(target);
 				}
 				if(target != null && e instanceof NeutralMob mob) {

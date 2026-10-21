@@ -6,13 +6,14 @@ import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mcmoddev.golems.entity.goal.FollowGoal;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
@@ -25,8 +26,8 @@ import java.util.Objects;
 @Immutable
 public class FollowBehavior extends Behavior {
 
-	public static final Codec<FollowBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
-			.and(ForgeRegistries.ENTITY_TYPES.getCodec().fieldOf("entity").forGetter(FollowBehavior::getEntity))
+	public static final MapCodec<FollowBehavior> CODEC = RecordCodecBuilder.mapCodec(instance -> codecStart(instance)
+			.and(BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("entity").forGetter(FollowBehavior::getEntity))
 			.and(Codec.INT.optionalFieldOf("priority", 2).forGetter(FollowBehavior::getPriority))
 			.apply(instance, FollowBehavior::new));
 
@@ -52,7 +53,7 @@ public class FollowBehavior extends Behavior {
 	}
 
 	@Override
-	public Codec<? extends Behavior> getCodec() {
+	public MapCodec<? extends Behavior> getCodec() {
 		return EGRegistry.BehaviorReg.FOLLOW.get();
 	}
 

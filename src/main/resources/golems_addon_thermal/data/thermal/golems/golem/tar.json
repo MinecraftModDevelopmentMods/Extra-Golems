@@ -5,11 +5,11 @@
 	"speed": 0.19
   },
   "blocks": {
-	"all": "#forge:storage_blocks/tar"
+	"all": "#c:storage_blocks/tar"
   },
   "repair_items": {
-    "#forge:storage_blocks/tar": 0.5,
-    "#forge:tar": 0.15
+    "#c:storage_blocks/tar": 0.5,
+    "#c:tar": 0.15
   },
   "model": "thermal:tar",
   "brain": "golems:empty"

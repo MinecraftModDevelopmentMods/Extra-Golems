@@ -11,7 +11,7 @@
 	"all": "minecraft:bookshelf"
   },
   "repair_items": {
-    "#forge:bookshelves": 0.5,
+    "#c:bookshelves": 0.5,
 	"minecraft:book": 0.15,
 	"#minecraft:planks": 0.15
   },

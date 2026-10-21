@@ -10,6 +10,7 @@ public enum Priority implements StringRepresentable {
 	LOW("low"),
 	LOWEST("lowest");
 
+	// Note: This should be Codec, not MapCodec, for enums
 	public static final Codec<Priority> CODEC = StringRepresentable.fromEnum(Priority::values);
 
 	private String name;

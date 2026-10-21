@@ -2,6 +2,7 @@ package com.mcmoddev.golems.data.behavior.util;
 
 import com.google.common.collect.Iterables;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.phys.Vec3;

@@ -17,7 +17,7 @@ import java.util.Optional;
 @Immutable
 public class Layer implements IVariantPredicate {
 
-	public static final Layer RAINBOW = new Layer.Builder(new ResourcePair(new ResourceLocation(ExtraGolems.MODID, "rainbow_vines"), true)).build();
+	public static final Layer RAINBOW = new Layer.Builder(new ResourcePair(ResourceLocation.fromNamespaceAndPath(ExtraGolems.MODID, "rainbow_vines"), true)).build();
 
 	public static final Codec<Layer> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			ResourcePair.CODEC.fieldOf("texture").forGetter(o -> o.rawTexture),
@@ -44,12 +44,12 @@ public class Layer implements IVariantPredicate {
 				 RenderTypes renderType, MinMaxBounds.Ints variant) {
 		this.rawTexture = texture;
 		if(texture.flag()) {
-			this.texture = new ResourcePair(new ResourceLocation(texture.resource().getNamespace(), "textures/entity/golem/" + texture.resource().getPath() + ".png"), texture.flag());
+			this.texture = new ResourcePair(ResourceLocation.fromNamespaceAndPath(texture.resource().getNamespace(), "textures/entity/golem/" + texture.resource().getPath() + ".png"), texture.flag());
 		} else {
-			this.texture = new ResourcePair(new ResourceLocation(texture.resource().getNamespace(), "textures/block/" + texture.resource().getPath() + ".png"), texture.flag());
+			this.texture = new ResourcePair(ResourceLocation.fromNamespaceAndPath(texture.resource().getNamespace(), "textures/block/" + texture.resource().getPath() + ".png"), texture.flag());
 		}
 		this.rawTemplate = template.orElse(null);
-		this.template = template.map(id -> new ResourceLocation(id.getNamespace(), "textures/entity/golem/" + id.getPath() + ".png")).orElse(null);
+		this.template = template.map(id -> ResourceLocation.fromNamespaceAndPath(id.getNamespace(), "textures/entity/golem/" + id.getPath() + ".png")).orElse(null);
 		this.emissive = emissive;
 		this.color = color;
 		this.colors = Vec3.fromRGB24(color);

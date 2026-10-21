@@ -1,34 +1,31 @@
 {
-  "parent": "golems:generic_log",
-  "attributes": {
-	"immune": [
-	  "minecraft:in_fire",
-	  "minecraft:on_fire"
-	]
-  },
-  "hidden": false,
-  "blocks": {
-	"all": "#biomesoplenty:hellbark_logs"
-  },
-  "model": "biomesoplenty:hellbark_log",
-  "brain": {
-	"behaviors": [
-	  {
-		"type": "golems:item_update_golem",
-		"item": "#minecraft:axes",
-		"display_name": "golem.description.axe",
-		"sound": "minecraft:item.axe.strip",
-		"particle": {
-		  "type": "minecraft:item",
-		  "value": {
-			"id": "biomesoplenty:hellbark_log",
-			"Count": 1
-		  }
-		},
-		"apply": {
-		  "golem": "biomesoplenty:stripped_hellbark_log"
-		}
-	  }
-	]
-  }
+	"parent": "golems:generic_log",
+	"attributes": {
+		"immune": ["minecraft:in_fire", "minecraft:on_fire"]
+	},
+	"hidden": false,
+	"blocks": {
+		"all": "#biomesoplenty:hellbark_logs"
+	},
+	"model": "biomesoplenty:hellbark_log",
+	"brain": {
+		"behaviors": [
+			{
+				"type": "golems:item_update_golem",
+				"item": "#minecraft:axes",
+				"display_name": "golem.description.axe",
+				"sound": "minecraft:item.axe.strip",
+				"particle": {
+					"type": "minecraft:item",
+					"item": {
+						"id": "biomesoplenty:hellbark_log",
+						"Count": 1
+					}
+				},
+				"apply": {
+					"golem": "biomesoplenty:stripped_hellbark_log"
+				}
+			}
+		]
+	}
 }

@@ -14,7 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 import java.util.Map;
 import java.util.Optional;
@@ -65,7 +65,7 @@ public class DeferredBlockState implements Supplier<BlockState> {
 	public BlockState get() {
 		if(null == blockState) {
 			// resolve block state
-			final Block block = ForgeRegistries.BLOCKS.getValue(this.block);
+			final Block block = BuiltInRegistries.BLOCK.get(this.block);
 			if(null == block) {
 				throw new RuntimeException("[ExtraGolems.DeferredBlockState] Unknown block with ID '" + this.block.toString() + "'");
 			}

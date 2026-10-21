@@ -6,11 +6,11 @@
 	"sound": "minecraft:metal"
   },
   "blocks": {
-	"all": "#forge:storage_blocks/invar"
+	"all": "#c:storage_blocks/invar"
   },
   "repair_items": {
-    "#forge:storage_blocks/invar": 0.5,
-    "#forge:ingots/invar": 0.15
+    "#c:storage_blocks/invar": 0.5,
+    "#c:ingots/invar": 0.15
   },
   "model": "thermal:invar",
   "brain": "golems:empty"

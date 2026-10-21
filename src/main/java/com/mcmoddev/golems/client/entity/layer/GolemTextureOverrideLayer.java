@@ -17,11 +17,11 @@ import java.util.Optional;
 
 public class GolemTextureOverrideLayer<T extends GolemBase> extends RenderLayer<T, GolemModel<T>> {
 
-	private static final ResourceLocation BONE_SKELETON = new ResourceLocation(ExtraGolems.MODID, "textures/entity/golem/bone_skeleton.png");
-	private static final ResourceLocation GANON = new ResourceLocation(ExtraGolems.MODID, "textures/entity/golem/ganon.png");
-	private static final ResourceLocation COOKIE = new ResourceLocation(ExtraGolems.MODID, "textures/entity/golem/cookie.png");
-	private static final ResourceLocation YETI = new ResourceLocation(ExtraGolems.MODID, "textures/entity/golem/yeti.png");
-	private static final ResourceLocation HARAMBE = new ResourceLocation(ExtraGolems.MODID, "textures/entity/golem/harambe.png");
+	private static final ResourceLocation BONE_SKELETON = ResourceLocation.fromNamespaceAndPath(ExtraGolems.MODID, "textures/entity/golem/bone_skeleton.png");
+	private static final ResourceLocation GANON = ResourceLocation.fromNamespaceAndPath(ExtraGolems.MODID, "textures/entity/golem/ganon.png");
+	private static final ResourceLocation COOKIE = ResourceLocation.fromNamespaceAndPath(ExtraGolems.MODID, "textures/entity/golem/cookie.png");
+	private static final ResourceLocation YETI = ResourceLocation.fromNamespaceAndPath(ExtraGolems.MODID, "textures/entity/golem/yeti.png");
+	private static final ResourceLocation HARAMBE = ResourceLocation.fromNamespaceAndPath(ExtraGolems.MODID, "textures/entity/golem/harambe.png");
 
 	/**
 	 * Renders all layers in the golem {@link LayerList}
@@ -46,7 +46,7 @@ public class GolemTextureOverrideLayer<T extends GolemBase> extends RenderLayer<
 		}
 		// prepare to render
 		getParentModel().resetColor();
-		renderColoredCutoutModel(getParentModel(), override.get(), poseStack, bufferSource, packedLight, entity, 1.0F, 1.0F, 1.0F);
+		renderColoredCutoutModel(getParentModel(), override.get(), poseStack, bufferSource, packedLight, entity, 0xFFFFFFFF);
 	}
 
 	public static <G extends GolemBase> Optional<ResourceLocation> getOverrideTexture(final G entity) {

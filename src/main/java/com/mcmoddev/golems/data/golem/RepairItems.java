@@ -7,8 +7,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.tags.IReverseTag;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.HolderSet;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.HashMap;
@@ -38,7 +38,7 @@ public class RepairItems {
 		final ImmutableMap.Builder<ResourceLocation, Double> itemMapBuilder = ImmutableMap.builder();
 		for(Map.Entry<ResourcePair, Double> entry : map.entrySet()) {
 			if(entry.getKey().flag()) {
-				tagMapBuilder.put(ForgeRegistries.ITEMS.tags().createTagKey(entry.getKey().resource()), entry.getValue());
+				tagMapBuilder.put(TagKey.create(BuiltInRegistries.ITEM.key(), entry.getKey().resource()), entry.getValue());
 			} else {
 				itemMapBuilder.put(entry.getKey().resource(), entry.getValue());
 			}
@@ -67,17 +67,14 @@ public class RepairItems {
 	 */
 	public double getRepairAmount(final ItemStack itemStack) {
 		// resolve id
-		final ResourceLocation itemId = ForgeRegistries.ITEMS.getKey(itemStack.getItem());
+		final ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(itemStack.getItem());
 		if(this.itemMap.containsKey(itemId)) {
 			return this.itemMap.get(itemId);
 		}
-		// resolve reverse tag
-		final Optional<IReverseTag<Item>> reverseTag = ForgeRegistries.ITEMS.tags().getReverseTag(itemStack.getItem());
-		if(reverseTag.isPresent()) {
-			for(TagKey<Item> tagKey : reverseTag.get().getTagKeys().toList()) {
-				if(this.tagMap.containsKey(tagKey)) {
-					return this.tagMap.get(tagKey);
-				}
+		// resolve tags
+		for(TagKey<Item> tagKey : this.tagMap.keySet()) {
+			if(itemStack.is(tagKey)) {
+				return this.tagMap.get(tagKey);
 			}
 		}
 		return 0.0D;

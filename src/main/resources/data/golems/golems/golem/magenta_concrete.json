@@ -2,8 +2,8 @@
   "parent": "golems:generic_concrete",
   "hidden": false,
   "blocks": {
-	"arms": "#forge:concrete",
-	"legs": "#forge:concrete",
+	"arms": "#c:concrete",
+	"legs": "#c:concrete",
 	"body": "minecraft:magenta_concrete"
   },
   "model": "golems:magenta_concrete"

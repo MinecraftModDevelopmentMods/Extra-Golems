@@ -2,7 +2,7 @@
   "parent": "golems:coal",
   "group": "golems:coal",
   "blocks": {
-	"all": "#forge:storage_blocks/charcoal"
+	"all": "#c:storage_blocks/charcoal"
   },
   "model": "golems:charcoal"
 }

@@ -9,7 +9,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class GolemInventoryScreen extends AbstractContainerScreen<GolemInventoryMenu> {
 
-	public static final ResourceLocation BG_TEXTURE = new ResourceLocation("minecraft:textures/gui/container/dispenser.png");
+	public static final ResourceLocation BG_TEXTURE = ResourceLocation.parse("minecraft:textures/gui/container/dispenser.png");
 
 	public GolemInventoryScreen(GolemInventoryMenu cont, Inventory pInv, Component title) {
 		super(cont, pInv, title);
@@ -23,7 +23,7 @@ public class GolemInventoryScreen extends AbstractContainerScreen<GolemInventory
 
 	@Override
 	public void render(GuiGraphics matrix, int x, int y, float f) {
-		this.renderBackground(matrix);
+		this.renderBackground(matrix, x, y, f);
 		super.render(matrix, x, y, f);
 		this.renderTooltip(matrix, x, y);
 	}

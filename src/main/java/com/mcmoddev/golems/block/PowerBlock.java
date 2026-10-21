@@ -21,7 +21,7 @@ public class PowerBlock extends UtilityBlock {
 	public static final int UPDATE_TICKS = 4;
 
 	public PowerBlock(final int powerLevel) {
-		super(Properties.copy(Blocks.GLASS).randomTicks(), UPDATE_TICKS);
+		super(Properties.ofFullCopy(Blocks.GLASS).randomTicks(), UPDATE_TICKS);
 		this.registerDefaultState(this.defaultBlockState().setValue(POWER_LEVEL, powerLevel));
 	}
 

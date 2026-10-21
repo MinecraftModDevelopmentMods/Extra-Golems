@@ -27,7 +27,7 @@ public class GolemRenderType extends RenderType {
 
 	private static TextureStateShard getTextureState(final ResourceLocation texture, final ResourceLocation template) {
 		// lazy-load the texture state
-		final ResourceLocation id = new ResourceLocation(texture.getNamespace(), "dynamic/" + template.getPath() + "/" + texture.getPath());
+		final ResourceLocation id = ResourceLocation.fromNamespaceAndPath(texture.getNamespace(), "dynamic/" + template.getPath() + "/" + texture.getPath());
 		if (!dynamicTextureMap.containsKey(id)) {
 			dynamicTextureMap.put(id, new DynamicTextureState(id, texture, template));
 		}
@@ -72,7 +72,7 @@ public class GolemRenderType extends RenderType {
 		}
 		// make dynamic outline type
 		return create("golem_outline",
-				DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256, false, false,
+				DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP, VertexFormat.Mode.QUADS, 256, false, false,
 				RenderType.CompositeState.builder()
 						.setShaderState(RENDERTYPE_OUTLINE_SHADER)
 						.setCullState(CullStateShard.NO_CULL)

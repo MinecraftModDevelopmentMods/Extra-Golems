@@ -9,14 +9,13 @@ import com.mcmoddev.golems.data.modifier.Modifier;
 import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Adds all of the given behaviors to the {@link BehaviorList.Builder}
@@ -25,12 +24,13 @@ import java.util.Optional;
 @Immutable
 public class AddBehaviorModifier extends Modifier {
 
-	private static final Codec<Either<ResourceLocation, List<Behavior>>> EITHER_CODEC = Codec.either(ResourceLocation.CODEC, EGCodecUtils.listOrElementCodec(Behavior.DIRECT_CODEC));
+	private static final Codec<Either<ResourceLocation, List<Behavior>>> EITHER_CODEC = Codec
+			.either(ResourceLocation.CODEC, EGCodecUtils.listOrElementCodec(Behavior.DIRECT_CODEC));
 
-	public static final Codec<AddBehaviorModifier> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+	public static final MapCodec<AddBehaviorModifier> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
 			EITHER_CODEC.fieldOf("behavior").forGetter(AddBehaviorModifier::getBehaviors),
-			Codec.BOOL.optionalFieldOf("replace", false).forGetter(AddBehaviorModifier::replace)
-	).apply(instance, AddBehaviorModifier::new));
+			Codec.BOOL.optionalFieldOf("replace", false).forGetter(AddBehaviorModifier::replace))
+			.apply(instance, AddBehaviorModifier::new));
 
 	private final Either<ResourceLocation, List<Behavior>> behaviors;
 	private final boolean replace;
@@ -55,22 +55,25 @@ public class AddBehaviorModifier extends Modifier {
 	@Override
 	public void apply(Golem.Builder builder) {
 		builder.behaviors(b -> {
-			if(replace()) {
+			if (replace()) {
 				b.clear();
 			}
 			// add elements from
 			getBehaviors().ifLeft(id -> {
-				final Registry<BehaviorList> registry = builder.getRegistryAccess().registryOrThrow(EGRegistry.Keys.BEHAVIOR_LIST);
-				registry.getOptional(id).ifPresentOrElse(
-						behaviorList -> b.addAll(behaviorList.getBehaviors()),
-						() -> ExtraGolems.LOGGER.error("Failed to apply AddBehaviorModifier; missing BehaviorList with ID " + id));
+				final ResourceKey<BehaviorList> key = ResourceKey.create(EGRegistry.Keys.BEHAVIOR_LIST, id);
+				builder.getRegistryAccess().lookup(EGRegistry.Keys.BEHAVIOR_LIST)
+						.flatMap(registry -> registry.get(key))
+						.ifPresentOrElse(
+								holder -> b.addAll(holder.value().getBehaviors()),
+								() -> ExtraGolems.LOGGER.error(
+										"Failed to apply AddBehaviorModifier; missing BehaviorList with ID " + id));
 			});
 			getBehaviors().ifRight(b::addAll);
 		});
 	}
 
 	@Override
-	public Codec<? extends Modifier> getCodec() {
+	public MapCodec<? extends Modifier> getCodec() {
 		return EGRegistry.GolemModifierReg.ADD_BEHAVIOR.get();
 	}
 }

@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "#c:storage_blocks/waxed_copper",
+    "#c:storage_blocks/unwaxed_copper"
+  ]
+}

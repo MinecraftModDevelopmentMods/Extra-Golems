@@ -52,8 +52,8 @@ public class GuideBook {
 	protected static final Component BUILD_HEAD_BODY = Component.literal("\n\n\n\n")
 			.append(Component.translatable(PREFIX + "recipe_head.recipe", BUILD_HEAD_TITLE));
 
-	protected static final ResourceLocation SPELL_RECIPE = new ResourceLocation(ExtraGolems.MODID, "golem_spell");
-	protected static final ResourceLocation HEAD_RECIPE = new ResourceLocation(ExtraGolems.MODID, "golem_head");
+	protected static final ResourceLocation SPELL_RECIPE = ResourceLocation.fromNamespaceAndPath(ExtraGolems.MODID, "golem_spell");
+	protected static final ResourceLocation HEAD_RECIPE = ResourceLocation.fromNamespaceAndPath(ExtraGolems.MODID, "golem_head");
 
 	private final int x;
 	private final int y;
@@ -256,7 +256,7 @@ public class GuideBook {
 		// determine golem(s) to spawn
 		final List<ResourceLocation> list = group.getList().stream().map(GuideBookEntry::getId).toList();
 		// send packet to server
-		EGNetwork.CHANNEL.sendToServer(new ServerBoundSpawnGolemPacket(list));
+		net.neoforged.neoforge.network.PacketDistributor.sendToServer(new ServerBoundSpawnGolemPacket(list));
 	}
 
 	private static void debugSpawnGolem(final GuideBookEntry entry) {
@@ -265,12 +265,12 @@ public class GuideBook {
 			return;
 		}
 		// send packet to server
-		EGNetwork.CHANNEL.sendToServer(new ServerBoundSpawnGolemPacket(ImmutableList.of(entry.getId())));
+		net.neoforged.neoforge.network.PacketDistributor.sendToServer(new ServerBoundSpawnGolemPacket(ImmutableList.of(entry.getId())));
 	}
 
 	private static Optional<CraftingRecipe> loadRecipe(final RecipeManager recipeManager, final ResourceLocation recipe) {
-		final Optional<? extends Recipe<?>> oRecipe = recipeManager.byKey(recipe);
-		if(oRecipe.isPresent() && oRecipe.get() instanceof CraftingRecipe craftingRecipe && craftingRecipe.canCraftInDimensions(2, 2)) {
+		final Optional<net.minecraft.world.item.crafting.RecipeHolder<?>> oRecipe = recipeManager.byKey(recipe);
+		if(oRecipe.isPresent() && oRecipe.get().value() instanceof CraftingRecipe craftingRecipe && craftingRecipe.canCraftInDimensions(2, 2)) {
 			return Optional.of(craftingRecipe);
 		}
 		return Optional.empty();

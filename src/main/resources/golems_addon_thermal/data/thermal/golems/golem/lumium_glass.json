@@ -13,7 +13,7 @@
   },
   "repair_items": {
 	"thermal:lumium_glass": 0.5,
-	"#forge:glass": 0.15
+	"#c:glass_blocks": 0.15
   },
   "model": "thermal:lumium_glass",
   "brain": {

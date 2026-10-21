@@ -24,8 +24,8 @@ import java.util.Optional;
 
 public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemModel<T>> {
 
-	public static final ModelLayerLocation GOLEM_MODEL_RESOURCE = new ModelLayerLocation(new ResourceLocation(ExtraGolems.MODID, "golem"), "main");
-	private static final ResourceLocation GOLEM_LOCATION = new ResourceLocation("textures/entity/iron_golem/iron_golem.png");
+	public static final ModelLayerLocation GOLEM_MODEL_RESOURCE = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(ExtraGolems.MODID, "golem"), "main");
+	private static final ResourceLocation GOLEM_LOCATION = ResourceLocation.parse("textures/entity/iron_golem/iron_golem.png");
 
 	/**
 	 * @param context the entity render manager
@@ -41,9 +41,9 @@ public class GolemRenderer<T extends GolemBase> extends MobRenderer<T, GolemMode
 	}
 
 	@Override
-	protected void setupRotations(T entity, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick) {
+	protected void setupRotations(T entity, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTick, float scale) {
 		// set up parent rotations
-		super.setupRotations(entity, poseStack, ageInTicks, rotationYaw, partialTick);
+		super.setupRotations(entity, poseStack, ageInTicks, rotationYaw, partialTick, scale);
 		// flip upside down
 		if (ExtraGolems.CONFIG.aprilFirst()) {
 			poseStack.translate(0.0F, entity.getBbHeight() + 0.1F, 0.0F);

@@ -6,6 +6,7 @@ import com.mcmoddev.golems.data.behavior.util.AoeShape;
 import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.util.AoeMapper;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.MinMaxBounds;
@@ -30,7 +31,7 @@ public class AoeGrowBehavior extends AoeBehavior {
 
 	private static final IntProvider DEFAULT_AMOUNT = UniformInt.of(2, 5);
 
-	public static final Codec<AoeGrowBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStartAoe(instance)
+	public static final MapCodec<AoeGrowBehavior> CODEC = RecordCodecBuilder.mapCodec(instance -> codecStartAoe(instance)
 			.and(Codec.doubleRange(0.0D, 1.0D).optionalFieldOf("chance", 0.05D).forGetter(AoeGrowBehavior::getChance))
 			.and(IntProvider.NON_NEGATIVE_CODEC.optionalFieldOf("amount", DEFAULT_AMOUNT).forGetter(AoeGrowBehavior::getAmount))
 			.apply(instance, AoeGrowBehavior::new));
@@ -67,7 +68,7 @@ public class AoeGrowBehavior extends AoeBehavior {
 	}
 
 	@Override
-	public Codec<? extends Behavior> getCodec() {
+	public MapCodec<? extends Behavior> getCodec() {
 		return EGRegistry.BehaviorReg.AOE_GROW.get();
 	}
 

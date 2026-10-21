@@ -5,6 +5,7 @@ import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.MinMaxBounds;
@@ -17,8 +18,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.EntityTeleportEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
@@ -31,7 +32,7 @@ import java.util.Objects;
 @Immutable
 public class TeleportBehavior extends Behavior {
 
-	public static final Codec<TeleportBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
+	public static final MapCodec<TeleportBehavior> CODEC = RecordCodecBuilder.mapCodec(instance -> codecStart(instance)
 			.and(Codec.doubleRange(0.0D, 128.0D).optionalFieldOf("radius", 0.0D).forGetter(TeleportBehavior::getRadius))
 			.and(Codec.doubleRange(0.0D, 1.0D).optionalFieldOf("idle_chance", 0.0D).forGetter(TeleportBehavior::getChanceOnIdle))
 			.and(Codec.doubleRange(0.0D, 1.0D).optionalFieldOf("hurt_chance", 0.0D).forGetter(TeleportBehavior::getChanceOnHurt))
@@ -74,7 +75,7 @@ public class TeleportBehavior extends Behavior {
 	}
 
 	@Override
-	public Codec<? extends Behavior> getCodec() {
+	public MapCodec<? extends Behavior> getCodec() {
 		return EGRegistry.BehaviorReg.TELEPORT.get();
 	}
 
@@ -108,7 +109,7 @@ public class TeleportBehavior extends Behavior {
 	@Override
 	public void onActuallyHurt(final IExtraGolem entity, final DamageSource source, final float amount) {
 		final Mob mob = entity.asMob();
-		if (source.isIndirect()) {
+		if (source.getEntity() != source.getDirectEntity()) {
 			// if damage was projectile, remember the indirect entity and set as target
 			if (source.getEntity() instanceof LivingEntity) {
 				LivingEntity target = (LivingEntity) source.getEntity();
@@ -187,7 +188,7 @@ public class TeleportBehavior extends Behavior {
 		// create vent
 		final EntityTeleportEvent event = new EntityTeleportEvent.EnderEntity(mob, x, y, z);
 		// fire event
-		if (MinecraftForge.EVENT_BUS.post(event)) {
+		if (NeoForge.EVENT_BUS.post(event).isCanceled()) {
 			return false;
 		}
 		Vec3 target = event.getTarget();

@@ -117,10 +117,10 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> implement
 	//// RENDER ////
 
 	@Override
-	public void renderToBuffer(final PoseStack poseStack, final VertexConsumer vertexConsumer, final int packedLight, final int packedOverlay, final float red,
-							   final float green, final float blue, final float alpha) {
-		// render with custom colors
-		super.renderToBuffer(poseStack, vertexConsumer, packedLight, packedOverlay, this.red, this.green, this.blue, alpha);
+	public void renderToBuffer(final PoseStack poseStack, final VertexConsumer vertexConsumer, final int packedLight, final int packedOverlay, final int color) {
+		// render with custom colors - convert RGB to packed color format
+		int packedColor = ((int)(this.red * 255) << 16) | ((int)(this.green * 255) << 8) | (int)(this.blue * 255) | (color & 0xFF000000);
+		super.renderToBuffer(poseStack, vertexConsumer, packedLight, packedOverlay, packedColor);
 	}
 
 	public void renderKittyLayer(final PoseStack poseStack, final VertexConsumer vertexConsumer, final int packedLight, final int packedOverlay) {
@@ -136,7 +136,7 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> implement
 
 	public void setupKittyAnim(T entity, float limbSwing, float limbSwingAmount, float partialTicks, float netHeadYaw, float headPitch) {
 		// ears
-		this.ears.copyFrom(this.head);
+		this.ears.copyFrom(this.root().getChild("head"));
 		// tail
 		this.tail.y = 2.0F;
 		this.tail.z = 4.0F;
@@ -170,8 +170,8 @@ public class GolemModel<T extends GolemBase> extends IronGolemModel<T> implement
 
 	protected ModelPart getArmForSide(HumanoidArm side) {
 		if (side == HumanoidArm.LEFT) {
-			return this.leftArm;
+			return this.root().getChild("left_arm");
 		}
-		return this.rightArm;
+		return this.root().getChild("right_arm");
 	}
 }

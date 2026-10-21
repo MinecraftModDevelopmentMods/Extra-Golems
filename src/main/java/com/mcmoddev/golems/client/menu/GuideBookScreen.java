@@ -22,8 +22,10 @@ import java.util.List;
 
 public class GuideBookScreen extends Screen implements IBookScreen {
 
-	public static final ResourceLocation TEXTURE = new ResourceLocation(ExtraGolems.MODID, "textures/gui/guide_book.png");
-	public static final ResourceLocation CONTENTS = new ResourceLocation(ExtraGolems.MODID, "textures/gui/guide_book_contents.png");
+	public static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(ExtraGolems.MODID,
+			"textures/gui/guide_book.png");
+	public static final ResourceLocation CONTENTS = ResourceLocation.fromNamespaceAndPath(ExtraGolems.MODID,
+			"textures/gui/guide_book_contents.png");
 
 	protected int imageWidth;
 	protected int imageHeight;
@@ -65,21 +67,24 @@ public class GuideBookScreen extends Screen implements IBookScreen {
 
 		// add Done button
 		final int doneButtonWidth = 98;
-		this.doneButton = this.addRenderableWidget(Button.builder(Component.translatable("gui.done"), b -> this.minecraft.setScreen(null))
-				.pos(this.x + (this.imageWidth - doneButtonWidth) / 2, this.y + this.imageHeight + 8)
-				.size(98, 20)
-				.build());
+		this.doneButton = this.addRenderableWidget(
+				Button.builder(Component.translatable("gui.done"), b -> this.minecraft.setScreen(null))
+						.pos(this.x + (this.imageWidth - doneButtonWidth) / 2, this.y + this.imageHeight + 8)
+						.size(98, 20)
+						.build());
 
 		// prepare to add previous and next page buttons
 		final int arrowWidth = 18;
 		final int arrowHeight = 10;
 		final int arrowY = this.y + this.imageHeight - arrowHeight - 12;
 		// add Previous Page button
-		this.prevPageButton = this.addRenderableWidget(new ImageButton(this.x + 12, arrowY, arrowWidth, arrowHeight,
-				22, 168, arrowHeight, TEXTURE, b -> addPage(-2)));
+		this.prevPageButton = this
+				.addRenderableWidget(new SimpleImageButton(this.x + 12, arrowY, arrowWidth, arrowHeight,
+						22, 168, arrowHeight, TEXTURE, b -> addPage(-2)));
 		// add Next Page button
-		this.nextPageButton = this.addRenderableWidget(new ImageButton(this.x + this.imageWidth - arrowWidth - 12, arrowY, arrowWidth, arrowHeight,
-				0, 168, arrowHeight, TEXTURE, b -> addPage(2)));
+		this.nextPageButton = this.addRenderableWidget(
+				new SimpleImageButton(this.x + this.imageWidth - arrowWidth - 12, arrowY, arrowWidth, arrowHeight,
+						0, 168, arrowHeight, TEXTURE, b -> addPage(2)));
 
 		// create guide book
 		guideBook = new GuideBook(this, this.groups, this.x, this.y, 128, 164);
@@ -100,19 +105,28 @@ public class GuideBookScreen extends Screen implements IBookScreen {
 		return false;
 	}
 
+	/**
+	 * Override to disable the blur effect that was added in Minecraft 1.21
+	 * Without this override, the screen content appears blurry
+	 */
+	@Override
+	protected void renderBlurredBackground(float partialTick) {
+		// Do nothing - this prevents the blur effect from being applied
+	}
+
 	//// RENDER ////
 
 	@Override
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-		// draw background
-		renderBackground(graphics);
+		// draw transparent background without blur effect
+		renderTransparentBackground(graphics);
 		graphics.blit(TEXTURE, this.x, this.y, 0, 0, this.imageWidth, this.imageHeight);
 
 		// calculate ticks open
 		final float ticksOpen = this.ticksOpen + partialTicks;
 
 		// render open pages
-		if(this.guideBook != null) {
+		if (this.guideBook != null) {
 			this.guideBook.getPage(this.page).render(this, graphics, ticksOpen);
 			this.guideBook.getPage(this.page + 1).render(this, graphics, ticksOpen);
 		}
@@ -182,26 +196,55 @@ public class GuideBookScreen extends Screen implements IBookScreen {
 	//// SCROLL ////
 
 	@Override
-	public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-		if(guideBook != null && guideBook.getPage(page) instanceof ScrollButton.IScrollProvider provider && provider.getScrollButton() != null) {
-			return provider.getScrollButton().mouseScrolled(mouseX, mouseY, amount);
+	public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+		if (guideBook != null && guideBook.getPage(page) instanceof ScrollButton.IScrollProvider provider
+				&& provider.getScrollButton() != null) {
+			return provider.getScrollButton().mouseScrolled(mouseX, mouseY, scrollX, scrollY);
 		}
-		if(guideBook != null && guideBook.getPage(page + 1) instanceof ScrollButton.IScrollProvider provider && provider.getScrollButton() != null) {
-			return provider.getScrollButton().mouseScrolled(mouseX, mouseY, amount);
+		if (guideBook != null && guideBook.getPage(page + 1) instanceof ScrollButton.IScrollProvider provider
+				&& provider.getScrollButton() != null) {
+			return provider.getScrollButton().mouseScrolled(mouseX, mouseY, scrollX, scrollY);
 		}
-		return super.mouseScrolled(mouseX, mouseY, amount);
+		return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
 	}
 
 	@Override
 	public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-		if(guideBook != null && guideBook.getPage(page) instanceof ScrollButton.IScrollProvider provider && provider.getScrollButton().isDragging()) {
+		if (guideBook != null && guideBook.getPage(page) instanceof ScrollButton.IScrollProvider provider
+				&& provider.getScrollButton().isDragging()) {
 			provider.getScrollButton().onDrag(mouseX, mouseY, dragX, dragY);
 			return true;
 		}
-		if(guideBook != null && guideBook.getPage(page + 1) instanceof ScrollButton.IScrollProvider provider && provider.getScrollButton().isDragging()) {
+		if (guideBook != null && guideBook.getPage(page + 1) instanceof ScrollButton.IScrollProvider provider
+				&& provider.getScrollButton().isDragging()) {
 			provider.getScrollButton().onDrag(mouseX, mouseY, dragX, dragY);
 			return true;
 		}
 		return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+	}
+
+	private static class SimpleImageButton extends Button {
+		private final ResourceLocation texture;
+		private final int u;
+		private final int v;
+		private final int dv;
+
+		public SimpleImageButton(int x, int y, int width, int height, int u, int v, int dv, ResourceLocation texture,
+				OnPress onPress) {
+			super(x, y, width, height, Component.empty(), onPress, DEFAULT_NARRATION);
+			this.texture = texture;
+			this.u = u;
+			this.v = v;
+			this.dv = dv;
+		}
+
+		@Override
+		public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+			int vOffset = this.v;
+			if (this.isHoveredOrFocused()) {
+				vOffset += this.dv;
+			}
+			guiGraphics.blit(this.texture, this.getX(), this.getY(), this.u, vOffset, this.width, this.height);
+		}
 	}
 }

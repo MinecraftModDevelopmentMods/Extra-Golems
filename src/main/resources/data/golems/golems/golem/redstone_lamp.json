@@ -10,8 +10,8 @@
   },
   "repair_items": {
     "minecraft:redstone_lamp": 0.5,
-	"#forge:dusts/redstone": 0.15,
-	"#forge:dusts/glowstone": 0.15
+	"#c:dusts/redstone": 0.15,
+	"#c:dusts/glowstone": 0.15
   },
   "variants": 2,
   "model": "golems:redstone_lamp",

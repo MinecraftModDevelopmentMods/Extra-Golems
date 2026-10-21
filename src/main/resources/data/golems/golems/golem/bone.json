@@ -12,7 +12,7 @@
   },
   "repair_items": {
     "minecraft:bone_block": 0.5,
-	"#forge:bones": 0.25,
+	"#c:bones": 0.25,
 	"minecraft:bone_meal": 0.08
   },
   "model": "golems:bone",

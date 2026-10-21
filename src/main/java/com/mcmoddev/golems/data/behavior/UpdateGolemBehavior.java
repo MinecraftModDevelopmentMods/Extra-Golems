@@ -12,6 +12,7 @@ import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mcmoddev.golems.util.PredicateUtils;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.MinMaxBounds;
@@ -37,7 +38,7 @@ import java.util.function.Predicate;
 @Immutable
 public class UpdateGolemBehavior extends Behavior {
 
-	public static final Codec<UpdateGolemBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
+	public static final MapCodec<UpdateGolemBehavior> CODEC = RecordCodecBuilder.mapCodec(instance -> codecStart(instance)
 			.and(UpdateTarget.CODEC.fieldOf("apply").forGetter(UpdateGolemBehavior::getApply))
 			.and(TriggerType.CODEC.optionalFieldOf("trigger", TriggerType.TICK).forGetter(UpdateGolemBehavior::getTrigger))
 			.and(EGCodecUtils.listOrElementCodec(GolemPredicate.CODEC).optionalFieldOf("predicate", ImmutableList.of(GolemPredicate.ALWAYS)).forGetter(UpdateGolemBehavior::getPredicates))
@@ -83,7 +84,7 @@ public class UpdateGolemBehavior extends Behavior {
 	}
 
 	@Override
-	public Codec<? extends Behavior> getCodec() {
+	public MapCodec<? extends Behavior> getCodec() {
 		return EGRegistry.BehaviorReg.UPDATE_GOLEM.get();
 	}
 

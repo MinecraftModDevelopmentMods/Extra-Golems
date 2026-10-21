@@ -31,7 +31,7 @@ import java.util.Optional;
 
 public final class SpawnGolemItem extends Item {
 
-	public static final ResourceLocation BEDROCK_GOLEM = new ResourceLocation(ExtraGolems.MODID, "bedrock");
+	public static final ResourceLocation BEDROCK_GOLEM = ResourceLocation.fromNamespaceAndPath(ExtraGolems.MODID, "bedrock");
 
 	public SpawnGolemItem(final Item.Properties properties) {
 		super(properties);
@@ -64,7 +64,7 @@ public final class SpawnGolemItem extends Item {
 			final GolemBase entity = GolemBase.create(level, BEDROCK_GOLEM);
 			entity.moveTo(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
 			level.addFreshEntity(entity);
-			entity.finalizeSpawn((ServerLevel) level, level.getCurrentDifficultyAt(spawnPos), MobSpawnType.SPAWN_EGG, null, null);
+			entity.finalizeSpawn((ServerLevel) level, level.getCurrentDifficultyAt(spawnPos), MobSpawnType.SPAWN_EGG, null);
 			entity.setInvulnerable(true);
 		}
 		// spawn the entity!
@@ -110,9 +110,9 @@ public final class SpawnGolemItem extends Item {
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-		if(level != null) {
-			final GolemContainer container = GolemContainer.getOrCreate(level.registryAccess(), BEDROCK_GOLEM);
+	public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
+		if(context.registries() != null) {
+			final GolemContainer container = GolemContainer.getOrCreate(context.registries(), BEDROCK_GOLEM);
 			final Component name = container.getTypeName();
 			tooltip.add(Component.translatable(getDescriptionId() + ".tooltip", name));
 		}

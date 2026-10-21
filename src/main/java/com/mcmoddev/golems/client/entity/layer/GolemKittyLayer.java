@@ -15,7 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class GolemKittyLayer<T extends GolemBase> extends RenderLayer<T, GolemModel<T>> {
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(ExtraGolems.MODID, "textures/entity/golem/layer/kitty_layer.png");
+	private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(ExtraGolems.MODID, "textures/entity/golem/layer/kitty_layer.png");
 
 	public GolemKittyLayer(RenderLayerParent<T, GolemModel<T>> ientityrenderer) {
 		super(ientityrenderer);

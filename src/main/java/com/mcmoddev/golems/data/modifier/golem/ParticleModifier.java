@@ -3,21 +3,21 @@ package com.mcmoddev.golems.data.modifier.golem;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.golem.Golem;
 import com.mcmoddev.golems.data.modifier.Modifier;
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 
 import javax.annotation.concurrent.Immutable;
 
 /**
- * Sets the group of the golem
+ * Sets the particle of the golem
  */
 @Immutable
 public class ParticleModifier extends Modifier {
 
-	public static final Codec<ParticleModifier> CODEC = ParticleTypes.CODEC
+	public static final MapCodec<ParticleModifier> CODEC = ParticleTypes.CODEC
 			.xmap(ParticleModifier::new, ParticleModifier::getParticle)
-			.fieldOf("particle").codec();
+			.fieldOf("particle");
 
 	private final ParticleOptions particle;
 
@@ -39,7 +39,7 @@ public class ParticleModifier extends Modifier {
 	}
 
 	@Override
-	public Codec<? extends Modifier> getCodec() {
+	public MapCodec<? extends Modifier> getCodec() {
 		return EGRegistry.GolemModifierReg.PARTICLE.get();
 	}
 }

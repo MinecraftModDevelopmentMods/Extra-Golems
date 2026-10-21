@@ -9,6 +9,7 @@ import com.mcmoddev.golems.entity.goal.InertGoal;
 import com.mcmoddev.golems.entity.goal.LookAtWhenActiveGoal;
 import com.mcmoddev.golems.entity.goal.LookRandomlyWhenActiveGoal;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.MinMaxBounds;
@@ -30,7 +31,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraftforge.common.ForgeHooks;
+import net.neoforged.neoforge.common.extensions.IItemExtension;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
@@ -44,7 +45,7 @@ import java.util.Optional;
 @Immutable
 public class UseFuelBehavior extends Behavior {
 
-	public static final Codec<UseFuelBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
+	public static final MapCodec<UseFuelBehavior> CODEC = RecordCodecBuilder.mapCodec(instance -> codecStart(instance)
 			.and(Codec.intRange(1, Integer.MAX_VALUE).fieldOf("max_fuel").forGetter(UseFuelBehavior::getMaxFuel))
 			.and(Codec.intRange(1, Integer.MAX_VALUE).fieldOf("burn_time").forGetter(UseFuelBehavior::getBurnTime))
 			.apply(instance, UseFuelBehavior::new));
@@ -71,7 +72,7 @@ public class UseFuelBehavior extends Behavior {
 	}
 
 	@Override
-	public Codec<? extends Behavior> getCodec() {
+	public MapCodec<? extends Behavior> getCodec() {
 		return EGRegistry.BehaviorReg.USE_FUEL.get();
 	}
 
@@ -121,12 +122,12 @@ public class UseFuelBehavior extends Behavior {
 
 	@Override
 	public void onWriteData(final IExtraGolem entity, final CompoundTag tag) {
-		entity.getBehaviorData(UseFuelBehaviorData.class).ifPresent(helper -> tag.put(KEY_FUEL_HELPER, helper.serializeNBT()));
+		entity.getBehaviorData(UseFuelBehaviorData.class).ifPresent(helper -> tag.put(KEY_FUEL_HELPER, helper.serializeNBT(((net.minecraft.world.entity.Entity)entity).level().registryAccess())));
 	}
 
 	@Override
 	public void onReadData(final IExtraGolem entity, final CompoundTag tag) {
-		entity.getBehaviorData(UseFuelBehaviorData.class).ifPresent(helper -> helper.deserializeNBT(tag.getCompound(KEY_FUEL_HELPER)));
+		entity.getBehaviorData(UseFuelBehaviorData.class).ifPresent(helper -> helper.deserializeNBT(((net.minecraft.world.entity.Entity)entity).level().registryAccess(), tag.getCompound(KEY_FUEL_HELPER)));
 	}
 
 	//// HELPER METHODS ////
@@ -148,7 +149,7 @@ public class UseFuelBehavior extends Behavior {
 		final UseFuelBehaviorData data = oData.get();
 		ItemStack stack = player.getItemInHand(hand);
 		final Mob mob = entity.asMob();
-		int burnTime = ForgeHooks.getBurnTime(stack, RecipeType.SMELTING) * (player.isCrouching() ? stack.getCount() : 1);
+		int burnTime = stack.getBurnTime(RecipeType.SMELTING) * (player.isCrouching() ? stack.getCount() : 1);
 		if (burnTime > 0 && (data.getFuel() + burnTime) <= getMaxFuel()) {
 			if (player.isCrouching()) {
 				// take entire ItemStack

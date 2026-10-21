@@ -12,6 +12,7 @@ import com.mcmoddev.golems.util.DeferredBlockState;
 import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mcmoddev.golems.util.PredicateUtils;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
@@ -42,7 +43,7 @@ import java.util.function.Predicate;
 @Immutable
 public class PlaceBlockBehavior extends Behavior {
 
-	public static final Codec<PlaceBlockBehavior> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+	public static final MapCodec<PlaceBlockBehavior> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
 			EGCodecUtils.MIN_MAX_INTS_CODEC.optionalFieldOf("variant", MinMaxBounds.Ints.ANY).forGetter(Behavior::getVariantBounds),
 			TooltipPredicate.CODEC.optionalFieldOf("tooltip", TooltipPredicate.NORMAL).forGetter(Behavior::getTooltipPredicate),
 			TriggerType.CODEC.optionalFieldOf("trigger", TriggerType.TICK).forGetter(PlaceBlockBehavior::getTrigger),
@@ -122,7 +123,7 @@ public class PlaceBlockBehavior extends Behavior {
 	}
 
 	@Override
-	public Codec<? extends Behavior> getCodec() {
+	public MapCodec<? extends Behavior> getCodec() {
 		return EGRegistry.BehaviorReg.PLACE.get();
 	}
 

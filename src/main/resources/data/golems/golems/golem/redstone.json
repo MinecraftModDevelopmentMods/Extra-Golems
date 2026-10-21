@@ -5,11 +5,11 @@
 	"knockback_resistance": 0.1
   },
   "blocks": {
-	"all": "#forge:storage_blocks/redstone"
+	"all": "#c:storage_blocks/redstone"
   },
   "repair_items": {
-    "#forge:storage_blocks/redstone": 0.5,
-	"#forge:dusts/redstone": 0.15
+    "#c:storage_blocks/redstone": 0.5,
+	"#c:dusts/redstone": 0.15
   },
   "model": "golems:redstone",
   "brain": {

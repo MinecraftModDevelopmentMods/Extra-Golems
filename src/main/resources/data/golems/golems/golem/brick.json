@@ -10,7 +10,7 @@
   },
   "repair_items": {
     "minecraft:bricks": 0.5,
-	"#forge:ingots/brick": 0.5
+	"#c:ingots/brick": 0.5
   },
   "model": "golems:brick",
   "brain": "golems:empty"

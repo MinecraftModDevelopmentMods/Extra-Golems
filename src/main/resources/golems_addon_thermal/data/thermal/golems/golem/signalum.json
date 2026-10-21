@@ -6,11 +6,11 @@
 	"sound": "minecraft:metal"
   },
   "blocks": {
-	"all": "#forge:storage_blocks/signalum"
+	"all": "#c:storage_blocks/signalum"
   },
   "repair_items": {
-    "#forge:storage_blocks/signalum": 0.5,
-    "#forge:ingots/signalum": 0.15
+    "#c:storage_blocks/signalum": 0.5,
+    "#c:ingots/signalum": 0.15
   },
   "model": "thermal:signalum",
   "brain": {

@@ -18,8 +18,8 @@
   },
   "repair_items": {
     "quark:blaze_lantern": 0.5,
-	"#forge:dusts/blaze_powder": 0.1,
-	"#forge:rods/blaze": 0.25
+	"#c:dusts/blaze_powder": 0.1,
+	"#c:rods/blaze": 0.25
   },
   "model": "quark:blaze_lantern",
   "brain": {

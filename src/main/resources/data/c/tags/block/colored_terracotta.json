@@ -1,0 +1,21 @@
+{
+	"replace": false,
+	"values": [
+		"#c:terracotta/white",
+		"#c:terracotta/orange",
+		"#c:terracotta/magenta",
+		"#c:terracotta/light_blue",
+		"#c:terracotta/yellow",
+		"#c:terracotta/lime",
+		"#c:terracotta/pink",
+		"#c:terracotta/gray",
+		"#c:terracotta/light_gray",
+		"#c:terracotta/cyan",
+		"#c:terracotta/purple",
+		"#c:terracotta/blue",
+		"#c:terracotta/brown",
+		"#c:terracotta/green",
+		"#c:terracotta/red",
+		"#c:terracotta/black"
+	]
+}

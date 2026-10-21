@@ -13,7 +13,7 @@
   "repair_items": {
     "quark:thatch": 0.5,
     "minecraft:hay_block": 0.4,
-	"#forge:crops/wheat": 0.1
+	"#c:crops/wheat": 0.1
   },
   "model": "quark:thatch",
   "brain": {

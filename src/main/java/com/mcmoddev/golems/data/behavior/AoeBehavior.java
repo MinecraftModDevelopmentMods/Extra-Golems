@@ -7,12 +7,13 @@ import com.mcmoddev.golems.util.GolemModifyBlocksEvent;
 import com.mcmoddev.golems.util.AoeMapper;
 import com.mojang.datafixers.Products;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.bus.api.Event;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.Objects;
@@ -64,12 +65,12 @@ public abstract class AoeBehavior extends Behavior {
 
 	@Override
 	public void onTick(IExtraGolem entity) {
-		if(entity.asMob().tickCount % this.interval != 0) {
+		if(((net.minecraft.world.entity.Entity)entity).tickCount % this.interval != 0) {
 			return;
 		}
-		final GolemModifyBlocksEvent event = new GolemModifyBlocksEvent(entity.asMob(), entity.asMob().blockPosition(), getRadius(), getShape(), getMapper());
+		final GolemModifyBlocksEvent event = new GolemModifyBlocksEvent(entity, ((net.minecraft.world.entity.Entity)entity).blockPosition(), getRadius(), getShape(), getMapper());
 		// verify the event was not canceled or denied
-		if (!MinecraftForge.EVENT_BUS.post(event) && event.getResult() != Event.Result.DENY) {
+		if (!NeoForge.EVENT_BUS.post(event).isCanceled() && event.getResult() != GolemModifyBlocksEvent.Result.DENY) {
 			// Apply the mapper to each position in the shape
 			for(BlockPos pos : event.getShape().createPositions(event.getCenter(), event.getRadius())) {
 				// verify position is not in blacklist

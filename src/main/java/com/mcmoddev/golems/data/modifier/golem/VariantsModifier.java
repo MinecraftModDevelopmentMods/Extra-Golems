@@ -4,6 +4,7 @@ import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.golem.Golem;
 import com.mcmoddev.golems.data.modifier.Modifier;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import javax.annotation.concurrent.Immutable;
@@ -14,7 +15,7 @@ import javax.annotation.concurrent.Immutable;
 @Immutable
 public class VariantsModifier extends Modifier {
 
-	public static final Codec<VariantsModifier> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+	public static final MapCodec<VariantsModifier> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
 			Codec.INT.fieldOf("amount").forGetter(VariantsModifier::getAmount),
 			Codec.BOOL.optionalFieldOf("replace", false).forGetter(VariantsModifier::replace)
 	).apply(instance, VariantsModifier::new));
@@ -49,7 +50,7 @@ public class VariantsModifier extends Modifier {
 	}
 
 	@Override
-	public Codec<? extends Modifier> getCodec() {
+	public MapCodec<? extends Modifier> getCodec() {
 		return EGRegistry.GolemModifierReg.VARIANTS.get();
 	}
 }

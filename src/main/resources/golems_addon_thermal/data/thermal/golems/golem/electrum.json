@@ -7,11 +7,11 @@
 	"sound": "minecraft:metal"
   },
   "blocks": {
-	"all": "#forge:storage_blocks/electrum"
+	"all": "#c:storage_blocks/electrum"
   },
   "repair_items": {
-    "#forge:storage_blocks/electrum": 0.5,
-    "#forge:ingots/electrum": 0.15
+    "#c:storage_blocks/electrum": 0.5,
+    "#c:ingots/electrum": 0.15
   },
   "model": "thermal:electrum",
   "brain": "golems:empty"

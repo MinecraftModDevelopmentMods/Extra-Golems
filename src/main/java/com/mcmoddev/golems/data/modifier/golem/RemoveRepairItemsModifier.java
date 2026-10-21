@@ -7,6 +7,7 @@ import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mcmoddev.golems.util.PredicateUtils;
 import com.mcmoddev.golems.data.ResourcePair;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 
@@ -18,15 +19,17 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
- * Removes all repair item entries from the {@link com.mcmoddev.golems.data.golem.RepairItems.Builder}
+ * Removes all repair item entries from the
+ * {@link com.mcmoddev.golems.data.golem.RepairItems.Builder}
  * that pass any of the given {@link RemovePredicate}s
  */
 @Immutable
 public class RemoveRepairItemsModifier extends Modifier {
 
-	public static final Codec<RemoveRepairItemsModifier> CODEC = EGCodecUtils.listOrElementCodec(RemovePredicate.CODEC)
+	public static final MapCodec<RemoveRepairItemsModifier> CODEC = EGCodecUtils
+			.listOrElementCodec(RemovePredicate.CODEC)
 			.xmap(RemoveRepairItemsModifier::new, RemoveRepairItemsModifier::getPredicates)
-			.fieldOf("predicate").codec();
+			.fieldOf("predicate");
 
 	private final List<RemovePredicate> predicates;
 	private final Predicate<Map.Entry<ResourcePair, Double>> predicate;
@@ -50,7 +53,7 @@ public class RemoveRepairItemsModifier extends Modifier {
 	}
 
 	@Override
-	public Codec<? extends Modifier> getCodec() {
+	public MapCodec<? extends Modifier> getCodec() {
 		return EGRegistry.GolemModifierReg.REMOVE_REPAIR_ITEMS.get();
 	}
 
@@ -58,10 +61,12 @@ public class RemoveRepairItemsModifier extends Modifier {
 
 	public static class RemovePredicate implements Predicate<Map.Entry<ResourcePair, Double>> {
 
+		// Note: This needs to be Codec, not MapCodec, for use in listOrElementCodec
 		public static final Codec<RemovePredicate> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 				ResourcePair.CODEC.optionalFieldOf("item").forGetter(o -> Optional.ofNullable(o.resourcePair)),
-				EGCodecUtils.MIN_MAX_DOUBLES_CODEC.optionalFieldOf("amount").forGetter(o -> Optional.ofNullable(o.values))
-		).apply(instance, RemovePredicate::new));
+				EGCodecUtils.MIN_MAX_DOUBLES_CODEC.optionalFieldOf("amount")
+						.forGetter(o -> Optional.ofNullable(o.values)))
+				.apply(instance, RemovePredicate::new));
 
 		private final @Nullable ResourcePair resourcePair;
 		private final @Nullable MinMaxBounds.Doubles values;
@@ -73,10 +78,10 @@ public class RemoveRepairItemsModifier extends Modifier {
 
 		@Override
 		public boolean test(Map.Entry<ResourcePair, Double> entry) {
-			if(this.resourcePair != null && !this.resourcePair.equals(entry.getKey())) {
+			if (this.resourcePair != null && !this.resourcePair.equals(entry.getKey())) {
 				return false;
 			}
-			if(this.values != null && !this.values.matches(entry.getValue())) {
+			if (this.values != null && !this.values.matches(entry.getValue())) {
 				return false;
 			}
 			// all checks passed

@@ -9,7 +9,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,9 +19,9 @@ import java.util.regex.Pattern;
 
 public class EGCodecUtils {
 	/** Codec to map between items and item stacks with a single item and no tag **/
-	public static final Codec<ItemStack> ITEM_OR_STACK_CODEC = Codec.either(ForgeRegistries.ITEMS.getCodec(), ItemStack.CODEC)
+	public static final Codec<ItemStack> ITEM_OR_STACK_CODEC = Codec.either(BuiltInRegistries.ITEM.byNameCodec(), ItemStack.CODEC)
 			.xmap(either -> either.map(ItemStack::new, Function.identity()),
-					stack -> stack.getCount() == 1 && !stack.hasTag()
+					stack -> stack.getCount() == 1 && stack.getComponentsPatch().isEmpty()
 							? Either.left(stack.getItem())
 							: Either.right(stack));
 
@@ -33,8 +33,8 @@ public class EGCodecUtils {
 
 	/** {@link MinMaxBounds.Ints} codec **/
 	public static final Codec<MinMaxBounds.Ints> MIN_MAX_INTS_DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			Codec.INT.optionalFieldOf("min").forGetter(o -> Optional.ofNullable(o.getMin())),
-			Codec.INT.optionalFieldOf("max").forGetter(o -> Optional.ofNullable(o.getMax()))
+			Codec.INT.optionalFieldOf("min").forGetter(MinMaxBounds.Ints::min),
+			Codec.INT.optionalFieldOf("max").forGetter(MinMaxBounds.Ints::max)
 	).apply(instance, (p1, p2) -> {
 		if(p1.isPresent() && p2.isEmpty()) return MinMaxBounds.Ints.atLeast(p1.get());
 		if(p1.isEmpty() && p2.isPresent()) return MinMaxBounds.Ints.atMost(p2.get());
@@ -44,12 +44,12 @@ public class EGCodecUtils {
 	/** {@link MinMaxBounds.Ints} or {@link Codec#INT} codec **/
 	public static final Codec<MinMaxBounds.Ints> MIN_MAX_INTS_CODEC = Codec.either(Codec.INT, MIN_MAX_INTS_DIRECT_CODEC)
 			.xmap(either -> either.map(MinMaxBounds.Ints::exactly, Function.identity()),
-					o -> (o.getMin() != null && o.getMax() != null && o.getMin().equals(o.getMax())) ? Either.left(o.getMin()) : Either.right(o));
+					o -> (o.min().isPresent() && o.max().isPresent() && o.min().equals(o.max())) ? Either.left(o.min().get()) : Either.right(o));
 
 	/** {@link MinMaxBounds.Ints} codec **/
 	public static final Codec<MinMaxBounds.Doubles> MIN_MAX_DOUBLES_DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			Codec.DOUBLE.optionalFieldOf("min").forGetter(o -> Optional.ofNullable(o.getMin())),
-			Codec.DOUBLE.optionalFieldOf("max").forGetter(o -> Optional.ofNullable(o.getMax()))
+			Codec.DOUBLE.optionalFieldOf("min").forGetter(MinMaxBounds.Doubles::min),
+			Codec.DOUBLE.optionalFieldOf("max").forGetter(MinMaxBounds.Doubles::max)
 	).apply(instance, (p1, p2) -> {
 		if(p1.isPresent() && p2.isEmpty()) return MinMaxBounds.Doubles.atLeast(p1.get());
 		if(p1.isEmpty() && p2.isPresent()) return MinMaxBounds.Doubles.atMost(p2.get());
@@ -59,11 +59,11 @@ public class EGCodecUtils {
 	/** {@link MinMaxBounds.Doubles} or {@link Codec#DOUBLE} codec **/
 	public static final Codec<MinMaxBounds.Doubles> MIN_MAX_DOUBLES_CODEC = Codec.either(Codec.DOUBLE, MIN_MAX_DOUBLES_DIRECT_CODEC)
 			.xmap(either -> either.map(MinMaxBounds.Doubles::exactly, Function.identity()),
-					o -> (o.getMin() != null && o.getMax() != null && o.getMin().equals(o.getMax())) ? Either.left(o.getMin()) : Either.right(o));
+					o -> (o.min().isPresent() && o.max().isPresent() && o.min().equals(o.max())) ? Either.left(o.min().get()) : Either.right(o));
 
 	/** {@link MobEffectInstance} codec **/
 	public static final Codec<MobEffectInstance> MOB_EFFECT_INSTANCE_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			ForgeRegistries.MOB_EFFECTS.getCodec().fieldOf("id").forGetter(MobEffectInstance::getEffect),
+			BuiltInRegistries.MOB_EFFECT.holderByNameCodec().fieldOf("id").forGetter(MobEffectInstance::getEffect),
 			Codec.INT.optionalFieldOf("duration", 0).forGetter(MobEffectInstance::getDuration),
 			Codec.INT.optionalFieldOf("amplifier", 0).forGetter(MobEffectInstance::getAmplifier),
 			Codec.BOOL.optionalFieldOf("ambient", false).forGetter(MobEffectInstance::isAmbient),
@@ -121,9 +121,9 @@ public class EGCodecUtils {
 	 */
 	public static Codec<MinMaxBounds.Ints> boundedIntCodec(final int min, final int max) {
 		Function<MinMaxBounds.Ints, DataResult<MinMaxBounds.Ints>> function = (instance) -> {
-			if (instance.getMin() != null && instance.getMin() < min) {
+			if (instance.min().isPresent() && instance.min().get() < min) {
 				return DataResult.error(() -> "Value too low. minimum " + min + "; provided [" + instance + "]");
-			} else if(instance.getMax() != null && instance.getMax() > max) {
+			} else if(instance.max().isPresent() && instance.max().get() > max) {
 				return DataResult.error(() -> "Value too high. maximum " + max + "; provided [" + instance + "]");
 			} else {
 				return DataResult.success(instance);

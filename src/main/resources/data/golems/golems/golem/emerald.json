@@ -6,11 +6,11 @@
 	"armor": 3.5
   },
   "blocks": {
-	"all": "#forge:storage_blocks/emerald"
+	"all": "#c:storage_blocks/emerald"
   },
   "repair_items": {
-    "#forge:storage_blocks/emerald": 0.5,
-	"#forge:gems/emerald": 0.1
+    "#c:storage_blocks/emerald": 0.5,
+	"#c:gems/emerald": 0.1
   },
   "model": "golems:emerald",
   "brain": {

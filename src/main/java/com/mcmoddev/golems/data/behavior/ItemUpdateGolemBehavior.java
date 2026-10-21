@@ -13,6 +13,7 @@ import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mcmoddev.golems.util.EGComponentUtils;
 import com.mcmoddev.golems.util.PredicateUtils;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.MinMaxBounds;
@@ -30,7 +31,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
@@ -47,7 +48,7 @@ import java.util.function.Predicate;
 @Immutable
 public class ItemUpdateGolemBehavior extends Behavior {
 
-	public static final Codec<ItemUpdateGolemBehavior> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+	public static final MapCodec<ItemUpdateGolemBehavior> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
 			EGCodecUtils.MIN_MAX_INTS_CODEC.optionalFieldOf("variant", MinMaxBounds.Ints.ANY).forGetter(Behavior::getVariantBounds),
 			TooltipPredicate.CODEC.optionalFieldOf("tooltip", TooltipPredicate.NORMAL).forGetter(Behavior::getTooltipPredicate),
 			UpdateTarget.CODEC.fieldOf("apply").forGetter(ItemUpdateGolemBehavior::getApply),
@@ -56,7 +57,7 @@ public class ItemUpdateGolemBehavior extends Behavior {
 			EGCodecUtils.listOrElementCodec(GolemPredicate.CODEC).optionalFieldOf("predicate", ImmutableList.of(GolemPredicate.ALWAYS)).forGetter(ItemUpdateGolemBehavior::getPredicates),
 			Codec.BOOL.optionalFieldOf("consume", false).forGetter(ItemUpdateGolemBehavior::consume),
 			Codec.doubleRange(0.0D, 1.0D).optionalFieldOf("chance", 1.0D).forGetter(ItemUpdateGolemBehavior::getChance),
-			ForgeRegistries.SOUND_EVENTS.getCodec().optionalFieldOf("sound").forGetter(o -> Optional.ofNullable(o.sound)),
+			BuiltInRegistries.SOUND_EVENT.byNameCodec().optionalFieldOf("sound").forGetter(o -> Optional.ofNullable(o.sound)),
 			ParticleTypes.CODEC.optionalFieldOf("particle").forGetter(o -> Optional.ofNullable(o.particle))
 	).apply(instance, ItemUpdateGolemBehavior::new));
 
@@ -131,7 +132,7 @@ public class ItemUpdateGolemBehavior extends Behavior {
 	}
 
 	@Override
-	public Codec<? extends Behavior> getCodec() {
+	public MapCodec<? extends Behavior> getCodec() {
 		return EGRegistry.BehaviorReg.ITEM_UPDATE_GOLEM.get();
 	}
 
@@ -182,7 +183,7 @@ public class ItemUpdateGolemBehavior extends Behavior {
 		if(this.displayNameKey != null && !this.displayNameKey.isEmpty()) {
 			itemName = Component.translatable(this.displayNameKey);
 		} else if(!this.item.isEmpty()) {
-			final Item randomItem = this.item.get(BuiltInRegistries.ITEM).get(0).get();
+			final Item randomItem = this.item.get(BuiltInRegistries.ITEM).get(0).value();
 			itemName = randomItem.getDescription();
 		} else {
 			itemName = Component.translatable(PREFIX + "item_update_golem.empty_hand");

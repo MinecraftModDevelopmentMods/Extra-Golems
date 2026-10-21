@@ -3,7 +3,7 @@ package com.mcmoddev.golems.data.modifier.golem;
 import com.mcmoddev.golems.EGRegistry;
 import com.mcmoddev.golems.data.golem.Golem;
 import com.mcmoddev.golems.data.modifier.Modifier;
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.concurrent.Immutable;
@@ -14,9 +14,9 @@ import javax.annotation.concurrent.Immutable;
 @Immutable
 public class GroupModifier extends Modifier {
 
-	public static final Codec<GroupModifier> CODEC = ResourceLocation.CODEC
+	public static final MapCodec<GroupModifier> CODEC = ResourceLocation.CODEC
 			.xmap(GroupModifier::new, GroupModifier::getGroup)
-			.fieldOf("group").codec();
+			.fieldOf("group");
 
 	private final ResourceLocation group;
 
@@ -38,7 +38,7 @@ public class GroupModifier extends Modifier {
 	}
 
 	@Override
-	public Codec<? extends Modifier> getCodec() {
+	public MapCodec<? extends Modifier> getCodec() {
 		return EGRegistry.GolemModifierReg.GROUP.get();
 	}
 }

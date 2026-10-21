@@ -13,7 +13,7 @@
   },
   "repair_items": {
 	"minecraft:slime_block": 0.5,
-	"#forge:slimeballs": 0.15
+	"#c:slimeballs": 0.15
   },
   "model": "golems:slime",
   "brain": {

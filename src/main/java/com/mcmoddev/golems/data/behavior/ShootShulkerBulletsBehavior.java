@@ -7,6 +7,7 @@ import com.mcmoddev.golems.data.behavior.util.TooltipPredicate;
 import com.mcmoddev.golems.entity.IExtraGolem;
 import com.mcmoddev.golems.entity.goal.MoveToItemGoal;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.critereon.MinMaxBounds;
@@ -35,7 +36,7 @@ import java.util.List;
 @Immutable
 public class ShootShulkerBulletsBehavior extends AbstractShootBehavior {
 
-	public static final Codec<ShootShulkerBulletsBehavior> CODEC = RecordCodecBuilder.create(instance -> codecStart(instance)
+	public static final MapCodec<ShootShulkerBulletsBehavior> CODEC = RecordCodecBuilder.mapCodec(instance -> codecStart(instance)
 			.and(Codec.intRange(1, 100).optionalFieldOf("attack_interval", 30).forGetter(AbstractShootBehavior::getAttackInterval))
 			.apply(instance, ShootShulkerBulletsBehavior::new));
 
@@ -47,7 +48,7 @@ public class ShootShulkerBulletsBehavior extends AbstractShootBehavior {
 	//// GETTERS ////
 
 	@Override
-	public Codec<? extends Behavior> getCodec() {
+	public MapCodec<? extends Behavior> getCodec() {
 		return EGRegistry.BehaviorReg.SHOOT_SHULKER_BULLETS.get();
 	}
 

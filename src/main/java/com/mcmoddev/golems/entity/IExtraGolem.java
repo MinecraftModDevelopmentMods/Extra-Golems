@@ -5,7 +5,7 @@ import com.mcmoddev.golems.data.behavior.data.IBehaviorData;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.ContainerListener;
@@ -21,8 +21,6 @@ import java.util.Optional;
 
 public interface IExtraGolem extends IVariantProvider, ILightProvider, IPowerProvider,
 		IInventoryProvider, ContainerListener, RangedAttackMob {
-
-	public static final EntityDataSerializer<Optional<ResourceLocation>> OPTIONAL_RESOURCE_LOCATION = EntityDataSerializer.optional(FriendlyByteBuf::writeResourceLocation, FriendlyByteBuf::readResourceLocation);
 
 	//// ENTITY ////
 
@@ -59,7 +57,7 @@ public interface IExtraGolem extends IVariantProvider, ILightProvider, IPowerPro
 	default Optional<GolemContainer> getContainer(final RegistryAccess registryAccess) {
 		// load variant ID
 		final Optional<ResourceLocation> oId = getGolemId();
-		if(oId.isEmpty()) {
+		if (oId.isEmpty()) {
 			return Optional.empty();
 		}
 		// all checks passed
@@ -87,7 +85,7 @@ public interface IExtraGolem extends IVariantProvider, ILightProvider, IPowerPro
 
 	/**
 	 * @param data the behavior data
-	 * @param <T> the behavior data class
+	 * @param <T>  the behavior data class
 	 */
 	default <T extends IBehaviorData> void attachBehaviorData(final T data) {
 		getBehaviorData().put(data.getClass(), data);
@@ -95,11 +93,11 @@ public interface IExtraGolem extends IVariantProvider, ILightProvider, IPowerPro
 
 	/**
 	 * @param clazz the behavior data class
-	 * @param <T> the behavior data class
+	 * @param <T>   the behavior data class
 	 * @return the behavior data for the given class, if any
 	 */
 	default <T extends IBehaviorData> Optional<T> getBehaviorData(final Class<T> clazz) {
-		return Optional.ofNullable((T)getBehaviorData().get(clazz));
+		return Optional.ofNullable((T) getBehaviorData().get(clazz));
 	}
 
 	//// GOLEM ////
@@ -112,13 +110,15 @@ public interface IExtraGolem extends IVariantProvider, ILightProvider, IPowerPro
 	/**
 	 * Called after construction when a entity is built by a player
 	 *
-	 * @param body the body block
-	 * @param legs the legs block
-	 * @param arm1 the first arm block
-	 * @param arm2 the second arm block
+	 * @param body   the body block
+	 * @param legs   the legs block
+	 * @param arm1   the first arm block
+	 * @param arm2   the second arm block
 	 * @param player the player who built the entity, if any
 	 */
-	default void onBuilt(final BlockState body, final BlockState legs, final BlockState arm1, final BlockState arm2, @Nullable Entity player) {}
+	default void onBuilt(final BlockState body, final BlockState legs, final BlockState arm1, final BlockState arm2,
+			@Nullable Entity player) {
+	}
 
 	//// NBT ////
 
@@ -130,12 +130,12 @@ public interface IExtraGolem extends IVariantProvider, ILightProvider, IPowerPro
 
 	default void readContainer(CompoundTag pCompound) {
 		// read golem ID
-		if(pCompound.contains(KEY_GOLEM_ID, Tag.TAG_STRING)) {
-			setGolemId(new ResourceLocation(pCompound.getString(KEY_GOLEM_ID)));
+		if (pCompound.contains(KEY_GOLEM_ID, Tag.TAG_STRING)) {
+			setGolemId(ResourceLocation.parse(pCompound.getString(KEY_GOLEM_ID)));
 		}
 		// read legacy golem ID
-		if(pCompound.contains("Material", Tag.TAG_STRING)) {
-			setGolemId(new ResourceLocation(pCompound.getString("Material")));
+		if (pCompound.contains("Material", Tag.TAG_STRING)) {
+			setGolemId(ResourceLocation.parse(pCompound.getString("Material")));
 		}
 	}
 }

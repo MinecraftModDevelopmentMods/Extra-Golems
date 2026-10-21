@@ -7,11 +7,11 @@
   },
   "group": "golems:bronze",
   "blocks": {
-	"all": "#forge:storage_blocks/bronze"
+	"all": "#c:storage_blocks/bronze"
   },
   "repair_items": {
-    "#forge:storage_blocks/bronze": 0.5,
-    "#forge:ingots/bronze": 0.15
+    "#c:storage_blocks/bronze": 0.5,
+    "#c:ingots/bronze": 0.15
   },
   "model": "mekanism:bronze",
   "brain": "golems:empty"

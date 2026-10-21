@@ -6,11 +6,11 @@
 	"sound": "minecraft:metal"
   },
   "blocks": {
-	"all": "#forge:storage_blocks/enderium"
+	"all": "#c:storage_blocks/enderium"
   },
   "repair_items": {
-    "#forge:storage_blocks/enderium": 0.5,
-    "#forge:ingots/enderium": 0.15
+    "#c:storage_blocks/enderium": 0.5,
+    "#c:ingots/enderium": 0.15
   },
   "model": "thermal:enderium",
   "brain": {

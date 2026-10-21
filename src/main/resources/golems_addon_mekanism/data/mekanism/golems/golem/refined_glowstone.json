@@ -9,11 +9,11 @@
 	"sound": "minecraft:metal"
   },
   "blocks": {
-	"all": "#forge:storage_blocks/refined_glowstone"
+	"all": "#c:storage_blocks/refined_glowstone"
   },
   "repair_items": {
-    "#forge:storage_blocks/refined_glowstone": 0.5,
-    "#forge:ingots/refined_glowstone": 0.15
+    "#c:storage_blocks/refined_glowstone": 0.5,
+    "#c:ingots/refined_glowstone": 0.15
   },
   "model": "mekanism:refined_glowstone",
   "brain": {

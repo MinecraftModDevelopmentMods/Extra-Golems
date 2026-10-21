@@ -124,7 +124,7 @@ public final class SoundTypeRegistry {
 	}
 
 	public static SoundType register(final String id, final SoundType soundType) {
-		return register(new ResourceLocation(id), soundType);
+		return register(ResourceLocation.parse(id), soundType);
 	}
 
 	public static SoundType register(final ResourceLocation id, final SoundType soundType) {

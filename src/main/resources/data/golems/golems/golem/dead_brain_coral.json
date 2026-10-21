@@ -4,11 +4,11 @@
   "blocks": {
 	"arms": [
 	  "#minecraft:coral_blocks",
-	  "#forge:dead_coral_blocks"
+	  "#c:dead_coral_blocks"
 	],
 	"legs": [
 	  "#minecraft:coral_blocks",
-	  "#forge:dead_coral_blocks"
+	  "#c:dead_coral_blocks"
 	],
 	"body": "minecraft:dead_brain_coral_block"
   },

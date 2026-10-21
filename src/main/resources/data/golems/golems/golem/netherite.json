@@ -13,11 +13,11 @@
 	"sound": "minecraft:metal"
   },
   "blocks": {
-	"all": "#forge:storage_blocks/netherite"
+	"all": "#c:storage_blocks/netherite"
   },
   "repair_items": {
-	"#forge:storage_blocks/netherite": 1.0,
-	"#forge:ingots/netherite": 0.5
+	"#c:storage_blocks/netherite": 1.0,
+	"#c:ingots/netherite": 0.5
   },
   "model": "golems:netherite",
   "brain": "golems:empty"

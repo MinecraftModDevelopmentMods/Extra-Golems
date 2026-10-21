@@ -1,0 +1,21 @@
+{
+	"replace": false,
+	"values": [
+		"#c:concrete/white",
+		"#c:concrete/orange",
+		"#c:concrete/magenta",
+		"#c:concrete/light_blue",
+		"#c:concrete/yellow",
+		"#c:concrete/lime",
+		"#c:concrete/pink",
+		"#c:concrete/gray",
+		"#c:concrete/light_gray",
+		"#c:concrete/cyan",
+		"#c:concrete/purple",
+		"#c:concrete/blue",
+		"#c:concrete/brown",
+		"#c:concrete/green",
+		"#c:concrete/red",
+		"#c:concrete/black"
+	]
+}

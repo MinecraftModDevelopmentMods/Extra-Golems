@@ -9,6 +9,7 @@ import com.mcmoddev.golems.data.modifier.Modifier;
 import com.mcmoddev.golems.util.EGCodecUtils;
 import com.mcmoddev.golems.util.PredicateUtils;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.resources.ResourceLocation;
@@ -28,9 +29,9 @@ import java.util.function.Predicate;
 @Immutable
 public class RemoveBehaviorModifier extends Modifier {
 
-	public static final Codec<RemoveBehaviorModifier> CODEC = EGCodecUtils.listOrElementCodec(RemovePredicate.CODEC)
+	public static final MapCodec<RemoveBehaviorModifier> CODEC = EGCodecUtils.listOrElementCodec(RemovePredicate.CODEC)
 			.xmap(RemoveBehaviorModifier::new, RemoveBehaviorModifier::getPredicates)
-			.fieldOf("predicate").codec();
+			.fieldOf("predicate");
 
 	private final List<RemovePredicate> predicates;
 	private final Predicate<Behavior> predicate;
@@ -54,7 +55,7 @@ public class RemoveBehaviorModifier extends Modifier {
 	}
 
 	@Override
-	public Codec<? extends Modifier> getCodec() {
+	public MapCodec<? extends Modifier> getCodec() {
 		return EGRegistry.GolemModifierReg.REMOVE_BEHAVIOR.get();
 	}
 
@@ -62,17 +63,20 @@ public class RemoveBehaviorModifier extends Modifier {
 
 	public static class RemovePredicate implements Predicate<Behavior> {
 
+		// Note: This needs to be Codec, not MapCodec, for use in listOrElementCodec
 		public static final Codec<RemovePredicate> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 				ResourceLocation.CODEC.optionalFieldOf("type").forGetter(o -> Optional.ofNullable(o.type)),
-				EGCodecUtils.MIN_MAX_INTS_CODEC.optionalFieldOf("variant", MinMaxBounds.Ints.ANY).forGetter(o -> o.variant),
-				TooltipPredicate.CODEC.optionalFieldOf("tooltip").forGetter(o -> Optional.ofNullable(o.tooltip))
-		).apply(instance, RemovePredicate::new));
+				EGCodecUtils.MIN_MAX_INTS_CODEC.optionalFieldOf("variant", MinMaxBounds.Ints.ANY)
+						.forGetter(o -> o.variant),
+				TooltipPredicate.CODEC.optionalFieldOf("tooltip").forGetter(o -> Optional.ofNullable(o.tooltip)))
+				.apply(instance, RemovePredicate::new));
 
 		private final @Nullable ResourceLocation type;
 		private final MinMaxBounds.Ints variant;
 		private final @Nullable TooltipPredicate tooltip;
 
-		public RemovePredicate(Optional<ResourceLocation> type, MinMaxBounds.Ints variant, Optional<TooltipPredicate> tooltip) {
+		public RemovePredicate(Optional<ResourceLocation> type, MinMaxBounds.Ints variant,
+				Optional<TooltipPredicate> tooltip) {
 			this.type = type.orElse(null);
 			this.variant = variant;
 			this.tooltip = tooltip.orElse(null);
@@ -81,16 +85,17 @@ public class RemoveBehaviorModifier extends Modifier {
 		@Override
 		public boolean test(Behavior behavior) {
 			// test type
-			if(type != null && !this.type.equals(EGRegistry.BEHAVIOR_SERIALIZER_SUPPLIER.get().getKey(behavior.getCodec()))) {
+			if (type != null
+					&& !this.type.equals(EGRegistry.BEHAVIOR_SERIALIZER_SUPPLIER.getKey(behavior.getCodec()))) {
 				return false;
 			}
 			// test tooltip
-			if(tooltip != null && tooltip != behavior.getTooltipPredicate()) {
+			if (tooltip != null && tooltip != behavior.getTooltipPredicate()) {
 				return false;
 			}
 			// test variant
 			final MinMaxBounds.Ints bounds = behavior.getVariantBounds();
-			if(!Objects.equals(bounds.getMin(), variant.getMin()) || !Objects.equals(bounds.getMax(), variant.getMax())) {
+			if (!Objects.equals(bounds.min(), variant.min()) || !Objects.equals(bounds.max(), variant.max())) {
 				return false;
 			}
 			// all checks passed
